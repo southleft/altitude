@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {
   addDays,
   addMonths,
@@ -25,7 +25,7 @@ import {
   toDate
 } from 'date-fns';
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { query } from 'lit/decorators/query.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
@@ -40,8 +40,10 @@ import styles from './calendar.scss';
 
 /**
  * Component: al-calendar
- * - **slot** "before": If content is slotted, it will override the default "previous button" icon
- * - **slot** "after": If content is slotted, it will override the default "next button" icon
+ * @slot before - If content is slotted, it will override the default "previous button" icon
+ * @slot after - If content is slotted, it will override the default "next button" icon
+ *
+ * @event onCalendarChange - Fired when a date is selected. Detail: `{ value, rawDate }` — the date formatted per `dateFormat`, and the underlying `Date` object.
  */
 export class ALCalendar extends ALElement {
   static el = 'al-calendar';
@@ -395,7 +397,7 @@ export class ALCalendar extends ALElement {
       const selectedMonth = getMonth(this.navDate);
       let currentDate = startOfMonth(this.navDate);
       let firstDayOfMonth = (getDay(currentDate) + 7 - weekStart) % 7;
-      let weekDays = [];
+      const weekDays = [];
       /* 1 */
       while (firstDayOfMonth > 0) {
         weekDays.push({ value: null, available: false });
@@ -531,6 +533,114 @@ export class ALCalendar extends ALElement {
   }
 
   /**
+   * A11y — the date the day grid currently exposes as its single tab stop.
+   *
+   * The grid used to render ~30 day `<button>`s all in the tab order, on a
+   * `role="presentation"` table with no arrow-key handling at all: reaching the
+   * end of a month took 30+ Tab presses and there was no way to move by week or
+   * month. It is now one tab stop with the WAI-ARIA grid keyboard model
+   * (arrows, Home/End, PageUp/PageDown), which is what
+   * `<al-date-picker>` and `<al-date-time-picker>` embed.
+   */
+  @state()
+  accessor focusedDate: Date | null = null;
+
+  /**
+   * Is this the day that carries `tabindex="0"`?
+   * Falls back — in order — to the explicitly focused day, the selected day,
+   * today, then the first day of the displayed month, so the grid always has
+   * exactly one tab stop.
+   */
+  isRovingDay(day: Date): boolean {
+    if (!day) return false;
+
+    const selected = this.selectedDate ? new Date(this.selectedDate) : null;
+    const anchor =
+      (this.focusedDate && isSameMonth(this.focusedDate, this.navDate) ? this.focusedDate : null) ||
+      (selected && isSameMonth(selected, this.navDate) ? selected : null) ||
+      (isSameMonth(this.currentDate, this.navDate) ? this.currentDate : null) ||
+      startOfMonth(this.navDate);
+
+    return isSameDay(day, anchor);
+  }
+
+  /**
+   * Move the roving focus to `date`, paging the displayed month if the target
+   * falls outside it, then focus the matching button once it has rendered.
+   */
+  private async moveFocusTo(date: Date) {
+    const needsPaging = !isSameMonth(date, this.navDate);
+
+    if (needsPaging) {
+      const moved = isBefore(date, this.navDate) ? this.setPrevMonth() : this.setNextMonth();
+      if (!moved) {
+        return;
+      }
+      // setGrid() rebuilds `days` inside a setTimeout, so wait a turn for it.
+      await new Promise((resolve) => setTimeout(resolve, 2));
+    }
+
+    this.focusedDate = date;
+    await this.updateComplete;
+
+    const button = this.shadowRoot?.querySelector<HTMLButtonElement>(`.al-c-calendar__item[data-date="${format(date, 'yyyy-MM-dd')}"]`);
+    button?.focus();
+  }
+
+  /**
+   * Handle keydown inside the day grid (WAI-ARIA grid keyboard model).
+   * 1. Left/Right move a day, Up/Down move a week
+   * 2. Home/End move to the start/end of the week
+   * 3. PageUp/PageDown move a month
+   */
+  handleOnGridKeydown(e: KeyboardEvent) {
+    const target = e.target as HTMLElement;
+    const iso = target?.dataset?.date;
+    if (!iso) {
+      return;
+    }
+
+    const [y, m, d] = iso.split('-').map(Number);
+    const from = new Date(y, m - 1, d);
+    let to: Date | null = null;
+
+    switch (e.code) {
+      /* 1 */
+      case 'ArrowLeft':
+        to = addDays(from, -1);
+        break;
+      case 'ArrowRight':
+        to = addDays(from, 1);
+        break;
+      case 'ArrowUp':
+        to = addDays(from, -7);
+        break;
+      case 'ArrowDown':
+        to = addDays(from, 7);
+        break;
+      /* 2 */
+      case 'Home':
+        to = addDays(from, -((getDay(from) + 7 - (this.startOnMonday ? 1 : 0)) % 7));
+        break;
+      case 'End':
+        to = addDays(from, 6 - ((getDay(from) + 7 - (this.startOnMonday ? 1 : 0)) % 7));
+        break;
+      /* 3 */
+      case 'PageUp':
+        to = subMonths(from, 1);
+        break;
+      case 'PageDown':
+        to = addMonths(from, 1);
+        break;
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    this.moveFocusTo(to);
+  }
+
+  /**
    * Handle keydown
    * 1. Close the month calendar popup when escape is hit when the user is focused within the popup
    * 2. Return focus back to the month selector button
@@ -542,6 +652,18 @@ export class ALCalendar extends ALElement {
       this.calendarMonthButton.focus();
     }
   }
+
+  /**
+   * Accessible name for the month/year picker popup.
+   *
+   * The popup is `role="dialog"` and its content is a grid of year headings and
+   * month buttons, so it had no accessible name at all — a screen reader
+   * announced "dialog" and nothing else. Settable rather than hardcoded so it
+   * can be localised, matching `timeSelectorLabel` / `cancelLabel` on
+   * al-date-time-picker.
+   */
+  @property()
+  accessor monthSelectorLabel: string = 'Choose month and year';
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-calendar', {});
@@ -583,11 +705,11 @@ export class ALCalendar extends ALElement {
         </nav>
 
         <div class="al-c-calendar__table-container">
-          <table role="presentation" class="al-c-calendar__table">
+          <table class="al-c-calendar__table" aria-label=${format(this.navDate, 'MMMM yyyy')} @keydown=${this.handleOnGridKeydown}>
             <thead class="al-c-calendar__table-header">
               <tr class="al-c-calendar__table-row">
                 ${this.setWeekdaysHeader().map((day: any) => {
-                  return html` <th abbr="${day}" class="al-c-calendar__header-cell">${day}</th> `;
+                  return html` <th scope="col" abbr="${day}" class="al-c-calendar__header-cell">${day}</th> `;
                 })}
               </tr>
             </thead>
@@ -609,6 +731,8 @@ export class ALCalendar extends ALElement {
                                   aria-pressed=${ifDefined(this.setActive(day) ? true : undefined)}
                                   @click=${() => this.handleOnClickDay(day)}
                                   ?disabled=${!this.setAvailableDay(day.value)}
+                                  tabindex=${this.isRovingDay(day.value) ? '0' : '-1'}
+                                  data-date=${format(day.value, 'yyyy-MM-dd')}
                                   aria-label="${format(day.value, this.fullDateFormat)}"
                                 >
                                   ${format(day.value, 'd')}
@@ -625,7 +749,7 @@ export class ALCalendar extends ALElement {
           </table>
         </div>
 
-        <div class="al-c-calendar__month-selector-popup" role="dialog" ?hidden="${!this.showMonthPopup}" @keydown=${this.handleOnKeydown}>
+        <div class="al-c-calendar__month-selector-popup" role="dialog" aria-label=${this.monthSelectorLabel} ?hidden="${!this.showMonthPopup}" @keydown=${this.handleOnKeydown}>
           <div class="al-c-month-selector">
             <ul class="al-c-month-selector__list">
               ${this.years.map((year: any) => {

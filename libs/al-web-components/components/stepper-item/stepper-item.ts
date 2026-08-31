@@ -1,5 +1,5 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import register from '../../directives/register';
@@ -10,9 +10,9 @@ import styles from './stepper-item.scss';
 
 /**
  * Component: al-stepper-item
- * - **slot**: The label for each stepper item
- * - **slot** "icon": The icon that displays next to the label
- * - **slot** "description": The description that displays below the label
+ * @slot - The label for each stepper item
+ * @slot icon - The icon that displays next to the label
+ * @slot description - The description that displays below the label
  */
 export class ALStepperItem extends ALElement {
   static el = 'al-stepper-item';
@@ -66,6 +66,37 @@ export class ALStepperItem extends ALElement {
   @property({ type: Number })
   accessor stepNumber: number = 1;
 
+  /**
+   * A11y — the role rendered on the internal `<li>`.
+   *
+   * `listitem` is only legal inside a `list`, and the owning `<ul role="list">`
+   * lives in the *parent* component's shadow root. Rendered standalone the
+   * hardcoded role has no required parent (axe `aria-required-parent`), while
+   * dropping the role leaves a bare `<li>` outside a list (axe `listitem`).
+   * `none` is the honest answer for an orphan; `hasAncestorRole` walks the
+   * flattened tree, so the slot/shadow hop to the real `<ul>` is followed.
+   */
+  @state()
+  accessor _listRole: 'listitem' | 'none' = 'none';
+
+  /**
+   * A11y — recompute the internal `<li>`'s role from the flattened tree.
+   * Also runs once on the next frame, because the owning list component may
+   * not have rendered its `<ul>` yet when this item first updates.
+   */
+  private syncListRole() {
+    this._listRole = this.hasAncestorRole(['list', 'group'], ['ul', 'ol', 'menu']) ? 'listitem' : 'none';
+  }
+
+  async firstUpdated() {
+    await this.updateComplete;
+    requestAnimationFrame(() => this.syncListRole());
+  }
+
+  updated() {
+    this.syncListRole();
+  }
+
   render() {
     const componentClassNames = this.componentClassNames('al-c-stepper-item', {
       'al-c-stepper-item--vertical': this.variant === 'vertical',
@@ -75,7 +106,7 @@ export class ALStepperItem extends ALElement {
     });
 
     return html`
-      <li role="listitem" class="${componentClassNames}" aria-current=${ifDefined(this.isActive ? 'step' : null)}>
+      <li role=${this._listRole} class="${componentClassNames}" aria-current=${ifDefined(this.isActive ? 'step' : null)}>
         <div class="al-c-stepper-item__step">
           <div class="al-c-stepper-item__counter">
             ${this.isComplete ? html`<${this.iconCheckEl}></${this.iconCheckEl}>` : html` ${this.stepNumber} `}

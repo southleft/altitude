@@ -1,0 +1,54 @@
+{
+  "name": "@southleft/altitude-mcp",
+  "description": "Stdio MCP server exposing Altitude's generated token/component graph (CEM, schemas, tokens, icons, deterministic theme engine) to AI agents",
+  "version": "1.0.0",
+  "//private": "HELD BACK FROM THE v2 RELEASE, and `private` is the only field that actually holds it. The `.changeset/config.json` ignore list does NOT: `changeset publish` filters on `private` alone (@changesets/cli 2.31.0, dist/changesets-cli.cjs.js:1041 `packages.filter(pkg => !pkg.packageJson.private)`) and then publishes every remaining package whose local version is absent from the registry. This package has never been published at any version, so a v2 release would have pushed it to npm as a side effect of shipping the two Altitude libraries — a decision nobody made. `ignore` governs VERSIONING only, so keep the entry there too. To ship this package: delete this key, drop the ignore entry, add a changeset, and add it back to RELEASED in scripts/check-publishable.mjs (which now asserts this flag from the HELD side).",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southleft/altitude.git",
+    "directory": "libs/altitude-mcp"
+  },
+  "homepage": "https://altitude.pages.dev/docs",
+  "bugs": {
+    "url": "https://github.com/southleft/altitude/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "design-system",
+    "design-tokens",
+    "ai-agents",
+    "altitude",
+    "southleft"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "altitude-mcp": "./src/server.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types --no-warnings ./src/server.mjs",
+    "test": "node --experimental-strip-types --no-warnings ./test/smoke.mjs && node --experimental-strip-types --no-warnings ./test/parity-status.mjs && node --experimental-strip-types --no-warnings ./test/mark-synced.mjs && node --experimental-strip-types --no-warnings ./test/worker-smoke.mjs",
+    "capability-matrix": "node --experimental-strip-types --no-warnings ./scripts/build-capability-matrix.mjs",
+    "capability-matrix:check": "node --experimental-strip-types --no-warnings ./scripts/build-capability-matrix.mjs --check"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.4.3"
+  },
+  "author": "Southleft, LLC"
+}

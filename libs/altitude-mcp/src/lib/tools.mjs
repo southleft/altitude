@@ -1,0 +1,370 @@
+// MCP TOOLS — a data-driven `TOOLS` array (R4, spec
+// 2026-08-25-mcp-library-first-refactor), the same shape `STATIC_RESOURCES`
+// (./resources.mjs) and `PROMPTS` (./prompts.mjs) already use: each entry is
+// `{ name, config, handler }`, registered in a loop by
+// `registerAltitudeTools()` in `../index.mjs`. This file used to be eight
+// inline `server.registerTool(...)` calls in `../server.mjs`; the names,
+// descriptions, input schemas, response shapes and error codes below are
+// UNCHANGED from that version — only the shape they're expressed in moved,
+// so the existing smoke tests (`test/smoke.mjs`) and the capability matrix
+// keep passing without edits.
+
+import { z } from 'zod';
+
+import { loadComponents, getComponent } from './cem.mjs';
+import { getMigrationState } from './migration.mjs';
+import { loadSchema } from './schemas.mjs';
+import { getStoryInfo } from './stories.mjs';
+import { validate } from './validate.mjs';
+import { queryTokens } from './tokens.mjs';
+import { searchIcons } from './icons.mjs';
+import { generateTheme } from './theme.mjs';
+import { computeParity, STATUS } from './parity.mjs';
+import { resolveProject, listProjectIds } from './ds-project.mjs';
+import { loadComponentContract, loadComponentDoc } from './component-docs.mjs';
+import { MissingArtifactError } from './paths.mjs';
+
+/** Uniform JSON tool response, with MissingArtifactError surfaced as structured data (not a thrown protocol error) so an agent can read `hint` and self-heal. */
+export function json(data) {
+  return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
+}
+
+/**
+ * The `project` argument's description, WITHOUT reading the registry eagerly.
+ *
+ * This string used to be built by calling `listProjectIds()` / `resolveProject()`
+ * inline in the description template. Both read `.altitude/ds-projects.json`, and
+ * a description is evaluated at `registerTool()` time — so a missing or malformed
+ * registry threw out of `buildServer()` and took down ALL EIGHT tools, not just
+ * the two that need the registry. `altitude_list_components` has nothing to do
+ * with design-system projects and should not stop working because a JSON file a
+ * different tool reads went missing.
+ *
+ * The read is now best-effort: on success the ids are named (they are genuinely
+ * useful in a description), on failure the description degrades to prose and the
+ * error resurfaces where it belongs — inside the handler, as structured JSON the
+ * agent can act on.
+ *
+ * LAZY BY CONSTRUCTION: `altitude_check_parity`'s `inputSchema` exposes the
+ * `project` field through a GETTER, so this function runs when the tool is
+ * REGISTERED (the SDK reads the schema at `registerTool()` time), not when
+ * this module is imported. A plain property on the `TOOLS` array literal
+ * would evaluate it at module-eval time — a filesystem read as an import
+ * side effect (violates the index.mjs zero-side-effect contract), baked in
+ * before any consumer `repoRoot` override could apply. The getter also means
+ * a server registered after `configurePaths(repoRoot)` names THAT root's
+ * project ids, not this checkout's.
+ */
+function describeProjectArg() {
+  try {
+    return `Design-system project id from .altitude/ds-projects.json (${listProjectIds().join(', ')}). Omit for the default ("${resolveProject().id}").`;
+  } catch {
+    return 'Design-system project id from .altitude/ds-projects.json. Call altitude_list_ds_projects for the valid ids (the registry could not be read when this server started, so they cannot be named here). Omit for the registry default.';
+  }
+}
+
+export function toolHandler(fn) {
+  return async (args) => {
+    try {
+      return json(await fn(args));
+    } catch (err) {
+      if (err instanceof MissingArtifactError) {
+        return json({ error: err.message, code: err.code, path: err.path, hint: err.hint });
+      }
+      // Errors that carry their own `code` (UnknownProjectError's
+      // ERR_MISSING_DS_REGISTRY / ERR_INVALID_DS_REGISTRY / ERR_UNKNOWN_DS_PROJECT)
+      // are self-describing — pass the code and the known-id list through rather
+      // than flattening them to a generic failure.
+      return json({
+        error: String(err?.message ?? err),
+        code: typeof err?.code === 'string' ? err.code : 'ERR_TOOL_FAILURE',
+        ...(Array.isArray(err?.known) && err.known.length ? { knownProjects: err.known } : {}),
+      });
+    }
+  };
+}
+
+/** The eight tools this server registers — `{ name, config, handler }`, one per entry. */
+export const TOOLS = [
+  // ── altitude_list_components ────────────────────────────────────────────
+  {
+    name: 'altitude_list_components',
+    config: {
+      title: 'List Altitude components',
+      description:
+        'List every @southleft/al-web-components custom element from the Custom Elements Manifest (CEM): tag, ' +
+        'class name, description, and migration state. Optionally filter by a substring match on tag, ' +
+        'class name, or description.',
+      inputSchema: {
+        filter: z.string().optional().describe('Case-insensitive substring to match against tag, className, or description.'),
+      },
+    },
+    handler: toolHandler(({ filter }) => {
+      const q = filter?.toLowerCase().trim();
+      const components = loadComponents()
+        .filter((c) => !q || [c.tag, c.className, c.description].some((s) => s?.toLowerCase().includes(q)))
+        .map((c) => ({
+          tag: c.tag,
+          className: c.className,
+          summary: c.summary || c.description,
+          migration: getMigrationState(c.tag),
+        }));
+      return { count: components.length, components };
+    }),
+  },
+
+  // ── altitude_get_component ──────────────────────────────────────────────
+  {
+    name: 'altitude_get_component',
+    config: {
+      title: 'Get one Altitude component',
+      description:
+        'Full detail for one @southleft/al-web-components custom element: its CEM entry (attributes, slots, ' +
+        'events, CSS parts/properties), its JSON Schema from schemas/, its migration state, and its ' +
+        'Storybook docs URL. Also carries, when available for the resolved `project` (T20, spec ' +
+        '2026-08-25-contract-backed-figma-parity-and-generation): `contract` — the component\'s canvas-' +
+        'expressible API contract (variant axes, slots + Figma placeholder convention, states, token ' +
+        'bindings incl. per-variant/per-state conditionalBindings, the Figma set name/nodeId or by-name ' +
+        'rule); and `referenceDoc` — the generated human-readable Markdown twin of that contract ' +
+        '(.altitude/contracts/docs/<project>/<tag>.md), the fastest thing to read before touching this ' +
+        'component\'s Figma set. Both are OMITTED (never an error) for a tag with no contract yet — e.g. ' +
+        'al-icon, which parity excludes.',
+      inputSchema: {
+        tag: z.string().describe('The custom element tag name, e.g. "al-button".'),
+        // Getter, not a plain property — see describeProjectArg()'s header.
+        get project() {
+          return z.string().optional().describe(describeProjectArg());
+        },
+      },
+    },
+    handler: toolHandler(({ tag, project }) => {
+      const component = getComponent(tag);
+      if (!component) {
+        return { error: `No CEM entry for tag "${tag}".`, code: 'ERR_UNKNOWN_COMPONENT' };
+      }
+      // Contract/doc lookup is per-project, but a missing/unknown project id
+      // here must not fail a request that only asked for CEM facts — the
+      // rest of this tool's response has nothing to do with ds-projects.json.
+      let contract = null;
+      let referenceDoc = null;
+      try {
+        const resolved = resolveProject(project);
+        contract = loadComponentContract(component.tag, resolved.id);
+        referenceDoc = loadComponentDoc(component.tag, resolved.id);
+      } catch {
+        // Unknown/misconfigured project — leave contract/referenceDoc null,
+        // same graceful-degradation discipline as a tag with no contract.
+      }
+      return {
+        tag: component.tag,
+        className: component.className,
+        description: component.description,
+        summary: component.summary,
+        attributes: component.attributes,
+        slots: component.slots,
+        events: component.events,
+        cssParts: component.cssParts,
+        cssProperties: component.cssProperties,
+        migration: getMigrationState(component.tag),
+        schema: loadSchema(component.tag),
+        story: getStoryInfo(component.modulePath),
+        ...(contract ? { contract } : {}),
+        ...(referenceDoc ? { referenceDoc } : {}),
+      };
+    }),
+  },
+
+  // ── altitude_validate ────────────────────────────────────────────────────
+  {
+    name: 'altitude_validate',
+    config: {
+      title: 'Validate Altitude usage',
+      description:
+        'Validate <al-*> / @southleft/al-react usage against the component contracts. Wraps ' +
+        'libs/al-web-components/cli/validate.mjs --json verbatim (same stable error codes: ' +
+        'ERR_UNKNOWN_COMPONENT, ERR_UNKNOWN_ATTRIBUTE, ERR_INVALID_ENUM, ERR_TYPE_MISMATCH). Pass ' +
+        'either inline markup or a file/directory path.',
+      inputSchema: {
+        markup: z.string().optional().describe('Inline HTML/JSX/markup to validate.'),
+        path: z.string().optional().describe('A file or directory path to scan instead of inline markup.'),
+      },
+    },
+    handler: toolHandler(({ markup, path }) => validate({ markup, path })),
+  },
+
+  // ── altitude_get_tokens ──────────────────────────────────────────────────
+  {
+    name: 'altitude_get_tokens',
+    config: {
+      title: 'Query Altitude design tokens',
+      description:
+        'Query design tokens. With no filters, returns the flat resolved dist/css/tokens.json set ' +
+        '(the default altitude/light build). Add `tier` (1|2|3), `brand` ("altitude" or "southleft"), or ' +
+        '`mode` ("light"|"dark") to query the DTCG source tree instead and get brand/mode-scoped ' +
+        'raw + resolved values (a token\'s CSS custom-property name is stable across brand/mode; ' +
+        'only its value changes). `name` is a substring filter on the token name in all cases.',
+      inputSchema: {
+        tier: z.union([z.string(), z.number()]).optional().describe('1, 2, or 3 (or "tier-1" etc).'),
+        brand: z
+          .enum(['altitude', 'southleft'])
+          .optional()
+          .describe(
+            'The two brands this repo ships, matching styles/tokens-dtcg/tier-2/brand/* and ' +
+            '.altitude/ds-projects.json. "altitude" is the design system default identity; "southleft" is the ' +
+            'southleft.com brand. (northright, odyssey, meridian, voltage, solstice and nocturne ' +
+            'were removed by spec 2026-08-20-brand-pruning-and-storybook-de-bloat — see .altitude/BRANDS.md §7 "The two brands".)',
+          ),
+        mode: z.enum(['light', 'dark']).optional(),
+        name: z.string().optional().describe('Substring to match against the token name.'),
+        limit: z.number().int().positive().max(1000).optional(),
+      },
+    },
+    handler: toolHandler((args) => queryTokens(args)),
+  },
+
+  // ── altitude_search_icons ────────────────────────────────────────────────
+  {
+    name: 'altitude_search_icons',
+    config: {
+      title: 'Search Altitude icons',
+      description:
+        'Search the 1,512-glyph Phosphor icon catalog by name, tag, or category. Each result includes ' +
+        'the exact glyphs.js barrel import + registerIcons() snippet to use it.',
+      inputSchema: {
+        query: z.string().optional().describe('Substring match against icon name, tags, or categories.'),
+        category: z.string().optional().describe('Exact category match, e.g. "weather", "arrows".'),
+        limit: z.number().int().positive().max(200).optional(),
+      },
+    },
+    handler: toolHandler((args) => {
+      const results = searchIcons(args);
+      return { count: results.length, icons: results };
+    }),
+  },
+
+  // ── altitude_generate_theme ──────────────────────────────────────────────
+  {
+    name: 'altitude_generate_theme',
+    config: {
+      title: 'Generate an Altitude theme (deterministic OKLCH solver)',
+      description:
+        'Derive a full Altitude token override set from an art-direction object (same shape as the ' +
+        'Storybook AI console\'s functions/api/theme.js contract) or a bare text prompt. Runs the ' +
+        'same deterministic, WCAG-AA-enforcing OKLCH solver Storybook uses — this tool never calls ' +
+        'an LLM or returns colors it did not derive itself.',
+      inputSchema: {
+        prompt: z.string().max(80).optional().describe('A short text prompt; seeds hue/chroma/personality/mode via a keyless keyword dictionary when `direction` omits them.'),
+        direction: z
+          .object({
+            accentHue: z.number().optional(),
+            secondaryHue: z.number().optional(),
+            neutralHue: z.number().optional(),
+            chroma: z.number().optional(),
+            personality: z.enum(['editorial', 'brutalist', 'geometric', 'luxe', 'playful']).optional(),
+            mode: z.enum(['light', 'dark']).optional(),
+            bgTint: z.enum(['neutral', 'tinted', 'vivid']).optional(),
+            radius: z.enum(['sharp', 'subtle', 'rounded', 'pill']).optional(),
+            elevation: z.enum(['flat', 'subtle', 'lifted', 'deep']).optional(),
+            motion: z.enum(['snappy', 'smooth', 'springy', 'stately']).optional(),
+            borderWeight: z.enum(['hairline', 'standard', 'thick']).optional(),
+            name: z.string().optional(),
+            quip: z.string().optional(),
+          })
+          .optional()
+          .describe('Explicit art direction. Any omitted field falls back to the prompt-seeded value.'),
+        variant: z.number().int().optional(),
+      },
+    },
+    handler: toolHandler((args) => generateTheme(args)),
+  },
+
+  // ── altitude_check_parity ────────────────────────────────────────────────
+  {
+    name: 'altitude_check_parity',
+    config: {
+      title: 'Check Figma <-> code parity',
+      description:
+        'Figma <-> code parity status for every component (or one tag): in-sync, code-drift, ' +
+        'figma-drift, conflict, missing-in-figma, missing-in-code, or excluded. MULTI-PROJECT: this ' +
+        'repo drives more than one design system off one component library (see ' +
+        '.altitude/ds-projects.json and altitude_list_ds_projects) — pass `project` to check ' +
+        'Southleft instead of Altitude. Reads that project\'s parity manifest; code drift is ' +
+        'computed LIVE by hashing the component source, Figma drift is as of the manifest\'s ' +
+        'figmaLastRefreshed (update it with scripts/figma-parity/refresh-figma-digests.mjs ' +
+        '--project <id>). Each entry carries an `aiPrompt` — a ready-to-run reconciliation prompt ' +
+        'naming THAT project\'s Figma file. When a live canvas contract dump exists on disk for a ' +
+        'tag (scripts/contracts/extract-canvas.mjs), the entry also carries a property-level ' +
+        '`disagreements[]` (dimension/key/kind/code/canvas/detail, from contract-diff.mjs) plus a ' +
+        '`canvasContractDiff` summary — absent entirely when no dump exists, never affecting `status`. ' +
+        'Same data the docs site\'s parity panels render from.',
+      inputSchema: {
+        tag: z.string().optional().describe('One custom element tag, e.g. "al-button". Omit for the full report.'),
+        status: z
+          .enum(Object.values(STATUS))
+          .optional()
+          .describe('Only return components with this status.'),
+        // Getter, not a plain property: defers the registry read to
+        // registerTool() time — see describeProjectArg()'s header.
+        get project() {
+          return z.string().optional().describe(describeProjectArg());
+        },
+      },
+    },
+    handler: toolHandler(({ tag, status, project }) => {
+      let report;
+      try {
+        report = computeParity(project);
+      } catch (err) {
+        if (err?.code === 'ERR_UNKNOWN_DS_PROJECT') {
+          return { error: err.message, code: err.code, knownProjects: err.known };
+        }
+        throw err;
+      }
+      if (tag) {
+        const component = report.components.find((c) => c.tag === tag);
+        return (
+          component ?? {
+            error: `No component "${tag}" in the ${report.project} parity report.`,
+            code: 'ERR_UNKNOWN_COMPONENT',
+          }
+        );
+      }
+      if (status) {
+        const matches = [...report.components, ...report.figmaOnly].filter((c) => c.status === status);
+        return { ...report, components: matches, figmaOnly: [] };
+      }
+      return report;
+    }),
+  },
+
+  // ── altitude_list_ds_projects ────────────────────────────────────────────
+  {
+    name: 'altitude_list_ds_projects',
+    config: {
+      title: 'List design-system projects',
+      description:
+        'Every design system this repo drives, from .altitude/ds-projects.json: id, display name, ' +
+        'brand, Figma file key/name/URL, Storybook port and parity-manifest path. Use it to discover ' +
+        'the `project` argument accepted by altitude_check_parity.',
+      inputSchema: {},
+    },
+    handler: toolHandler(() => ({
+      default: resolveProject().id,
+      projects: listProjectIds().map((id) => {
+        const p = resolveProject(id);
+        return {
+          id: p.id,
+          name: p.name,
+          brand: p.brand,
+          isDefault: p.isDefault,
+          figma: { fileKey: p.figma.fileKey, fileName: p.figma.fileName, url: p.resolved.figmaUrlBase },
+          // null when a project has no Storybook (Southleft's was retired in
+          // favour of the docs site); `docs` is the surface that replaced it.
+          storybook: p.storybook ? { port: p.storybook.port, brandTitle: p.storybook.brandTitle } : null,
+          docs: p.docs?.productionBase ?? null,
+          parityManifest: p.paths.parityManifest,
+        };
+      }),
+    })),
+  },
+];

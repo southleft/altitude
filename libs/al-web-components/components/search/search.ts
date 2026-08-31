@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { TemplateResult, unsafeCSS } from 'lit';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { property, query, queryAssignedElements } from 'lit/decorators.js';
@@ -20,9 +20,11 @@ import styles from './search.scss';
 
 /**
  * Component: al-search
- * - **slot**: The search's dropdown content
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The search's dropdown content
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onSearchChange - Fired when the search query changes. Detail: `{ value }`.
  */
 export class ALSearch extends ALElement {
   static el = 'al-search';
@@ -646,12 +648,12 @@ export class ALSearch extends ALElement {
             aria-autocomplete="list"
             aria-activedescendant="${this.ariaActiveDescendantId}"
             aria-controls=${this.ariaControlsId}
+            aria-haspopup="listbox"
             role="combobox"
             @keydown=${this.handleKeyDown}
             @keyup=${this.handleKeyUp}
             @input=${(e: Event) => this.onChanged(e)}
             maxLength=${ifDefined(this.maxlength)}
-            ?isActive="${this.isActive}"
           >
             <${this.iconSearchEl} slot="before" class="al-c-search__icon-search"></${this.iconSearchEl}>
             ${

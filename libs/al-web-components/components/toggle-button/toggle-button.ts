@@ -9,7 +9,10 @@ import styles from './toggle-button.scss';
 
 /**
  * Component: al-toggle-button
- * - **slot**: The content to display in the toggle button
+ * @slot - The content to display in the toggle button
+ *
+ * @event onToggleButtonSelect - Fired when the button becomes selected. Detail: `{ item, selected }`.
+ * @event onToggleButtonDeselect - Fired when the button becomes deselected. Detail: `{ item, selected }`.
  */
 export class ALToggleButton extends ALElement {
   static el = 'al-toggle-button';

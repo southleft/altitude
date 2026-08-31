@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALTooltip as ALWebTooltip } from 'al-web-components/dist/components/tooltip/tooltip';
-import register from 'al-web-components/dist/directives/register';
+import { ALTooltip as ALWebTooltip } from '@southleft/al-web-components/components/tooltip';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebTooltip.el, ALWebTooltip],
@@ -13,5 +15,8 @@ export const ALTooltip = createComponent({
   react: React,
   tagName: elementMap.get(ALWebTooltip.el),
   elementClass: ALWebTooltip,
-  events: {}
+  events: {
+    onTooltipClose: 'onTooltipClose',
+    onTooltipOpen: 'onTooltipOpen'
+  }
 });

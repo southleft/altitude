@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALSearch as ALWebSearch } from 'al-web-components/dist/components/search/search';
-import register from 'al-web-components/dist/directives/register';
+import { ALSearch as ALWebSearch } from '@southleft/al-web-components/components/search';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebSearch.el, ALWebSearch],
@@ -13,5 +15,7 @@ export const ALSearch = createComponent({
   react: React,
   tagName: elementMap.get(ALWebSearch.el),
   elementClass: ALWebSearch,
-  events: {}
+  events: {
+    onSearchChange: 'onSearchChange'
+  }
 });

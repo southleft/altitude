@@ -1,0 +1,117 @@
+# Altitude — line-ending contract.
+#
+# The repo had none until 2026-07-28, so what landed in a working tree depended
+# on each contributor's `core.autocrlf`. Every tracked text blob in the repo is
+# already LF (verified with `git cat-file blob`), so this file changes nothing
+# about what git STORES — only what lands on disk.
+
+# ---------------------------------------------------------------------------
+# Default: LF in the working tree on EVERY platform.
+#
+# The first version of this file said `* text=auto` and left the working tree
+# platform-native, on the reasoning that it "does not force a re-checkout".
+# That conservatism has a measured price, so it is reversed here.
+#
+# THE MEASUREMENT (2026-07-28, same commit, Node 20.18.1 + pnpm 9.15.0 on both
+# sides — a Windows CRLF working tree vs. a real Linux build of the same tree):
+#
+#   Windows dist total   3,563,072 B
+#   Linux   dist total   3,524,525 B
+#   ---------------------------------
+#   difference              38,547 B  (1.094 %)
+#
+#   875 of 1022 built files were byte-identical; 147 differed; 0 files existed
+#   on only one platform. Every byte of the 38,547 is a carriage return:
+#     - 18,959 CRLF line ends inside `sourcesContent` in Vite's .js.map files,
+#       serialized as the escaped `\r` sequence — 2 bytes each = 37,918 B. The
+#       maps embed the .ts sources verbatim, so a CRLF checkout is copied
+#       straight into the build output.
+#     -    629 raw CR bytes in the .svg / .hbs / .js assets that
+#       `scripts/copy-assets-to-dist.js` mirrors from source into dist/.
+#
+# Why that matters: `.github/workflows/v2-checks.yml` (`baselines-bundle`)
+# allows 1 % drift. The EOL delta ALONE is 1.094 %, so with a native-EOL
+# checkout `.altitude/baselines/bundle/snapshot.json` could only ever be
+# captured on Linux, and a Windows capture was guaranteed to fail CI in the
+# opposite direction. Pinning the working tree to LF makes the build
+# byte-reproducible across platforms and the gate satisfiable from any OS.
+#
+# The repo has no `.bat`/`.cmd`/`.ps1` files, which are the only common case
+# that genuinely needs CRLF; add an explicit override here if one is ever
+# introduced.
+#
+# Applying this to an existing clone (git does not re-checkout on its own):
+#
+#   git add .gitattributes && git commit -m 'eol'   # attributes must be committed FIRST
+#   git rm --cached -r . -q && git reset --hard     # or: git checkout-index -a -f
+#
+# ---------------------------------------------------------------------------
+* text=auto eol=lf
+
+# ---------------------------------------------------------------------------
+# Generated artifacts.
+#
+# Now covered by the global `eol=lf` above, but kept listed because these are
+# the files where a native-EOL checkout was actively harmful and the reason is
+# worth keeping next to the paths: their emitters write LF unconditionally
+# (`JSON.stringify`, `lines.join('\n')`).
+# With a native-EOL checkout the file on disk is CRLF, so every regeneration
+# rewrote it as LF.
+# The content hash is unchanged, but git's stat cache can never settle
+# (`git status` shows " M" forever while `git diff` is empty — see
+# `git status --porcelain=v2`, which prints the same blob hash on both sides).
+# Pinning the checkout to LF makes generate → status a genuine no-op.
+#
+# This does NOT fix carriage returns that end up inside JSON *string values*
+# (serialized as the escaped `\r` sequence). Those are file content, not line
+# terminators, and git normalization cannot touch them — they are fixed in the
+# emitters: `libs/al-web-components/cem-plugins/al-deterministic.mjs` and
+# `scripts/generate-component-schemas.js`.
+# ---------------------------------------------------------------------------
+libs/al-web-components/custom-elements.json                text eol=lf
+libs/al-web-components/schemas/**                          text eol=lf
+libs/al-web-components/components/icon/fonts/iconfont.css  text eol=lf
+
+# Phosphor icon system — everything below is written by
+# `libs/al-web-components/icons/icons-config.mjs` (`pnpm --filter
+# @southleft/al-web-components build:icons`) with `join('\n')`, and all of it is COMMITTED
+# (1,512 glyph modules + 37 legacy shims + five barrels). That combination is
+# what makes it EOL-sensitive: a CRLF checkout means every `build:icons` run
+# rewrites ~1,560 tracked files as LF, which is both the worst possible
+# `git status` noise and enough churn to move the bundle baseline.
+#
+# The `iconfont.svg` entry that used to sit above is gone with the webfont.
+libs/al-web-components/components/icon/phosphor/**         text eol=lf
+libs/al-web-components/components/icon/icons/**            text eol=lf
+libs/al-web-components/components/icon/glyphs.ts           text eol=lf
+libs/al-web-components/components/icon/catalog.ts          text eol=lf
+libs/al-web-components/components/icon/all.ts              text eol=lf
+libs/al-web-components/components/icon/lazy.ts             text eol=lf
+libs/al-web-components/components/icon/icon-aliases.ts     text eol=lf
+.altitude/baselines/**/*.json                              text eol=lf
+.altitude/ai-readiness/**/*.json                           text eol=lf
+.altitude/golden-snapshots/*.expected                      text eol=lf
+
+# Shell scripts must keep LF or they will not execute on Linux/macOS/CI.
+*.sh text eol=lf
+
+# Lockfiles are tool-written; keep them byte-stable across platforms.
+pnpm-lock.yaml text eol=lf
+package-lock.json text eol=lf
+
+# ---------------------------------------------------------------------------
+# Binary — never EOL-convert, never diff as text.
+# ---------------------------------------------------------------------------
+*.woff2 binary
+*.woff  binary
+*.ttf   binary
+*.eot   binary
+*.otf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.pdf   binary
+*.zip   binary

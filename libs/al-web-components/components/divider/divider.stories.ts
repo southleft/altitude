@@ -1,7 +1,8 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './divider';
-import '../../.storybook/components/f-po/f-po';
+import '../layout/layout';
+import '../text-block/text-block';
 
 export default {
   title: 'Atoms/Divider',
@@ -20,22 +21,22 @@ export default {
 };
 
 const Template = (args) => html`
-  <div style="display: flex; flex-direction: column; gap: 1rem;">
-    <f-po>Layout Section</f-po>
+  <al-layout direction="column" gap="md">
+    <al-text-block>Tokens are grouped into three tiers.</al-text-block>
     <al-divider ${spread(args)}></al-divider>
-    <f-po>Layout Section</f-po>
-  </div>
+    <al-text-block>Tier-3 is where a brand overrides a role.</al-text-block>
+  </al-layout>
 `;
 
 export const Default = Template.bind({});
 Default.args = {};
 
 const TemplateVertical = (args) => html`
-  <div style="display: flex; gap: 1rem;">
-    <f-po>Layout Section</f-po>
+  <al-layout direction="row" gap="md">
+    <al-text-block>Components</al-text-block>
     <al-divider ${spread(args)}></al-divider>
-    <f-po>Layout Section</f-po>
-  </div>
+    <al-text-block>Tokens</al-text-block>
+  </al-layout>
 `;
 
 export const Vertical = TemplateVertical.bind({});

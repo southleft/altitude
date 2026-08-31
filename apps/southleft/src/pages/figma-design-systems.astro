@@ -1,0 +1,164 @@
+---
+// Figma Design Systems: The Definitive Guide — spec 2026-08-20-southleft-example-app, T10.
+// Long-form content migrated verbatim from southleft-v5's
+// src/pages/figma-design-systems.astro (Terminal panels and grid-texture not
+// reproduced — see T9 verification notes). Defaults to paper (light), matching
+// v5's long-form-article convention.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { withBase } from '../lib/url';
+
+const checklist = [
+  'Are all tokens mapped and named semantically?',
+  'Are components structured with variants, slots, and props?',
+  'Are hardcoded values avoided?',
+  'Are states clearly defined and grouped?',
+  'Has FigmaLint passed all checks?',
+];
+---
+
+<Base
+  title="Figma Design Systems: The Definitive Guide"
+  description="A Figma file alone isn't a system. How to turn Figma into structured, machine-readable infrastructure — tokens, variants, metadata — that developers and AI agents can both build from."
+  theme="light"
+>
+  <div class="sl-section--tight">
+    <PageHero label="figma-design-systems" heading="Figma design systems, engineered for the AI era" dek="A Figma file alone isn't a system. We help teams turn Figma into structured, machine-readable infrastructure — tokens, variants, metadata — so that developers and AI agents can both build from it with confidence." />
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <al-heading tagName="h2" variant="md" isBold={true}>What a real Figma design system is</al-heading>
+    <al-text-block style="margin-top: var(--al-theme-space);">
+      Figma-based design systems are no longer nice-to-haves — they're essential infrastructure. But
+      a Figma file alone isn't a system. A working Figma design system is more than a component
+      library. It has:
+    </al-text-block>
+    <al-list style="margin-top: var(--al-theme-space);">
+      <al-list-item>Atomic components with consistent variant logic</al-list-item>
+      <al-list-item>Semantic design tokens for spacing, color, and typography</al-list-item>
+      <al-list-item>Accessibility baked in, not bolted on</al-list-item>
+      <al-list-item>The naming conventions and metadata that make Dev Mode — and MCP — actually useful</al-list-item>
+    </al-list>
+    <al-text-block style="margin-top: var(--al-theme-space);">Structured right, your Figma file doesn't just guide developers. <strong>It generates real code.</strong></al-text-block>
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <al-heading tagName="h2" variant="md" isBold={true}>Why structure pays — the developer's side</al-heading>
+    <al-text-block style="margin-top: var(--al-theme-space);">
+      Without a system, developers get flat designs, inconsistent spacing, and handoffs with no
+      context — guesswork all the way down. With one, components snap into predictable structures,
+      tokens map 1:1 to the codebase, and MCP-connected editors like Cursor and Claude generate code
+      you can actually ship.
+    </al-text-block>
+    <div style="margin-top: var(--al-theme-space-lg);">
+      <al-stat value="95%" label="In one demo, a login card built in Figma came out production-ready — tokens and all — after a single pass through an AI editor, using MCP." />
+    </div>
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <al-heading tagName="h2" variant="md" isBold={true}>How Figma MCP changes the game</al-heading>
+    <al-text-block style="margin-top: var(--al-theme-space);">
+      MCP adds a machine-readable layer on top of Dev Mode. Instead of a screenshot and a prayer, an
+      AI editor gets your component's tokens, slots, and structure — and turns them into component
+      code. It works in Cursor or Claude, and it supports headless systems where the design source
+      and the code target live in different stacks.
+    </al-text-block>
+    <al-text-block>The path looks like this: Figma → AI → component code, with the system intact.</al-text-block>
+    <al-card style="margin-top: var(--al-theme-space-lg);">
+      <div slot="header">
+        <al-chip variant="secondary">callout</al-chip>
+        <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">Figma Console MCP</al-heading>
+      </div>
+      <al-text-block>
+        Our open-source MCP server goes further than read-only Dev Mode workflows: full read
+        <em>and write</em> access to your Figma design system. Extract variables, components, and
+        styles as structured data — or create and update tokens and layouts through natural
+        language. Your design system, as an API.
+      </al-text-block>
+      <al-layout direction="row" wrap gap="xs" align="center">
+        <al-link href="https://github.com/southleft/figma-console-mcp" target="_blank">View on GitHub →</al-link>
+        <al-link href={withBase('/tools')}>All open-source tools →</al-link>
+      </al-layout>
+    </al-card>
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <al-heading tagName="h2" variant="md" isBold={true}>FigmaLint: audit before handoff</al-heading>
+    <al-text-block style="margin-top: var(--al-theme-space);">FigmaLint audits your components the way a developer — or an AI agent — would read them. It flags:</al-text-block>
+    <al-list style="margin-top: var(--al-theme-space);">
+      <al-list-item>Hardcoded values where tokens should be</al-list-item>
+      <al-list-item>Missing accessibility props</al-list-item>
+      <al-list-item>Unclear naming and variant logic</al-list-item>
+      <al-list-item>Structure gaps that break automation</al-list-item>
+    </al-list>
+    <al-text-block style="margin-top: var(--al-theme-space);">
+      Recommendations land in-editor, with a built-in chat for working through fixes — so quality
+      gets checked before handoff, not after the bug report.
+    </al-text-block>
+    <al-card style="margin-top: var(--al-theme-space-lg);">
+      <div slot="header">
+        <al-chip variant="secondary">callout</al-chip>
+        <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">Get FigmaLint</al-heading>
+      </div>
+      <al-text-block>
+        An AI-powered Figma plugin for design quality analysis — component consistency,
+        accessibility compliance, and token usage, with intelligent auto-fix suggestions and
+        developer handoff exports.
+      </al-text-block>
+      <al-link href="https://github.com/southleft/figmalint" target="_blank">View on GitHub →</al-link>
+    </al-card>
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <al-heading tagName="h2" variant="md" isBold={true}>The toolchain we use</al-heading>
+    <al-text-block style="margin-top: var(--al-theme-space);">Figma → MCP → Claude / Cursor → Story UI → FigmaLint.</al-text-block>
+    <al-list style="margin-top: var(--al-theme-space);">
+      <al-list-item><strong>Figma</strong> as the source of truth.</al-list-item>
+      <al-list-item><strong>MCP</strong> for structured output — tokens, slots, structure.</al-list-item>
+      <al-list-item><strong>Claude or Cursor</strong> for AI code generation.</al-list-item>
+      <al-list-item><strong>Story UI</strong> for prompt-based layout prototyping in Storybook.</al-list-item>
+      <al-list-item><strong>FigmaLint</strong> for audit and QA before anything ships.</al-list-item>
+    </al-list>
+    <al-text-block style="margin-top: var(--al-theme-space);">
+      This isn't design-to-code gimmickry — it's the process we run with mid-market and enterprise
+      teams to shorten cycles and cut dev friction.
+    </al-text-block>
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <al-heading tagName="h2" variant="md" isBold={true}>Proof: Big Medium</al-heading>
+    <al-card style="margin-top: var(--al-theme-space-lg);">
+      <al-list>
+        <al-list-item><strong>Client:</strong> Big Medium (digital product studio)</al-list-item>
+        <al-list-item><strong>Challenge:</strong> Translate an existing Figma design system into production-grade web components — aligned with tokens, variants, and design logic.</al-list-item>
+        <al-list-item><strong>Approach:</strong> Built on the Altitude Design System foundation, wrapped in React, with MCP and Story UI enabling prompt-based layout generation — PMs laid out pages in natural language against a fully token-compliant system.</al-list-item>
+      </al-list>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-stat value="40%+" label="reduction in design-to-code time" />
+      </div>
+    </al-card>
+    <al-text-block style="margin-top: var(--al-theme-space);">
+      Related work: <al-link href={withBase('/projects/petsmart')}>PetSmart Sparky</al-link> ·
+      <al-link href={withBase('/projects/toast-on-the-line')}>On The Line with Toast</al-link>
+    </al-text-block>
+  </div>
+
+  <div class="sl-container sl-section sl-container--prose">
+    <al-heading tagName="h2" variant="md" isBold={true}>The handoff checklist</al-heading>
+    <al-text-block style="margin-top: var(--al-theme-space);">Before you hand off to developers — or to AI — ask:</al-text-block>
+    <al-list style="margin-top: var(--al-theme-space);">
+      {checklist.map((item) => <al-list-item>{item}</al-list-item>)}
+    </al-list>
+    <al-text-block style="margin-top: var(--al-theme-space);">
+      We audit and refactor existing Figma systems, build headless component libraries, automate
+      code generation with MCP + AI, and coach designers on system thinking. If your Figma file is
+      working harder than your team, let's fix that.
+    </al-text-block>
+  </div>
+
+      <CTABand
+      heading="Let's talk about your Figma system"
+      dek="Audit, refactor, or rebuild — a 30-minute discovery call is the fastest way to find out what your Figma file could be generating."
+    />
+</Base>

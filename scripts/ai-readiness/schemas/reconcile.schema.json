@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["findings", "verdict", "sourceUsed"],
+  "additionalProperties": false,
+  "properties": {
+    "findings": {
+      "type": "array",
+      "description": "Every disagreement between the two contracts. Empty when they agree.",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "key", "kind", "detail"],
+        "additionalProperties": false,
+        "properties": {
+          "dimension": {
+            "enum": ["prop", "variant-axis", "variant-value", "state", "slot", "token-binding", "anatomy"]
+          },
+          "key": {
+            "type": "string",
+            "description": "The prop name, axis name, state name, or Figma variable name the disagreement is about."
+          },
+          "kind": {
+            "enum": ["missing-in-canvas", "missing-in-code", "value-mismatch", "present-despite-omission"]
+          },
+    "renamedTo": {
+      "type": "string",
+      "description": "OPTIONAL. When this disagreement is a RENAME, the name the other side uses. Set `key` to the name one side uses, `kind` to \"value-mismatch\", and this to the other. The underlying differ has no rename concept and records a rename as two findings (the old name missing from one side, the new name missing from the other); reporting it as one finding WITH this field set is scored as covering both halves, so the better analysis is not penalised."
+    },
+          "detail": { "type": "string" },
+          "winner": {
+            "enum": ["code", "canvas", "ask-a-human"],
+            "description": "Which side should be treated as correct when reconciling this one disagreement."
+          }
+        }
+      }
+    },
+    "verdict": {
+      "enum": ["in-sync", "drifted"],
+      "description": "in-sync only when findings is empty."
+    },
+    "sourceUsed": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Files, tools or documents actually consulted."
+    },
+    "notes": { "type": "string" }
+  }
+}

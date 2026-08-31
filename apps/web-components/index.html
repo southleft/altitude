@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Altitude — Web Components Fixture</title>
+    <link rel="stylesheet" href="@southleft/al-web-components/css/main.css" />
+    <script>
+      // Must run before any ES module import: legacy auto-register flag.
+      window.alAutoRegistry = true;
+    </script>
+  </head>
+  <body>
+    <al-theme brand="altitude" mode="dark">
+      <al-layout variant="constrained" size="lg" gutter="md">
+        <header>
+          <al-heading tagName="h1" variant="lg">Altitude pilot fixture (web components)</al-heading>
+          <al-text-block>
+            <p>
+              T0.3 — minimal Lit consumer that imports the 5 pilot components. Used
+              by CI to verify each phase ships green for native consumers.
+            </p>
+          </al-text-block>
+        </header>
+
+        <main>
+          <al-layout gap="lg">
+            <section>
+              <al-heading tagName="h2" variant="sm">button</al-heading>
+              <al-layout direction="row" gap="sm" wrap>
+                <al-button>Default</al-button>
+                <al-button variant="secondary">Secondary</al-button>
+                <al-button variant="danger">Danger</al-button>
+              </al-layout>
+            </section>
+
+            <section>
+              <al-heading tagName="h2" variant="sm">input</al-heading>
+              <al-input label="Name" placeholder="Type something" required></al-input>
+            </section>
+
+            <section>
+              <al-heading tagName="h2" variant="sm">select</al-heading>
+              <al-select label="Choose"></al-select>
+            </section>
+
+            <section>
+              <al-heading tagName="h2" variant="sm">dialog</al-heading>
+              <al-button id="open">Open dialog</al-button>
+              <al-dialog id="dlg" heading="Hello"></al-dialog>
+            </section>
+
+            <section>
+              <al-heading tagName="h2" variant="sm">theme-switcher</al-heading>
+              <al-theme-switcher></al-theme-switcher>
+            </section>
+          </al-layout>
+        </main>
+      </al-layout>
+    </al-theme>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

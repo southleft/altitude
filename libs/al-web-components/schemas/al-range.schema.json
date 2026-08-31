@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-range.schema.json",
+  "title": "ALRange (al-range)",
+  "description": "Component: al-range",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-range",
+    "className": "ALRange",
+    "module": "components/range/range.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "If content is slotted, it will override the default range label",
+        "name": "label"
+      },
+      {
+        "description": "If content is slotted, it will override the default range \"min\" label text",
+        "name": "before"
+      },
+      {
+        "description": "If content is slotted, it will override the default range \"max\" label text",
+        "name": "after"
+      }
+    ],
+    "events": [
+      {
+        "name": "onRangeDrag",
+        "description": "Fired continuously while the thumb is dragged. Prefer `onRangeOutputValueChange` for committed values; this one fires on every move."
+      },
+      {
+        "name": "onRangeOutputValueChange",
+        "description": "Fired when the range's output value changes. Detail: `{ value }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-range"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hideLabel": {
+          "description": "Hide label?\n- If true, hides the label from displaying",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        "handleLabelUnit": {
+          "description": "Handle label unit attribute",
+          "type": "string"
+        },
+        "min": {
+          "description": "Min property for range",
+          "type": "number"
+        },
+        "minSelected": {
+          "description": "Minselected property for range",
+          "type": "number"
+        },
+        "max": {
+          "description": "Max property for range",
+          "type": "number"
+        },
+        "maxSelected": {
+          "description": "Maxselected property for range",
+          "type": "number"
+        },
+        "step": {
+          "description": "Step for range",
+          "type": "number"
+        },
+        "hasOutput": {
+          "description": "Shows input value",
+          "type": "boolean"
+        },
+        "value": {
+          "description": "Input value",
+          "type": "number"
+        },
+        "lowerRangeValue": {
+          "description": "Input value for lower range of range",
+          "type": "number"
+        },
+        "upperRangeValue": {
+          "description": "Input value for upper range of range",
+          "type": "number"
+        },
+        "label": {
+          "description": "Slide Label",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "Field note text",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error note text",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility",
+          "type": "string"
+        },
+        "fieldId": {
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name attribute forwarded to the underlying `<input type=\"range\">`.\n- Previously hardcoded to `\"range\"`, which silently overrode whatever the\n  consumer submitted the field as.",
+          "type": "string"
+        },
+        "hasTooltip": {
+          "description": "Displays value label above range",
+          "type": "boolean"
+        },
+        "behavior": {
+          "description": "typescript: 'range'",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

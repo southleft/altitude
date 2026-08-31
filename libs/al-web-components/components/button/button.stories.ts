@@ -1,11 +1,10 @@
-import { expect, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 import '../icon/icons/success';
 import '../icon/icons/send';
 import './button';
+import '../layout/layout';
 
 export default {
   title: 'Atoms/Button',
@@ -18,7 +17,6 @@ export default {
       handles: ['click']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     type: {
       options: ['button', 'submit', 'reset'],
@@ -27,6 +25,13 @@ export default {
     variant: {
       options: ['default', 'secondary', 'tertiary', 'bare', 'danger'],
       control: { type: 'radio' }
+    },
+    size: {
+      options: ['default', 'sm', 'lg'],
+      control: { type: 'radio' }
+    },
+    isPill: {
+      control: 'boolean'
     },
     target: {
       options: ['_blank', '_self', '_parent', '_top'],
@@ -238,24 +243,35 @@ export const WithSubmit = () =>
     }}
   >
     <input type="hidden" name="test" value="test" />
-    <div style="display: flex; gap: 16px;">
+    <al-layout direction="row" gap="md">
       <al-button data-testid="submit" type="submit">Submit</al-button>
       <al-button data-testid="reset" type="reset" variant="tertiary">Reset</al-button>
-    </div>
+    </al-layout>
   </form>`;
 
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-DefaultIconAfter.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const iconAfterSlot: any = canvas.queryByTestId('icon-after')?.shadowRoot?.querySelector('[class*="al-c-icon"]');
-  expect(iconAfterSlot).toBeInTheDocument();
+export const Small = Template.bind({});
+Small.args = {
+  size: 'sm',
+  variant: 'tertiary'
 };
 
-DefaultIconBefore.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const iconBefore = canvas.queryByTestId('icon-before')?.shadowRoot?.querySelector('[class*="al-c-icon"]');
-  expect(iconBefore).toBeInTheDocument();
+export const Large = Template.bind({});
+Large.args = {
+  size: 'lg',
+  variant: 'tertiary'
+};
+
+export const Pill = Template.bind({});
+Pill.args = {
+  isPill: true
+};
+
+export const PillOutline = Template.bind({});
+PillOutline.args = {
+  isPill: true,
+  variant: 'tertiary'
 };

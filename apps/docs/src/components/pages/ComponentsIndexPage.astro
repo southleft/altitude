@@ -1,0 +1,234 @@
+---
+/**
+ * Components index — the canvas's `data-screen-label="Components"` screen,
+ * rendered for ONE design system.
+ *
+ * The tier sections, their headings, their counts and every tile are produced
+ * by iterating the SCOPED registry on the context; the "n / N SHOWN" readout is two
+ * derived numbers. No component name and no count is typed on this page.
+ */
+import Shell from '../../layouts/Shell.astro';
+
+interface Props {
+  context: any;
+}
+
+const { context } = Astro.props;
+const { registry, site, href } = context;
+---
+
+<Shell
+  context={context}
+  title="Components"
+  description={`All ${registry.count} ${site.fullName} components, generated from the library's custom elements manifest.`}
+  active="components"
+>
+  <div class="page">
+    <div class="micro">INDEX / 05</div>
+    <!-- ARRANGEMENT IS <al-layout> (R4) — title vs. the "n SHOWN" readout. -->
+    <al-layout direction="row" wrap justify="between" align="end" class="components-head">
+      <h1 class="t-page-title">Components</h1>
+      <span class="micro" data-shown-readout>
+        <span data-shown>{registry.count}</span> / {registry.count} SHOWN
+      </span>
+    </al-layout>
+    <p class="t-body-md components-lede">
+      Every component ships as a Lit web component{
+        registry.stats.withReact === registry.count ? ' with a generated React wrapper' : ''
+      } and a custom-elements manifest entry. This page, its counts and its taxonomy are built
+      from that manifest.
+    </p>
+
+    <!-- EXEMPT: single-line search bar, intrinsic to this one element (not
+         section arrangement) — kept as CSS. -->
+    <label class="index-search">
+      <span class="micro">FILTER</span>
+      <input
+        id="index-search"
+        type="search"
+        autocomplete="off"
+        placeholder={`Filter ${registry.count} components by name or tag…`}
+      />
+    </label>
+
+    <!--
+      Lifecycle filter chips — one per phase the library actually declares
+      (registry.mjs → buildRegistry().lifecycle). ALL is the cleared state.
+      ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+      display:contents host cannot carry. gap="none" preserves the chips'
+      own border-collapse trick (.pg__opt's -1px negative margins).
+    -->
+    <div class="index-phases-wrap">
+      <al-layout direction="row" wrap gap="none">
+        <button class="pg__opt" type="button" data-status-filter="" aria-pressed="true">all</button>
+        {
+          registry.lifecycle.map((phase) => (
+            <button class="pg__opt" type="button" data-status-filter={phase.id} aria-pressed="false">
+              {phase.id} · {phase.count}
+            </button>
+          ))
+        }
+      </al-layout>
+    </div>
+
+    {
+      registry.tiers.map((tier, i) => (
+        <section data-tier-section={tier.id}>
+          <div class="section-rule">
+            <span>
+              {String(i + 1).padStart(2, '0')} — {tier.label}
+            </span>
+            <span data-section-count={tier.id}>{tier.count}</span>
+          </div>
+          <!--
+            ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+            display:contents host cannot carry. Hooks live on the .grid-tiles
+            class in docs.css (shared with the tile grid's auto-fill track).
+          -->
+          <div class="grid-tiles-wrap">
+            <al-layout variant="grid" noCollapse class="grid-tiles">
+              {tier.components.map((component) => (
+                <a
+                  class="tile"
+                  data-card
+                  data-name={component.name.toLowerCase()}
+                  data-tag={component.tag}
+                  data-status={component.status ?? 'undeclared'}
+                  href={href(`/components/${component.slug}`)}
+                >
+                  <div class="tile__kicker">{tier.label.replace(/S$/, '')}</div>
+                  <div class="tile__name">{component.name}</div>
+                  <div class="tile__meta">
+                    {component.tag} · {component.status ?? 'undeclared'}
+                  </div>
+                </a>
+              ))}
+            </al-layout>
+          </div>
+        </section>
+      ))
+    }
+
+    <p class="empty-note" data-index-empty hidden>
+      NO COMPONENT MATCHES THAT FILTER.
+    </p>
+  </div>
+</Shell>
+
+<style>
+  /* Arrangement lives on <al-layout> (R4); 20px is off al-layout's gap
+   * scale (none/xs/sm/md/lg/xl), so it's set via the documented hook. */
+  .components-head {
+    --al-layout-gap: 20px;
+  }
+
+  .components-head .micro {
+    padding-bottom: 16px;
+  }
+
+  .components-lede {
+    margin: 0 0 32px;
+    max-width: 560px;
+  }
+
+  .index-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    max-width: 560px;
+  }
+
+  /* The label carries the focus affordance. Its input is borderless and
+   * edge-to-edge, so the global `input:focus` outline (docs.css) would draw a
+   * second box inside this one — suppressed on the input below. */
+  .index-search:focus-within {
+    border-color: var(--blue);
+  }
+
+  /* The wrapper owns the margin a display:contents layout host cannot. */
+  .index-phases-wrap {
+    margin-bottom: 40px;
+  }
+
+  .index-search input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: var(--fg);
+    font: 400 13px/20px var(--mono);
+    padding: 0;
+  }
+
+  .index-search input:focus,
+  .index-search input:focus-visible {
+    outline: none;
+  }
+</style>
+
+<script>
+  // Client-side filter over the generated tiles. Mirrors the canvas's
+  // behaviour: sections and their counts collapse to what is still shown.
+  const input = document.getElementById('index-search') as HTMLInputElement | null;
+  if (input) {
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-card]'));
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-tier-section]'));
+    const shown = document.querySelector<HTMLElement>('[data-shown]');
+    const empty = document.querySelector<HTMLElement>('[data-index-empty]');
+
+    let status = '';
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      for (const card of cards) {
+        const name = card.dataset.name ?? '';
+        const tag = card.dataset.tag ?? '';
+        const matchesQuery = q === '' || name.includes(q) || tag.includes(q);
+        const matchesStatus = status === '' || card.dataset.status === status;
+        card.hidden = !(matchesQuery && matchesStatus);
+      }
+      let total = 0;
+      for (const section of sections) {
+        const visible = section.querySelectorAll<HTMLElement>('[data-card]:not([hidden])').length;
+        total += visible;
+        const counter = section.querySelector<HTMLElement>(
+          `[data-section-count="${section.dataset.tierSection}"]`
+        );
+        if (counter) counter.textContent = String(visible);
+        section.hidden = visible === 0;
+      }
+      if (shown) shown.textContent = String(total);
+      if (empty) empty.hidden = total !== 0;
+    };
+
+    input.addEventListener('input', apply);
+
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-status-filter]'));
+    const selectStatus = (value: string) => {
+      status = value;
+      for (const chip of chips) {
+        chip.setAttribute('aria-pressed', String((chip.dataset.statusFilter ?? '') === value));
+      }
+      apply();
+    };
+    for (const chip of chips) {
+      chip.addEventListener('click', () => selectStatus(chip.dataset.statusFilter ?? ''));
+    }
+
+    // `?q=` arrives from the sidebar's Enter-to-escalate handler; `?status=`
+    // from the sidebar's LIFECYCLE rows.
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) input.value = q;
+    const initialStatus = params.get('status');
+    if (initialStatus && chips.some((c) => c.dataset.statusFilter === initialStatus)) {
+      selectStatus(initialStatus);
+    } else if (q) {
+      apply();
+    }
+    input.focus({ preventScroll: true });
+  }
+</script>

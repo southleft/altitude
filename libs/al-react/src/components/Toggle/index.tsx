@@ -1,1 +1,3 @@
-export * from './Toggle';
+'use client';
+
+export * from './Toggle.js';

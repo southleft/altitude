@@ -1,0 +1,119 @@
+purpose: >-
+  The control that changes the active brand and mode. It is a popover holding a
+  menu of brand+mode entries, and its real job is to find the nearest
+  `<al-theme>` ancestor and set `brand` and `mode` attributes on it — a scoped
+  change, not a global one, so several themes can coexist in one document.
+
+whenToUse:
+  - >-
+    A product lets the user choose between light and dark, or between brands,
+    and the choice should apply to a region of the page rather than to the
+    document.
+  - >-
+    You are demoing or documenting the system and want a visible way to switch
+    brands without reloading.
+  - >-
+    You need to react to the change — `onThemeSwitcherChange` reports the
+    resolved theme, the logo, and whether the change was applied scoped or
+    through the deprecated global path.
+
+whenNotToUse:
+  - text: >-
+      You want the theme applied and never changed by the user. Wrap the region
+      in the theme host and set its attributes directly — the switcher is the UI
+      for changing it, not the mechanism for applying it.
+    instead: theme
+  - text: >-
+      You need a general-purpose menu of options anchored to a button. The
+      switcher is a specific control with a fixed, data-driven brand list.
+    instead: popover
+  - text: >-
+      The choice is any other binary setting. Nothing here generalises beyond
+      brand and mode.
+    instead: toggle
+
+dos:
+  - >-
+    Put an `<al-theme>` ancestor above the switcher. That is the supported path:
+    the switcher walks up to the nearest one and sets its attributes, which
+    scopes the change instead of mutating the document.
+  - >-
+    Set `scopedOnly` when you want the deprecated global stylesheet swap to
+    never run, even if the theme host is missing. It turns a silent fallback
+    into a no-op you can notice.
+  - >-
+    Read `scoped` from the `onThemeSwitcherChange` detail if you need to know
+    which path ran. It is `true` when a theme ancestor was found and updated,
+    `false` when the legacy swap was used.
+  - >-
+    Add a brand by adding an entry to the component's brand table rather than by
+    branching in consumer code — the list is data, and the component does not
+    change when it grows.
+
+donts:
+  - >-
+    Don't depend on the global swap. It removes and re-appends a
+    `<style id="al-tokens-sheet">` element in the document head, is marked
+    deprecated with a removal target of 3.0.0, and exists only because one
+    in-repo fixture still uses the switcher with no theme wrapper.
+  - >-
+    Don't put two switchers over the same theme host expecting them to stay in
+    step. Each one sets attributes on the host; neither reads the other's state.
+  - >-
+    Don't assume changing the theme re-renders the whole page cheaply when the
+    page is server-rendered. Each themed host serialises its brand and mode
+    blocks into its own declarative shadow DOM template, which is a real cost
+    when many themed islands are rendered on the server.
+  - >-
+    Don't expose a brand switch to end users when the brand is a property of the
+    product rather than a preference. Mode is a preference; brand usually is
+    not.
+
+accessibility:
+  - >-
+    The switcher composes a button, a popover and a menu, so it inherits their
+    keyboard behaviour rather than defining its own — the trigger is a real
+    button and the entries are real menu items.
+  - >-
+    A theme change is a visual change with no announcement. If the switch also
+    changes meaning — a high-contrast mode, say — say so in text near the
+    control, because nothing here tells a screen-reader user what changed.
+  - >-
+    Both light and dark entries have to clear contrast on their own. A switcher
+    is not a substitute for either mode being accessible.
+
+content:
+  - >-
+    Label the entries with what the user gets, not with the token layer behind
+    it: "Dark", "Light", the brand's name.
+  - >-
+    Keep the trigger's accessible name about the setting, not about the widget —
+    "Change theme" rather than "Settings", which is what the gear icon alone
+    implies.
+
+sources:
+  - path: libs/al-web-components/components/theme-switcher/theme-switcher.ts
+    contains: const themeHost = this.closest
+    note: >-
+      The scoped path: the nearest theme ancestor is found and its brand and
+      mode attributes are set, with no global mutation.
+  - path: libs/al-web-components/components/theme-switcher/theme-switcher.ts
+    contains: DEPRECATED global-swap
+    note: >-
+      The legacy document-level stylesheet swap, why it is still present, and
+      its removal target.
+  - path: libs/al-web-components/components/theme-switcher/theme-switcher.ts
+    contains: onThemeSwitcherChange
+    note: >-
+      The change event, including the `scoped` flag that reports which of the
+      two paths ran.
+  - path: MIGRATION.md
+    contains: Legacy fallback
+    note: >-
+      The migration note covering the deprecated global swap and what replaces
+      it.
+  - path: .altitude/SSR.md
+    contains: Measured cost
+    note: >-
+      The measured server-rendering cost of a themed host — every brand and mode
+      block is serialised into each host's declarative shadow DOM template.

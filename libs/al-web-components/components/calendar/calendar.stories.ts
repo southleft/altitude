@@ -1,10 +1,9 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './calendar';
 
 export default {
-  title: 'Atoms/Calendar',
+  title: 'Atoms/Form/Calendar',
   component: 'al-calendar',
   tags: [ 'autodocs' ],
   parameters: {
@@ -13,7 +12,6 @@ export default {
       handles: ['onCalendarChange']
     }
   },
-  decorators: [ withActions ],
 };
 
 export const Default = (args) => html` <al-calendar ${spread(args)}></al-calendar> `;

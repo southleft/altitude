@@ -1,0 +1,1982 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-popover",
+  "name": "Popover",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-popover",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaLabelledBy",
+      "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaLabelledBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "heading",
+      "description": "Heading text that appears in the header region",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "heading"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDismissible",
+      "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDismissible"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "position",
+      "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top",
+      "type": "string",
+      "rawType": "| 'bottom-center' | 'bottom-right' | 'bottom-left' | 'top-center' | 'top-right' | 'top-left' | 'left' | 'left-top' | 'right' | 'right-top'",
+      "default": "'bottom-left'",
+      "bindings": {
+        "code": {
+          "attribute": "position"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "transitionDelay",
+      "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+      "type": "number",
+      "rawType": "number",
+      "default": "400",
+      "bindings": {
+        "code": {
+          "attribute": "transitionDelay"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding",
+      "type": "string",
+      "rawType": "'menu'",
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onPopoverClose",
+      "description": "Fired when the popover closes by any means. Detail: `{ active }`."
+    },
+    {
+      "name": "onPopoverCloseButton",
+      "description": "Fired only when the popover's close button is activated. Detail: `{ active }`. Use `onPopoverClose` to catch every close path."
+    },
+    {
+      "name": "onPopoverOpen",
+      "description": "Fired when the popover opens. Detail: `{ active }` — the new open state."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The main body of the popover"
+    },
+    {
+      "name": "footer",
+      "description": "The footer of the popover that appears below the main slot"
+    },
+    {
+      "name": "header",
+      "description": "The header of the popover that appears above the main slot"
+    },
+    {
+      "name": "trigger",
+      "description": "The trigger that opens/closes the popover"
+    }
+  ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-button",
+        "evidence": [
+          "template",
+          "import"
+        ]
+      },
+      {
+        "tag": "al-focus-trap",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-heading",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-icon",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Position=bottom",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-popover al-is-active",
+      "box": {
+        "w": 139,
+        "h": 40
+      },
+      "layout": {
+        "display": "flex",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {},
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-popover__trigger",
+          "box": {
+            "w": 139,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "span",
+              "cls": "",
+              "box": {
+                "w": 139,
+                "h": 40
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "button",
+                  "cls": "al-c-button",
+                  "component": "al-button",
+                  "box": {
+                    "w": 139,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "inline-flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-primary-default",
+                      "figma": "theme/color/background/primary-default"
+                    },
+                    "border-bottom-left-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-bottom-right-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-top-left-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-top-right-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "color": {
+                      "code": "--al-theme-color-content-primary-weak",
+                      "figma": "theme/color/content/primary-weak"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "font-weight": {
+                      "code": "--al-font-weight-bold",
+                      "figma": "typography/font-weight/bold"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                      "figma": null
+                    },
+                    "padding": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-button__text",
+                      "box": {
+                        "w": 107,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-button__text",
+                          "text": "Open Popover",
+                          "box": {
+                            "w": 107,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-focus-trap",
+          "component": "al-focus-trap",
+          "box": {
+            "w": 0,
+            "h": 0
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-popover__container",
+              "box": {
+                "w": 187.7,
+                "h": 100
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-popover__header",
+                  "box": {
+                    "w": 155.7,
+                    "h": 28
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "flex-end"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__title",
+                      "box": {
+                        "w": 155.7,
+                        "h": 28
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "flex-start",
+                        "grow": 1
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "h1",
+                          "cls": "al-c-heading",
+                          "component": "al-heading",
+                          "box": {
+                            "w": 155.7,
+                            "h": 28
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-heading-sm",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-heading-sm-letter-spacing",
+                              "figma": null
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "h1",
+                              "cls": "al-c-heading",
+                              "component": "al-heading",
+                              "text": "Popover heading",
+                              "box": {
+                                "w": 155.7,
+                                "h": 24
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-heading-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-popover__body",
+                  "box": {
+                    "w": 155.7,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal",
+                    "grow": 1
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__body",
+                      "text": "Popover content",
+                      "box": {
+                        "w": 121.2,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal",
+                        "grow": 1
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Position=bottom",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-popover al-is-active",
+          "box": {
+            "w": 139,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-popover__trigger",
+              "box": {
+                "w": 139,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "box": {
+                    "w": 139,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "button",
+                      "cls": "al-c-button",
+                      "component": "al-button",
+                      "box": {
+                        "w": 139,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "inline-flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-primary-default",
+                          "figma": "theme/color/background/primary-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "figma": null
+                        },
+                        "padding": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-bottom": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-left": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-right": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-top": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-button__text",
+                          "box": {
+                            "w": 107,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "span",
+                              "cls": "al-c-button__text",
+                              "text": "Open Popover",
+                              "box": {
+                                "w": 107,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-focus-trap",
+              "component": "al-focus-trap",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-popover__container",
+                  "box": {
+                    "w": 187.7,
+                    "h": 100
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__header",
+                      "box": {
+                        "w": 155.7,
+                        "h": 28
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "flex-end"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__title",
+                          "box": {
+                            "w": 155.7,
+                            "h": 28
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "h1",
+                              "cls": "al-c-heading",
+                              "component": "al-heading",
+                              "box": {
+                                "w": 155.7,
+                                "h": 28
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-heading-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "h1",
+                                  "cls": "al-c-heading",
+                                  "component": "al-heading",
+                                  "text": "Popover heading",
+                                  "box": {
+                                    "w": 155.7,
+                                    "h": 24
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {
+                                    "color": {
+                                      "code": "--al-theme-color-content-default",
+                                      "figma": "theme/color/content/default"
+                                    },
+                                    "font": {
+                                      "code": "--al-theme-typography-heading-sm",
+                                      "figma": null
+                                    },
+                                    "letter-spacing": {
+                                      "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                      "figma": null
+                                    }
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__body",
+                      "box": {
+                        "w": 155.7,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal",
+                        "grow": 1
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__body",
+                          "text": "Popover content",
+                          "box": {
+                            "w": 121.2,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "column",
+                            "align": "normal",
+                            "justify": "normal",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Position=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-popover al-c-popover--bottom-left al-is-active",
+          "box": {
+            "w": 139,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-popover__trigger",
+              "box": {
+                "w": 139,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "box": {
+                    "w": 139,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "button",
+                      "cls": "al-c-button",
+                      "component": "al-button",
+                      "box": {
+                        "w": 139,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "inline-flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-primary-default",
+                          "figma": "theme/color/background/primary-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "figma": null
+                        },
+                        "padding": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-bottom": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-left": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-right": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-top": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-button__text",
+                          "box": {
+                            "w": 107,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "span",
+                              "cls": "al-c-button__text",
+                              "text": "Open Popover",
+                              "box": {
+                                "w": 107,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-focus-trap",
+              "component": "al-focus-trap",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-popover__container",
+                  "box": {
+                    "w": 187.7,
+                    "h": 100
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__header",
+                      "box": {
+                        "w": 155.7,
+                        "h": 28
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "flex-end"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__title",
+                          "box": {
+                            "w": 155.7,
+                            "h": 28
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "h1",
+                              "cls": "al-c-heading",
+                              "component": "al-heading",
+                              "box": {
+                                "w": 155.7,
+                                "h": 28
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-heading-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "h1",
+                                  "cls": "al-c-heading",
+                                  "component": "al-heading",
+                                  "text": "Popover heading",
+                                  "box": {
+                                    "w": 155.7,
+                                    "h": 24
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {
+                                    "color": {
+                                      "code": "--al-theme-color-content-default",
+                                      "figma": "theme/color/content/default"
+                                    },
+                                    "font": {
+                                      "code": "--al-theme-typography-heading-sm",
+                                      "figma": null
+                                    },
+                                    "letter-spacing": {
+                                      "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                      "figma": null
+                                    }
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__body",
+                      "box": {
+                        "w": 155.7,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal",
+                        "grow": 1
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__body",
+                          "text": "Popover content",
+                          "box": {
+                            "w": 121.2,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "column",
+                            "align": "normal",
+                            "justify": "normal",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Position=left",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-popover al-c-popover--left al-is-active",
+          "box": {
+            "w": 139,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-popover__trigger",
+              "box": {
+                "w": 139,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "box": {
+                    "w": 139,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "button",
+                      "cls": "al-c-button",
+                      "component": "al-button",
+                      "box": {
+                        "w": 139,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "inline-flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-primary-default",
+                          "figma": "theme/color/background/primary-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "figma": null
+                        },
+                        "padding": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-bottom": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-left": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-right": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-top": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-button__text",
+                          "box": {
+                            "w": 107,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "span",
+                              "cls": "al-c-button__text",
+                              "text": "Open Popover",
+                              "box": {
+                                "w": 107,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-focus-trap",
+              "component": "al-focus-trap",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-popover__container",
+                  "box": {
+                    "w": 187.7,
+                    "h": 100
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__header",
+                      "box": {
+                        "w": 155.7,
+                        "h": 28
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "flex-end"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__title",
+                          "box": {
+                            "w": 155.7,
+                            "h": 28
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "h1",
+                              "cls": "al-c-heading",
+                              "component": "al-heading",
+                              "box": {
+                                "w": 155.7,
+                                "h": 28
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-heading-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "h1",
+                                  "cls": "al-c-heading",
+                                  "component": "al-heading",
+                                  "text": "Popover heading",
+                                  "box": {
+                                    "w": 155.7,
+                                    "h": 24
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {
+                                    "color": {
+                                      "code": "--al-theme-color-content-default",
+                                      "figma": "theme/color/content/default"
+                                    },
+                                    "font": {
+                                      "code": "--al-theme-typography-heading-sm",
+                                      "figma": null
+                                    },
+                                    "letter-spacing": {
+                                      "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                      "figma": null
+                                    }
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__body",
+                      "box": {
+                        "w": 155.7,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal",
+                        "grow": 1
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__body",
+                          "text": "Popover content",
+                          "box": {
+                            "w": 121.2,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "column",
+                            "align": "normal",
+                            "justify": "normal",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Position=right",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-popover al-c-popover--right al-is-active",
+          "box": {
+            "w": 139,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-popover__trigger",
+              "box": {
+                "w": 139,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "box": {
+                    "w": 139,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "button",
+                      "cls": "al-c-button",
+                      "component": "al-button",
+                      "box": {
+                        "w": 139,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "inline-flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-primary-default",
+                          "figma": "theme/color/background/primary-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius",
+                          "figma": "theme/border/radius/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "font-weight": {
+                          "code": "--al-font-weight-bold",
+                          "figma": "typography/font-weight/bold"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "figma": null
+                        },
+                        "padding": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-bottom": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "padding-left": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-right": {
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
+                        },
+                        "padding-top": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xs",
+                          "figma": "theme/space/xs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-button__text",
+                          "box": {
+                            "w": 107,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "span",
+                              "cls": "al-c-button__text",
+                              "text": "Open Popover",
+                              "box": {
+                                "w": 107,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-focus-trap",
+              "component": "al-focus-trap",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-popover__container",
+                  "box": {
+                    "w": 187.7,
+                    "h": 100
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__header",
+                      "box": {
+                        "w": 155.7,
+                        "h": 28
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "flex-end"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__title",
+                          "box": {
+                            "w": 155.7,
+                            "h": 28
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "h1",
+                              "cls": "al-c-heading",
+                              "component": "al-heading",
+                              "box": {
+                                "w": 155.7,
+                                "h": 28
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-heading-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "h1",
+                                  "cls": "al-c-heading",
+                                  "component": "al-heading",
+                                  "text": "Popover heading",
+                                  "box": {
+                                    "w": 155.7,
+                                    "h": 24
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {
+                                    "color": {
+                                      "code": "--al-theme-color-content-default",
+                                      "figma": "theme/color/content/default"
+                                    },
+                                    "font": {
+                                      "code": "--al-theme-typography-heading-sm",
+                                      "figma": null
+                                    },
+                                    "letter-spacing": {
+                                      "code": "--al-theme-typography-heading-sm-letter-spacing",
+                                      "figma": null
+                                    }
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-popover__body",
+                      "box": {
+                        "w": 155.7,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal",
+                        "grow": 1
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-popover__body",
+                          "text": "Popover content",
+                          "box": {
+                            "w": 121.2,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "column",
+                            "align": "normal",
+                            "justify": "normal",
+                            "grow": 1
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-theme-border-radius",
+    "--al-theme-color-background-primary-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-primary-weak",
+    "--al-theme-space",
+    "--al-theme-space-xs",
+    "--al-theme-typography-body-md-bold-letter-spacing",
+    "--al-theme-typography-heading-sm",
+    "--al-theme-typography-heading-sm-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaLabelledBy",
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/popover/popover.ts",
+      "tagName": "al-popover",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

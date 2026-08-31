@@ -1,4 +1,4 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /*------------------------------------*\
   #PAGINATION-ITEM
 \*------------------------------------*/
@@ -6,58 +6,74 @@
 /**
  * Pagination item
  */
-.al-c-pagination-item {
-  @include al-theme-typography-body-sm;
-  list-style: none;
-}
 
-/**
- * Pagination item link
- */
-.al-c-pagination__link {
-  padding: var(--al-theme-space-xs) var(--al-theme-space);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  cursor: pointer;
-  width: max-content;
-  transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-  border-radius: var(--al-theme-border-radius);
-  background-color: var(--al-theme-color-background-transparent-default);
-  color: var(--al-theme-color-content-default);
-  --al-icon-width: #{var(--al-theme-icon-lg)};
-  --al-icon-height: #{var(--al-theme-icon-lg)};
+@layer al.component {
+  .al-c-pagination-item {
+    @include al-theme-typography-body-sm;
+    list-style: none;
+  }
 
   /**
-   * Hover state
+   * Pagination item link
    */
-  &:hover:not(:active, .al-is-disabled &) {
+  .al-c-pagination__link {
+    padding: var(--al-theme-space-xs) var(--al-theme-space);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    width: max-content;
+    transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+    border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius));
     background-color: var(--al-theme-color-background-transparent-default);
-    color: var(--al-theme-color-content-default-weak);
-  }
-
-  /**
-  * Disabled state
-  */
-  .al-is-disabled & {
-    cursor: not-allowed;
-    opacity: var(--al-theme-opacity-disabled);
-  }
-
-  /**
-   * Selected state
-   */
-  .al-is-selected & {
-    background-color: var(--al-theme-color-background-primary-default);
-    color: var(--al-theme-color-content-primary-weak);
+    color: var(--al-theme-color-content-default);
+    --al-icon-width: #{var(--al-theme-icon-lg)};
+    --al-icon-height: #{var(--al-theme-icon-lg)};
 
     /**
-     * Selected and hover state
+     * Hover state
      */
     &:hover:not(:active, .al-is-disabled &) {
-      background-color: var(--al-theme-color-background-primary-strong);
+      background-color: var(--al-theme-color-background-transparent-default);
+      color: var(--al-theme-color-content-default-weak);
+    }
+
+    /**
+     * Focus state
+     *
+     * The anchor is focusable (it carries `tabindex="0"` unless disabled —
+     * pagination-item.ts) but had NO focus style of its own, so keyboard users got
+     * only the UA default outline while every other interactive component in the
+     * library draws the token-bound ring. The contract already declared a `focus`
+     * state; this is what makes that declaration true.
+     */
+    &:focus-visible {
+      @include al-focus;
+    }
+
+    /**
+    * Disabled state
+    */
+    .al-is-disabled & {
+      cursor: not-allowed;
+      opacity: var(--al-theme-opacity-disabled);
+    }
+
+    /**
+     * Selected state
+     */
+    .al-is-selected & {
+      background-color: var(--al-theme-color-background-primary-default);
       color: var(--al-theme-color-content-primary-weak);
+
+      /**
+       * Selected and hover state
+       */
+      &:hover:not(:active, .al-is-disabled &) {
+        background-color: var(--al-theme-color-background-primary-strong);
+        color: var(--al-theme-color-content-primary-weak);
+      }
     }
   }
 }

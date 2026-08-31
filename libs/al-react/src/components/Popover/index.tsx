@@ -1,1 +1,3 @@
-export * from './Popover';
+'use client';
+
+export * from './Popover.js';

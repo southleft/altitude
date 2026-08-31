@@ -1,9 +1,23 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /*------------------------------------*\
   #{{upperCase name}}
 \*------------------------------------*/
 
 /**
  * {{titleCase name}}
+ *
+ * Do NOT hand-roll `display: flex` / `display: grid` here to arrange SLOTTED
+ * children — that arrangement belongs to <al-layout>. Styling this component's
+ * own internal shadow structure is fine.
  */
-.al-c-{{dashCase name}} {}
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  .al-c-{{dashCase name}} {
+    /* Tokens only — verify names against styles/dist/tokens.json.
+     * Typography via the al-theme-typography-* mixins, never raw --al-font-* primitives.
+     * Focus ring on any interactive element: &:focus-visible { @include al-focus; } */
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "theme": {
+    "color": {
+      "header": {
+        "background": {
+          "$value": "{theme.color.background.default}",
+          "$type": "color",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "color"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-3 theme-level alias: the <al-header> background colour, aliasing theme.color.background.default-strong. DEAD today (0 var() readers) not because it is redundant but because the header component invented its own --al-header-background hook instead of reading this token — a component bug, not a reason to deprecate the token. See spec Findings."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "color",
+                "background-color",
+                "background",
+                "border-color",
+                "border",
+                "outline-color",
+                "outline",
+                "box-shadow",
+                "fill",
+                "stroke",
+                "text-decoration-color",
+                "caret-color",
+                "accent-color",
+                "text-stroke",
+                "scrollbar-color"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-14"
+            },
+            "com.adobe.id": {
+              "uuid": "b36d4f7f-021f-4820-bc51-fb4bca95ea57"
+            }
+          }
+        }
+      },
+      "body": {
+        "background": {
+          "$value": "{theme.color.background.default-weak}",
+          "$type": "color",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "color"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-3 theme-level alias: the page canvas background, aliasing theme.color.background.default-weak. One member per mode (light/dark)."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "color",
+                "background-color",
+                "background",
+                "border-color",
+                "border",
+                "outline-color",
+                "outline",
+                "box-shadow",
+                "fill",
+                "stroke",
+                "text-decoration-color",
+                "caret-color",
+                "accent-color",
+                "text-stroke",
+                "scrollbar-color"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-14"
+            },
+            "com.adobe.id": {
+              "uuid": "6b9d5279-a168-410e-a837-217088de5242"
+            }
+          }
+        }
+      },
+      "focus-ring": {
+        "comment": "The focus indicator colour. Lives in tier-3 because it is a THEME-level alias of a tier-2 semantic, exactly like header/body background. Before this existed, `al-focus()` read `var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default))` against a token the pipeline never emitted, so the fallback always won and no brand or mode could restate the focus colour without editing the mixin.",
+        "$value": "{theme.color.border.primary-default}",
+        "$type": "color",
+        "$extensions": {
+          "org.altitude.token": {
+            "cssType": "color"
+          },
+          "org.primer.llm": {
+            "usage": "Tier-3 theme-level alias layer. Its one member today, focus-ring, is the brand/mode-restatable focus indicator colour (R4, this session) — consumed by the al-focus()/al-focus-inset() mixins as `outline: <width> solid var(--al-theme-color-focus-ring)`. Legal CSS surface: outline, outline-color, border-color."
+          },
+          "com.salesforce.styling": {
+            "cssProperties": [
+              "color",
+              "background-color",
+              "background",
+              "border-color",
+              "border",
+              "outline-color",
+              "outline",
+              "box-shadow",
+              "fill",
+              "stroke",
+              "text-decoration-color",
+              "caret-color",
+              "accent-color",
+              "text-stroke",
+              "scrollbar-color"
+            ]
+          },
+          "com.atlassian.token": {
+            "introduced": "2026-08-23"
+          },
+          "com.adobe.id": {
+            "uuid": "e3a2cab4-1fa6-4f06-b086-3ef46c36c0aa"
+          }
+        }
+      }
+    }
+  }
+}

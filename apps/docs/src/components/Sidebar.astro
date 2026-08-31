@@ -1,0 +1,385 @@
+---
+/**
+ * The persistent 264px sidebar from the design canvas
+ * (.mm/specs/.../visuals/altitude-ds-site.dc.html, `<aside
+ * data-screen-label="Sidebar">`): logo + "DESIGN SYSTEM — V2.0" eyebrow,
+ * search field, INDEX section, then the atomic groups with live counts.
+ *
+ * NOTHING here is hand-maintained. The groups, their order, their counts and
+ * every link inside them come from the SCOPED registry on the context
+ * (`buildRegistry(project.scope)`), which derives them from
+ * `libs/al-web-components/custom-elements.json` plus each component's own story
+ * title, filtered by that design system's `library.components` allowlist in
+ * `.altitude/ds-projects.json`. Adding a component to the library adds it to
+ * the whole-library site; adding it to a project's allowlist adds it to that
+ * project's. There is no second list to update, and no per-project template.
+ *
+ * The DESIGN SYSTEMS block at the foot is the same idea one level up: one row
+ * per project in the registry, so a new entry appears in every site's sidebar
+ * without an edit here.
+ */
+import { PROJECTS } from '../lib/projects.mjs';
+import { contextFor } from '../lib/context.mjs';
+import Logo from './Logo.astro';
+import SearchIcon from './SearchIcon.astro';
+
+interface Props {
+  context: any;
+  /** Which INDEX entry is current. */
+  active?:
+    | 'overview'
+    | 'foundations'
+    | 'motion'
+    | 'icons'
+    | 'utilities'
+    | 'components'
+    | 'maturity'
+    | 'migration';
+  /** Slug of the component detail page being viewed, if any. */
+  activeSlug?: string;
+}
+
+const { context, active, activeSlug } = Astro.props;
+const { project, registry, site, href } = context;
+
+// The INDEX order is the reading order, and it is the same order the page
+// eyebrows count in (INDEX / 00 … 07). Motion, Icons and Utilities sit beside
+// Foundations because they are the same kind of thing — shared layers every
+// component reads — not components of their own. Icons in particular: the
+// 1,512 glyphs are the PAYLOAD of `<al-icon>`, which is why they are one INDEX
+// entry here and not 1,512 rows in the atomic groups below.
+//
+// Maturity and Migration come AFTER Components, and the order is the reason
+// they were added last rather than a ranking: both are about the STATE of the
+// catalog — where each component has got to, and how to move a consumer onto
+// it — so neither means anything until you have met the catalog itself.
+const index = [
+  { id: 'overview', label: 'Overview', path: '/' },
+  { id: 'foundations', label: 'Foundations', path: '/foundations' },
+  { id: 'motion', label: 'Motion', path: '/motion' },
+  { id: 'icons', label: 'Icons', path: '/icons' },
+  { id: 'utilities', label: 'Utilities', path: '/utilities' },
+  { id: 'components', label: 'Components', path: '/components' },
+  { id: 'maturity', label: 'Maturity', path: '/maturity' },
+  { id: 'migration', label: 'Migration', path: '/migration' },
+] as const;
+
+/** Every design system's site, so any of them is one click from any other. */
+const systems = PROJECTS.map((candidate) => ({
+  id: candidate.id,
+  shortName: candidate.shortName,
+  count: contextFor(candidate).registry.count,
+  href: contextFor(candidate).href('/'),
+  current: candidate.id === project.id,
+}));
+---
+
+<aside class="sidebar">
+  <a class="sidebar__brand" href={href('/')} aria-label={`${site.name} home`}>
+    <Logo project={project} variant="wordmark" />
+    <div class="sidebar__eyebrow">{site.eyebrow}</div>
+  </a>
+
+  <div class="sidebar__search">
+    <div class="sidebar__search-field">
+      <SearchIcon />
+      <!-- The placeholder quotes the generated component count; it is never
+           typed. `data-total` lets the client script restore it after a
+           filter is cleared. -->
+      <input
+        id="sidebar-search"
+        type="search"
+        autocomplete="off"
+        aria-label={`Search ${registry.count} components and the rest of the docs`}
+        data-total={registry.count}
+        placeholder={`SEARCH ${registry.count} COMPONENTS + DOCS`}
+      />
+    </div>
+    {/*
+      Site-wide results, distinct from the component filter above. The input
+      does two things at once on purpose: the component list filters instantly
+      and locally (no network, no index load), while everything the list cannot
+      cover — Foundations, Motion, Icons, Utilities, Maturity, Migration,
+      guidance prose — comes from Pagefind. Labelled so the two are not confused
+      for one ranked list.
+    */}
+    <div class="sidebar__results" data-search-results hidden>
+      <p class="micro sidebar__results-label">ELSEWHERE IN THE DOCS</p>
+      <ul class="sidebar__results-list" data-search-results-list></ul>
+    </div>
+  </div>
+
+  <nav class="sidebar__nav" aria-label="Documentation">
+    <div class="sidebar__group sidebar__group--first"><span>INDEX</span><span>00</span></div>
+    {
+      index.map((item) => (
+        <a
+          class="sidebar__index-link"
+          href={href(item.path)}
+          aria-current={active === item.id ? 'page' : undefined}
+        >
+          <span class="sidebar__mark">{active === item.id ? '■' : '·'}</span>
+          {item.label}
+        </a>
+      ))
+    }
+
+    {
+      registry.tiers.map((tier) => (
+        <div data-tier-block={tier.id}>
+          <div class="sidebar__group">
+            <span>{tier.label}</span>
+            <span data-tier-count={tier.id}>{tier.count}</span>
+          </div>
+          {tier.components.map((component) => (
+            <a
+              class="sidebar__link"
+              data-component-link
+              data-name={component.name.toLowerCase()}
+              data-tag={component.tag}
+              href={href(`/components/${component.slug}`)}
+              aria-current={activeSlug === component.slug ? 'page' : undefined}
+            >
+              {component.name}
+            </a>
+          ))}
+        </div>
+      ))
+    }
+    <p class="sidebar__version" data-no-results hidden>NO COMPONENT MATCHES</p>
+
+    <!-- The second axis of the hierarchy: lifecycle. Groups and counts are
+         derived (registry.mjs → CEM `deprecated` + each story's own
+         `status` parameter), so a component promoted out of beta moves here
+         by itself. Each row filters the index. -->
+    <div class="sidebar__group"><span>LIFECYCLE</span><span>{registry.lifecycle.length}</span></div>
+    {
+      registry.lifecycle.map((phase) => (
+        <a class="sidebar__link sidebar__link--phase" href={href(`/components?status=${phase.id}`)}>
+          <span>{phase.label}</span>
+          <span>{phase.count}</span>
+        </a>
+      ))
+    }
+
+    <!-- One row per design system in .altitude/ds-projects.json. The count
+         beside each is that system's own scope, so the difference between the
+         library and what a brand ships is visible before you click. -->
+    <div class="sidebar__group"><span>DESIGN SYSTEMS</span><span>{systems.length}</span></div>
+    {
+      systems.map((system) => (
+        <a
+          class="sidebar__link sidebar__link--phase"
+          href={system.href}
+          data-system={system.id}
+          aria-current={system.current ? 'true' : undefined}
+        >
+          <span>{system.shortName}</span>
+          <span>{system.count}</span>
+        </a>
+      ))
+    }
+  </nav>
+
+  <!--
+    SCROLL CONTINUITY. `.sidebar__nav` is its own scroll container, and this is
+    a multi-page app: every component link is a full document load, so the nav
+    re-mounts at scrollTop 0. Clicking the last organism in a 28-item list
+    therefore threw the reader back to the top of the list, on the one
+    interaction where they are most likely to click a NEIGHBOURING item next.
+
+    Deliberately `is:inline`, and deliberately placed immediately after the
+    element it restores. A bundled Astro script is a deferred module: it would
+    run after first paint, so the reader would see the list at the top and then
+    watch it jump. Inline and in-flow, this runs while the parser is still
+    inside <aside>, before anything is painted.
+  -->
+  <script is:inline>
+    (() => {
+      const KEY = 'docs:sidebar-scroll';
+      const nav = document.currentScript.previousElementSibling;
+      if (!(nav instanceof HTMLElement)) return;
+
+      const saved = sessionStorage.getItem(KEY);
+      if (saved) nav.scrollTop = Number(saved) || 0;
+
+      // Written on the way out rather than on every scroll frame: one write per
+      // navigation, and `pagehide` (unlike `beforeunload`) also fires when the
+      // page goes into the back/forward cache.
+      const save = () => {
+        try {
+          sessionStorage.setItem(KEY, String(nav.scrollTop));
+        } catch {
+          /* private mode / quota — scroll continuity is not worth an error. */
+        }
+      };
+      addEventListener('pagehide', save);
+      nav.addEventListener('click', save);
+    })();
+  </script>
+
+  <div class="sidebar__foot">
+    <div class="sidebar__foot-row">
+      <span class="micro">THEME / <span data-theme-label>LIGHT</span></span>
+      <button class="switch" type="button" data-theme-toggle aria-label="Toggle color theme"></button>
+    </div>
+    <div class="sidebar__version">{site.footprint}</div>
+  </div>
+</aside>
+
+<script>
+  // Sidebar component filter. Filters the generated links in place and
+  // rewrites each group's count to the number still shown, which is exactly
+  // what the design canvas does (`atomsCount` = `navAtoms.length` after the
+  // query filter, altitude-ds-site.dc.html's `renderVals()`).
+  const input = document.getElementById('sidebar-search') as HTMLInputElement | null;
+  if (input) {
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>('[data-component-link]')
+    );
+    const blocks = Array.from(document.querySelectorAll<HTMLElement>('[data-tier-block]'));
+    const empty = document.querySelector<HTMLElement>('[data-no-results]');
+
+    const apply = () => {
+      const q = input.value.trim().toLowerCase();
+      for (const link of links) {
+        const name = link.dataset.name ?? '';
+        const tag = link.dataset.tag ?? '';
+        link.hidden = q !== '' && !name.includes(q) && !tag.includes(q);
+      }
+      let shown = 0;
+      for (const block of blocks) {
+        const id = block.dataset.tierBlock;
+        const visible = block.querySelectorAll<HTMLElement>(
+          '[data-component-link]:not([hidden])'
+        ).length;
+        shown += visible;
+        const counter = block.querySelector<HTMLElement>(`[data-tier-count="${id}"]`);
+        if (counter) counter.textContent = String(visible);
+        block.hidden = visible === 0 && q !== '';
+      }
+      if (empty) empty.hidden = shown !== 0;
+    };
+
+    input.addEventListener('input', apply);
+
+    /*
+     * SITE-WIDE SEARCH, layered on top of the local filter above.
+     *
+     * Pagefind is loaded LAZILY on first keystroke and never on page load: the
+     * index is ~1.8MB and most visits never search. The import specifier is
+     * built at runtime rather than written literally because Vite would
+     * otherwise try to resolve `/pagefind/pagefind.js` at BUILD time, when it
+     * does not exist yet — Pagefind runs after `astro build`, over its output.
+     *
+     * The project filter is what keeps one index serving several design
+     * systems: `dist/docs` holds every project's site, so an unfiltered query
+     * from /docs/southleft/ would surface Altitude pages. `data-docs-project`
+     * on <html> is the same value the Shell tags each page with.
+     */
+    const resultsBox = document.querySelector<HTMLElement>('[data-search-results]');
+    const resultsList = document.querySelector<HTMLElement>('[data-search-results-list]');
+    const projectId = document.documentElement.dataset.docsProject ?? '';
+    const docsBase = (document.documentElement.dataset.docsBase ?? '').replace(/\/$/, '');
+
+    let pagefind: any = null;
+    let loadFailed = false;
+    let seq = 0;
+
+    async function getPagefind() {
+      if (pagefind || loadFailed) return pagefind;
+      try {
+        const url = `${docsBase}/pagefind/pagefind.js`;
+        /*
+         * `new Function`, not a bare `import(url)`, and not `@vite-ignore`.
+         *
+         * Vite rewrites every dynamic import it can see — including one it has
+         * been told to ignore — and injects its preload helper. The index does
+         * not exist at build time (Pagefind runs AFTER astro build, over its
+         * output), so the rewritten call reached the browser as
+         * `ReferenceError: __VITE_PRELOAD__` and search silently returned
+         * nothing for every query. Building the import inside a Function body
+         * puts it beyond static analysis, which is the only reliable way to
+         * hand the browser an import Vite must not touch.
+         */
+        pagefind = await new Function('u', 'return import(u)')(url);
+        await pagefind.options({ excerptLength: 18 });
+      } catch (error) {
+        /*
+         * SAY SO. A silent catch here is the exact failure this site is built
+         * to avoid: search would appear to work, return nothing for every
+         * query, and look like "no matches" rather than "the index never
+         * loaded". The local component filter keeps working either way — that
+         * is why this degrades rather than throws — but the reason is stated.
+         *
+         * The common causes are both legitimate: `astro dev` serves no index
+         * (Pagefind runs after `astro build`), and a build that skipped the
+         * indexing step has none either.
+         */
+        loadFailed = true;
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[docs] site-wide search is unavailable: could not load ${docsBase}/pagefind/pagefind.js. ` +
+            'Component filtering still works. Run `pnpm run build:app-docs` to generate the index.',
+          error
+        );
+      }
+      return pagefind;
+    }
+
+    async function runSearch() {
+      const q = input.value.trim();
+      const mine = ++seq;
+      if (q.length < 2) {
+        if (resultsBox) resultsBox.hidden = true;
+        return;
+      }
+      const pf = await getPagefind();
+      if (!pf || !resultsBox || !resultsList) return;
+
+      const search = await pf.search(q, { filters: { project: projectId } });
+      // A slower earlier query must not overwrite a newer one's results.
+      if (mine !== seq) return;
+
+      const top = await Promise.all(search.results.slice(0, 6).map((r: any) => r.data()));
+      resultsList.innerHTML = '';
+      for (const hit of top) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = hit.url;
+        a.className = 'sidebar__result';
+        const title = document.createElement('span');
+        title.className = 'sidebar__result-title';
+        title.textContent = hit.meta?.title ?? hit.url;
+        const excerpt = document.createElement('span');
+        excerpt.className = 'micro sidebar__result-excerpt';
+        // Pagefind returns the excerpt with <mark> around the match; it is
+        // generated from the indexed text, not from user input.
+        excerpt.innerHTML = hit.excerpt;
+        a.append(title, excerpt);
+        li.append(a);
+        resultsList.append(li);
+      }
+      resultsBox.hidden = top.length === 0;
+    }
+
+    let debounce: ReturnType<typeof setTimeout>;
+    input.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(runSearch, 140);
+    });
+    // A query typed on any page should be able to escalate to the full index —
+    // this design system's index, which is what `data-docs-site` carries (the
+    // base plus this project's route prefix).
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      const q = input.value.trim();
+      const root =
+        document.querySelector<HTMLAnchorElement>('.sidebar__brand')?.getAttribute('href') ?? '';
+      const prefix = root.replace(/\/$/, '');
+      window.location.href = q
+        ? `${prefix}/components?q=${encodeURIComponent(q)}`
+        : `${prefix}/components`;
+    });
+  }
+</script>

@@ -1,1 +1,3 @@
-export * from './Send';
+'use client';
+
+export * from './Send.js';

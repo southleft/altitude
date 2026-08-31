@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Altitude story fixture</title>
+    <!--
+      REGISTRY FLAG, INLINE AND FIRST — load-bearing, not a convenience.
+
+      Composites read `window.alAutoRegistry` at MODULE-EVAL time to choose the
+      tag they render their sub-components under. ESM imports hoist, so setting
+      this from application JS runs too late and a composite silently renders
+      unregistered children. See .altitude/REGISTRATION.md.
+    -->
+    <script>
+      window.alAutoRegistry = true;
+    </script>
+    <link rel="stylesheet" href="../styles/main.scss" />
+  </head>
+  <body>
+    <!--
+      `#storybook-root` keeps its Storybook name deliberately: it is the
+      selector `scripts/build-a11y-report.mjs` waits for and scopes axe to.
+      Renaming it would break a working consumer to no benefit.
+    -->
+    <div id="storybook-root"></div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

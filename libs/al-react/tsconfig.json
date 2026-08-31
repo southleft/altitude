@@ -9,13 +9,49 @@
   "typeRoots": ["./types", "./node_modules/@types", "./src"],
   "compilerOptions": {
     "allowJs": true,
-    "jsx": "react",
+    // `react` (the CLASSIC runtime) emits bare `React.createElement` calls and
+    // injects no import, so every module with JSX must import React itself.
+    // 64 of the 65 story files do not — `Button.stories.tsx` builds JSX in
+    // module-scope `args` and threw `ReferenceError: React is not defined` on
+    // load, taking the whole story file with it. Vite's esbuild transform reads
+    // this field, so the Storybook preview inherited it.
+    //
+    // `react-jsx` (the automatic runtime, React 17+) injects
+    // `react/jsx-runtime` itself. Modules that DO import React keep working,
+    // and `tsc`'s emitted output is unchanged: nothing in this file's `include`
+    // list contains JSX (the 66 wrappers are `createComponent` calls).
+    "jsx": "react-jsx",
     "target": "es6",
-    "moduleResolution": "node",
-    "module": "ES2020",
+    // `bundler` (not `node`) because @southleft/al-web-components now publishes an
+    // `exports` map: classic `node` resolution ignores `exports` entirely, so
+    // every `@southleft/al-web-components/components/*` subpath failed TS2307 while Vite
+    // resolved it fine. `bundler` reads `exports` and requires `module` to be
+    // `esnext`/`preserve`, hence the change just below.
+    "moduleResolution": "bundler",
+    "module": "esnext",
     "declaration": true,
     "esModuleInterop": true,
+    // `rootDir` is PINNED, and the pin is load-bearing.
+    //
+    // Without it, tsc infers the common source directory from the input set —
+    // which includes `package.json` (all 66 wrappers do
+    // `import PackageJson from '../../../package.json'` for the `register({
+    // suffix })` version, and `resolveJsonModule` puts it in the program). The
+    // inferred root was therefore the PACKAGE root, not `src`, so the emit
+    // landed at `dist/src/index.js` while `package.json` declared
+    // `main: dist/index.js` — an entry point that did not exist. `apps/react`
+    // worked around it by deep-importing `@southleft/al-react/dist/src`.
+    //
+    // Pinning `src` makes the emit match the manifest, and the JSON specifier
+    // stays correct by construction: `src/` and `dist/` are both one level
+    // below the package root, so `../../../package.json` resolves to the real
+    // `libs/al-react/package.json` from `dist/components/X/X.js` exactly as it
+    // does from `src/components/X/X.tsx`. It also stops tsc emitting a
+    // `dist/package.json` copy — the file that shadowed `/package.json` and
+    // broke every story when `.storybook/main.ts` served `staticDirs:
+    // ['../dist']`.
     "outDir": "dist",
+    "rootDir": "src",
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,

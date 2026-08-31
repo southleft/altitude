@@ -1,11 +1,10 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/chevron-right';
 import './link';
 
 export default {
-  title: 'Atoms/Link',
+  title: 'Atoms/Text/Link',
   component: 'al-link',
   tags: [ 'autodocs' ],
   parameters: {
@@ -15,7 +14,6 @@ export default {
       handles: ['click']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },
@@ -44,7 +42,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-link ${spread(args)} data-testid="link">Link<al-icon-chevron-right></al-icon-chevron-right></al-link>`;
+const Template = (args) => html`<al-link ${spread(args)} data-testid="link">Text link<al-icon-chevron-right></al-icon-chevron-right></al-link>`;
 
 export const Default = Template.bind({});
 Default.args = {};

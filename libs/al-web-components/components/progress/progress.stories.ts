@@ -1,7 +1,5 @@
-import { within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './progress';
 
 export default {
@@ -14,7 +12,6 @@ export default {
       handles: ['onProgressChange' ]
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isCircle: {
       control: 'boolean'
@@ -269,91 +266,3 @@ const updateProgress = (canvasElement, changeValue = 1, intervalMs = 10) => {
 
 const incrementUnits = 10;
 const decrementUnits = -10;
-
-Default.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-DefaultReversed.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, -1);
-};
-
-DefaultShowLabel.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-DefaultShowLabelRatio.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, incrementUnits);
-};
-
-DefaultReversedShowLabel.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, -1);
-};
-
-DefaultReversedShowLabelRatio.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, -1);
-};
-
-Circle.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleReversed.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, -1);
-};
-
-CircleShowLabel.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleShowLabelRatio.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, incrementUnits);
-};
-
-CircleMd.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleMdReversed.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, -1);
-};
-
-CircleMdShowLabel.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleMdShowLabelRatio.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, incrementUnits);
-};
-
-CircleLg.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleLgReversed.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, -1);
-};
-
-CircleLgShowLabel.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleLgShowLabelRatio.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, incrementUnits);
-};
-
-CircleXl.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleXlReversed.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, -1);
-};
-
-CircleXlShowLabel.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement);
-};
-
-CircleXlShowLabelRatio.play = async ({ canvasElement }) => {
-  updateProgress(canvasElement, incrementUnits);
-};

@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/calendar';
 import '../icon/icons/warning-circle';
 import '../list-item/list-item';
@@ -21,7 +20,7 @@ const dataSource = [
 ];
 
 export default {
-  title: 'Molecules/Select',
+  title: 'Atoms/Form/Select',
   component: 'al-select',
   tags: [ 'autodocs' ],
   parameters: {
@@ -31,7 +30,6 @@ export default {
       handles: ['onSelectOpen', 'onSelectClose']
     }
   },
-  decorators: [ withActions ],
   args: {
     label: 'Select Option',
     fieldNote: 'This is a field note.',

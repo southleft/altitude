@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALSelect as ALWebSelect } from 'al-web-components/dist/components/select/select';
-import register from 'al-web-components/dist/directives/register';
+import { ALSelect as ALWebSelect } from '@southleft/al-web-components/components/select';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebSelect.el, ALWebSelect],
@@ -13,5 +15,8 @@ export const ALSelect = createComponent({
   react: React,
   tagName: elementMap.get(ALWebSelect.el),
   elementClass: ALWebSelect,
-  events: {}
+  events: {
+    onSelectClose: 'onSelectClose',
+    onSelectOpen: 'onSelectOpen'
+  }
 });

@@ -1,8 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './accordion-panel';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
 
 export default {
   title: 'Atoms/Accordion Panel',
@@ -14,7 +13,6 @@ export default {
       handles: ['onAccordionPanelOpen', 'onAccordionPanelClose']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isDisabled: { control: 'boolean' },
     isLast: { control: 'boolean' },

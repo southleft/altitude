@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALHeader as ALWebHeader } from 'al-web-components/dist/components/header/header';
-import register from 'al-web-components/dist/directives/register';
-import PackageJson from '../../../package.json';
+import { ALHeader as ALWebHeader } from '@southleft/al-web-components/components/header';
+import register from '@southleft/al-web-components/directives/register';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebHeader.el, ALWebHeader],

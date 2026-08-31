@@ -1,0 +1,173 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #COMMAND-PALETTE
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  /**
+   * Command palette
+   * - Displays a dimmed backdrop when the palette is active, mirroring al-dialog.
+   */
+  .al-c-command-palette {
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: background-color var(--al-theme-animation-duration-role-slow, var(--al-theme-animation-duration-long)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+      background-color: transparent;
+    }
+
+    &.al-is-active::after {
+      pointer-events: all;
+      z-index: var(--al-z-index-500);
+      background-color: var(--al-theme-color-background-transparent-strong);
+    }
+  }
+
+  /**
+   * Palette container
+   * - Fixed near the top of the viewport, the canonical cmd/ctrl+k position
+   */
+  .al-c-command-palette__container {
+    transition: opacity var(--al-theme-animation-duration-role-slow, var(--al-theme-animation-duration-long)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing)), visibility var(--al-theme-animation-duration-role-slow, var(--al-theme-animation-duration-long)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    width: 100%;
+    max-width: var(--al-command-palette-width, 560px);
+    max-height: 60vh;
+    position: fixed;
+    inset-block-start: 15vh;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-lg));
+    box-shadow: var(--al-theme-box-shadow-lg);
+    background-color: var(--al-theme-color-background-default);
+    z-index: var(--al-z-index-top);
+    overflow: hidden;
+
+    @media all and (max-width: $al-breakpoint-sm) {
+      inset-block-start: 0;
+      width: 100vw;
+      max-width: 100vw;
+      max-height: 100vh;
+      height: 100vh;
+      border-radius: 0;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    .al-is-active & {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  /**
+   * Search field row
+   */
+  .al-c-command-palette__search {
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space-sm);
+    padding: var(--al-theme-space-md);
+    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  }
+
+  .al-c-command-palette__search-icon {
+    flex: none;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .al-c-command-palette__input {
+    all: unset;
+    box-sizing: border-box;
+    flex: 1;
+    @include al-theme-typography-body-md;
+    color: var(--al-theme-color-content-default);
+
+    &::placeholder {
+      color: var(--al-theme-color-content-default-weak);
+    }
+  }
+
+  /**
+   * Results list
+   */
+  .al-c-command-palette__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--al-theme-space-xxs) 0;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .al-c-command-palette__group {
+    @include al-theme-typography-body-xs-bold;
+    padding: var(--al-theme-space-xs) var(--al-theme-space-md);
+    color: var(--al-theme-color-content-default-weak);
+    text-transform: uppercase;
+  }
+
+  .al-c-command-palette__option {
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space-sm);
+    padding: var(--al-theme-space-sm) var(--al-theme-space-md);
+    @include al-theme-typography-body-sm;
+    color: var(--al-theme-color-content-default);
+    cursor: pointer;
+
+    &.al-is-active {
+      background-color: var(--al-theme-color-background-default-strong);
+    }
+  }
+
+  .al-c-command-palette__option-icon {
+    flex: none;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .al-c-command-palette__empty {
+    @include al-theme-typography-body-sm;
+    padding: var(--al-theme-space-md);
+    color: var(--al-theme-color-content-default-weak);
+    text-align: center;
+  }
+
+  /**
+   * Keyboard hint footer
+   */
+  .al-c-command-palette__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space-md);
+    padding: var(--al-theme-space-xs) var(--al-theme-space-md);
+    border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    @include al-theme-typography-body-xs;
+    color: var(--al-theme-color-content-default-weak);
+
+    kbd {
+      font: inherit;
+      padding: 0 var(--al-theme-space-xxs);
+      border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+      border-radius: var(--al-theme-border-radius-xs);
+      margin-inline-end: var(--al-theme-space-xxxs);
+    }
+  }
+}

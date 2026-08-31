@@ -1,52 +1,85 @@
 {
-  "name": "al-react",
+  "name": "@southleft/al-react",
   "description": "The React powered design system for web applications",
-  "version": "1.0.0",
-  "private": true,
-  "license": "UNLICENSED",
-  "packageManager": "yarn@1.22.21",
-  "main": "dist/index.js",
-  "scripts": {
-    "start": "storybook dev -p 9009",
-    "build": "yarn del-cli dist && tsc && cp -r ./.storybook/static/images ./dist/images && cp -r ../al-web-components/dist/css ./dist",
-    "build:storybook": "storybook build",
-    "plop": "plop --plopfile plop/plop-config.js"
+  "version": "2.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southleft/altitude.git",
+    "directory": "libs/al-react"
   },
-  "entry": "dist/index.js",
+  "homepage": "https://altitude.pages.dev/docs",
+  "bugs": {
+    "url": "https://github.com/southleft/altitude/issues"
+  },
+  "keywords": [
+    "design-system",
+    "react",
+    "web-components",
+    "lit",
+    "design-tokens",
+    "altitude",
+    "southleft"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//type": "See the note of the same name in @southleft/al-web-components. tsc emits ESM here (`module: esnext`), so dist/*.js is ESM and must be declared as such. plop/plop-config was renamed to .cjs for this.",
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*/index.d.ts",
+      "default": "./dist/components/*/index.js"
+    },
+    "./css/*": "./dist/css/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "start": "pnpm --dir ../.. exec vitest run --project react",
+    "build": "pnpm exec del-cli dist && tsc && node scripts/copy-dist-assets.mjs",
+    "plop": "plop --plopfile plop/plop-config.cjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE"
   ],
   "dependencies": {
-    "@lit/react": "^1.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@lit/react": "^1.0.6",
+    "@southleft/al-web-components": "workspace:*"
+  },
+  "//peerDependencies": "react/react-dom are PEERS, not dependencies. They were plain `dependencies` until now, which let a consumer's install resolve a SECOND copy of React under node_modules/@southleft/al-react — two react instances in one tree means `Invalid hook call` and a dead context/reconciler boundary, and npm would never warn because the constraint was satisfied locally. They stay in devDependencies below so this workspace still builds and tests on its own.",
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/plugin-proposal-decorators": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
-    "@babel/preset-react": "^7.23.3",
-    "@babel/preset-typescript": "^7.23.3",
-    "@etchteam/storybook-addon-status": "^4.2.4",
-    "@storybook/addon-a11y": "^7.6.17",
-    "@storybook/addon-essentials": "^7.6.17",
-    "@storybook/manager-api": "^7.6.17",
-    "@storybook/react-webpack5": "^7.6.17",
-    "@storybook/theming": "^7.6.17",
     "@types/node": "^20.11.10",
-    "@types/react-dom": "^18.2.18",
-    "@types/react": "^18.2.48",
-    "babel-loader": "^9.1.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.3",
     "classnames": "^2.5.1",
-    "css-loader": "^6.10.0",
     "del-cli": "^5.1.0",
     "plop": "^4.0.1",
-    "raw-loader": "^4.0.2",
-    "sass-loader": "^14.1.0",
+    "react": "^19",
+    "react-dom": "^19",
+    "remark-gfm": "4",
     "sass": "^1.70.0",
-    "storybook-theme-switch-addon": "^0.0.6",
-    "style-loader": "^3.3.4",
-    "typescript": "^5.3.3"
-  }
+    "typescript": "^5.7",
+    "vite": "^7.1.12"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "./dist/components/**"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "author": "Southleft, LLC"
 }

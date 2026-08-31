@@ -1,0 +1,388 @@
+---
+// "04 / try-the-system" — spec 2026-08-20-southleft-example-app, T12
+// audit-2 round (E). Transcribed from v5's TokenPlayground.astro: a live
+// token editor (accent/radius/space/mode/wdth controls) driving a local
+// preview card, plus an "Act 2" prompt form that derives a full site theme.
+// Static fidelity first (structure/copy/anatomy match v5), then real
+// wiring: the LOCAL preview is fully self-contained (matches v5's own
+// local-only CSS-custom-property approach — no site dependency, same as
+// v5). "Apply to the whole site" writes real values onto `#sl-theme`
+// (mode attribute, density attribute for space, and scoped custom-property
+// overrides for accent/radius — the same shadow-piercing technique
+// `.altitude/AI-THEME.md` documents and this app's own light-mode a11y fix
+// already uses in layout.css). The `wdth` (display font-variation) axis has
+// no site-wide hook — `al-heading` doesn't expose one — so it drives the
+// LOCAL preview only (real, not fake) and is honestly left out of "apply".
+// Act 2 reuses the SAME engine AIDirectionPanel.astro uses (one copy, see
+// that file's frontmatter comment) rather than forking a second copy.
+import SectionHeader from './SectionHeader.astro';
+---
+
+<section class="section-gap sl-section" id="playground" data-section-id="trysystem">
+  <div class="sl-container">
+    <SectionHeader
+      index="04"
+      label="try-the-system"
+      heading="Change one token. Everything agrees."
+      dek="This is the entire argument for design systems: decisions live in tokens, not scattered across components. Flip a few — the product follows, instantly."
+    />
+
+    <div class="sl-pg-grid">
+      <!-- Controls: the "token editor" -->
+      <form class="sl-terminal sl-pg-editor" id="pg-editor" aria-label="Design token controls">
+        <div class="sl-terminal__bar" aria-hidden="true">
+          <span class="sl-terminal__dot sl-terminal__dot--1"></span>
+          <span class="sl-terminal__dot sl-terminal__dot--2"></span>
+          <span class="sl-terminal__dot sl-terminal__dot--3"></span>
+          <span class="sl-terminal__title al-u-theme-typography-body-xs">tokens.css — editing</span>
+        </div>
+        <div class="sl-pg-fields">
+          <fieldset class="sl-pg-fieldset">
+            <legend class="sl-pg-legend">--sl-accent</legend>
+            <div class="sl-pg-options">
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-red-500)">
+                <input type="radio" name="pg-accent" value="red" checked />
+                <span class="al-u-is-vishidden">Brand red</span>
+              </label>
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-blue-500)">
+                <input type="radio" name="pg-accent" value="blue" />
+                <span class="al-u-is-vishidden">Brand blue</span>
+              </label>
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-green-500)">
+                <input type="radio" name="pg-accent" value="green" />
+                <span class="al-u-is-vishidden">Success green</span>
+              </label>
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-paper-400)">
+                <input type="radio" name="pg-accent" value="sand" />
+                <span class="al-u-is-vishidden">Brand sand</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="sl-pg-fieldset">
+            <legend class="sl-pg-legend">--sl-radius</legend>
+            <div class="sl-pg-options">
+              <label class="sl-pg-pill"><input type="radio" name="pg-radius" value="0px" /><span>sharp</span></label>
+              <label class="sl-pg-pill"><input type="radio" name="pg-radius" value="4px" checked /><span>system</span></label>
+              <label class="sl-pg-pill"><input type="radio" name="pg-radius" value="16px" /><span>soft</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="sl-pg-fieldset">
+            <legend class="sl-pg-legend">--sl-space</legend>
+            <div class="sl-pg-options">
+              <label class="sl-pg-pill"><input type="radio" name="pg-space" value="compact" /><span>compact</span></label>
+              <label class="sl-pg-pill"><input type="radio" name="pg-space" value="system" checked /><span>system</span></label>
+              <label class="sl-pg-pill"><input type="radio" name="pg-space" value="comfy" /><span>comfy</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="sl-pg-fieldset">
+            <legend class="sl-pg-legend">--sl-mode</legend>
+            <div class="sl-pg-options">
+              <label class="sl-pg-pill"><input type="radio" name="pg-mode" value="dark" checked /><span>ink</span></label>
+              <label class="sl-pg-pill"><input type="radio" name="pg-mode" value="light" /><span>paper</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="sl-pg-fieldset sl-pg-slider">
+            <legend class="sl-pg-legend">--sl-display-wdth <span id="pg-wdth-out">125</span></legend>
+            <input type="range" name="pg-wdth" min="100" max="200" value="125" step="5" aria-label="Display font width axis" />
+          </fieldset>
+          <p class="sl-pg-note al-u-theme-typography-body-xs">
+            // local preview only — al-heading has no site-wide font-variation hook to apply this to yet.
+          </p>
+
+          <button type="button" id="pg-reset" class="sl-pg-reset al-u-theme-typography-body-xs">↺ reset to system defaults</button>
+
+          <div class="sl-pg-apply">
+            <button type="button" id="pg-apply" class="sl-pg-apply-btn al-u-theme-typography-body-sm">⚡ apply to the whole site</button>
+            <p class="al-u-theme-typography-body-xs">Yes, really — accent, radius, space, and mode write straight onto this page's live theme scope. Your changes stick until you reset them.</p>
+          </div>
+        </div>
+      </form>
+
+      <!-- Preview: the "product" -->
+      <div class="sl-pg-stage" id="pg-stage" data-pg-mode="dark">
+        <div class="sl-pg-app">
+          <div class="sl-pg-app-bar">
+            <span class="sl-pg-dot" aria-hidden="true"></span>
+            <span class="sl-pg-app-name">acme-product / dashboard</span>
+            <span class="sl-pg-badge">built on your system</span>
+          </div>
+          <div class="sl-pg-app-body">
+            <p class="sl-pg-kicker">&lt;q3-report&gt;</p>
+            <h3 class="sl-pg-heading">Design decisions, compounding.</h3>
+            <p class="sl-pg-copy">
+              Every element on this card reads the same five tokens you're editing. No component was touched.
+            </p>
+            <div class="sl-pg-stats">
+              <div class="sl-pg-stat"><strong>214</strong><span>components</span></div>
+              <div class="sl-pg-stat"><strong>1</strong><span>source of truth</span></div>
+              <div class="sl-pg-stat"><strong>0</strong><span>rogue hex values</span></div>
+            </div>
+            <div class="sl-pg-form-row">
+              <input class="sl-pg-input" type="text" placeholder="Search components…" aria-label="Example search input" />
+              <button type="button" class="sl-pg-btn sl-pg-btn-primary">Ship it</button>
+              <button type="button" class="sl-pg-btn sl-pg-btn-ghost">Docs</button>
+            </div>
+            <div class="sl-pg-tags">
+              <span class="sl-pg-tag">tokens</span>
+              <span class="sl-pg-tag">a11y: AA</span>
+              <span class="sl-pg-tag">mcp-ready</span>
+            </div>
+          </div>
+        </div>
+        <p class="sl-pg-readout al-u-theme-typography-body-xs" id="pg-readout" aria-live="off">
+          // --sl-accent: red · radius: 4px · space: system · mode: ink · wdth: 125
+        </p>
+      </div>
+    </div>
+
+    <!-- Act two: the same alias layer, driven by AI art direction. -->
+    <div class="sl-pg-act2" id="derive">
+      <al-section-header index="act 2" label="describe a vibe" kicker=""></al-section-header>
+      <div class="sl-pg-act2-grid">
+        <div>
+          <al-heading tagName="h3" variant="md" isBold={true}>Or skip the sliders. Describe a vibe.</al-heading>
+          <p class="sl-pg-act2-copy">
+            Claude art-directs all 44 tokens at once — personality, palette, typography, texture, elevation, motion —
+            and our contrast solver keeps every combination WCAG AA. The entire site re-derives from a sentence.
+            That's what a real token architecture buys you.
+          </p>
+          <p class="sl-pg-note al-u-theme-typography-body-xs">
+            // your theme sticks until you reset it. yes, even the fonts.
+          </p>
+        </div>
+        <form id="acttwo-form" aria-label="Derive a site theme from a prompt">
+          <div class="sl-pg-act2-form-row">
+            <label class="al-u-is-vishidden" for="acttwo-input">Describe a vibe</label>
+            <input
+              id="acttwo-input"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              maxlength="80"
+              placeholder="neon tokyo rain"
+              class="sl-pg-act2-input"
+            />
+            <button type="submit" class="sl-pg-apply-btn al-u-theme-typography-body-sm">derive ↵</button>
+          </div>
+          <div class="sl-pg-act2-chips" id="acttwo-chips">
+            {
+              [
+                "child's coloring book",
+                'medieval metal album cover',
+                '1920s jazz club marquee',
+                'deep in a rainforest',
+                'stark minimal',
+              ].map((c) => (
+                <button type="button" class="sl-token-chip sl-pg-act2-chip" data-prompt={c}>
+                  {c}
+                </button>
+              ))
+            }
+          </div>
+          <p id="acttwo-status" class="sl-pg-note al-u-theme-typography-body-xs" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+
+    <p class="sl-pg-closing al-u-theme-typography-body-sm">
+      Now hand those same tokens to an AI agent over MCP and it ships UI that matches your product on the first pass
+      — no rogue styles, no drift. Making that work inside real organizations is
+      <a href="/ai-design-systems" class="sl-mono-link">the work we do</a>. Already fluent?
+      <a href="/quiz" class="sl-mono-link">Take the aptitude test</a> — we grade on conviction.
+    </p>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const editor = document.getElementById('pg-editor') as HTMLFormElement | null;
+    const stage = document.getElementById('pg-stage');
+    const readout = document.getElementById('pg-readout');
+    const wdthOut = document.getElementById('pg-wdth-out');
+
+    const ACCENT_VARS: Record<string, string> = {
+      red: '--al-color-brand-red-500',
+      blue: '--al-color-brand-blue-500',
+      green: '--al-color-brand-green-500',
+      sand: '--al-color-brand-paper-400',
+    };
+
+    if (editor && stage && readout) {
+      const DEFAULTS: Record<string, string> = {
+        'pg-accent': 'red',
+        'pg-radius': '4px',
+        'pg-space': 'system',
+        'pg-mode': 'dark',
+        'pg-wdth': '125',
+      };
+
+      // Local preview — fully self-contained, exactly mirrors v5's own
+      // local-only approach: reads the form, writes scoped custom
+      // properties + a data attribute on `#pg-stage` only. Never touches
+      // the real page theme (that's what "apply to the whole site" is for).
+      const applyLocal = () => {
+        const data = new FormData(editor);
+        const accentKey = String(data.get('pg-accent') ?? DEFAULTS['pg-accent']);
+        const radius = String(data.get('pg-radius') ?? DEFAULTS['pg-radius']);
+        const spaceKey = String(data.get('pg-space') ?? DEFAULTS['pg-space']);
+        const mode = String(data.get('pg-mode') ?? DEFAULTS['pg-mode']);
+        const wdth = String(data.get('pg-wdth') ?? DEFAULTS['pg-wdth']);
+        const spaceFactor = spaceKey === 'compact' ? '0.7' : spaceKey === 'comfy' ? '1.35' : '1';
+
+        const accentVarName = ACCENT_VARS[accentKey] ?? ACCENT_VARS.red;
+        stage.style.setProperty('--pg-accent', `var(${accentVarName})`);
+        stage.style.setProperty('--pg-radius', radius);
+        stage.style.setProperty('--pg-space', spaceFactor);
+        stage.style.setProperty('--pg-wdth', wdth);
+        stage.setAttribute('data-pg-mode', mode);
+        if (wdthOut) wdthOut.textContent = wdth;
+
+        readout.textContent = `// --sl-accent: ${accentKey} · radius: ${radius} · space: ${spaceKey} · mode: ${mode === 'dark' ? 'ink' : 'paper'} · wdth: ${wdth}`;
+      };
+
+      editor.addEventListener('input', applyLocal);
+      applyLocal();
+
+      // "Apply to the whole site" — real values, not a simulation: mode
+      // writes the same `#sl-theme` mode attribute the header toggle uses;
+      // space maps to `<al-theme density>`'s compact/cozy axis (the closest
+      // real 3-step ramp this token surface exposes); accent/radius write
+      // scoped custom-property overrides directly on `#sl-theme` — the
+      // same shadow-piercing technique `.altitude/AI-THEME.md` documents
+      // and this file's own light-mode a11y fix already uses.
+      const APPLIED_KEYS = [
+        '--al-theme-color-content-primary-default',
+        '--al-theme-color-content-primary-strong',
+        '--al-theme-color-background-primary-default',
+        '--al-theme-border-radius',
+        '--al-theme-border-radius-sm',
+        '--al-theme-border-radius-md',
+        '--al-theme-border-radius-lg',
+      ];
+
+      document.getElementById('pg-apply')?.addEventListener('click', () => {
+        const themeHost = document.getElementById('sl-theme') as HTMLElement | null;
+        if (!themeHost) return;
+        const data = new FormData(editor);
+        const accentKey = String(data.get('pg-accent') ?? DEFAULTS['pg-accent']);
+        const radius = String(data.get('pg-radius') ?? DEFAULTS['pg-radius']);
+        const spaceKey = String(data.get('pg-space') ?? DEFAULTS['pg-space']);
+        const mode = String(data.get('pg-mode') ?? DEFAULTS['pg-mode']);
+
+        const accentVarName = ACCENT_VARS[accentKey] ?? ACCENT_VARS.red;
+        themeHost.style.setProperty('--al-theme-color-content-primary-default', `var(${accentVarName})`);
+        themeHost.style.setProperty('--al-theme-color-content-primary-strong', `var(${accentVarName})`);
+        themeHost.style.setProperty('--al-theme-color-background-primary-default', `var(${accentVarName})`);
+
+        const radiusScale: Record<string, [string, string, string]> =
+          radius === '0px' ? ['0px', '0px', '0px'] : radius === '16px' ? ['8px', '12px', '20px'] : null as unknown as [string, string, string];
+        if (radiusScale) {
+          themeHost.style.setProperty('--al-theme-border-radius', radiusScale[0]);
+          themeHost.style.setProperty('--al-theme-border-radius-sm', radiusScale[0]);
+          themeHost.style.setProperty('--al-theme-border-radius-md', radiusScale[1]);
+          themeHost.style.setProperty('--al-theme-border-radius-lg', radiusScale[2]);
+        } else {
+          themeHost.style.removeProperty('--al-theme-border-radius');
+          themeHost.style.removeProperty('--al-theme-border-radius-sm');
+          themeHost.style.removeProperty('--al-theme-border-radius-md');
+          themeHost.style.removeProperty('--al-theme-border-radius-lg');
+        }
+
+        if (spaceKey === 'compact') themeHost.setAttribute('density', 'compact');
+        else if (spaceKey === 'comfy') themeHost.setAttribute('density', 'cozy');
+        else themeHost.removeAttribute('density');
+
+        themeHost.setAttribute('mode', mode);
+        try {
+          localStorage.setItem('sl-mode', mode);
+        } catch {
+          /* ignore */
+        }
+
+        document.dispatchEvent(new CustomEvent('sl:toast', { detail: { message: 'tokens applied site-wide. this is not a simulation.' } }));
+      });
+
+      document.getElementById('pg-reset')?.addEventListener('click', () => {
+        for (const [name, value] of Object.entries(DEFAULTS)) {
+          const field = editor.elements.namedItem(name);
+          if (field instanceof RadioNodeList) field.value = value;
+          else if (field instanceof HTMLInputElement) field.value = value;
+        }
+        applyLocal();
+
+        const themeHost = document.getElementById('sl-theme') as HTMLElement | null;
+        if (themeHost) {
+          for (const key of APPLIED_KEYS) themeHost.style.removeProperty(key);
+          themeHost.removeAttribute('density');
+        }
+      });
+    }
+  });
+</script>
+
+<script>
+  // Act 2 — reuses the SAME deterministic + AI engine AIDirectionPanel.astro
+  // wires up (one copy of buildTheme/applyTheme/THEME_API, not a fork; see
+  // that file's frontmatter comment for why exactly one copy exists).
+  document.addEventListener('DOMContentLoaded', async () => {
+    const form = document.getElementById('acttwo-form');
+    const input = document.getElementById('acttwo-input') as HTMLInputElement | null;
+    const status = document.getElementById('acttwo-status');
+    if (!form || !input) return;
+
+    const { buildTheme, applyTheme, THEME_API } = await import('@southleft/al-web-components/theme-engine');
+    const { applyLayout } = await import('../lib/layout-resolver');
+
+    let requestId = 0;
+
+    async function derive(prompt: string) {
+      const trimmed = prompt.trim();
+      if (!trimmed) return;
+      const thisRequest = ++requestId;
+      if (status) status.textContent = 'Deriving…';
+
+      const local = buildTheme({ prompt: trimmed });
+      applyTheme({ palette: local.palette, mode: local.mode });
+      applyLayout(local.layout);
+      if (status) status.textContent = `Deterministic preview — "${local.name || 'untitled'}"`;
+
+      try {
+        const res = await fetch(THEME_API, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ prompt: trimmed }),
+        });
+        if (thisRequest !== requestId) return;
+        if (!res.ok) {
+          if (status) status.textContent = `Deterministic preview (AI unavailable) — "${local.name || 'untitled'}"`;
+          return;
+        }
+        const direction = await res.json();
+        const aiTheme = buildTheme({ prompt: trimmed, direction });
+        if (thisRequest !== requestId) return;
+        applyTheme({ palette: aiTheme.palette, mode: aiTheme.mode });
+        applyLayout(aiTheme.layout);
+        if (status) status.textContent = `AI-derived — "${aiTheme.name || 'untitled'}"`;
+      } catch {
+        if (thisRequest !== requestId) return;
+        if (status) status.textContent = `Deterministic preview (AI unreachable) — "${local.name || 'untitled'}"`;
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      derive(input.value);
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('#acttwo-chips [data-prompt]').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        input.value = chip.dataset.prompt || '';
+        derive(chip.dataset.prompt || '');
+      });
+    });
+  });
+</script>

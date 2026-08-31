@@ -22,6 +22,8 @@ import styles from './time-selector-list.scss';
 
 /**
  * Component: al-time-selector-list
+ *
+ * @event onTimeSelectorListChange - Fired when a time is selected. Detail: `{ value }` — formatted per `timeFormat`.
  */
 export class ALTimeSelectorList extends ALElement {
   static el = 'al-time-selector-list';
@@ -31,10 +33,10 @@ export class ALTimeSelectorList extends ALElement {
   }
 
   /**
-   * Determines the orientation of the time selector ('horizontal' renders items in a row).
+   * Determines the direction of the time selector ('row' renders items in a row).
    */
   @property()
-  accessor orientation: 'horizontal';
+  accessor direction: 'row';
 
   /**
    * Sets a specific time to be active (24-hour format, e.g., activeTime="16:00" for 4 PM).
@@ -273,7 +275,7 @@ export class ALTimeSelectorList extends ALElement {
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-time-selector-list', {
-      'al-c-time-selector-list--horizontal': this.orientation === 'horizontal'
+      'al-c-time-selector-list--row': this.direction === 'row'
     });
 
     return html`

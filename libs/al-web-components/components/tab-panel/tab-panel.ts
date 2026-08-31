@@ -6,7 +6,7 @@ import styles from './tab-panel.scss';
 
 /**
  * Component: al-tab-panel
- * - **slot**: The tab panel content
+ * @slot - The tab panel content
  */
 export class ALTabPanel extends ALElement {
   static el = 'al-tab-panel';

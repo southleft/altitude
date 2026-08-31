@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["winner", "justification", "action", "confidence"],
+  "additionalProperties": false,
+  "properties": {
+    "winner": {
+      "enum": ["code", "canvas", "ask-a-human"],
+      "description": "Which side is the source of truth for this disagreement."
+    },
+    "justification": {
+      "type": "string",
+      "description": "The rule that decides it, not a restatement of the scenario."
+    },
+    "action": {
+      "type": "string",
+      "description": "The concrete next step."
+    },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "sourceUsed": { "type": "array", "items": { "type": "string" } }
+  }
+}

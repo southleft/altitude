@@ -1,0 +1,51 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #FOOTER
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  /**
+   * The footer landmark — block rhythm, block padding and content colour, all
+   * from theme tokens so the footer stays density-aware inside any
+   * `<al-theme density="...">` scope.
+   *
+   * 1. The single flex column is the one arrangement opinion, and the minimum
+   *    that makes stacked rows behave: children stack in source order with a
+   *    consistent gap. Everything WITHIN a row is the slotted `<al-layout>`'s
+   *    call, and a rule between rows is an `<al-divider>` the page places.
+   * 2. No inline padding: the page measure belongs to
+   *    `<al-layout variant="constrained">`, not to the footer.
+   */
+  .al-c-footer {
+    display: flex; /* 1 */
+    flex-direction: column; /* 1 */
+    gap: var(--al-footer-gap, var(--al-theme-space-lg));
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding-block: var(--al-footer-padding-block, calc(var(--al-theme-space) * 3)); /* 2 */
+    color: var(--al-theme-color-content-default);
+    /**
+     * 3. A sunken surface and a hairline rule separating the footer from the
+     *    page above it are FOOTER CHROME — the same category as the block
+     *    padding and content colour this component already owns. Neither can
+     *    be applied from outside: `:host` is `display: contents`, so this is
+     *    the only box, and it lives in the shadow root.
+     *
+     *    Without these hooks a consumer's only recourse is to re-materialise
+     *    the host with `display: block` from the document tree and paint
+     *    there — which works (document rules beat `:host`) but silently
+     *    reintroduces the extra box `display: contents` exists to remove, and
+     *    puts the background on a different element than the padding. Both
+     *    default to `none`/`transparent`, so existing footers are unchanged.
+     *
+     *    Mirrors `--al-header-border-block-end` / `--al-header-backdrop-filter`
+     *    on `al-header`.
+     */
+    background: var(--al-footer-background, transparent); /* 3 */
+    border-block-start: var(--al-footer-border-block-start, none); /* 3 */
+  }
+}

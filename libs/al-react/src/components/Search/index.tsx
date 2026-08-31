@@ -1,1 +1,3 @@
-export * from './Search';
+'use client';
+
+export * from './Search.js';

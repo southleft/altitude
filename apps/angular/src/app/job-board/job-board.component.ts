@@ -1,32 +1,39 @@
 import { Component } from '@angular/core';
 
-import "al-web-components/dist/components/badge/badge.js";
-import "al-web-components/dist/components/button-group/button-group.js";
-import "al-web-components/dist/components/button/button.js";
-import "al-web-components/dist/components/card/card.js";
-import "al-web-components/dist/components/checkbox-group/checkbox-group.js";
-import "al-web-components/dist/components/checkbox/checkbox.js";
-import "al-web-components/dist/components/chip-group/chip-group.js";
-import "al-web-components/dist/components/dialog/dialog.js";
-import "al-web-components/dist/components/divider/divider.js";
-import "al-web-components/dist/components/heading/heading.js";
-import "al-web-components/dist/components/icon/icons/filter.js";
-import "al-web-components/dist/components/icon/icons/pin.js";
-import "al-web-components/dist/components/icon/icons/star.js";
-import "al-web-components/dist/components/input/input.js";
-import "al-web-components/dist/components/link/link.js";
-import "al-web-components/dist/components/list/list.js";
-import "al-web-components/dist/components/list-item/list-item.js";
-import "al-web-components/dist/components/pagination/pagination.js";
-import "al-web-components/dist/components/radio-group/radio-group.js";
-import "al-web-components/dist/components/radio/radio.js";
-import "al-web-components/dist/components/range/range.js";
-import "al-web-components/dist/components/search/search.js";
-import "al-web-components/dist/components/select/select.js";
-import "al-web-components/dist/components/text-passage/text-passage.js";
+import "@southleft/al-web-components/components/badge";
+import "@southleft/al-web-components/components/layout";
+import "@southleft/al-web-components/components/button";
+import "@southleft/al-web-components/components/card";
+import "@southleft/al-web-components/components/checkbox-group";
+import "@southleft/al-web-components/components/checkbox";
+import "@southleft/al-web-components/components/dialog";
+import "@southleft/al-web-components/components/divider";
+import "@southleft/al-web-components/components/heading";
+import "@southleft/al-web-components/components/icon/icons/filter";
+import "@southleft/al-web-components/components/icon/icons/pin";
+import "@southleft/al-web-components/components/icon/icons/star";
+import "@southleft/al-web-components/components/input";
+import "@southleft/al-web-components/components/link";
+import "@southleft/al-web-components/components/list";
+import "@southleft/al-web-components/components/list-item";
+import "@southleft/al-web-components/components/pagination";
+import "@southleft/al-web-components/components/radio-group";
+import "@southleft/al-web-components/components/radio";
+import "@southleft/al-web-components/components/range";
+import "@southleft/al-web-components/components/search";
+import "@southleft/al-web-components/components/select";
+import "@southleft/al-web-components/components/stat";
+
+interface JobListing {
+  title: string;
+  location: string;
+  tags: string[];
+  postedAgo: string;
+}
 
 @Component({
   selector: 'app-job-board',
+  standalone: false,
   templateUrl: './job-board.component.html',
   styleUrl: './job-board.component.scss'
 })
@@ -39,4 +46,16 @@ export class JobBoardComponent {
     'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
   ];
 
+  jobs: JobListing[] = [
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], postedAgo: '1 day ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], postedAgo: '1 day ago' },
+    { title: 'Junior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems', 'Remote'], postedAgo: '1 day ago' },
+    { title: 'Back-end Developer', location: 'New Orleans, LA', tags: ['Software', 'API'], postedAgo: '2 days ago' },
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], postedAgo: '2 days ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], postedAgo: '3 days ago' },
+    { title: 'Junior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems', 'Remote'], postedAgo: '3 days ago' },
+    { title: 'Back-end Developer', location: 'New Orleans, LA', tags: ['Software', 'API'], postedAgo: '3 days ago' },
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], postedAgo: '4 days ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], postedAgo: '4 days ago' },
+  ];
 }

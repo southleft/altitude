@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALPagination as ALWebPagination } from 'al-web-components/dist/components/pagination/pagination';
-import register from 'al-web-components/dist/directives/register';
-import PackageJson from '../../../package.json';
+import { ALPagination as ALWebPagination } from '@southleft/al-web-components/components/pagination';
+import register from '@southleft/al-web-components/directives/register';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebPagination.el, ALWebPagination],
@@ -13,5 +15,7 @@ export const ALPagination = createComponent({
   react: React,
   tagName: elementMap.get(ALWebPagination.el),
   elementClass: ALWebPagination,
-  events: {}
+  events: {
+    onPaginationChange: 'onPaginationChange'
+  }
 });

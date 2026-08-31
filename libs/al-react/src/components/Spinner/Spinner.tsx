@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALSpinner as ALWebSpinner } from 'al-web-components/dist/components/spinner/spinner';
-import register from 'al-web-components/dist/directives/register';
+import { ALSpinner as ALWebSpinner } from '@southleft/al-web-components/components/spinner';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebSpinner.el, ALWebSpinner],

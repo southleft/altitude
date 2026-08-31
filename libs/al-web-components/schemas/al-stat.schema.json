@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-stat.schema.json",
+  "title": "ALStat (al-stat)",
+  "description": "Component: al-stat\n\nA single KPI tile — value, label, and an optional trend delta with a\ndirectional chevron. Follows the design system's canonical stat-card\ncontract (value/label/trend/delta/invertPolarity). Composes into a \"KPI\nband\" by placing several `<al-stat>` inside a grid (see the KPI Band\nstory) or an `<al-layout variant=\"bento\">`.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-stat",
+    "className": "ALStat",
+    "module": "components/stat/stat.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "Optional leading icon, rendered above the value.",
+        "name": "icon"
+      }
+    ],
+    "events": [],
+    "cssParts": [
+      {
+        "name": "container",
+        "description": ""
+      },
+      {
+        "name": "value",
+        "description": ""
+      },
+      {
+        "name": "trend",
+        "description": ""
+      }
+    ],
+    "cssProperties": [
+      {
+        "description": "Text color of the value. Defaults to `--al-theme-color-content-default`.",
+        "name": "--al-stat-value-color"
+      }
+    ]
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-stat"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "description": "The display value, e.g. \"1,234\" or \"$4.2M\". Typed as a string — the\nconsumer owns locale formatting, digit grouping, and unit suffixes.",
+          "type": "string"
+        },
+        "label": {
+          "description": "The metric's label, e.g. \"Active users\".",
+          "type": "string"
+        },
+        "description": {
+          "description": "Optional supporting description rendered below the trend row.",
+          "type": "string"
+        },
+        "trend": {
+          "description": "Trend direction.\n- **none** (default) No trend indicator is rendered\n- **up** Renders an up chevron\n- **down** Renders a down chevron",
+          "type": "string",
+          "enum": [
+            "up",
+            "down",
+            "none"
+          ]
+        },
+        "delta": {
+          "description": "The delta text, e.g. \"+12%\". Renders next to the trend chevron. The\ntrend row only renders when this is a non-empty string.",
+          "type": "string"
+        },
+        "invertPolarity": {
+          "description": "Flips ONLY the success/danger color mapping for metrics where a lower\nnumber is better (cost, latency, churn). The chevron direction and the\naccessible \"Trending up/down\" text always reflect the literal `trend`\nvalue — only the color changes.",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

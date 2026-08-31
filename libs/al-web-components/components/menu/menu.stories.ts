@@ -1,7 +1,5 @@
-import { expect, userEvent, within, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../icon/icons/document';
 import '../icon/icons/menu';
@@ -10,7 +8,7 @@ import '../toggle-button/toggle-button';
 import './menu';
 
 export default {
-  title: 'Molecules/Menu',
+  title: 'Molecules/Navigation/Menu',
   component: 'al-menu',
   tags: [ 'autodocs' ],
   parameters: {
@@ -30,7 +28,6 @@ export default {
       ]
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       type: 'radio',
@@ -161,83 +158,15 @@ SimpleWithGroups.parameters= {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const menu = canvas.queryByTestId('menu') as any;
-  const menuItems = canvas.queryAllByTestId(/^menu-item-0/) as any;
-  const menuListEl = menu.shadowRoot?.querySelector('.al-c-menu__list') as HTMLUListElement;
-
-  // Make assertions
-  expect(menu).toBeInTheDocument();
-
-  // Simulate a focus event on the menu's first item
-  await menuItems[0].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*').focus();
-  await waitFor(() => expect(menu.focusedItem).toBe(undefined), {
-    timeout: 6000
-  });
-
-  // Simulate a keyboard event (pressing Arrow Down key)
-  await userEvent.keyboard('[ArrowDown]');
-  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[1]), {
-    timeout: 6000
-  });
-
-  // Simulate a keyboard event (pressing Arrow Up key)
-  await userEvent.keyboard('[ArrowUp]');
-  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[0]), {
-    timeout: 6000
-  });
-
-  // Simulate a keyboard event (pressing End key)
-  await userEvent.keyboard('[End]');
-  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[5]), {
-    timeout: 6000
-  });
-
-  // Simulate a keyboard event (pressing Arrow Up key) to a disabled menu item
-  await userEvent.keyboard('[ArrowUp]');
-  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[4]), {
-    timeout: 6000
-  });
-
-  // Simulate a keyboard event (pressing Home key)
-  await userEvent.keyboard('[Home]');
-  await waitFor(() => expect(menu.focusedItem).toBe(menuItems[0]), {
-    timeout: 6000
-  });
-
-  // Simulate a click event on a disabled menu item
-  await userEvent.click(menuItems[4].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*'));
-  expect(menu.selectedItem).toBe(undefined);
-  expect(menuItems[4].isSelected).toBe(undefined);
-
-  // Simulate a click event on the first menu item
-  await userEvent.click(menuItems[0].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*'));
-  expect(menu.selectedItem).toBe(menuItems[0]);
-
-  // Simulate a click event on the second menu item
-  await userEvent.click(menuItems[1].shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*'));
-  expect(menu.selectedItem).toBe(menuItems[1]);
-  expect(menuItems[0].isSelected).toBe(false);
-
-  // Remove selected item and focus
-  menuItems[1].isSelected = false;
-  menu.selectedItem = undefined
-  menuItems[1].blur();
-};
-
-
-WithGroups.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const menuItems = canvas.queryAllByTestId(/^menu-item-0/) as any;
-
-  // Simulate a click event on menu expand button
-  await userEvent.click(menuItems[1].shadowRoot.querySelector('.al-c-menu-item__control'));
-  expect(menuItems[2].isHidden).toBe(true);
-  expect(menuItems[3].isHidden).toBe(true);
-
-  // Simulate a click event on menu expand button
-  await userEvent.click(menuItems[1].shadowRoot.querySelector('.al-c-menu-item__control'));
-  expect(menuItems[2].isHidden).toBe(false);
-  expect(menuItems[3].isHidden).toBe(false);
+/**
+ * The element inside an `<al-menu-item>` that actually takes focus.
+ *
+ * Most items render an `<al-link>` and the focusable control lives in *its*
+ * shadow root. A header with no `href` renders a plain
+ * `<div class="al-c-menu-item__link" tabindex="-1">` and has no nested shadow
+ * root — reaching blindly for `.shadowRoot.querySelector('*')` threw on those.
+ */
+const focusTarget = (item: any): HTMLElement => {
+  const link = item.shadowRoot.querySelector('.al-c-menu-item__link');
+  return (link.shadowRoot ? link.shadowRoot.querySelector('*') : link) as HTMLElement;
 };

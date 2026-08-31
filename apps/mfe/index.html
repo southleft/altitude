@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Altitude — MFE coexistence fixture</title>
+    <link rel="stylesheet" href="@southleft/al-web-components/css/main.css" />
+    <style>
+      /*
+       * No `window.alAutoRegistry` here — this fixture proves the
+       * `versioned` registry mode (see src/main.js), so every Altitude tag
+       * below is a suffixed alias produced by `registerAltitude`, not the
+       * plain tag the auto-registry flag would define.
+       */
+      code {
+        background: var(--al-theme-color-background-secondary-default, rgba(127, 127, 127, 0.2));
+        padding: var(--al-theme-space-xxs, 0.1em) var(--al-theme-space-xs, 0.4em);
+        border-radius: var(--al-theme-border-radius, 3px);
+      }
+    </style>
+  </head>
+  <body>
+    <al-theme-shell brand="altitude" mode="dark">
+      <al-layout-shell gap="lg">
+        <header>
+          <al-heading-shell tagName="h1" variant="lg">Micro-frontend coexistence fixture (T0.3 + T4.6)</al-heading-shell>
+          <p>
+            Two simulated Altitude consumers registered with distinct
+            <code>versioned</code> suffixes via
+            <code>registerAltitude({mode: 'versioned', suffix})</code>.
+            The buttons on the left and right are <em>different custom-element
+            tags</em> backed by <em>different constructors</em> (one empty
+            subclass per simulated bundle — the registry rejects the same
+            constructor twice) — proving subtree isolation works for
+            multi-version MFE deployments.
+          </p>
+        </header>
+
+        <al-layout-shell variant="grid" columns="2" gap="lg">
+          <al-card-1-0-0 data-app="left">
+            <al-heading-1-0-0 slot="header" tagName="h2" variant="sm">App A (suffix <code>1-0-0</code>)</al-heading-1-0-0>
+            <div id="left-mount"></div>
+          </al-card-1-0-0>
+
+          <al-card-2-0-0 data-app="right">
+            <al-heading-2-0-0 slot="header" tagName="h2" variant="sm">App B (suffix <code>2-0-0</code>)</al-heading-2-0-0>
+            <div id="right-mount"></div>
+          </al-card-2-0-0>
+        </al-layout-shell>
+      </al-layout-shell>
+    </al-theme-shell>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,10 +1,9 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './range';
 
 export default {
-  title: 'Molecules/Range',
+  title: 'Atoms/Form/Range',
   component: 'al-range',
   tags: [ 'autodocs' ],
   parameters: {
@@ -13,7 +12,6 @@ export default {
       handles: ['onRangeDrag', 'onRangeOutputValueChange']
     }
   },
-  decorators: [ withActions ],
   args: {
     label: 'Label',
     fieldNote: 'This is a field note.'

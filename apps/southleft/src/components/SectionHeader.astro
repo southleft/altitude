@@ -1,0 +1,41 @@
+---
+// Section header — now `<al-section-header>` from @southleft/sl-web-components
+// (docs: /docs/southleft/components/section-header). The brand package owns the
+// numbered mono rule, the accent kicker, the heading and the trailing link; the
+// hand-rolled copy that used to live here has been deleted.
+//
+// The one thing this wrapper still has to do is `withBase()`. The component
+// renders `linkHref` verbatim, so passing a bare `/work` would emit a link that
+// 404s under this site's `/southleft` base path. Resolving it here keeps all
+// five call sites passing plain site-relative paths, exactly as before.
+import { withBase } from '../lib/url';
+
+interface Props {
+  index?: string;
+  label: string;
+  heading: string;
+  dek?: string;
+  linkHref?: string;
+  linkLabel?: string;
+  /**
+   * Kicker text without the angle brackets. Defaults to a slug of `label`; pass
+   * an empty string for the rule alone, or a different word where the two
+   * genuinely differ.
+   */
+  kicker?: string;
+}
+
+const { index, label, heading, dek, linkHref, linkLabel, kicker } = Astro.props;
+---
+
+<al-section-header
+  index={index}
+  label={label}
+  heading={heading}
+  dek={dek}
+  kicker={kicker}
+  link-href={linkHref ? withBase(linkHref) : undefined}
+  link-label={linkLabel}
+>
+  <slot />
+</al-section-header>

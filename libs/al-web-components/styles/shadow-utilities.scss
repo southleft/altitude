@@ -1,0 +1,7 @@
+// Shared utility surface adopted into every component's shadow root by
+// `ALElement.getSharedThemeSheet()`. Carries only the `.al-u-*` utility
+// classes (~7 KB compiled) plus the Sass variable + mixin context the
+// utility partials need. Reset, base, theme tokens, and the font @import
+// stay at the document level — they don't need to be replicated per shadow
+// root.
+@use './core/utilities';

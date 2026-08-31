@@ -1,12 +1,11 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import './input-stepper';
 
 export default {
-  title: 'Molecules/Input Stepper',
+  title: 'Molecules/Form/Input Stepper',
   component: 'al-input-stepper',
   tags: [ 'autodocs' ],
   parameters: {
@@ -16,7 +15,6 @@ export default {
       handles: ['onInputStepperChange']
     }
   },
-  decorators: [ withActions ],
   args: {
     count: '1',
     min: '0',
@@ -46,6 +44,17 @@ Disabled.args = {
 export const HiddenLabel = Template.bind({});
 HiddenLabel.args = {
   hideLabel: true,
+};
+
+/**
+ * The canvas's denser alternative, meant for table rows: the value takes the
+ * full width and the two steppers stack at the trailing edge. Note it is TALLER
+ * than the default (50px vs 40px) so each stacked button clears the 24x24
+ * minimum in WCAG 2.2 SC 2.5.8 — see input-stepper.scss.
+ */
+export const Trailing = Template.bind({});
+Trailing.args = {
+  variant: 'trailing',
 };
 
 const TemplateSlottedFieldNote = (args) => html`

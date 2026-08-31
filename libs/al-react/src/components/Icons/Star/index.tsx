@@ -1,1 +1,3 @@
-export * from './Star';
+'use client';
+
+export * from './Star.js';

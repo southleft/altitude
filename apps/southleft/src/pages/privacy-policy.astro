@@ -1,0 +1,35 @@
+---
+// Privacy Policy — spec 2026-08-20-southleft-example-app, T10.
+// Legal text migrated VERBATIM from southleft-v5's src/pages/privacy-policy.astro
+// (itself extracted verbatim from the live WordPress site) — do not rewrite,
+// only relative-link touch-ups.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+
+const policyHtml = `
+<p><em>Last updated: July 22, 2026</em></p>
+<h2>Introduction</h2>
+<p>Southleft, LLC ("we," "us," or "our") values the privacy of our website visitors. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website. Please read this policy carefully. If you do not agree with the terms, please do not access or use the site.</p>
+<h2>Information Collection and Use</h2>
+<p>We collect information about your browsing behavior via Google Analytics to analyze user patterns and improve our website. This information is only used for analytical purposes and helps us enhance user experience.</p>
+<h2>Cookies and Tracking Technologies</h2>
+<p>We use cookies to track users for analytics purposes. These cookies allow us to understand how our website is being used and help us make improvements.</p>
+<h2>Third-Party Sharing</h2>
+<p>Google Analytics is the only third party that has access to user browsing behavior. No other personal information is shared with third parties.</p>
+<h2>User Choices</h2>
+<p>You have the right to opt-out of our cookie policy. More information about how to do this can be found in our cookie policy <a href="${'/cookie-policy'}">here</a>.</p>
+<h2>Security</h2>
+<p>We take the security of your information seriously. Our website uses SSL and Cloudflare to ensure that your data is protected.</p>
+<h2>Contact Us</h2>
+<p>If you have any questions or concerns regarding this Privacy Policy, please contact us at <a href="mailto:info@southleft.com">info@southleft.com</a>.</p>
+`;
+---
+
+<Base title="Privacy Policy" description="How Southleft, LLC collects, uses, and safeguards your information when you visit our website." theme="light">
+  <div class="sl-section--tight">
+    <PageHero label="legal" heading="Privacy Policy" />
+  </div>
+  <div class="sl-container sl-section sl-container--prose">
+    <al-text-block set:html={policyHtml} />
+  </div>
+</Base>

@@ -1,0 +1,469 @@
+---
+/**
+ * Icons — the fourth INDEX screen, rendered for ONE design system.
+ *
+ * Same rule as Foundations and Motion: nothing here is typed. The names, the
+ * categories, the tags, the artwork and the deprecated-element table are all
+ * read at build time from the generated icon modules (`src/lib/icons.mjs`).
+ *
+ * HOW THE ARTWORK GETS ONTO A STATIC PAGE — the one real decision on this page.
+ *
+ * The Storybook original rendered `<al-icon>` elements and paged at 120,
+ * because it had to: each tile was a custom element with its own shadow root,
+ * and each glyph arrived through the lazy resolver as a separate dynamic
+ * import. In `storybook dev` that meant ~1,500 module requests before the page
+ * settled, which is what the 120-tile budget existed to avoid.
+ *
+ * Neither cost survives the move to a static build, and pretending otherwise
+ * would have made this page worse than the one it replaces. What is inlined
+ * instead is the raw SVG the glyph modules hold — `<svg viewBox><path d="…"/>`,
+ * straight into the document.
+ *
+ * MEASURED, on this checkout:
+ *   1,512 glyphs, 630,625 bytes of `<path>` data — 417 bytes each on average,
+ *   1,980 at the worst. Rendered with the tile markup and the tag/category
+ *   metadata the search needs, the built page is 1,240,476 bytes of HTML and
+ *   252,133 gzipped (246 KB over the wire). It is the largest page on the site
+ *   by an order of magnitude, and it is one page.
+ *
+ * WHAT THE ALTERNATIVES COST, since 1.1 MB deserves an argument:
+ *   - 1,512 `<al-icon>` elements: 1,512 shadow roots to upgrade after parse,
+ *     plus either the whole `icon/all` bundle or 1,512 lazy chunks
+ *     (`dist/icon-glyphs/` already contains exactly that many). Strictly more
+ *     bytes AND a blank page until the runtime lands.
+ *   - An external sprite (`<use href="sprite.svg#name">`): one cached file, but
+ *     external `<use>` references are inconsistently supported across engines
+ *     and fail silently when they are not — a catalog of empty boxes.
+ *   - Fetching a glyph index on demand: the smallest first paint, but it makes
+ *     the icon catalog the one page on this site that needs JavaScript to show
+ *     its content, and it needs a per-project endpoint to do it.
+ *
+ * So: inline, everything, once. No requests, no upgrade, no JS needed to SEE
+ * the catalog — script only filters what is already there, exactly as the
+ * sidebar's component filter does. `content-visibility: auto` on the tile keeps
+ * the render cost proportional to what is on screen rather than to 1,512, and
+ * `contain-intrinsic-size` keeps the scrollbar honest while it does.
+ *
+ * There is no pagination for the same reason there is no "load more": with the
+ * artwork already in the document, hiding 1,392 tiles buys nothing a browser
+ * was not already doing.
+ */
+import Shell from '../../layouts/Shell.astro';
+import {
+  ICONS,
+  ICON_COUNT,
+  ICON_CATEGORIES,
+  LEGACY_ELEMENTS,
+  LEGACY_COUNT,
+  MISSING_ARTWORK,
+  ARTWORK_BYTES,
+  categoryCounts,
+} from '../../lib/icons.mjs';
+
+interface Props {
+  context: any;
+}
+
+const { context } = Astro.props;
+const { site, project } = context;
+
+const categories = categoryCounts();
+
+/**
+ * One string per tile, carrying BOTH jobs: it is the hover tooltip a reader
+ * wants (the tags are the payoff of Phosphor's metadata — typing "settings"
+ * should surface `gear`) and the haystack the filter matches against. Emitting
+ * it once rather than as `title` plus a `data-q` twin saves ~75 KB of duplicated
+ * tag text on a page that is already the heaviest on the site.
+ */
+const tooltip = (icon: (typeof ICONS)[number]) =>
+  icon.tags.length ? `${icon.name} · ${icon.tags.join(', ')}` : icon.name;
+
+const REGISTER_SAMPLE = `import { caretDown, magnifyingGlass }
+  from '@southleft/al-web-components/components/icon/glyphs';
+import { registerIcons }
+  from '@southleft/al-web-components/components/icon/registry';
+
+// Tree-shakeable, synchronous, and SSR-safe: the glyph is in
+// the bundle, so the box is never empty on first paint.
+registerIcons({
+  'caret-down': caretDown,
+  'magnifying-glass': magnifyingGlass,
+});`;
+
+const MARKUP_SAMPLE = `<al-icon name="caret-down" size="sm"></al-icon>
+
+<!-- iconTitle becomes the accessible name. Set it when the
+     icon carries meaning ALONE; leave it off beside visible
+     text and the glyph is correctly hidden from assistive
+     technology instead of read twice. -->
+<al-icon name="magnifying-glass" iconTitle="Search"></al-icon>`;
+
+const LAZY_SAMPLE = `// Only when icon names come from data you do not control.
+// ~13 KB gzipped, one request per glyph, and it cannot
+// render server-side — so it is an opt-in, not the default.
+import '@southleft/al-web-components/components/icon/lazy';`;
+---
+
+<Shell
+  context={context}
+  title="Icons"
+  description={`The ${ICON_COUNT} Phosphor glyphs ${site.fullName} ships, searchable by name and tag.`}
+  active="icons"
+>
+  <div class="page">
+    <div class="micro">INDEX / 03</div>
+    <h1 class="t-page-title">Icons</h1>
+    <p class="t-body-md icons-lede">
+      {ICON_COUNT} glyphs from <a href="https://phosphoricons.com" rel="noreferrer">Phosphor</a> at
+      regular weight, MIT licensed — the payload of <code class="mono">&lt;al-icon&gt;</code>, not
+      components of their own. Search matches names <em>and</em> tags, so “settings” finds <code
+        class="mono">gear</code
+      >. Click any tile to copy its element.
+    </p>
+
+    <div class="section-rule">
+      <span>CATALOG — {ICON_COUNT} GLYPHS</span>
+      <span data-icon-note>{Math.round(ARTWORK_BYTES / 1024)} KB OF INLINE ARTWORK</span>
+    </div>
+
+    {
+      /* An icon in the catalog with no glyph module is invisible on a page of
+         1,512 boxes, so it is stated rather than left to be noticed. */
+      MISSING_ARTWORK.length > 0 && (
+        <p class="t-body-sm icons-warn">
+          {MISSING_ARTWORK.length} catalog {MISSING_ARTWORK.length === 1 ? 'entry has' : 'entries have'}{' '}
+          no glyph module and {MISSING_ARTWORK.length === 1 ? 'is' : 'are'} not shown:{' '}
+          {MISSING_ARTWORK.join(', ')}.
+        </p>
+      )
+    }
+
+    <div class="icons-controls">
+      <input
+        class="icons-search"
+        id="icon-search"
+        type="search"
+        autocomplete="off"
+        aria-label={`Search ${ICON_COUNT} icons by name or tag`}
+        placeholder={`SEARCH ${ICON_COUNT} ICONS BY NAME OR TAG`}
+      />
+      <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+           display:contents host cannot carry. -->
+      <div class="icons-cats-wrap">
+        <al-layout direction="row" wrap class="icons-cats" role="group" aria-label="Filter by category">
+          <button class="chip-tag" type="button" data-cat-filter="" aria-pressed="true">
+            all · {ICON_COUNT}
+          </button>
+          {
+            categories.map(({ category, count }) => (
+              <button class="chip-tag chip-tag--weak" type="button" data-cat-filter={category} aria-pressed="false">
+                {category} · {count}
+              </button>
+            ))
+          }
+        </al-layout>
+      </div>
+      <p class="micro" data-icon-count>SHOWING {ICON_COUNT} OF {ICON_COUNT}</p>
+    </div>
+
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin.
+         .icon-tile keeps its own content-visibility/contain-intrinsic-size —
+         unaffected by the arrangement host, which sits above it. -->
+    <div class="icon-grid-wrap">
+      <al-layout variant="grid" noCollapse class="icon-grid">
+      {
+        ICONS.map((icon) => (
+          <button
+            class="icon-tile"
+            type="button"
+            title={tooltip(icon)}
+            data-icon={icon.name}
+            data-cat={` ${icon.categories.join(' ')} `}
+          >
+            <svg class="icon-tile__art" viewBox={icon.viewBox} aria-hidden="true" set:html={icon.body} />
+            <span class="icon-tile__name">{icon.name}</span>
+          </button>
+        ))
+      }
+      </al-layout>
+    </div>
+    <p class="t-body-sm icons-empty" data-icon-empty hidden>
+      No icon matches that name or tag.
+    </p>
+
+    <div class="section-rule">
+      <span>USAGE</span>
+      <span>REGISTER WHAT YOU USE</span>
+    </div>
+    <p class="t-body-md icons-lede">
+      Registration is explicit and per-glyph. That is the whole reason the set can be this large
+      without costing anything: the glyphs you never name are never bundled.
+    </p>
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin. -->
+    <div class="icons-code-wrap">
+      <al-layout variant="grid" columns={2} noCollapse class="icons-code">
+        <pre class="code code--inline">{REGISTER_SAMPLE}</pre>
+        <pre class="code code--inline">{MARKUP_SAMPLE}</pre>
+      </al-layout>
+    </div>
+    <p class="t-body-md icons-lede">
+      If icon names come from data you do not control, opt into the loader once — and only then.
+    </p>
+    <pre class="code code--inline icons-code-wide">{LAZY_SAMPLE}</pre>
+
+    <div class="section-rule">
+      <span>DEPRECATED ELEMENTS — {LEGACY_COUNT}</span>
+      <span>PREFER &lt;AL-ICON NAME&gt;</span>
+    </div>
+    <p class="t-body-md icons-lede">
+      The original <code class="mono">&lt;al-icon-*&gt;</code> elements still work and now render
+      Phosphor artwork, but they are deprecated. The alias table is consulted only after a lookup
+      against the catalog above MISSES, so a legacy name can never shadow a real Phosphor icon —
+      which is what the warning on one row below is about.
+    </p>
+    <div class="spec-table spec-table--props">
+      <div class="spec-table__head">
+        <span>DEPRECATED ELEMENT</span>
+        <span>REPLACEMENT</span>
+        <span>NOTE</span>
+      </div>
+      {
+        LEGACY_ELEMENTS.map((row) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">{`<${row.element}>`}</span>
+            <span class="spec-table__type">{`<al-icon name="${row.replacement}">`}</span>
+            <span class="spec-table__default">
+              {row.shadowed ? `name="${row.legacy}" is a different Phosphor icon` : '—'}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+    <p class="t-body-sm icons-foot">
+      Rendered under <code class="mono">{`<al-theme brand="${project.brand}">`}</code>. An icon
+      inherits <code class="mono">currentColor</code>, so it takes whatever content colour the theme
+      resolves at the element it sits in.
+    </p>
+  </div>
+</Shell>
+
+<style>
+  .icons-lede {
+    margin: 0 0 28px;
+    max-width: 620px;
+  }
+
+  .icons-warn {
+    margin: 0 0 20px;
+    color: var(--fg-weak);
+  }
+
+  .icons-foot {
+    margin: 8px 0 64px;
+    color: var(--fg-weak);
+    max-width: 620px;
+  }
+
+  .icons-controls {
+    margin-bottom: 20px;
+  }
+
+  .icons-search {
+    width: 100%;
+    max-width: 420px;
+    padding: 10px 12px;
+    font: 400 11px/1 var(--mono);
+    letter-spacing: 0.1em;
+    color: var(--fg);
+    background: var(--bg);
+    border: 1px solid var(--line);
+  }
+
+  .icons-search:focus,
+  .icons-search:focus-visible {
+    outline: none;
+    border-color: var(--blue);
+  }
+
+  /* The wrapper owns the margin; 6px is off al-layout's gap scale. */
+  .icons-cats-wrap {
+    margin: 14px 0 12px;
+  }
+
+  .icons-cats {
+    --al-layout-gap: 6px;
+  }
+
+  .icons-cats .chip-tag {
+    cursor: pointer;
+    background: none;
+    color: inherit;
+  }
+
+  .icons-cats .chip-tag[aria-pressed='true'] {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  /* The wrapper owns the margin; 2px is off al-layout's gap scale. */
+  .icon-grid-wrap {
+    margin-bottom: 8px;
+  }
+
+  .icon-grid {
+    --al-layout-template: repeat(auto-fill, minmax(118px, 1fr));
+    --al-layout-gap: 2px;
+  }
+
+  /*
+   * `content-visibility: auto` is what makes 1,512 tiles in one document a
+   * non-event: the browser skips layout and paint for anything off screen.
+   * `contain-intrinsic-size` is the other half — without a size to reserve,
+   * skipped tiles collapse to zero and the scrollbar jumps as you scroll.
+   */
+  .icon-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 6px;
+    cursor: pointer;
+    color: inherit;
+    background: none;
+    border: 1px solid var(--line-weak);
+    content-visibility: auto;
+    contain-intrinsic-size: auto 94px;
+  }
+
+  .icon-tile:hover,
+  .icon-tile:focus-visible {
+    outline: none;
+    border-color: var(--blue);
+  }
+
+  .icon-tile[data-copied] {
+    border-color: var(--blue);
+    background: var(--bg2);
+  }
+
+  .icon-tile__art {
+    width: 26px;
+    height: 26px;
+    fill: currentColor;
+  }
+
+  .icon-tile__name {
+    font: 400 9px/12px var(--mono);
+    color: var(--fg-weak);
+    word-break: break-word;
+    text-align: center;
+  }
+
+  .icons-empty {
+    margin: 24px 0 0;
+    color: var(--fg-weak);
+  }
+
+  /* The wrapper owns the margin; 2px is off al-layout's gap scale. */
+  .icons-code-wrap {
+    margin-bottom: 28px;
+  }
+
+  .icons-code {
+    --al-layout-gap: 2px;
+  }
+
+  .icons-code-wide {
+    margin-bottom: 56px;
+  }
+
+  @media (max-width: 1000px) {
+    .icons-code {
+      --al-layout-columns: 1;
+    }
+  }
+</style>
+
+<script>
+  // Filter over the tiles that are already in the document — the same shape as
+  // the sidebar's component filter, and for the same reason: there is no second
+  // copy of the data to keep in step, and with JS off the whole catalog is
+  // still on the page.
+  const search = document.getElementById('icon-search') as HTMLInputElement | null;
+  const grid = document.querySelector<HTMLElement>('.icon-grid');
+
+  if (search && grid) {
+    const tiles = Array.from(grid.querySelectorAll<HTMLButtonElement>('.icon-tile'));
+    const readout = document.querySelector<HTMLElement>('[data-icon-count]');
+    const empty = document.querySelector<HTMLElement>('[data-icon-empty]');
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-cat-filter]'));
+
+    /*
+     * The haystacks are lowercased ONCE, into a plain array held beside the
+     * elements. Reading and lowercasing 1,512 `title` attributes on every
+     * keystroke is the difference between a filter that feels instant and one
+     * that stutters on the third character.
+     */
+    const rows = tiles.map((el) => ({
+      el,
+      q: (el.title || '').toLowerCase(),
+      cats: el.dataset.cat ?? '',
+    }));
+
+    let category = '';
+
+    const apply = () => {
+      const q = search.value.trim().toLowerCase();
+      let shown = 0;
+      for (const row of rows) {
+        const hit =
+          (q === '' || row.q.includes(q)) && (category === '' || row.cats.includes(` ${category} `));
+        row.el.hidden = !hit;
+        if (hit) shown += 1;
+      }
+      if (readout) readout.textContent = `SHOWING ${shown} OF ${rows.length}`;
+      if (empty) empty.hidden = shown !== 0;
+    };
+
+    search.addEventListener('input', apply);
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        category = chip.dataset.catFilter ?? '';
+        for (const other of chips) {
+          other.setAttribute('aria-pressed', String(other === chip));
+          other.classList.toggle('chip-tag--weak', other !== chip);
+        }
+        apply();
+      });
+    }
+
+    // Click to copy the element, not the bare name: the name alone is not
+    // something you can paste anywhere.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    grid.addEventListener('click', async (event) => {
+      const tile = (event.target as HTMLElement).closest<HTMLButtonElement>('.icon-tile');
+      if (!tile) return;
+      const name = tile.dataset.icon ?? '';
+      const note = document.querySelector<HTMLElement>('[data-icon-note]');
+      const idle = note?.dataset.idle ?? note?.textContent ?? '';
+      if (note && !note.dataset.idle) note.dataset.idle = idle;
+      try {
+        await navigator.clipboard.writeText(`<al-icon name="${name}"></al-icon>`);
+        tile.dataset.copied = '';
+        if (note) note.textContent = `COPIED <AL-ICON NAME="${name.toUpperCase()}">`;
+      } catch {
+        // Clipboard is unavailable in some embedded contexts. Say so rather
+        // than flashing a success state that did not happen.
+        if (note) note.textContent = `COPY BLOCKED — ${name.toUpperCase()}`;
+      }
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        delete tile.dataset.copied;
+        if (note) note.textContent = note.dataset.idle ?? '';
+      }, 1400);
+    });
+  }
+</script>

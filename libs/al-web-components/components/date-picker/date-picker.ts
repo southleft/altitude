@@ -15,8 +15,12 @@ import styles from './date-picker.scss';
 
 /**
  * Component: al-date-picker
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onDatePickerOpen - Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDatePickerClose - Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDatePickerChange - Fired when the selected date changes. Detail: `{ value }` — the formatted date string.
  */
 export class ALDatePicker extends ALElement {
   static el = 'al-date-picker';
@@ -33,6 +37,15 @@ export class ALDatePicker extends ALElement {
   });
 
   private inputEl = unsafeStatic(this.elementMap.get(ALInput.el));
+
+  /**
+   * A11y — id of the calendar popup, referenced by the field's
+   * `aria-controls`. The field is the combobox that opens a `dialog`
+   * (WAI-ARIA "date picker combobox"): it previously announced as a plain
+   * read-only text field, with no `aria-expanded` and no `aria-haspopup`, so
+   * nothing told a screen-reader user that a calendar opens.
+   */
+  private popupId = nanoid();
   private fieldNoteEl = unsafeStatic(this.elementMap.get(ALFieldNote.el));
   private calendarEl = unsafeStatic(this.elementMap.get(ALCalendar.el));
   private iconCalendarEl = unsafeStatic(this.elementMap.get(ALIconCalendar.el));
@@ -399,6 +412,10 @@ export class ALDatePicker extends ALElement {
             ?isDisabled="${this.isDisabled}"
             ?isError="${this.isError}"
             aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+            role="combobox"
+            aria-haspopup="dialog"
+            aria-expanded=${this.isActiveCalendar === true}
+            aria-controls=${ifDefined(this.isActiveCalendar ? this.popupId : undefined)}
             placeholder="${ifDefined(this.placeholder)}"
             @click=${this.toggleActiveCalendar}
             @keydown=${this.handleOnKeydown}
@@ -408,7 +425,7 @@ export class ALDatePicker extends ALElement {
             <${this.iconCalendarEl} slot="before"></${this.iconCalendarEl}>
             <${this.iconChevronDownEl} size="lg" slot="after" class="al-c-date-picker__icon-arrow"></${this.iconChevronDownEl}>
           </${this.inputEl}>
-          <div class="al-c-date-picker__popup" ?hidden="${!this.isActiveCalendar}" role="dialog">
+          <div class="al-c-date-picker__popup" id=${this.popupId} ?hidden="${!this.isActiveCalendar}" role="dialog" aria-label=${this.label || 'Choose date'}>
             <div class="al-c-date-picker__popup-body">
               <${this.calendarEl}
                 class="al-c-date-picker__calendar"

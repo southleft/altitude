@@ -1,0 +1,27 @@
+{
+  "$comment": "MANUAL accessibility test records — the half of the picture axe cannot produce. axe-core reports what a machine can check on a rendered story; it cannot tell you whether a screen reader announces a component usefully, or whether the tab order makes sense. Those are human passes, and this file is where a human records one. Read by apps/docs/src/lib/a11y.mjs and rendered in the per-component checks panel.",
+  "$rules": [
+    "This file is a RECORD STORE, not a component list. Components are enumerated from the custom elements manifest; a component with no key here renders as NOT RECORDED, which is the truth.",
+    "Never add an entry for a test that was not actually run. An empty file is honest; an optimistic one is worse than no panel at all.",
+    "`date` is the day the pass was performed. `tool` names the screen reader and browser used. `result` is 'pass' or 'fail'."
+  ],
+  "$schema_example": {
+    "components": {
+      "button": {
+        "screenReader": {
+          "result": "pass",
+          "tool": "NVDA 2024.4 / Firefox",
+          "date": "2026-01-01",
+          "notes": "Name, role and disabled state all announced."
+        },
+        "keyboard": {
+          "result": "pass",
+          "date": "2026-01-01",
+          "notes": "Reachable by Tab, activates on Enter and Space, visible focus ring."
+        }
+      }
+    }
+  },
+  "updated": null,
+  "components": {}
+}

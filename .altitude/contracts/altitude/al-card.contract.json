@@ -1,0 +1,121 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-card",
+  "name": "Card",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-card",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "fill",
+      "description": "Fill the available block size instead of hugging the content.\n\nFor a card in a grid or a stretched flex row, where a row of cards should\nshare one height and their footers should line up. Reflected, so a page can\nalso select `al-card[fill]`.\n\nIt has to be a property rather than something the page sets from outside:\n`:host` is `display: contents`, so `<al-card>` generates no box and a\n`height: 100%` written on the element is dropped entirely. `apps/southleft`\nhit exactly this and worked around it with\n`style=\"height:100%; box-sizing:border-box\"` at 25 call sites across 13\nfiles — that inline style is what this replaces.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "fill"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "layout",
+      "description": "Layout\n- **default** Displays the slotted items stacked in a column\n- **row** Displays the slotted items inline in a row",
+      "type": "string",
+      "rawType": "'inline'",
+      "bindings": {
+        "code": {
+          "attribute": "layout"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** Renders a card with a background color, box shadow, or border radius\n- **bare** Renders a card without a background color, box shadow, or border radius",
+      "type": "string",
+      "rawType": "'bare'",
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The main content of the card (renders below the header)."
+    },
+    {
+      "name": "action-right",
+      "description": "Top-right single control (kebab / overflow menu)."
+    },
+    {
+      "name": "actions-end",
+      "description": "Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action."
+    },
+    {
+      "name": "actions-start",
+      "description": "Trailing-action row, leading edge (bottom-left). Use for a \"View\" / \"Open\" primary action."
+    },
+    {
+      "name": "footer",
+      "description": "Card footer row, below a hairline rule and on a tinted ground. Compose it with `<al-layout>` rather than relying on slot order."
+    },
+    {
+      "name": "header",
+      "description": "Card heading row. Rendered above a hairline rule. Compose the row itself with `<al-layout>` when it carries a title and a control."
+    },
+    {
+      "name": "image",
+      "description": "Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that owns its own padding, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which move the padding onto the content column."
+    }
+  ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-avatar",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/card/card.ts",
+      "tagName": "al-card",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

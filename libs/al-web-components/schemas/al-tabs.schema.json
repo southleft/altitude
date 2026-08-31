@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-tabs.schema.json",
+  "title": "ALTabs (al-tabs)",
+  "description": "Component: al-tabs",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-tabs",
+    "className": "ALTabs",
+    "module": "components/tabs/tabs.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The tab items for the tabs",
+        "name": ""
+      },
+      {
+        "description": "The tab panels that correspond to the slotted tab items",
+        "name": "panel"
+      }
+    ],
+    "events": [
+      {
+        "name": "onTabsChange",
+        "description": "Fired when the active tab changes, whether by user interaction or programmatically. Detail: `{ value, activeTabIdx }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-tabs"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'stretch'",
+          "type": "string"
+        },
+        "activeIndex": {
+          "description": "Active tab state\n- Sets the initial active tab (e.g. 0 sets the first tab, 1 sets the second tab, etc.)",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

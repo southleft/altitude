@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './tab-panel';
+import { loremParagraphs } from '../../fixtures';
 import '../button/button';
 
 export default {
@@ -25,10 +26,9 @@ export default {
 
 const Template = (args) => html`
 <al-tab-panel ${spread(args)} data-testid="tab-panel">
-  <al-text-passage>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec nulla nunc. Mauris id augue ut nulla egestas tempor non a lectus. In id dignissim metus, eu luctus velit. Pellentesque rhoncus enim et feugiat fringilla. Praesent congue nisl dui, non convallis velit ultrices ac. Vestibulum vulputate enim turpis, id auctor mi vulputate vitae.</p>
-    <p>Mauris tristique metus sed enim faucibus, eget cursus elit pretium. In pellentesque interdum tellus sit amet varius. Sed at tempus dolor. Phasellus egestas, tellus eu gravida tincidunt, urna ante lacinia ex, nec sodales leo lorem in est. Donec sollicitudin massa magna, vitae sagittis massa auctor convallis.</p>
-  </al-text-passage>
+  <al-text-block>
+    ${loremParagraphs(2, 'tab-panel').map((p) => html`<p>${p}</p>`)}
+  </al-text-block>
   <al-button>Button</al-button>
 </al-tab-panel>
 `;

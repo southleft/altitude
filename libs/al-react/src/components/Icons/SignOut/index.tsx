@@ -1,1 +1,3 @@
-export * from './SignOut';
+'use client';
+
+export * from './SignOut.js';

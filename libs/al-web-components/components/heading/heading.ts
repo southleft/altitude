@@ -5,7 +5,7 @@ import styles from './heading.scss';
 
 /**
  * Component: al-heading
- * - **slot**: The heading content
+ * @slot - The heading content
  */
 export class ALHeading extends ALElement {
   static el = 'al-heading';

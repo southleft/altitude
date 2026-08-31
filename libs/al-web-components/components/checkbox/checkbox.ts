@@ -11,9 +11,11 @@ import styles from './checkbox.scss';
 
 /**
  * Component: al-checkbox
- * - **slot**: The component content that appears next to the checkbox
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The component content that appears next to the checkbox
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onCheckboxChange - Fired when the checked state changes. Detail: `{ checked, indeterminate, value }`.
  */
 export class ALCheckbox extends ALElement {
   static el = 'al-checkbox';
@@ -39,6 +41,14 @@ export class ALCheckbox extends ALElement {
   /**
    * Indeterminate state
    * - Changes the component's treatment to represent an indeterminate state
+   *
+   * Rendered as BOTH `.indeterminate` and `aria-checked="mixed"`. It used to be
+   * neither — only an `al-is-indeterminate` class — so a tri-state "select all"
+   * looked mixed and announced as plain unchecked. `.indeterminate` has no
+   * content attribute at all (there is no `?indeterminate` that could work) and
+   * is what paints the native glyph; `aria-checked` is what a screen reader
+   * reads. Left undefined when not indeterminate, so the input's own checked
+   * state is announced rather than shadowed by a stale value.
    */
   @property({ type: Boolean })
   accessor isIndeterminate: boolean;
@@ -115,13 +125,47 @@ export class ALCheckbox extends ALElement {
    * Connected callback
    * - Dynamically sets the fieldId and ariaDescribedBy for A11y
    */
+  /**
+   * Generated id for the ERROR note.
+   *
+   * Separate from `ariaDescribedBy`, which is public API and names the field
+   * note. Both can render at once, and `aria-describedby` takes a LIST, so the
+   * error needs an id of its own rather than borrowing the field note's.
+   */
+  private errorNoteId: string;
+
   connectedCallback() {
     super.connectedCallback();
     /* 1 */
     this.fieldId = this.fieldId || nanoid();
+    /*
+     * An errorNote counts too. This used to generate an id only when a
+     * `fieldNote` existed, and the error note rendered with no id at all — so a
+     * control with an error and no field note showed the message on screen and
+     * referenced it from nothing. A validation error that assistive tech cannot
+     * reach is the one message that most needs to be announced.
+     */
     if (this.fieldNote) {
       this.ariaDescribedBy = this.ariaDescribedBy || nanoid();
     }
+    if (this.errorNote) {
+      this.errorNoteId = this.errorNoteId || nanoid();
+    }
+  }
+
+  /**
+   * The ids `aria-describedby` should point at, in reading order.
+   *
+   * Only the notes actually RENDERED are listed — the error note is conditional
+   * on `isError`, and pointing at an element that is not in the DOM makes the
+   * whole attribute unreliable rather than merely incomplete.
+   */
+  private get describedBy(): string | undefined {
+    const ids = [
+      this.fieldNote || this.slotNotEmpty('field-note') ? this.ariaDescribedBy : undefined,
+      (this.errorNote || this.slotNotEmpty('error')) && this.isError ? this.errorNoteId : undefined
+    ].filter(Boolean);
+    return ids.length ? ids.join(' ') : undefined;
   }
 
   /**
@@ -174,14 +218,16 @@ export class ALCheckbox extends ALElement {
               class="al-c-checkbox__input"
               type="checkbox"
               id="${this.fieldId}"
-              name="${this.name}"
+              name="${ifDefined(this.name)}"
               .value="${this.value}"
               .checked="${this.isChecked}"
               ?disabled="${this.isDisabled}"
               ?required=${this.isRequired}
               @change=${this.handleOnChange}
               @keydown=${this.handleOnKeydown}
-              aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+              aria-describedby="${ifDefined(this.describedBy)}"
+              .indeterminate=${this.isIndeterminate === true}
+              aria-checked=${ifDefined(this.isIndeterminate === true ? 'mixed' : undefined)}
               tabindex="0"
             />
             <span class="al-c-checkbox__custom-check"></span>
@@ -201,7 +247,7 @@ export class ALCheckbox extends ALElement {
         ${(this.errorNote || this.slotNotEmpty('error')) && this.isError
           ? html`
               <slot name="error">
-                <${this.fieldNoteEl} ?isDisabled=${this.isDisabled} ?isError=${true}> ${this.errorNote} </${this.fieldNoteEl}>
+                <${this.fieldNoteEl} ?isDisabled=${this.isDisabled} ?isError=${true} id=${ifDefined(this.errorNoteId)}> ${this.errorNote} </${this.fieldNoteEl}>
               </slot>
             `
           : html``}

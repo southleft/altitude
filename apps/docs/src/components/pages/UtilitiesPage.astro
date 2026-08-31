@@ -1,0 +1,456 @@
+---
+/**
+ * Utilities — the fifth INDEX screen, rendered for ONE design system.
+ *
+ * The utilities are the one part of this system that is neither a component nor
+ * a token: plain CSS classes, emitted by four SCSS files, that arrange and
+ * style light-DOM markup a component never sees. They are documented here for
+ * the same reason Foundations documents the token layer — a reader reaching for
+ * `class="al-u-grid"` needs to know the closed set, not a sample of it.
+ *
+ * Every row below is parsed out of the stylesheet that emits it
+ * (`src/lib/utilities.mjs`), including the DECLARATIONS: `align-items: center`
+ * is shown rather than "aligns items to the center of the cross axis", because
+ * the paraphrase is the half that goes stale. The generated grid classes are
+ * the one exception, and deliberately so — `column-generator` emits 12 × 7 × 4
+ * selectors from two variables, so the page names the rule and reads the
+ * variables instead of printing 336 identical rows.
+ *
+ * THE DEMOS ARE THE REAL CLASSES. `Shell.astro` already loads the library's
+ * `dist/css/main.css`, which is where these utilities ship, so every example
+ * below is the shipped rule acting on this page's own light DOM — not a
+ * reconstruction of it in scoped CSS. If a utility regresses, this page
+ * regresses with it, which is the only kind of example worth publishing.
+ *
+ * ARRANGEMENT VS. UTILITIES. `<al-layout>` is the layout primitive for
+ * COMPONENTS (AGENTS.md, "Arrangement vs. semantics"); these classes are for
+ * page-level markup and for spanning children inside a layout's grid, which is
+ * why `al-u-grid__item` is not scoped under `.al-u-grid` in the source. The
+ * lede says so, because reaching for the wrong one of the two is the mistake
+ * this page can actually prevent.
+ */
+import Shell from '../../layouts/Shell.astro';
+import {
+  breakpoints,
+  gapClasses,
+  gapModifiers,
+  gridAlignmentClasses,
+  gridPatterns,
+  typographyClasses,
+  utilityCount,
+  visibilityClasses,
+} from '../../lib/utilities.mjs';
+
+interface Props {
+  context: any;
+}
+
+const { context } = Astro.props;
+const { site } = context;
+
+const bps = breakpoints();
+const gaps = gapClasses();
+const gapMods = gapModifiers();
+const grid = gridPatterns();
+const alignment = gridAlignmentClasses();
+const typography = typographyClasses();
+const visibility = visibilityClasses();
+const total = utilityCount();
+
+const tier1 = typography.filter((row) => row.tier === 1);
+const tier2 = typography.filter((row) => row.tier === 2);
+
+/** `align-items: center` — the rule body, flattened onto one line. */
+const declarations = (row: { declarations: { property: string; value: string }[] }) =>
+  row.declarations.map((d) => `${d.property}: ${d.value}`).join('; ');
+
+const RESPONSIVE_SAMPLE = `<div class="al-u-grid cols:6@md cols:3@lg al-u-gap-lg">
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+  <div>4</div>
+</div>`;
+
+const EXPLICIT_SAMPLE = `<div class="al-u-grid al-u-gap-lg">
+  <div class="al-u-grid__item col:6 col:8@md">1</div>
+  <div class="al-u-grid__item col:6 col:4@md">2</div>
+</div>`;
+
+const ROW_SAMPLE = `<div class="al-u-grid">
+  <div class="al-u-grid__item col:8@md">1</div>
+  <div class="al-u-grid__item col:4@md row:2@md">2</div>
+  <div class="al-u-grid__item col:8@md">3</div>
+</div>`;
+
+const OFFSET_SAMPLE = `<div class="al-u-grid">
+  <div class="al-u-grid__item col:7@md offset:2@md">1</div>
+  <div class="al-u-grid__item col:3@md">2</div>
+</div>`;
+
+const GAP_SAMPLE = `<!-- The gap classes go on the PARENT. They set
+     display:flex and a column direction as well as
+     the gap, so a bare wrapper needs nothing else. -->
+<div class="al-u-gap-lg">
+  <div>Item</div>
+  <div>Item</div>
+</div>
+
+<!-- ...and al-u-gap--row turns the same stack sideways. -->
+<div class="al-u-gap-sm al-u-gap--row">
+  <div>Item</div>
+  <div>Item</div>
+</div>`;
+
+/** The 12 spans of the full grid, so the demo is generated like everything else. */
+const fullLayout = [
+  ...Array.from({ length: 12 }, () => 1),
+  ...Array.from({ length: 6 }, () => 2),
+  ...Array.from({ length: 4 }, () => 3),
+  ...Array.from({ length: 3 }, () => 4),
+  ...Array.from({ length: 2 }, () => 6),
+  12,
+];
+---
+
+<Shell
+  context={context}
+  title="Utilities"
+  description={`The ${total} utility classes ${site.fullName} publishes — grid, spacing, typography and visibility.`}
+  active="utilities"
+>
+  <div class="page">
+    <div class="micro">INDEX / 04</div>
+    <h1 class="t-page-title">Utilities</h1>
+    <p class="t-body-md util-lede">
+      {total} classes, shipped in <code class="mono">css/main.css</code>, for arranging and styling
+      light-DOM markup: a {grid.columns}-track grid, the gap scale, the type ramp and two visibility
+      helpers. Every row below is read at build time from the stylesheet that emits it, declarations
+      included.
+    </p>
+    <p class="t-body-md util-lede">
+      Use these on <em>page</em> markup and on children you are spanning inside a grid. Arranging
+      sibling COMPONENTS is <code class="mono">&lt;al-layout&gt;</code>’s job, not a wrapper of your
+      own — which is also why <code class="mono">.al-u-grid__item</code> is not scoped under <code
+        class="mono">.al-u-grid</code
+      > in the source: the container may be a layout’s shadow root, where no
+      <code class="mono">.al-u-grid</code> ancestor exists in the light DOM to match.
+    </p>
+
+    <div class="section-rule">
+      <span>BREAKPOINTS — {bps.length}</span>
+      <span>THE @SUFFIX ON EVERY GRID CLASS</span>
+    </div>
+    <!-- ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+         display:contents host cannot carry. .util-bp stays CSS flex — card
+         internals, not section arrangement. -->
+    <div class="util-bps-wrap">
+      <al-layout direction="row" wrap class="util-bps">
+        {
+          bps.map((bp) => (
+            <div class="util-bp">
+              <span class="spec-table__name">@{bp.id}</span>
+              <span class="spec-table__default">min-width: {bp.value}</span>
+            </div>
+          ))
+        }
+      </al-layout>
+    </div>
+
+    <div class="section-rule">
+      <span>GRID — {grid.columns} TRACKS</span>
+      <span>{alignment.length} ALIGNMENT CLASSES</span>
+    </div>
+    <div class="spec-table spec-table--pair">
+      <div class="spec-table__head"><span>CLASS</span><span>DECLARES</span></div>
+      {
+        alignment.map((row) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">.{row.className}</span>
+            <span class="spec-table__type">{declarations(row)}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="section-rule">
+      <span>GRID — GENERATED CLASSES</span>
+      <span>N = 1…{grid.columns} · @{grid.suffixes.join(' @')}</span>
+    </div>
+    <p class="t-body-md util-lede">
+      Four families, each emitted once bare and once inside every breakpoint, so
+      <code class="mono">col:8@md</code> is a real class and so is
+      <code class="mono">col:8</code>. Breakpoints stack: the widest matching one wins.
+    </p>
+    <div class="spec-table spec-table--props">
+      <div class="spec-table__head"><span>PATTERN</span><span>WHAT IT DOES</span><span>EMITS</span></div>
+      {
+        grid.families.map((family) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">{family.pattern}</span>
+            <span class="spec-table__type">
+              {family.summary}
+              <span class="spec-table__desc">on {family.on}</span>
+            </span>
+            <span class="spec-table__default">{family.emits}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <h2 class="t-heading-sm util-h2">Implicit columns</h2>
+    <p class="t-body-md util-lede">
+      Uniform columns declare themselves on the container. Unlike float or flexbox grid libraries
+      there is no wrapper element around each column.
+    </p>
+    <!--
+      EXEMPT, deliberately: every `al-u-grid` / `al-u-gap-*` div below is the
+      UTILITY CLASS being documented, not page-layout arrangement — converting
+      it to <al-layout> would demonstrate the wrong primitive (see this page's
+      "ARRANGEMENT VS. UTILITIES" lede above). `.util-demo` stays a plain div
+      for the same reason plus its own box-model (border/padding/background).
+    -->
+    <div class="util-demo">
+      <div class="al-u-grid cols:6@md cols:3@lg al-u-gap-lg">
+        {[1, 2, 3, 4].map((n) => <div class="util-po">{n}</div>)}
+      </div>
+    </div>
+    <pre class="code code--inline util-code">{RESPONSIVE_SAMPLE}</pre>
+
+    <h2 class="t-heading-sm util-h2">Explicit columns</h2>
+    <p class="t-body-md util-lede">
+      Columns that are not uniform declare their own span, on the element that spans it.
+    </p>
+    <div class="util-demo">
+      <div class="al-u-grid al-u-gap-lg">
+        <div class="util-po al-u-grid__item col:6 col:8@md">1</div>
+        <div class="util-po al-u-grid__item col:6 col:4@md">2</div>
+      </div>
+    </div>
+    <pre class="code code--inline util-code">{EXPLICIT_SAMPLE}</pre>
+
+    <h2 class="t-heading-sm util-h2">Explicit rows</h2>
+    <p class="t-body-md util-lede">
+      The same idea vertically — a cell that occupies two rows, with no row wrapper anywhere.
+    </p>
+    <div class="util-demo">
+      <div class="al-u-grid">
+        <div class="util-po al-u-grid__item col:8@md">1</div>
+        <div class="util-po al-u-grid__item col:4@md row:2@md">2</div>
+        <div class="util-po al-u-grid__item col:8@md">3</div>
+      </div>
+    </div>
+    <pre class="code code--inline util-code">{ROW_SAMPLE}</pre>
+
+    <h2 class="t-heading-sm util-h2">Offset columns</h2>
+    <p class="t-body-md util-lede">
+      <code class="mono">offset:N</code> starts an item in track N, leaving the tracks before it
+      empty.
+    </p>
+    <div class="util-demo">
+      <div class="al-u-grid">
+        <div class="util-po al-u-grid__item col:7@md offset:2@md">1</div>
+        <div class="util-po al-u-grid__item col:3@md">2</div>
+      </div>
+    </div>
+    <pre class="code code--inline util-code">{OFFSET_SAMPLE}</pre>
+
+    <h2 class="t-heading-sm util-h2">Every span, one grid</h2>
+    <p class="t-body-md util-lede">
+      Multiple rows come from filling {grid.columns} tracks, not from a row wrapper per row. All
+      {grid.columns} spans, in one container:
+    </p>
+    <div class="util-demo">
+      <div class="al-u-grid">
+        {fullLayout.map((span) => <div class={`util-po al-u-grid__item col:${span}`}>{span}</div>)}
+      </div>
+    </div>
+
+    <div class="section-rule">
+      <span>SPACING — {gaps.length} GAP CLASSES</span>
+      <span>SET ON THE PARENT</span>
+    </div>
+    <p class="t-body-md util-lede">
+      A gap class makes its element a flex column and spaces the children. The value column below is
+      resolved through the same token layer Foundations reads, so it is what this brand actually
+      renders — not what the SCSS literally says.
+    </p>
+    <div class="spec-table spec-table--props">
+      <div class="spec-table__head"><span>CLASS</span><span>TOKEN</span><span>VALUE</span></div>
+      {
+        gaps.map((row) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">.{row.className}</span>
+            <span class="spec-table__type">
+              {row.token ? `--${row.token}` : row.declared}
+              {row.mismatch && (
+                <span class="spec-table__desc">
+                  Note: the name implies --{row.mismatch}, which exists in the token layer. This
+                  class reads --{row.token}; the two are documented as they are declared, not as
+                  they read.
+                </span>
+              )}
+            </span>
+            <span class="spec-table__default">{row.value}</span>
+          </div>
+        ))
+      }
+      {
+        gapMods.map((row) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">.{row.className}</span>
+            <span class="spec-table__type">modifier — combine with any size above</span>
+            <span class="spec-table__default">{declarations(row)}</span>
+          </div>
+        ))
+      }
+    </div>
+    <!-- ARRANGEMENT IS <al-layout> (R4) for the two DEMO PANELS side by
+         side; .util-demo keeps the box-model, the al-u-gap-* children inside
+         are the utility classes being documented (see the EXEMPT note above). -->
+    <div class="util-demo">
+      <al-layout variant="grid" columns={2} noCollapse class="util-demo--pair">
+        <div class="al-u-gap-lg">
+          <div class="util-po">Item</div>
+          <div class="util-po">Item</div>
+        </div>
+        <div class="al-u-gap-sm al-u-gap--row">
+          <div class="util-po">Item</div>
+          <div class="util-po">Item</div>
+        </div>
+      </al-layout>
+    </div>
+    <pre class="code code--inline util-code">{GAP_SAMPLE}</pre>
+
+    <div class="section-rule">
+      <span>TYPOGRAPHY — {typography.length} CLASSES</span>
+      <span>{tier2.length} ROLE · {tier1.length} LITERAL</span>
+    </div>
+    <p class="t-body-md util-lede">
+      Two tiers, and the difference matters. A tier-2 class names a ROLE, which a brand, a density
+      or a contrast setting is allowed to repoint; a tier-1 class pins a literal step of the ramp
+      and follows nothing. Prefer tier 2 unless you have a reason not to.
+    </p>
+    <div class="spec-table spec-table--props">
+      <div class="spec-table__head"><span>TIER 2 — ROLE</span><span>SPECIMEN</span><span>RESOLVES TO</span></div>
+      {
+        tier2.map((row) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">.{row.className}</span>
+            <span class={row.className}>Design at {site.name.toLowerCase()}</span>
+            <span class="spec-table__default">{row.value}</span>
+          </div>
+        ))
+      }
+    </div>
+    <div class="spec-table spec-table--props">
+      <div class="spec-table__head"><span>TIER 1 — LITERAL</span><span>SPECIMEN</span><span>RESOLVES TO</span></div>
+      {
+        tier1.map((row) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">.{row.className}</span>
+            <span class={row.className}>Design at {site.name.toLowerCase()}</span>
+            <span class="spec-table__default">{row.value}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="section-rule">
+      <span>VISIBILITY — {visibility.length}</span>
+      <span>NO SUBSTITUTE FOR SEMANTICS</span>
+    </div>
+    <div class="spec-table spec-table--pair">
+      <div class="spec-table__head"><span>CLASS</span><span>DECLARES</span></div>
+      {
+        visibility.map((row) => (
+          <div class="spec-table__row">
+            <span class="spec-table__name">.{row.className}</span>
+            <span class="spec-table__type">
+              {declarations(row)}
+              {row.via && <span class="spec-table__desc">via the {row.via} mixin</span>}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+    <p class="t-body-sm util-foot">
+      <code class="mono">.al-u-is-vishidden</code> keeps content in the accessibility tree while
+      removing it visually — it is for labels a screen reader needs and a sighted reader does not,
+      never for content you simply want gone. Use <code class="mono">hidden</code> for that.
+    </p>
+  </div>
+</Shell>
+
+<style>
+  .util-lede {
+    margin: 0 0 24px;
+    max-width: 620px;
+  }
+
+  .util-foot {
+    margin: 8px 0 64px;
+    color: var(--fg-weak);
+    max-width: 620px;
+  }
+
+  .util-h2 {
+    margin: 36px 0 10px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* The wrapper owns the margin; 2px is off al-layout's gap scale. */
+  .util-bps-wrap {
+    margin-bottom: 44px;
+  }
+
+  .util-bps {
+    --al-layout-gap: 2px;
+  }
+
+  .util-bp {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 16px;
+    border: 1px solid var(--line-weak);
+    min-width: 132px;
+  }
+
+  /*
+   * The demo frame, NOT the demo. The utility classes inside it are the shipped
+   * ones from main.css; this only draws a boundary around them so a full-bleed
+   * 12-track grid reads as an example rather than as page layout.
+   */
+  .util-demo {
+    border: 1px solid var(--line-weak);
+    padding: 18px;
+    margin-bottom: 2px;
+    background: var(--bg2);
+  }
+
+  /* Arrangement lives on <al-layout> (R4); 18px is off al-layout's gap scale. */
+  .util-demo--pair {
+    --al-layout-gap: 18px;
+  }
+
+  .util-po {
+    background: var(--blue);
+    color: var(--bg);
+    font: 500 11px/1 var(--mono);
+    padding: 18px 10px;
+    text-align: center;
+    display: grid;
+    place-items: center;
+  }
+
+  .util-code {
+    margin-bottom: 36px;
+  }
+
+  @media (max-width: 1000px) {
+    .util-demo--pair {
+      --al-layout-columns: 1;
+    }
+  }
+</style>

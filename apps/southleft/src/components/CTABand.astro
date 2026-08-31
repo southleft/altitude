@@ -1,0 +1,43 @@
+---
+// Closing CTA band.
+//
+// The band itself is now `<al-cta-band>` from @southleft/sl-web-components — the
+// brand package already owns this section (and the docs already document it at
+// /docs/southleft/components/cta-band), so the hand-rolled texture + kicker +
+// centred heading stack that used to live here has been deleted along with its
+// four blocks in styles/layout.css. The component reproduces all of it, and its
+// texture sits at z-index 0/1 inside its own stacking context rather than the
+// -1 this file used, which is the more robust of the two.
+//
+// This wrapper SURVIVES rather than being inlined at the call sites, because it
+// owns the part the component deliberately does not: the actions. `al-cta-band`
+// exposes a single default slot and takes no button props, while the buttons
+// here need `CTA` from lib/site and base-path-aware hrefs via `withBase()`.
+// Keeping the wrapper means all 16 call sites stay untouched; inlining would
+// have copied the same two buttons and two imports into every one of them.
+import { CTA } from '../lib/site';
+import { withBase } from '../lib/url';
+
+interface Props {
+  heading?: string;
+  dek?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+const {
+  heading = 'Is your design system AI-ready?',
+  dek = 'A 30-minute discovery call is the fastest way to find out where your leverage is.',
+  secondaryLabel = 'Ask about a workshop',
+  secondaryHref = '/services/workshops-training',
+} = Astro.props;
+
+// An absolute URL is already complete; only site-relative paths take the base.
+const resolvedSecondary = secondaryHref.startsWith('http') ? secondaryHref : withBase(secondaryHref);
+---
+
+<al-cta-band heading={heading} dek={dek}>
+  <al-layout direction="row" wrap gap="md" align="center" justify="center">
+    <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+    <al-button variant="tertiary" href={resolvedSecondary}>{secondaryLabel}</al-button>
+  </al-layout>
+</al-cta-band>

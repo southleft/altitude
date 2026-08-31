@@ -6,7 +6,13 @@ import styles from './link.scss';
 
 /**
  * Component: al-link
- * - **slot**: The link text
+ * @slot - The link text
+ * @slot after - Content to display after the link text, typically an icon
+ *   (an external-link or chevron affordance). The link is `inline-flex` with a
+ *   `--al-theme-space-xs` gap, and each size variant re-binds `--al-icon-width` /
+ *   `--al-icon-height`, so a slotted icon is sized by the variant automatically.
+ *
+ *     <al-link href="/docs">Read the docs<al-icon-chevron-right slot="after"></al-icon-chevron-right></al-link>
  */
 export class ALLink extends ALElement {
   static el = 'al-link';
@@ -91,6 +97,7 @@ export class ALLink extends ALElement {
           rel=${ifDefined(this.target === '_blank' ? 'noopener' : null)}
         >
           <slot></slot>
+          ${this.slotNotEmpty('after') && html`<span class="al-c-link__after"><slot name="after"></slot></span>`}
         </a>
       `;
     } else {
@@ -103,6 +110,7 @@ export class ALLink extends ALElement {
           aria-disabled=${ifDefined(this.isDisabled)}
         >
           <slot></slot>
+          ${this.slotNotEmpty('after') && html`<span class="al-c-link__after"><slot name="after"></slot></span>`}
         </button>
       `;
     }

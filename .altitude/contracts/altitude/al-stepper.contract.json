@@ -1,0 +1,3241 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-stepper",
+  "name": "Stepper",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-stepper",
+  "semantics": {
+    "element": "ul",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout",
+      "type": "string",
+      "rawType": "'vertical'",
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The stepper content, a set of stepper items"
+    }
+  ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-stepper-item",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Variant=default",
+  "anatomy": {
+    "root": {
+      "tag": "ul",
+      "cls": "al-c-stepper",
+      "box": {
+        "w": 432,
+        "h": 92
+      },
+      "layout": {
+        "display": "flex",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "column-gap": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        },
+        "gap": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-sm",
+          "figma": "theme/space/sm"
+        }
+      },
+      "children": [
+        {
+          "tag": "li",
+          "cls": "al-c-stepper-item al-is-complete",
+          "component": "al-stepper-item",
+          "box": {
+            "w": 136,
+            "h": 92
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "center",
+            "justify": "center"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-md-bold-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-stepper-item__step",
+              "box": {
+                "w": 136,
+                "h": 32
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__counter",
+                  "box": {
+                    "w": 32,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    },
+                    "border": {
+                      "code": "--al-theme-border-width",
+                      "figma": "theme/border/width/@"
+                    },
+                    "border-color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    },
+                    "border-top-color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    },
+                    "border-top-width": {
+                      "code": "--al-theme-border-width",
+                      "figma": "theme/border/width/@"
+                    },
+                    "color": {
+                      "code": "--al-theme-color-content-inverse-default",
+                      "figma": "theme/color/content/inverse-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "min-width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-icon",
+                      "component": "al-icon",
+                      "box": {
+                        "w": 16,
+                        "h": 16
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "svg",
+                          "cls": "",
+                          "box": {
+                            "w": 16,
+                            "h": 16
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center"
+                          },
+                          "tokens": {
+                            "height": {
+                              "code": "--al-theme-icon",
+                              "figma": "theme/icon/@"
+                            },
+                            "width": {
+                              "code": "--al-theme-icon",
+                              "figma": "theme/icon/@"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "path",
+                              "cls": "",
+                              "box": {
+                                "w": 13,
+                                "h": 13
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "hr",
+                  "cls": "al-c-stepper-item__hr",
+                  "box": {
+                    "w": 92,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-border-default",
+                      "figma": "theme/color/border/default"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-stepper-item__content",
+              "box": {
+                "w": 102.4,
+                "h": 48
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__body",
+                  "box": {
+                    "w": 102.4,
+                    "h": 48
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__title",
+                      "box": {
+                        "w": 102.4,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center",
+                        "wrap": "wrap"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "text": "Label",
+                          "box": {
+                            "w": 42.7,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__description",
+                      "box": {
+                        "w": 102.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center",
+                        "wrap": "wrap"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-sm",
+                          "figma": null
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-sm-letter-spacing",
+                          "figma": null
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "",
+                          "text": "Supporting text",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "li",
+          "cls": "al-c-stepper-item al-is-active",
+          "component": "al-stepper-item",
+          "box": {
+            "w": 136,
+            "h": 92
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "center",
+            "justify": "center"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-md-bold-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-stepper-item__step",
+              "box": {
+                "w": 136,
+                "h": 32
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__counter",
+                  "text": "2",
+                  "box": {
+                    "w": 32,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-primary-default",
+                      "figma": "theme/color/background/primary-default"
+                    },
+                    "border": {
+                      "code": "--al-theme-border-width",
+                      "figma": "theme/border/width/@"
+                    },
+                    "border-color": {
+                      "code": "--al-theme-color-border-primary-default",
+                      "figma": "theme/color/border/primary-default"
+                    },
+                    "border-top-color": {
+                      "code": "--al-theme-color-border-primary-default",
+                      "figma": "theme/color/border/primary-default"
+                    },
+                    "border-top-width": {
+                      "code": "--al-theme-border-width",
+                      "figma": "theme/border/width/@"
+                    },
+                    "color": {
+                      "code": "--al-theme-color-content-primary-weak",
+                      "figma": "theme/color/content/primary-weak"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "min-width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "hr",
+                  "cls": "al-c-stepper-item__hr",
+                  "box": {
+                    "w": 92,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-border-default",
+                      "figma": "theme/color/border/default"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-stepper-item__content",
+              "box": {
+                "w": 102.4,
+                "h": 48
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__body",
+                  "box": {
+                    "w": 102.4,
+                    "h": 48
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__title",
+                      "box": {
+                        "w": 102.4,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center",
+                        "wrap": "wrap"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "text": "Label",
+                          "box": {
+                            "w": 42.7,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__description",
+                      "box": {
+                        "w": 102.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center",
+                        "wrap": "wrap"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-sm",
+                          "figma": null
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-sm-letter-spacing",
+                          "figma": null
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "",
+                          "text": "Supporting text",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "li",
+          "cls": "al-c-stepper-item al-is-last",
+          "component": "al-stepper-item",
+          "box": {
+            "w": 136,
+            "h": 92
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "center",
+            "justify": "center"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-md-bold-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-stepper-item__step",
+              "box": {
+                "w": 136,
+                "h": 32
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__counter",
+                  "text": "3",
+                  "box": {
+                    "w": 32,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "border": {
+                      "code": "--al-theme-border-width",
+                      "figma": "theme/border/width/@"
+                    },
+                    "border-top-color": {
+                      "code": "--al-theme-color-border-default",
+                      "figma": "theme/color/border/default"
+                    },
+                    "border-top-width": {
+                      "code": "--al-theme-border-width",
+                      "figma": "theme/border/width/@"
+                    },
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "min-width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-stepper-item__content",
+              "box": {
+                "w": 102.4,
+                "h": 48
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__body",
+                  "box": {
+                    "w": 102.4,
+                    "h": 48
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xxs",
+                      "figma": "theme/space/xxs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__title",
+                      "box": {
+                        "w": 102.4,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center",
+                        "wrap": "wrap"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "text": "Label",
+                          "box": {
+                            "w": 42.7,
+                            "h": 19
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__description",
+                      "box": {
+                        "w": 102.4,
+                        "h": 20
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center",
+                        "wrap": "wrap"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-sm",
+                          "figma": null
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-sm-letter-spacing",
+                          "figma": null
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "",
+                          "text": "Supporting text",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Variant=default",
+        "root": {
+          "tag": "ul",
+          "cls": "al-c-stepper",
+          "box": {
+            "w": 432,
+            "h": 92
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "li",
+              "cls": "al-c-stepper-item al-is-complete",
+              "component": "al-stepper-item",
+              "box": {
+                "w": 136,
+                "h": 92
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__step",
+                  "box": {
+                    "w": 136,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__counter",
+                      "box": {
+                        "w": 32,
+                        "h": 32
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-inverse-default",
+                          "figma": "theme/color/content/inverse-default"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "min-width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-icon",
+                          "component": "al-icon",
+                          "box": {
+                            "w": 16,
+                            "h": 16
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "svg",
+                              "cls": "",
+                              "box": {
+                                "w": 16,
+                                "h": 16
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center"
+                              },
+                              "tokens": {
+                                "height": {
+                                  "code": "--al-theme-icon",
+                                  "figma": "theme/icon/@"
+                                },
+                                "width": {
+                                  "code": "--al-theme-icon",
+                                  "figma": "theme/icon/@"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "path",
+                                  "cls": "",
+                                  "box": {
+                                    "w": 13,
+                                    "h": 13
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {},
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "hr",
+                      "cls": "al-c-stepper-item__hr",
+                      "box": {
+                        "w": 92,
+                        "h": 1
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__content",
+                  "box": {
+                    "w": 102.4,
+                    "h": 48
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__body",
+                      "box": {
+                        "w": 102.4,
+                        "h": 48
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "box": {
+                            "w": 102.4,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-stepper-item__title",
+                              "text": "Label",
+                              "box": {
+                                "w": 42.7,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center",
+                                "wrap": "wrap"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__description",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-sm",
+                              "figma": null
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-sm-letter-spacing",
+                              "figma": null
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "",
+                              "text": "Supporting text",
+                              "box": {
+                                "w": 102.4,
+                                "h": 20
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-stepper-item al-is-active",
+              "component": "al-stepper-item",
+              "box": {
+                "w": 136,
+                "h": 92
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__step",
+                  "box": {
+                    "w": 136,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__counter",
+                      "text": "2",
+                      "box": {
+                        "w": 32,
+                        "h": 32
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-primary-default",
+                          "figma": "theme/color/background/primary-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "min-width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "hr",
+                      "cls": "al-c-stepper-item__hr",
+                      "box": {
+                        "w": 92,
+                        "h": 1
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__content",
+                  "box": {
+                    "w": 102.4,
+                    "h": 48
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__body",
+                      "box": {
+                        "w": 102.4,
+                        "h": 48
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "box": {
+                            "w": 102.4,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-stepper-item__title",
+                              "text": "Label",
+                              "box": {
+                                "w": 42.7,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center",
+                                "wrap": "wrap"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__description",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-sm",
+                              "figma": null
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-sm-letter-spacing",
+                              "figma": null
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "",
+                              "text": "Supporting text",
+                              "box": {
+                                "w": 102.4,
+                                "h": 20
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-stepper-item al-is-last",
+              "component": "al-stepper-item",
+              "box": {
+                "w": 136,
+                "h": 92
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__step",
+                  "box": {
+                    "w": 136,
+                    "h": 32
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__counter",
+                      "text": "3",
+                      "box": {
+                        "w": 32,
+                        "h": 32
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "min-width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__content",
+                  "box": {
+                    "w": 102.4,
+                    "h": 48
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__body",
+                      "box": {
+                        "w": 102.4,
+                        "h": 48
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "box": {
+                            "w": 102.4,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-stepper-item__title",
+                              "text": "Label",
+                              "box": {
+                                "w": 42.7,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center",
+                                "wrap": "wrap"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__description",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-sm",
+                              "figma": null
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-sm-letter-spacing",
+                              "figma": null
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "",
+                              "text": "Supporting text",
+                              "box": {
+                                "w": 102.4,
+                                "h": 20
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Variant=vertical",
+        "root": {
+          "tag": "ul",
+          "cls": "al-c-stepper al-c-stepper--vertical",
+          "box": {
+            "w": 146.4,
+            "h": 261
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-sm",
+              "figma": "theme/space/sm"
+            }
+          },
+          "children": [
+            {
+              "tag": "li",
+              "cls": "al-c-stepper-item al-c-stepper-item--vertical al-is-complete",
+              "component": "al-stepper-item",
+              "box": {
+                "w": 146.4,
+                "h": 79
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "flex-start",
+                "justify": "flex-start"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__step",
+                  "box": {
+                    "w": 32,
+                    "h": 79
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "center",
+                    "justify": "flex-start"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__counter",
+                      "box": {
+                        "w": 32,
+                        "h": 32
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default-weak",
+                          "figma": "theme/color/content/default-weak"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-inverse-default",
+                          "figma": "theme/color/content/inverse-default"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "min-width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-icon",
+                          "component": "al-icon",
+                          "box": {
+                            "w": 16,
+                            "h": 16
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "svg",
+                              "cls": "",
+                              "box": {
+                                "w": 16,
+                                "h": 16
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center"
+                              },
+                              "tokens": {
+                                "height": {
+                                  "code": "--al-theme-icon",
+                                  "figma": "theme/icon/@"
+                                },
+                                "width": {
+                                  "code": "--al-theme-icon",
+                                  "figma": "theme/icon/@"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "path",
+                                  "cls": "",
+                                  "box": {
+                                    "w": 13,
+                                    "h": 13
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {},
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "hr",
+                      "cls": "al-c-stepper-item__hr",
+                      "box": {
+                        "w": 1,
+                        "h": 35
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__content",
+                  "box": {
+                    "w": 102.4,
+                    "h": 56
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default-weak",
+                      "figma": "theme/color/content/default-weak"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__body",
+                      "box": {
+                        "w": 102.4,
+                        "h": 48
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "box": {
+                            "w": 102.4,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-stepper-item__title",
+                              "text": "Label",
+                              "box": {
+                                "w": 42.7,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "flex-start",
+                                "wrap": "wrap"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__description",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-sm",
+                              "figma": null
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-sm-letter-spacing",
+                              "figma": null
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "",
+                              "text": "Supporting text",
+                              "box": {
+                                "w": 102.4,
+                                "h": 20
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-stepper-item al-c-stepper-item--vertical al-is-active",
+              "component": "al-stepper-item",
+              "box": {
+                "w": 146.4,
+                "h": 79
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "flex-start",
+                "justify": "flex-start"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__step",
+                  "box": {
+                    "w": 32,
+                    "h": 79
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "center",
+                    "justify": "flex-start"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__counter",
+                      "text": "2",
+                      "box": {
+                        "w": 32,
+                        "h": 32
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-primary-default",
+                          "figma": "theme/color/background/primary-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "min-width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "hr",
+                      "cls": "al-c-stepper-item__hr",
+                      "box": {
+                        "w": 1,
+                        "h": 35
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__content",
+                  "box": {
+                    "w": 102.4,
+                    "h": 56
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__body",
+                      "box": {
+                        "w": 102.4,
+                        "h": 48
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "box": {
+                            "w": 102.4,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-stepper-item__title",
+                              "text": "Label",
+                              "box": {
+                                "w": 42.7,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "flex-start",
+                                "wrap": "wrap"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__description",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-sm",
+                              "figma": null
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-sm-letter-spacing",
+                              "figma": null
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "",
+                              "text": "Supporting text",
+                              "box": {
+                                "w": 102.4,
+                                "h": 20
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "li",
+              "cls": "al-c-stepper-item al-c-stepper-item--vertical al-is-last",
+              "component": "al-stepper-item",
+              "box": {
+                "w": 146.4,
+                "h": 79
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "flex-start",
+                "justify": "flex-start"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__step",
+                  "box": {
+                    "w": 32,
+                    "h": 79
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "center",
+                    "justify": "flex-start"
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__counter",
+                      "text": "3",
+                      "box": {
+                        "w": 32,
+                        "h": 32
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-default",
+                          "figma": "theme/color/border/default"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width",
+                          "figma": "theme/border/width/@"
+                        },
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "min-width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "cls": "al-c-stepper-item__content",
+                  "box": {
+                    "w": 102.4,
+                    "h": 56
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "div",
+                      "cls": "al-c-stepper-item__body",
+                      "box": {
+                        "w": 102.4,
+                        "h": 48
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "column",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "column-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        },
+                        "row-gap": {
+                          "code": "--al-theme-space-xxs",
+                          "figma": "theme/space/xxs"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__title",
+                          "box": {
+                            "w": 102.4,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "al-c-stepper-item__title",
+                              "text": "Label",
+                              "box": {
+                                "w": 42.7,
+                                "h": 19
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "flex-start",
+                                "wrap": "wrap"
+                              },
+                              "tokens": {
+                                "column-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                },
+                                "row-gap": {
+                                  "code": "--al-theme-space-xxs",
+                                  "figma": "theme/space/xxs"
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "div",
+                          "cls": "al-c-stepper-item__description",
+                          "box": {
+                            "w": 102.4,
+                            "h": 20
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "flex-start",
+                            "wrap": "wrap"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default",
+                              "figma": "theme/color/content/default"
+                            },
+                            "column-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-sm",
+                              "figma": null
+                            },
+                            "gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-sm-letter-spacing",
+                              "figma": null
+                            },
+                            "row-gap": {
+                              "code": "--al-theme-space-xxs",
+                              "figma": "theme/space/xxs"
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "div",
+                              "cls": "",
+                              "text": "Supporting text",
+                              "box": {
+                                "w": 102.4,
+                                "h": 20
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-base-space",
+    "--al-font-weight-bold",
+    "--al-theme-border-width",
+    "--al-theme-color-background-primary-default",
+    "--al-theme-color-background-transparent-default",
+    "--al-theme-color-border-default",
+    "--al-theme-color-border-primary-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-color-content-inverse-default",
+    "--al-theme-color-content-primary-weak",
+    "--al-theme-icon",
+    "--al-theme-space-sm",
+    "--al-theme-space-xs",
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-md-bold-letter-spacing",
+    "--al-theme-typography-body-sm",
+    "--al-theme-typography-body-sm-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/stepper/stepper.ts",
+      "tagName": "al-stepper",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

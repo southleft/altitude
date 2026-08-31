@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-dialog.schema.json",
+  "title": "ALDialog (al-dialog)",
+  "description": "Component: al-dialog",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-dialog",
+    "className": "ALDialog",
+    "module": "components/dialog/dialog.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The main body of the dialog",
+        "name": ""
+      },
+      {
+        "description": "The trigger that opens/closes the dialog",
+        "name": "trigger"
+      },
+      {
+        "description": "The header of the dialog that appears above the main slot",
+        "name": "header"
+      },
+      {
+        "description": "The footer of the dialog that appears below the main slot",
+        "name": "footer"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDialogOpen",
+        "description": "Fired when the dialog opens. Detail: `{ active, item }` — the new open state and the dialog element itself."
+      },
+      {
+        "name": "onDialogClose",
+        "description": "Fired when the dialog closes by any means, including backdrop click and Escape. Detail: `{ active, item }`."
+      },
+      {
+        "name": "onDialogCloseButton",
+        "description": "Fired only when the dialog's close button is activated. Detail: `{ active, item }`. Use `onDialogClose` to catch every close path."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-dialog"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "description": "Heading text that appears in the header region",
+          "type": "string"
+        },
+        "isActive": {
+          "description": "Is active?\n- **true** Shows the dialog container\n- **false** Hides the dialog container",
+          "type": "boolean"
+        },
+        "ariaLabelledBy": {
+          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+          "type": "string"
+        },
+        "disableClickOutside": {
+          "description": "Disable click outside\n- **true** Disables closing the dialog on click outside of the dialog container\n- **false** Enables closing the dialog on click outside of the dialog container",
+          "type": "boolean"
+        },
+        "width": {
+          "description": "The width of the dialog container\n- If no value is entered, it defaults to 432px",
+          "type": "number"
+        },
+        "transitionDelay": {
+          "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation",
+          "type": "number"
+        },
+        "dialogTrigger": {
+          "description": "typescript: any",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

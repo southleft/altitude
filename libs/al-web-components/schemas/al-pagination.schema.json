@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-pagination.schema.json",
+  "title": "ALPagination (al-pagination)",
+  "description": "Component: al-pagination",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-pagination",
+    "className": "ALPagination",
+    "module": "components/pagination/pagination.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "If content is slotted, it will override the default pagination label",
+        "name": "label"
+      },
+      {
+        "description": "If content is slotted, it will override the default \"previous\" icon",
+        "name": "prev"
+      },
+      {
+        "description": "If content is slotted, it will override the default \"next\" icon",
+        "name": "next"
+      }
+    ],
+    "events": [
+      {
+        "name": "onPaginationChange",
+        "description": "Fired when the page or page size changes. Detail: `{ pageNumber, pageSize, totalRecordSize }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-pagination"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prevButtonText": {
+          "description": "Text displayed on the previous button",
+          "type": "string"
+        },
+        "nextButtonText": {
+          "description": "Text displayed on the next button",
+          "type": "string"
+        },
+        "ariaLabel": {
+          "description": "Aria label attribute for accessibility\nProvides an accessible name for the navigation element",
+          "type": "string"
+        },
+        "totalRecords": {
+          "description": "Total number of records\nRepresents the total size of the data set",
+          "type": "number"
+        },
+        "currentItem": {
+          "description": "Current page number being displayed",
+          "type": "number"
+        },
+        "pageSize": {
+          "description": "Number of records to display per page",
+          "type": "number"
+        },
+        "pageSizeOptions": {
+          "description": "typescript: Array<number>",
+          "type": "string"
+        },
+        "variant": {
+          "description": "typescript: 'small'",
+          "type": "string"
+        },
+        "pageSizeLabel": {
+          "description": "Label text for the page size dropdown",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

@@ -1,1 +1,3 @@
-export * from './DotsHorizontal';
+'use client';
+
+export * from './DotsHorizontal.js';

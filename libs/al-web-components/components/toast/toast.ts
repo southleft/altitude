@@ -1,3 +1,12 @@
+/* eslint-disable lit-a11y/mouse-events-have-key-events --
+ * The rule wants a literal `@focus` beside `@mouseover`. This component pairs
+ * `@mouseover`/`@mouseleave` with `@focusin`/`@focusout` instead, which is the
+ * keyboard equivalent the rule is asking for and the ONLY form that works
+ * here: focus does not bubble, so `@focus` on a non-focusable wrapper never
+ * fires from the close button or a slotted action, and a keyboard user would
+ * get no pause at all. The disable is file-level because an inline one cannot
+ * live inside a Lit template literal.
+ */
 import { TemplateResult, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
@@ -15,9 +24,12 @@ import styles from './toast.scss';
 
 /**
  * Component: al-toast
- * - **slot**: The toast title or primary text
- * - **slot** "actions": Actions to optionally display in the toast
- * - **slot** "icon": Slot in an icon to override the default one
+ * @slot - The toast title or primary text
+ * @slot actions - Actions to optionally display in the toast
+ * @slot icon - Slot in an icon to override the default one
+ *
+ * @event onToastClose - Fired when the toast is dismissed. Detail: `{ active }`.
+ * @event onToastOpen - Fired when the toast becomes visible. Detail: `{ active }`.
  */
 export class ALToast extends ALElement {
   static el = 'al-toast';
@@ -81,14 +93,14 @@ export class ALToast extends ALElement {
 
   /**
    * Auto close?
-   * - Set whether you want the toast group to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds
+   * - Set whether you want the toast to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds
    */
   @property({ type: Boolean })
   accessor autoClose: boolean;
 
   /**
    * Delay property
-   * 1. Number of seconds to close the toast group when autoClose is enabled
+   * 1. Number of seconds to close the toast when autoClose is enabled
    * 2. Default amount is 3
    */
   @property({ type: Number })
@@ -134,7 +146,7 @@ export class ALToast extends ALElement {
 
     /* 2 */
     this.dispatch({
-      eventName: 'onToastGroupOpen',
+      eventName: 'onToastOpen',
       detailObj: {
         active: this.isActive
       }
@@ -170,7 +182,7 @@ export class ALToast extends ALElement {
 
   /**
    * Mouseover event
-   * 1. On mouseover of the toast group, clear the timer to pause auto close
+   * 1. On mouseover of the toast, clear the timer to pause auto close
    */
   handleMouseOver() {
     if (this.autoClose) {
@@ -211,6 +223,8 @@ export class ALToast extends ALElement {
       <div role="alert"
         class=${componentClassNames}
         @keydown=${this.handleKeyDown}
+        @focusin=${this.handleMouseOver}
+        @focusout=${this.handleMouseLeave}
         @mouseover=${this.handleMouseOver}
         @mouseleave=${this.handleMouseLeave}
       >

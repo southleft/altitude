@@ -1,17 +1,49 @@
+/* eslint-disable lit-a11y/click-events-have-key-events --
+ * The trigger wrapper takes `tabindex="0"` only when the slotted trigger has
+ * nothing focusable of its own (`syncTriggerFocusability`), and the keydown that
+ * activates it — Enter/Space -> `toggleActive` — sits on the PARENT wrapper, so
+ * it catches the bubbled event. The rule requires the handler on the same
+ * element as the click and cannot follow that. Verified by test: an inert
+ * trigger is tabbable and opens on Enter.
+ */
+/* eslint-disable lit-a11y/accessible-name --
+ * `role="tooltip"` here wraps `<slot></slot>`: the tooltip's accessible name IS
+ * its slotted content, supplied by the consumer, and at runtime it has one. The
+ * rule cannot see through a shadow slot, so it reports every slotted tooltip —
+ * the same blind spot that makes `lit-a11y/list` unusable on this library (see
+ * eslint.config.js).
+ *
+ * Adding an `aria-label` to satisfy it would be actively WRONG: it would
+ * override the visible text with a generic string, so the tooltip would be
+ * announced as something other than what it says on screen. A false positive is
+ * better suppressed than appeased.
+ */
 import { html, unsafeCSS } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { nanoid } from 'nanoid';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { ALElement } from '../ALElement';
+import getFocusableElements from '../../directives/getFocusableElements';
+import { TooltipController } from '../../controllers/tooltip';
 import styles from './tooltip.scss';
 
 /**
  * Component: al-tooltip
- * - **slot**: The content that appears inside the tooltip
- * - **slot** "prefix": The content that appears before the main content
- * - **slot** "trigger": The trigger that opens the tooltip
+ * @slot - The content that appears inside the tooltip
+ * @slot prefix - The content that appears before the main content
+ * @slot trigger - The trigger that opens the tooltip
+ *
+ * @event onTooltipOpen - Fired when the tooltip becomes visible. Detail: `{ active }`.
+ * @event onTooltipClose - Fired when the tooltip hides. Detail: `{ active }`.
  */
 export class ALTooltip extends ALElement {
   static el = 'al-tooltip';
+
+  /**
+   * T5.1 — headless TooltipController owns the show/hide debounce + the
+   * mouseenter/mouseleave/focusin/focusout listeners.
+   */
+  protected tooltipCtrl = new TooltipController(this);
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -78,6 +110,13 @@ export class ALTooltip extends ALElement {
   accessor tooltipTrigger: HTMLElement;
 
   /**
+   * A11y — true when the slotted trigger contains its own focusable control,
+   * in which case the trigger wrapper must not add a second tab stop.
+   */
+  @state()
+  accessor triggerHasOwnFocusable: boolean = false;
+
+  /**
    * Get the document dir
    */
   get isRTL() {
@@ -100,6 +139,10 @@ export class ALTooltip extends ALElement {
    */
   connectedCallback() {
     super.connectedCallback();
+    /* 1. Generate the description id here, not in firstUpdated: the container
+       renders `id=${this.ariaDescribedBy}` on the very first pass, and setting
+       it later meant the first paint shipped `id="undefined"`. */
+    this.ariaDescribedBy = this.ariaDescribedBy || nanoid();
     globalThis.addEventListener('mousedown', this.handleOnClickOutside, false); /* 2 */
     this.addEventListener('mouseover', this.handleOnMouseOver);
     this.addEventListener('mouseout', this.handleOnMouseOut);
@@ -126,11 +169,27 @@ export class ALTooltip extends ALElement {
    */
   async firstUpdated() {
     await this.updateComplete; /* 1 */
-    this.ariaDescribedBy = this.ariaDescribedBy || nanoid(); /* 2 */
+    this.syncTriggerFocusability(); /* 2 */
     /* 3 */
     if (this.tooltipContainer.clientHeight < 16) {
       this.tooltipContainer.style.display = 'none';
     }
+  }
+
+  /**
+   * A11y — decide whether the trigger wrapper needs its own tab stop.
+   *
+   * The wrapper was unconditionally `tabindex="0"`. When the consumer slots a
+   * control that is already focusable (`<al-button slot="trigger">`) that
+   * produced **two** tab stops for one control. The wrapper is only tabbable
+   * when the slotted trigger has nothing focusable of its own — which is the
+   * documented usage (`<span slot="trigger">`).
+   */
+  private syncTriggerFocusability() {
+    const slotted = Array.from(this.querySelectorAll('[slot="trigger"]'));
+    this.triggerHasOwnFocusable = slotted.some(
+      (el) => getFocusableElements(el).length > 0
+    );
   }
 
   /**
@@ -304,7 +363,13 @@ export class ALTooltip extends ALElement {
       <div class="${componentClassNames}" @keydown=${this.handleOnKeydown}>
         ${this.slotNotEmpty('trigger') &&
         html`
-          <div class="al-c-tooltip__trigger" tabindex="0" @click=${this.toggleActive} @focus=${this.handleOnFocus}>
+          <div
+            class="al-c-tooltip__trigger"
+            tabindex=${ifDefined(this.triggerHasOwnFocusable ? undefined : '0')}
+            aria-describedby=${this.ariaDescribedBy}
+            @click=${this.toggleActive}
+            @focus=${this.handleOnFocus}
+          >
             <slot name="trigger"></slot>
           </div>
         `}

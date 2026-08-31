@@ -1,0 +1,50 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #TESTIMONIAL
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  .al-c-testimonial {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-md);
+    margin: 0;
+    padding-inline-start: var(--al-theme-space-md);
+    border-inline-start: var(--al-theme-border-width-md) solid var(--al-theme-color-border-default);
+  }
+
+  .al-c-testimonial__quote {
+    @include al-theme-typography-heading-sm;
+    margin: 0;
+    color: var(--al-theme-color-content-default);
+  }
+
+  .al-c-testimonial__attribution {
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space-sm);
+  }
+
+  .al-c-testimonial__avatar {
+    flex: 0 0 auto;
+  }
+
+  .al-c-testimonial__meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .al-c-testimonial__name {
+    @include al-theme-typography-body-md-bold;
+    color: var(--al-theme-color-content-default);
+  }
+
+  .al-c-testimonial__role {
+    @include al-theme-typography-body-sm;
+    color: var(--al-theme-color-content-default-weak);
+  }
+}

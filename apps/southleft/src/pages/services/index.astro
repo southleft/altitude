@@ -1,0 +1,131 @@
+---
+// Services — spec 2026-08-20-southleft-example-app, T4-1.
+// Real copy migrated verbatim from southleft-v5's src/pages/services/index.astro.
+// Individual /services/<slug> deep pages are left for the follow-up agent
+// (T5-T8); the five hrefs below already point at their eventual routes.
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import { CTA } from '../../lib/site';
+import { withBase } from '../../lib/url';
+
+const services = [
+  {
+    href: '/ai-design-systems',
+    name: 'AI + Design Systems',
+    flagship: true,
+    oneLiner: 'Discovery, research, and strategy for teams who want their design system to work with AI — not against it.',
+    body: 'Modern teams don’t just need design systems — they need systems that can work with AI. We help product organizations figure out what that means for them: auditing what you have, researching what’s possible, and mapping the path to intelligent design-to-code workflows.',
+    items: ['AI-readiness audits', 'MCP integrations & working proof-of-concepts', 'Discovery & research reports', 'Prioritized roadmaps & executive readouts'],
+  },
+  {
+    href: '/services/design-systems',
+    name: 'Design System Development',
+    oneLiner: 'We build, audit, and scale design systems that align design and engineering — structured for AI from day one.',
+    body: 'Structured tokens, component libraries, and documentation ecosystems that reduce redundancy and speed up delivery. Whether you’re starting from scratch, auditing a system that’s drifted, or scaling one across brands and platforms, we build systems your team — and your AI tooling — can actually use.',
+    items: ['Component library development (Storybook)', 'Design token architecture', 'Design system audits', 'Documentation ecosystems & multi-brand theming'],
+  },
+  {
+    href: '/services/workshops-training',
+    name: 'Workshops & Training',
+    oneLiner: 'Hands-on workshops, team training, and conference talks on AI-native design systems — from the people building the tools.',
+    body: 'The fastest way to change how your team works is to work alongside people who’ve already made the shift. Working sessions on AI + design systems, MCP workflows, and design-to-code pipelines, built around your actual system — plus the AI & Design Systems course with Brad Frost.',
+    items: ['Team workshops', 'Training & mentorship programs', 'Speaking engagements', 'AI & Design Systems course with Brad Frost'],
+  },
+  {
+    href: '/services/team-augmentation',
+    name: 'Team Augmentation',
+    oneLiner: 'Senior design systems and front-end engineers embedded in your team — augmenting capability, not just capacity.',
+    body: 'Our engineers embed directly in your workflows — your repos, your standups, your roadmap — bringing deep design systems and front-end expertise while transferring skills to your team along the way.',
+    items: ['Embedded senior engineers', 'Tech stack evaluation & digital strategy', 'Performance & accessibility audits', 'Deliberate knowledge transfer'],
+  },
+  {
+    href: '/services/ai-prototype-to-production',
+    name: 'AI Prototype to Production',
+    oneLiner: 'You vibe-coded a working prototype. We make it production-ready.',
+    body: 'AI-assisted coding tools are empowering a new wave of makers — but they often stop short of the finish line. Whether you used Cursor, Lovable, or Bolt.new to kickstart your project, we help you make the leap from working prototype to production-ready application.',
+    items: ['Codebase review & audit', 'Component refactoring & architecture alignment', 'UI polish & WCAG accessibility', 'Security, DevOps & scalability readiness'],
+  },
+];
+
+const engage = [
+  { step: 'Discovery call', body: 'Thirty minutes with the people who’ll actually do the work. We dig into your system, your stack, and where you’re trying to go.' },
+  { step: 'Proposal', body: 'A scoped plan with clear deliverables. Most engagements open with a focused audit or discovery sprint before any longer commitment.' },
+  { step: 'Embedded work', body: 'We work inside your tools and rituals: weekly syncs, a shared Slack channel, and direct access to the developers writing the code.' },
+];
+
+const stack = ['Figma', 'Claude', 'TypeScript', 'React', 'Storybook', 'Web Components', 'Next.js', 'Vercel', 'Tailwind', 'GitHub', 'Vue', 'WordPress', 'Shopify', 'Contentful'];
+---
+
+<Base
+  title="Services"
+  description="AI + design systems consulting, design system development, workshops and training, team augmentation, and AI prototype-to-production — one practice, end to end."
+>
+  <div class="sl-section--tight">
+    <PageHero
+      label="services"
+      heading="What we do"
+      dek="One practice, end to end: we help product organizations build design systems that are ready for AI — through audits, workshops, research, and senior engineers who ship alongside your team."
+    >
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+          <al-button variant="tertiary" href={withBase('/work')}>See the work</al-button>
+        </al-layout>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Five ways to work with us</al-heading>
+    <div style="margin-top: var(--al-theme-space-xl);">
+      <al-layout gap="lg">
+        {services.map((s) => (
+          <al-card>
+            <div slot="header">
+              {s.flagship && <al-chip variant="secondary">main practice</al-chip>}
+              <al-heading tagName="h3" variant="md" isBold={true}><a href={withBase(s.href)}>{s.name}</a></al-heading>
+              <p class="al-u-theme-typography-body-sm">{s.oneLiner}</p>
+            </div>
+            <al-text-block>{s.body}</al-text-block>
+            <al-list>
+              {s.items.map((item) => <al-list-item>{item}</al-list-item>)}
+            </al-list>
+          </al-card>
+        ))}
+      </al-layout>
+    </div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>How an engagement starts</al-heading>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+      {engage.map((e, i) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <p class="al-u-theme-typography-body-xs">step {String(i + 1).padStart(2, '0')}</p>
+              <al-heading tagName="h3" variant="sm" isBold={true}>{e.step}</al-heading>
+            </div>
+            <al-text-block>{e.body}</al-text-block>
+          </al-card>
+        </div>
+      ))}
+    </al-layout></div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>The same habits on every engagement</al-heading>
+    <al-text-block>These aren’t aspirations — they’re how the studio has operated since 2012, on every project, at every scale.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-lg);">
+      <al-layout direction="row" wrap gap="xs" align="center">
+        {stack.map((t) => <al-chip>{t}</al-chip>)}
+      </al-layout>
+    </div>
+  </div>
+
+      <CTABand
+      heading="Not sure where to start?"
+      dek="An AI-readiness audit is the fastest way to find out where your leverage is. A 30-minute discovery call gets it moving."
+    />
+</Base>

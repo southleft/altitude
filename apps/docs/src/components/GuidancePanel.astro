@@ -1,0 +1,303 @@
+---
+/**
+ * Design guidance for one component — the half of a design system that cannot
+ * be generated from the manifest.
+ *
+ * Everything else on a component page is derived: props, slots, events, parity,
+ * axe results. This panel is the one place where a human judgement lands, so it
+ * is built to make that judgement checkable rather than decorative:
+ *
+ *   * THE SHAPE IS ENFORCED, NOT SUGGESTED. The seven sections below are all
+ *     required by the collection schema (`src/content.config.ts`), so a
+ *     guidance file cannot ship without a "when not to use" — the section the
+ *     audit found missing across the entire library. There is no branch here
+ *     that renders a partial panel.
+ *
+ *   * ABSENCE IS RENDERED, NOT HIDDEN. A component with no guidance gets an
+ *     explicit note saying so. A panel that simply disappeared would be
+ *     indistinguishable from a component nobody needed to warn you about, and
+ *     `scripts/check-guidance.mjs` would have nothing to count.
+ *
+ *   * EVERY CLAIM CARRIES ITS RECEIPT. The sources list is emitted with the
+ *     repo path and the literal anchor text in `data-` attributes, and the gate
+ *     re-reads them from the built HTML. When the code moves or the anchor is
+ *     deleted, the gate fails instead of the page quietly lying.
+ *
+ * The cross-file check (`assertPointsAtRealComponents`) runs here rather than
+ * in the schema because it needs every entry at once. Astro turns the throw
+ * into a build failure, which is the intent: a page must never recommend a
+ * component the library removed.
+ */
+import { getCollection } from 'astro:content';
+import { assertPointsAtRealComponents } from '../content.config';
+
+interface Props {
+  /** The component record — its library decides which guidance file applies. */
+  component: any;
+  /** The design system rendering the page, for the brand-layer lookup. */
+  project: any;
+}
+
+const { component, project } = Astro.props;
+const slug = component.slug;
+
+/**
+ * Sibling-component links are derived from the CURRENT url rather than from a
+ * base/prefix helper: this page's own route is the only thing that knows the
+ * configured base and (for a multi-project site) which project prefix it is
+ * being rendered under. Swapping the last segment is correct under either
+ * trailing-slash setting and couples this panel to no other module.
+ */
+const siblingHref = (target: string) =>
+  `${Astro.url.pathname.replace(/\/[^/]*\/?$/, '')}/${target}`;
+
+const all = await getCollection('guidance');
+assertPointsAtRealComponents(all as any);
+
+// Looked up in the loaded collection rather than with `getEntry`, which logs a
+// warning for every miss — and with 68 components and guidance authored for a
+// subset, a miss is the normal case, not an error.
+/*
+ * WHICH FILE APPLIES, and why a bare slug is not enough.
+ *
+ * A brand layer may override a base component, so `header` names two different
+ * components depending on the site: Altitude's bare landmark, and the brand's
+ * navigation bar. Guidance for the layer therefore lives under the project that
+ * owns it (`guidance/southleft/header.yaml`, see content.config.ts), and this
+ * page asks for that file only when the component it is rendering actually came
+ * from that layer.
+ *
+ * No fallback to the base file for a layer component: inheriting Altitude's
+ * advice about a component the brand replaced is precisely the wrong answer,
+ * and "not yet authored" is the honest one until someone writes it.
+ */
+const fromBrandLayer =
+  project.brandLayer && component.libraryWorkspace === project.brandLayer.workspace;
+const entryId = fromBrandLayer ? `${project.id}/${slug}` : slug;
+
+const g = all.find((item) => item.id === entryId)?.data;
+
+/** Guidance coverage, so the panel can say where this page sits. */
+const authored = all.length;
+
+/**
+ * Inline `code` spans, the only markup guidance prose is allowed to carry.
+ * Escaped first, then re-marked — so a backtick pair renders as code and
+ * everything else renders as text, whatever an author types.
+ */
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const inline = (text: string) =>
+  escapeHtml(text).replace(/`([^`]+)`/g, '<code>$1</code>');
+
+const SECTIONS = g
+  ? [
+      { id: 'when-to-use', label: 'WHEN TO USE', items: g.whenToUse, tone: 'yes' },
+      { id: 'dos', label: 'DO', items: g.dos, tone: 'yes' },
+      { id: 'donts', label: 'DON’T', items: g.donts, tone: 'no' },
+      { id: 'accessibility', label: 'ACCESSIBILITY IN PRACTICE', items: g.accessibility, tone: 'neutral' },
+      { id: 'content', label: 'CONTENT GUIDELINES', items: g.content, tone: 'neutral' },
+    ]
+  : [];
+---
+
+<div class="section-rule">
+  <span>GUIDANCE</span>
+  <span>{g ? 'AUTHORED · CITED TO SOURCE' : `NOT YET AUTHORED · ${authored} COMPONENTS COVERED`}</span>
+</div>
+
+{
+  !g && (
+    <p class="empty-note" data-guidance-missing data-guidance-slug={slug}>
+      NO USAGE GUIDANCE HAS BEEN WRITTEN FOR THIS COMPONENT YET. THE API BELOW IS GENERATED FROM THE
+      MANIFEST AND IS COMPLETE; WHAT IS MISSING IS WHEN TO REACH FOR IT AND WHEN NOT TO.
+    </p>
+  )
+}
+
+{
+  g && (
+    <div class="guidance" data-guidance-panel data-guidance-slug={slug}>
+      <p class="guidance__purpose" data-guidance-section="purpose" set:html={inline(g.purpose)} />
+
+      <div class="guidance__block" data-guidance-section="when-not-to-use">
+        <p class="micro guidance__label guidance__label--no">WHEN NOT TO USE</p>
+        <ul class="guidance__list guidance__list--no">
+          {g.whenNotToUse.map((row) => (
+            <li>
+              <span set:html={inline(row.text)} />
+              {row.instead && (
+                <a class="guidance__instead" href={siblingHref(row.instead)}>
+                  USE {row.instead.toUpperCase()} →
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {SECTIONS.map((section) => (
+        <div class="guidance__block" data-guidance-section={section.id}>
+          <p class={`micro guidance__label guidance__label--${section.tone}`}>{section.label}</p>
+          <ul class={`guidance__list guidance__list--${section.tone}`}>
+            {section.items.map((item) => (
+              <li set:html={inline(item)} />
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      <div class="guidance__block guidance__block--sources" data-guidance-section="sources">
+        <p class="micro guidance__label">WHERE THIS CAME FROM</p>
+        <ul class="guidance__sources">
+          {g.sources.map((source) => (
+            <li data-guidance-source={source.path} data-guidance-contains={source.contains}>
+              <code>{source.path}</code>
+              <span>{source.note}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="guidance__gate">
+          Each line above names a file and a literal string that must still appear in it.
+          <code>pnpm gate:guidance</code> re-reads them from this built page, so guidance that has
+          stopped being true fails a check rather than misleading you.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .guidance {
+    margin-bottom: 44px;
+  }
+
+  .guidance__purpose {
+    margin: 0 0 30px;
+    font: 400 16px/26px var(--sans);
+    color: var(--fg);
+    max-width: 660px;
+  }
+
+  .guidance__block + .guidance__block {
+    margin-top: 26px;
+  }
+
+  .guidance__label {
+    margin: 0 0 10px;
+  }
+
+  .guidance__label--yes {
+    color: var(--blue);
+  }
+
+  .guidance__label--no {
+    color: var(--fg);
+  }
+
+  .guidance__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-width: 660px;
+  }
+
+  .guidance__list li {
+    position: relative;
+    padding: 0 0 0 22px;
+    margin: 0 0 10px;
+    font: 400 14px/23px var(--sans);
+    color: var(--fg-weak);
+  }
+
+  .guidance__list li::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font: 500 13px/23px var(--mono);
+  }
+
+  .guidance__list--yes li::before {
+    content: '+';
+    color: var(--blue);
+  }
+
+  .guidance__list--no li::before {
+    content: '×';
+    color: var(--fg);
+  }
+
+  .guidance__list--neutral li::before {
+    content: '·';
+    color: var(--fg-weak);
+  }
+
+  .guidance__list code,
+  .guidance__purpose code,
+  .guidance__gate code {
+    font: 400 12px/1 var(--mono);
+    background: var(--bg2);
+    padding: 2px 4px;
+  }
+
+  .guidance__instead {
+    display: inline-block;
+    margin-left: 6px;
+    font: 500 10px/1 var(--mono);
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .guidance__instead:hover {
+    text-decoration: underline;
+  }
+
+  .guidance__block--sources {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line-weak);
+  }
+
+  .guidance__sources {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-width: 720px;
+  }
+
+  .guidance__sources li {
+    display: grid;
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    gap: 6px 18px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line-weak);
+  }
+
+  .guidance__sources code {
+    font: 400 11px/17px var(--mono);
+    overflow-wrap: anywhere;
+  }
+
+  .guidance__sources span {
+    font: 400 12px/19px var(--sans);
+    color: var(--fg-weak);
+  }
+
+  .guidance__gate {
+    margin: 16px 0 0;
+    font: 400 12px/19px var(--sans);
+    color: var(--fg-weak);
+    border-left: 2px solid var(--line-weak);
+    padding-left: 12px;
+    max-width: 660px;
+  }
+
+  @media (max-width: 640px) {
+    .guidance__sources li {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

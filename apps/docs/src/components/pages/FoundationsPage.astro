@@ -1,0 +1,475 @@
+---
+/**
+ * Foundations — the canvas's `data-screen-label="Foundations"` screen,
+ * rendered for ONE design system.
+ *
+ * The canvas typed every swatch hex, every spacing value and every type row
+ * inline. All of them turned out to be token values, so this page reads them
+ * from `@southleft/al-web-components/tokens.json` instead (see lib/tokens.mjs). The
+ * ramps, their families and their step names are discovered, not listed —
+ * retuning a ramp in the DTCG sources changes this page with no edit here.
+ */
+import Shell from '../../layouts/Shell.astro';
+import {
+  TOKEN_COUNT,
+  colorRamps,
+  spacingScale,
+  radiusScale,
+  shadowScale,
+  borderWidthScale,
+  breakpointScale,
+  layoutScale,
+  opacityScale,
+  zIndexScale,
+  typeScale,
+  brandOverrides,
+} from '../../lib/tokens.mjs';
+
+interface Props {
+  context: any;
+}
+
+const { context } = Astro.props;
+const { project, site } = context;
+
+/**
+ * What THIS brand changes about the token layer. The ramps, the scale and the
+ * presets below are the base bundle every brand composes on top of; this table
+ * is the delta `<al-theme brand="…">` applies on `:host`. A brand that
+ * overrides nothing is the neutral reference, and says so rather than showing
+ * an empty table.
+ */
+const overrides = brandOverrides(project.brand);
+
+const ramps = colorRamps();
+const spacing = spacingScale();
+const radii = radiusScale();
+const shadows = shadowScale();
+
+/*
+ * Restored 2026-08-25. These five had their only visual home in
+ * `.storybook/components/tokens/`, which went with Storybook. The DATA was
+ * never lost — all of them were already in llms-tokens.txt — so this is
+ * rendering, not recovery.
+ *
+ * Rendered two ways on purpose. `borders` and `opacities` get a specimen,
+ * because a width and an alpha are things you judge by eye. `breakpoints`,
+ * `layouts` and `zIndexes` get a plain table: a 1440px bar and a `z-index: 400`
+ * have no useful visual, and a fake one would imply a relationship that is not
+ * there.
+ */
+const borders = borderWidthScale();
+const breakpoints = breakpointScale();
+const layouts = layoutScale();
+const opacities = opacityScale();
+const zIndexes = zIndexScale();
+
+const scaleTables = [
+  { label: 'BREAKPOINTS', rows: breakpoints },
+  { label: 'LAYOUT WIDTHS', rows: layouts },
+  { label: 'Z-INDEX', rows: zIndexes },
+];
+const type = typeScale();
+
+/** The widest spacing step sets the bar scale, so the chart is self-sizing. */
+const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
+---
+
+<Shell
+  context={context}
+  title="Foundations"
+  description={`The ${site.fullName} token layer — ${TOKEN_COUNT} tokens across color, type, space, radius and elevation.`}
+  active="foundations"
+>
+  <div class="page">
+    <div class="micro">INDEX / 01</div>
+    <h1 class="t-page-title">Foundations</h1>
+    <p class="t-body-md foundations-lede">
+      Tier-1 primitives, resolved through tier-2 theme aliases. Every value below is read at build
+      time from the published token layer — all {TOKEN_COUNT} of them.
+    </p>
+
+    <div class="section-rule">
+      <span>BRAND — {project.brand.toUpperCase()}</span>
+      <span data-brand-overrides={overrides.properties.length}>
+        {overrides.properties.length} PROPERTIES REDECLARED
+      </span>
+    </div>
+    <p class="t-body-md foundations-lede">
+      {
+        overrides.reason ??
+          `Everything below is the base token bundle. Inside <al-theme brand="${project.brand}">, these ${overrides.properties.length} properties resolve to a different value on :host; every other token is shared.`
+      }
+    </p>
+    {
+      overrides.properties.length > 0 && (
+        <div class="spec-table spec-table--props">
+          <div class="spec-table__head">
+            <span>PROPERTY</span>
+            <span>THIS BRAND</span>
+            <span>BASE</span>
+          </div>
+          {overrides.properties.map((property) => (
+            <div class="spec-table__row">
+              <span class="spec-table__name">{property.name}</span>
+              <span class="spec-table__type">{property.value}</span>
+              <span class="spec-table__default">{property.base ?? '—'}</span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    <div class="section-rule">
+      <span>COLOR — {ramps.length} RAMPS</span>
+      <span data-copy-note>CLICK A SWATCH TO COPY ITS HEX</span>
+    </div>
+    {
+      ramps.map((ramp) => (
+        <div class="ramp">
+          <div class="ramp__head">
+            <span class="t-heading-sm" style="font-size:14px;line-height:20px">
+              {ramp.label}
+            </span>
+            <span class="mono" style="color:var(--fg-weak)">
+              {ramp.prefix}
+            </span>
+          </div>
+          <div class="ramp__steps">
+            {ramp.steps.map((step) => (
+              <button class="ramp__step" type="button" data-hex={step.value}>
+                <span class="ramp__chip" style={`background:${step.value}`} />
+                <span class="ramp__name">{step.name}</span>
+                <span class="ramp__value">{step.value}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    <div class="section-rule">
+      <span>TYPOGRAPHY — {type.length} PRESETS</span>
+      <span>IBM PLEX SANS</span>
+    </div>
+    <div class="spec-table">
+      {
+        type.map((preset) => (
+          <div class="type-row">
+            <span class="spec-table__name">{preset.name}</span>
+            <span class="spec-table__type">{preset.value.replace(', sans-serif', '')}</span>
+            <span style={`font:${preset.value}`}>Design at {site.name.toLowerCase()}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="section-rule">
+      <span>SPACING — {spacing.length} STEPS</span>
+      <span>8PX BASE</span>
+    </div>
+    <!--
+      ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin a
+      display:contents host cannot carry. .scale-row itself stays CSS grid —
+      TABULAR data (label/value/bar), not section arrangement.
+    -->
+    <div class="scale-list-wrap">
+      <al-layout class="scale-list">
+        {
+          spacing.map((step) => (
+            <div class="scale-row">
+              <span class="spec-table__type">{step.name}</span>
+              <span class="spec-table__default">{step.value}</span>
+              <span class="scale-bar" style={`width:${Math.max((step.px / maxSpace) * 100, 1)}%`} />
+            </div>
+          ))
+        }
+      </al-layout>
+    </div>
+
+    <!--
+      ARRANGEMENT IS <al-layout> (R4); the wrapper owns the margin. Equal
+      2-column split → `columns={2}`, overridden to 1 below 1000px via the
+      --al-layout-columns hook the `columns` prop itself sets.
+    -->
+    <div class="foundations-split-wrap">
+      <al-layout variant="grid" columns={2} noCollapse class="foundations-split">
+        <div>
+          <div class="section-rule"><span>RADIUS</span><span>{radii.length}</span></div>
+          <!-- ARRANGEMENT IS <al-layout> (R4); a row of swatches that wraps. -->
+          <al-layout direction="row" wrap class="radius-grid">
+            {
+              radii.map((radius) => (
+                <div class="radius-cell">
+                  <div class="radius-swatch" style={`border-radius:${radius.value}`} />
+                  <div class="micro">
+                    {radius.name} · {radius.value}
+                  </div>
+                </div>
+              ))
+            }
+          </al-layout>
+        </div>
+        <div>
+          <div class="section-rule"><span>ELEVATION</span><span>{shadows.length}</span></div>
+          <!-- ARRANGEMENT IS <al-layout> (R4); background/padding stay on the wrapper. -->
+          <div class="shadow-grid-wrap">
+            <al-layout variant="grid" columns={3} noCollapse class="shadow-grid">
+              {
+                shadows.map((shadow) => (
+                  <div>
+                    <div class="shadow-swatch" style={`box-shadow:${shadow.value}`} />
+                    <div class="micro">{shadow.name}</div>
+                  </div>
+                ))
+              }
+            </al-layout>
+          </div>
+        </div>
+        <div>
+          <div class="section-rule"><span>BORDER WIDTH</span><span>{borders.length}</span></div>
+          <!-- ARRANGEMENT IS <al-layout> (R4); 24px matches the gap="lg" step. -->
+          <al-layout direction="row" wrap gap="lg" class="border-grid">
+            {
+              borders.map((border) => (
+                <div class="border-cell">
+                  <div class="border-specimen" style={`border-top-width:${border.value}`} />
+                  <div class="micro">
+                    {border.name} · {border.value}
+                  </div>
+                </div>
+              ))
+            }
+          </al-layout>
+        </div>
+        <div>
+          <div class="section-rule"><span>OPACITY</span><span>{opacities.length}</span></div>
+          <al-layout direction="row" wrap gap="lg" class="border-grid">
+            {
+              opacities.map((step) => (
+                <div class="border-cell">
+                  <div class="opacity-specimen" style={`opacity:${step.value}`} />
+                  <div class="micro">
+                    {step.name} · {step.value}
+                  </div>
+                </div>
+              ))
+            }
+          </al-layout>
+        </div>
+        {
+          scaleTables.map((group) => (
+            <div>
+              <div class="section-rule">
+                <span>{group.label}</span>
+                <span>{group.rows.length}</span>
+              </div>
+              {/* spec-table is TABULAR data (spec 2026-08-28..., R4 exemption) — stays CSS grid. */}
+              <div class="spec-table spec-table--pair">
+                <div class="spec-table__head">
+                  <span>STEP</span>
+                  <span>VALUE</span>
+                </div>
+                {group.rows.map((row) => (
+                  <div class="spec-table__row">
+                    <span class="spec-table__name">{row.name}</span>
+                    <span class="spec-table__type">{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </al-layout>
+    </div>
+  </div>
+</Shell>
+
+<style>
+  .border-cell {
+    min-width: 96px;
+  }
+
+  /* Top border only — the specimen IS the line being measured. */
+  .border-specimen {
+    border-top-style: solid;
+    border-top-color: var(--al-theme-color-border-default);
+    margin-bottom: 8px;
+  }
+
+  .opacity-specimen {
+    block-size: 32px;
+    margin-bottom: 8px;
+    background: var(--al-theme-color-content-default);
+  }
+
+  .foundations-lede {
+    margin: 0 0 44px;
+    max-width: 560px;
+  }
+
+  .ramp {
+    margin-bottom: 28px;
+  }
+
+  /* EXEMPT: card-internal head (label + prefix on a repeating ramp row), not
+   * section arrangement — kept as CSS, matching .tier-cards__head. */
+  .ramp__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  /* EXEMPT: decorative swatch strip — kept as CSS. */
+  .ramp__steps {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ramp__step {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    text-align: left;
+  }
+
+  .ramp__chip {
+    display: block;
+    height: 60px;
+    border: 1px solid var(--line-weak);
+  }
+
+  .ramp__name {
+    display: block;
+    font: 500 10px/1 var(--mono);
+    margin-top: 6px;
+    color: var(--fg);
+  }
+
+  .ramp__value {
+    display: block;
+    font: 400 9px/1 var(--mono);
+    color: var(--fg-weak);
+    margin-top: 3px;
+  }
+
+  /* EXEMPT: TABULAR row (label/type/sample), not section arrangement. */
+  .type-row {
+    display: grid;
+    grid-template-columns: 150px 220px minmax(0, 1fr);
+    gap: 16px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-weak);
+    overflow: hidden;
+  }
+
+  /* The wrapper owns the margin a display:contents layout host cannot. */
+  .scale-list-wrap {
+    margin-bottom: 52px;
+  }
+
+  .scale-list {
+    --al-layout-gap: 9px;
+  }
+
+  /* EXEMPT: TABULAR row (label/value/bar), not section arrangement. */
+  .scale-row {
+    display: grid;
+    grid-template-columns: 110px 60px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+  }
+
+  .scale-bar {
+    height: 14px;
+    background: var(--blue);
+    display: block;
+  }
+
+  /* The wrapper owns the margin; 48px is off al-layout's gap scale. */
+  .foundations-split-wrap {
+    margin-bottom: 64px;
+  }
+
+  .foundations-split {
+    --al-layout-gap: 48px;
+  }
+
+  /* 18px is off al-layout's gap scale (none/xs/sm/md/lg/xl). */
+  .radius-grid {
+    --al-layout-gap: 18px;
+  }
+
+  .radius-cell {
+    text-align: center;
+  }
+
+  .radius-swatch {
+    width: 52px;
+    height: 52px;
+    border: 1.5px solid var(--fg);
+  }
+
+  .radius-cell .micro {
+    margin-top: 8px;
+  }
+
+  /* The wrapper owns the background/padding a display:contents layout host
+   * cannot; 20px is off al-layout's gap scale. */
+  .shadow-grid-wrap {
+    background: var(--bg2);
+    padding: 24px;
+  }
+
+  .shadow-grid {
+    --al-layout-gap: 20px;
+  }
+
+  .shadow-swatch {
+    height: 56px;
+    background: var(--bg);
+  }
+
+  .shadow-grid .micro {
+    margin-top: 8px;
+  }
+
+  @media (max-width: 1000px) {
+    .foundations-split {
+      --al-layout-columns: 1;
+    }
+
+    .type-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Click-to-copy, exactly as the canvas's `copyHex` behaves — including the
+  // "COPIED <hex>" readout in the section rule.
+  const note = document.querySelector<HTMLElement>('[data-copy-note]');
+  const idle = note?.textContent ?? '';
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  for (const swatch of document.querySelectorAll<HTMLButtonElement>('[data-hex]')) {
+    swatch.addEventListener('click', async () => {
+      const hex = swatch.dataset.hex ?? '';
+      try {
+        await navigator.clipboard.writeText(hex);
+        if (note) note.textContent = `COPIED ${hex.toUpperCase()}`;
+      } catch {
+        if (note) note.textContent = `COPY BLOCKED — ${hex.toUpperCase()}`;
+      }
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (note) note.textContent = idle;
+      }, 1500);
+    });
+  }
+</script>

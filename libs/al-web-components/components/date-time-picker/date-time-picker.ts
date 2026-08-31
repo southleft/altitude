@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
-import { ALButtonGroup } from '../button-group/button-group';
+import { ALLayout } from '../layout/layout';
 import { ALButton } from '../button/button';
 import { ALCalendar } from '../calendar/calendar';
 import { ALFieldNote } from '../field-note/field-note';
@@ -19,8 +19,13 @@ import styles from './date-time-picker.scss';
 
 /**
  * Component: al-date-time-picker
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onDateTimePickerOpen - Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDateTimePickerClose - Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state.
+ * @event onDateTimePickerDateChange - Fired when the date portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the time portion.
+ * @event onDateTimePickerTimeChange - Fired when the time portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the date portion.
  */
 export class ALDateTimePicker extends ALElement {
   static el = 'al-date-time-picker';
@@ -33,7 +38,7 @@ export class ALDateTimePicker extends ALElement {
       [ALIconCalendar.el, ALIconCalendar],
       [ALIconChevronDown.el, ALIconChevronDown],
       [ALTimeSelectorList.el, ALTimeSelectorList],
-      [ALButtonGroup.el, ALButtonGroup],
+      [ALLayout.el, ALLayout],
       [ALButton.el, ALButton]
     ],
     suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
@@ -45,7 +50,7 @@ export class ALDateTimePicker extends ALElement {
   private iconCalendarEl = unsafeStatic(this.elementMap.get(ALIconCalendar.el));
   private iconChevronDownEl = unsafeStatic(this.elementMap.get(ALIconChevronDown.el));
   private timeSelectorListEl = unsafeStatic(this.elementMap.get(ALTimeSelectorList.el));
-  private buttonGroupEl = unsafeStatic(this.elementMap.get(ALButtonGroup.el));
+  private layoutEl = unsafeStatic(this.elementMap.get(ALLayout.el));
   private buttonEl = unsafeStatic(this.elementMap.get(ALButton.el));
 
   static get styles() {
@@ -641,7 +646,7 @@ export class ALDateTimePicker extends ALElement {
             <${this.iconCalendarEl} slot="before"></${this.iconCalendarEl}>
             <${this.iconChevronDownEl} size="lg" slot="after" class="al-c-date-time-picker__icon-arrow"></${this.iconChevronDownEl}>
           </${this.inputEl}>
-          <div class="al-c-date-time-picker__popup" ?hidden="${!this.isActiveCalendar}" role="dialog">
+          <div class="al-c-date-time-picker__popup" ?hidden="${!this.isActiveCalendar}" role="dialog" aria-label=${this.label}>
             <div class="al-c-date-time-picker__popup-body">
               <div class="al-c-date-time-picker__calendar-container">
                 <${this.calendarEl}
@@ -661,7 +666,7 @@ export class ALDateTimePicker extends ALElement {
                 <${this.timeSelectorListEl}
                   class="al-c-date-time-picker__time-selector-list"
                   @onTimeSelectorListChange=${this.handleOnChangeTime}
-                  orientation=${this.isSmallScreen ? 'horizontal' : false}
+                  direction=${this.isSmallScreen ? 'row' : false}
                   resetTime="${this.isCancelled}"
                   .setActiveTime=${this.setActiveTime}
                   .is24HourFormat=${this.is24HourFormat}
@@ -672,7 +677,7 @@ export class ALDateTimePicker extends ALElement {
                 ></${this.timeSelectorListEl}>
               </div>
               <div class="al-c-date-time-picker__footer">
-                <${this.buttonGroupEl} alignment="right">
+                <${this.layoutEl} direction="row" justify="end" grow>
                   <${this.buttonEl}
                     class="al-c-date-time-picker__footer-cancel"
                     variant="tertiary"
@@ -683,7 +688,7 @@ export class ALDateTimePicker extends ALElement {
                     @click=${this.handleOnClickSubmit}
                     ?isDisabled="${this.disabledSubmit}"
                     >${this.submitLabel}</${this.buttonEl}>
-                </${this.buttonGroupEl}>
+                </${this.layoutEl}>
               </div>
             </div>
           </div>

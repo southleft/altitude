@@ -1,30 +1,122 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './header';
-import '../../.storybook/components/f-po/f-po';
+import '../avatar/avatar';
+import { placeholderImages } from '../../fixtures';
 import '../../components/button/button';
-import * as Search from '../../components/search/search.stories.ts';
-import * as Drawer from '../../components/drawer/drawer.stories.ts';
-import * as Avatar from '../../components/avatar/avatar.stories.ts';
+import '../../components/layout/layout';
+import '../../components/logo/logo';
+import '../../components/link/link';
+import '../../components/avatar/avatar';
 import '../../components/icon/icons/menu';
-import '../../components/popover/popover';
-import '../../components/menu/menu';
-import '../../components/menu-item/menu-item';
-import '../../components/divider/divider';
 
 export default {
   title: 'Organisms/Header',
   component: 'al-header',
-  parameters: { status: { type: 'beta' } },
-  tags: [ 'autodocs' ],
+  parameters: { status: { type: 'beta' }, layout: 'fullscreen' },
+  tags: ['autodocs'],
+  argTypes: {
+    sticky: { control: 'boolean' },
+    elevated: { control: 'boolean' }
+  }
 };
 
-const Template = (args) => html`
-<al-header ${spread(args)} data-testid="header">
-  <f-po slot="before">Slot Before</f-po>
-  <f-po>Slot Main</f-po>
-  <f-po slot="after">Slot After</f-po>
-</al-header>`;
+/**
+ * The header owns the `<header>` landmark and the bar chrome — surface, minimum
+ * height, and the opt-in `sticky` / `elevated` behaviour. It takes NO position on
+ * what sits where: nest an `<al-layout>` and arrange there.
+ *
+ * These stories are one composition each, not a set of supported configurations.
+ * Any arrangement `<al-layout>` can express, the header can hold.
+ */
+export const Default = ({ sticky, elevated, ...args }) => html`
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
+    <al-layout direction="row" align="center" justify="between">
+      <al-logo></al-logo>
+      <al-layout direction="row" gap="md" align="center">
+        <al-link href="#">Components</al-link>
+        <al-link href="#">Tokens</al-link>
+        <al-link href="#">Patterns</al-link>
+      </al-layout>
+      <al-avatar variant="sm">MK</al-avatar>
+    </al-layout>
+  </al-header>
+`;
+Default.args = { elevated: true };
 
-export const Default = Template.bind({});
-Default.args = {};
+/**
+ * A wordmark, a nav, and an action cluster on one row. The nav takes the free
+ * space via `grow`; the other two size to their content.
+ */
+export const BrandNavActions = ({ sticky, elevated, ...args }) => html`
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
+    <al-layout direction="row" align="center" gap="lg">
+      <al-logo variant="southleft"></al-logo>
+      <al-layout direction="row" align="center" gap="md" grow>
+        <al-link href="#">Product</al-link>
+        <al-link href="#">Solutions</al-link>
+        <al-link href="#">Developers</al-link>
+        <al-link href="#">Pricing</al-link>
+        <al-link href="#">Docs</al-link>
+        <al-link href="#">Company</al-link>
+      </al-layout>
+      <al-layout direction="row" align="center" gap="sm">
+        <al-button variant="tertiary">Sign in</al-button>
+        <al-button>Get started</al-button>
+      </al-layout>
+    </al-layout>
+  </al-header>
+`;
+BrandNavActions.args = { sticky: true, elevated: true };
+
+/**
+ * Nothing says the content must be a single row. A two-row header is just two
+ * stacked `<al-layout>`s — the bar grows because its height is a MINIMUM, not a
+ * fixed value.
+ */
+export const TwoRow = (args) => html`
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
+    <al-layout direction="column" gap="sm">
+      <al-layout direction="row" align="center" justify="between">
+        <al-logo variant="southleft"></al-logo>
+        <al-avatar></al-avatar>
+      </al-layout>
+      <al-layout direction="row" align="center" gap="md">
+        <al-link href="#">Overview</al-link>
+        <al-link href="#">Activity</al-link>
+        <al-link href="#">Settings</al-link>
+      </al-layout>
+    </al-layout>
+  </al-header>
+`;
+TwoRow.args = { elevated: true };
+
+/**
+ * A brand mark is sized by the page, not the header — nothing here constrains it.
+ */
+export const WithImageLogo = (args) => html`
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
+    <al-layout direction="row" align="center" justify="between">
+      <img src=${placeholderImages.logo} alt="Acme" width="160" height="40" />
+      <al-button variant="tertiary">
+        <al-icon-menu slot="before"></al-icon-menu>
+        Menu
+      </al-button>
+    </al-layout>
+  </al-header>
+`;
+WithImageLogo.args = {};
+
+/**
+ * Plain by default. Without `sticky` and `elevated` the header is an in-flow
+ * landmark, suitable for an embedded or in-page header.
+ */
+export const Plain = (args) => html`
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
+    <al-layout direction="row" align="center" justify="between">
+      <al-logo variant="southleft"></al-logo>
+      <al-button variant="tertiary">Sign in</al-button>
+    </al-layout>
+  </al-header>
+`;
+Plain.args = {};

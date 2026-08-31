@@ -1,12 +1,11 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
 import '../icon/icons/document';
 import './file-upload';
 
 export default {
-  title: 'Molecules/File Upload',
+  title: 'Atoms/Form/File Upload',
   component: 'al-file-upload',
   tags: [ 'autodocs' ],
   parameters: {
@@ -15,7 +14,6 @@ export default {
       handles: ['onFileUploadFileRemove', 'onFileUploadFileUpload']
     }
   },
-  decorators: [ withActions ],
   args: {
     name: 'file-upload',
     label: 'File upload',

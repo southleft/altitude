@@ -1,0 +1,196 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL HERO (homepage)
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * 1. `position: relative` scopes the texture layer to the band. `isolation`
+   *    creates a stacking context so the decoration cannot escape underneath a
+   *    page background painted by an ancestor — the site hit exactly this and
+   *    left a note pinning its own texture to `z-index: -1`, which only works
+   *    while nothing else competes. Isolating instead means the component
+   *    composes correctly wherever it is dropped.
+   */
+  .sl-c-hero {
+    position: relative; /* 1 */
+    isolation: isolate; /* 1 */
+    overflow: hidden;
+  }
+
+  .sl-c-hero__texture {
+    @include sl-grid-texture;
+  }
+
+  /**
+   * The glyph field — sparse stroke marks on the SAME 72px lattice as the grid
+   * above, which is what makes them read as marks ON the grid rather than
+   * decoration floating over it. Drawn to canvas by the component.
+   */
+  .sl-c-hero__murmur {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    inline-size: 100%;
+    block-size: 100%;
+    pointer-events: none;
+  }
+
+  /**
+   * THE CONTENT NEEDS ITS OWN BOX, and this is the bug it fixes.
+   *
+   * `position: relative` + `z-index` were originally set on the
+   * `<al-layout variant="constrained">` directly. That silently did NOTHING:
+   * an al-layout host is `display: contents`, so it generates no box, and
+   * `position`/`z-index` on a boxless element are inert. The positioned grid
+   * texture therefore painted OVER the headline instead of behind it.
+   *
+   * A plain `<div>` generates a box, takes the stacking context, and puts the
+   * copy above both decorative layers. Same trap as the eyebrow chip in
+   * `al-page-hero`: when a rule has to act on the element itself rather than on
+   * its contents, `display: contents` means you need a real box.
+   */
+  .sl-c-hero__content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /**
+   * 2. The measure AND the block rhythm ride on the same
+   *    `<al-layout variant="constrained">`, through `--al-layout-padding`.
+   *    BLOCK ONLY, deliberately: under `constrained` the inline insets are
+   *    gutter TRACKS, so inline padding would stack on top of them and shove
+   *    the content column off the measure.
+   */
+  .sl-c-hero__inner {
+    --al-layout-measure: var(--al-hero-measure, 79rem);
+    --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
+    --al-layout-padding: var(--al-hero-padding-block, 5rem) 0; /* 2 */
+  }
+
+  @media (min-width: 48rem) {
+    .sl-c-hero__inner {
+      --al-layout-padding: var(--al-hero-padding-block, 7rem) 0;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .sl-c-hero__inner {
+      --al-layout-padding: var(--al-hero-padding-block, 8rem) 0;
+    }
+  }
+
+  /**
+   * The kicker is 13px on a 16px line box — NOT the 12px the first pass wrote,
+   * and not the 24px line-height it inherits from body copy.
+   *
+   * Measured against the live site: 13px/16px. The 8px of extra line box that a
+   * 24px line-height adds is not cosmetic — it pushes the headline, the lead,
+   * the actions and the aside all down by 8px, so the whole hero drifts out of
+   * register against the reference. Both halves are pinned here for that
+   * reason.
+   */
+  .sl-c-hero__kicker {
+    @include sl-kicker;
+
+    line-height: 1rem;
+    color: var(--al-theme-color-content-primary-default);
+  }
+
+  /**
+   * 3. `ch` is measured against the ELEMENT'S OWN font, and `al-heading` applies
+   *    the display face on a node inside its SHADOW ROOT — so the host here
+   *    inherits the page's body sans at its default size and a bare `18ch`
+   *    would resolve against the wrong font entirely. Restating the font on the
+   *    host makes `ch` resolve against the real rendered glyph metrics. Nothing
+   *    changes visually: the host paints no text of its own, and the shadow
+   *    content's own declaration still wins for what is actually drawn.
+   *
+   *    IT MUST BE THE SAME TOKEN al-heading USES, not a hand-written stack.
+   *    A first attempt wrote `700 3rem/1.05 Agrandir` here — plausible, and
+   *    wrong by a factor of two: under the `southleft` brand this variant
+   *    renders at 7rem, so the cap was measured at 48px while the text drew at
+   *    112px and the headline broke to two or three words a line.
+   *
+   *    `--al-typography-preset-48-bold` is the TIER-1 primitive
+   *    `al-heading`'s `display-lg` + bold variant actually applies. Reaching
+   *    past the tier-2 `--al-theme-typography-display-lg-bold` alias is
+   *    deliberate: the brand's `:host` partials re-declare the tier-1
+   *    primitive per brand but not the alias, which stays pinned to the
+   *    Altitude default. That is a token-authoring gap in the library, worth
+   *    reaching around here rather than papering over.
+   * 4. `text-wrap: balance` is the real mechanism behind the brand's tight
+   *    four-line break. `18ch` alone caps the MAXIMUM width; it does not choose
+   *    a narrower, evenly-broken box. Inherited, so it crosses the shadow
+   *    boundary the way `color` does — nothing in al-heading declares
+   *    `text-wrap`, so nothing blocks it.
+   */
+  .sl-c-hero__heading {
+    display: block;
+    margin-block-start: var(--al-theme-space-md);
+    font: var(--al-typography-preset-48-bold); /* 3 */
+    max-inline-size: var(--al-hero-heading-max-width, 18ch); /* 3 */
+    text-wrap: balance; /* 4 */
+  }
+
+  /**
+   * 4. One column until `64rem`, two above it. The right column is narrower
+   *    than the left (0.85fr) — the lead copy is the subject and the aside
+   *    supports it, so an even split would misstate the hierarchy.
+   */
+  .sl-c-hero__grid {
+    --al-layout-template: minmax(0, 1fr); /* 4 */
+    --al-layout-gap: var(--al-theme-space-xxl);
+    margin-block-start: var(--al-theme-space-xxl);
+  }
+
+  @media (min-width: 64rem) {
+    .sl-c-hero__grid {
+      --al-layout-template: var(--al-hero-template, minmax(0, 1fr) minmax(0, 0.85fr)); /* 4 */
+      --al-layout-gap: 5rem;
+    }
+  }
+
+  .sl-c-hero__lead {
+    display: block;
+    max-inline-size: 42rem;
+    --al-text-block-font: #{$sl-text-lead} / 1.55 var(--al-font-family-primary, 'IBM Plex Sans', sans-serif);
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * 5. Rhythm as `--al-layout-padding`, not `margin-block-start`. An
+   *    `<al-layout>` host is `display: contents` and has no box to carry a
+   *    margin — it would be dropped silently. Padding lands on the layout's own
+   *    inner box and looks identical here, since neither element paints a
+   *    background or a border.
+   */
+  .sl-c-hero__actions {
+    --al-layout-padding: 2.25rem 0 0; /* 5 */
+  }
+
+  .sl-c-hero__chips {
+    margin-block-start: 3rem;
+  }
+
+  /**
+   * 6. The aside is hidden below the two-column breakpoint rather than stacked.
+   *    It is supporting material; stacked under the fold on a phone it would
+   *    push the actions out of view to show a panel nobody scrolled for.
+   */
+  .sl-c-hero__aside {
+    display: none; /* 6 */
+    min-inline-size: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .sl-c-hero__aside {
+      display: block; /* 6 */
+    }
+  }
+}

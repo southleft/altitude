@@ -1,4 +1,4 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /*------------------------------------*\
  #MENU-ITEM
 \*------------------------------------*/
@@ -6,72 +6,79 @@
 /**
  * Set the menu item height for the link & button
  */
-:host {
-  display: contents;
-  --al-menu-item-height: #{size(5)};
-  --al-focus-outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
-}
 
-/**
- * Menu Item
- */
-.al-c-menu-item {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  opacity: 1;
-  height: var(--al-menu-item-height);
-  max-height: var(--al-menu-item-height);
-  padding: 0;
-  margin: 0;
-  transition: opacity var(--al-theme-animation-duration) var(--al-theme-animation-timing), visibility var(--al-theme-animation-duration) var(--al-theme-animation-timing), max-height var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-  white-space: nowrap;
+@layer al.component {
+  :host {
+    display: contents;
+    --al-menu-item-height: var(--al-theme-size-control-sm);
+    --al-focus-outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
+  }
 
   /**
-   * Hidden Menu Item
+   * Menu Item
    */
-  &.al-is-hidden {
-    opacity: 0;
-    max-height: 0;
+  .al-c-menu-item {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    opacity: 1;
+    height: var(--al-menu-item-height);
+    max-height: var(--al-menu-item-height);
+    padding: 0;
+    margin: 0;
+    transition: opacity var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing)), visibility var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing)), max-height var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+    white-space: nowrap;
+
+    /**
+     * Hidden Menu Item
+     */
+    &.al-is-hidden {
+      opacity: 0;
+      max-height: 0;
+    }
   }
-}
 
-/**
- * Menu Item Header
- */
-.al-c-menu-item--header {
-  margin-block-start: var(--al-menu-item-header-margin-block-start, 0);
-}
-
-/**
-  * Menu Item link
-  * - Link fills up remaining space of the flexbox
-  */
-.al-c-menu-item__link {
-  flex: 1;
-  --al-link-text-decoration: none;
-
-  .al-is-hidden & {
-    pointer-events: none;
+  /**
+   * Menu Item Header
+   */
+  .al-c-menu-item--header {
+    margin-block-start: var(--al-menu-item-header-margin-block-start, 0);
   }
-}
 
-.al-c-menu-item--no-href {
-  @include al-theme-typography-body-md-bold;
-  display: flex;
-  align-items: center;
-  flex: 1;
-  gap: size(1);
-  height: var(--al-menu-item-height);
-  padding-block: var(--al-theme-space-xs);
-  padding-inline-end: var(--al-theme-space);
-  padding-inline-start: var(--al-link-padding-inline-start, #{var(--al-theme-space)});
-}
+  /**
+    * Menu Item link
+    * - Link fills up remaining space of the flexbox
+    */
+  .al-c-menu-item__link {
+    flex: 1;
+    --al-link-text-decoration: none;
 
-/**
-  * Menu item prefix - content in the "before" slot
-  */
-.al-c-menu-item__prefix {
-  --al-icon-width: #{var(--al-theme-icon-lg)};
-  --al-icon-height: #{var(--al-theme-icon-lg)};
+    .al-is-hidden & {
+      pointer-events: none;
+    }
+  }
+
+  .al-c-menu-item--no-href {
+    @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-medium);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: size(1);
+    height: var(--al-menu-item-height);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
+    padding-block: var(--al-theme-space-xs);
+    padding-inline-end: var(--al-theme-space-sm);
+    padding-inline-start: var(--al-link-padding-inline-start, #{var(--al-theme-space-sm)});
+  }
+
+  /**
+    * Menu item prefix - content in the "before" slot
+    */
+  .al-c-menu-item__prefix {
+    --al-icon-width: #{var(--al-theme-icon-lg)};
+    --al-icon-height: #{var(--al-theme-icon-lg)};
+  }
 }

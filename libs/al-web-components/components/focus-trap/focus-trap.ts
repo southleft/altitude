@@ -5,7 +5,7 @@ import getFocusableElements from '../../directives/getFocusableElements';
 
 /**
  * Component: al-focus-trap
- * - **slot**: The content to trap in the focus trap
+ * @slot - The content to trap in the focus trap
  */
 export class ALFocusTrap extends ALElement {
   static el = 'al-focus-trap';
@@ -50,8 +50,73 @@ export class ALFocusTrap extends ALElement {
   constructor() {
     super();
 
-    this.trapFocusEnd = this.trapFocusEnd.bind(this);
-    this.trapFocusStart = this.trapFocusStart.bind(this);
+    this.handleOnKeydown = this.handleOnKeydown.bind(this);
+  }
+
+  /**
+   * One keydown listener on the trap itself, for the trap's whole lifetime.
+   *
+   * The previous implementation snapshotted the first and last focusable
+   * elements when the trap opened and hung a `keydown` listener on each of
+   * them. That snapshot went stale the moment the trapped content changed —
+   * an error message appearing, a disabled button enabling, a list filtering
+   * down — and focus then escaped past a boundary that no longer existed.
+   * `keydown` is `composed`, so one listener here sees Tab from anywhere
+   * inside, including nested shadow roots.
+   */
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('keydown', this.handleOnKeydown);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('keydown', this.handleOnKeydown);
+  }
+
+  /**
+   * The deepest active element, following shadow roots.
+   */
+  private getActiveElement(): HTMLElement | null {
+    let active = (this.getRootNode() as Document | ShadowRoot).activeElement as HTMLElement | null;
+    while (active?.shadowRoot?.activeElement) {
+      active = active.shadowRoot.activeElement as HTMLElement;
+    }
+    return active;
+  }
+
+  /**
+   * Wrap Tab / Shift+Tab at the live edges of the trap.
+   * 1. Recompute the focusable set on *every* Tab, so it is never stale
+   * 2. Keep the public first/last properties in sync for consumers
+   * 3. Wrap when focus is at (or has somehow left) an edge
+   */
+  handleOnKeydown(evt: KeyboardEvent) {
+    if (!this.isActive || evt.code !== 'Tab' || !this.slottedContent?.length) {
+      return;
+    }
+
+    const focusableElements = getFocusableElements(this.slottedContent[0]); /* 1 */
+    if (!focusableElements.length) {
+      evt.preventDefault();
+      return;
+    }
+
+    /* 2 */
+    this.firstFocusableEl = focusableElements[0];
+    this.lastFocusableEl = focusableElements[focusableElements.length - 1];
+
+    /* 3 */
+    const active = this.getActiveElement();
+    const index = active ? focusableElements.indexOf(active) : -1;
+
+    if (evt.shiftKey && (index <= 0)) {
+      this.lastFocusableEl.focus();
+      evt.preventDefault();
+    } else if (!evt.shiftKey && (index === -1 || index === focusableElements.length - 1)) {
+      this.firstFocusableEl.focus();
+      evt.preventDefault();
+    }
   }
 
   /**
@@ -73,73 +138,51 @@ export class ALFocusTrap extends ALElement {
     }
   }
 
-  /**
-   * Trap focus at the end of the focus trap
-   * - Applied to the keydown listener on the last focusable element in the focus trap.
-   * - When the user presses "Tab", send focus to the first element in the focus trap.
-   */
-  trapFocusEnd(evt: KeyboardEvent) {
-    if (evt.code === 'Tab' && !evt.shiftKey) {
-      this.firstFocusableEl.focus();
-      evt.preventDefault();
-    }
-  }
-
-  /**
-   * Trap focus at the beginning of the focus trap
-   * - Applied to the keydown listener on the first focusable element in the focus trap.
-   * - When the user presses "Tab + Shift", send focus to the last element in the focus trap.
-   */
-  trapFocusStart(evt: KeyboardEvent) {
-    if (evt.code === 'Tab' && evt.shiftKey) {
-      this.lastFocusableEl.focus();
-      evt.preventDefault();
-    }
-  }
-
  /**
-   * Apply the focus trap
+   * Place initial focus when the trap opens.
    * 1. Query all focusable elements within the focus trap, including those nested within the shadow DOM.
-   * 2. If there are no focusable elements, set the sloted content as the initial focus. and first and last focusable, element.
-   * 3. Store the first and last focusable elements on state.
-   * 4. Set the initial focus element as either the selected item, or the first focusable element.
+   * 2. If there are no focusable elements, make the slotted content itself focusable and use it.
+   * 3. Record the current edges (Tab recomputes them; these are for consumers).
+   * 4. Prefer the selected item, then the first focusable element.
    * 5. Send focus to the initial focus element.
-   * 6. Apply keydown listeners to the first and last focusable elements to enable the focus trap functionality.
    */
   applyFocusTrap() {
+    if (!this.slottedContent?.length) {
+      return;
+    }
+
     const focusableElements = getFocusableElements(this.slottedContent[0]); /* 1 */
 
     /* 2 */
     if (!focusableElements.length) {
-      this.slottedContent[0].setAttribute("tabindex", "-1");
+      this.slottedContent[0].setAttribute('tabindex', '-1');
 
       this.initialFocusEl = this.slottedContent[0];
       this.firstFocusableEl = this.slottedContent[0];
       this.lastFocusableEl = this.slottedContent[0];
-    }
-    else {
+    } else {
       /* 3 */
       this.firstFocusableEl = focusableElements[0];
       this.lastFocusableEl = focusableElements[focusableElements.length - 1];
 
-      const selectedItem = focusableElements.find(item => item.classList.contains('al-is-selected'));
-      this.initialFocusEl = selectedItem || this.firstFocusableEl; /* 4 */
+      /* 4 — `.al-is-selected` is looked up here rather than being treated as a
+         focusable selector: it marks the item that should *receive* focus, and
+         the elements that carry it are already focusable in their own right. */
+      const selectedItem = focusableElements.find((item) => item.classList.contains('al-is-selected'));
+      this.initialFocusEl = selectedItem || this.firstFocusableEl;
     }
 
     this.initialFocusEl.focus(); /* 5 */
-
-    /* 6 */
-    this.lastFocusableEl.addEventListener('keydown', this.trapFocusEnd);
-    this.firstFocusableEl.addEventListener('keydown', this.trapFocusStart);
   }
 
   /**
-   * Remove the focus trap
-   * - Remove the keydown listeners on the first and last focusable elements.
+   * Release the trap.
+   * - The keydown listener lives on this element for its whole lifetime, so
+   *   there is nothing to detach; `isActive` gates it.
    */
   removeFocusTrap() {
-    this.firstFocusableEl?.removeEventListener('keydown', this.trapFocusStart);
-    this.lastFocusableEl?.removeEventListener('keydown', this.trapFocusEnd);
+    this.firstFocusableEl = undefined;
+    this.lastFocusableEl = undefined;
   }
 
   render() {

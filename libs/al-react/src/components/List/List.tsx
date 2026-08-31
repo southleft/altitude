@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALList as ALWebList } from 'al-web-components/dist/components/list/list';
-import register from 'al-web-components/dist/directives/register';
+import { ALList as ALWebList } from '@southleft/al-web-components/components/list';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebList.el, ALWebList],

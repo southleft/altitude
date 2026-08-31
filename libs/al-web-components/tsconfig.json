@@ -29,11 +29,17 @@
     ]
   },
   "include": ["**/**/*.ts"],
+  "//exclude": "fixtures/ and story-fixture/ are DEV-ONLY and never shipped. They used to sit under `.storybook/`, where TypeScript excluded them for free — its include globs skip dot-directories. Moving them out, so `.storybook/` can be deleted, put them in the program for the first time and surfaced pre-existing errors: fixtures/southleft-site.ts imports from apps/southleft, a library->app dependency that is a real layering problem and not one to fix in passing. Excluded explicitly rather than silently; see the .mm issue.",
   "exclude": [
     "node_modules",
     "typings",
     "components/**/*.stories.ts",
+    "**/*.test.ts",
+    "components/**/*.vite.ts",
     "components/**/test",
-    "dist"
+    "dist",
+    "dist-v5",
+    "fixtures",
+    "story-fixture"
   ]
 }

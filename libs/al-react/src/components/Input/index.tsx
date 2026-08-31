@@ -1,1 +1,3 @@
-export * from './Input';
+'use client';
+
+export * from './Input.js';

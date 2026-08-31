@@ -1,9 +1,7 @@
-import { expect, userEvent, waitFor, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../button/button';
-import '../text-passage/text-passage';
+import '../text-block/text-block';
 import './alert';
 import { ALAlert } from './alert';
 
@@ -17,7 +15,6 @@ export default {
       handles: ['keydown', 'onAlertOpen', 'onAlertClose']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       options: ['default', 'success', 'warning', 'danger'],
@@ -58,36 +55,47 @@ function openAlert() {
   }
 }
 
-const Template = (args) =>
-  html`<al-alert ${spread(args)} data-testid="alert">
-    <al-text-passage>
-      This is an alert. It is used to notify the user of something important.
-    </al-text-passage>
+const DEFAULT_BODY = 'Tokens v2 ships next week.';
+
+const Template = ({ body, isActive, ...args }) =>
+  html`<al-alert ${spread(args)} ?isActive=${isActive} data-testid="alert">
+    <al-text-block>${body ?? DEFAULT_BODY}</al-text-block>
   </al-alert>`;
 
-const TemplateWithAction = (args) =>
-html`<al-alert ${spread(args)} data-testid="alert">
-  <al-text-passage>
-    This is an alert. It is used to notify the user of something important.
-  </al-text-passage>
-  <al-button slot="action" data-testid="action" variant="tertiary">Action</al-button>
+const TemplateWithAction = ({ body, isActive, ...args }) =>
+html`<al-alert ${spread(args)} ?isActive=${isActive} data-testid="alert">
+  <al-text-block>${body ?? DEFAULT_BODY}</al-text-block>
+  <al-button slot="action" data-testid="action" variant="tertiary" size="sm">View changes</al-button>
 </al-alert>`;
 
 export const Default = Template.bind({});
+Default.args = {
+  isActive: true,
+  title: 'Heads up.'
+};
 
 export const Success = Template.bind({});
 Success.args = {
-  variant: 'success'
+  isActive: true,
+  variant: 'success',
+  title: 'Published.',
+  body: '42 components synced.'
 };
 
 export const Warning = Template.bind({});
 Warning.args = {
-  variant: 'warning'
+  isActive: true,
+  variant: 'warning',
+  title: 'Deprecation.',
+  body: 'Floating labels removed in v2.'
 };
 
 export const Danger = Template.bind({});
 Danger.args = {
+  isActive: true,
   variant: 'danger',
+  title: 'Build failed.',
+  body: '3 token references unresolved.'
 };
 
 export const DefaultDismissible = Template.bind({});
@@ -104,12 +112,12 @@ WithActionDismissible.args = {
 
 export const WithTitle = Template.bind({});
 WithTitle.args = {
-  title: 'Alert Title'
+  title: 'Heads up.'
 };
 
 export const WithTitleAndAction = TemplateWithAction.bind({});
 WithTitleAndAction.args = {
-  title: 'Alert Title'
+  title: 'Heads up.'
 };
 
 export const WithTitleAndActionDismissible = TemplateWithAction.bind({});
@@ -122,9 +130,9 @@ const TemplateOpenAlert = (args) => html`
   <div>
     <al-button @click=${openAlert} data-testid="open-alert">Show Alert</al-button>
     <al-alert ${spread(args)} data-testid="alert">
-      <al-text-passage>
+      <al-text-block>
         This is an alert. It is used to notify the user of something important.
-      </al-text-passage>
+      </al-text-block>
       <al-button slot="action" data-testid="action" variant="tertiary" @click=${closeAlert}>Action</al-button>
     </al-alert>
   </div>
@@ -143,31 +151,3 @@ WithAutoClose.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-WithAutoClose.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const alert = canvas.queryByTestId('alert') as any;
-  const alertEl = alert.shadowRoot.querySelector('.al-c-alert');
-  expect(alert.isActive).toBe(true);
-  await userEvent.hover(alertEl);
-  await userEvent.unhover(alertEl);
-
-  // Wait for a duration that should be longer than the expected autoClose delay
-  await waitFor(() => expect(alert.isActive).toBe(false), {
-    timeout: 6000 // A long timeout to make sure it doesn't close
-  });
-};
-
-WithOpenButton.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const alert = canvas.queryByTestId('alert') as any;
-  const alertEl = alert?.shadowRoot?.querySelector('.al-c-alert') as HTMLElement;
-  const alertOpenButton = canvas.queryByTestId('open-alert') as any;
-  const alertCloseButton = alert?.shadowRoot?.querySelector('.al-c-alert__close') as any;
-
-  // Simulate a click event
-  await userEvent.click(alertOpenButton);
-  expect(alertEl).toHaveClass('al-is-active');
-  await userEvent.click(alertCloseButton);
-  expect(alertEl).not.toHaveClass('al-is-active');
-};

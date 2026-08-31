@@ -1,1 +1,3 @@
-export * from './Alert';
+'use client';
+
+export * from './Alert.js';

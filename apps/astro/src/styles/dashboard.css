@@ -1,0 +1,162 @@
+/*------------------------------------*\
+  #GLOBAL
+\*------------------------------------*/
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/*------------------------------------*\
+  #DASHBOARD
+  App-specific layout for the demo dashboard. These `.al-l-*` classes are
+  shipped per-app (the React/Svelte demos each carry their own copy); they are
+  NOT part of @southleft/al-web-components' main.css. Ported from apps/svelte/src/lib so
+  this demo matches the others.
+\*------------------------------------*/
+
+.al-l-dashboard {
+  max-height: 100vh;
+}
+
+.al-l-dashboard__content {
+  overflow: auto;
+  max-height: 100vh;
+}
+
+/*
+ * Dashboard body
+ * - The block rhythm is set through `--al-layout-padding`, the hook
+ *   `<al-layout>` exposes for exactly this. It needs no wrapper element and
+ *   no `display` override: `:host` is `display: contents`, but custom
+ *   properties still INHERIT through it to the shadow `.al-c-layout` box
+ *   that does the painting (layout.scss). The component also resets every
+ *   `--al-layout-*` hook on `::slotted(*)`, so this value cannot leak into
+ *   the nested layouts inside.
+ * - Block-only on purpose. Under `variant="constrained"` the inline insets
+ *   are gutter TRACKS; inline padding would stack on top of them and push
+ *   the content column off its measure.
+ */
+.al-l-dashboard__body {
+  --al-layout-padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
+}
+
+/*
+ * `.al-l-dashboard__sidebar` stays a plain paint/position box — it is NOT
+ * `<al-layout>` itself. `<al-layout>`'s host is `display: contents` (layout.scss),
+ * so position/height/box-shadow/z-index/background applied to that host would
+ * have no box to render against. Arrangement (column, justify space-between)
+ * is owned by a nested `<al-layout>`; this class only keeps what needs a real box.
+ */
+.al-l-dashboard__sidebar {
+  position: sticky;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  height: 100vh;
+  z-index: var(--al-z-index-500);
+  background-color: var(--al-theme-color-background-default);
+  box-shadow: var(--al-theme-box-shadow);
+}
+
+@media all and (max-width: 768px) {
+  .al-l-dashboard__sidebar {
+    display: none;
+  }
+}
+
+.al-l-dashboard__sidebar-logo {
+  min-height: var(--al-theme-layout-height-header);
+  padding: 0 var(--al-theme-space);
+  border-bottom: 1px solid var(--al-theme-color-border-default);
+}
+
+.al-l-dashboard__sidebar-menu {
+  padding: var(--al-theme-space-super) 0;
+}
+
+.al-l-dashboard__sidebar-user {
+  --al-popover-width: 100%;
+  --al-popover-trigger-width: 100%;
+  --al-popover-offset: 0;
+  --al-popover-shift: 0;
+  --al-popover-container-width: calc(var(--al-theme-layout-width-sidebar) - var(--al-theme-space-xs));
+  --al-popover-container-padding: 0;
+}
+
+.al-l-dashboard__user {
+  cursor: pointer;
+  width: 100%;
+  padding: var(--al-theme-space);
+}
+
+.al-l-dashboard__user p {
+  display: flex;
+  flex: 1;
+}
+
+.al-l-dashboard__notifications-badge {
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-end: 10px;
+  display: block;
+}
+
+.al-l-dashboard__help-popover {
+  position: fixed;
+  inset-block-end: var(--al-theme-space);
+  inset-inline-end: var(--al-theme-space);
+  z-index: var(--al-z-index-400);
+}
+
+.al-l-dashboard__menu-link--header {
+  display: block;
+  margin-block-start: 12px;
+}
+
+/*------------------------------------*\
+  #JOB-BOARD
+\*------------------------------------*/
+
+.al-l-job-board {
+  --al-dialog-width: 100%;
+  --al-dialog-trigger-width: 100%;
+}
+
+.al-l-job-board__filter-dialog {
+  --al-input-label-background: var(--al-theme-color-background-default);
+}
+
+.al-l-job-board__card-image {
+  border-radius: var(--al-theme-border-radius-lg);
+  padding: var(--al-theme-space);
+  background-color: var(--al-theme-color-background-secondary-default);
+  color: var(--al-theme-color-content-secondary-weak);
+}
+
+/**
+ * Dashboard shell - a fixed-width sidebar beside a fluid content column.
+ *
+ * This used to be `<al-layout variant="sidebar-left">`. The design system no
+ * longer ships a sidebar variant; the page owns its own track list via
+ * `--al-layout-template`, which inherits through the shadow boundary into
+ * `<al-layout variant="grid">`. `noCollapse` on the element turns off the
+ * built-in single-column collapse so the responsive story is defined here.
+ */
+.al-l-dashboard__shell {
+  --al-layout-template: 1fr;
+}
+
+@media all and (min-width: 768px) {
+  .al-l-dashboard__shell {
+    --al-layout-template: calc(var(--al-theme-layout-width-sidebar, 40%) - var(--al-theme-space-xs)) minmax(0, 1fr);
+  }
+}

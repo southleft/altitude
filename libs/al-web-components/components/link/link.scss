@@ -1,133 +1,160 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /*------------------------------------*\
   #LINK
 \*------------------------------------*/
 
-:host {
-  display: contents;
-}
-
-/**
- * Link
- */
-.al-c-link {
-  @include al-link;
-  --al-icon-height: #{var(--al-theme-icon-md)};
-  --al-icon-width: #{var(--al-theme-icon-md)};
-}
-
-/**
- * Link extra small
- */
-.al-c-link--xs {
-  @include al-theme-typography-body-xs;
-  --al-icon-height: #{var(--al-theme-icon)};
-  --al-icon-width: #{var(--al-theme-icon)};
-}
-
-/**
- * Link small
- */
-.al-c-link--sm {
-  @include al-theme-typography-body-sm;
-  --al-icon-height: #{var(--al-theme-icon)};
-  --al-icon-width: #{var(--al-theme-icon)};
-}
-
-/**
- * Link large
- */
-.al-c-link--lg {
-  @include al-theme-typography-body-lg;
-  --al-icon-height: #{var(--al-theme-icon-lg)};
-  --al-icon-width: #{var(--al-theme-icon-lg)};
-}
-
-/*------------------------------------*\
-  #MENU-ITEM-LINK
-\*------------------------------------*/
-
-/**
- * Menu item link
- */
-.al-c-menu-item-link {
-  @include al-theme-typography-body-sm;
-  position: relative;
-  display: flex;
-  justify-content: flex-start;
-  border-radius: 0;
-  width: 100%;
-  height: var(--al-menu-item-height);
-  padding-block: var(--al-theme-space-xs);
-  padding-inline-end: var(--al-theme-space);
-  padding-inline-start: var(--al-link-padding-inline-start, #{var(--al-theme-space)});
-  color: var(--al-theme-color-content-default);
-  background: var(--al-theme-color-background-transparent);
+@layer al.component {
+  :host {
+    display: contents;
+  }
 
   /**
-   * Menu item link focus outline with rounded borders
+   * Link
    */
-  &::before {
-    @include al-focus;
-    display: block;
-    position: absolute;
-    content: '';
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    height: 100%;
+  .al-c-link {
+    @include al-link;
+    --al-icon-height: #{var(--al-theme-icon-md)};
+    --al-icon-width: #{var(--al-theme-icon-md)};
+  }
+
+  /**
+   * Trailing slot ("after") — typically an icon. The link itself is already
+   * `inline-flex` with a `--al-theme-space-xs` gap (the `al-link` mixin), so this
+   * box only has to center the glyph on the text baseline box; its SIZE comes from
+   * the `--al-icon-*` hooks each size variant re-binds above, and its COLOR from
+   * `currentColor` (icon.scss `fill: var(--al-icon-fill, currentColor)`), which is
+   * what keeps a trailing icon matching the link's own hover/disabled color.
+   */
+  .al-c-link__after {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /**
+   * Link extra small
+   */
+  .al-c-link--xs {
+    @include al-theme-typography-body-xs;
+    --al-icon-height: #{var(--al-theme-icon)};
+    --al-icon-width: #{var(--al-theme-icon)};
+  }
+
+  /**
+   * Link small
+   */
+  .al-c-link--sm {
+    @include al-theme-typography-body-sm;
+    --al-icon-height: #{var(--al-theme-icon)};
+    --al-icon-width: #{var(--al-theme-icon)};
+  }
+
+  /**
+   * Link large
+   */
+  .al-c-link--lg {
+    @include al-theme-typography-body-lg;
+    --al-icon-height: #{var(--al-theme-icon-lg)};
+    --al-icon-width: #{var(--al-theme-icon-lg)};
+  }
+
+  /*------------------------------------*\
+    #MENU-ITEM-LINK
+  \*------------------------------------*/
+
+  /**
+   * Menu item link
+   */
+  .al-c-menu-item-link {
+    /*
+     * v2 canvas: a menu row is 13px medium on the 6px action radius, so the
+     * hovered row reads as a rounded chip inside the menu's own padding. The
+     * square-cornered 14px row here did not match the no-href variant of the
+     * same component, which meant a menu looked different depending on whether
+     * its items happened to carry an href.
+     */
+    @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-medium);
+    line-height: 1;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
     width: 100%;
-    visibility: hidden;
-    opacity: 0;
-    background: transparent;
-    border-radius: var(--al-theme-border-radius-xs);
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  /**
-   * Menu item link hover state
-   */
-  &:hover:not(:active, .al-is-disabled) {
+    height: var(--al-menu-item-height);
+    padding-block: var(--al-theme-space-xs);
+    padding-inline-end: var(--al-theme-space);
+    padding-inline-start: var(--al-link-padding-inline-start, #{var(--al-theme-space)});
     color: var(--al-theme-color-content-default);
-    background: var(--al-theme-color-background-default-stronger);
-    text-decoration: none;
-  }
-
-  /**
-   * Menu item link focus state
-   */
-  &:focus-visible {
-    outline: none;
+    background: var(--al-theme-color-background-transparent-default);
 
     /**
-     * Show focus outline with rounded borders on focus-visible
+     * Menu item link focus outline with rounded borders
      */
     &::before {
-      visibility: visible;
-      opacity: 1;
+      @include al-focus;
+      display: block;
+      position: absolute;
+      content: '';
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      height: 100%;
+      width: 100%;
+      visibility: hidden;
+      opacity: 0;
+      background: transparent;
+      border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius-xs));
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /**
+     * Menu item link hover state
+     */
+    &:hover:not(:active, .al-is-disabled) {
+      color: var(--al-theme-color-content-default);
+      background: var(--al-theme-color-background-default-stronger);
+      text-decoration: none;
+    }
+
+    /**
+     * Menu item link focus state
+     */
+    &:focus-visible {
+      outline: none;
+
+      /**
+       * Show focus outline with rounded borders on focus-visible
+       */
+      &::before {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+
+    /**
+     * Menu item link selected state
+     */
+    &.al-is-selected {
+      color: var(--al-theme-color-content-primary-weak);
+      background: var(--al-theme-color-background-primary-default);
+
+      /**
+       * Menu item link hover state on a selected menu item
+       */
+      &:hover:not(:active, .al-is-disabled) {
+        color: var(--al-theme-color-content-primary-weak);
+        background: var(--al-theme-color-background-primary-strong);
+      }
     }
   }
 
   /**
-   * Menu item link selected state
+   * Menu item link header
    */
-  &.al-is-selected {
-    color: var(--al-theme-color-content-primary-weak);
-    background: var(--al-theme-color-background-primary-default);
-
-    /**
-     * Menu item link hover state on a selected menu item
-     */
-    &:hover:not(:active, .al-is-disabled) {
-      color: var(--al-theme-color-content-primary-weak);
-      background: var(--al-theme-color-background-primary-strong);
-    }
+  .al-c-menu-item-header-link {
+    @include al-theme-typography-body-md-bold;
   }
-}
-
-/**
- * Menu item link header
- */
-.al-c-menu-item-header-link {
-  @include al-theme-typography-body-md-bold;
 }

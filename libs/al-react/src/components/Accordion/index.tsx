@@ -1,1 +1,3 @@
-export * from './Accordion';
+'use client';
+
+export * from './Accordion.js';

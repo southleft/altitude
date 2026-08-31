@@ -1,0 +1,122 @@
+purpose: >-
+  A choice from a known list, rendered as a field the user opens rather than
+  types into. It composes `al-input` for the field itself and `al-dropdown-panel`
+  for the options, so it inherits the whole form-field treatment — label,
+  required marker, field note, error note — and adds the open/closed state and
+  keyboard traversal on top.
+
+whenToUse:
+  - >-
+    The value comes from a set the product knows in advance: a country, a
+    status, an assignee, a plan.
+  - >-
+    The list is long enough that showing every option at once would dominate the
+    form, but short enough that the user recognises the option rather than
+    recalling it.
+  - >-
+    The list is long enough to need filtering — set `hasSearch` and a search
+    field is rendered in the panel header.
+
+whenNotToUse:
+  - text: >-
+      The user may need to enter a value that is not in the list. The field is
+      `isReadonly` by default, so typing an unlisted value is not possible.
+    instead: combobox
+  - text: >-
+      There are only two or three options and the form has room. Showing them
+      all costs one click less and makes the choice visible while filling the
+      rest of the form.
+    instead: radio-group
+  - text: >-
+      The choice is a binary on/off for a single setting.
+    instead: toggle
+  - text: >-
+      What is being opened is a list of actions or destinations rather than a
+      value the form will submit.
+    instead: menu
+
+dos:
+  - >-
+    Give the panel a search field with `hasSearch` once the list passes roughly
+    ten options — scanning a long unfiltered list is where this control gets
+    slow.
+  - >-
+    Use `align="top"` when the field sits near the bottom of the viewport, so
+    the panel opens into space rather than off-screen.
+  - >-
+    Set `isError` alongside `errorNote`, exactly as with `al-input` — the field
+    treatment is inherited, and so is that requirement.
+  - >-
+    Keep `isReadonly` at its default `true` unless you have deliberately built a
+    type-ahead. It is what stops the user typing a value the list cannot honour.
+
+donts:
+  - >-
+    Don't expect the options to exist in the DOM while the select is closed. The
+    dropdown panel is only rendered when the panel is open, so anything that
+    walks the light DOM for options — a test, a form serializer, an autofill
+    heuristic — will find nothing until it is opened.
+  - >-
+    Don't stamp `role="option"` onto the slotted items. They are `al-list-item`s
+    that render their own `<button>`, and an interactive role wrapping an
+    interactive control is exactly the pattern the component avoided on purpose.
+  - >-
+    Don't use this for multi-select without checking what the composed panel
+    actually renders — the component registers `al-checkbox` for that case, but
+    the behaviour is not a documented public prop.
+  - >-
+    Don't reach for a select when the answer is a date. There is a dedicated
+    picker with the calendar semantics that come with it.
+
+accessibility:
+  - >-
+    The combobox semantics — `role="combobox"`, `aria-expanded`,
+    `aria-haspopup="listbox"` and `aria-controls` — were added deliberately
+    after a review found the control announced only as "edit text", with nothing
+    saying a list would open.
+  - >-
+    Those attributes are set on the `<al-input>` host element rather than on the
+    `<input>` inside its shadow root that actually takes focus. Verify the
+    announcement in your target screen reader before relying on it.
+  - >-
+    `aria-controls` is emitted only while the panel is open, which is correct —
+    the panel it names does not exist when closed.
+  - >-
+    The options stay un-roled on purpose. `aria-haspopup="listbox"` states the
+    intent without claiming a tree structure the DOM does not have.
+
+content:
+  - >-
+    Label the field with the thing being chosen ("Assignee", "Billing country"),
+    not the act of choosing ("Select an assignee").
+  - >-
+    Use `placeholder` for the unselected state and make it a real instruction
+    the user can act on — it is the only text in the field before a choice is
+    made.
+  - >-
+    Order options by what the user is most likely to want, not alphabetically,
+    unless the list is long enough that alphabetical order is how they will
+    search it.
+  - >-
+    Keep option labels parallel in grammar and length so the list can be scanned
+    rather than read.
+
+sources:
+  - path: libs/al-web-components/components/select/select.ts
+    contains: aria-haspopup
+    note: >-
+      The combobox semantics and the recorded reason they were added — the
+      control previously announced as plain edit text.
+  - path: libs/al-web-components/components/select/select.ts
+    contains: 'isReadonly: boolean = true'
+    note: >-
+      The field is read-only by default; that default is what makes this a
+      picker rather than a text field.
+  - path: libs/al-web-components/components/select/select.ts
+    contains: hasSearch
+    note: >-
+      The optional search field rendered into the dropdown panel header.
+  - path: libs/al-web-components/components/select/select.ts
+    contains: isActiveDropdown
+    note: >-
+      The panel — and therefore every option — is rendered only while open.

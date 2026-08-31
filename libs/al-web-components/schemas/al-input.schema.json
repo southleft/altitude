@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-input.schema.json",
+  "title": "ALInput (al-input)",
+  "description": "Component: al-input",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-input",
+    "className": "ALInput",
+    "module": "components/input/input.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The content that appears before the text in the input",
+        "name": "before"
+      },
+      {
+        "description": "The content that appears after the text in the input",
+        "name": "after"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the fieldNote property",
+        "name": "field-note"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the errorNote property",
+        "name": "error"
+      }
+    ],
+    "events": [
+      {
+        "name": "onInputChange",
+        "description": "Fired when the input's value changes. Detail: `{ value }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-input"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Type variants\n- Specifies the type input element to display\n- **text** renders a standar text input\n- **email** renders a text input specifically for an email format\n- **number** renders an input for number values only\n- **password** renders an input for a password input format\n- **url** renders an input for urls only\n- **tel** renders an input for telephone number values only",
+          "type": "string",
+          "enum": [
+            "text",
+            "email",
+            "number",
+            "password",
+            "url",
+            "hidden",
+            "tel"
+          ]
+        },
+        "isActive": {
+          "description": "isActive\n- Dynamically sets to true if the input has a value",
+          "type": "boolean"
+        },
+        "isReadonly": {
+          "description": "Readonly attribute\n- Specifies that an input field is read-only",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        "isRequired": {
+          "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form",
+          "type": "boolean"
+        },
+        "isOptional": {
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        "isFocused": {
+          "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads",
+          "type": "boolean"
+        },
+        "hideLabel": {
+          "description": "Hide label?\n- If true, hides the label VISUALLY. The label element stays in the DOM and\n  keeps its `for` association, so screen readers still announce the field.\n\nBefore v2 this also revealed the placeholder, because the floating label\noccupied the placeholder's position and the two could not both show. The\nlabel no longer sits inside the field, so that coupling is gone: a\n`placeholder` now renders whenever it is set, independently of this.",
+          "type": "boolean"
+        },
+        "labelPosition": {
+          "description": "Label position\n- `top` (default) puts the label above the field.\n- `inset` puts it inside the field's top padding, above the value — the v2\n  replacement for the floating label. It is STATIC: unlike the old floating\n  label it never moves between states, so there is no jump on focus and no\n  background patch punched through the field's border.",
+          "type": "string",
+          "enum": [
+            "top",
+            "inset"
+          ]
+        },
+        "label": {
+          "description": "Label attribute\n- Specifies what content to enter within the input element",
+          "type": "string"
+        },
+        "placeholder": {
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name attribute\n- Specifies the name of an input element",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value attribute\n- Specifies the value of an input element",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error message\n- An error field note that displays below the input",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "Field note\n- The helper text that displays below the input",
+          "type": "string"
+        },
+        "fieldId": {
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        "minLength": {
+          "description": "Min length\n- Specifies the minimum number of characters required in an input element",
+          "type": "number"
+        },
+        "maxLength": {
+          "description": "Max length\n- Specifies the maximum number of characters required in an input element",
+          "type": "number"
+        },
+        "maxLengthValue": {
+          "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
+          "type": "number"
+        },
+        "min": {
+          "description": "Minimum value\n- Specifies a minimum value for an input element",
+          "type": "number"
+        },
+        "max": {
+          "description": "Maximum value\n- Specifies a maximum value for an input element",
+          "type": "number"
+        },
+        "autoComplete": {
+          "description": "Autocomplete property\n- Specifies whether an input element should have autocomplete enabled",
+          "type": "string",
+          "enum": [
+            "on",
+            "off"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

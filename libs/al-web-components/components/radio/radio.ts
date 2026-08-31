@@ -11,9 +11,11 @@ import styles from './radio.scss';
 
 /**
  * Component: al-radio
- * - **slot**: The component content that appears next to the radio
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The component content that appears next to the radio
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onRadioChange - Fired when this radio becomes checked. Detail: `{ checked, name, value }`.
  */
 export class ALRadio extends ALElement {
   static el = 'al-radio';
@@ -169,7 +171,7 @@ export class ALRadio extends ALElement {
               class="al-c-radio__input"
               type="radio"
               id="${this.fieldId}"
-              name="${this.name}"
+              name="${ifDefined(this.name)}"
               .value="${this.value}"
               .checked="${this.isChecked}"
               ?disabled="${this.isDisabled}"

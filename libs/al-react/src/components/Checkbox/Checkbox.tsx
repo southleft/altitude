@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALCheckbox as ALWebCheckbox } from 'al-web-components/dist/components/checkbox/checkbox';
-import register from 'al-web-components/dist/directives/register';
+import { ALCheckbox as ALWebCheckbox } from '@southleft/al-web-components/components/checkbox';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebCheckbox.el, ALWebCheckbox],
@@ -14,6 +16,6 @@ export const ALCheckbox = createComponent({
   tagName: elementMap.get(ALWebCheckbox.el),
   elementClass: ALWebCheckbox,
   events: {
-    onChange: 'change'
+    onCheckboxChange: 'onCheckboxChange'
   }
 });

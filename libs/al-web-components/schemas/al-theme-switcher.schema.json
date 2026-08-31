@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-theme-switcher.schema.json",
+  "title": "ALThemeSwitcher (al-theme-switcher)",
+  "description": "Component: al-theme-switcher",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-theme-switcher",
+    "className": "ALThemeSwitcher",
+    "module": "components/theme-switcher/theme-switcher.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The component content",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onThemeSwitcherChange",
+        "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-theme-switcher"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

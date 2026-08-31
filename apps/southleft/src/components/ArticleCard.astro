@@ -1,0 +1,42 @@
+---
+// Insights post card — spec 2026-08-20-southleft-example-app, T4.
+//
+// REBUILT ON `<al-card variant="article">`. This was bespoke `.sl-media-card`
+// markup, on the reasoning that `al-card` could never render flush-to-edge
+// media: its single outer `padding` wraps the image region. That is still true
+// of Altitude's card, and it is no longer true of Southleft's, which owns its
+// padding as `--al-card-padding` and moves it onto the content column for the
+// media variants. The treatment is identical; it now lives in the design
+// system instead of in this app's stylesheet.
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  post: CollectionEntry<'insights'>;
+  featured?: boolean;
+}
+const { post, featured = false } = Astro.props;
+const slug = post.id.replace(/\.md$/, '');
+const href = withBase(`/insights/${post.data.category}/${slug}`);
+const dateLabel = post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+{/* `heading-variant` is left to the component: it resolves to `lg` for a
+    featured card and `md` otherwise, which is the same per-family judgment
+    this file used to make inline (v5's 32px title sits between al-heading's
+    scoped 24px and 48px steps, and long sentence titles overwrap badly at
+    `lg`). The `featured` flag below is what selects it. */}
+<al-card
+  variant="article"
+  fill
+  featured={featured || undefined}
+  href={href}
+  image={post.data.hero ? withBase(post.data.hero) : undefined}
+  heading={post.data.title}
+  excerpt={post.data.excerpt || undefined}
+  footer-label="read →"
+>
+  <span slot="meta" class="sl-media-card__meta-accent">{post.data.categoryName}</span>
+  <span slot="meta" aria-hidden="true">·</span>
+  <time slot="meta" datetime={post.data.date.toISOString().slice(0, 10)}>{dateLabel}</time>
+</al-card>

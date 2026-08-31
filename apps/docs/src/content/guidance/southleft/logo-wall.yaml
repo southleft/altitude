@@ -1,0 +1,38 @@
+purpose: A row of client or partner logos, normalised to one optical height and one contrast
+  treatment so a set of wildly different source files reads as a single band.
+whenToUse:
+- You are showing social proof as a group of marks, and the group matters more than any individual
+  logo in it.
+- The source images are inconsistent in colour and weight and need the wall's normalising
+  filter to sit together.
+whenNotToUse:
+- text: There is one mark and it is the site's own. The brand mark is its own component with
+    its own link behaviour.
+  instead: logo
+- text: Each logo needs to link to a case study, which makes this a list of destinations rather
+    than a band of proof.
+  instead: card
+dos:
+- Give every image real `alt` text naming the organisation. The wall is a claim about who
+  you work with, and that claim should survive with images off.
+- Use `vivid` when the logos are the point rather than the backdrop; it drops the flattening
+  filter and lets the marks keep their own colour.
+donts:
+- Do not mix logos with wildly different aspect ratios and expect the wall to fix it. It normalises
+  height, not proportion.
+- Do not put more marks in than fit on one row at the narrowest supported width unless you
+  have decided how it wraps.
+accessibility:
+- The default treatment flattens every mark to a single tone, so contrast comes from the surface
+  behind it. Check the wall in both modes rather than only the one you designed on.
+content:
+- Use each organisation's own name in the `alt`, not a description of the logo. A reader needs
+  the company, not the shape.
+sources:
+- path: libs/sl-web-components/components/logo-wall/logo-wall.ts
+  contains: export class SLLogoWall
+  note: The component this guidance describes.
+- path: libs/sl-web-components/components/logo-wall/logo-wall.scss
+  contains: :host([vivid])
+  note: The vivid attribute drops the normalising filter, which is what the second recommendation
+    rests on.

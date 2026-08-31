@@ -1,1 +1,3 @@
-export * from './Toast';
+'use client';
+
+export * from './Toast.js';

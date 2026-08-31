@@ -1,1 +1,3 @@
-export * from './Divider';
+'use client';
+
+export * from './Divider.js';

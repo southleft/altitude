@@ -1,4 +1,4 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /* ------------------------------------*\
   #TOGGLE-BUTTON
 \*------------------------------------ */
@@ -6,101 +6,122 @@
 /**
  * Toggle Button
  */
-.al-c-toggle-button {
-  @include al-theme-typography-body-sm;
-  display: flex;
-  padding: var(--al-theme-space-xs);
-  background: var(--al-theme-color-background-transparent);
-  border: none;
-  border-radius: var(--al-theme-border-radius-lg);
-  text-decoration: none;
-  cursor: pointer;
-}
 
-/**
- * Toggle Button - Background variant
- */
-.al-c-toggle-button--background {
-  background-color: var(--al-theme-color-background-default);
-  box-shadow: var(--al-theme-box-shadow-md);
-}
-
-/**
- * Toggle Button content
- */
-.al-c-toggle-button__content {
-  display: flex;
-  align-items: center;
-  justify-content: var(--al-toggle-button-justify-content, center);
-  gap: var(--al-theme-space-xs);
-  height: size(5);
-  min-width: size(5);
-  width: var(--al-toggle-button-content-width, auto);
-  color: var(--al-theme-color-content-default);
-  background: var(--al-theme-color-background-transparent);
-  border-radius: var(--al-theme-border-radius);
-  padding: var(--al-theme-space-xs);
-  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-  white-space: nowrap;
-  position: relative;
-
-  /**
-   * Remove padding for small variants
-   */
-  .al-c-toggle-button--small & {
-    padding: 0;
+@layer al.component {
+  .al-c-toggle-button {
+    /*
+     * v2 canvas: a segment of the segmented control — 32px tall, 13px
+     * semibold, on the 6px action radius. It was a 12px-radius, 14px-regular
+     * control, which read as a small card rather than as one segment of a row.
+     */
+    @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-bold);
+    line-height: 1;
+    box-sizing: border-box;
+    min-height: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--al-theme-space-sm);
+    background: var(--al-theme-color-background-transparent-default);
+    border: none;
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
+    text-decoration: none;
+    cursor: pointer;
   }
 
   /**
-   * Hover state
-   * - If parent is hovered, then change the background color of the content
+   * Toggle Button - Background variant
    */
-  &:hover:not(:active, .al-is-selected &) {
-    background: var(--al-theme-color-background-default-strong);
+  .al-c-toggle-button--background {
+    background-color: var(--al-theme-color-background-default);
+    /* v2: structure from a hairline, not elevation. */
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
   }
 
   /**
-   * Selected state
-   * - If parent has selected state, then change the background & color of the content
+   * Toggle Button content
    */
-  .al-is-selected & {
-    color: var(--al-theme-color-content-default-weak);
-    background: var(--al-theme-color-background-default-weak);
+  .al-c-toggle-button__content {
+    display: flex;
+    align-items: center;
+    justify-content: var(--al-toggle-button-justify-content, center);
+    gap: var(--al-theme-space-xs);
+    /*
+     * The inner box is what actually sets the segment height; the 40px here
+     * was overriding the host's control-scale minimum. 32px still clears the
+     * 24x24 of WCAG 2.2 SC 2.5.8 for the icon-only usages.
+     */
+    height: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
+    min-width: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
+    width: var(--al-toggle-button-content-width, auto);
+    color: var(--al-theme-color-content-default);
+    background: var(--al-theme-color-background-transparent-default);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
+    padding: var(--al-theme-space-xs);
+    transition: color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing)), background-color var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+    white-space: nowrap;
+    position: relative;
+
+    /**
+     * Remove padding for small variants
+     */
+    .al-c-toggle-button--small & {
+      padding: 0;
+    }
+
+    /**
+     * Hover state
+     * - If parent is hovered, then change the background color of the content
+     */
+    &:hover:not(:active, .al-is-selected &) {
+      background: var(--al-theme-color-background-default-strong);
+    }
+
+    /**
+     * Selected state
+     * - If parent has selected state, then change the background & color of the content
+     */
+    .al-is-selected & {
+      color: var(--al-theme-color-content-default-weak);
+      background: var(--al-theme-color-background-default-weak);
+    }
+
+    /**
+     * Overlay for click events on content
+     */
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-start: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
   }
 
   /**
-   * Overlay for click events on content
+   * Slotted content
+   * - Adjust to allow for the component click event to work normally
    */
-  &::after {
-    content: "";
-    display: block;
-    position: absolute;
-    inset-inline-start: 0;
-    inset-block-start: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
+  ::slotted(*) {
+    position: relative;
+    z-index: 3;
   }
-}
 
-/**
- * Slotted content
- * - Adjust to allow for the component click event to work normally
- */
-::slotted(*) {
-  position: relative;
-  z-index: 3;
-}
+  /**
+   * Slotted popovers
+   * - Adjust the positioning of the popover to account for control button padding
+   */
+  ::slotted(al-popover) {
+    --al-popover-trigger-z-index: 1;
+    --al-popover-shift: #{calc(#{var(--al-theme-space-sm)} * -1)};
 
-/**
- * Slotted popovers
- * - Adjust the positioning of the popover to account for control button padding
- */
-::slotted(al-popover) {
-  --al-popover-trigger-z-index: 1;
-  --al-popover-shift: #{calc(#{var(--al-theme-space-sm)} * -1)};
-
-  .al-c-toggle-button--background & {
-    --al-popover-offset: #{var(--al-theme-space-lg)};
+    .al-c-toggle-button--background & {
+      --al-popover-offset: #{var(--al-theme-space-lg)};
+    }
   }
 }

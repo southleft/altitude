@@ -1,1 +1,3 @@
-export * from './LayoutMasonry';
+'use client';
+
+export * from './LayoutMasonry.js';

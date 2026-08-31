@@ -1,0 +1,840 @@
+name: v2 refactor checks
+
+on:
+  push:
+    # `main` was absent, so a push straight to the release branch ran ZERO
+    # checks while release.yml published from it. `feature/v2` was also pinned
+    # to one literal branch, so every sibling branch (feature/v2-brooke, etc.)
+    # ran nothing on push either. Glob both.
+    branches:
+      - main
+      - 'feature/**'
+  pull_request:
+    branches: [main, 'feature/**']
+  # Re-running the matrix required pushing a commit. It is ~25 jobs; being able
+  # to retry a flaky runner without polluting history is worth one line.
+  workflow_dispatch:
+
+# A push to a branch that already has a run in flight superseded nothing: both
+# ran the full ~25-job matrix to completion. Cancel the older one instead.
+# `main` is deliberately EXCLUDED from cancellation -- release.yml publishes from
+# it, so every commit that lands there must keep its own complete check record.
+concurrency:
+  group: v2-checks-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  changesets:
+    name: Changesets present on public-API PRs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install root deps
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      # FATAL. The warn-only step below uses `|| true` so docs/infra PRs without a
+      # changeset stay green — but `|| true` also swallowed a stale `ignore` entry
+      # (`al-app-enhance`, a workspace deleted several commits earlier) that made
+      # `changeset status` throw a ValidationError. The release pipeline was broken
+      # and CI stayed green. This step validates the config itself and must pass.
+      - name: Validate changesets config
+        run: pnpm run check:changesets
+      - name: Changeset status (warn-only on docs/infra PRs)
+        run: pnpm exec changeset status --since=origin/${{ github.base_ref }} || true
+
+  migration-gate:
+    name: G2 - migration manifest gate
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Run migration gate
+        run: node scripts/check-migration-gate.js --base=origin/${{ github.base_ref }}
+
+  publishable:
+    # WAS `npm publish --dry-run` in each library. npm short-circuits on
+    # `"private": true` — it exits 0 without packing or validating anything, and
+    # both libraries are private, so this job could not fail by construction.
+    # check-publishable.mjs asserts the publish contract directly instead.
+    name: libraries are publishable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install root deps
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build libraries
+        run: pnpm run build
+      - name: Assert both libraries are publishable
+        run: pnpm run check:publishable
+
+  baselines-required:
+    name: G8 - baselines updated on build/dep change
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run baseline gate
+        run: node scripts/check-baselines-gate.js --base=origin/${{ github.base_ref }}
+
+  fixtures:
+    name: T0.3 fixtures build green
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build libraries
+        run: pnpm run build
+      - name: Build fixtures (web-components / react / mfe / ssr)
+        run: pnpm run build:fixtures
+
+  build-all:
+    # Cloudflare Pages parity: no other job runs the full build:all, so
+    # app/framework build breakage - e.g. an Angular-22 Node-version mismatch -
+    # previously only surfaced at deploy. Pin Node to .nvmrc (Cloudflare's
+    # source of truth) and run the exact deploy command to catch it in PRs.
+    #
+    # build:all is libs -> docs -> home -> angular/react/svelte/astro/southleft.
+    # The two PRODUCT surfaces (the docs site at /docs and the homepage at /)
+    # build immediately after the libraries they depend on and AHEAD of the
+    # demo fixtures, deliberately: build:all is a strict && chain, so a broken
+    # fixture must not be able to take the documentation site down with it.
+    # See the `//build:all` note in the root package.json -- the order is
+    # load-bearing, not alphabetical.
+    name: build:all (Cloudflare parity)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js (from .nvmrc — same as Cloudflare)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        # No --ignore-scripts: mirror Cloudflare's plain install so the
+        # onlyBuiltDependencies (esbuild, @swc/core) postinstalls run.
+        run: pnpm install --frozen-lockfile
+      - name: Build everything (libs, docs, home, then the framework fixtures)
+        run: pnpm run build:all
+      # The four docs gates existed as `pnpm run` scripts that only ever ran by
+      # hand — the exact "documented but not enforced" pattern the repo-hygiene
+      # job comment describes. They need built docs HTML, which only this job
+      # produces, so they run here after build:all.
+      - name: Docs coverage (every component routed, scopes resolve)
+        run: pnpm run gate:docs
+      - name: Docs status panels (no Figma-key/node-id leaks, no silent-success panels)
+        run: pnpm run gate:docs-panels
+      - name: Docs generalises across projects
+        run: pnpm run gate:docs-generalises
+      - name: Guidance quality (citations resolve, all sections present)
+        run: pnpm run gate:guidance
+
+  gate-self-test:
+    name: G2/G8 gate self-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          # No cache:'pnpm' here: this job runs only zero-dependency Node gate
+          # scripts (no `pnpm install`), so there's no pnpm store to cache and
+          # the setup-node post-step cache-save fails with a Path Validation
+          # Error nondeterministically.
+      - name: Run gate self-test
+        run: pnpm run gate:self-test
+      # T1, spec 2026-08-29-parity-judgement-gates-and-evals. The offline
+      # self-tests under scripts/__tests__/ had no runner at all — they were
+      # written, committed, and then never executed by anything. This job is
+      # the right home: they are zero-dependency Node scripts, and this job
+      # deliberately skips `pnpm install`.
+      - name: Offline script self-tests
+        run: pnpm run test:scripts
+      # T12: the judgement ledger must keep describing the real code, and a NEW
+      # unverified judgement point must not land unrecorded.
+      - name: Judgement ledger still true
+        run: pnpm run check:judgement-ledger
+
+  baselines-vrt:
+    # No component count in the name: components.vrt.spec.ts derives its list
+    # from the filesystem (componentEntries()), so any number written here is
+    # wrong the next time a component lands. It was "65" against 70 on disk.
+    name: T0.1 - VRT vs committed baselines (pilots + every component)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+      # playwright.config.ts declares THREE webServers (web-components :5174,
+      # mfe :5176, ssr :5177 serving a prebuilt dist/index.html) — every one of
+      # their fixtures must be built or config.webServer dies on a missing dist
+      # and the run collects 0 tests.
+      # `build:fixtures` rather than three named filters: it now also builds the
+      # story fixture, which tests/components.vrt.spec.ts serves on 5178 and
+      # reads its index.json from. Naming the apps individually is what left the
+      # new fixture unbuilt and the server unable to start.
+      - name: Build libraries + every VRT fixture
+        run: pnpm run build && pnpm run build:fixtures
+      - name: Run VRT against baselines
+        run: pnpm run test:vrt
+      # Scoped `<al-theme brand>` regression guard. Deliberately NOT a pixel
+      # baseline: the brands differentiate through SYSTEM font stacks (Georgia,
+      # Consolas / ui-monospace), which resolve differently on this runner than
+      # on a contributor's machine, so a golden screenshot would be permanently
+      # red. This asserts the brands differ FROM EACH OTHER in computed style,
+      # which is platform-stable and is the property that actually regressed
+      # before (`brand` was inert for a whole release with every gate green).
+      # Reuses this job's build + chromium; it renders its own page on :5198.
+      # Two brands, not four: 2026-08-20-brand-pruning-and-storybook-de-bloat
+      # pruned the set, and check-scoped-theming.mjs pins BRANDS to
+      # ['altitude', 'southleft'].
+      - name: Scoped theming (two brands, one document)
+        run: pnpm run test:scoped-theming -- --no-screenshot
+      - name: Upload diffs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          # test-results/ carries the -actual/-diff PNGs — the artifact this
+          # step exists for (playwright-report/ alone was empty when no HTML
+          # reporter is configured, so failures uploaded nothing).
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+
+  baselines-tokens:
+    name: T0.1 - tokens snapshot equal
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build tokens
+        run: pnpm --filter @southleft/al-web-components build:tokens
+      - name: Re-snapshot tokens (to a temp file) and compare hash to committed
+        run: |
+          cp .altitude/baselines/tokens/snapshot.json /tmp/committed.json
+          pnpm run baselines:tokens
+          NEW_HASH=$(node -e "console.log(require('./.altitude/baselines/tokens/snapshot.json').hash)")
+          OLD_HASH=$(node -e "console.log(require('/tmp/committed.json').hash)")
+          echo "committed: $OLD_HASH"
+          echo "regen:     $NEW_HASH"
+          if [ "$OLD_HASH" != "$NEW_HASH" ]; then
+            echo "::error::Token snapshot drifted from committed baseline."
+            diff <(node -e "console.log(JSON.stringify(require('/tmp/committed.json').variables, null, 2))") \
+                 <(node -e "console.log(JSON.stringify(require('./.altitude/baselines/tokens/snapshot.json').variables, null, 2))") | head -200 || true
+            exit 1
+          fi
+
+  baselines-bundle:
+    name: T0.1 - bundle snapshot equal
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build libraries
+        run: pnpm run build
+      - name: Re-snapshot bundle and compare totalBytes
+        run: |
+          cp .altitude/baselines/bundle/snapshot.json /tmp/committed.json
+          pnpm run baselines:bundle
+          NEW=$(node -e "console.log(require('./.altitude/baselines/bundle/snapshot.json').totalBytes)")
+          OLD=$(node -e "console.log(require('/tmp/committed.json').totalBytes)")
+          echo "committed totalBytes: $OLD"
+          echo "regen     totalBytes: $NEW"
+          # Allow 1% drift to absorb gzip/minifier non-determinism; tighten in P2.
+          DIFF=$(node -e "const o=$OLD,n=$NEW; console.log(Math.abs(n-o)/o)")
+          OVER=$(node -e "console.log($DIFF > 0.01 ? 1 : 0)")
+          if [ "$OVER" = "1" ]; then
+            echo "::error::Bundle baseline drifted >1% from committed snapshot."
+            exit 1
+          fi
+
+  bundle-completeness:
+    # WAS `vite-build-and-parity` (T2.1/T2.2). The webpack -> Vite migration it
+    # gated is finished, and two of its three steps had quietly become dead:
+    #
+    #   * "Build webpack lib (baseline)" ran `pnpm run build`, which is Vite.
+    #     There is no webpack config or webpack dependency left in this repo.
+    #   * check-vite-export-parity.js diffed dist/ against dist-vite/ -- but
+    #     `build` and `build:vite` were the SAME `vite build -c vite.config.mjs`
+    #     differing only in --outDir, so it asserted a build was a superset of
+    #     itself and could not fail. (.altitude/BUILD.md already recorded that
+    #     dist-vite/ "was retired at T2.2 finalization"; CI kept gating it.)
+    #   * check-vite-spike.js was a T2.1 SPIKE proving Vite *could* get SCSS
+    #     into a shadow root the way webpack+sass-loader did. It shipped.
+    #
+    # Both scripts, `build:vite`, `build:vite-spike` and vite.spike.config.mjs
+    # are deleted. check-bundle-completeness.js survives because it never had
+    # anything to do with the migration: it catches a component that exists on
+    # disk but is missing from bundle.ts, which is a live drift risk today.
+    name: bundle.ts completeness (no component drift)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build libraries
+        run: pnpm run build
+      - name: bundle.ts completeness (no component drift)
+        run: node scripts/check-bundle-completeness.js
+  cem-and-contracts:
+    name: T3.1/T3.2/T3.4 CEM + schemas + contract validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      # Tokens first: build:tokens writes styles/dist/tokens.json, which is the
+      # only input to the AI-readiness tokens digest checked for drift below.
+      - name: Build tokens (+ tokens digest)
+        run: pnpm --filter @southleft/al-web-components build:tokens
+      - name: Build CEM + schemas (+ CEM digest)
+        run: pnpm --filter @southleft/al-web-components build:custom-elements.json
+      # The whole generated chain — custom-elements.json, the 105 per-component
+      # schemas, schemas/INDEX.md, and both AI-readiness digests — is committed
+      # and read by agents (the MCP server, cli/validate.mjs, the docs site,
+      # run-probe/run-judge). Nothing detected a JSDoc or token edit that was
+      # never regenerated, so the committed copies could silently diverge from
+      # source. Regenerating above and diffing here makes that a hard failure.
+      - name: Generated artifacts are in sync with source (no un-regenerated edits)
+        run: |
+          git diff --exit-code -- \
+            libs/al-web-components/custom-elements.json \
+            libs/al-web-components/schemas \
+            .altitude/ai-readiness \
+            || {
+              echo "::error::Generated output differs from the committed copy."
+              echo "Run: pnpm --filter @southleft/al-web-components build:tokens && pnpm --filter @southleft/al-web-components build:custom-elements.json"
+              echo "then commit the regenerated files."
+              exit 1
+            }
+      - name: T3.1 — CEM coverage
+        run: node scripts/check-cem-coverage.js
+      - name: T3.4 — contract validator
+        run: node scripts/validate-contracts.js
+
+  bundle-budget:
+    name: T6.3 bundle-size budget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build libs
+        run: pnpm run build
+      - name: Bundle budget
+        run: node scripts/check-bundle-budget.js
+
+  controllers:
+    name: T5.1 headless controllers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Run controller unit tests
+        run: node scripts/test-controllers.js
+
+  css-layers:
+    name: T4.1/T6.1 css layers strict
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Strict layer compliance (post-scale-out)
+        run: node scripts/check-css-layers.js --strict
+
+  jsdoc-dialect:
+    name: R1/R2 JSDoc tag dialect + CEM event descriptions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      # The empty-event-description half reads the generated CEM, so it must be
+      # regenerated here rather than trusting the committed copy.
+      - name: Regenerate the CEM
+        run: pnpm --filter @southleft/al-web-components build:custom-elements.json
+      - name: JSDoc dialect + CEM event descriptions
+        run: pnpm run check:jsdoc
+
+  exports-map:
+    name: R6 package exports map vs built output
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      # The guard resolves export targets against real build output, so the
+      # libraries must be built first — a phantom entry is only detectable
+      # once dist/ exists.
+      - name: Build libraries
+        run: pnpm run build
+      - name: Exports map matches built output
+        run: pnpm run check:exports
+
+  react-wrapper-contract:
+    name: T4.7 React 19 wrapper contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Wrapper contract
+        run: node scripts/check-react-wrapper-contract.js
+
+  lint:
+    name: T2.3.c ESLint 9 flat + changed-line styles
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # fetch-depth: 0 for gate:styles-new below, which diffs against the
+        # merge-base with the target branch.
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Lint repo
+        run: pnpm run lint
+      # lint:styles (repo-hygiene) is the hard gate, but it can only cover .scss:
+      # the sites' hand-written .css carries 21 pre-existing violations, so
+      # gating all of it would be permanently red. gate:styles-new is the half
+      # that holds the line -- stylelint on the lines a branch actually CHANGED,
+      # .scss and .css alike. It was documented as "what holds the line over the
+      # site CSS" and never ran anywhere. PR-only: it needs a base to diff from.
+      - name: Styles lint on changed lines only (.scss and .css)
+        if: github.event_name == 'pull_request'
+        # Invoked as `node scripts/...` rather than `pnpm run gate:styles-new --`
+        # so argv is clean: `pnpm run X -- --flag` forwards a literal "--" too,
+        # which is exactly the shape the sibling base-diff gates avoid
+        # (check-migration-gate.js, check-baselines-gate.js).
+        run: node scripts/check-styles-changed.mjs --base origin/${{ github.base_ref }}
+
+  ai-readiness-dry-run:
+    # R7 / eval-harness-with-treatments spec — runs on EVERY PR (this
+    # workflow's own `on:` trigger), unlike the label-gated real-spend
+    # workflow (.github/workflows/ai-readiness-eval.yml). This is
+    # deliberate: the mcp-smoke job's own comment two jobs up records that a
+    # test which "existed but nothing ran it" rotted silently (asserted 6 of
+    # 8 tools, queried a pruned brand) — the SAME fate would hit
+    # run-probe.mjs's --dry-run path if it only ever ran behind a label. It
+    # spends zero dollars (see run-probe.mjs's DRY_RUN branch — no child
+    # process spawned) so there is no cost reason to gate it.
+    name: ai-readiness harness — dry-run job-list explosion + deterministic tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      # Deterministic grader / cost+latency / treatment-axis unit tests —
+      # R4 and R6's whole point is that these are regression-testable for
+      # $0. No claude/codex binary needed; all fixtures are recorded or
+      # explicitly-synthetic (see each test file's header).
+      - name: Deterministic grader tests (R4)
+        run: node scripts/ai-readiness/test/grader.test.mjs
+      - name: Metrics extraction tests (R6 cost/latency)
+        run: node scripts/ai-readiness/test/metrics.test.mjs
+      - name: Treatment axis + MCP tool-call trace tests (R3/R5)
+        run: node scripts/ai-readiness/test/treatment.test.mjs
+      # Only these three above are guaranteed $0 + no browser. axe-check.test.mjs
+      # needs a built libs/al-web-components/dist AND Playwright's Chromium —
+      # neither is provisioned in this lightweight job on purpose (a11y /
+      # story-fixture-a11y jobs already cover real axe-in-CI elsewhere in
+      # this workflow); it self-skips cleanly when its dependencies are
+      # absent rather than failing, so it is safe to leave out here.
+      - name: Dry-run job-list explosion across the FULL treatment matrix (spends $0 — see run-probe.mjs DRY_RUN branch)
+        run: node scripts/ai-readiness/run-probe.mjs --dry-run --fleet=2 --tasks=A,B,C,D,E,F,G --models=claude --treatments=all
+      - name: node --check every harness file (catches syntax errors eslint's parser would also catch, but faster / no config needed)
+        run: |
+          set -e
+          for f in $(git ls-files 'scripts/ai-readiness/**/*.mjs'); do
+            node --check "$f"
+          done
+
+  story-fixture-a11y:
+    name: T2.4 axe sweep over every story (story fixture)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Build libs
+        run: pnpm run build
+      # REPLACES the old `storybook-test` job, which built a static Storybook and
+      # ran `test-storybook` against it. That job was 494 stories x (one axe sweep
+      # + two Storybook-decorator guards); the guards checked Storybook's own
+      # wiring and died with it, and the sweep is what actually mattered.
+      #
+      # `story-fixture` renders the same stories with real Lit and was verified at
+      # EXACT parity against a freshly-built Storybook on the same commit —
+      # 67 components, 0 structural, 18 contrast, identical component-by-component.
+      # Roughly a minute, and no Storybook to build.
+      - name: Build the story fixture
+        run: pnpm run build:story-fixture
+      - name: Axe every story
+        run: node scripts/build-a11y-report.mjs --storybook libs/al-web-components/story-fixture/dist --out /tmp/a11y.json
+      # The report GENERATES; it does not gate. `assert-a11y-clean.mjs` is the
+      # half that fails, and it lives as a file rather than an inline `node -e`
+      # so it can be run locally and needs no escaping through YAML.
+      - name: Assert no structural violations and no unrendered stories
+        run: node scripts/assert-a11y-clean.mjs /tmp/a11y.json
+
+  a11y:
+    name: T6.3 a11y CI gate (axe-core)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Build libs + fixture
+        run: pnpm run build && pnpm --filter al-app-web-components build
+      - name: Start fixture preview
+        run: nohup pnpm --filter al-app-web-components preview &
+      - name: Wait for preview
+        run: |
+          for i in {1..30}; do
+            curl -sf http://localhost:5174/ > /dev/null && break
+            sleep 1
+          done
+      - name: Run a11y check
+        run: node scripts/check-a11y.js
+
+  register-altitude:
+    name: T4.6 registry modes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: T4.6 — registry-modes smoke test
+        run: node scripts/check-register-altitude.js
+
+  schema-validate-migration:
+    name: G2 - migration.json schema validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        # `ajv` is a root devDependency; pnpm understands the workspace:*
+        # protocol that the example apps use (plain `npm install` does not).
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Validate manifest against schema
+        run: |
+          node -e "
+            const Ajv = require('ajv');
+            const ajv = new Ajv({ strict: false });
+            const schema = require('./.altitude/migration.schema.json');
+            const data = require('./.altitude/migration.json');
+            const validate = ajv.compile(schema);
+            if (!validate(data)) {
+              console.error('migration.json failed schema validation:');
+              console.error(JSON.stringify(validate.errors, null, 2));
+              process.exit(1);
+            }
+            console.log('migration.json validates against schema. components:', Object.keys(data.components).length);
+          "
+
+  mcp-smoke:
+    # libs/altitude-mcp/test/smoke.mjs existed but nothing ran it, so it had
+    # rotted: it asserted 6 of the 8 registered tools and queried a brand
+    # (meridian) pruned by 2026-08-20-brand-pruning-and-storybook-de-bloat.
+    # It performs a real MCP handshake over stdio and calls every tool, so it
+    # needs the artifacts the server reads (tokens, CEM, schemas) to exist.
+    name: altitude-mcp tool contract (all 8 tools)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Build the artifacts the MCP server reads
+        run: pnpm --filter @southleft/al-web-components build:tokens && pnpm --filter @southleft/al-web-components build:custom-elements.json
+      - name: MCP smoke test
+        run: pnpm --filter @southleft/altitude-mcp test
+      # CAPABILITY-MATRIX.md is generated from the live server's registrations
+      # and had no drift gate -- the same gap that let the tool roster rot to
+      # "six tools" in three hand-written docs (check:mcp-docs now guards those).
+      # The smoke test proves the tools WORK; this proves the doc still
+      # describes them.
+      - name: Capability matrix matches the live server
+        run: pnpm --filter @southleft/altitude-mcp capability-matrix:check
+
+  unit-tests:
+    # B2 - the component libraries had zero unit tests. Vitest 3 in browser mode
+    # (Playwright/chromium), because focus order, `inert`, :focus-visible,
+    # constructable stylesheets and ElementInternals are all either missing or
+    # subtly wrong under a DOM shim - which is how a green suite ends up proving
+    # nothing.
+    name: unit tests (vitest browser) + coverage floor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+      # The `react` vitest project resolves @southleft/al-web-components through its
+      # exports map, i.e. dist/. Without this build it would test a library that
+      # does not exist yet.
+      - name: Build libraries
+        run: pnpm run build
+      - name: Unit tests with coverage
+        run: pnpm run test:unit:coverage
+      - name: Coverage floor (one-way ratchet)
+        run: pnpm run gate:coverage
+      - name: Upload coverage on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+
+  repo-hygiene:
+    # The four gates below existed as `pnpm run` scripts that only ever ran by
+    # hand. AGENTS.md names check:ds-projects as its own enforcement mechanism,
+    # so leaving it unwired meant the contract was documented but not enforced.
+    name: hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Southleft scope boundary
+        run: pnpm run check:sl-scope
+      # eslint-plugin-lit-a11y reads the `html` templates directly, so it sees
+      # branches no story renders — the gap the axe suite structurally cannot
+      # cover, since axe only measures what a story actually paints. Most rules
+      # are `error` and clean; three are held at `warn` with their count pinned
+      # in .altitude/baselines/lit-a11y.json so known-bad cannot grow while the
+      # fixes land. Promote each to `error` and drop it from the baseline as it
+      # reaches zero.
+      - name: Lit template accessibility (ratcheted)
+        run: pnpm run gate:lit-a11y
+      # Warning-only until the 7 real al-header/al-footer supersession gaps it
+      # found on day one are fixed (tracked as an .mm issue); then drop the
+      # fallback so new base->brand divergence becomes a hard failure.
+      - name: Brand supersession conformance (warning only, see issue)
+        run: pnpm run check:brand-conformance || echo "::warning::brand supersession gaps — see check:brand-conformance output and the tracking issue"
+      # @southleft/sl-web-components was in NO build pipeline and NO CI job — its own
+      # package.json said so. Its `tsc` step had been failing on TS2580 (a bare
+      # `process` reference in @southleft/al-web-components/directives/register.ts, which it
+      # compiles from source without @types/node) and nothing noticed, because
+      # nothing ran it. It needs @southleft/al-web-components built first: it compiles that
+      # package's source directly rather than consuming its dist.
+      - name: Build @southleft/al-web-components (@southleft/sl-web-components compiles its source)
+        run: pnpm --filter @southleft/al-web-components build
+      - name: "@southleft/sl-web-components builds"
+        run: pnpm --filter @southleft/sl-web-components build
+      # The brand-layer CEM is the SOLE source for the /docs/southleft component
+      # pages, yet nothing regenerated or diffed it (the base library has had
+      # this gate in cem-and-contracts all along). The package's `build` now
+      # regenerates it; diffing here makes a stale committed copy a hard failure.
+      - name: Brand-layer CEM is in sync with source
+        run: |
+          git diff --exit-code -- libs/sl-web-components/custom-elements.json || {
+            echo "::error::libs/sl-web-components/custom-elements.json differs from its source."
+            echo "Run: pnpm --filter @southleft/sl-web-components build:custom-elements.json and commit the result."
+            exit 1
+          }
+      # T15 (spec 2026-08-25-contract-backed-figma-parity-and-generation), R7 —
+      # the code side is validated against contracts. Both CEMs (base + brand)
+      # are built and fresh at this point in the job, which --check-drift needs
+      # for the southleft project's roster. Three legs, both projects: schema
+      # validation (illegal contracts refused BY NAME), CEM<->contract drift,
+      # and same-input->byte-identical-output determinism. See
+      # .altitude/contracts/README.md "CI gate".
+      - name: Contract gate (schema + CEM drift + determinism, both projects)
+        run: pnpm run gate:contracts
+      - name: Build tokens (brand distinctiveness reads built output)
+        run: pnpm --filter @southleft/al-web-components build:tokens
+      # Kept after build:tokens because the rest of R9 reads built output.
+      # NOTE the brand-token-set half does NOT need it: styles/tokens-dtcg/ is
+      # the tracked, hand-authored DTCG source (32 files in git), not build
+      # output -- it is present on a fresh clone. The old comment here claimed
+      # the opposite; the generated tree it was describing is styles/dist-v5/.
+      # See CLAUDE.md "Design Tokens".
+      - name: DS project registry is coherent
+        run: pnpm run check:ds-projects
+      - name: Brands are distinguishable
+        run: pnpm run test:brands
+      - name: No phantom tokens (read via var(), never emitted)
+        run: pnpm run gate:token-usage
+      # generate:token-metadata MUTATES the tracked DTCG source, writing a
+      # $extensions block per token -- and its own drift gate ran nowhere. It
+      # asserts uuid coverage and, crucially, uuid STABILITY (each token's uuid
+      # compared against `git show HEAD:<file>`), so a regenerate that silently
+      # reissues identities fails here instead of landing. Needs no build.
+      - name: Token metadata is complete and uuids are stable
+        run: pnpm run check:token-metadata
+      - name: Dependency audit (shipped packages are fatal at high)
+        run: pnpm run check:audit
+      - name: llms.txt matches its sources
+        run: pnpm run check:llms
+      - name: MCP tool docs match the server's registered tools
+        run: pnpm run check:mcp-docs
+      # Same discipline as check:llms and check:mcp-docs, applied to the agent
+      # skill: .claude/skills/altitude-facts/GENERATED-FACTS.md is generated
+      # from the CEM, the digests and the MCP registrations, and is what grounds
+      # agents writing al-* markup. It is the last generated artifact in this
+      # family that had no drift gate.
+      - name: Agent skill facts match their sources
+        run: pnpm run check:skills
+      - name: Styles lint (the hard style gate)
+        run: pnpm run lint:styles
+      # Parity freshness — visibility, not a gate: prints figmaLastRefreshed age,
+      # everObserved, and unreachable statuses per DS project. Exit 0 by design
+      # (the Figma loop is deliberately operator-driven; see .altitude/FIGMA-SYNC.md).
+      - name: Parity freshness (warning only)
+        run: node scripts/check-parity-freshness.mjs || echo "::warning::parity freshness script failed (non-blocking)"

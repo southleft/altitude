@@ -1,1 +1,3 @@
-export * from './Badge';
+'use client';
+
+export * from './Badge.js';

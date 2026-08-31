@@ -2,6 +2,7 @@ import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import '../icon/icons/user';
 import './avatar';
+import { placeholderImages } from '../../fixtures';
 
 export default {
   title: 'Atoms/Avatar',
@@ -26,7 +27,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-avatar ${spread(args)} data-testid="avatar">WW</al-avatar>`;
+const Template = (args) => html`<al-avatar ${spread(args)} data-testid="avatar">TC</al-avatar>`;
 
 const TemplateWithIcon = (args) => html`
   <al-avatar ${spread(args)}>
@@ -36,7 +37,7 @@ const TemplateWithIcon = (args) => html`
 
 const TemplateWithImage = (args) => html`
   <al-avatar ${spread(args)} data-testid="avatar-with-image">
-    <img src="https://picsum.photos/80/80" alt="Alt text" />
+    <img src=${placeholderImages.avatar} alt="Alt text" />
   </al-avatar>
 `;
 

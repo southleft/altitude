@@ -1,0 +1,277 @@
+---
+/**
+ * The app shell from the design canvas: a fixed 264px sidebar beside a
+ * single scrolling `<main>`. Every page of every design system's site renders
+ * inside it — one shell, one design language, N brands.
+ *
+ * TWO THEMING AXES, deliberately separate:
+ *
+ *   `data-theme` on <html> — the docs CHROME's light/dark, driven by the
+ *   sidebar's pill switch, the same mechanism the canvas uses. It styles the
+ *   documentation, not the thing being documented.
+ *
+ *   `<al-theme brand mode>` around the whole shell — the COMPONENTS' brand.
+ *   Tokens land on `:host` and inherit into the light DOM inside it
+ *   (`.altitude/BRANDS.md`; the mechanism `pnpm test:scoped-theming` proves),
+ *   so every live preview on a project's site renders in that project's brand
+ *   with no forked template and no second stylesheet. It composes on top of
+ *   `dist/css/main.css` rather than replacing it, which is why the neutral
+ *   reference brand emits no override block at all and still works.
+ *
+ * The one place the two meet is the accent: `docs.css` re-declares `--blue`
+ * ON the `al-theme` element as `var(--al-theme-color-content-primary-default)`.
+ * Declared there and not on `:root`, so it resolves against the BRANDED value
+ * rather than the base one — custom properties substitute where they are
+ * declared, so a `:root` declaration would have frozen the base blue before the
+ * brand could reach it.
+ */
+import '@southleft/al-web-components/css/main.css';
+import '../styles/docs.css';
+import Sidebar from '../components/Sidebar.astro';
+import BrandTheme from '../components/BrandTheme.astro';
+import ThemeRuntime from '../components/ThemeRuntime.astro';
+import LiveRuntime from '../components/LiveRuntime.astro';
+import BrandRuntime from '../components/BrandRuntime.astro';
+import { SITE, base } from '../lib/site.mjs';
+
+interface Props {
+  /** The design-system context this page belongs to (lib/context.mjs). */
+  context: any;
+  title: string;
+  description?: string;
+  active?:
+    | 'overview'
+    | 'foundations'
+    | 'motion'
+    | 'icons'
+    | 'utilities'
+    | 'components'
+    | 'maturity'
+    | 'migration';
+  activeSlug?: string;
+  /** Load the component runtime (only detail pages render live elements). */
+  liveComponents?: boolean;
+}
+
+const {
+  context,
+  title,
+  description = context.site.description,
+  active,
+  activeSlug,
+  liveComponents = false,
+} = Astro.props;
+
+const { project, site } = context;
+const pageTitle = title === site.name ? site.title : `${title} · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+---
+
+<!doctype html>
+{/*
+  `data-booting` ships SET and is cleared by the inline script below once
+  `<al-theme>` has upgraded. It drives the boot blur (docs.css, `.shell`).
+
+  The chrome's colours are `--al-theme-color-*` now, and those only resolve
+  per-brand once that element upgrades — so between first paint and upgrade
+  the page is drawn in the DEFAULT brand's palette. The boot palette in
+  docs.css is pinned to exactly those values, so the default project shifts by
+  nothing; every other brand shifts a little, and the blur covers the moment
+  the text, rules and previews all re-resolve at once.
+*/}
+<html
+  lang="en"
+  data-booting
+  data-docs-base={base}
+  data-docs-project={project.id}
+  data-docs-brand={project.brand}
+  data-docs-default-mode={project.defaultMode}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.fullName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+
+    <!--
+      Restore the saved theme before first paint. With nothing stored, the
+      PROJECT'S default mode stands (`docs.theme.defaultMode` in
+      .altitude/ds-projects.json, rendered as data-docs-default-mode): a
+      design system whose own site boots dark gets docs that boot dark
+      (spec 2026-08-28-southleft-docs-parity-with-example-site, R8). Light
+      remains the absence of the attribute, as the :root boot palette expects.
+    -->
+    <script is:inline>
+      (function () {
+        var mode = document.documentElement.dataset.docsDefaultMode || 'light';
+        try {
+          var stored = localStorage.getItem('al-docs-theme');
+          if (stored === 'dark' || stored === 'light') mode = stored;
+        } catch (e) {
+          /* localStorage unavailable — the default above stands. */
+        }
+        if (mode === 'dark') document.documentElement.dataset.theme = 'dark';
+      })();
+    </script>
+
+    {
+      /* Deep component imports self-register only when this flag is set at
+         module-eval time (.altitude/REGISTRATION.md — load-bearing, not a boot
+         convenience). Inline, in <head>, before any component module. Set on
+         every page now, not only the live ones: `<al-theme>` wraps the shell. */
+    }
+    <script is:inline>window.alAutoRegistry = true;</script>
+
+    {
+      /* Clears the boot blur. INLINE and in <head> so it is armed before the
+         body exists and does not depend on the bundled module graph — if that
+         fails to load, the backstop below still un-blurs rather than leaving
+         the site permanently frosted. */
+    }
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var done = false;
+        var clear = function () {
+          if (done) return;
+          done = true;
+          root.removeAttribute('data-booting');
+        };
+
+        /* The real signal: the theme host is what sets every --al-theme-color-*
+           the chrome reads, and the layout primitive is what arranges the page
+           sections — so "both upgraded" IS "the colours are final and the
+           grids are in place". ThemeRuntime.astro guarantees both resolve on
+           every page, not just the ones that mount live components. */
+        if (window.customElements) {
+          Promise.all([
+            window.customElements.whenDefined('al-theme'),
+            window.customElements.whenDefined('al-layout'),
+          ]).then(function () {
+            requestAnimationFrame(clear);
+          });
+        } else {
+          clear();
+        }
+
+        /* Backstop. A blur that never lifts is far worse than a flash, so any
+           failure mode — blocked module, 404'd bundle, an unregistered tag —
+           ends with a sharp page. */
+        setTimeout(clear, 2000);
+      })();
+    </script>
+
+    {
+      /* No JS means no upgrade, no clear, and a permanently blurred site.
+         `is:inline` keeps this inside <noscript>; without it Astro hoists the
+         block into the page stylesheet where it would disable the blur for
+         everyone. */
+    }
+    <noscript>
+      <style is:inline>
+        html[data-booting] .shell { filter: none !important; }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    {/*
+      `mode` is server-rendered as the PROJECT's default so the host upgrades
+      straight into it; the theme-switch script below re-asserts the visitor's
+      stored preference on top. `contrast` comes from the same registry block —
+      southleft.com sets contrast="more" on its own host, so its docs previews
+      render disabled states at the same opacity the site does (R8). `null`
+      omits the attribute.
+    */}
+    <al-theme
+      brand={project.brand}
+      mode={project.defaultMode}
+      contrast={project.contrast}
+      data-brand-host
+    >
+      <div class="shell">
+        <Sidebar context={context} active={active} activeSlug={activeSlug} />
+        {/*
+          SEARCH INDEXING — `data-pagefind-body` marks what Pagefind indexes,
+          and scoping it to <main> keeps the sidebar's 68 component links out of
+          every single page's index (without it, every page matches every
+          component name and the results are noise).
+
+          `data-pagefind-filter` carries the design system. One `dist/docs`
+          holds every project's site, so a single index spans all of them —
+          searching from /docs/southleft/ must not surface Altitude pages. The
+          filter is read from the project record, never hardcoded, so a third
+          design system is indexed and filterable with no edit here.
+        */}
+        <main
+          class="shell__main"
+          id="main"
+          data-pagefind-body
+          data-pagefind-filter={`project:${project.id}`}
+        >
+          <slot />
+        </main>
+      </div>
+    </al-theme>
+
+    <script>
+      // Theme switch. Reflects into `data-theme` on <html> for the docs chrome
+      // and into `mode` on <al-theme> for the components, so one control moves
+      // both axes together instead of leaving branded previews in light mode on
+      // a dark page.
+      const label = document.querySelector<HTMLElement>('[data-theme-label]');
+      const host = document.querySelector<HTMLElement>('[data-brand-host]');
+      const paint = () => {
+        const mode = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+        if (label) label.textContent = mode.toUpperCase();
+        host?.setAttribute('mode', mode);
+      };
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        try {
+          localStorage.setItem('al-docs-theme', next);
+        } catch (e) {
+          /* ignore */
+        }
+        paint();
+      });
+      paint();
+    </script>
+
+    <BrandTheme />
+
+    <!--
+      THE THEME HOST, ON EVERY PAGE. Cheap (one component, not the registry)
+      and load-bearing twice over: it is what makes the chrome resolve in this
+      project's brand on pages that mount no live components, and it is what
+      the boot blur waits on. See ThemeRuntime.astro.
+    -->
+    <ThemeRuntime />
+
+    <!--
+      THE BRAND LAYER GOES FIRST, AND THE ORDER IS LOAD-BEARING.
+
+      A brand layer may OVERRIDE a base component: same tag, brand
+      implementation (`supersedes` in .altitude/ds-projects.json — Southleft's
+      `al-header` and `al-footer`). `customElements.define` is first-come,
+      first-served and cannot be undone, so whichever bundle evaluates first
+      owns the tag for the life of the page. LiveRuntime imports the WHOLE base
+      library; if it ran first it would claim `al-header` and the brand
+      implementation this page exists to document would silently never upgrade.
+
+      Registered in this order, the base bundle finds the tag taken and skips
+      it — which is exactly the override the registry declares. Module scripts
+      execute in document order, so this is ordering, not a race.
+
+      Only pages of a project that HAS a layer render this at all.
+    -->
+    {liveComponents && context.registry.layer && <BrandRuntime />}
+    {liveComponents && <LiveRuntime />}
+  </body>
+</html>

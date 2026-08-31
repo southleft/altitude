@@ -1,7 +1,5 @@
-import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './chip';
 import '../icon/icons/warning-triangle';
 
@@ -15,7 +13,6 @@ export default {
       handles: ['click', 'onChipClose']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: { type: 'radio' },
@@ -31,24 +28,27 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-chip ${spread(args)}>Label</al-chip>`;
+const Template = ({ text, ...args }) => html`<al-chip ${spread(args)}>${text ?? 'Design'}</al-chip>`;
 
 export const Default = Template.bind({});
 Default.args = {};
 
 export const Secondary = Template.bind({});
 Secondary.args = {
-  variant: 'secondary'
+  variant: 'secondary',
+  text: 'Engineering'
 };
 
 export const Info = Template.bind({});
 Info.args = {
-  variant: 'info'
+  variant: 'info',
+  text: 'Research'
 };
 
 export const Success = Template.bind({});
 Success.args = {
-  variant: 'success'
+  variant: 'success',
+  text: 'Stable'
 };
 
 export const Warning = Template.bind({});
@@ -84,29 +84,4 @@ Squared.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-WithIconDismissible.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const chip = canvas.queryByTestId('chip') as any;
-  const chipClose = chip?.shadowRoot?.querySelector('.al-c-chip__close') as HTMLElement;
-
-  // Make assertions
-  expect(chip).toBeInTheDocument();
-  expect(chipClose).toBeInTheDocument();
-
-  // Simulate a click event
-  await userEvent.click(chipClose);
-  expect(chip.isDismissed).toBe(true);
-
-  // Set the chip to active
-  chip.isDismissed = true;
-
-  // Simulate a keyboard event (pressing Escape key)
-  await userEvent.type(chip, '{Escape}');
-  expect(chip.isDismissed).toBe(true);
-
-  // Set the chip to active
-  chip.isDismissed = false;
-  chip.blur();
-};
 

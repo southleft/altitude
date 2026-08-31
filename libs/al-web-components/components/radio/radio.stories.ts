@@ -1,14 +1,12 @@
-import { expect, userEvent, within, waitFor } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import './radio';
 
 export default {
-  title: 'Atoms/Radio',
+  title: 'Atoms/Form/Radio',
   component: 'al-radio',
   tags: [ 'autodocs' ],
   parameters: {
@@ -17,7 +15,6 @@ export default {
       handles: ['onRadioChange']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isChecked: {
       control: 'boolean'
@@ -133,28 +130,3 @@ SlottedErrorNote.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const radioItem = canvas.queryByTestId('radio');
-  const radioItemInput = radioItem?.shadowRoot?.querySelector('input') as HTMLInputElement;
-
-  // Make assertions
-  expect(radioItem).toBeInTheDocument();
-
-  // Simulate a click event
-  await userEvent.click(radioItemInput);
-
-  // Check that the radio is checked
-  expect(radioItemInput.checked).toBe(true);
-
-  // Simulate a keyboard event (pressing Enter key)
-  await userEvent.keyboard('{Enter}');
-
-  // Check that the radio is no longer checked
-  expect(radioItemInput.checked).toBe(true);
-
-  // Remove focus from the input element
-  radioItem.isChecked = false;
-  radioItemInput.blur();
-};

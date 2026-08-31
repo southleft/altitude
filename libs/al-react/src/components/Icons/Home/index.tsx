@@ -1,1 +1,3 @@
-export * from './Home';
+'use client';
+
+export * from './Home.js';

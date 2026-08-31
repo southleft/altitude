@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Altitude — &lt;al-theme contrast&gt; behavioural fixture</title>
+    <script>
+      globalThis.alAutoRegistry = true;
+    </script>
+    <!--
+      Deliberately no page-level background override (unlike scoped.css, which
+      hardcodes #0b0b0b for the multi-brand screenshot). `body`'s background
+      must stay whatever `--al-theme-color-body-background` resolves to
+      (base.scss:27), because scripts/verify-contrast-axis.mjs measures the
+      REAL rendered contrast of a disabled `<al-field-note>` against it —
+      overriding it here would measure the harness's chrome, not the token.
+    -->
+    <link rel="stylesheet" href="../../../libs/al-web-components/dist/css/main.css" />
+    <style>
+      body { margin: 0; padding: 1rem; font-family: system-ui, sans-serif; }
+      .col { display: inline-block; vertical-align: top; margin: 0 1.5rem 1.5rem 0; }
+      .col h2 { font: 600 0.75rem/1.4 system-ui, sans-serif; margin: 0 0 0.5rem; }
+    </style>
+  </head>
+  <body>
+    <div id="probes"></div>
+    <script type="module" src="./contrast-axis.js"></script>
+  </body>
+</html>

@@ -1,0 +1,93 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL SECTION HEADER
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+    margin-block-end: var(--al-section-header-margin-block-end, var(--al-theme-space-xl));
+  }
+
+  /**
+   * The mono rule: a hairline, the index/label, then a hairline to the edge.
+   *
+   * 1. This IS a flex container, and it is the one in this package. It arranges
+   *    a box this component renders itself — a `<span>` between two `::before`
+   *    / `::after` pseudo-elements — which is the "internal shadow-DOM
+   *    structure" case AGENTS.md exempts. Nothing a consumer provides is
+   *    positioned by it; the rule cannot be slotted into. Arranging SLOTTED
+   *    content this way is what the guardrail forbids, and this is not that.
+   * 2. Short lead-in on the left, then the rule runs to the right edge — the
+   *    asymmetry is the brand's, and it is why the two pseudo-elements have
+   *    different `flex` values rather than one centred rule.
+   */
+  .sl-c-section-header__rule {
+    display: flex; /* 1 */
+    align-items: center;
+    gap: var(--al-theme-space);
+    font-family: $sl-font-mono;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--al-theme-color-content-default-weak);
+    margin-block-end: var(--al-theme-space-xl);
+  }
+
+  .sl-c-section-header__rule::before,
+  .sl-c-section-header__rule::after {
+    content: '';
+    block-size: var(--al-theme-border-width);
+    background: var(--al-theme-color-border-default-weak);
+    flex: 1 1 auto;
+  }
+
+  .sl-c-section-header__rule::before {
+    flex: 0 0 clamp(1.5rem, 4vw, 3rem); /* 2 */
+  }
+
+  .sl-c-section-header__kicker {
+    @include sl-kicker;
+
+    color: var(--al-theme-color-content-primary-default);
+  }
+
+  .sl-c-section-header__dek {
+    margin: 0;
+    font-size: $sl-text-lead;
+    line-height: 1.55;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * 3. `align-self: flex-end` rather than a rule on the parent: the row's
+   *    alignment is `<al-layout align="end">`'s call, and this only pins the
+   *    link to the baseline of a heading stack that may have grown to three
+   *    lines. `white-space: nowrap` keeps "all insights →" from wrapping its
+   *    arrow onto a second line at narrow widths.
+   */
+  .sl-c-section-header__link {
+    align-self: flex-end; /* 3 */
+    white-space: nowrap; /* 3 */
+    display: inline-flex;
+    align-items: center;
+    gap: var(--al-theme-space-xxs);
+    font-family: $sl-font-mono;
+    color: var(--al-theme-color-content-info-default);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-underline-offset: 4px;
+    transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+
+    &:hover {
+      text-decoration-color: currentColor;
+    }
+
+    /* Non-negotiable per AGENTS.md — every interactive control takes the
+       system focus ring, never a re-authored outline. */
+    &:focus-visible {
+      @include al-focus;
+    }
+  }
+}

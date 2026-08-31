@@ -5,7 +5,24 @@ import styles from './{{dashCase name}}.scss';
 
 /**
  * Component: al-{{dashCase name}}
- * - **slot**: The component content
+ *
+ * Document the public surface with the modern tag dialect — the CEM is generated
+ * from these tags, and every AI-facing artifact is generated from the CEM.
+ * Delete any tag that does not apply; do NOT leave a placeholder description.
+ *
+ * ARRANGEMENT: compose with <al-layout>. Do NOT add a `direction`,
+ * `orientation`, `gap`, `align`, `alignment`, `justify`, `behavior` or `wrap`
+ * property to this component, and do NOT hand-roll `display: flex` / `grid` in
+ * the .scss to arrange SLOTTED children — nest them in <al-layout> instead.
+ * (Styling this component's own internal shadow structure is fine.)
+ * Never scaffold a new `*-group` wrapper: a wrapper owning no behavior, ARIA
+ * relationship or state is <al-layout> with props. See "Arrangement vs.
+ * semantics" in AGENTS.md.
+ *
+ * @slot - The component content
+ * @csspart -
+ * @cssproperty --al-theme-... -
+ * @event al-{{dashCase name}}-change - Fired when ... (document at the dispatch site too)
  */
 export class AL{{pascalCase name}} extends ALElement {
   static el = 'al-{{dashCase name}}';

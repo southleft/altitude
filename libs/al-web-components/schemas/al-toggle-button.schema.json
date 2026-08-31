@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-toggle-button.schema.json",
+  "title": "ALToggleButton (al-toggle-button)",
+  "description": "Component: al-toggle-button",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-toggle-button",
+    "className": "ALToggleButton",
+    "module": "components/toggle-button/toggle-button.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The content to display in the toggle button",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onToggleButtonSelect",
+        "description": "Fired when the button becomes selected. Detail: `{ item, selected }`."
+      },
+      {
+        "name": "onToggleButtonDeselect",
+        "description": "Fired when the button becomes deselected. Detail: `{ item, selected }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-toggle-button"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'background'",
+          "type": "string"
+        },
+        "isSelected": {
+          "description": "Indicates the selected state of the toggle button.",
+          "type": "boolean"
+        },
+        "isSmall": {
+          "description": "If true, a fixed width will be set on the button.\n- Dynamically set based on the slotted component",
+          "type": "boolean"
+        },
+        "hasToggle": {
+          "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

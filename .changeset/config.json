@@ -1,0 +1,32 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [
+    [
+      "@southleft/al-web-components",
+      "@southleft/al-react"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "_provenance": "Provenance is set via NPM_CONFIG_PROVENANCE=true on the release workflow (.github/workflows/release.yml). Changesets honors that env var when running npm publish.",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "_ignore": "Every workspace that is NOT part of a release must be listed here, or `changeset status` surfaces it as a spurious patch bump (changesets versions private packages by default). al-app-docs was missing — added 2026-08-27; apps/docs landed after this list was last touched, which is the same drift that once left the deleted al-app-enhance in here. check-changesets-config.js enforces this list in BOTH directions.",
+  "ignore": [
+    "al-app-angular",
+    "al-app-astro",
+    "al-app-docs",
+    "al-app-home",
+    "al-app-mfe",
+    "al-app-react",
+    "al-app-southleft",
+    "al-app-ssr",
+    "al-app-svelte",
+    "al-app-web-components",
+    "@southleft/altitude-mcp",
+    "@southleft/sl-web-components"
+  ],
+  "_ignore_is_not_a_publish_gate": "READ THIS BEFORE MOVING AN ENTRY. `ignore` governs VERSIONING ONLY. `changeset publish` never consults it: it selects with `packages.filter(pkg => !pkg.packageJson.private)` (@changesets/cli 2.31.0, dist/changesets-cli.cjs.js:1041) and publishes every survivor whose local version is absent from the registry. @southleft/sl-web-components and @southleft/altitude-mcp were listed here but NOT private, and neither has ever been published, so the first v2 release would have pushed both to npm as a side effect of shipping the two Altitude libraries. Both are `private: true` again as of 2026-08-31 (owner decision: v2 ships the two Altitude libraries only), and scripts/check-publishable.mjs R8 now asserts that flag from its HELD list so the hold cannot rot back into a comment."
+}

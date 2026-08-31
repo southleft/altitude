@@ -1,133 +1,139 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /* ------------------------------------*\
   #BADGE
 \*------------------------------------ */
 
-:host {
-  display: contents;
-}
-
-/**
- *  Badges are dots of color with text inside used for messaging
- */
-.al-c-badge {
-  @include al-theme-typography-body-xs-bold;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--al-theme-color-background-default-stronger);
-  color: var(--al-theme-color-content-default);
-  padding: 0 var(--al-theme-space-xxs);
-  border-radius: size(2.5);
-  min-width: size(2.5);
-  min-height: size(2.5);
-  width: fit-content;
-  gap: var(--al-theme-space-xxs);
+@layer al.component {
+  :host {
+    display: contents;
+  }
 
   /**
-   * Dot badge
+   *  Badges are dots of color with text inside used for messaging
    */
-  &.al-is-dot {
-    padding: 0;
-    border-radius: var(--al-theme-space-xs);
-    min-width: var(--al-theme-space-xs);
-    min-height: var(--al-theme-space-xs);
-    max-width: var(--al-theme-space-xs);
-    max-height: var(--al-theme-space-xs);
-    text-indent: 9999px; // Prevent the text for showing, but is visible to screen readers
+  .al-c-badge {
+    @include al-theme-typography-body-xs-bold;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--al-theme-color-background-default-stronger);
+    color: var(--al-theme-color-content-default);
+    padding: 0 var(--al-theme-space-xs);
+    border-radius: var(--al-theme-border-radius-pill);
+    min-width: size(2.5);
+    min-height: size(2.5);
+    width: fit-content;
+    gap: var(--al-theme-space-xxs);
 
     /**
-     * Dot badge border
+     * Dot badge
      */
-    &:after {
-      position: absolute;
-      content: '';
-      min-width: var(--al-theme-space-sm);
-      min-height: var(--al-theme-space-sm);
-      background: transparent;
-      border: var(--al-badge-outline-color, var(--al-theme-color-background-default)) solid var(--al-badge-border-width, 0);
-      border-radius: var(--al-theme-border-radius-round);
+    &.al-is-dot {
+      padding: 0;
+      border-radius: var(--al-theme-space-xs);
+      min-width: var(--al-theme-space-xs);
+      min-height: var(--al-theme-space-xs);
+      max-width: var(--al-theme-space-xs);
+      max-height: var(--al-theme-space-xs);
+      text-indent: 9999px; // Prevent the text for showing, but is visible to screen readers
+
+      /**
+       * Dot badge border
+       */
+      &:after {
+        position: absolute;
+        content: '';
+        min-width: var(--al-theme-space-sm);
+        min-height: var(--al-theme-space-sm);
+        background: transparent;
+        border: var(--al-badge-outline-color, var(--al-theme-color-background-default)) solid var(--al-badge-border-width, 0);
+        border-radius: var(--al-theme-border-radius-role-indicator, var(--al-theme-border-radius-round));
+      }
     }
   }
-}
 
-/**
- * Info badge
- */
-.al-c-badge--info {
-  background: var(--al-theme-color-background-info-default);
-  color: var(--al-theme-color-content-info-weak);
-}
+  /**
+   * Info badge
+   */
+  .al-c-badge--info {
+    /* v2: soft tint + tone text, not a saturated fill with knockout text. */
+    background: var(--al-theme-color-background-info-weak);
+    color: var(--al-theme-color-content-info-default);
+  }
 
-/**
- * Success badge
- */
-.al-c-badge--success {
-  background: var(--al-theme-color-background-success-default);
-  color: var(--al-theme-color-content-success-weak);
-}
+  /**
+   * Success badge
+   */
+  .al-c-badge--success {
+    /* v2: soft tint + tone text, not a saturated fill with knockout text. */
+    background: var(--al-theme-color-background-success-weak);
+    color: var(--al-theme-color-content-success-default);
+  }
 
-/**
- * Warning badge
- */
-.al-c-badge--warning {
-  background: var(--al-theme-color-background-warning-default);
-  color: var(--al-theme-color-content-warning-weak);
-}
+  /**
+   * Warning badge
+   */
+  .al-c-badge--warning {
+    /* v2: soft tint + tone text, not a saturated fill with knockout text. */
+    background: var(--al-theme-color-background-warning-weak);
+    color: var(--al-theme-color-content-warning-default);
+  }
 
-/**
- * Danger badge
- */
-.al-c-badge--danger {
-  background: var(--al-theme-color-background-danger-default);
-  color: var(--al-theme-color-content-danger-weak);
-}
+  /**
+   * Danger badge
+   */
+  .al-c-badge--danger {
+    /* v2: soft tint + tone text, not a saturated fill with knockout text. */
+    background: var(--al-theme-color-background-danger-weak);
+    color: var(--al-theme-color-content-danger-default);
+  }
 
-/**
- * Badge position
- */
-.al-c-badge--top-left,
-.al-c-badge--top-right,
-.al-c-badge--bottom-left,
-.al-c-badge--bottom-right {
-  position: absolute;
-  transform-origin: center center;
-  z-index: var(--al-z-index-400);
-}
+  /**
+   * Badge position
+   */
+  .al-c-badge--top-left,
+  .al-c-badge--top-right,
+  .al-c-badge--bottom-left,
+  .al-c-badge--bottom-right {
+    position: absolute;
+    transform-origin: center center;
+    z-index: var(--al-z-index-400);
+  }
 
-/**
- * Badge position - top left
- */
-.al-c-badge--top-left {
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  transform: translate(-50%, -50%);
-}
+  /**
+   * Badge position - top left
+   */
+  .al-c-badge--top-left {
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    transform: translate(-50%, -50%);
+  }
 
-/**
- * Badge position - top right
- */
-.al-c-badge--top-right {
-  inset-block-start: 0;
-  inset-inline-end: 0;
-  transform: translate(50%, -50%);
-}
+  /**
+   * Badge position - top right
+   */
+  .al-c-badge--top-right {
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    transform: translate(50%, -50%);
+  }
 
-/**
- * Badge position - bottom left
- */
-.al-c-badge--bottom-left {
-  inset-block-end: 0;
-  inset-inline-start: 0;
-  transform: translate(-50%, 50%);
-}
+  /**
+   * Badge position - bottom left
+   */
+  .al-c-badge--bottom-left {
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    transform: translate(-50%, 50%);
+  }
 
-/**
- * Badge position - bottom right
- */
-.al-c-badge--bottom-right {
-  inset-block-end: 0;
-  inset-inline-end: 0;
-  transform: var(--al-badge-transform, translate(50%, 50%));
+  /**
+   * Badge position - bottom right
+   */
+  .al-c-badge--bottom-right {
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    transform: var(--al-badge-transform, translate(50%, 50%));
+  }
 }

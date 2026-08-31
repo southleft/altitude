@@ -1,0 +1,3544 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-calendar",
+  "name": "Calendar",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-calendar",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "dateFormat",
+      "description": "Specify date format for UI display",
+      "type": "enum",
+      "rawType": "'MMM dd, yyyy' | 'MM/dd/yyyy' | 'dd/MM/yyyy' | 'yyyy/MM/dd' | 'MMM dd yyyy' | 'dd MMM yyyy'",
+      "values": [
+        "MM/dd/yyyy",
+        "MMM dd yyyy",
+        "MMM dd, yyyy",
+        "dd MMM yyyy",
+        "dd/MM/yyyy",
+        "yyyy/MM/dd"
+      ],
+      "default": "'MMM dd, yyyy'",
+      "bindings": {
+        "code": {
+          "attribute": "dateFormat"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "datePickerId",
+      "description": "Internal ID only for labeling date picker popup",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "datePickerId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "days",
+      "description": "Container for current days in month",
+      "type": "string",
+      "rawType": "Array<any>",
+      "default": "[]",
+      "bindings": {
+        "code": {
+          "attribute": "days"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "disabled",
+      "description": "Disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "disabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "disabledMaxDate",
+      "description": "Maximum date for disabled dates (format: yyyy/mm/dd)",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "disabledMaxDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "disabledMinDate",
+      "description": "Minimum date for disabled dates (format: yyyy/mm/dd)",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "disabledMinDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fullDateFormat",
+      "description": "Specify \"full\" date format for aria role",
+      "type": "string",
+      "rawType": "string",
+      "default": "'d, EEEE MMMM yyyy'",
+      "bindings": {
+        "code": {
+          "attribute": "fullDateFormat"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "iconName",
+      "description": "Field note icon name",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "iconName"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDayShortHand",
+      "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "isDayShortHand"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "monthSelectorLabel",
+      "description": "Accessible name for the month/year picker popup.\n\nThe popup is `role=\"dialog\"` and its content is a grid of year headings and\nmonth buttons, so it had no accessible name at all — a screen reader\nannounced \"dialog\" and nothing else. Settable rather than hardcoded so it\ncan be localised, matching `timeSelectorLabel` / `cancelLabel` on\nal-date-time-picker.",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Choose month and year'",
+      "bindings": {
+        "code": {
+          "attribute": "monthSelectorLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "multiYear",
+      "description": "Amount of years to go before and after the current date",
+      "type": "number",
+      "rawType": "number",
+      "default": "3",
+      "bindings": {
+        "code": {
+          "attribute": "multiYear"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "nextButtonText",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Next Month'",
+      "bindings": {
+        "code": {
+          "attribute": "nextButtonText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "previousButtonText",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Previous Month'",
+      "bindings": {
+        "code": {
+          "attribute": "previousButtonText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "resetDates",
+      "description": "Make active calendar date inactive",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "resetDates"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "selectedDate",
+      "description": "Selected date",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "selectedDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "setActiveDate",
+      "description": "Set a specific date to be active",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "setActiveDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "showMonthPopup",
+      "description": "Value to track month picker display",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "showMonthPopup"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "startOnMonday",
+      "description": "Start the day of the week on Monday",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "startOnMonday"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "years",
+      "description": "Container for years toggle",
+      "type": "string",
+      "rawType": "Array<any>",
+      "default": "[]",
+      "bindings": {
+        "code": {
+          "attribute": "years"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onCalendarChange",
+      "description": "Fired when a date is selected. Detail: `{ value, rawDate }` — the date formatted per `dateFormat`, and the underlying `Date` object."
+    }
+  ],
+  "slots": [
+    {
+      "name": "after",
+      "description": "If content is slotted, it will override the default \"next button\" icon"
+    },
+    {
+      "name": "before",
+      "description": "If content is slotted, it will override the default \"previous button\" icon"
+    }
+  ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-button",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-date-picker",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-date-time-picker",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-icon",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Default=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-calendar",
+      "box": {
+        "w": 360,
+        "h": 331
+      },
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-default",
+          "figma": "theme/color/background/default"
+        },
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "box-shadow": {
+          "code": "--al-theme-box-shadow-md",
+          "figma": "theme/box-shadow/md"
+        },
+        "min-width": {
+          "code": "--al-base-space",
+          "figma": "base/space"
+        }
+      },
+      "children": [
+        {
+          "tag": "nav",
+          "cls": "al-c-calendar__header",
+          "box": {
+            "w": 360,
+            "h": 56
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "space-between"
+          },
+          "tokens": {
+            "padding": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-right": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "button",
+              "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
+              "component": "al-button",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "inline-flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-top-left-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-top-right-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "padding": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-button__icon",
+                  "box": {
+                    "w": 24,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-icon",
+                      "component": "al-icon",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "svg",
+                          "cls": "",
+                          "box": {
+                            "w": 24,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center"
+                          },
+                          "tokens": {
+                            "height": {
+                              "code": "--al-icon-height",
+                              "figma": null
+                            },
+                            "width": {
+                              "code": "--al-icon-width",
+                              "figma": null
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "path",
+                              "cls": "",
+                              "box": {
+                                "w": 9,
+                                "h": 16.5
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "span",
+                  "cls": "al-u-is-vishidden al-c-button__text",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-u-is-vishidden al-c-button__text",
+                      "text": "Previous Month",
+                      "box": {
+                        "w": 66.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "button",
+              "cls": "al-c-calendar__month-selector-button",
+              "box": {
+                "w": 107,
+                "h": 36
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                  "figma": null
+                },
+                "padding": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-icon",
+                  "component": "al-icon",
+                  "box": {
+                    "w": 16,
+                    "h": 16
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "svg",
+                      "cls": "",
+                      "box": {
+                        "w": 16,
+                        "h": 16
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "height": {
+                          "code": "--al-theme-icon",
+                          "figma": "theme/icon/@"
+                        },
+                        "width": {
+                          "code": "--al-theme-icon",
+                          "figma": "theme/icon/@"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "path",
+                          "cls": "",
+                          "box": {
+                            "w": 11,
+                            "h": 6
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "button",
+              "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
+              "component": "al-button",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "inline-flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-top-left-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-top-right-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                  "figma": null
+                },
+                "padding": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-u-is-vishidden al-c-button__text",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-u-is-vishidden al-c-button__text",
+                      "text": "Next Month",
+                      "box": {
+                        "w": 49.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "span",
+                  "cls": "al-c-button__icon",
+                  "box": {
+                    "w": 24,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-icon",
+                      "component": "al-icon",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "svg",
+                          "cls": "",
+                          "box": {
+                            "w": 24,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center"
+                          },
+                          "tokens": {
+                            "height": {
+                              "code": "--al-icon-height",
+                              "figma": null
+                            },
+                            "width": {
+                              "code": "--al-icon-width",
+                              "figma": null
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "path",
+                              "cls": "",
+                              "box": {
+                                "w": 9,
+                                "h": 16.5
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-calendar__table-container",
+          "box": {
+            "w": 360,
+            "h": 275
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "padding": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "table",
+              "cls": "al-c-calendar__table",
+              "box": {
+                "w": 328,
+                "h": 267
+              },
+              "layout": {
+                "display": "table",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "thead",
+                  "cls": "al-c-calendar__table-header",
+                  "box": {
+                    "w": 328,
+                    "h": 37
+                  },
+                  "layout": {
+                    "display": "table-header-group",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "tr",
+                      "cls": "al-c-calendar__table-row",
+                      "box": {
+                        "w": 328,
+                        "h": 37
+                      },
+                      "layout": {
+                        "display": "table-row",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "th",
+                          "cls": "al-c-calendar__header-cell",
+                          "text": "Sun",
+                          "box": {
+                            "w": 46.8,
+                            "h": 37
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-xs",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-xs-letter-spacing",
+                              "figma": null
+                            },
+                            "padding-bottom": {
+                              "code": "--al-theme-space",
+                              "figma": "theme/space/@"
+                            }
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "th",
+                          "cls": "al-c-calendar__header-cell",
+                          "text": "Mon",
+                          "box": {
+                            "w": 46.8,
+                            "h": 37
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-xs",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-xs-letter-spacing",
+                              "figma": null
+                            },
+                            "padding-bottom": {
+                              "code": "--al-theme-space",
+                              "figma": "theme/space/@"
+                            }
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "th",
+                          "cls": "al-c-calendar__header-cell",
+                          "text": "Tue",
+                          "box": {
+                            "w": 46.8,
+                            "h": 37
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-xs",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-xs-letter-spacing",
+                              "figma": null
+                            },
+                            "padding-bottom": {
+                              "code": "--al-theme-space",
+                              "figma": "theme/space/@"
+                            }
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "th",
+                          "cls": "al-c-calendar__header-cell",
+                          "text": "Wed",
+                          "box": {
+                            "w": 46.8,
+                            "h": 37
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-xs",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-xs-letter-spacing",
+                              "figma": null
+                            },
+                            "padding-bottom": {
+                              "code": "--al-theme-space",
+                              "figma": "theme/space/@"
+                            }
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "th",
+                          "cls": "al-c-calendar__header-cell",
+                          "text": "Thu",
+                          "box": {
+                            "w": 46.8,
+                            "h": 37
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-xs",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-xs-letter-spacing",
+                              "figma": null
+                            },
+                            "padding-bottom": {
+                              "code": "--al-theme-space",
+                              "figma": "theme/space/@"
+                            }
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "th",
+                          "cls": "al-c-calendar__header-cell",
+                          "text": "Fri",
+                          "box": {
+                            "w": 46.8,
+                            "h": 37
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-xs",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-xs-letter-spacing",
+                              "figma": null
+                            },
+                            "padding-bottom": {
+                              "code": "--al-theme-space",
+                              "figma": "theme/space/@"
+                            }
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "th",
+                          "cls": "al-c-calendar__header-cell",
+                          "text": "Sat",
+                          "box": {
+                            "w": 46.9,
+                            "h": 37
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-default-weak",
+                              "figma": "theme/color/content/default-weak"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-body-xs",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-body-xs-letter-spacing",
+                              "figma": null
+                            },
+                            "padding-bottom": {
+                              "code": "--al-theme-space",
+                              "figma": "theme/space/@"
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "tbody",
+                  "cls": "al-c-calendar__table-body",
+                  "box": {
+                    "w": 328,
+                    "h": 230
+                  },
+                  "layout": {
+                    "display": "table-row-group",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "tr",
+                      "cls": "al-c-calendar__table-row",
+                      "box": {
+                        "w": 328,
+                        "h": 46
+                      },
+                      "layout": {
+                        "display": "table-row",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "1",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "2",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "3",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "4",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "5",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.9,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "6",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "tr",
+                      "cls": "al-c-calendar__table-row",
+                      "box": {
+                        "w": 328,
+                        "h": 46
+                      },
+                      "layout": {
+                        "display": "table-row",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "7",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "8",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "9",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "10",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "11",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "12",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.9,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "13",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "tr",
+                      "cls": "al-c-calendar__table-row",
+                      "box": {
+                        "w": 328,
+                        "h": 46
+                      },
+                      "layout": {
+                        "display": "table-row",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "14",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n al-is-today",
+                              "text": "15",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "16",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "17",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "18",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "19",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.9,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "20",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "tr",
+                      "cls": "al-c-calendar__table-row",
+                      "box": {
+                        "w": 328,
+                        "h": 46
+                      },
+                      "layout": {
+                        "display": "table-row",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "21",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "22",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "23",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "24",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "25",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "26",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.9,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "27",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "tag": "tr",
+                      "cls": "al-c-calendar__table-row",
+                      "box": {
+                        "w": 328,
+                        "h": 46
+                      },
+                      "layout": {
+                        "display": "table-row",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "28",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "29",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "button",
+                              "cls": "al-c-calendar__item\n \n al-is-available\n",
+                              "text": "30",
+                              "box": {
+                                "w": 36,
+                                "h": 36
+                              },
+                              "layout": {
+                                "display": "inline-block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {
+                                "color": {
+                                  "code": "--al-theme-color-content-default",
+                                  "figma": "theme/color/content/default"
+                                },
+                                "font": {
+                                  "code": "--al-theme-typography-body-sm",
+                                  "figma": null
+                                },
+                                "letter-spacing": {
+                                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                                  "figma": null
+                                }
+                              },
+                              "children": []
+                            }
+                          ]
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.8,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        },
+                        {
+                          "tag": "td",
+                          "cls": "al-c-calendar__table-cell",
+                          "box": {
+                            "w": 46.9,
+                            "h": 46
+                          },
+                          "layout": {
+                            "display": "table-cell",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stateOverrides": {
+      "hover": {
+        "0.1.0.1.0.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.0.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.0.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.0.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.0.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.0.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.1.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.1.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.1.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.1.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.1.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.1.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.1.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.2.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.2.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.2.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.2.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.2.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.2.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.2.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.3.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.3.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.3.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.3.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.3.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.3.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.3.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.4.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.4.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        },
+        "0.1.0.1.4.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        }
+      },
+      "focus": {
+        "0.1.0.1.0.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.0.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.0.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.0.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.0.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.0.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.1.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.1.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.1.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.1.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.1.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.1.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.1.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.2.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.2.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.2.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.2.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.2.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.2.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.2.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.3.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.3.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.3.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.3.3.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.3.4.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.3.5.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.3.6.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.4.0.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.4.1.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        },
+        "0.1.0.1.4.2.0": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
+      },
+      "disabled": {
+        "0.1.0.1.0.1.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.0.2.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.0.3.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.0.4.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.0.5.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.0.6.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.1.0.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.1.1.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.1.2.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.1.3.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.1.4.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.1.5.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.1.6.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.2.0.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.2.1.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.2.2.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.2.3.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.2.4.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.2.5.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.2.6.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.3.0.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.3.1.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.3.2.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.3.3.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.3.4.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.3.5.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.3.6.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.4.0.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.4.1.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        },
+        "0.1.0.1.4.2.0": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-base-space",
+    "--al-font-weight-bold",
+    "--al-icon-height",
+    "--al-icon-width",
+    "--al-theme-border-radius",
+    "--al-theme-border-radius-lg",
+    "--al-theme-border-width-md",
+    "--al-theme-box-shadow-md",
+    "--al-theme-color-background-default",
+    "--al-theme-color-background-default-strong",
+    "--al-theme-color-background-transparent-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-icon",
+    "--al-theme-opacity-disabled",
+    "--al-theme-space",
+    "--al-theme-space-md",
+    "--al-theme-space-xs",
+    "--al-theme-typography-body-md-bold-letter-spacing",
+    "--al-theme-typography-body-sm",
+    "--al-theme-typography-body-sm-letter-spacing",
+    "--al-theme-typography-body-xs",
+    "--al-theme-typography-body-xs-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/calendar/calendar.ts",
+      "tagName": "al-calendar",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

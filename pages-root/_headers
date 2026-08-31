@@ -1,0 +1,50 @@
+# Cloudflare Pages response headers for the whole published site.
+#
+# WHY THIS FILE EXISTS. The machine artifacts (`/docs/llms*.txt` and every
+# `.md` twin of a docs page) are only useful if they arrive as TEXT. Every one
+# of the design systems this repo was benchmarked against — spectrum.adobe.com,
+# polaris.shopify.com, primer.style — serves an llms.txt endpoint that returns
+# 200 with `text/html`, because the request fell through to a single-page-app
+# shell and the agent read a page of markup instead of the documentation.
+#
+# Cloudflare Pages does map `.txt` and `.md` to text/plain by default. Declaring
+# it makes that a property of this deployment rather than of a default that a
+# future config, framework adapter or redirect rule could change silently.
+# `scripts/check-llms-content-type.mjs <base-url>` asserts it against a running
+# deployment.
+#
+# WHY THERE ARE NO PER-PROJECT RULES. An earlier version of this file also
+# listed `/docs/*/llms.txt`, `/docs/*/llms-full.txt` and so on, to spell out the
+# scoped design systems (`/docs/southleft/...`). Those rules were redundant and
+# actively harmful: in Cloudflare `_headers`, `*` matches ACROSS `/`, so
+# `/docs/*.txt` already covers `/docs/southleft/llms.txt`. Both rules matched,
+# Cloudflare applied both, and the response carried the value twice --
+# `content-type: text/plain; charset=utf-8, text/plain; charset=utf-8` --
+# observed live on every southleft artifact while the unscoped `/docs/llms.txt`
+# was clean. That is a malformed field (RFC 9110 s8.3 allows exactly one
+# Content-Type, and the joined value is not a valid media type), so a strict
+# agent HTTP client may reject or mis-sniff it -- precisely the "does it arrive
+# as text" failure this file exists to prevent. One rule per extension is both
+# sufficient and correct; check-llms-content-type.mjs now fails on a
+# comma-joined content-type so the class cannot come back silently.
+#
+# HOW THIS REACHES THE ROOT. `pnpm run copy:pages-root` copies pages-root/ into
+# dist/ during build:all, so this lands at dist/_headers. Cloudflare reads
+# _headers ONLY from the published root -- a nested copy is ignored.
+#
+# It used to ride along inside apps/home/public/, because apps/home was the one
+# app that built straight into dist/. The homepage was dropped from the deploy
+# on 2026-08-27, which would have silently stopped shipping this file: the
+# artifacts would have kept serving, just with the wrong content-type and no
+# error anywhere. Hence pages-root/ -- see its README.
+
+/docs/*.txt
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*.md
+  Content-Type: text/plain; charset=utf-8
+  X-Content-Type-Options: nosniff
+
+/docs/*/status.json
+  Content-Type: application/json; charset=utf-8

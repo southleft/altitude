@@ -1,71 +1,451 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /* ------------------------------------*\
   #LAYOUT
 \*------------------------------------ */
 
-.al-c-layout {
-  display: grid;
-  gap: var(--al-theme-space);
-  grid-template-columns: repeat(1, 1fr);
-  min-height: var(--al-layout-min-height, 100vh);
-}
-
 /**
- * Layout gap none
- * 1. Remove the gap between items
+ * Layout is the single arrangement primitive for the design system. It owns
+ * three orthogonal jobs, selected by `variant`:
+ *
+ *   flow (default) - stack or row content: direction, gap, align, justify, wrap
+ *   constrained    - own the page measure: a centred content column with gutter
+ *                    tracks, where any child can break out edge-to-edge
+ *   grid           - an N-column grid; children span with the SHARED
+ *                    `.al-u-grid__item.col:N` classes
+ *   bento          - a 12-column auto-row grid for asymmetric feature tiles
+ *
+ * Semantic components (checkbox-group, radio-group) must
+ * NOT re-implement any of this - they nest their slotted content in an
+ * `<al-layout>` instead.
  */
-.al-c-layout--gap-none {
-  gap: 0;
-}
 
-/**
- * Layout gap none
- * 1. Shrink the gap to 8px between items
- */
-.al-c-layout--gap-sm {
-  gap: var(--al-theme-space-xs);
-}
-
-/**
- * Layout gap none
- * 1. Shrink the gap to 24px between items
- */
-.al-c-layout--gap-lg {
-  gap: var(--al-theme-space-lg);
-}
-
-/**
- * Layout gap xl
- * 1. Widen the gap to 32px between items
- */
-.al-c-layout--gap-xl {
-  gap: var(--al-theme-space-xxl);
-}
-
-/**
- * Left sidebar layout
- * 1. Layout that is stacked on small screens and turns into a left sidebar with main
- * content to the right
- * 2. The main column stretches the full width minus the sidebar width and gap.
- *    The sidebar column has a minimum width value (enough to accommodate navigation
- *    and other sidebar content) but stretches to fit the content placed inside it.
- */
-.al-c-layout--sidebar-left {
-  @media all and (min-width: $al-breakpoint-md) {
-    grid-template-columns: calc(var(--al-theme-layout-width-sidebar, 40%) - (var(--al-theme-space-xs))) minmax(0, 1fr); /* 2 */
+@layer al.component {
+  /**
+   * 1. `display: contents` lets the layout box participate directly in a
+   *    flex/grid parent when Layout is projected into a slot (for example a
+   *    dialog or popover footer, which is `display: flex`). Without this the
+   *    host would form an extra inline box and `justify`/`grow` would have no
+   *    effect on the surrounding row.
+   */
+  :host {
+    display: contents; /* 1 */
   }
-}
 
-/**
- * Right sidebar layout
- * 1. Layout that is stacked on small screens and turns into a right sidebar with main
- * content to the left
- * 2. The main column stretches the full width minus the sidebar width and gap.
- *    The sidebar column has a minimum width value (enough to accommodate navigation
- *    and other sidebar content) but stretches to fit the content placed inside it.
- */
-.al-c-layout--sidebar-right {
-  @media all and (min-width: $al-breakpoint-md) {
-    grid-template-columns: minmax(0, 1fr) calc(var(--al-theme-layout-width-sidebar, 40%) - (var(--al-theme-space-xs))); /* 2 */
+  /**
+   * Neutralise the legacy `align` presentational hint.
+   *
+   * `align` is one of HTML's legacy presentational attributes, and browsers
+   * map it to `text-align` on EVERY HTML element — including custom ones, and
+   * including values (`start`/`end`/`center`) that look like flexbox keywords.
+   * Layout's `align` property reflects to an `align` attribute, so
+   * `<al-layout align="center">` silently sets `text-align: center` on the
+   * host, and because `text-align` inherits, on everything slotted into it and
+   * everything below that.
+   *
+   * The symptom never looks like an alignment bug: `align="end"` on a row that
+   * bottom-aligns a "view all" link against a heading block also right-aligns
+   * the kicker, the heading and the body copy inside it.
+   *
+   * `inherit` restores what the host would have had from its parent — the hint
+   * is a presentational-hint-origin declaration, which any author rule beats,
+   * so this wins over the UA mapping while still losing to a consumer's own
+   * `text-align` on the element (a page that genuinely wants centred text in a
+   * centred row keeps working).
+   *
+   * Do not "fix" this by renaming the property: `align` is the right name for
+   * the API, and a consumer can also write the attribute by hand.
+   */
+  :host([align]) {
+    text-align: inherit;
   }
+
+  /**
+   * `--al-layout-gap` is the escape hatch for a gap the `gap` prop's scale
+   * cannot name. The scale (none/xs/sm/md/lg/xl) is the API and should stay
+   * the first choice; this exists for the cases a token scale legitimately
+   * cannot serve — a page theme retuning grid density at runtime, or a design
+   * whose gap is a measured value rather than a step.
+   *
+   * Without it the only way to change a layout's gap from outside was to
+   * redefine `--al-theme-space` on the element, which inherits through the
+   * shadow boundary and therefore also silently retunes the spacing of
+   * everything slotted inside. `--al-bento-grid-gap` already existed for the
+   * bento variant; flow and grid were simply missing the equivalent.
+   *
+   * Each `gap` prop modifier below overrides this, so an explicit `gap="lg"`
+   * still wins over an ambient `--al-layout-gap`.
+   */
+  /**
+   * `--al-layout-padding` is the layout's own inset.
+   *
+   * `:host` is `display: contents`, so a consumer cannot pad an `<al-layout>`
+   * from the outside — padding on a `display: contents` box is dropped along
+   * with the box. Without a hook, every layout that needs breathing room has
+   * to be wrapped in a plain `<div>` that exists only to carry the padding,
+   * which puts hand-rolled box-model markup back at exactly the call sites
+   * this component exists to clean up. A page hero is the ordinary case: it
+   * wants a measure AND a large responsive block rhythm, and had to be two
+   * elements to get both.
+   *
+   * This element — the shadow root's own div — IS a real box in every
+   * variant, so it is where the padding belongs.
+   *
+   * Under `variant="constrained"`, prefer this for BLOCK padding only: the
+   * inline insets there are gutter TRACKS (`--al-layout-gutter`), and inline
+   * padding would stack on top of them and push the content column off the
+   * measure.
+   */
+  .al-c-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--al-layout-gap, var(--al-theme-space));
+    padding: var(--al-layout-padding, 0);
+  }
+
+  /* ------------------------------------*\
+    #DIRECTION
+  \*------------------------------------ */
+
+  /**
+   * Row direction
+   * 1. Centring on the cross axis is the sane default for a row of controls
+   *    (buttons, chips, toggles) whose heights differ. Override with `align`.
+   */
+  .al-c-layout--row {
+    flex-direction: row;
+    align-items: center; /* 1 */
+  }
+
+  /* ------------------------------------*\
+    #GAP
+  \*------------------------------------ */
+
+  .al-c-layout--gap-none {
+    gap: 0;
+  }
+
+  .al-c-layout--gap-xs {
+    gap: var(--al-theme-space-xxs);
+  }
+
+  .al-c-layout--gap-sm {
+    gap: var(--al-theme-space-xs);
+  }
+
+  .al-c-layout--gap-md {
+    gap: var(--al-theme-space);
+  }
+
+  .al-c-layout--gap-lg {
+    gap: var(--al-theme-space-lg);
+  }
+
+  .al-c-layout--gap-xl {
+    gap: var(--al-theme-space-xxl);
+  }
+
+  /* ------------------------------------*\
+    #ALIGNMENT
+  \*------------------------------------ */
+
+  .al-c-layout--align-start {
+    align-items: flex-start;
+  }
+
+  .al-c-layout--align-center {
+    align-items: center;
+  }
+
+  .al-c-layout--align-end {
+    align-items: flex-end;
+  }
+
+  .al-c-layout--align-stretch {
+    align-items: stretch;
+  }
+
+  .al-c-layout--justify-start {
+    justify-content: flex-start;
+  }
+
+  .al-c-layout--justify-center {
+    justify-content: center;
+  }
+
+  .al-c-layout--justify-end {
+    justify-content: flex-end;
+  }
+
+  .al-c-layout--justify-between {
+    justify-content: space-between;
+  }
+
+  /* ------------------------------------*\
+    #BEHAVIOR
+  \*------------------------------------ */
+
+  .al-c-layout--wrap {
+    flex-wrap: wrap;
+  }
+
+  /**
+   * Grow
+   * - Lets the layout box absorb the free space of a flex parent. Required when
+   *   Layout is slotted into a `space-between` footer and its own `justify`
+   *   needs room to act on.
+   */
+  .al-c-layout--grow {
+    flex: 1;
+  }
+
+  /**
+   * Full height
+   * - Opt-in page-shell height. This used to be an unconditional
+   *   `min-height: 100vh` on every layout, which made Layout unusable for
+   *   anything smaller than a page.
+   */
+  .al-c-layout--full-height {
+    min-height: var(--al-layout-min-height, 100vh);
+  }
+
+  /**
+   * Responsive
+   * - Collapses a row into a column on small screens.
+   */
+  .al-c-layout--responsive {
+    @media all and (max-width: $al-breakpoint-sm) {
+      flex-direction: column;
+      align-items: stretch;
+
+      ::slotted(*) {
+        width: 100%;
+        --al-button-width: 100%;
+      }
+    }
+  }
+
+  /* ------------------------------------*\
+    #CONSTRAINED (page measure + breakout)
+  \*------------------------------------ */
+
+  /**
+   * Constrained layout - the "content column with gutter tracks" pattern.
+   * Children land in the centred `content` column by default; a child marked
+   * `bleed` breaks out to the `full` column and runs edge-to-edge. This is what
+   * replaces the old `sidebar-left` / `sidebar-right` / `container` variants:
+   * the page declares its measure once, and each child decides whether it lives
+   * inside that measure or breaks out of it.
+   *
+   * 1. Fluid gutter, 20px -> 60px, so the page breathes without a breakpoint.
+   * 2. `min()` keeps the content column inside the viewport minus both gutters
+   *    at narrow widths, and caps it at the measure at wide widths.
+   * 3. `min-width: 0` stops long content or flex children blowing out the track.
+   */
+  .al-c-layout--constrained {
+    --al-layout-gutter: clamp(1.25rem, 5vw, 3.75rem); /* 1 */
+
+    display: grid;
+    inline-size: 100%;
+    box-sizing: border-box;
+
+    /**
+     * 4. The gutters are TRACKS, not gaps. The base `.al-c-layout` gap is a
+     *    harmless row-gap on a flex column, but on this three-track grid it
+     *    would also apply as a column-gap - pushing the content track off the
+     *    measure and overflowing the container by two gaps. Row gap is kept so
+     *    stacked children still breathe.
+     */
+    column-gap: 0; /* 4 */
+    grid-template-columns:
+      [full-start]
+        minmax(var(--al-layout-gutter), 1fr)
+      [content-start]
+        min(100% - (var(--al-layout-gutter) * 2), var(--al-layout-measure, var(--al-theme-layout-width-container))) /* 2 */
+      [content-end]
+        minmax(var(--al-layout-gutter), 1fr)
+      [full-end];
+  }
+
+  /**
+   * 5. `display: block` is LOAD-BEARING — do not remove it as redundant.
+   *
+   *    `grid-column` only applies to an element that generates a box. A slotted
+   *    child whose own shadow root sets `:host { display: contents }` — which is
+   *    every composite in this library, `al-layout` included — generates none,
+   *    so `grid-column: content` would compute on it and do nothing; its inner
+   *    box becomes the real grid item, `::slotted()` cannot reach that (it only
+   *    matches top-level assigned nodes), and the child auto-places into the
+   *    next free track, i.e. the gutter.
+   *
+   *    Forcing a box works because `::slotted()` comes from the OUTER tree and
+   *    wins over the inner tree's `:host` rule. It is a no-op for every other
+   *    child: grid already blockifies its items.
+   */
+  .al-c-layout--constrained > slot::slotted(*) {
+    display: block; /* 5 */
+    grid-column: content;
+    min-width: 0; /* 3 */
+  }
+
+  /**
+   * Stop this layout's OWN configuration cascading into layouts nested inside
+   * it.
+   *
+   * Every `--al-layout-*` hook is a custom property, and custom properties
+   * inherit. A consumer setting one on an `<al-layout>` is describing THAT
+   * layout, but without this reset the value keeps flowing down and silently
+   * reconfigures every `<al-layout>` underneath it.
+   *
+   * This is not hypothetical, and the symptoms never look like inheritance:
+   *   - A hero setting `--al-layout-padding: 8rem 0` for its own block rhythm
+   *     also padded the button row and the chip row nested inside it by 8rem,
+   *     top and bottom — a 76px chip row measured 332px.
+   *   - Three dashboard apps set `--al-layout-template` to a sidebar track
+   *     list on their page shell; every nested `variant="grid"` inside picked
+   *     the sidebar tracks up instead of `repeat(12, 1fr)`, so `col:9@xl` and
+   *     friends silently stopped meaning anything.
+   *
+   * Resetting on the slotted children rather than on this element is what
+   * makes it work: the value has already been consumed here, and `initial`
+   * (guaranteed-invalid) then inherits on down, so a nested layout falls back
+   * to its own default. A consumer targeting that nested layout directly still
+   * wins — a document rule beats `::slotted()` — so deliberate per-layout
+   * configuration is unaffected; only accidental inheritance is stopped.
+   */
+  .al-c-layout > slot::slotted(*) {
+    --al-layout-padding: initial;
+    --al-layout-gap: initial;
+    --al-layout-template: initial;
+    --al-layout-columns: initial;
+    --al-layout-measure: initial;
+    --al-layout-gutter: initial;
+    --al-layout-min-height: initial;
+  }
+
+  .al-c-layout--constrained > slot::slotted([bleed]) {
+    grid-column: full;
+  }
+
+  /**
+   * Gutter scale - overrides the fluid default.
+   */
+  .al-c-layout--gutter-none {
+    --al-layout-gutter: 0;
+  }
+
+  .al-c-layout--gutter-sm {
+    --al-layout-gutter: var(--al-theme-space);
+  }
+
+  .al-c-layout--gutter-md {
+    --al-layout-gutter: var(--al-theme-space-lg);
+  }
+
+  .al-c-layout--gutter-lg {
+    --al-layout-gutter: var(--al-theme-space-xxl);
+  }
+
+  /**
+   * Measure scale - the width of the centred content column.
+   *
+   * These read the TIER-2 semantics (`--al-theme-layout-max-width-*`), not the
+   * tier-1 pixel primitives (`--al-layout-max-width-600`). Four of these five
+   * steps used to reach straight past tier-2 to tier-1 while `size-xl` alone
+   * read a semantic, which had two costs: the block was inconsistent with
+   * itself, and it made `--al-theme-layout-max-width-lg` / `-xxl` dead tokens
+   * -- emitted into `:root` on every page with zero `var()` readers, so a brand
+   * that restated the measure scale changed nothing here. The tier-2 tokens
+   * alias exactly the primitives that were inlined (600/800/1000/1440), so this
+   * is value-identical for the default brand and correctly brand-aware for
+   * every other.
+   */
+  .al-c-layout--size-sm {
+    --al-layout-measure: var(--al-theme-layout-max-width-sm);
+  }
+
+  .al-c-layout--size-md {
+    --al-layout-measure: var(--al-theme-layout-max-width-md);
+  }
+
+  .al-c-layout--size-lg {
+    --al-layout-measure: var(--al-theme-layout-max-width-lg);
+  }
+
+  .al-c-layout--size-xl {
+    --al-layout-measure: var(--al-theme-layout-width-container);
+  }
+
+  .al-c-layout--size-xxl {
+    --al-layout-measure: var(--al-theme-layout-max-width-xxl);
+  }
+
+  .al-c-layout--size-full {
+    --al-layout-measure: none;
+  }
+
+  /* ------------------------------------*\
+    #GRID
+  \*------------------------------------ */
+
+  /**
+   * N-column grid. Children span with the SHARED grid item classes
+   * (`.al-u-grid__item.col:N` / `.row:N`) from `styles/core/utilities/grid.scss`
+   * - there is deliberately no second span system here.
+   */
+  .al-c-layout--grid {
+    display: grid;
+    /**
+     * `--al-layout-template` is the escape hatch. Custom properties inherit
+     * through the shadow boundary, so a THEME can define an arbitrary track
+     * list (a fixed-width sidebar, an asymmetric split) from its own stylesheet
+     * without the design system growing a variant for it. Falls back to N equal
+     * columns. Pair it with `noCollapse` so the theme owns the responsive story.
+     */
+    grid-template-columns: var(--al-layout-template, repeat(var(--al-layout-columns, 12), 1fr));
+    inline-size: 100%;
+    box-sizing: border-box;
+  }
+
+  @for $i from 1 through 12 {
+    .al-c-layout--cols-#{$i} {
+      --al-layout-columns: #{$i};
+    }
+  }
+
+  /**
+   * Collapse a multi-column grid to one column below the medium breakpoint so
+   * an asymmetric desktop layout never produces unreadably narrow tiles. Opt
+   * out with `noCollapse` when the columns are meant to hold at every width.
+   */
+  @media all and (max-width: #{$al-breakpoint-md - 1px}) {
+    .al-c-layout--grid:not(.al-c-layout--no-collapse) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ------------------------------------*\
+    #BENTO
+  \*------------------------------------ */
+
+  /**
+   * Bento grid - a 12-column, auto-row grid for asymmetric feature grids.
+   * Absorbs `al-bento-grid`, which carried no properties of its own.
+   *
+   * Children are ordinary components (usually `<al-card>`) carrying the SHARED
+   * grid item classes - `al-u-grid__item col:12 col:8@md` - so a tile is
+   * full-width on small screens and spans at `md` and up. There is no
+   * `al-bento-item`: it was a wrapper whose only job duplicated those classes.
+   * Because the items own the responsive story, the container deliberately does
+   * NOT force a single-column collapse.
+   */
+  .al-c-layout--bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(var(--al-bento-grid-row-height, calc(var(--al-theme-space) * 16)), auto);
+    gap: var(--al-bento-grid-gap, var(--al-theme-space));
+    inline-size: 100%;
+    box-sizing: border-box;
+  }
+
 }

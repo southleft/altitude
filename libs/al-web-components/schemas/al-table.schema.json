@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-table.schema.json",
+  "title": "ALTable (al-table)",
+  "description": "Component: al-table\n\nRenders a semantic `<table>` either from the `columns` + `data` properties\n(data-driven mode) or from slotted `<thead>` / `<tbody>` markup (slotted\nmode, used when `columns`/`data` are not both set). The horizontal scroll\ncontainer lives INSIDE the component so a wide table scrolls itself —\nthe page never scrolls. Cell/header padding uses the theme's `--al-theme-space-*`\ntokens, so the table is automatically density-aware wherever it is rendered\ninside a `<al-theme density=\"...\">` scope.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-table",
+    "className": "ALTable",
+    "module": "components/table/table.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "Slotted `<table>`-internal markup (e.g. `<thead>`/`<tbody>`), used only when `columns` and `data` are not both provided.",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onTableSort",
+        "description": "Fired when a sortable header is activated. Detail: `{ key, direction }`. `al-table` does not re-sort `data` itself — it tracks and displays the active sort state (`sortKey`/`sortDirection`, reflected via `aria-sort`); re-render with sorted `data` in response to this event."
+      },
+      {
+        "name": "onTableRowSelect",
+        "description": "Fired when a row's selection checkbox is toggled. Detail: `{ rowKey, isSelected, selectedRowKeys }`."
+      },
+      {
+        "name": "onTableSelectAll",
+        "description": "Fired when the header's select-all checkbox is toggled. Detail: `{ isSelected, selectedRowKeys }`."
+      }
+    ],
+    "cssParts": [
+      {
+        "description": "The horizontal scroll container.",
+        "name": "scroll"
+      },
+      {
+        "description": "The `<table>` element (data-driven mode only).",
+        "name": "table"
+      }
+    ],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-table"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "columns": {
+          "description": "typescript: Array<ALTableColumn>",
+          "type": "string"
+        },
+        "data": {
+          "description": "typescript: Array<ALTableRow>",
+          "type": "string"
+        },
+        "rowKey": {
+          "description": "The property on each row object used to derive a stable row identifier\n(used for selection tracking and the `key` attribute).",
+          "type": "string"
+        },
+        "caption": {
+          "description": "Visible table caption. Also used as the accessible name of the scroll\ncontainer so keyboard users know what they're scrolling.",
+          "type": "string"
+        },
+        "hideCaption": {
+          "description": "Visually hides the caption while keeping it in the accessibility tree.",
+          "type": "boolean"
+        },
+        "isSelectable": {
+          "description": "Shows a leading checkbox column for row selection.",
+          "type": "boolean"
+        },
+        "sortKey": {
+          "description": "The `key` of the column currently sorted, if any.",
+          "type": "string"
+        },
+        "sortDirection": {
+          "description": "typescript: ALTableSortDirection",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

@@ -1,0 +1,454 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-field-note",
+  "name": "Field Note",
+  "version": "1.1.0",
+  "status": "source",
+  "description": "Component: al-field-note",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "isDisabled",
+      "description": "Disabled attribute\n1. Changes the component's treatment to represent a disabled state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error"
+          ],
+          "pairWith": "State"
+        }
+      }
+    },
+    {
+      "name": "isError",
+      "description": "Error state\n1. Changes the component's treatment to represent an error state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isError"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error"
+          ],
+          "pairWith": "State"
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The field note content"
+    }
+  ],
+  "composition": {
+    "renders": []
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-field-note",
+      "box": {
+        "w": 73.6,
+        "h": 20
+      },
+      "layout": {
+        "display": "flex",
+        "direction": "row",
+        "align": "center",
+        "justify": "normal"
+      },
+      "tokens": {
+        "color": {
+          "code": "--al-theme-color-content-default-weak",
+          "figma": "theme/color/content/default-weak"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "font": {
+          "code": "--al-theme-typography-body-sm",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "letter-spacing": {
+          "code": "--al-theme-typography-body-sm-letter-spacing",
+          "figma": null
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-field-note",
+          "text": "Helper text",
+          "box": {
+            "w": 73.6,
+            "h": 16
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-sm",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-sm-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-field-note",
+          "box": {
+            "w": 73.6,
+            "h": 20
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-sm",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-sm-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-field-note",
+              "text": "Helper text",
+              "box": {
+                "w": 73.6,
+                "h": 16
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "State=Disabled",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-field-note al-is-disabled",
+          "box": {
+            "w": 73.6,
+            "h": 20
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-sm",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-sm-letter-spacing",
+              "figma": null
+            },
+            "opacity": {
+              "code": "--al-theme-opacity-disabled",
+              "figma": "theme/opacity/disabled"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-field-note al-is-disabled",
+              "text": "Helper text",
+              "box": {
+                "w": 73.6,
+                "h": 16
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                  "figma": null
+                },
+                "opacity": {
+                  "code": "--al-theme-opacity-disabled",
+                  "figma": "theme/opacity/disabled"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "State=Error",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-field-note al-is-error",
+          "box": {
+            "w": 73.6,
+            "h": 20
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-danger-default",
+              "figma": "theme/color/content/danger-default"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-sm",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-sm-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-field-note al-is-error",
+              "text": "Helper text",
+              "box": {
+                "w": 73.6,
+                "h": 16
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-danger-default",
+                  "figma": "theme/color/content/danger-default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-theme-color-content-default-weak",
+    "--al-theme-space-xs",
+    "--al-theme-typography-body-sm",
+    "--al-theme-typography-body-sm-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/field-note/field-note.ts",
+      "tagName": "al-field-note",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Field Note",
+      "nodeId": "3543:46961",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-46961"
+    }
+  }
+}

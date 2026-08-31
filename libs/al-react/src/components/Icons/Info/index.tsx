@@ -1,1 +1,3 @@
-export * from './Info';
+'use client';
+
+export * from './Info.js';

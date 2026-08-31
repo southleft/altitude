@@ -1,0 +1,46 @@
+---
+// Interior-page hero.
+//
+// Now `<al-page-hero>` from @southleft/sl-web-components. The brand package owns
+// this band (docs: /docs/southleft/components/page-hero), and the hand-rolled
+// chip + heading + text-block stack that used to live here has been deleted
+// along with its two blocks in styles/layout.css.
+//
+// Three deliberate changes come with the swap, all of them visible:
+//
+//  1. The call sites drop `.sl-container` and keep `.sl-section--tight`. The
+//     component supplies the page measure itself (85rem + the same fluid side
+//     gutter), so keeping `.sl-container` would double the gutter — but
+//     `.sl-section--tight` is padding-block ONLY, and it is the outer quarter of
+//     the section rhythm the component does not reproduce. Dropping both would
+//     have quietly taken 1.5-2.5rem off the top and bottom of all 19 pages.
+//  2. The dek gets its lead treatment. `<al-text-block>{dek}</al-text-block>`
+//     carried no type styling here; the component applies the brand's lead size,
+//     line-height and weak colour. Every dek grows slightly. This is a fix.
+//  3. The eyebrow starts hugging its content. `class="sl-page-hero__eyebrow"`
+//     sat directly on `<al-chip>`, whose `:host` is `display: contents` — so it
+//     was never a flex item and `align-self: start` did nothing. The component
+//     wraps the chip in a real element. Also a fix.
+//
+// The wrapper survives so the 19 call sites keep passing plain props.
+interface Props {
+  label: string;
+  heading: string;
+  dek?: string;
+  /** `display-sm` for the narrower prose measure; defaults to the interior-page scale. */
+  headingVariant?: string;
+  /** `center` for the standalone pages (404, quiz) that centre the whole band. */
+  align?: 'start' | 'center';
+}
+const { label, heading, dek, headingVariant, align } = Astro.props;
+---
+
+<al-page-hero
+  label={label}
+  heading={heading}
+  dek={dek}
+  heading-variant={headingVariant}
+  align={align}
+>
+  <slot />
+</al-page-hero>

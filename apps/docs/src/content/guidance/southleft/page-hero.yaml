@@ -1,0 +1,36 @@
+purpose: 'The title band an interior page opens with: an optional label, the page heading,
+  and a short dek. It owns its vertical rhythm and nothing else, so the page''s own stack
+  starts immediately underneath it.'
+whenToUse:
+- The page is an interior one (a work index, an article listing, a service page) and needs
+  a heading band before its content.
+- You want the page title and its one-line explanation to share a consistent measure and spacing
+  across every route.
+whenNotToUse:
+- text: This is the homepage's first screen and the composition needs the texture, the two-column
+    split and a supporting panel.
+  instead: hero
+- text: The heading opens a section inside a page rather than the page itself, and wants the
+    numbered rule treatment.
+  instead: section-header
+dos:
+- Let the band own its block padding through `--al-page-hero-padding-block` rather than adding
+  margin to whatever follows it.
+- Set `heading-tag` when the band is not the page's `h1`, so the outline stays correct on
+  a page that already has one.
+donts:
+- Do not use it as a section divider repeatedly down a page; its padding is tuned for one
+  appearance at the top.
+- Do not put actions inside it. A title band that also carries buttons becomes a hero without
+  the composition to support them.
+accessibility:
+- '`heading-tag` exists so the rendered element matches the document outline rather than the
+  visual rank. Set it deliberately instead of accepting the default on a page that already
+  has an `h1`.'
+content:
+- 'The label is a category, not a sentence: one or two words saying what kind of page this
+  is.'
+sources:
+- path: libs/sl-web-components/components/page-hero/page-hero.ts
+  contains: export class SLPageHero
+  note: The component this guidance describes.

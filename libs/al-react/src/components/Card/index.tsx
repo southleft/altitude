@@ -1,1 +1,3 @@
-export * from './Card';
+'use client';
+
+export * from './Card.js';

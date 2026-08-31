@@ -23,14 +23,28 @@
 
 /**
  * Dashboard body
+ * - The block rhythm is set through `--al-layout-padding`, the hook
+ *   `<al-layout>` exposes for exactly this. No `display: block` crutch is
+ *   needed: `:host` is `display: contents`, but custom properties still
+ *   INHERIT through it to the shadow `.al-c-layout` box that paints
+ *   (layout.scss), and the component resets every `--al-layout-*` hook on
+ *   `::slotted(*)` so the value cannot leak into the layouts nested inside.
+ * - Block-only on purpose. Under `variant="constrained"` the inline insets
+ *   are gutter TRACKS; inline padding would stack on them and push the
+ *   content column off its measure.
  */
 .al-l-dashboard__body {
-  display: flex;
-  padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
+  --al-layout-padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
 }
 
 /**
  * Dashboard sidebar
+ * - Stays a plain `<div>` — NOT `<al-layout>` itself. `<al-layout>`'s `:host`
+ *   is `display: contents` (layout.scss), so position/height/box-shadow/
+ *   z-index/background applied directly to that host would have no box to
+ *   render against. Column stacking + space-between is owned by a NESTED
+ *   `<al-layout direction="column" justify="between" fullHeight>`; this class
+ *   only carries what needs a real box.
  */
 .al-l-dashboard__sidebar {
   position: sticky;
@@ -40,9 +54,6 @@
   z-index: var(--al-z-index-500);
   background-color: var(--al-theme-color-background-default);
   box-shadow: var(--al-theme-box-shadow);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 
   @media all and (max-width: 768px) {
     display: none;
@@ -51,10 +62,11 @@
 
 /**
  * Dashboard sidebar logo
+ * - Plain `<div>` for the same reason as `.al-l-dashboard__sidebar` above —
+ *   min-height/padding/border need a real box. Row + centered alignment is
+ *   owned by a nested `<al-layout direction="row" align="center">`.
  */
 .al-l-dashboard__sidebar-logo {
-  display: flex;
-  align-items: center;
   min-height: var(--al-theme-layout-height-header);
   padding: 0 var(--al-theme-space);
   border-bottom: 1px solid var(--al-theme-color-border-default);
@@ -62,10 +74,12 @@
 
 /**
  * Dashboard sidebar menu
+ * - Plain `<div>` wrapping `<al-menu>` (also `:host { display: contents }`
+ *   in menu.scss, so padding placed directly on `<al-menu>` would be dead
+ *   for the same reason). Filling the remaining sidebar height is owned by
+ *   the unclassed `<al-layout grow>` this div sits inside.
  */
 .al-l-dashboard__sidebar-menu {
-  flex: 1;
-  display: flex;
   padding: var(--al-theme-space-super) 0;
 }
 
@@ -83,20 +97,17 @@
 
 /**
  * Dashboard user
+ * - Applied to the `<al-card variant="bare" layout="inline">` popover
+ *   trigger. Row arrangement, gap and the "label grows to push the trailing
+ *   button" behavior are owned by al-card's inline layout (`.al-c-card__body`
+ *   is `flex: 1`); this class only restores the trigger's clickable
+ *   affordance and padding, which `variant="bare"` strips.
  */
 .al-l-dashboard__user {
+  display: block;
   cursor: pointer;
   width: 100%;
   padding: var(--al-theme-space);
-  display: flex;
-  gap: var(--al-theme-space);
-  align-items: center;
-  justify-content: space-between;
-
-  p {
-    display: flex;
-    flex: 1;
-  }
 }
 
 /**
@@ -125,4 +136,23 @@
  .al-l-dashboard__menu-link--header {
   display: block;
   margin-block-start: 12px;
+}
+
+/**
+ * Dashboard shell - a fixed-width sidebar beside a fluid content column.
+ *
+ * This used to be `<al-layout variant="sidebar-left">`. The design system no
+ * longer ships a sidebar variant; the page owns its own track list via
+ * `--al-layout-template`, which inherits through the shadow boundary into
+ * `<al-layout variant="grid">`. `noCollapse` on the element turns off the
+ * built-in single-column collapse so the responsive story is defined here.
+ */
+.al-l-dashboard__shell {
+  --al-layout-template: 1fr;
+}
+
+@media all and (min-width: 768px) {
+  .al-l-dashboard__shell {
+    --al-layout-template: calc(var(--al-theme-layout-width-sidebar, 40%) - var(--al-theme-space-xs)) minmax(0, 1fr);
+  }
 }

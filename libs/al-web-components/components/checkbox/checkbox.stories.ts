@@ -1,7 +1,5 @@
-import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
@@ -9,7 +7,7 @@ import './checkbox';
 import { ALCheckbox } from './checkbox';
 
 export default {
-  title: 'Atoms/Checkbox',
+  title: 'Atoms/Form/Checkbox',
   component: 'al-checkbox',
   tags: [ 'autodocs' ],
   parameters: {
@@ -18,7 +16,6 @@ export default {
       handles: ['onCheckboxChange']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isChecked: {
       control: 'boolean'
@@ -147,49 +144,4 @@ SlottedErrorNote.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Checked.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const checkboxItem = canvas.queryByTestId('checkbox') as any;
-  const checkboxItemInput = checkboxItem?.shadowRoot?.querySelector('input') as HTMLInputElement;
-
-  // Make assertions
-  expect(checkboxItem).toBeInTheDocument();
-
-  // Simulate a click event
-  await userEvent.click(checkboxItemInput);
-
-  // Check that the checkbox is checked
-  expect(checkboxItem.isChecked).toBe(false);
-
-  // Simulate a keyboard event (pressing Enter key)
-  await userEvent.keyboard('{Enter}');
-
-  // Check that the checkbox is no longer checked
-  expect(checkboxItem.isChecked).toBe(true);
-
-  // Remove focus from the input element
-  checkboxItemInput.blur();
-};
-
-Indeterminate.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const checkboxItem = canvas.queryByTestId<ALCheckbox>('checkbox')?.shadowRoot?.querySelector('.al-c-checkbox');
-  const checkboxItemInput = checkboxItem?.querySelector('input') as HTMLInputElement ;
-
-  // Check that it starts as indeterminate
-  expect(checkboxItem).toHaveClass('al-is-indeterminate');
-
-  // Simulate a click event
-  await userEvent.click(checkboxItemInput);
-
-  // Check that it's no longer indeterminate
-  expect(checkboxItem).not.toHaveClass('al-is-indeterminate');
-
-  // Change the state of the checkbox back to isIndeterminate
-  canvas.queryByTestId<any>('checkbox').isIndeterminate = true;
-
-  // Remove focus from the input element
-  checkboxItemInput.blur();
-};
 

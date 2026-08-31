@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALButton as ALWebButton } from 'al-web-components/dist/components/button/button';
-import register from 'al-web-components/dist/directives/register';
+import { ALButton as ALWebButton } from '@southleft/al-web-components/components/button';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebButton.el, ALWebButton],

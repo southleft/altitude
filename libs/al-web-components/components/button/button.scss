@@ -1,4 +1,4 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 
 /* ------------------------------------ *\
   #BUTTON
@@ -7,242 +7,281 @@
 /**
  * Default button
  */
-.al-c-button {
-  @include al-theme-typography-body-md-bold;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--al-theme-space-xs);
-  margin: 0;
-  padding: var(--al-button-padding, #{var(--al-theme-space-xs)} #{var(--al-theme-space)});
-  border: none;
-  border-radius: var(--al-theme-border-radius);
-  text-decoration: none;
-  cursor: pointer;
-  transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-  position: relative;
-  background-color: var(--al-theme-color-background-primary-default);
-  color: var(--al-theme-color-content-primary-weak);
-  width: var(--al-button-width, auto);
-  --al-icon-height: #{var(--al-theme-icon-lg)};
-  --al-icon-width: #{var(--al-theme-icon-lg)};
 
-  /**
-   * Hover state
-   */
-  &:hover:not(:active, :disabled) {
-    background-color: var(--al-theme-color-background-primary-strong);
+@layer al.component {
+  .al-c-button {
+    /*
+     * v2 canvas: controls are 14px/1 semibold and take their height from the
+     * control scale, NOT from padding + line-height. Deriving height from the
+     * type scale is what let the outline variant render 42px against the 40px
+     * of every other variant — its 1px border had nothing to subtract from.
+     */
+    @include al-theme-typography-body-sm-bold;
+    line-height: 1;
+    box-sizing: border-box;
+    min-height: var(--al-button-height, var(--al-theme-size-control));
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--al-theme-space-xs);
+    margin: 0;
+    padding: var(--al-button-padding, 0 #{var(--al-theme-space)});
+    border: none;
+    border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius));
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+    position: relative;
+    background-color: var(--al-theme-color-background-primary-default);
+    color: var(--al-theme-color-content-primary-weak);
+    width: var(--al-button-width, auto);
+    --al-icon-height: #{var(--al-theme-icon-lg)};
+    --al-icon-width: #{var(--al-theme-icon-lg)};
+
+    /**
+     * Hover state
+     */
+    &:hover:not(:active, :disabled) {
+      background-color: var(--al-theme-color-background-primary-strong);
+    }
+
+    /**
+     * Focus outline for A11y
+     */
+    &:focus-visible {
+      @include al-focus;
+    }
+
+    /**
+    * Disabled state
+    */
+    &:disabled {
+      cursor: not-allowed;
+      opacity: var(--al-theme-opacity-disabled);
+    }
   }
 
   /**
-   * Focus outline for A11y
+   * Secondary button
    */
-  &:focus-visible {
-    @include al-focus;
+  .al-c-button--secondary {
+    /*
+     * v2 canvas "Tonal": a primary-tinted fill with primary text, not a
+     * neutral grey. Hover steps to background-primary-weak-strong.
+     */
+    background-color: var(--al-theme-color-background-primary-weak);
+    color: var(--al-theme-color-content-primary-default);
+
+    /**
+     * Hover state
+     */
+    &:hover:not(:active, :disabled) {
+      background-color: var(--al-theme-color-background-primary-weak-strong);
+    }
   }
 
   /**
-  * Disabled state
-  */
-  &:disabled {
-    cursor: not-allowed;
-    opacity: var(--al-theme-opacity-disabled);
-  }
-}
-
-/**
- * Secondary button
- */
-.al-c-button--secondary {
-  background-color: var(--al-theme-color-background-secondary-default);
-  color: var(--al-theme-color-content-secondary-weak);
-
-  /**
-   * Hover state
+   * Tertiary button
    */
-  &:hover:not(:active, :disabled) {
-    background-color: var(--al-theme-color-background-secondary-strong);
-  }
-}
-
-/**
- * Tertiary button
- */
-.al-c-button--tertiary {
-  background-color: var(--al-theme-color-background-transparent-default);
-  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-  color: var(--al-theme-color-content-default);
-
-  /**
-   * Hover state
-   */
-  &:hover:not(:active, :disabled) {
+  .al-c-button--tertiary {
     background-color: var(--al-theme-color-background-transparent-default);
-    border-color: var(--al-theme-color-border-default-weak);
-    color: var(--al-theme-color-content-default-weak);
-  }
-}
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    color: var(--al-theme-color-content-default);
 
-/**
- * Bare button
- */
-.al-c-button--bare {
-  background-color: var(--al-theme-color-background-transparent-default);
-  color: var(--al-theme-color-content-default);
+    /**
+     * Hover state
+     */
+    &:hover:not(:active, :disabled) {
+      background-color: var(--al-theme-color-background-transparent-default);
+      border-color: var(--al-theme-color-border-default-weak);
+      color: var(--al-theme-color-content-default-weak);
+    }
+  }
 
   /**
-   * Hover state
+   * Bare button
    */
-  &:hover:not(:active, :disabled) {
+  .al-c-button--bare {
     background-color: var(--al-theme-color-background-transparent-default);
-    color: var(--al-theme-color-content-default-weak);
-  }
-}
+    color: var(--al-theme-color-content-default);
 
-/**
- * Danger button
- */
-.al-c-button--danger {
-  background-color: var(--al-theme-color-background-danger-default);
-  color: var(--al-theme-color-content-danger-weak);
+    /**
+     * Hover state
+     */
+    &:hover:not(:active, :disabled) {
+      background-color: var(--al-theme-color-background-transparent-default);
+      color: var(--al-theme-color-content-default-weak);
+    }
+  }
 
   /**
-   * Hover state
+   * Danger button
    */
-  &:hover:not(:active, :disabled) {
-    background-color: var(--al-theme-color-background-danger-strong);
+  .al-c-button--danger {
+    background-color: var(--al-theme-color-background-danger-default);
+    color: var(--al-theme-color-content-danger-weak);
+
+    /**
+     * Hover state
+     */
+    &:hover:not(:active, :disabled) {
+      background-color: var(--al-theme-color-background-danger-strong);
+    }
   }
-}
-
-/**
- * Icon only button
- */
-.al-c-button--icon-only {
-  padding: var(--al-button-padding, #{var(--al-theme-space-xs)} #{var(--al-theme-space-xs)});
-}
-
-/**
- * Full-width button
- */
-.al-c-button--full-width {
-  width: 100%;
-  text-align: center;
-}
-
-/**
- * Allows for click events to only be on the button element and not slotted items
- */
-::slotted(*) {
-  pointer-events: none;
-}
-
-/*------------------------------------*\
-  #MENU-ITEM-BUTTON
-\*------------------------------------*/
-
-/**
- * Menu item button
- * - Controls the expanded state for Menu Item's
- */
-.al-c-menu-item-button {
-  position: relative;
-  height: var(--al-menu-item-height);
-  width: size(5);
-  border-radius: 0;
-  line-height: 1;
-  color: var(--al-theme-color-content-default-weak);
-  background: var(--al-theme-color-background-transparent);
 
   /**
-   * Menu item buton focus outline with rounded borders
+   * Size variants — heights come from the control scale (32 / 40 / 48).
    */
-  &::before {
-    @include al-focus;
-    display: block;
-    position: absolute;
-    content: '';
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    height: 100%;
+  .al-c-button--sm {
+    min-height: var(--al-button-height, var(--al-theme-size-control-sm));
+    padding: var(--al-button-padding, 0 #{var(--al-theme-space-sm)});
+    font-size: var(--al-font-size-13);
+  }
+
+  .al-c-button--lg {
+    min-height: var(--al-button-height, var(--al-theme-size-control-lg));
+    padding: var(--al-button-padding, 0 #{var(--al-theme-space-md)});
+    font-size: var(--al-font-size-15);
+  }
+
+  /**
+   * Pill shape — the canvas ships this as a friendlier alternative to the
+   * default 6px action radius. One radius token flip, nothing else moves.
+   */
+  .al-c-button--pill {
+    border-radius: var(--al-theme-border-radius-pill);
+  }
+
+  /**
+   * Icon only button
+   */
+  .al-c-button--icon-only {
+    padding: var(--al-button-padding, #{var(--al-theme-space-xs)} #{var(--al-theme-space-xs)});
+  }
+
+  /**
+   * Full-width button
+   */
+  .al-c-button--full-width {
     width: 100%;
-    visibility: hidden;
-    opacity: 0;
-    background: transparent;
-    border-radius: var(--al-theme-border-radius-xs);
-    z-index: 1;
+    text-align: center;
+  }
+
+  /**
+   * Allows for click events to only be on the button element and not slotted items
+   */
+  ::slotted(*) {
     pointer-events: none;
   }
 
-  /**
-   * Menu item button icon
-   * - The chevron icon that visually displays whether the menu item is expanded
-   */
-  .al-c-button__icon {
-    transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-    transform: rotate(0deg);
-  }
+  /*------------------------------------*\
+    #MENU-ITEM-BUTTON
+  \*------------------------------------*/
 
   /**
-   * Menu item button hover state
+   * Menu item button
+   * - Controls the expanded state for Menu Item's
    */
-  &:hover:not(:active, :disabled) {
+  .al-c-menu-item-button {
+    position: relative;
+    height: var(--al-menu-item-height);
+    width: size(5);
+    border-radius: 0;
+    line-height: 1;
     color: var(--al-theme-color-content-default-weak);
-    background: var(--al-theme-color-background-default-strong);
+    background: var(--al-theme-color-background-transparent-default);
 
     /**
-     * Show focus outline with rounded borders on focus-visible
+     * Menu item buton focus outline with rounded borders
      */
     &::before {
+      @include al-focus;
+      display: block;
+      position: absolute;
+      content: '';
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      height: 100%;
+      width: 100%;
       visibility: hidden;
       opacity: 0;
+      background: transparent;
+      border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius-xs));
+      z-index: 1;
+      pointer-events: none;
     }
-  }
-
-  /**
-   * Menu item button focus state
-   */
-   &:focus-visible {
-    outline: none;
 
     /**
-     * Show focus outline with rounded borders on focus-visible
+     * Menu item button icon
+     * - The chevron icon that visually displays whether the menu item is expanded
      */
-    &::before {
-      visibility: visible;
-      opacity: 1;
-    }
-  }
-
-  /**
-   * Menu item button selected state
-   */
-  &.al-is-selected {
-    color: var(--al-theme-color-content-default-primary-stronger);
-    background: var(--al-theme-color-background-primary-default);
-
-    /**
-     * Menu item button hover state on a selected menu item
-     */
-    &:hover:not(:active, .al-is-disabled) {
-      color: var(--al-theme-color-content-primary-weak);
-      background: var(--al-theme-color-background-primary-strong);
-    }
-  }
-
-  /**
-   * Menu item button expanded state
-   * - Rotate the icon when expanded
-  */
-  &.al-is-expanded {
     .al-c-button__icon {
-      transform: rotate(-180deg);
+      transition: transform var(--al-theme-animation-duration-role-fast, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+      transform: rotate(0deg);
+    }
+
+    /**
+     * Menu item button hover state
+     */
+    &:hover:not(:active, :disabled) {
+      color: var(--al-theme-color-content-default-weak);
+      background: var(--al-theme-color-background-default-strong);
+
+      /**
+       * Show focus outline with rounded borders on focus-visible
+       */
+      &::before {
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+
+    /**
+     * Menu item button focus state
+     */
+     &:focus-visible {
+      outline: none;
+
+      /**
+       * Show focus outline with rounded borders on focus-visible
+       */
+      &::before {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+
+    /**
+     * Menu item button selected state
+     */
+    &.al-is-selected {
+      color: var(--al-theme-color-content-primary-weak);
+      background: var(--al-theme-color-background-primary-default);
+
+      /**
+       * Menu item button hover state on a selected menu item
+       */
+      &:hover:not(:active, .al-is-disabled) {
+        color: var(--al-theme-color-content-primary-weak);
+        background: var(--al-theme-color-background-primary-strong);
+      }
+    }
+
+    /**
+     * Menu item button expanded state
+     * - Rotate the icon when expanded
+    */
+    &.al-is-expanded {
+      .al-c-button__icon {
+        transform: rotate(-180deg);
+      }
     }
   }
-}
 
-/**
- * Visually hide items
- */
-.al-u-is-vishidden {
-  @include al-visually-hidden;
+  /**
+   * Visually hide items
+   */
+  .al-u-is-vishidden {
+    @include al-visually-hidden;
+  }
 }

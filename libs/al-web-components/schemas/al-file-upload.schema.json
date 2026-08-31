@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-file-upload.schema.json",
+  "title": "ALFileUpload (al-file-upload)",
+  "description": "Component: al-file-upload",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-file-upload",
+    "className": "ALFileUpload",
+    "module": "components/file-upload/file-upload.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The component's content",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onFileUploadFileUpload",
+        "description": "Fired when files are added. Detail: `{ uploadedFiles }` — the files accepted by this interaction."
+      },
+      {
+        "name": "onFileUploadFileRemove",
+        "description": "Fired when a file is removed. Detail: `{ updatedFiles }` — the remaining files after removal, not the removed one."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-file-upload"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fieldId": {
+          "description": "Unique ID of the field",
+          "type": "string"
+        },
+        "label": {
+          "description": "Label for the form field",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name attribute for the checkbox",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value associated with the field",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "Text for the field note",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Text for the error note",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria described-by attribute\n- Connects the field note in the select to the select menu for accessibility",
+          "type": "string"
+        },
+        "isRequired": {
+          "description": "Indicates if the field is required",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Indicates if the field is disabled",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Indicates if the field note is in error state",
+          "type": "boolean"
+        },
+        "hideLabel": {
+          "description": "Indicates if the label is hidden",
+          "type": "boolean"
+        },
+        "textConfig": {
+          "description": "typescript: FileUploadTextConfig",
+          "type": "string"
+        },
+        "uploadFiles": {
+          "description": "typescript: FileUploadProgressStream[]",
+          "type": "string"
+        },
+        "uploadTime": {
+          "description": "Time taken for uploading\n- Defaults to 1 second",
+          "type": "number"
+        },
+        "fileSizeLimit": {
+          "description": "Maximum file size allowed for upload in MB",
+          "type": "number"
+        },
+        "accept": {
+          "description": "Acceptable file types for upload\n- Example: '.jpg, .png, .gif'",
+          "type": "string"
+        },
+        "multiple": {
+          "description": "Allows multiple files to be added to the file upload",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

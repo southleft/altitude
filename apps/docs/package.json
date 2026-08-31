@@ -1,0 +1,27 @@
+{
+  "name": "al-app-docs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "The Altitude documentation site. Every component-shaped surface — sidebar taxonomy, counts, index, props tables, code snippets — is generated at build time from libs/al-web-components/custom-elements.json (see src/lib/registry.mjs). Design language is fixed by the approved canvas at .mm/specs/2026-08-22-altitude-docs-site/visuals/altitude-ds-site.dc.html.",
+  "scripts": {
+    "start": "astro dev --port 6120",
+    "build": "node scripts/copy-brand-assets.mjs && astro build && pagefind --site ../../dist/docs",
+    "preview": "astro preview --port 6121",
+    "check:coverage": "node scripts/check-docs-coverage.mjs",
+    "check:panels": "node scripts/check-status-panels.mjs",
+    "check:third-project": "node scripts/check-third-project.mjs",
+    "check:motion": "node scripts/verify-motion-page.mjs",
+    "//build": "Astro emits to ../../dist/docs, then Pagefind indexes that BUILT output in place. Pagefind is a post-build indexer, not a plugin: it reads the emitted HTML, so it must run after astro build and against the same directory astro.config.mjs points outDir at.",
+    "dev": "astro dev"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@southleft/al-web-components": "workspace:*",
+    "@southleft/sl-web-components": "workspace:*"
+  },
+  "devDependencies": {
+    "astro": "^7.0.3",
+    "pagefind": "^1.5.2"
+  }
+}

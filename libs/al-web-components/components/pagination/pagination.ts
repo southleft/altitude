@@ -29,9 +29,11 @@ const endDot = '... '; /* 3 */
 
 /**
  * Component: al-pagination
- * - **slot** "label": If content is slotted, it will override the default pagination label
- * - **slot** "prev": If content is slotted, it will override the default "previous" icon
- * - **slot** "next": If content is slotted, it will override the default "next" icon
+ * @slot label - If content is slotted, it will override the default pagination label
+ * @slot prev - If content is slotted, it will override the default "previous" icon
+ * @slot next - If content is slotted, it will override the default "next" icon
+ *
+ * @event onPaginationChange - Fired when the page or page size changes. Detail: `{ pageNumber, pageSize, totalRecordSize }`.
  */
 export class ALPagination extends ALElement {
   static el = 'al-pagination';
@@ -330,7 +332,7 @@ export class ALPagination extends ALElement {
     /* 1 */
     let quotient = this.totalRecords;
     if (this.totalRecords > 6) {
-      let remainder = this.totalRecords % this.pageSize;
+      const remainder = this.totalRecords % this.pageSize;
       quotient = this.totalRecords / this.pageSize;
       /* 2 */
       if (remainder !== 0) {

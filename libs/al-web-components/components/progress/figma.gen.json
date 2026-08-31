@@ -1,0 +1,35 @@
+{
+  "$comment": "Per-component Figma-generation config. al-progress had NO Figma set at all until 2026-08-27 (parity manifest carried `figma: null` + a MISSING_IN_FIGMA note). Its contract has 10 measured anatomy cases across three dimensions, but ops emitted a SINGLE `State=Default` variant because none of the three case dimensions auto-map to a prop: the auto-mapper pairs a dimension to a prop by name minus an is/has prefix, and Shape/isCircle, Size/circleSize, Label/showLabel all fail that test. caseAxes below names each pairing explicitly. Sources: progress.ts:24 `isCircle: boolean = false` (the bar is the default shape), :35 `circleSize: 'md'|'lg'|'xl'` (only meaningful when isCircle — the bar is measured at Size=default only, which is why the case matrix is 10 and not 16), :43 `showLabel: boolean = false`. sheet.cellWidth: this component's natural width exceeds the library's default 200px sheet pitch (sheet-style.mjs SHEET_CELL_WIDTH_PX), so its instances bled across the border-collapse grid lines and clipped their own helper text. Measured live 2026-08-27 from the widest instance in its own prop sheet, rounded up with breathing room. This is the documented per-component override the generator expects - do NOT re-measure instances inside the build (the sheet-style.mjs header explains why: ~30s per-call ceiling).",
+  "anatomyCase": "Shape=bar,Size=default,Label=hidden",
+  "caseAxes": [
+    {
+      "dimension": "Shape",
+      "prop": "isCircle",
+      "property": "Shape",
+      "valueMap": {
+        "bar": "Bar",
+        "circle": "Circle"
+      }
+    },
+    {
+      "dimension": "Size",
+      "prop": "circleSize",
+      "property": "Size",
+      "valueMap": {
+        "default": "Default",
+        "md": "Md",
+        "lg": "Lg",
+        "xl": "Xl"
+      }
+    },
+    {
+      "dimension": "Label",
+      "prop": "showLabel",
+      "property": "Label",
+      "valueMap": {
+        "hidden": "Hidden",
+        "shown": "Shown"
+      }
+    }
+  ]
+}

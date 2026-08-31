@@ -1,0 +1,595 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-spinner",
+  "name": "Spinner",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: el-spinner\n\nSpinner is used when retrieving data or performing slow computations, to notify users that their action is being processed.",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "inverted",
+      "description": "Inverted variant\n1) Used for dark backgrounds",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "inverted"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "small",
+      "description": "Small loader",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "small"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "composition": {
+    "renders": []
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Tone=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-spinner",
+      "box": {
+        "w": 24,
+        "h": 24
+      },
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "height": {
+          "code": "--al-theme-icon-lg",
+          "figma": "theme/icon/lg"
+        },
+        "width": {
+          "code": "--al-theme-icon-lg",
+          "figma": "theme/icon/lg"
+        }
+      },
+      "children": [
+        {
+          "tag": "svg",
+          "cls": "",
+          "box": {
+            "w": 24,
+            "h": 24
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7.5,
+                "h": 7
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7,
+                "h": 7.5
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7,
+                "h": 7.5
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7.5,
+                "h": 7
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7.5,
+                "h": 7
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7,
+                "h": 7.5
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7,
+                "h": 7.5
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 7.5,
+                "h": 7
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Tone=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-spinner",
+          "box": {
+            "w": 24,
+            "h": 24
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "height": {
+              "code": "--al-theme-icon-lg",
+              "figma": "theme/icon/lg"
+            },
+            "width": {
+              "code": "--al-theme-icon-lg",
+              "figma": "theme/icon/lg"
+            }
+          },
+          "children": [
+            {
+              "tag": "svg",
+              "cls": "",
+              "box": {
+                "w": 24,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Tone=inverted",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-spinner al-c-spinner--inverted",
+          "box": {
+            "w": 24,
+            "h": 24
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "height": {
+              "code": "--al-theme-icon-lg",
+              "figma": "theme/icon/lg"
+            },
+            "width": {
+              "code": "--al-theme-icon-lg",
+              "figma": "theme/icon/lg"
+            }
+          },
+          "children": [
+            {
+              "tag": "svg",
+              "cls": "",
+              "box": {
+                "w": 24,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7,
+                    "h": 7.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 7.5,
+                    "h": 7
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-theme-icon-lg"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/spinner/spinner.ts",
+      "tagName": "al-spinner",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

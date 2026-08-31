@@ -1,1 +1,3 @@
-export * from './Pin';
+'use client';
+
+export * from './Pin.js';

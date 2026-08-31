@@ -1,6 +1,19 @@
 import { useState } from 'react';
-import { ALBadge, ALButtonGroup, ALButton, ALCard, ALCheckboxGroup, ALCheckbox, ALChipGroup, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALIconStar, ALInput, ALLink, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALTextPassage } from 'al-react/dist/src';
+import { ALBadge, ALButton, ALCard, ALCheckboxGroup, ALCheckbox, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALIconStar, ALInput, ALLayout, ALLink, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALStat } from '@southleft/al-react';
 import './JobBoard.scss';
+
+const jobs = [
+  { id: 1, title: 'UX Designer', location: 'New Orleans, LA', chips: ['Design', 'Remote'], posted: '1 day ago' },
+  { id: 2, title: 'Senior Front-end Developer', location: 'New Orleans, LA', chips: ['Front-end Developer', 'Design Systems'], posted: '1 day ago' },
+  { id: 3, title: 'Junior Front-end Developer', location: 'New Orleans, LA', chips: ['Front-end Developer', 'Design Systems', 'Remote'], posted: '1 day ago' },
+  { id: 4, title: 'Back-end Developer', location: 'New Orleans, LA', chips: ['Software', 'API'], posted: '2 days ago' },
+  { id: 5, title: 'UX Designer', location: 'New Orleans, LA', chips: ['Design', 'Remote'], posted: '2 days ago' },
+  { id: 6, title: 'Senior Front-end Developer', location: 'New Orleans, LA', chips: ['Front-end Developer', 'Design Systems'], posted: '3 days ago' },
+  { id: 7, title: 'Junior Front-end Developer', location: 'New Orleans, LA', chips: ['Front-end Developer', 'Design Systems', 'Remote'], posted: '3 days ago' },
+  { id: 8, title: 'Back-end Developer', location: 'New Orleans, LA', chips: ['Software', 'API'], posted: '3 days ago' },
+  { id: 9, title: 'UX Designer', location: 'New Orleans, LA', chips: ['Design', 'Remote'], posted: '4 days ago' },
+  { id: 10, title: 'Senior Front-end Developer', location: 'New Orleans, LA', chips: ['Front-end Developer', 'Design Systems'], posted: '4 days ago' }
+];
 
 export default function JobBoard({ children }) {
   const [filterStates, setFilterStates] = useState([
@@ -12,10 +25,10 @@ export default function JobBoard({ children }) {
   ]);
 
   return (
-    <div className="al-l-job-board al-u-gap-xl">
+    <ALLayout gap="xl" className="al-l-job-board">
       <ALHeading isBold={true} variant="lg" tagName="h2">Job Board</ALHeading>
-      <div className="al-u-gap">
-        <div className="al-u-grid">
+      <ALLayout gap="md">
+        <ALLayout variant="grid">
           <ALSearch className="al-u-grid__item col:12 col:12@lg col:6@xxl" label="Search by job title, company, keywords">
             <ALList>
               <ALListItem>Senior Designer</ALListItem>
@@ -32,13 +45,13 @@ export default function JobBoard({ children }) {
               ))}
             </ALList>
           </ALSelect>
-          <ALDialog className="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop={true}>
+          <ALDialog className="al-u-grid__item col:12 col:6@lg col:3@xxl">
             <ALInput label="Filters" isReadonly={true} slot="trigger">
               <ALIconFilter slot="before"></ALIconFilter>
               <ALBadge slot="after">3</ALBadge>
             </ALInput>
             <ALHeading slot="header" isBold={true} variant="md" tagName="h2">Filter</ALHeading>
-            <div className="al-l-job-board__filter-dialog al-u-gap">
+            <ALLayout gap="md" className="al-l-job-board__filter-dialog">
               <ALSelect label="Job Type" value="Full-time">
                 <ALList>
                   <ALListItem>All job types</ALListItem>
@@ -49,7 +62,7 @@ export default function JobBoard({ children }) {
                 </ALList>
               </ALSelect>
               <ALDivider></ALDivider>
-              <div className="al-u-grid cols:6@md al-u-grid--align-end">
+              <ALLayout variant="grid" columns={2} align="end">
                 <ALCheckboxGroup label="Category">
                   <ALCheckbox>UX & UI Design</ALCheckbox>
                   <ALCheckbox>Print Design</ALCheckbox>
@@ -60,7 +73,7 @@ export default function JobBoard({ children }) {
                   <ALCheckbox isChecked={true}>Design Systems</ALCheckbox>
                   <ALCheckbox>Software Development</ALCheckbox>
                 </ALCheckboxGroup>
-              </div>
+              </ALLayout>
               <ALDivider></ALDivider>
               <ALRadioGroup label="Posted At">
                 <ALRadio>Any time</ALRadio>
@@ -82,164 +95,48 @@ export default function JobBoard({ children }) {
               <ALRange label="Radius" behavior="range" max="1000" step="10"></ALRange>
               <ALDivider></ALDivider>
               <ALCheckbox>Only remote jobs</ALCheckbox>
-            </div>
-            <ALButtonGroup slot="footer">
+            </ALLayout>
+            <ALLayout slot="footer" direction="row" grow>
               <ALButton>Show Results</ALButton>
               <ALButton variant="secondary">Reset</ALButton>
-            </ALButtonGroup>
+            </ALLayout>
           </ALDialog>
-        </div>
-        <ALChipGroup className="al-u-gap">
+        </ALLayout>
+        <ALLayout direction="row" wrap>
           <ALChip isDismissible={true}>Front-end Development</ALChip>
           <ALChip isDismissible={true}>Design Systems</ALChip>
           <ALChip isDismissible={true}>Full-time</ALChip>
-        </ALChipGroup>
-      </div>
+        </ALLayout>
+      </ALLayout>
       <ALDivider></ALDivider>
-      <div className="al-u-gap">
-        <div className="al-u-grid al-u-grid--align-end">
-          <ALTextPassage className="al-u-grid__item col:12 col:5@md col:8@lg col:9@xl"><p>We've found <strong>32</strong> jobs!</p></ALTextPassage>
+      <ALLayout gap="md">
+        <ALLayout variant="grid" align="end">
+          <ALStat className="al-u-grid__item col:12 col:5@md col:8@lg col:9@xl" value="32" label="Jobs found"></ALStat>
           <ALSelect className="al-u-grid__item col:12 col:7@md col:4@lg col:3@xl" label="Sort by">
             <ALList>
               <ALListItem>Date</ALListItem>
               <ALListItem>Title</ALListItem>
             </ALList>
           </ALSelect>
-        </div>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">UX Designer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Design</ALChip>
-            <ALChip variant="secondary">Remote</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">1 day ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Front-end Developer</ALChip>
-            <ALChip variant="secondary">Design Systems</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">1 day ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">Junior Front-end Developer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Front-end Developer</ALChip>
-            <ALChip variant="secondary">Design Systems</ALChip>
-            <ALChip variant="secondary">Remote</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">1 day ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">Back-end Developer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Software</ALChip>
-            <ALChip variant="secondary">API</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">2 days ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">UX Designer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Design</ALChip>
-            <ALChip variant="secondary">Remote</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">2 days ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Front-end Developer</ALChip>
-            <ALChip variant="secondary">Design Systems</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">3 days ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">Junior Front-end Developer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Front-end Developer</ALChip>
-            <ALChip variant="secondary">Design Systems</ALChip>
-            <ALChip variant="secondary">Remote</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">3 days ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">Back-end Developer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Software</ALChip>
-            <ALChip variant="secondary">API</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">3 days ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">UX Designer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Design</ALChip>
-            <ALChip variant="secondary">Remote</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">4 days ago</div>
-        </ALCard>
-        <ALCard layout="inline">
-          <div slot="image" className="al-l-job-board__card-image">
-            <ALIconStar size="xl"></ALIconStar>
-          </div>
-          <ALHeading variant="sm" tagName="h3"><a href="#">Senior Front-end Developer</a></ALHeading>
-          <div className="al-u-gap-xs al-u-gap--row"><ALIconPin></ALIconPin><p>New Orleans, LA</p></div>
-          <div className="al-u-gap-xs al-u-gap--row">
-            <ALChip variant="secondary">Front-end Developer</ALChip>
-            <ALChip variant="secondary">Design Systems</ALChip>
-          </div>
-          <ALButton slot="actions-start">Apply</ALButton>
-          <div slot="actions-end" className="al-u-theme-typography-body-xs">4 days ago</div>
-        </ALCard>
-      </div>
+        </ALLayout>
+        {jobs.map((job) => (
+          <ALCard key={job.id} layout="inline">
+            <div slot="image" className="al-l-job-board__card-image">
+              <ALIconStar size="xl"></ALIconStar>
+            </div>
+            <ALHeading variant="sm" tagName="h3"><ALLink href="#">{job.title}</ALLink></ALHeading>
+            <ALLayout direction="row" gap="sm"><ALIconPin></ALIconPin><p>{job.location}</p></ALLayout>
+            <ALLayout direction="row" gap="sm">
+              {job.chips.map((chip) => (
+                <ALChip key={chip} variant="secondary">{chip}</ALChip>
+              ))}
+            </ALLayout>
+            <ALButton slot="actions-start">Apply</ALButton>
+            <div slot="actions-end" className="al-u-theme-typography-body-xs">{job.posted}</div>
+          </ALCard>
+        ))}
+      </ALLayout>
       <ALPagination totalRecords="32"></ALPagination>
-    </div>
+    </ALLayout>
   )
 }

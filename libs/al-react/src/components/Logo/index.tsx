@@ -1,1 +1,3 @@
-export * from './Logo';
+'use client';
+
+export * from './Logo.js';

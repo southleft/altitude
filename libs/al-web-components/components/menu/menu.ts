@@ -7,7 +7,16 @@ import styles from './menu.scss';
 
 /**
  * Component: al-menu
- * - **slot**: The menu items in the menu
+ *
+ * @slot - The menu items in the menu (children must be `<al-menu-item>`).
+ *
+ * @fires onMenuItemSelect - Bubbled from `<al-menu-item>` (bubbles + composed). Bind the listener HERE on `<al-menu>`, not on each item. `e.detail.value` carries the selected item's `value` attribute.
+ *
+ * Example:
+ *
+ *     <al-menu @onMenuItemSelect=${(e) => handleSelect(e.detail.value)}>
+ *       <al-menu-item value="edit">Edit</al-menu-item>
+ *     </al-menu>
  */
 export class ALMenu extends ALElement {
   static el = 'al-menu';
@@ -142,6 +151,54 @@ export class ALMenu extends ALElement {
   firstUpdated() {
     this.setWidthHeight(); /* 1 */
     this.syncHeadersWithItems(); /* 2 */
+    /* 3 — the items' inner controls render on their own schedule. */
+    requestAnimationFrame(() => this.syncRovingTabindex());
+  }
+
+  updated() {
+    this.syncRovingTabindex();
+  }
+
+  /**
+   * A11y — roving tabindex across the menu items.
+   *
+   * Tab and the arrow handler used to disagree: every item was its own tab
+   * stop, so Tab walked through all of them one at a time while ArrowUp/Down
+   * *also* moved between them — two competing models for the same list, and a
+   * 20-item menu meant 20 Tab presses to get past it. The menu is now a single
+   * tab stop: Tab enters at the current item and leaves the menu, arrows move
+   * within it.
+   *
+   * 1. Only items that keyboard navigation can reach are candidates (a
+   *    collapsed group's items have `idx === null` and are hidden)
+   * 2. The tab stop follows focus, then selection, then the first item
+   * 3. `menuItemLinkEl` is the `<a>`/`<button>` inside `<al-link>`'s shadow
+   *    root — the element that actually takes focus
+   */
+  private syncRovingTabindex() {
+    if (!this.menuItems?.length) {
+      return;
+    }
+
+    /* 1 */
+    const reachable = this.menuItems.filter((item) => item.idx !== null && !item.isHidden);
+    if (!reachable.length) {
+      return;
+    }
+
+    /* 2 */
+    const active =
+      (this.focusedItem && reachable.includes(this.focusedItem) && this.focusedItem) ||
+      (this.selectedItem && reachable.includes(this.selectedItem) && this.selectedItem) ||
+      reachable[0];
+
+    /* 3 */
+    this.menuItems.forEach((item) => {
+      const control = item.menuItemFocusable;
+      if (control) {
+        control.tabIndex = item === active ? 0 : -1;
+      }
+    });
   }
 
   /**
@@ -195,7 +252,7 @@ export class ALMenu extends ALElement {
         if (!item.groupId) {
           item.groupId = groupId;
           item.id = `group-${groupId}-item-${i}`;
-          groupHeader.ariaControls += ` ${item.id}`;
+          groupHeader.ariaControls = groupHeader.ariaControls ? `${groupHeader.ariaControls} ${item.id}` : item.id;
           /* 8 */
           if (this.indentGroupItems) {
             this.setIndentation(groupHeader, item);
@@ -285,7 +342,8 @@ export class ALMenu extends ALElement {
       this.focusedItem.isFocused = false; /* 1 */
     }
     this.focusedItem = item; /* 2 */
-    this.focusedItem.menuItemLinkEl.focus(); /* 3 */
+    this.syncRovingTabindex(); /* 2a — the tab stop follows focus */
+    this.focusedItem.menuItemFocusable?.focus(); /* 3 */
   }
 
   /**
@@ -358,6 +416,27 @@ export class ALMenu extends ALElement {
     this.syncHeadersWithItems();
   }
 
+  /**
+   * A11y — the list is deliberately a plain `<ul>` (implicit role `list`), not
+   * `role="menu"`.
+   *
+   * Every `<al-menu-item>` renders an `<al-link>`, i.e. an `<a href>` or a
+   * `<button>`. The tree is therefore links inside list items, not `menuitem`
+   * children: with `role="menu"` axe reported `aria-required-children` on every
+   * Menu story because no `menuitem` existed anywhere below it, and pushing
+   * `menuitem` down onto the items would have made each one an interactive role
+   * wrapping a separate interactive control (`nested-interactive`). List
+   * semantics describe what this component is — a navigation list. `aria-label`
+   * is allowed on `list`.
+   *
+   * The role is written out explicitly even though `<ul>` already means `list`:
+   * axe's `list` rule only runs on a `<ul>`/`<ol>` with **no** role attribute,
+   * and it does not descend through the role-less `<al-menu-item>` hosts to
+   * find the `<li role="listitem">` inside each shadow root — so a bare `<ul>`
+   * across a shadow boundary reports "list has children that are not listitem"
+   * even when the flattened tree is correct. `role="list"` is also what
+   * `<al-list>` does.
+   */
   render() {
     const componentClassNames = this.componentClassNames('al-c-menu', {
       'al-c-menu--simple': this.variant === 'simple',
@@ -368,7 +447,7 @@ export class ALMenu extends ALElement {
       <div class="${componentClassNames}">
         <ul
           class="al-c-menu__list"
-          role="menu"
+          role="list"
           aria-label=${this.label}
           @keydown=${this.handleOnKeydown}
         >

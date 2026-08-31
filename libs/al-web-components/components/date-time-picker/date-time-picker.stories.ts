@@ -1,13 +1,12 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import './date-time-picker';
 
 export default {
-  title: 'Molecules/Date & Time Picker',
+  title: 'Atoms/Form/Date & Time Picker',
   component: 'al-date-time-picker',
   tags: [ 'autodocs' ],
   parameters: {
@@ -16,7 +15,6 @@ export default {
       handles: ['onDateTimePickerOpen', 'onDateTimePickerClose', 'onDateTimePickerDateChange', 'onDateTimePickerTimeChange']
     },
   },
-  decorators: [ withActions ],
   args: {
     label: 'Select a Date & Time',
     fieldNote: 'This is a field note.',

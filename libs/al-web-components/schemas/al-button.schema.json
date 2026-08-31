@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-button.schema.json",
+  "title": "ALButton (al-button)",
+  "description": "Component: al-button",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-button",
+    "className": "ALButton",
+    "module": "components/button/button.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead).",
+        "name": ""
+      },
+      {
+        "description": "Content to display before the button text, typically an icon.",
+        "name": "before"
+      },
+      {
+        "description": "Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label=\"Open actions menu\" ariaControls=\"menu-id\"> <al-icon-dots-vertical slot=\"before\" iconTitle=\"Actions\"></al-icon-dots-vertical> </al-button>",
+        "name": "after"
+      }
+    ],
+    "events": [],
+    "cssParts": [
+      {
+        "name": "button",
+        "description": ""
+      }
+    ],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-button"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Type of button",
+          "type": "string",
+          "enum": [
+            "button",
+            "submit",
+            "reset"
+          ]
+        },
+        "variant": {
+          "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button used for secondary actions\n- **tertiary** renders the button with an outlined style\n- **bare** renders the button with a bare style\n- **danger** renders the button used for caution actions",
+          "type": "string",
+          "enum": [
+            "secondary",
+            "tertiary",
+            "bare",
+            "danger"
+          ]
+        },
+        "size": {
+          "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text",
+          "type": "string",
+          "enum": [
+            "sm",
+            "lg"
+          ]
+        },
+        "isPill": {
+          "description": "Pill shape\n- **true** renders the button with a fully rounded (pill) radius\n- **false** renders the button with the default action radius",
+          "type": "boolean"
+        },
+        "target": {
+          "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
+          "type": "string",
+          "enum": [
+            "_blank",
+            "_self",
+            "_parent",
+            "_top"
+          ]
+        },
+        "href": {
+          "description": "URL if this is an <a> element - this swaps <button> for <a>",
+          "type": "string"
+        },
+        "name": {
+          "description": "Indicates the name when submitted with form data.",
+          "type": "string"
+        },
+        "label": {
+          "description": "Indicates the aria label to apply to the button.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Indicates the value associated with the name when submitted with form data.",
+          "type": "string"
+        },
+        "isPressed": {
+          "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "mixed"
+              ]
+            }
+          ]
+        },
+        "isDisabled": {
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        "isAriaDisabled": {
+          "description": "Aria-disabled attribute\n- **true** marks the button disabled to assistive tech while leaving it\n  focusable and clickable — use when the button must stay reachable to\n  explain why it is unavailable\n- prefer `isDisabled` (native `disabled`) unless focusability is required",
+          "type": "boolean"
+        },
+        "isExpanded": {
+          "description": "Indicates this button is a toggle button and whether it is pressed or not.",
+          "type": "boolean"
+        },
+        "hideText": {
+          "description": "Visually hide button text (but text is still accessible to assistive technology)\n1. Use this for icon-only buttons for accessibility",
+          "type": "boolean"
+        },
+        "fullWidth": {
+          "description": "Full width button",
+          "type": "boolean"
+        },
+        "ariaControls": {
+          "description": "aria-controls attribute on the button\n1. Used for items like the buttons attached drawers",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

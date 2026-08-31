@@ -1,0 +1,76 @@
+---
+// Case-study detail — spec 2026-08-20-southleft-example-app, T4, corrected
+// T9 round 2. URL preserved exactly: /projects/<slug>. Ink (dark) mode by
+// default — verified against v5's real src/pages/projects/[slug].astro
+// (`<Base ... theme="dark">`); the previous "light, matching v5's
+// article/case-study convention" comment was wrong for case studies
+// specifically (insights articles DO default light — see that route).
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../lib/site';
+import { withBase } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('work');
+  return projects.map((project) => ({
+    params: { slug: project.id.replace(/\.md$/, '') },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.data.title,
+  about: project.data.client,
+  description: project.data.oneLiner || project.data.summary,
+  image: project.data.hero,
+  creator: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+};
+---
+
+<Base
+  title={project.data.title}
+  description={project.data.oneLiner || project.data.summary}
+  theme="dark"
+  ogImage={project.data.hero}
+  jsonLd={jsonLd}
+>
+  <div class="sl-container sl-section--tight">
+    <!-- al-breadcrumbs-item takes `href` directly — see the sibling insights
+         detail template for why (T8 a11y pass). -->
+    <al-breadcrumbs>
+      <al-breadcrumbs-item href={withBase('/work')}>Work</al-breadcrumbs-item>
+      <al-breadcrumbs-item isCurrent>{project.data.title}</al-breadcrumbs-item>
+    </al-breadcrumbs>
+    <div class="sl-container--prose" style="margin-top: var(--al-theme-space-xl);">
+      <al-chip variant="secondary">{project.data.client}</al-chip>
+      <al-heading tagName="h1" variant="display-sm" isBold={true} style="margin-top: var(--al-theme-space-sm);">{project.data.title}</al-heading>
+      {project.data.oneLiner && <al-text-block>{project.data.oneLiner}</al-text-block>}
+      {project.data.capabilities.length > 0 && (
+        <div style="margin-top: var(--al-theme-space-sm);">
+          <al-layout direction="row" wrap gap="xs" align="center">
+            {project.data.capabilities.map((c) => <al-chip>{c}</al-chip>)}
+          </al-layout>
+        </div>
+      )}
+    </div>
+  </div>
+
+  {project.data.hero && project.data.showHero && (
+    <div class="sl-container sl-section--tight">
+      <img src={project.data.hero} alt="" style="width: 100%; height: auto; display: block;" />
+    </div>
+  )}
+
+  <div class="sl-container sl-section">
+    <div class="sl-container--prose">
+      <al-text-block>
+        <Content />
+      </al-text-block>
+    </div>
+  </div>
+</Base>

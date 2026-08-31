@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-breadcrumbs.schema.json",
+  "title": "ALBreadcrumbs (al-breadcrumbs)",
+  "description": "Component: al-breadcrumbs",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-breadcrumbs",
+    "className": "ALBreadcrumbs",
+    "module": "components/breadcrumbs/breadcrumbs.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The breadcrumbs content, a set of breadcrumb items",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-breadcrumbs"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "description": "Label attribute\n- Provides an accessible name for the breadcrumbs element",
+          "type": "string"
+        },
+        "isTruncated": {
+          "description": "Truncated attribute\n- **true** Collapse items under a ALPanel based on the itemsBefore/AfterCollpase properties\n- **false** Do not collapse any breacrumb items",
+          "type": "boolean"
+        },
+        "itemsAfterCollapse": {
+          "description": "Number of items to display after the Panel in the Truncated treatment\n- Default is 1",
+          "type": "number"
+        },
+        "itemsBeforeCollapse": {
+          "description": "Number of items to display before the Panel in the Truncated treatment\n- Default is 1",
+          "type": "number"
+        },
+        "menuId": {
+          "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

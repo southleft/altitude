@@ -1,5 +1,7 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, query, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import { state, property, query, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import getFocusableElements from '../../directives/getFocusableElements';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -9,17 +11,33 @@ import { ALButton } from '../button/button';
 import { ALHeading } from '../heading/heading';
 import { ALIconClose } from '../icon/icons/close';
 import { ALFocusTrap } from '../focus-trap/focus-trap';
+import { DialogController } from '../../controllers/dialog';
 import styles from './dialog.scss';
 
 /**
  * Component: al-dialog
- * - **slot**: The main body of the dialog
- * - **slot** "trigger": The trigger that opens/closes the dialog
- * - **slot** "header": The header of the dialog that appears above the main slot
- * - **slot** "footer": The footer of the dialog that appears below the main slot
+ * @slot - The main body of the dialog
+ * @slot trigger - The trigger that opens/closes the dialog
+ * @slot header - The header of the dialog that appears above the main slot
+ * @slot footer - The footer of the dialog that appears below the main slot
+ *
+ * @event onDialogOpen - Fired when the dialog opens. Detail: `{ active, item }` — the new open state and the dialog element itself.
+ * @event onDialogClose - Fired when the dialog closes by any means, including backdrop click and Escape. Detail: `{ active, item }`.
+ * @event onDialogCloseButton - Fired only when the dialog's close button is activated. Detail: `{ active, item }`. Use `onDialogClose` to catch every close path.
  */
 export class ALDialog extends ALElement {
   static el = 'al-dialog';
+
+  /**
+   * T5.1 — headless DialogController consumed for ESC + click-outside.
+   * The host still owns open()/close() so the public event detail
+   * (`item: this`) is preserved.
+   */
+  protected dialogCtrl = new DialogController(this, {
+    closeOnEscape: true,
+    closeOnClickOutside: false, // host owns this via handleOnClickOutside
+    onRequestClose: () => this.close(),
+  });
 
   private elementMap = register({
     elements: [
@@ -115,6 +133,12 @@ export class ALDialog extends ALElement {
   accessor dialogTrigger: any;
 
   /**
+   * The element that had focus when the dialog was opened.
+   * - Used as the last-resort focus-restore target on close (WCAG 2.4.3)
+   */
+  private previouslyFocused: HTMLElement | null = null;
+
+  /**
    * Query the dialog trigger inner element
    */
   get dialogTriggerButton(): any {
@@ -147,6 +171,7 @@ export class ALDialog extends ALElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     globalThis.removeEventListener('mousedown', this.handleOnClickOutside, false); /* 1 */
+    this.setOutsideInert(false); /* 2 — never leave the page inert */
   }
 
   /**
@@ -155,7 +180,41 @@ export class ALDialog extends ALElement {
    * 2. Set aria-expanded on the trigger for A11y
    * 3. Set the width of the dialog container
    */
+  /**
+   * A11y — true when the slotted trigger contains its own focusable control, in
+   * which case the trigger wrapper must not add a second tab stop.
+   */
+  @state()
+  accessor triggerHasOwnFocusable: boolean = false;
+
+  /**
+   * A11y — decide whether the trigger wrapper needs its own tab stop.
+   *
+   * The wrapper is a plain `<div>` carrying `@click`. When the consumer slots a
+   * control that is already focusable (`<al-button slot="trigger">`) the click
+   * a keyboard press produces bubbles up to it and everything works. When they
+   * slot something inert (`<span slot="trigger">`) there was NO keyboard path
+   * at all — measured before this fix: the wrapper was not tabbable and Enter
+   * did nothing, so the component could not be opened without a mouse (WCAG
+   * 2.1.1). al-tooltip already solved this; the same shape is used here.
+   */
+  private syncTriggerFocusability() {
+    const slotted = Array.from(this.querySelectorAll('[slot="trigger"]'));
+    this.triggerHasOwnFocusable = slotted.some((el) => getFocusableElements(el).length > 0);
+  }
+
+  /** A11y — Enter/Space on the wrapper, for the inert-trigger case above. */
+  private handleTriggerKeydown(e: KeyboardEvent) {
+    if (this.triggerHasOwnFocusable) return;
+    if (e.code === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      this.open();
+    }
+  }
+
   async firstUpdated() {
+    await this.updateComplete;
+    this.syncTriggerFocusability();
     await this.updateComplete; /* 1 */
     this.setAria(); /* 2 */
     this.setWidth(); /* 3 */
@@ -264,9 +323,15 @@ export class ALDialog extends ALElement {
   * 3. Dispatch a custom event on open
   */
  public open(e?: MouseEvent) {
+  /* 2a — capture what had focus *before* the dialog steals it, so close() can
+     always put it back even when the dialog was opened programmatically with
+     no event and no slotted trigger. */
+  this.previouslyFocused = this.getActiveElement();
   this.isActive = true; /* 1 */
   /* 2 */
-  this.dialogTrigger = e?.target || this.slottedTrigger[0] || null;
+  this.dialogTrigger = e?.target || this.slottedTrigger?.[0] || null;
+  /* 2b — the rest of the page is inert for as long as the dialog is open. */
+  this.setOutsideInert(true);
   /* 3 */
   this.dispatch({
     eventName: 'onDialogOpen',
@@ -283,14 +348,15 @@ export class ALDialog extends ALElement {
    * 2. If the close event was a keyboard event, send focus to the trigger button
    * 3. Dispatch a custom event on close
    */
-  public close(e?: MouseEvent | KeyboardEvent) {
+  public close(_e?: MouseEvent | KeyboardEvent) {
     this.isActive = false; /* 1 */
+    this.setOutsideInert(false);
 
-    /* 2 */
-    const isKeyboardEvent = e?.detail === 0; /* 1 */
-    if (isKeyboardEvent) {
-      this.sendFocusToTrigger();
-    }
+    /* 2 — WCAG 2.4.3: focus must return to the invoking control on *every*
+       close path. This used to be gated on `e?.detail === 0` (a "was this a
+       keyboard event?" heuristic), so closing by click, by backdrop, or by
+       calling close() programmatically dropped focus to <body>. */
+    this.sendFocusToTrigger();
     /* 3 */
     this.dispatch({
       eventName: 'onDialogClose',
@@ -308,11 +374,31 @@ export class ALDialog extends ALElement {
    * 3. Focus the focusable element inside the trigger
    */
   sendFocusToTrigger() {
-    if (this.dialogTriggerButton) { /* 1 */
+    /* 1 — prefer the focusable element inside the trigger component, then the
+       trigger element itself (a plain <button> has no shadow root, so the old
+       `dialogTriggerButton` getter returned undefined and focus was dropped),
+       then whatever had focus before the dialog opened. */
+    const target: HTMLElement =
+      this.dialogTriggerButton ||
+      (this.dialogTrigger as HTMLElement) ||
+      this.previouslyFocused;
+
+    if (target && typeof target.focus === 'function') {
       setTimeout(() => { /* 2 */
-        this.dialogTriggerButton.focus(); /* 3 */
+        target.focus(); /* 3 */
       }, 1);
     }
+  }
+
+  /**
+   * The deepest active element, following shadow roots.
+   */
+  private getActiveElement(): HTMLElement | null {
+    let active = document.activeElement as HTMLElement | null;
+    while (active?.shadowRoot?.activeElement) {
+      active = active.shadowRoot.activeElement as HTMLElement;
+    }
+    return active;
   }
 
   render() {
@@ -325,7 +411,12 @@ export class ALDialog extends ALElement {
         ${
           this.slotNotEmpty('trigger') &&
           html`
-            <div class="al-c-dialog__trigger" @click=${this.open}>
+            <div
+            class="al-c-dialog__trigger"
+            tabindex=${ifDefined(this.triggerHasOwnFocusable ? undefined : '0')}
+            @click=${this.open}
+            @keydown=${this.handleTriggerKeydown}
+          >
               <slot name="trigger"></slot>
             </div>
           `
@@ -335,7 +426,8 @@ export class ALDialog extends ALElement {
             class="al-c-dialog__container"
             role="dialog"
             aria-labelledby=${this.ariaLabelledBy}
-            aria-modal=${this.isActive ? false : true}
+            aria-modal=${this.isActive ? 'true' : 'false'}
+            ?inert=${!this.isActive}
           >
             <div class="al-c-dialog__header">
               ${

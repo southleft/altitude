@@ -1,0 +1,424 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-logo",
+  "name": "Logo",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-logo",
+  "semantics": {
+    "element": "a",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "href",
+      "description": "The logo link URL",
+      "type": "string",
+      "rawType": "string",
+      "default": "'/'",
+      "bindings": {
+        "code": {
+          "attribute": "href"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "A11y — the accessible name of the logo mark.\n\nThe logo renders an inline `<svg>` inside an `<a>`; an `<svg>` with no\n`role`/name contributes nothing to name-from-content, so the link was\nnameless (axe `link-name`). Defaults to the wordmark the variant draws.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "The logo variant\n- **default** displays the Altitude logo\n- **southleft** displays the Southleft logo",
+      "type": "string",
+      "rawType": "'southleft'",
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The component content"
+    }
+  ],
+  "composition": {
+    "renders": []
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Brand=default",
+  "anatomy": {
+    "root": {
+      "tag": "a",
+      "cls": "al-c-logo",
+      "box": {
+        "w": 201.9,
+        "h": 28
+      },
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "flex-start",
+        "justify": "center"
+      },
+      "tokens": {
+        "color": {
+          "code": "--al-theme-color-content-default-weak",
+          "figma": "theme/color/content/default-weak"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xxs",
+          "figma": "theme/space/xxs"
+        }
+      },
+      "children": [
+        {
+          "tag": "svg",
+          "cls": "",
+          "box": {
+            "w": 201.7,
+            "h": 24
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": [
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 20.2,
+                "h": 23.5
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            },
+            {
+              "tag": "path",
+              "cls": "",
+              "box": {
+                "w": 173.9,
+                "h": 24
+              },
+              "layout": {
+                "display": "inline",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-logo__tagline",
+          "box": {
+            "w": 0,
+            "h": 0
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Brand=default",
+        "root": {
+          "tag": "a",
+          "cls": "al-c-logo",
+          "box": {
+            "w": 201.9,
+            "h": 28
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "center"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            }
+          },
+          "children": [
+            {
+              "tag": "svg",
+              "cls": "",
+              "box": {
+                "w": 201.7,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 20.2,
+                    "h": 23.5
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 173.9,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-logo__tagline",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Brand=southleft",
+        "root": {
+          "tag": "a",
+          "cls": "al-c-logo al-c-logo--southleft",
+          "box": {
+            "w": 190.1,
+            "h": 28
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "center"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            }
+          },
+          "children": [
+            {
+              "tag": "svg",
+              "cls": "",
+              "box": {
+                "w": 189.9,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": [
+                {
+                  "tag": "path",
+                  "cls": "",
+                  "box": {
+                    "w": 189.9,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "inline",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-logo__tagline",
+              "box": {
+                "w": 0,
+                "h": 0
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-xs-bold-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/logo/logo.ts",
+      "tagName": "al-logo",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

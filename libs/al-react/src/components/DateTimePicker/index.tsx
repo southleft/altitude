@@ -1,1 +1,3 @@
-export * from './DateTimePicker';
+'use client';
+
+export * from './DateTimePicker.js';

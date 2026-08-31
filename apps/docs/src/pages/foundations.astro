@@ -1,0 +1,14 @@
+---
+/**
+ * ROUTE ONLY — Foundations for the registry’s DEFAULT project.
+ *
+ * The body is `src/components/pages/FoundationsPage.astro`, shared with the
+ * `src/pages/[project]/` routes. This file exists to bind ONE design-system
+ * context to it; it holds no markup and no project name, so a new entry in
+ * `.altitude/ds-projects.json` produces a whole site without touching it.
+ */
+import FoundationsPage from '../components/pages/FoundationsPage.astro';
+import { DEFAULT_CONTEXT } from '../lib/context.mjs';
+---
+
+<FoundationsPage context={DEFAULT_CONTEXT} />

@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-field-note.schema.json",
+  "title": "ALFieldNote (al-field-note)",
+  "description": "Component: al-field-note",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-field-note",
+    "className": "ALFieldNote",
+    "module": "components/field-note/field-note.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The field note content",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-field-note"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isError": {
+          "description": "Error state\n1. Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n1. Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

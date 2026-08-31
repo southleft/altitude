@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-heading.schema.json",
+  "title": "ALHeading (al-heading)",
+  "description": "Component: al-heading",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-heading",
+    "className": "ALHeading",
+    "module": "components/heading/heading.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The heading content",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-heading"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "Heading variants\n- **default** renders a heading with the XL font styles\n- **sm** renders a heading with the SM font styles\n- **md** renders a heading with the MD font styles\n- **lg** renders a heading with the LG font styles\n- **display-sm** renders a heading with the Display SM font styles\n- **display-md** renders a heading with the Display MD font styles\n- **display-lg** renders a heading with the Display LG font styles",
+          "type": "string",
+          "enum": [
+            "display-lg",
+            "display-md",
+            "display-sm",
+            "lg",
+            "md",
+            "sm"
+          ]
+        },
+        "tagName": {
+          "description": "Heading tag name\n- **h1** renders an `h1` tag\n- **h2** renders an `h2` tag, this is the default\n- **h3** renders an `h3` tag\n- **h4** renders an `h4` tag\n- **h5** renders an `h5` tag\n- **h6** renders an `h6` tag",
+          "type": "string",
+          "enum": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6"
+          ]
+        },
+        "isBold": {
+          "description": "Is bold?\n- **true** Renders the heading with semibold font weight\n- **false** Renders the heading with regular font weight",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

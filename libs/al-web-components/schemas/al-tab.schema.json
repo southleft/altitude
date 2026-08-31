@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-tab.schema.json",
+  "title": "ALTab (al-tab)",
+  "description": "Component: al-tab",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-tab",
+    "className": "ALTab",
+    "module": "components/tab/tab.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The tab label",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onTabSelect",
+        "description": "Fired when this tab is selected. Detail: `{ value, index }` — the tab element itself and its index."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-tab"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isActive": {
+          "description": "Active state\n- **true** Renders a tab with selected/active state\n- **false** Renders a tab without selected/active state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n- **true** Renders a tab with the disabled property and state\n- **false** Renders a tab without the disabled property and state",
+          "type": "boolean"
+        },
+        "ariaId": {
+          "description": "ID used to connect the tab panel to the tab aria-controls",
+          "type": "string"
+        },
+        "ariaControls": {
+          "description": "Aria controls attribute\n- Set by `<al-tabs>` to the id of the matching `<al-tab-panel>`\n- **Not rendered as an attribute.** The panel's id lives inside\n  `<al-tab-panel>`'s shadow root while this tab's `<button>` lives inside\n  `<al-tab>`'s, and an IDREF cannot cross a shadow boundary — axe reported\n  every value as `aria-valid-attr-value`. `aria-controls` is a SHOULD for\n  `role=\"tab\"`, not a MUST; the selected state still comes through\n  `aria-selected`.",
+          "type": "string"
+        },
+        "idx": {
+          "description": "Index to track tab",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

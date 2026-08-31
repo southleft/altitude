@@ -1,1 +1,3 @@
-export * from './BreadcrumbsItem';
+'use client';
+
+export * from './BreadcrumbsItem.js';

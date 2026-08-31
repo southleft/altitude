@@ -1,0 +1,147 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #TABLE
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: block;
+    width: 100%;
+  }
+
+  /**
+   * Table
+   */
+  .al-c-table {
+    display: block;
+    width: 100%;
+  }
+
+  /**
+   * Scroll container
+   * 1. The overflow lives INSIDE the component — a wide table scrolls itself,
+   *    the page never scrolls.
+   */
+  .al-c-table__scroll {
+    width: 100%;
+    overflow-x: auto; /* 1 */
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius));
+
+    &:focus-visible {
+      @include al-focus;
+    }
+  }
+
+  /**
+   * The generated <table> element
+   */
+  .al-c-table__table {
+    width: 100%;
+    min-width: max-content;
+    border-collapse: collapse;
+    background-color: var(--al-theme-color-background-default);
+  }
+
+  /**
+   * Caption
+   */
+  .al-c-table__caption {
+    @include al-theme-typography-body-sm-bold;
+    text-align: start;
+    padding: var(--al-theme-space-sm) var(--al-theme-space-md);
+    color: var(--al-theme-color-content-default);
+  }
+
+  /**
+   * Shared cell styles (header + body)
+   */
+  .al-c-table__cell {
+    @include al-theme-typography-body-sm;
+    padding: var(--al-theme-space-sm) var(--al-theme-space-md);
+    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    color: var(--al-theme-color-content-default);
+    text-align: start;
+    white-space: nowrap;
+  }
+
+  /**
+   * Header cells
+   * 1. Sticks to the top of the scroll container while scrolling vertically
+   */
+  .al-c-table__cell--header {
+    @include al-theme-typography-body-sm-bold;
+
+    /**
+     * v2 metadata layer: column headers are mono, uppercase and tracked out —
+     * the same treatment as token names and timestamps. Declared AFTER the
+     * typography include on purpose: that mixin emits the `font` shorthand,
+     * which resets font-family, so a family declared above it is discarded.
+     */
+    font-family: var(--al-font-family-mono);
+    font-size: var(--al-font-size-12);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    padding: 0;
+    color: var(--al-theme-color-content-default-faint);
+    background-color: var(--al-theme-color-background-default-weak);
+    position: sticky; /* 1 */
+    inset-block-start: 0;
+    z-index: var(--al-z-index-100);
+  }
+
+  /**
+   * Sort button
+   * - Fills the header cell so the entire cell is the click target
+   */
+  .al-c-table__sort-button {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--al-theme-space-xxs);
+    width: 100%;
+    padding: var(--al-theme-space-sm) var(--al-theme-space-md);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--al-theme-color-content-default);
+    }
+
+    &:focus-visible {
+      @include al-focus;
+    }
+  }
+
+  .al-c-table__sort-icon {
+    flex: none;
+  }
+
+  /**
+   * Selection checkbox column
+   */
+  .al-c-table__select-cell {
+    width: size(5);
+    padding-inline: var(--al-theme-space-md);
+  }
+
+  /**
+   * Row states
+   */
+  .al-c-table__row {
+    &:hover .al-c-table__cell {
+      background-color: var(--al-theme-color-background-default-strong);
+    }
+
+    &.al-is-selected .al-c-table__cell {
+      background-color: var(--al-theme-color-background-default-stronger);
+    }
+  }
+
+  .al-c-table__row:last-child .al-c-table__cell {
+    border-block-end: none;
+  }
+}

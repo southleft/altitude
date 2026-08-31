@@ -1,0 +1,45 @@
+---
+/**
+ * The PROP / TYPE / DEFAULT table from the canvas's Button spec screen.
+ *
+ * Rows arrive already generated (registry.mjs → CEM `attributes`, joined to
+ * their backing field for the default). This component only renders them, so
+ * it is impossible for the table to describe a prop the library does not have.
+ * A `—` default means the CEM records no initializer, which is the truth for
+ * most of the library's properties, not a missing value.
+ */
+interface Props {
+  rows: {
+    name: string;
+    type: string;
+    default: string;
+    description: string;
+  }[];
+}
+
+const { rows } = Astro.props;
+---
+
+{
+  rows.length ? (
+    <div class="spec-table spec-table--props">
+      <div class="spec-table__head">
+        <span>PROP</span>
+        <span>TYPE</span>
+        <span>DEFAULT</span>
+      </div>
+      {rows.map((row) => (
+        <div class="spec-table__row">
+          <span class="spec-table__name">{row.name}</span>
+          <span class="spec-table__type">
+            {row.type}
+            {row.description && <span class="spec-table__desc">{row.description}</span>}
+          </span>
+          <span class="spec-table__default">{row.default}</span>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p class="empty-note">THIS COMPONENT DECLARES NO PUBLIC PROPERTIES IN THE MANIFEST.</p>
+  )
+}

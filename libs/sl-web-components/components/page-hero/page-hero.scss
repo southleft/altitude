@@ -1,0 +1,92 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL PAGE HERO
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * The band, and only the band.
+   *
+   * 1. The vertical rhythm is the entire layout opinion this component holds.
+   *    It is a band, so it has a height; everything ABOVE this line — the
+   *    stacking, the gaps, where the CTAs sit — belongs to the `<al-layout>`
+   *    inside, which is why there is no `display: flex` anywhere in this file.
+   * 2. Declared on this element rather than on the nested `<al-layout>`
+   *    because al-layout's `:host` is `display: contents` — padding set on it
+   *    is dropped by the browser, never applied. (The site hit exactly this
+   *    and left a note about it in `PageHero.astro:15-16`.) al-layout does
+   *    expose `--al-layout-padding` for its own inset, but the band's rhythm
+   *    is this component's chrome, not the stack's.
+   */
+  /**
+   * 3. The band owns the page MEASURE, not just the rhythm. The site currently
+   *    writes `<div class="sl-container sl-section--tight">` around this hero
+   *    at 25 call sites across 19 files to get exactly these three
+   *    declarations. Owning them here is what deletes that wrapper — the
+   *    numbers are the site's own `.sl-container` (85rem cap, fluid gutter).
+   */
+  .sl-c-page-hero {
+    padding-block: var(--al-page-hero-padding-block, clamp(3rem, 6vw, 5rem)); /* 1, 2 */
+    inline-size: 100%; /* 3 */
+    max-inline-size: var(--al-page-hero-max-width, 85rem); /* 3 */
+    margin-inline: auto; /* 3 */
+    box-sizing: border-box;
+    padding-inline: var(--al-page-hero-padding-inline, clamp(1.25rem, 4vw, 3rem)); /* 3 */
+  }
+
+  /**
+   * 4. The eyebrow hugs its content instead of stretching to the stack's
+   *    inline size.
+   *
+   *    THE WRAPPER IS LOAD-BEARING. `al-chip`'s `:host` is `display: contents`,
+   *    so the `<al-chip>` element generates no box at all — it is never a flex
+   *    item, and `align-self` set directly on it computes to `start` and then
+   *    does exactly nothing (verified in the browser: the property applied,
+   *    the element measured 0px wide, and the chip's own inner box stretched
+   *    full-width as a hoisted child of the layout). A plain `<div>` DOES
+   *    generate a box, so it becomes the flex item and takes the alignment.
+   *
+   *    The same trap applies to any `display: contents` element — most of
+   *    Altitude's wrappers are — so reach for a real box whenever a rule has
+   *    to act on the item itself rather than on its contents.
+   */
+  /*
+   * Centred variant. `text-align` alone is not enough: the eyebrow wrapper below
+   * pins `align-self: start`, so the chip would stay hard left while the heading
+   * centred around it.
+   */
+  :host([align='center']) {
+    text-align: center;
+  }
+
+  :host([align='center']) .sl-c-page-hero__eyebrow {
+    align-self: center;
+  }
+
+  .sl-c-page-hero__eyebrow {
+    align-self: start; /* 4 */
+  }
+
+  .sl-c-page-hero__dek {
+    font-size: $sl-text-lead;
+    line-height: 1.55;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * 4. `display: contents` so each node the page slots in becomes its own
+   *    child of the stack, rather than the whole slot collapsing into a single
+   *    item. This matches what the page got when the markup was inline
+   *    (`PageHero.astro:22`, a bare `<slot />` inside the layout) — without
+   *    it, two slotted CTAs would share one stack row and the gap between
+   *    them would silently stop working.
+   */
+  slot {
+    display: contents; /* 4 */
+  }
+}

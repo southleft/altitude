@@ -1,0 +1,77 @@
+{
+  "name": "@southleft/sl-web-components",
+  "description": "The Southleft brand design system — opinionated section components built on Altitude",
+  "version": "1.0.0",
+  "//private": "HELD BACK FROM THE v2 RELEASE, and `private` is the only field that actually holds it. The `.changeset/config.json` ignore list does NOT: `changeset publish` filters on `private` alone (@changesets/cli 2.31.0, dist/changesets-cli.cjs.js:1041 `packages.filter(pkg => !pkg.packageJson.private)`) and then publishes every remaining package whose local version is absent from the registry. This package has never been published at any version, so a v2 release would have pushed it to npm as a side effect of shipping the two Altitude libraries — a decision nobody made. `ignore` governs VERSIONING only, so keep the entry there too. To ship this package: delete this key, drop the ignore entry, add a changeset, and add it back to RELEASED in scripts/check-publishable.mjs (which now asserts this flag from the HELD side).",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southleft/altitude.git",
+    "directory": "libs/sl-web-components"
+  },
+  "homepage": "https://altitude.pages.dev/docs",
+  "bugs": {
+    "url": "https://github.com/southleft/altitude/issues"
+  },
+  "keywords": [
+    "design-system",
+    "web-components",
+    "custom-elements",
+    "lit",
+    "altitude",
+    "southleft"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "//": "The `types` and `default` targets sit in DIFFERENT subtrees and that is not a typo. Vite writes the JS to `dist/components/…` (vite.config.mjs entry map). `tsc` writes the declarations one level deeper, under `dist/sl-web-components/components/…`, because this package's components import Altitude through RELATIVE paths (`../../../al-web-components/components/ALElement`), which pulls those sources into the tsc program and makes the inferred rootDir `libs/`, not `libs/sl-web-components`. Both halves were pointed at the vite layout, where no .d.ts has ever existed — the same class of break as the note on al-web-components' root export, and it was invisible while this package was `\"private\": true`. The emitted tree is internally consistent (`dist/sl-web-components/**` re-imports `dist/al-web-components/**` at exactly those relative depths), so it is the map that was wrong, not the emit. If those relative imports are ever replaced by the `@southleft/al-web-components` specifier, rootDir collapses to this package and these two paths must lose the `sl-web-components/` segment.",
+      "types": "./dist/sl-web-components/components/bundle.d.ts",
+      "default": "./dist/components/bundle/bundle.js"
+    },
+    "./components/*": {
+      "types": "./dist/sl-web-components/components/*/*.d.ts",
+      "default": "./dist/components/*/*.js"
+    },
+    "./custom-elements.json": "./custom-elements.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "custom-elements.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "//dependencies": "`workspace:^` rather than `workspace:*`: pnpm rewrites `*` to an EXACT pin at pack time, so this package would ship depending on @southleft/al-web-components@<one exact version> and force a duplicate install for any consumer on a later 2.x. al-web-components and al-react are in the changesets `fixed` group and always release together, so an exact pin is harmless there; this package is not in that group.",
+  "scripts": {
+    "//build": "Wired into the root `build` (and so into `build:all`) as of 2026-08-23. The Southleft Storybook that used to be the only consumer was retired, and apps/docs took its place: /docs/southleft documents this package as Southleft's BRAND LAYER (`brandLibrary` in .altitude/ds-projects.json) and imports `dist/components/bundle/bundle.js` so its playgrounds upgrade. The docs build therefore FAILS if this package has not been built — which is why it can no longer sit outside the pipeline. apps/southleft still does not import it (spec 2026-08-22-southleft-brand-design-system-as-a-linked-layer-on-altitude, T11).",
+    "build": "del-cli dist && vite build -c vite.config.mjs && tsc && pnpm run build:custom-elements.json",
+    "//build:custom-elements.json": "Part of `build` (above) since the committed custom-elements.json is the SOLE source for the /docs/southleft component pages — a stale CEM ships silently wrong docs. CI diffs the regenerated file against the committed copy (repo-hygiene job).",
+    "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir .",
+    "lint": "eslint components --ext .ts"
+  },
+  "dependencies": {
+    "@southleft/al-web-components": "workspace:^",
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.4",
+    "del-cli": "^6.0.0",
+    "sass": "^1.101.0",
+    "typescript": "^5.6.3",
+    "vite": "^7.1.12"
+  },
+  "//sideEffects": "Source paths as well as dist, for the same reason as @southleft/al-web-components — see the note there. Every component module here ends in a `customElements.define` guarded by `alAutoRegistry`; if the bundler thinks the module is side-effect-free it drops the whole import and the element silently never upgrades in a production Storybook build.",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss",
+    "./components/*/*.ts",
+    "./components/bundle.ts",
+    "./dist/components/**/*.js"
+  ],
+  "author": "Southleft, LLC",
+  "customElements": "custom-elements.json"
+}

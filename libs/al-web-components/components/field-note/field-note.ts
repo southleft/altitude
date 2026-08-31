@@ -5,7 +5,7 @@ import styles from './field-note.scss';
 
 /**
  * Component: al-field-note
- * - **slot**: The field note content
+ * @slot - The field note content
  */
 export class ALFieldNote extends ALElement {
   static el = 'al-field-note';

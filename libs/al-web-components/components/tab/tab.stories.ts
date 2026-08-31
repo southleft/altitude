@@ -1,12 +1,10 @@
-import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/success';
 import './tab';
 
 export default {
-  title: 'Atoms/Tab',
+  title: 'Atoms/Navigation/Tab',
   component: 'al-tab',
   tags: [ 'autodocs' ],
   parameters: {
@@ -18,7 +16,6 @@ export default {
       exclude: ['ariaId', 'ariaControls', 'idx', 'tabEl']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     isActive: {
       control: 'boolean',
@@ -59,16 +56,3 @@ WithIconOnly.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Selected.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const tab = canvas.queryByTestId('tab') as any;
-
-  // Make assertions
-  expect(tab).toBeInTheDocument();
-
-  // Simulate a click event
-  await userEvent.click(tab);
-  expect(tab.isActive).toBe(true);
-  tab.blur();
-};

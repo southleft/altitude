@@ -1,0 +1,35 @@
+{
+  "$comment": "Per-component Figma-generation config (scripts/contracts/figma/component-config.mjs). anatomyCase: sample unchecked+label-shown. caseAxes: measured 'Label' dimension pairs with hideLabel (real set's Label=Hidden/Shown axis); Checked auto-maps via isChecked. glyphs: the check and indeterminate-dash paths are copied VERBATIM from checkbox.scss's own ::before mask data-URIs (lines ~59-64 check, ~188 dash) and layered exactly as the CSS does: the ::before covers the box in border-primary-default (boxColor) with the mark as a mask cutout showing the content-primary-weak bg through (color) — scss lines ~59-64. Walkthrough, 2026-08-26.",
+  "anatomyCase": "Checked=Off,Label=shown",
+  "caseAxes": [
+    {
+      "dimension": "Label",
+      "prop": "hideLabel",
+      "property": "Label",
+      "valueMap": {
+        "hidden": "Hidden",
+        "shown": "Shown"
+      }
+    }
+  ],
+  "glyphs": [
+    {
+      "class": "al-c-checkbox__custom-check",
+      "when": {
+        "Checked": "On"
+      },
+      "svg": "<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><path d='m14.88,6.38l-7,7c-.49.49-1.28.49-1.77,0l-3-3c-.49-.49-.49-1.28,0-1.77.49-.49,1.28-.49,1.77,0l2.12,2.12,6.12-6.12c.49-.49,1.28-.49,1.77,0,.49.49.49,1.28,0,1.77Z' fill='white'/></svg>",
+      "color": "theme/color/content/primary-weak",
+      "boxColor": "theme/color/border/primary-default"
+    },
+    {
+      "class": "al-c-checkbox__custom-check",
+      "when": {
+        "Checked": "Indeterminate"
+      },
+      "svg": "<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><path d='m12.91,10.25H4.91c-.69,0-1.25-.56-1.25-1.25s.56-1.25,1.25-1.25h8c.69,0,1.25.56,1.25,1.25s-.56,1.25-1.25,1.25Z' fill='white'/></svg>",
+      "color": "theme/color/content/primary-weak",
+      "boxColor": "theme/color/border/primary-default"
+    }
+  ]
+}

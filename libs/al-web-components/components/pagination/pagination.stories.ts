@@ -1,10 +1,9 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './pagination';
 
 export default {
-  title: 'Molecules/Pagination',
+  title: 'Molecules/Navigation/Pagination',
   component: 'al-pagination',
   tags: [ 'autodocs' ],
   parameters: {
@@ -14,7 +13,6 @@ export default {
     },
     layout: 'centered'
   },
-  decorators: [ withActions ],
   args: {
     totalRecords: '200',
     pageSize: '20'

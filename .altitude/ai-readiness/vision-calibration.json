@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "$comment": "T10, spec 2026-08-29-parity-judgement-gates-and-evals (R6). The CALIBRATION LEDGER for a vision judge over Figma-vs-site image pairs. It is EMPTY on purpose, and that is the finding: the labelled cases needed to calibrate such a judge do not exist in this repository. Until this file has enough confirmed cases to clear `threshold.minAgreement`, scripts/ai-readiness/check-vision-calibration.mjs refuses to certify a judge, and no vision model may be used to screen visual fidelity. Numbers gate; a model screens only what the comparator cannot express, and only after it has been shown to agree with known answers.",
+  "why_empty": [
+    ".altitude/visual-compare/auto/ is GITIGNORED (.gitignore, `.altitude/visual-compare/auto`) — the PNGs are run output, so nothing there survives a clone and none of it can serve as a tracked answer key.",
+    "The one documented visual defect with a known answer — al-toggle's track rendering as a 'giant square' (auto/REPORT.md, 2026-08-26) — no longer has an image. The fix regenerated the PNG in place, so the BEFORE state was overwritten by its own repair. The label survives in prose; the evidence does not.",
+    "That is the general failure, not a one-off: this repo repairs and regenerates images in place, so every visual defect erases its own evidence as it is fixed. A calibration set cannot be assembled retroactively — it has to be captured at the moment a defect is found."
+  ],
+  "threshold": {
+    "minCases": 12,
+    "minAgreement": 0.75,
+    "$comment": "minAgreement 0.75 is the low end of the 75-90% human-agreement band the LLM-as-judge literature treats as the bar for trusting a judge at all. minCases 12 is this repo's own floor rather than a cited one: below roughly a dozen cases a single lucky call moves the agreement figure by more than the threshold's width, so the number would not mean anything. Both are deliberately conservative — a judge admitted too early screens with authority it has not earned."
+  },
+  "captureProcedure": [
+    "When a visual defect is found in a generated set, BEFORE fixing it: copy the defective PNG to .altitude/ai-readiness/vision-cases/<slug>.before.png and commit it. It is small, and it is the only moment the evidence exists.",
+    "Add a case below: { id, image, expectedVerdict: 'defective' | 'correct', defectAxis, description, source }.",
+    "After the fix, copy the corrected render to <slug>.after.png and add it as a second case with expectedVerdict 'correct'. A judge that flags everything is as useless as one that flags nothing, so every defect should contribute BOTH labels.",
+    "Re-run `pnpm run evals:vision-calibration`. It reports how far the set still is from the threshold."
+  ],
+  "axes": {
+    "$comment": "The dimensions a vision judge would be asked to score, each separately. Scoring each axis in isolation rather than asking for one holistic number is the documented way to keep a model judge consistent — and it is also what makes disagreement diagnosable rather than just low.",
+    "colour": "do the fills read as the same colour family and weight?",
+    "glyph": "is the same mark/icon present, and is it the right one?",
+    "labelText": "do the visible words match?",
+    "hierarchy": "does the same element read as most prominent?"
+  },
+  "cases": []
+}

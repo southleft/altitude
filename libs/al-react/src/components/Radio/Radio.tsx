@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALRadio as ALWebRadio } from 'al-web-components/dist/components/radio/radio';
-import register from 'al-web-components/dist/directives/register';
+import { ALRadio as ALWebRadio } from '@southleft/al-web-components/components/radio';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebRadio.el, ALWebRadio],
@@ -13,5 +15,7 @@ export const ALRadio = createComponent({
   react: React,
   tagName: elementMap.get(ALWebRadio.el),
   elementClass: ALWebRadio,
-  events: {}
+  events: {
+    onRadioChange: 'onRadioChange'
+  }
 });

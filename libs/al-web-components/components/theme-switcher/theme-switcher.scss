@@ -1,4 +1,4 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /*------------------------------------*\
   #THEME-SWITCHER
 \*------------------------------------*/
@@ -6,4 +6,7 @@
 /**
  * Theme-Switcher
  */
-.al-c-theme-switcher {}
+
+@layer al.component {
+  .al-c-theme-switcher {}
+}

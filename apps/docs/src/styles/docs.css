@@ -1,0 +1,1678 @@
+/*
+ * Altitude docs — design language.
+ *
+ * Ported verbatim from the approved Claude Design canvas at
+ * .mm/specs/2026-08-22-altitude-docs-site/visuals/altitude-ds-site.dc.html.
+ * Every custom property below appears in that file's `<helmet>` block with
+ * the same value; the type ramp, the hairline rules, the mono uppercase
+ * micro-labels and the 264px sidebar are its measurements, not new ones.
+ *
+ * Two font families, matching the v2 canvas: Public Sans (fetched by
+ * @southleft/al-web-components/css/main.css, styles/main.scss:11) and IBM Plex Mono
+ * (self-hosted in public/fonts/, same files and provenance as
+ * apps/southleft/public/fonts/README.md). IBM Plex Sans is ALSO imported below:
+ * it is no longer the base face, but southleft-branded previews on this site
+ * still resolve to it through that brand's `{font-family.plex}` pin.
+ *
+ * Dark mode is `[data-theme]` on <html>, exactly as the canvas drives it.
+ */
+
+/* ------------------------------------------------------------- typefaces */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/docs/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/docs/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+ * Agrandir — the `southleft` brand's display face, reached ONLY through the
+ * brand token `font-family.secondary` (no docs rule sets `font-family:
+ * Agrandir`). Without this registration every southleft-branded preview and
+ * heading under `<al-theme brand="southleft">` silently fell back to
+ * `sans-serif` — the single largest docs↔site divergence (spec
+ * 2026-08-28-southleft-docs-parity-with-example-site, R1).
+ *
+ * Declared unconditionally because @font-face is inert until rendered text
+ * resolves to the family: altitude-brand pages never fetch it. The file is
+ * copied from the owning app at build time (scripts/copy-brand-assets.mjs),
+ * same one-source-of-truth arrangement as public/logos.
+ */
+@font-face {
+  font-family: 'Agrandir';
+  src:
+    url('/docs/brand-fonts/Agrandir-Variable.woff2') format('woff2-variations'),
+    url('/docs/brand-fonts/Agrandir-Variable.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------- tokens */
+
+/*
+ * THE BOOT PALETTE, and it is no longer just "the canvas's colours".
+ *
+ * Everything below is overridden on `al-theme` (see the brand host further
+ * down) the moment that element UPGRADES — but `--al-theme-color-*` only
+ * resolve per-brand once it has, and the registry bundle is deferred to the
+ * end of <body>. So for the first paint of every page, THESE values are what
+ * the reader sees.
+ *
+ * That makes them the flash: any literal here that differs from what the
+ * brand resolves to is a colour the page visibly changes out of. They are
+ * therefore pinned to the DEFAULT PROJECT'S resolved values rather than to
+ * the canvas's originals — measured, not guessed — so the flagship site
+ * boots on exactly what it ends on and has no flash at all. A non-default
+ * brand still shifts (Southleft: #e2e0da → #f3f1eb light, #101010 → #181714
+ * dark), which is what the boot blur in `Shell.astro` is for.
+ *
+ * Changing a brand's background tokens therefore means re-checking these.
+ */
+:root {
+  --bg: #f7f6f3;
+  --bg2: #ffffff;
+  --fg: #191813;
+  --fg-weak: #6e6b60;
+  --line: #d2cfc6;
+  --line-weak: #e7e5de;
+  --blue: #2e5ce6;
+  --blue-hover: #2549c4;
+  --blue-ink: #0e1834;
+  --blue-soft: #e9eefc;
+
+  /*
+   * Status tones. Named here rather than inline at the rule sites because
+   * fourteen scattered hex literals is exactly what `lint:styles` exists to
+   * stop — a colour nobody can find and nobody can restate per brand.
+   *
+   * These are deliberately NOT yet `var(--al-theme-color-content-success-*)`.
+   * The design system's semantic status tokens exist and main.css is loaded,
+   * but they switch on `<al-theme mode>` while this site switches on
+   * `[data-theme]`, so binding to them today would freeze the status colours
+   * in light mode. Reconcile the two switches, then replace these three pairs
+   * with the semantic tokens; the values below are the canvas's.
+   */
+  --status-ok: #157b46;
+  --status-warn: #906500;
+  --status-gap: #cc2b36;
+
+  /*
+   * Two tones that stay fixed across both themes, so they live here rather
+   * than being restated per rule. The code block is deliberately dark in
+   * light mode too (it is the canvas's treatment), and --on-blue is the
+   * foreground that sits on the accent, used by ::selection.
+   */
+  --code-bg: #191813;
+  --code-fg: #f1f0ea;
+  --on-blue: #ffffff;
+  --al-bg-default: #ffffff;
+  --al-bg-strong: #f7f6f3;
+  --al-bg-stronger: #eceae4;
+  --al-content: #191813;
+  --al-content-weak: #6e6b60;
+  --al-border: #d2cfc6;
+  --al-border-weak: #e7e5de;
+  --al-shadow: 0 8px 24px 0 rgb(25 22 14 / 16%);
+
+  --sans: 'Public Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --sidebar-w: 264px;
+  --pad-x: 64px;
+  --ease: cubic-bezier(0.15, 0.99, 0.18, 0.99);
+}
+
+/* The dark half of the boot palette — same rule: the default brand's resolved
+   values, so its dark pages boot on their final colours. */
+[data-theme='dark'] {
+  --bg: #131311;
+  --bg2: #1d1d1a;
+  --fg: #f1f0ea;
+  --fg-weak: #a5a399;
+  --line: #3c3c35;
+  --line-weak: #2c2c28;
+  --blue: #7290ff;
+  --blue-hover: #8ea6ff;
+  --blue-soft: #252e4d;
+  --al-bg-default: #1d1d1a;
+  --al-bg-strong: #2c2c28;
+  --al-bg-stronger: #3c3c35;
+  --al-content: #f1f0ea;
+  --al-content-weak: #a5a399;
+  --al-border: #3c3c35;
+  --al-border-weak: #2c2c28;
+  --al-shadow: 0 8px 8px rgb(0 0 0 / 60%), 0 4px 4px rgb(0 0 0 / 60%), 0 2px 2px rgb(0 0 0 / 60%);
+  --status-ok: #4cd98a;
+  --status-warn: #f5b942;
+  --status-gap: #ff6d76;
+}
+
+/* ------------------------------------------------------------------ base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/*
+ * Every filter on this site (sidebar component filter, components index,
+ * icons search) hides misses by setting the `hidden` ATTRIBUTE. The UA's
+ * `[hidden] { display: none }` has attribute-selector specificity, so any
+ * author `display:` on the same element (`.sidebar__link { display: block }`,
+ * `.icon-tile { display: flex }`) silently wins and nothing disappears.
+ * Re-assert it once, with !important, so `hidden` always means hidden.
+ */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * `@southleft/al-web-components/css/main.css` is loaded for the token layer the live
+ * component previews need, and its `styles/core/base.scss` sets
+ * `body { display:flex; color; background; font }` UNLAYERED (core/layers.scss
+ * only declares the layer ORDER; base.scss is not wrapped in one). Equal
+ * specificity means source order would decide, so the docs chrome re-asserts
+ * its own page frame at `html body` — one notch higher — rather than relying
+ * on which stylesheet the bundler happens to emit second.
+ */
+html body {
+  display: block;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 16px/24px var(--sans);
+}
+
+/*
+ * THE BRAND HOST. Shell.astro wraps the whole shell in `<al-theme brand=…>`,
+ * which sets that design system's tokens on `:host` and inherits them into the
+ * light DOM inside it. Two rules matter here:
+ *
+ * 1. `display: contents` in the LIGHT dom. The element's own shadow stylesheet
+ *    says the same, but only once it upgrades; without this, an un-upgraded
+ *    `<al-theme>` is an inline box wrapping a grid, and the shell reflows on
+ *    hydration.
+ *
+ * 2. The accent, re-declared ON THE HOST rather than on `:root`. Custom
+ *    properties substitute where they are DECLARED, so `--blue:
+ *    var(--al-theme-color-content-primary-default)` written at `:root` would
+ *    resolve against the base bundle and inherit that frozen value into every
+ *    brand. Declared on `al-theme` — an element the brand's own `:host` block
+ *    applies to — it resolves against the BRANDED value, so the docs chrome's
+ *    accent is the design system's accent, for every project, from one rule.
+ *    The fallbacks are the base bundle's values, which is what the reference
+ *    brand resolves to anyway: this changes nothing for it.
+ */
+al-theme {
+  display: contents;
+  --blue: var(--al-theme-color-content-primary-default, #4375ff);
+  --blue-hover: var(--al-theme-color-content-primary-strong, #6b93ff);
+
+  /*
+   * PAGE SURFACES, bound to the brand by the same mechanism and for the same
+   * reason as the accent above — declared HERE and not at `:root`, or they
+   * would resolve against the base bundle and every design system would get
+   * the reference brand's neutrals.
+   *
+   * This is what made the southleft docs render on the same #101010 as
+   * altitude while southleft.com rendered warm brown: the chrome background
+   * was a literal in this file, so the one thing a reader uses to tell two
+   * design systems apart was the one thing that could not vary.
+   *
+   * WHY `background-default-weak` IS THE PAGE COLOUR, rather than a judgement
+   * call: the token layer says so itself —
+   * `--al-theme-color-body-background: var(--al-theme-color-background-default-weak)`
+   * (styles/dist/css/theme/tokens-{light,dark}.css:436, both modes).
+   *
+   * WHY THE LEAF AND NOT THAT ALIAS. `body-background` is declared only in the
+   * unscoped `:root` bundle and is NOT restated in `<al-theme>`'s
+   * `:host([mode])` partials (verified: no match in dist-v5/scss/host/). This
+   * site TOGGLES mode at runtime, so the alias would resolve once and then sit
+   * still while the toggle moved everything around it. The `-weak` leaf is
+   * restated per mode, which is why apps/southleft/src/styles/layout.css:98
+   * reaches past the same alias for the same reason.
+   *
+   * WHAT MOVES, measured against each shell's own background:
+   *   altitude light  #ffffff → #e2e0da   body text 19.03→14.41, weak 6.19→4.69
+   *   altitude dark   #101010 → #101010   unchanged, to the byte
+   *   southleft light #ffffff → #f3f1eb   body text 19.03→16.85, weak 6.19→5.48
+   *   southleft dark  #101010 → #181714   body text 17.89→16.86, weak 8.77→8.27
+   *
+   * Every ratio still clears AA for normal text; 4.69 (weak body copy on the
+   * altitude light shell) is the tight one and the number to re-check before
+   * anything else in this file gets darker. `--fg` / `--line` stay literal on
+   * purpose — this is the backgrounds-only half of the brand, so the type
+   * ramp and hairlines keep the canvas's neutrals.
+   */
+  --bg: var(--al-theme-color-background-default-weak, #ffffff);
+  --bg2: var(--al-theme-color-background-default, #f8f8f6);
+
+  /*
+   * TYPE AND RULES, on the same footing as the surfaces above.
+   *
+   * `--line` IS A CONTENT TOKEN, and specifically the -weak one. Two wrong
+   * answers were tried first and both are instructive:
+   *
+   *   `content-default` — matches the canvas exactly, because `--line` and
+   *   `--fg` were the same literal in both modes. It survives on Altitude,
+   *   whose design language IS ink rules, and it is wrong the moment a brand
+   *   is warm: on the Southleft dark site it resolves #faf9f8, so a
+   *   near-white hairline runs down a #181714 page. Matching the canvas is
+   *   not the goal; the canvas WAS one brand.
+   *
+   *   `border-default-strong` — the name a structural rule should obviously
+   *   take, and it fails hardest: Altitude publishes #bdb39e for it in BOTH
+   *   modes, which is 1.57:1 on the light Altitude shell. The rules would all
+   *   but vanish on the flagship site. `border-default` is worse still,
+   *   failing in three of the four brand×mode combinations.
+   *
+   * Measured against each shell's own background:
+   *                          alt light  alt dark  sl light  sl dark
+   *   content-default          14.41     17.89     15.87    17.05
+   *   border-default-strong     1.57      9.16      8.44     6.36
+   *   content-default-weak      8.62      9.16      6.32     6.36   ← this
+   *
+   * It is the only candidate strong enough to read as structure in all four,
+   * and it lands #a49981 on Southleft dark — the warm brown that brand's
+   * rules are supposed to be. The cost is that `--line` and `--fg-weak` now
+   * resolve to the same value; at 1px that reads as a rule and at 16px as
+   * secondary copy, so the collision is not worth a second token.
+   *
+   * `--al-border*` below are the mid-greys, and they take the border tokens.
+   *
+   * `--fg-weak` is the one judgement call: no token matches #616161/#b0b0b0,
+   * so it takes `content-default-weak` and gets DARKER in light mode
+   * (#616161 → #3a3a3a, 4.69:1 → 8.62:1). Better contrast, slightly less
+   * separation from `--fg` — if secondary copy now reads too close to
+   * primary, that is the trade and this is the line to revisit.
+   */
+  --fg: var(--al-theme-color-content-default, #101010);
+  --fg-weak: var(--al-theme-color-content-default-weak, #3a3a3a);
+  --line: var(--al-theme-color-content-default-weak, #3a3a3a);
+  --line-weak: var(--al-theme-color-border-default-weak, #d9d9d9);
+
+  /*
+   * The `--al-*` mirrors were LITERAL COPIES of these very tokens — every one
+   * of the seven matched its token exactly, in both modes (verified against
+   * the resolved values before this edit). So this is a pure refactor for the
+   * reference brand and a real fix for every other one: the theme switch and
+   * the outline buttons were painting Altitude's greys on Southleft's site.
+   */
+  --al-bg-default: var(--al-theme-color-background-default, #e9e7e2);
+  --al-bg-strong: var(--al-theme-color-background-default-strong, #f2f1ee);
+  --al-bg-stronger: var(--al-theme-color-background-default-stronger, #f4f3f1);
+  --al-content: var(--al-theme-color-content-default, #101010);
+  --al-content-weak: var(--al-theme-color-content-default-weak, #3a3a3a);
+  --al-border: var(--al-theme-color-border-default, #b0b0b0);
+  --al-border-weak: var(--al-theme-color-border-default-weak, #d9d9d9);
+
+  /*
+   * `--status-gap` migrates and its two siblings CANNOT, which is a fact about
+   * the token set rather than a preference. The DS's status tokens do not vary
+   * by mode — `content-success-default` is #36b370 on a white page and on a
+   * black one. That is fine for the gap tone, whose literal was mode-invariant
+   * too (#f05735 in both, and identical to the token). It is fatal for the
+   * other two, whose literals DO change per mode. Measured against the light
+   * shell, migrating them would have moved:
+   *   --status-ok    #2f8f4e 3.08:1  →  #36b370 2.03:1
+   *   --status-warn  #b4761a 2.87:1  →  #ffab00 1.44:1
+   * The `-weak` variants invert the problem: 13.9:1 in light, 1.04:1 in dark.
+   * So they stay literal until the DS ships per-mode status tones.
+   *
+   * SEPARATELY, and pre-existing: 3.08 and 2.87 are already under the 4.5:1
+   * these need as TEXT (`.status--*` sets `color`). Not introduced here and
+   * not fixed here — worth its own issue.
+   */
+  --status-gap: var(--al-theme-color-content-danger-default, #f05735);
+
+  /*
+   * THE ACCENT'S COMPANIONS, brand-bound the same way (spec
+   * 2026-08-28-southleft-docs-parity-with-example-site, R2).
+   *
+   * `--blue-ink` is the text that sits ON the accent surface (.btn). Its
+   * literal #000b29 IS `--al-color-brand-blue-900`, which is exactly what
+   * `content-primary-weak` resolves to for the reference brand — and
+   * `content-primary-weak` on `background-primary-default` is the pairing
+   * al-button's own primary variant ships (button.scss:26-27). So this is a
+   * pure refactor for altitude and a real fix for southleft, whose accent
+   * button was painting the brand's red under ALTITUDE'S navy text.
+   *
+   * `--blue-soft` was blue-100 (light) / blue-800 (dark) — ramp members with
+   * no semantic rung, and no brand-generic "soft accent" token exists. It is
+   * DERIVED from the accent instead: a 20% tint over white lands within a
+   * couple of RGB points of blue-100 for the reference brand (#d9e3ff vs
+   * #dbe5ff) and a warm soft red for southleft. The dark mix over
+   * `--blue-ink` is a looser match (#… vs blue-800's #0c3197) — acceptable
+   * for its two usages, both decorative fills (OverviewPage swatch strip,
+   * MotionPage demo panel). If a `background-primary-weak` rung ever ships,
+   * bind to it and delete both mixes.
+   */
+  --blue-ink: var(--al-theme-color-content-primary-weak, #000b29);
+  --blue-soft: color-mix(in srgb, var(--blue) 20%, #ffffff);
+}
+
+[data-theme='dark'] al-theme {
+  --blue-soft: color-mix(in srgb, var(--blue) 45%, var(--blue-ink));
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--fg);
+}
+
+::selection {
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+input:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+/* --------------------------------------------------------------- type ramp
+ * Named exactly as the Foundations artboard names them, so the token page and
+ * the pages that use the ramp cannot drift apart.
+ *
+ * HEADING VOICE IS THE BRAND'S; GEOMETRY IS THE CANVAS'S (spec
+ * 2026-08-28-southleft-docs-parity-with-example-site, R1/R3). The heading
+ * classes take their `font` shorthand from the brand's own display/heading
+ * tokens — family, weight and tracking — and then re-assert the canvas's
+ * responsive sizes and line-heights on top. Same reasoning the brand host
+ * block above applies to colour ("matching the canvas is not the goal; the
+ * canvas WAS one brand"): with the ramp frozen to `700 … var(--sans)`, the
+ * southleft docs H1 rendered IBM Plex Sans 700 while southleft.com rendered
+ * Agrandir 600 — the largest visible docs↔site divergence. For the reference
+ * brand this moves headings from the canvas's 700/-0.03em to its own tokens'
+ * 600/0.01em — the brand's published display voice, not a regression.
+ *
+ * THE PRESET LEAVES, NOT THE `--al-theme-typography-*` ALIASES — for exactly
+ * the reason the brand host block reaches past `body-background` for
+ * `background-default-weak`: the aliases are declared only in the unscoped
+ * `:root` bundle, so their `var()` resolves against the BASE presets before
+ * the value ever inherits into `<al-theme>`, and the brand's Agrandir
+ * restatement (`:host([brand]) --al-typography-preset-*`) never reaches them.
+ * Verified in the built site: the alias computed `IBM Plex Sans` on a host
+ * whose own preset-48 said `Agrandir`. The leaves ARE restated per brand.
+ *
+ * Fallbacks are the DEFAULT BRAND'S RESOLVED VALUES (600 / 0.01em), per this
+ * file's boot-palette convention, so the flagship boots on what it ends on.
+ * Body classes stay literal: both brands' body face is IBM Plex Sans.
+ */
+
+.t-display-lg {
+  /* display-lg = preset-48 (heading.scss's own mapping). */
+  font: var(--al-typography-preset-48-bold, 600 16px var(--sans));
+  font-size: clamp(44px, 6.2vw, 74px);
+  line-height: 0.98;
+  letter-spacing: var(--al-typography-preset-48-bold-letter-spacing, 0.01em);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.t-page-title {
+  /* display-md = preset-44. */
+  font: var(--al-typography-preset-44-bold, 600 16px var(--sans));
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: var(--al-typography-preset-44-bold-letter-spacing, 0.01em);
+  margin: 14px 0 8px;
+}
+
+.t-display-md {
+  /* heading-lg = preset-36. */
+  font: var(--al-typography-preset-36-bold, 600 16px var(--sans));
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: var(--al-typography-preset-36-bold-letter-spacing, 0.01em);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.t-heading-sm {
+  /* heading-sm = preset-20. */
+  font: var(--al-typography-preset-20-bold, 600 16px var(--sans));
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: var(--al-typography-preset-20-bold-letter-spacing, 0.01em);
+  margin: 0;
+}
+
+.t-body-lg {
+  font: 400 17px/28px var(--sans);
+  color: var(--fg-weak);
+  text-wrap: pretty;
+}
+
+.t-body-md {
+  font: 400 16px/26px var(--sans);
+  color: var(--fg-weak);
+}
+
+.t-body-sm {
+  font: 400 13px/20px var(--sans);
+  color: var(--fg-weak);
+}
+
+/* The mono uppercase micro-label — the canvas's most-repeated element. */
+.micro {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  text-transform: uppercase;
+}
+
+.micro--blue {
+  color: var(--blue);
+}
+
+.micro--lg {
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.2em;
+  color: var(--blue);
+}
+
+.mono {
+  font: 400 11px/18px var(--mono);
+}
+
+/* Section rule: hairline + mono label, the canvas's section divider. */
+.section-rule {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  margin-bottom: 16px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.section-rule > :last-child {
+  color: var(--fg-weak);
+}
+
+/* Import paths, tag names and token keys are case-significant — exempt them
+   from the section rule's uppercasing. */
+.section-rule__raw {
+  text-transform: none;
+}
+
+/* ----------------------------------------------------------------- shell */
+
+.shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+
+  /*
+   * THE BOOT BLUR. `<html data-booting>` ships set and is cleared once
+   * `<al-theme>` upgrades (Shell.astro), so this is the page's first-paint
+   * state and sharp is the resting one.
+   *
+   * WHAT IT ACTUALLY BUYS, stated honestly: blur hides DETAIL, not hue. A
+   * flat background moving #101010 → #181714 is still that colour underneath
+   * a 14px blur. What the blur removes is the part that reads as broken — the
+   * text, rules and component previews resolving at different moments — and
+   * what makes the residual colour shift acceptable is that the boot palette
+   * above is pinned to the default brand, so the shift only happens on
+   * non-default brands and is small when it does. Blur alone, over the old
+   * #ffffff boot value, would NOT have hidden white → beige.
+   *
+   * On `.shell` rather than `body`: `--bg` is declared on `<al-theme>`, which
+   * is `display: contents` and cannot take a filter, and `.shell` is the first
+   * real box inside it. Verified no `position: fixed` or `sticky` anywhere in
+   * this file — a filter would otherwise become their containing block and
+   * move them for the duration of the boot.
+   */
+  transition: filter 0.32s var(--ease);
+}
+
+html[data-booting] .shell {
+  filter: blur(14px);
+}
+
+/*
+ * Reduced motion keeps the blur and drops the ANIMATION. The blur is a static
+ * state, not movement, and removing it entirely would put the flash back —
+ * so what goes is the 320ms transition, leaving a clean cut to sharp.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .shell {
+    transition: none;
+  }
+}
+
+.shell__main {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.page {
+  padding: 48px var(--pad-x);
+  max-width: 1440px;
+}
+
+/* --------------------------------------------------------------- sidebar */
+
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+}
+
+.sidebar__brand {
+  display: block;
+  padding: 22px 20px;
+  border-bottom: 1px solid var(--line);
+  color: inherit;
+}
+
+.sidebar__brand:hover {
+  color: inherit;
+}
+
+.sidebar__brand svg {
+  width: 158px;
+  display: block;
+}
+
+.sidebar__eyebrow {
+  font: 500 9px/1 var(--mono);
+  letter-spacing: 0.22em;
+  color: var(--fg-weak);
+  margin-top: 10px;
+}
+
+.sidebar__search {
+  padding: 14px 16px 0;
+}
+
+.sidebar__search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  padding: 9px 10px;
+}
+
+/* The field itself carries the focus affordance. The inner input is
+ * borderless and edge-to-edge, so the global `input:focus` outline would draw
+ * a second box inside this one — suppress it there and recolour the wrapper
+ * instead (see `.sidebar__search-field input:focus` below). */
+.sidebar__search-field:focus-within {
+  border-color: var(--blue);
+}
+
+.sidebar__search-field svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.sidebar__search-field input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.04em;
+  padding: 0;
+}
+
+.sidebar__search-field input:focus,
+.sidebar__search-field input:focus-visible {
+  outline: none;
+}
+
+/*
+ * THE SIDEBAR SCROLLBAR — the last piece of this shell still drawn by the
+ * browser, and the one that gave away that the dark theme was paint rather
+ * than a theme: a default Chromium scrollbar is a light grey trough, so on a
+ * #101010 sidebar it read as a bright stripe down the edge of the nav.
+ *
+ * IT USES THE DESIGN SYSTEM'S OWN TOKENS, not this file's `--line` / `--fg`
+ * chrome variables, and that is the point of the rule. Those chrome variables
+ * switch on `[data-theme]` and are hard-coded per theme in this stylesheet;
+ * `--al-theme-color-*` switch on `<al-theme mode>` and are whatever the
+ * PROJECT'S BRAND says they are. So the altitude site and the southleft site
+ * get different scrollbars from this one rule, and a third design system added
+ * to the registry gets a correct one with no edit here — the same argument as
+ * the `--blue` remap on `al-theme` above.
+ *
+ * It resolves branded because `.sidebar__nav` is a DESCENDANT of `<al-theme>`
+ * (Shell.astro wraps the whole shell): the host's tokens inherit down, so the
+ * var() substitutes against the branded value. The `--blue` remap has to be
+ * declared ON the host for that reason; this does not, because it is already
+ * inside it.
+ *
+ * WHICH TOKENS, AND WHY NOT THE OBVIOUS ONE. A scrollbar thumb is a user
+ * interface component, so WCAG 1.4.11 asks 3:1 against what it sits on. That
+ * rules out the intuitive pick: `border-default` is the token a thumb "should"
+ * use by name, and it fails. Contrast measured against each site's own sidebar
+ * background, both modes, both brands:
+ *
+ *   token                       alt light  alt dark  sl light  sl dark
+ *   border-default                 2.17       5.51      1.65      2.00   ✗
+ *   border-default-strong          2.08       9.16      9.53      6.75   ✗
+ *   content-disabled-default       6.19       3.07      6.19      3.07   ✓  ← rest
+ *   content-default-weak          11.37       9.16      7.14      6.75   ✓  ← hover
+ *   content-default               19.03      17.89     17.93     18.10   ✓
+ *
+ * `border-default` and `border-default-strong` each pass in ONE brand and fail
+ * in the other, which is the trap in a multi-brand system: a token that looks
+ * right on the site you are testing is not a token that is right. The two
+ * chosen clear 3:1 in all four combinations, and 3.07 is the tight one — the
+ * resting thumb on a dark sidebar. Anything quieter than that fails somewhere.
+ *
+ * The rest/hover split is also a light-vs-dark split in the values themselves:
+ * `content-default-weak` resolves #3a3a3a on the light altitude sidebar and
+ * #bdb39e on the dark one — it darkens against white and lightens against
+ * black, which is the thing a single literal grey cannot do.
+ */
+.sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 16px 20px;
+
+  /*
+   * NO `scrollbar-gutter: stable` HERE, and it was tried. The argument for it
+   * is real — the search field filters this nav in place, so narrowing 68 items
+   * to 3 removes the scrollbar and shifts every remaining item sideways — but
+   * the property reserves the gutter unconditionally, including on the
+   * platforms where the scrollbar is an OVERLAY and costs no layout space to
+   * begin with. Measured in this repo's Playwright Chromium: without it the
+   * nav's clientWidth is 263 whether the list overflows or not (no jump to
+   * fix); with it, 253 in both states — a permanent 10px of dead column bought
+   * to solve a shift that browser never had. It belongs here only once someone
+   * has confirmed the jump on a classic-scrollbar platform.
+   */
+
+  /*
+   * The standard properties. Chromium 121+, Firefox and Safari 18.2+ use these
+   * and IGNORE the `::-webkit-scrollbar` rules below once `scrollbar-width` is
+   * anything but `auto` — the two blocks are alternatives, not layers, which is
+   * why they are kept in sync by hand rather than one overriding the other.
+   */
+  scrollbar-width: thin;
+  scrollbar-color: var(--al-theme-color-content-disabled-default) transparent;
+}
+
+/*
+ * Hovering the NAV, not the thumb: `scrollbar-color` has no thumb-level hover
+ * state, so this is the only hover the standard properties can express. It
+ * reads well anyway — the bar stays quiet until the pointer is in the column
+ * that owns it, then becomes solid enough to aim at.
+ */
+.sidebar__nav:hover {
+  scrollbar-color: var(--al-theme-color-content-default-weak) transparent;
+}
+
+/*
+ * Safari before 18.2, which supports neither standard property. Same two
+ * tokens, so the two implementations cannot drift in colour — only in the
+ * shape, which the pseudo-elements can express and the standard ones cannot:
+ * a transparent border plus `background-clip: content-box` insets the thumb
+ * into a 4px pill instead of filling the full 10px trough.
+ */
+.sidebar__nav::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sidebar__nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar__nav::-webkit-scrollbar-thumb {
+  background-color: var(--al-theme-color-content-disabled-default);
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+
+.sidebar__nav::-webkit-scrollbar-thumb:hover {
+  background-color: var(--al-theme-color-content-default-weak);
+}
+
+.sidebar__group {
+  display: flex;
+  justify-content: space-between;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  margin: 20px 0 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-weak);
+}
+
+.sidebar__group--first {
+  margin: 16px 0 6px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.sidebar__index-link {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 6px 8px;
+  font: 500 14px/20px var(--sans);
+  color: var(--fg);
+}
+
+.sidebar__index-link:hover {
+  background: var(--bg2);
+  color: var(--fg);
+}
+
+.sidebar__mark {
+  font: 500 10px/1 var(--mono);
+  color: var(--blue);
+}
+
+.sidebar__link {
+  display: block;
+  padding: 4px 8px;
+  font: 400 13px/19px var(--sans);
+  color: var(--fg-weak);
+}
+
+.sidebar__link:hover {
+  color: var(--fg);
+  background: var(--bg2);
+}
+
+.sidebar__link--phase {
+  display: flex;
+  justify-content: space-between;
+  font: 400 11px/19px var(--mono);
+  letter-spacing: 0.06em;
+}
+
+.sidebar__link[aria-current='page'] {
+  color: var(--fg);
+  background: var(--bg2);
+}
+
+.sidebar__foot {
+  border-top: 1px solid var(--line);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar__foot-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar__version {
+  font: 400 9px/14px var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--fg-weak);
+}
+
+/* Theme switch — the canvas's pill toggle. */
+.switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 22px;
+  border: none;
+  padding: 0;
+  background: var(--al-bg-strong);
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 18px;
+  background: var(--al-content);
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s var(--ease);
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 15%);
+}
+
+[data-theme='dark'] .switch {
+  background: var(--blue);
+}
+
+[data-theme='dark'] .switch::after {
+  left: 20px;
+}
+
+/* ------------------------------------------------------------- blueprint */
+
+/*
+ * The grid is drawn at 60% of `--line-weak` rather than at full strength.
+ *
+ * `color-mix` and not `opacity`: the grid is a background-image ON the element,
+ * so an `opacity` here would fade the hero copy, the buttons and — on the
+ * playground stage, which is also a `.blueprint` — the live component sitting
+ * on top of it. Mixing toward transparent moves only the paint.
+ *
+ * It is 60% of a token rather than a fourth hardcoded grey, so it still tracks
+ * the brand: Altitude dark mixes from #616161, Southleft dark from #4a453a.
+ * The tick marks at the grid corners are the ACCENT (`.blueprint__tick`) and
+ * are deliberately left at full strength — they are the one part of this
+ * backdrop meant to be legible.
+ */
+.blueprint {
+  position: relative;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--line-weak) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--line-weak) 60%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.blueprint--sm {
+  background-size: 40px 40px;
+}
+
+.blueprint__tick {
+  position: absolute;
+  font: 400 14px/1 var(--mono);
+  color: var(--blue);
+}
+
+.blueprint__tick--tl {
+  top: 6px;
+  left: 10px;
+}
+
+.blueprint__tick--tr {
+  top: 6px;
+  right: 10px;
+}
+
+.blueprint__tick--bl {
+  bottom: 6px;
+  left: 10px;
+}
+
+.blueprint__tick--br {
+  bottom: 6px;
+  right: 10px;
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.btn {
+  font: 600 16px/24px var(--sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  /* Same recipe as al-button itself (button.scss:21): the role token where a
+   * brand ships one (southleft: pill, like the site's buttons), the 4px step
+   * where it doesn't (altitude — byte-identical to the literal this replaces). */
+  border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius, 4px));
+  background: var(--blue);
+  color: var(--blue-ink);
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+
+.btn:hover {
+  background: var(--blue-hover);
+  color: var(--blue-ink);
+}
+
+.btn--outline {
+  border: 1px solid var(--al-border);
+  background: transparent;
+  color: var(--al-content);
+}
+
+.btn--outline:hover {
+  border-color: var(--al-border-weak);
+  background: transparent;
+  color: var(--al-content-weak);
+}
+
+/* ----------------------------------------------------------------- cards */
+
+.hard-card {
+  border: 1px solid var(--line);
+  padding: 24px;
+  background: var(--bg);
+  color: inherit;
+  display: block;
+  transition: all 0.15s ease;
+}
+
+.hard-card:hover {
+  box-shadow: 6px 6px 0 var(--blue);
+  transform: translate(-2px, -2px);
+  color: inherit;
+}
+
+.tile {
+  border: 1px solid var(--line-weak);
+  padding: 14px 12px;
+  transition: border-color 0.15s;
+  color: inherit;
+  display: block;
+}
+
+.tile:hover {
+  border-color: var(--fg);
+  color: inherit;
+}
+
+.tile__kicker {
+  font: 400 9px/1 var(--mono);
+  color: var(--blue);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.tile__name {
+  font: 500 14px/20px var(--sans);
+}
+
+.tile__meta {
+  font: 400 9px/14px var(--mono);
+  color: var(--fg-weak);
+  margin-top: 5px;
+}
+
+/* Arrangement lives on <al-layout variant="grid">; this is hooks-only
+ * (spec 2026-08-28-southleft-docs-parity-with-example-site, R4). The
+ * margin-bottom moved to .grid-tiles-wrap (ComponentsIndexPage.astro) since
+ * al-layout's :host is `display: contents` and cannot carry it. */
+.grid-tiles {
+  --al-layout-template: repeat(auto-fill, minmax(168px, 1fr));
+  --al-layout-gap: 10px;
+}
+
+.grid-tiles-wrap {
+  margin-bottom: 44px;
+}
+
+/* --------------------------------------------------------------- top bar */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 40px;
+  border-bottom: 1px solid var(--line);
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+}
+
+/* The four-up arrangement is an <al-layout variant="grid" columns="4"> inside
+ * this wrapper now (OverviewPage.astro, R4); the wrapper keeps the box-model a
+ * display:contents layout host cannot carry. */
+.statbar {
+  border-bottom: 1px solid var(--line);
+}
+
+.statbar__cell {
+  padding: 28px 40px;
+}
+
+.statbar__label {
+  margin-top: 10px;
+}
+
+.statbar__cell + .statbar__cell {
+  border-left: 1px solid var(--line-weak);
+}
+
+.statbar__value {
+  font: 600 40px/1 var(--sans);
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------------ code */
+
+.code {
+  margin: 0;
+  font: 400 13px/22px var(--mono);
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 20px 22px;
+  overflow: auto;
+  white-space: pre;
+}
+
+.code--inline {
+  padding: 14px 16px;
+  font-size: 12.5px;
+  line-height: 20px;
+}
+
+.chip-tag {
+  font: 400 11px/1 var(--mono);
+  border: 1px solid var(--line);
+  padding: 6px 9px;
+  white-space: nowrap;
+}
+
+.chip-tag--weak {
+  border-color: var(--line-weak);
+  color: var(--fg-weak);
+}
+
+/* -------------------------------------------------------------- playground */
+
+.pg {
+  border: 1px solid var(--line);
+  display: grid;
+  /*
+   * `minmax(0, 1fr)` and not `1fr`. A grid track's default minimum is
+   * min-content, so a wide preview — a hero with a 72px display headline, a
+   * header with a full nav — pushes the track past the page instead of being
+   * constrained by it, and the whole playground scrolls sideways. Capping the
+   * minimum at 0 makes the track obey the container, which is what lets the
+   * component reflow the way it would on a real page.
+   */
+  grid-template-columns: minmax(0, 1fr) 280px;
+}
+
+.pg__stage {
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 40px 40px;
+}
+
+/*
+ * Full-bleed stage for organisms (Playground.astro sets this from the derived
+ * tier). The default stage centres a shrink-wrapped element inside 40px of
+ * padding; a page section needs the whole column instead, top-aligned, with
+ * only the label's headroom kept so it does not sit on the component.
+ */
+/*
+ * A page section gets the whole row, with its controls stacked underneath
+ * rather than beside it. Sharing the row with a 280px control column leaves a
+ * hero, a header or a footer rendering at roughly two thirds of the measure —
+ * which is the one thing about an organism a preview has to get right.
+ */
+.pg--stacked {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pg--stacked .pg__controls {
+  border-left: 0;
+  border-top: 1px solid var(--line);
+  max-height: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+/* Nothing to toggle — the stage takes the row rather than sitting beside a
+   280px column with a sentence in it. */
+.pg--no-controls {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pg__stage--full {
+  display: block;
+  align-items: initial;
+  justify-content: initial;
+  padding: 32px 0 0;
+}
+
+/*
+ * `<f-po>` is the base library's Storybook-only "flexible placeholder" element
+ * (.storybook/components/f-po/f-po). Seven stories slot one in to stand for
+ * "whatever the consumer puts here". It lives under the library's Storybook
+ * config rather than in its published exports, so it is not a component this
+ * site can register — an unregistered custom element renders as bare inline
+ * text, which reads like a bug rather than like a placeholder. Giving it the
+ * dashed box it has in Storybook restores the meaning without importing it.
+ */
+[data-pg-example] f-po {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 1px dashed var(--line);
+  border-radius: var(--al-theme-border-radius-xs, 2px);
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--fg-weak);
+  text-transform: uppercase;
+}
+
+.pg__stage--full > [data-pg-mount] {
+  width: 100%;
+  min-width: 0;
+}
+
+/* The stage is also a grid ITEM, so it needs the same escape from min-content
+   sizing that the track above does. */
+.pg__stage {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pg__stage-label {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font: 400 9px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+}
+
+/*
+ * LOADING STATE.
+ *
+ * The stage is server-rendered with `data-pg-loading` set and the inline
+ * script in Playground.astro removes it once the element has upgraded AND
+ * painted. So these rules describe the page as it ARRIVES, and the default —
+ * the rules further up this file — is the finished state.
+ *
+ * What is being hidden is worth naming: an Altitude tag before its class is
+ * registered is an unknown element, which the browser lays out as an inline
+ * box containing its slotted text. A reader watching that window sees the
+ * word "Button" in body copy, then a button — which reads as a rendering bug
+ * rather than as loading. `visibility` and not `display`: the mount keeps its
+ * box, so nothing on the page moves when the preview appears.
+ */
+.pg__stage[data-pg-loading] [data-pg-mount] {
+  visibility: hidden;
+}
+
+.pg__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  /* Above the blueprint backdrop, below nothing else — the stage has no other
+     positioned children except its label, which sits in a corner. */
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pg__stage:not([data-pg-loading]) .pg__loading {
+  display: none;
+}
+
+.pg__loading-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--line-weak);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: pg-spin 0.7s linear infinite;
+}
+
+.pg__loading-label {
+  font: 400 9px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-weak);
+}
+
+@keyframes pg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*
+ * Reduced motion gets a slow pulse rather than nothing at all: the spinner's
+ * whole job is to say "this is still coming", and a frozen ring says the
+ * opposite. Opacity, not rotation — no vestibular trigger.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .pg__loading-spinner {
+    animation: pg-pulse 1.6s ease-in-out infinite;
+    border-top-color: var(--line-weak);
+    background: var(--blue);
+  }
+
+  @keyframes pg-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+.pg__controls {
+  border-left: 1px solid var(--line);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  max-height: 520px;
+}
+
+.pg__control-label {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.pg__opts {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pg__opt {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.06em;
+  padding: 8px 9px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  margin: -1px 0 0 -1px;
+  background: transparent;
+  color: var(--fg);
+  text-transform: uppercase;
+}
+
+.pg__opt[aria-pressed='true'] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.pg__text {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  font: 400 12px/1 var(--mono);
+  padding: 9px 10px;
+}
+
+.pg__flags {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.pg__flag {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.08em;
+  background: none;
+  border: none;
+  color: var(--fg);
+  padding: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.pg__box {
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid var(--fg);
+  background: transparent;
+  display: inline-block;
+  flex: none;
+}
+
+.pg__flag[aria-pressed='true'] .pg__box {
+  background: var(--blue);
+}
+
+/* Icon-slot toggles (T24) — one `.pg__flag` per before/after slot, each with
+   a compact <al-combobox> search revealed underneath once switched on. */
+.pg__icon-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pg__icon-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pg__icon-search {
+  min-width: 0;
+}
+
+.pg__icon-search al-combobox {
+  display: block;
+  font: 400 11px/1.4 var(--mono);
+}
+
+.pg__code {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+}
+
+.pg__tabs {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--line);
+}
+
+.pg__tab {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  border: none;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  padding: 11px 18px;
+  cursor: pointer;
+}
+
+.pg__tab[aria-selected='true'] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.pg__copy {
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.12em;
+  border: none;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  color: var(--blue);
+  padding: 0 18px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* ------------------------------------------------------------ data tables */
+
+.spec-table {
+  margin-bottom: 44px;
+}
+
+.spec-table__head,
+.spec-table__row {
+  display: grid;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.spec-table--props .spec-table__head,
+.spec-table--props .spec-table__row {
+  grid-template-columns: 170px minmax(0, 1fr) 130px;
+}
+
+.spec-table--pair .spec-table__head,
+.spec-table--pair .spec-table__row {
+  grid-template-columns: 170px minmax(0, 1fr);
+}
+
+.spec-table__head {
+  padding: 12px 0 8px;
+  font: 500 9px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-weak);
+  text-transform: uppercase;
+}
+
+.spec-table__row {
+  padding: 11px 0;
+  border-top: 1px solid var(--line-weak);
+}
+
+.spec-table__name {
+  font: 500 12px/18px var(--mono);
+  color: var(--blue);
+  word-break: break-word;
+}
+
+.spec-table__type {
+  font: 400 11px/18px var(--mono);
+  color: var(--fg-weak);
+  word-break: break-word;
+}
+
+.spec-table__default {
+  font: 400 11px/18px var(--mono);
+  word-break: break-word;
+}
+
+.spec-table__desc {
+  display: block;
+  font: 400 12px/18px var(--sans);
+  color: var(--fg-weak);
+  margin-top: 6px;
+}
+
+.empty-note {
+  font: 400 12px/20px var(--mono);
+  color: var(--fg-weak);
+  padding: 14px 0 32px;
+  border-top: 1px solid var(--line-weak);
+}
+
+/* ----------------------------------------------------------------- badges */
+
+.status {
+  font: 500 9px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--al-border);
+  color: var(--fg-weak);
+  padding: 5px 7px;
+}
+
+.status--beta {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.status--deprecated {
+  border-color: var(--status-gap);
+  color: var(--status-gap);
+}
+
+/*
+ * Status-panel tones. Four, not seven: the parity vocabulary has seven statuses
+ * and the accessibility rows have five states, but a reader only needs to know
+ * whether a thing is settled (ok), moving (warn), absent (gap) or deliberately
+ * out of scope / unrecorded (mute). The mapping from status to tone lives in
+ * src/lib/parity.mjs and ChecksPanel.astro, never in the colour itself.
+ */
+.status--parity-ok {
+  border-color: var(--status-ok);
+  color: var(--status-ok);
+}
+
+.status--parity-warn {
+  border-color: var(--status-warn);
+  color: var(--status-warn);
+}
+
+.status--parity-gap {
+  border-color: var(--status-gap);
+  color: var(--status-gap);
+}
+
+.status--parity-mute {
+  border-color: var(--line-weak);
+  color: var(--fg-weak);
+}
+
+/* ------------------------------------------------------------------ misc */
+
+.site-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 40px;
+  font: 400 10px/1 var(--mono);
+  letter-spacing: 0.12em;
+  color: var(--fg-weak);
+}
+
+.stack-56 {
+  padding: 56px var(--pad-x);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+
+    /*
+     * The branded page colour lives on `.shell`, because `--bg` is declared on
+     * `<al-theme>` and `<body>` is that element's ANCESTOR — a custom property
+     * cannot travel upwards, so body keeps the neutral literal. At desktop
+     * that is invisible: `.shell` is `height: 100vh` and covers everything.
+     * Here it is not, and a page shorter than the viewport would show a strip
+     * of neutral #ffffff/#101010 under the brand's colour. Filling the
+     * viewport is the cheap half of the fix; moving the theme host to <body>
+     * is the other one, and is a bigger change than this rule.
+     */
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page {
+    padding: 32px 20px;
+  }
+
+  .pg {
+    grid-template-columns: 1fr;
+  }
+
+  .pg__controls {
+    border-left: none;
+    border-top: 1px solid var(--line);
+    max-height: none;
+  }
+
+  .statbar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --------------------------------------------------- site-wide search results
+ *
+ * Distinct from the component filter above them in the sidebar. The input
+ * drives both: the component list filters instantly and locally, while these
+ * come from the Pagefind index and cover what the list cannot — Foundations,
+ * Motion, Icons, Utilities, Maturity, Migration and the guidance prose.
+ */
+.sidebar__results {
+  margin-top: 10px;
+  border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+  padding-top: 10px;
+}
+
+.sidebar__results-label {
+  margin: 0 0 6px;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sidebar__results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar__result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.sidebar__result:hover .sidebar__result-title,
+.sidebar__result:focus-visible .sidebar__result-title {
+  text-decoration: underline;
+}
+
+/* One line of context, not a preview pane. */
+.sidebar__result-excerpt {
+  color: var(--al-theme-color-content-default-weak);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Pagefind wraps the matched term in <mark>; the default yellow highlight is
+   wrong here, so it is re-expressed as weight rather than background. */
+.sidebar__result-excerpt mark {
+  background: none;
+  color: var(--al-theme-color-content-default);
+  font-weight: 600;
+}

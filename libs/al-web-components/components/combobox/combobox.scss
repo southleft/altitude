@@ -1,0 +1,90 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #COMBOBOX
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  /**
+   * Combobox
+   */
+  .al-c-combobox {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-xxs);
+    width: 100%;
+    min-width: max-content;
+  }
+
+  /**
+   * Combobox container
+   * 1. Positions the popup panel relative to the field
+   */
+  .al-c-combobox__container {
+    position: relative; /* 1 */
+  }
+
+  /**
+   * Trailing chevron
+   * - Rotates open when the listbox is active, matching al-select
+   */
+  .al-c-combobox__icon-arrow {
+    transition: transform var(--al-theme-animation-duration-role-fast, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+    transform: rotate(0);
+    transform-origin: center;
+
+    .al-is-active-dropdown & {
+      transform: rotate(180deg);
+    }
+  }
+
+  /**
+   * Clear button
+   */
+  .al-c-combobox__clear-button {
+    flex: none;
+  }
+
+  /**
+   * Popup panel
+   * 1. Positioned absolutely to the field, reusing al-select's viewport-aware alignment
+   */
+  .al-c-combobox__panel {
+    position: absolute; /* 1 */
+    inset-block-start: calc(100% + var(--al-theme-space-xxxs));
+    inset-inline-start: 0;
+    width: 100%;
+    z-index: var(--al-z-index-400);
+
+    .al-c-combobox--align-top & {
+      inset-block-start: auto;
+      inset-block-end: calc(100% + var(--al-theme-space-xs));
+    }
+  }
+
+  /**
+   * Empty state
+   */
+  .al-c-combobox__empty {
+    @include al-theme-typography-body-sm;
+    padding: var(--al-theme-space-sm) var(--al-theme-space-md);
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * Field note / error note slotted content
+   */
+  slot[name="field-note"]::slotted(*),
+  slot[name="error"]::slotted(*) {
+    .al-is-error & {
+      --al-field-note-color: var(--al-theme-color-border-danger-default);
+    }
+
+    .al-is-disabled & {
+      opacity: var(--al-theme-opacity-disabled);
+    }
+  }
+}

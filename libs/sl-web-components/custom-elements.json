@@ -1,0 +1,1958 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "components/card/card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-card\n\nSouthleft's implementation of the card, and a SUPERSET of Altitude's: the\nsame regions (`image`, `header`, `actions-start`, `actions-end`, the default\nbody), the same `layout`, `variant=\"bare\"` and `fill` behaviour, plus the\nfour card treatments southleft.com ships.\n\nONE COMPONENT, FIVE TREATMENTS. Every one of them is a bounded surface\ngrouping a single subject, with a heading, a body and a trailing cue. They\ndiffer in padding, typography, whether the media bleeds to the edge, and\nwhich regions they use — presentation decisions, which is what `variant` is\nfor. They are not different components, and splitting them into some would\nmean four tags a consumer has to choose between before they can render a\ncard.\n\n  * (unset) — the base surface: background, shadow, radius.\n  * `bare`    — the regions without the surface.\n  * `service` — the \"what we do\" card. A bordered well on the 40px padding\n    step, a display-face heading with a corner glyph opposite it, and a mono\n    supporting list.\n  * `tool`    — the \"we publish our homework\" card. A mono command line for a\n    title and a footer cue pinned to the bottom edge.\n  * `article` / `work` — the linked media card. Media flush to the card edge,\n    then a padded column: a mono meta row, a heading, a clamped excerpt, tag\n    chips and a mono footer cue. `work` is the case-study cut of the same\n    anatomy — a wider media ratio, a shallower clamp, a tighter rhythm.\n\nWHY THE MEDIA VARIANTS CAN LIVE HERE AT ALL. Altitude's `al-card` carries a\nsingle outer `padding` that wraps its image region, so its media can never\nsit flush to the edge — which is why the brand layer used to ship a separate\n`al-media-card`. This component owns its own padding (`--al-card-padding`,\nmoved onto the content column under `article`/`work`), so the constraint that\nforced a second component does not apply. That is a brand-layer decision and\nit stays here: the base card's behaviour is unchanged for every other design\nsystem built on the same library.\n\n```html\n<al-card variant=\"service\" fill href=\"/services/audits\">\n  <h3 slot=\"header\">Design system audits</h3>\n  <span slot=\"cue\" aria-hidden=\"true\">&#8599;</span>\n  <p>Where the system is costing you velocity, and what to do first.</p>\n  <ul slot=\"list\"><li>Token audit</li><li>Component inventory</li></ul>\n</al-card>\n\n<al-card variant=\"work\" fill href=\"/projects/petsmart\"\n         image=\"/img/petsmart.webp\" heading=\"PetSmart\"\n         excerpt=\"A design system for 1,600 stores.\"\n         footer-label=\"case study &#8594;\">\n  <span slot=\"tags\">Design systems</span>\n</al-card>\n```",
+          "name": "SLCard",
+          "cssProperties": [
+            {
+              "description": "The card's padding. Defaults to `--al-theme-space`; the brand's 40px step under `service`, `--al-theme-space-xl` under `tool`, and under `article`/`work` it moves off the surface and onto the content column.",
+              "name": "--al-card-padding"
+            },
+            {
+              "description": "The media region's ratio under `article`/`work`. Defaults to `16 / 9`, or `16 / 10` under `work`.",
+              "name": "--al-card-media-aspect-ratio"
+            },
+            {
+              "description": "Lines the excerpt is clamped to. Defaults to `3`, or `2` under `work`.",
+              "name": "--al-card-line-clamp"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The card surface itself. An `<a>` when `href` is set, a `<div>` otherwise.",
+              "name": "card"
+            },
+            {
+              "description": "The media region.",
+              "name": "image"
+            },
+            {
+              "description": "The padded content column.",
+              "name": "body"
+            },
+            {
+              "description": "The `<al-heading>` rendered from the `heading` property.",
+              "name": "heading"
+            },
+            {
+              "description": "The clamped excerpt paragraph.",
+              "name": "excerpt"
+            },
+            {
+              "description": "The mono footer cue.",
+              "name": "footer"
+            },
+            {
+              "name": "meta",
+              "description": ""
+            }
+          ],
+          "slots": [
+            {
+              "description": "The card's body.",
+              "name": ""
+            },
+            {
+              "description": "Media above the header. Under the base variants it sits INSIDE the card's padding, exactly as Altitude's card does; under `article`/`work` the media region is flush to the card edge. The `image` property is the usual way to fill it for the media variants; this slot is for anything else, an `<al-avatar>` included.",
+              "name": "image"
+            },
+            {
+              "description": "The card's heading row. Ignored when the `heading` property is set, which is how the media variants supply theirs.",
+              "name": "header"
+            },
+            {
+              "description": "Top-right single control (kebab / overflow menu). Altitude's card documents this slot but renders no matching `<slot>` element, so anything assigned to it there disappears; this implementation actually renders it, in the header row's trailing cluster beside `cue`.",
+              "name": "action-right"
+            },
+            {
+              "description": "A trailing cue on the header row — the corner glyph under `variant=\"service\"`. Decorative; mark it `aria-hidden` when the card is already a link.",
+              "name": "cue"
+            },
+            {
+              "description": "A mono meta row above the heading — category, date. Each slotted node is its own item in a row. Collapses entirely when empty.",
+              "name": "meta"
+            },
+            {
+              "description": "Tag chips under the body. Each slotted node gets the brand's square-cornered chip treatment, so plain `<span>`s are enough. Collapses entirely when empty.",
+              "name": "tags"
+            },
+            {
+              "description": "A supporting list below the body. Under `variant=\"service\"` a slotted `<ul>` gets the brand's mono treatment.",
+              "name": "list"
+            },
+            {
+              "description": "A footer cue pinned to the bottom of the card, whatever the body's height. Ignored when the `footer-label` property is set.",
+              "name": "footer"
+            },
+            {
+              "description": "Trailing-action row, leading edge.",
+              "name": "actions-start"
+            },
+            {
+              "description": "Trailing-action row, trailing edge — the canonical primary action.",
+              "name": "actions-end"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-card'"
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "'inline'"
+              },
+              "description": "Layout\n- **default** Displays the slotted items stacked in a column\n- **row** Displays the slotted items inline in a row",
+              "attribute": "layout"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'bare' | 'service' | 'tool' | 'article' | 'work'"
+              },
+              "description": "Variant\n- **default** A card with a background color, box shadow and border radius\n- **bare** No background color, box shadow or border radius\n- **service** The brand's \"what we do\" card: a bordered well, the 40px padding step, a display-face heading and a mono list\n- **tool** The brand's \"we publish our homework\" card: a mono command line and a footer cue pinned to the bottom\n- **article** The linked media card: flush-to-edge media, a meta row, a heading, a clamped excerpt and a mono footer cue\n- **work** The case-study cut of the media card: a wider media ratio, a two-line clamp and a tighter rhythm",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fill the available block size instead of hugging the content.\n\nReflected, so a page can also select `al-card[fill]`. It has to be a\nproperty rather than something the page sets from outside: `:host` is\n`display: contents`, so a `height: 100%` written on `<al-card>` is dropped\nentirely.",
+              "attribute": "fill",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Make the whole card one link target.\n\nThe brand's `service`, `tool`, `article` and `work` cards are links in\ntheir entirety, which is why this is a property and not a slotted `<a>`:\none target, one focus ring, and no nested interactive regions for a\nkeyboard user to get lost between. Do not combine it with buttons inside\nthe card.",
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link target, when `href` is set. `_blank` for the off-site tool cards.",
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link `rel`. Defaults to `noopener` whenever `target=\"_blank\"`, so an\nexternal card cannot be opened without it by forgetting to pass it.",
+              "attribute": "rel"
+            },
+            {
+              "kind": "field",
+              "name": "command",
+              "type": {
+                "text": "string"
+              },
+              "description": "The mono command line that titles a `tool` card — `npx altitude init`.\n\nA property rather than a slot because the prefix glyph is styled\nseparately from the command, and `::slotted()` reaches direct children\nonly: a slotted `<p><span>$</span> npx …</p>` puts the span out of reach.",
+              "attribute": "command"
+            },
+            {
+              "kind": "field",
+              "name": "commandPrefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "'$'",
+              "description": "The muted glyph before `command`. `$` for a shell line, `//` for a note.",
+              "attribute": "command-prefix"
+            },
+            {
+              "kind": "field",
+              "name": "dashed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Dashed rather than solid border — the brand's \"coming soon\" tool card.",
+              "attribute": "dashed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "description": "Media source for the `article` / `work` variants. Omit to render `fallback`.",
+              "attribute": "image"
+            },
+            {
+              "kind": "field",
+              "name": "imageAlt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Alt text. Empty by default: the heading already names the destination, so the image is decorative.",
+              "attribute": "image-alt"
+            },
+            {
+              "kind": "field",
+              "name": "fallback",
+              "type": {
+                "text": "string"
+              },
+              "description": "Stand-in shown when there is no image — the brand uses `<P>`, the client initial in angle brackets.",
+              "attribute": "fallback"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The card's heading. Rendered as an `<al-heading>`, in place of the `header` slot.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "excerpt",
+              "type": {
+                "text": "string"
+              },
+              "description": "The clamped summary under the heading.",
+              "attribute": "excerpt"
+            },
+            {
+              "kind": "field",
+              "name": "footerLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "The mono cue in the footer, e.g. `read →`. Omit for no footer.",
+              "attribute": "footer-label"
+            },
+            {
+              "kind": "field",
+              "name": "featured",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The larger treatment used for a lead card that spans two grid columns.",
+              "attribute": "featured",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "headingVariant",
+              "type": {
+                "text": "string"
+              },
+              "description": "Heading scale override. Left unset, it follows the anatomy: `lg` for work\ncards and featured articles (short client names and lead treatments), `md`\nfor a standard article card, whose long sentence titles overwrap badly at\n`lg`. Altitude's scoped steps here are 24px and 48px with nothing between —\na real gap in `al-heading`, documented rather than papered over.",
+              "attribute": "heading-variant"
+            },
+            {
+              "kind": "field",
+              "name": "resolvedHeadingVariant",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncSlotFlag",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "'meta' | 'tags'"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Reflect whether a slot actually received content, so the SCSS can drop the\nempty wrapper instead of leaving a phantom gap in the content column.\n\nThis has to be JS. `:host(:has([slot='meta']))` is the natural way to ask\nand is unsupported — `CSS.supports('selector(:host(:has(*)))')` is false —\nand `slot:empty` tests fallback children, not assigned nodes. `slotchange`\nalso re-fires when the page swaps children, which a render-time check\nwould miss."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "layout",
+              "type": {
+                "text": "'inline'"
+              },
+              "description": "Layout\n- **default** Displays the slotted items stacked in a column\n- **row** Displays the slotted items inline in a row",
+              "fieldName": "layout"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'bare' | 'service' | 'tool' | 'article' | 'work'"
+              },
+              "description": "Variant\n- **default** A card with a background color, box shadow and border radius\n- **bare** No background color, box shadow or border radius\n- **service** The brand's \"what we do\" card: a bordered well, the 40px padding step, a display-face heading and a mono list\n- **tool** The brand's \"we publish our homework\" card: a mono command line and a footer cue pinned to the bottom\n- **article** The linked media card: flush-to-edge media, a meta row, a heading, a clamped excerpt and a mono footer cue\n- **work** The case-study cut of the media card: a wider media ratio, a two-line clamp and a tighter rhythm",
+              "fieldName": "variant"
+            },
+            {
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Fill the available block size instead of hugging the content.\n\nReflected, so a page can also select `al-card[fill]`. It has to be a\nproperty rather than something the page sets from outside: `:host` is\n`display: contents`, so a `height: 100%` written on `<al-card>` is dropped\nentirely.",
+              "fieldName": "fill"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Make the whole card one link target.\n\nThe brand's `service`, `tool`, `article` and `work` cards are links in\ntheir entirety, which is why this is a property and not a slotted `<a>`:\none target, one focus ring, and no nested interactive regions for a\nkeyboard user to get lost between. Do not combine it with buttons inside\nthe card.",
+              "fieldName": "href"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link target, when `href` is set. `_blank` for the off-site tool cards.",
+              "fieldName": "target"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Link `rel`. Defaults to `noopener` whenever `target=\"_blank\"`, so an\nexternal card cannot be opened without it by forgetting to pass it.",
+              "fieldName": "rel"
+            },
+            {
+              "name": "command",
+              "type": {
+                "text": "string"
+              },
+              "description": "The mono command line that titles a `tool` card — `npx altitude init`.\n\nA property rather than a slot because the prefix glyph is styled\nseparately from the command, and `::slotted()` reaches direct children\nonly: a slotted `<p><span>$</span> npx …</p>` puts the span out of reach.",
+              "fieldName": "command"
+            },
+            {
+              "name": "command-prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "'$'",
+              "description": "The muted glyph before `command`. `$` for a shell line, `//` for a note.",
+              "fieldName": "commandPrefix"
+            },
+            {
+              "name": "dashed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Dashed rather than solid border — the brand's \"coming soon\" tool card.",
+              "fieldName": "dashed"
+            },
+            {
+              "name": "image",
+              "type": {
+                "text": "string"
+              },
+              "description": "Media source for the `article` / `work` variants. Omit to render `fallback`.",
+              "fieldName": "image"
+            },
+            {
+              "name": "image-alt",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Alt text. Empty by default: the heading already names the destination, so the image is decorative.",
+              "fieldName": "imageAlt"
+            },
+            {
+              "name": "fallback",
+              "type": {
+                "text": "string"
+              },
+              "description": "Stand-in shown when there is no image — the brand uses `<P>`, the client initial in angle brackets.",
+              "fieldName": "fallback"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The card's heading. Rendered as an `<al-heading>`, in place of the `header` slot.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "excerpt",
+              "type": {
+                "text": "string"
+              },
+              "description": "The clamped summary under the heading.",
+              "fieldName": "excerpt"
+            },
+            {
+              "name": "footer-label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The mono cue in the footer, e.g. `read →`. Omit for no footer.",
+              "fieldName": "footerLabel"
+            },
+            {
+              "name": "featured",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "The larger treatment used for a lead card that spans two grid columns.",
+              "fieldName": "featured"
+            },
+            {
+              "name": "heading-variant",
+              "type": {
+                "text": "string"
+              },
+              "description": "Heading scale override. Left unset, it follows the anatomy: `lg` for work\ncards and featured articles (short client names and lead treatments), `md`\nfor a standard article card, whose long sentence titles overwrap badly at\n`lg`. Altitude's scoped steps here are 24px and 48px with nothing between —\na real gap in `al-heading`, documented rather than papered over.",
+              "fieldName": "headingVariant"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-card",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLCard",
+          "declaration": {
+            "name": "SLCard",
+            "module": "components/card/card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-card",
+          "declaration": {
+            "name": "SLCard",
+            "module": "components/card/card.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLCard",
+            "module": "components/card/card.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/cta-band/cta-band.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-cta-band\n\nThe closing call-to-action band that ends 16 of the site's 24 pages: a\nfull-bleed surface with the brand's grid texture behind it, a kicker, a\ncentred display heading and lead, and the page's actions below.\n\nWhat it owns is the band — the top hairline, the texture, the generous\nresponsive rhythm, and the centred measure the copy is capped to. The actions\ncome from the page through the default slot, because which CTAs close a page\nis the page's decision, not the band's.\n\n```html\n<al-cta-band heading=\"Is your design system AI-ready?\" dek=\"…\">\n  <al-layout direction=\"row\" wrap gap=\"md\" align=\"center\" justify=\"center\">\n    <al-button href=\"/contact\">Book a call</al-button>\n    <al-button variant=\"tertiary\" href=\"/services/workshops\">Ask about a workshop</al-button>\n  </al-layout>\n</al-cta-band>\n```",
+          "name": "SLCtaBand",
+          "cssProperties": [
+            {
+              "description": "The band's vertical rhythm. Defaults to `6rem`, and `8rem` from the `48rem` breakpoint up.",
+              "name": "--al-cta-band-padding-block"
+            },
+            {
+              "description": "Measure the content column is capped to. Defaults to `85rem`.",
+              "name": "--al-cta-band-max-width"
+            },
+            {
+              "description": "Measure the heading is capped to. Defaults to `48rem`.",
+              "name": "--al-cta-band-heading-max-width"
+            },
+            {
+              "description": "Measure the lead is capped to. Defaults to `32rem`.",
+              "name": "--al-cta-band-dek-max-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The full-bleed outer band. The top hairline lives here.",
+              "name": "band"
+            },
+            {
+              "description": "The decorative grid layer. Hide it with `display: none` where a page wants a plain band.",
+              "name": "texture"
+            },
+            {
+              "description": "The centred, measure-capped content column.",
+              "name": "inner"
+            },
+            {
+              "description": "The accent kicker.",
+              "name": "kicker"
+            },
+            {
+              "description": "The `<al-heading>`.",
+              "name": "heading"
+            },
+            {
+              "description": "The lead paragraph.",
+              "name": "dek"
+            },
+            {
+              "description": "The wrapper around the slotted actions.",
+              "name": "actions"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The band's actions. Wrap them in an `<al-layout>` to arrange them — a row that wraps to a stack is the usual choice.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-cta-band'"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The band's heading.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "dek",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph under the heading. Omit for none.",
+              "attribute": "dek"
+            },
+            {
+              "kind": "field",
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "default": "'<cta>'",
+              "description": "The accent kicker above the heading. Defaults to the brand's `<cta>` form.",
+              "attribute": "kicker"
+            },
+            {
+              "kind": "field",
+              "name": "headingTag",
+              "type": {
+                "text": "string"
+              },
+              "default": "'h2'",
+              "description": "The heading's semantic level — a document-outline concern, so not fixed.",
+              "attribute": "heading-tag"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The band's heading.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "dek",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph under the heading. Omit for none.",
+              "fieldName": "dek"
+            },
+            {
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "default": "'<cta>'",
+              "description": "The accent kicker above the heading. Defaults to the brand's `<cta>` form.",
+              "fieldName": "kicker"
+            },
+            {
+              "name": "heading-tag",
+              "type": {
+                "text": "string"
+              },
+              "default": "'h2'",
+              "description": "The heading's semantic level — a document-outline concern, so not fixed.",
+              "fieldName": "headingTag"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-cta-band",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLCtaBand",
+          "declaration": {
+            "name": "SLCtaBand",
+            "module": "components/cta-band/cta-band.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-cta-band",
+          "declaration": {
+            "name": "SLCtaBand",
+            "module": "components/cta-band/cta-band.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLCtaBand",
+            "module": "components/cta-band/cta-band.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/footer/footer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-footer\n\nSouthleft's site footer — an asymmetric three-column masthead, a pull quote,\nand a legal bar.\n\nIT *IS* `al-footer` — the brand implementation of that tag. It owns the\n`<footer>` landmark and its box directly; it no longer wraps Altitude's,\nbecause a component cannot render the tag it is registered under without\nrecursing (spec 2026-08-23-one-al-namespace-across-brand-and-base). The\n`--al-footer-*` custom properties remain the public API, now read here.\n\n```html\n<al-footer copyright=\"© 2026 Southleft, LLC. All rights reserved.\"\n           quote=\"If I cannot do great things, I can do small things in a great way.\"\n           cite=\"— attributed to Dr. Martin Luther King Jr.\">\n  <al-logo slot=\"brand\" variant=\"southleft\" href=\"/\"></al-logo>\n  <p slot=\"brand\">Design systems consulting, engineering, and AI integration.</p>\n  <nav slot=\"columns\" aria-label=\"Footer\">…</nav>\n  <a slot=\"legal\" href=\"/privacy-policy\">Privacy policy</a>\n</al-footer>\n```\n\nThe masthead is `<al-layout variant=\"grid\">` driven through the documented\n`--al-layout-template` hook, not a bespoke grid — the same escape hatch the\nsite already uses, so an asymmetric masthead never becomes a reason to\nhand-roll `display: grid`.",
+          "name": "SLFooter",
+          "cssProperties": [
+            {
+              "description": "The masthead track list. Defaults to `1.4fr 1fr 1fr`.",
+              "name": "--al-footer-template"
+            },
+            {
+              "description": "The content column. Defaults to `79rem`.",
+              "name": "--al-footer-measure"
+            },
+            {
+              "description": "The footer's vertical rhythm. Defaults to `3.5rem`.",
+              "name": "--al-footer-padding-block"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The column grid.",
+              "name": "masthead"
+            },
+            {
+              "description": "The pull quote.",
+              "name": "quote"
+            },
+            {
+              "description": "The bottom legal bar.",
+              "name": "bar"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The first, wider column: wordmark, blurb, CTA, whatever annotation the page carries.",
+              "name": "brand"
+            },
+            {
+              "description": "The remaining masthead columns. Each top-level element becomes one column.",
+              "name": "columns"
+            },
+            {
+              "description": "Links for the bottom bar, beside the copyright.",
+              "name": "legal"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-footer'"
+            },
+            {
+              "kind": "field",
+              "name": "quote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The pull quote above the legal bar. Omit for no quote.",
+              "attribute": "quote"
+            },
+            {
+              "kind": "field",
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Attribution under the quote.",
+              "attribute": "cite"
+            },
+            {
+              "kind": "field",
+              "name": "copyright",
+              "type": {
+                "text": "string"
+              },
+              "description": "The copyright line in the bottom bar.",
+              "attribute": "copyright"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "quote",
+              "type": {
+                "text": "string"
+              },
+              "description": "The pull quote above the legal bar. Omit for no quote.",
+              "fieldName": "quote"
+            },
+            {
+              "name": "cite",
+              "type": {
+                "text": "string"
+              },
+              "description": "Attribution under the quote.",
+              "fieldName": "cite"
+            },
+            {
+              "name": "copyright",
+              "type": {
+                "text": "string"
+              },
+              "description": "The copyright line in the bottom bar.",
+              "fieldName": "copyright"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-footer",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLFooter",
+          "declaration": {
+            "name": "SLFooter",
+            "module": "components/footer/footer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-footer",
+          "declaration": {
+            "name": "SLFooter",
+            "module": "components/footer/footer.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLFooter",
+            "module": "components/footer/footer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/header/header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-header\n\nSouthleft's primary navigation bar — sticky, translucent, blurred, with pill\nnav items, circular icon actions and a numbered mobile panel.\n\nIT *IS* `al-header` — the brand implementation of that tag, not a wrapper\naround Altitude's. It owns the `<header>` landmark, the sticky behaviour and\nthe stacking context itself, and adds what is Southleft's alone: the pill\ntreatment, the icon-button shape, and the mobile panel.\n\nIt used to compose `<al-header>` and feed it chrome through\n`--al-header-background` / `-backdrop-filter` / `-border-block-end`. Taking\nthe tag ended that (one namespace, spec\n2026-08-23-one-al-namespace-across-brand-and-base): an `<al-header>` rendered\ninside `<al-header>` recurses forever. Those custom properties are still the\npublic API — header.scss now READS them rather than passing them on — so a\nconsumer overriding one is unaffected.\n\nAn app gets this implementation, or Altitude's bare landmark, by importing\none module or the other. Never both: `customElements.define` is first-come\nand final.\n\n```html\n<al-header>\n  <al-logo slot=\"brand\" variant=\"southleft\" href=\"/\"></al-logo>\n  <a slot=\"nav\" href=\"/work\">Work</a>\n  <a slot=\"nav\" href=\"/insights\" aria-current=\"page\">Insights</a>\n  <button slot=\"actions\" aria-label=\"Ink / paper\">…</button>\n  <al-button slot=\"actions\" href=\"/contact\">Book a call</al-button>\n  <a slot=\"mobile\" href=\"/work\">Work</a>\n</al-header>\n```\n\nIt earns its own tag by owning BEHAVIOUR, not arrangement: the mobile panel's\nopen/closed state, the button that drives it, and the `aria-expanded` /\n`aria-controls` relationship between them. Everything positional is still\n`<al-layout>`.",
+          "name": "SLHeader",
+          "cssProperties": [
+            {
+              "description": "Bar height. Defaults to `4rem`, and `5rem` from the `48rem` breakpoint up.",
+              "name": "--al-header-height"
+            },
+            {
+              "description": "The content column. Defaults to `79rem`.",
+              "name": "--al-header-measure"
+            },
+            {
+              "description": "Bar surface. Defaults to the page background at 85% so the blur reads.",
+              "name": "--al-header-background"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The row inside the measure.",
+              "name": "bar"
+            },
+            {
+              "description": "The `<nav>` landmark around the pills.",
+              "name": "nav"
+            },
+            {
+              "description": "The button that opens the mobile panel.",
+              "name": "menu-button"
+            },
+            {
+              "description": "The mobile panel.",
+              "name": "panel"
+            },
+            {
+              "name": "bar-outer",
+              "description": ""
+            }
+          ],
+          "slots": [
+            {
+              "description": "The wordmark. Usually `<al-logo variant=\"southleft\">`.",
+              "name": "brand"
+            },
+            {
+              "description": "The primary links, as flat `<a>` elements. The component gives them the pill treatment and marks `aria-current=\"page\"` as the filled state. Hidden below the `64rem` breakpoint, where the mobile panel takes over.",
+              "name": "nav"
+            },
+            {
+              "description": "The right-hand cluster. Native `<button>`s get the circular icon treatment; anything else (an `<al-button>` CTA) is left alone.",
+              "name": "actions"
+            },
+            {
+              "description": "The panel's links. Supplied separately from `nav` because a slot can project its nodes only once — see the note in the SCSS.",
+              "name": "mobile"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-header'"
+            },
+            {
+              "kind": "field",
+              "name": "sticky",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Stick the bar to the top of the scroll container. On by default — the site's header is sticky.",
+              "attribute": "sticky",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "menuOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the mobile panel is open. Reflected so the page can style against\n`al-header[menu-open]` and so the state is inspectable in devtools rather\nthan trapped in the shadow root.",
+              "attribute": "menu-open",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "toggleMenu",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "When the mobile panel opens or closes. `detail.open` carries the new state.",
+              "name": "sl-header-menu-toggle"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "sticky",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "Stick the bar to the top of the scroll container. On by default — the site's header is sticky.",
+              "fieldName": "sticky"
+            },
+            {
+              "name": "menu-open",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the mobile panel is open. Reflected so the page can style against\n`al-header[menu-open]` and so the state is inspectable in devtools rather\nthan trapped in the shadow root.",
+              "fieldName": "menuOpen"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLHeader",
+          "declaration": {
+            "name": "SLHeader",
+            "module": "components/header/header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-header",
+          "declaration": {
+            "name": "SLHeader",
+            "module": "components/header/header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLHeader",
+            "module": "components/header/header.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/hero/hero.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-hero\n\nThe HOMEPAGE hero — a full-bleed landing composition: the brand's grid\ntexture behind a kicker and a display headline, then a two-column split with\nthe lead copy and actions on the left and a supporting panel on the right.\n\nDistinct from `al-page-hero`, the interior band on 19 of the site's other\npages. The site's own class names (`.al-hero` vs `.al-page-hero`) already\nseparate them; these components keep that split rather than overloading one\nname — they are different shapes, not variants of each other.\n\n```html\n<al-hero\n  kicker=\"<southleft>\"\n  heading=\"AI-powered design systems. Built by the people building the tools.\"\n  lead=\"We audit, build, and evolve design systems for teams at…\"\n>\n  <al-button slot=\"actions\" href=\"/contact\">Book a call</al-button>\n  <al-button slot=\"actions\" variant=\"tertiary\" href=\"/services\">See how we work</al-button>\n  <div slot=\"chips\">…loose token chips…</div>\n  <div slot=\"aside\">…the terminal panel…</div>\n</al-hero>\n```\n\nTHE GLYPH FIELD IS PART OF THE HERO, not page art. It was first left in the\napp on the reuse test, which was the wrong call: the marks are drawn on the\nSAME 72px lattice as the grid texture, and the app's own note says it plainly\n— \"the grid alone reads as an empty backdrop\". Grid without marks is an\nunfinished hero, so the component owns both layers. `--sl-artifacts` thins\nthe field or silences it (`0`), and reduced motion stops it moving.\n\nWHAT STAYS IN THE PAGE is the terminal panel — one page, brand art with no\nbearing on the hero's shape. The `aside` slot is that seam: the hero owns the\ntwo-column composition and the rhythm, the page owns what fills the right\ncolumn.",
+          "name": "SLHero",
+          "cssProperties": [
+            {
+              "description": "The band's vertical rhythm. Defaults to `5rem`, stepping up at the `48rem` and `64rem` breakpoints.",
+              "name": "--al-hero-padding-block"
+            },
+            {
+              "description": "The content column. Defaults to `79rem`.",
+              "name": "--al-hero-measure"
+            },
+            {
+              "description": "The two-column track list above `64rem`. Defaults to `minmax(0, 1fr) minmax(0, 0.85fr)`.",
+              "name": "--al-hero-template"
+            },
+            {
+              "description": "Measure the headline is capped to. Defaults to `18ch`.",
+              "name": "--al-hero-heading-max-width"
+            },
+            {
+              "description": "Density of the glyph field, `0`–`1`. `0` silences it entirely. Defaults to `1`.",
+              "name": "--sl-artifacts"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The full-bleed outer band.",
+              "name": "band"
+            },
+            {
+              "description": "The decorative grid layer. Hide it with `display: none` for a plain hero.",
+              "name": "texture"
+            },
+            {
+              "description": "The glyph field drawn over the grid. Hide it for a plain grid.",
+              "name": "murmur"
+            },
+            {
+              "description": "The accent kicker.",
+              "name": "kicker"
+            },
+            {
+              "description": "The display headline.",
+              "name": "heading"
+            },
+            {
+              "description": "The lead paragraph.",
+              "name": "lead"
+            },
+            {
+              "description": "The right-hand column wrapper.",
+              "name": "aside"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The CTAs, under the lead copy. Laid out as a wrapping row.",
+              "name": "actions"
+            },
+            {
+              "description": "The annotation strip beneath the actions — the site's \"loose tokens\" row.",
+              "name": "chips"
+            },
+            {
+              "description": "The right-hand column. Hidden below `64rem`, where the composition collapses to one column and a supporting panel would crowd the fold.",
+              "name": "aside"
+            },
+            {
+              "description": "Anything extra at the end of the lead column.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-hero'"
+            },
+            {
+              "kind": "field",
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "description": "The accent kicker above the headline.",
+              "attribute": "kicker"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The headline. Rendered at the display scale.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "lead",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph in the left column.",
+              "attribute": "lead"
+            },
+            {
+              "kind": "field",
+              "name": "canvas",
+              "type": {
+                "text": "HTMLCanvasElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "CELL",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "static": true,
+              "readonly": true,
+              "default": "72",
+              "description": "72px — the SAME cell as the grid texture. If one changes the other must, or the marks stop landing on the grid."
+            },
+            {
+              "kind": "field",
+              "name": "murmurTimer",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "murmurCols",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "murmurRows",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "cssVar",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Colours are read from custom properties, never hardcoded, so a mode switch or a derived theme repaints correctly."
+            },
+            {
+              "kind": "field",
+              "name": "density",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "description": "Field density, 0–1. `--sl-artifacts` lets a theme thin it out or silence it.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "glyph",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "ctx",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "c",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "r",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "accent",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "One mark, centred in its cell. Five forms."
+            },
+            {
+              "kind": "method",
+              "name": "seedMurmur",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "stirMurmur",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "description": "The accent kicker above the headline.",
+              "fieldName": "kicker"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The headline. Rendered at the display scale.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "lead",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph in the left column.",
+              "fieldName": "lead"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-hero",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLHero",
+          "declaration": {
+            "name": "SLHero",
+            "module": "components/hero/hero.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-hero",
+          "declaration": {
+            "name": "SLHero",
+            "module": "components/hero/hero.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLHero",
+            "module": "components/hero/hero.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/logo-wall/logo-wall.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-logo-wall\n\nThe client logo band — a wrapping row of monochrome marks that come up to\nfull strength on hover.\n\n```html\n<al-logo-wall>\n  <img src=\"/logos/ibm.webp\" alt=\"IBM\" />\n  <img src=\"/logos/google.webp\" alt=\"Google\" />\n</al-logo-wall>\n```\n\nThe marks are slotted, because which clients appear is the page's business.\nWhat the component owns is the treatment: the uniform optical height, the\nknock-back-and-reveal, and the asymmetric row/column rhythm the brand uses.",
+          "name": "SLLogoWall",
+          "cssProperties": [
+            {
+              "description": "Optical height every mark is normalised to. Defaults to `1.75rem`, and `2rem` from the `48rem` breakpoint up.",
+              "name": "--al-logo-wall-height"
+            },
+            {
+              "description": "Resting opacity. Defaults to `0.5`.",
+              "name": "--al-logo-wall-opacity"
+            },
+            {
+              "description": "Row and column gap, in that order. Defaults to `3rem 3.5rem`.",
+              "name": "--al-logo-wall-gap"
+            },
+            {
+              "description": "The knock-back treatment. Defaults to `brightness(0) invert(1)`, which silhouettes each mark and flips it white — correct on a dark canvas and INVISIBLE on a light one. Set it to `brightness(0)` in light mode; the component cannot detect mode from inside its shadow root.",
+              "name": "--al-logo-wall-filter"
+            },
+            {
+              "description": "Filter on hover/focus. Defaults to the resting filter. Set it to `grayscale(0) invert(0) contrast(1)` to reveal each mark's real colours.",
+              "name": "--al-logo-wall-filter-hover"
+            },
+            {
+              "description": "Opacity on hover/focus. Defaults to `1`.",
+              "name": "--al-logo-wall-opacity-hover"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The wrapping row.",
+              "name": "wall"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The logo images. Sized and treated by the component; pass them at their natural dimensions.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-logo-wall'"
+            },
+            {
+              "kind": "field",
+              "name": "vivid",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Render the marks at full strength instead of knocked back. For a page where\nthe logos are the subject rather than social proof in passing.",
+              "attribute": "vivid",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "vivid",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Render the marks at full strength instead of knocked back. For a page where\nthe logos are the subject rather than social proof in passing.",
+              "fieldName": "vivid"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-logo-wall",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLLogoWall",
+          "declaration": {
+            "name": "SLLogoWall",
+            "module": "components/logo-wall/logo-wall.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-logo-wall",
+          "declaration": {
+            "name": "SLLogoWall",
+            "module": "components/logo-wall/logo-wall.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLLogoWall",
+            "module": "components/logo-wall/logo-wall.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/marquee/marquee.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-marquee\n\nAn endless belt of outline display type. Decorative reinforcement of the\npage's message — it pauses on hover and stands still under reduced motion.\n\nItems are given as slotted elements and the component renders the belt\nitself, twice:\n\n```html\n<al-marquee>\n  <span>Design Systems</span>\n  <span data-variant=\"solid\">×</span>\n  <span>AI</span>\n  <span data-variant=\"mono\">— built by the people building the tools —</span>\n</al-marquee>\n```\n\nWHY THE SLOT IS A DATA SOURCE, NOT THE RENDERED CONTENT. A seamless loop\nneeds the sequence present twice, so the `-50%` translate lands the second\ncopy exactly where the first began. A slot can only project its nodes ONCE —\nthere is no way to show the same light-DOM node in two places — so the\ncomponent reads the slotted elements, hides the slot, and renders two copies\ninto the shadow root. Styling then lives in ordinary shadow CSS rather than\nbeing split between `::slotted()` for the originals and normal rules for the\nclones.\n\nThis is arrangement the component genuinely owns: the belt is a single\nanimated track, not a place a consumer arranges boxes.",
+          "name": "SLMarquee",
+          "cssProperties": [
+            {
+              "description": "One full cycle. Defaults to `36s`.",
+              "name": "--al-marquee-duration"
+            },
+            {
+              "description": "Space between items. Defaults to `3rem`.",
+              "name": "--al-marquee-gap"
+            },
+            {
+              "description": "Display item size. Defaults to `clamp(2.5rem, 6vw, 5rem)`.",
+              "name": "--al-marquee-font-size"
+            },
+            {
+              "description": "The band's vertical rhythm. Defaults to `clamp(1.25rem, 3vw, 2.5rem)`.",
+              "name": "--al-marquee-padding-block"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The animated belt. Retune or stop the animation here.",
+              "name": "track"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The items. Each element's text becomes one item; `data-variant=\"solid\"` fills it in the accent colour and `data-variant=\"mono\"` renders it as small mono type.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-marquee'"
+            },
+            {
+              "kind": "field",
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Pause the belt. Reflected so a page can stop it from outside\n(`al-marquee[paused]`) without reaching into the shadow root.",
+              "attribute": "paused",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "MarqueeItem[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "readItems",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderRun",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "copy",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "One pass of the sequence. Rendered twice — see the class note."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "paused",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Pause the belt. Reflected so a page can stop it from outside\n(`al-marquee[paused]`) without reaching into the shadow root.",
+              "fieldName": "paused"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-marquee",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLMarquee",
+          "declaration": {
+            "name": "SLMarquee",
+            "module": "components/marquee/marquee.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-marquee",
+          "declaration": {
+            "name": "SLMarquee",
+            "module": "components/marquee/marquee.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLMarquee",
+            "module": "components/marquee/marquee.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/page-hero/page-hero.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-page-hero\n\nSouthleft's INTERIOR-page hero band — an eyebrow, a display heading, a lead\nparagraph, and whatever the page adds below. Appears on 19 of the site's 24\npages.\n\nNot to be confused with `al-hero`, the HOMEPAGE hero: that one is a\ntwo-column landing composition with the grid texture behind it. They are\ngenuinely different shapes, and the site's own class names (`.al-page-hero`\nvs `.al-hero`) already tell them apart — this keeps that distinction rather\nthan overloading one name with two jobs.\n\nWhat it owns is the BAND: the vertical rhythm, and the eyebrow hugging its\ncontent instead of stretching. Arrangement is `<al-layout>`'s job, and the\nstack below is exactly that — nested in the shadow root so the page does not\nhave to restate it, not replaced by a grid of this component's own.\n\n```html\n<al-page-hero label=\"Services\" heading=\"Design systems that hold\" dek=\"…\">\n  <al-layout direction=\"row\" gap=\"md\">\n    <al-button>Book a call</al-button>\n  </al-layout>\n</al-page-hero>\n```\n\nThe three content props are CONTENT, not layout — they say what the band\nsays, never where anything sits. A fundamentally different hero shape is a\ndifferent component, not another prop on this one. That distinction is the\nwhole reason `al-hero` was removed from Altitude: six fixed named slots plus\nfive layout props, abandoned mid-build by its first real consumer.",
+          "name": "SLPageHero",
+          "cssProperties": [
+            {
+              "description": "The band's vertical rhythm. Defaults to `clamp(3rem, 6vw, 5rem)`.",
+              "name": "--al-page-hero-padding-block"
+            },
+            {
+              "description": "The measure the band is capped to. Defaults to `85rem`, the site's own container width.",
+              "name": "--al-page-hero-max-width"
+            },
+            {
+              "description": "The side gutters. Defaults to `clamp(1.25rem, 4vw, 3rem)`.",
+              "name": "--al-page-hero-padding-inline"
+            },
+            {
+              "description": "Gap between the stacked items. Defaults to `--al-theme-space-md`.",
+              "name": "--al-page-hero-gap"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The outer band. Retune the vertical rhythm and the measure here.",
+              "name": "band"
+            },
+            {
+              "description": "The `<al-chip>` eyebrow.",
+              "name": "eyebrow"
+            },
+            {
+              "description": "The `<al-heading>`.",
+              "name": "heading"
+            },
+            {
+              "description": "The lead paragraph.",
+              "name": "dek"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Anything below the lead paragraph — CTAs, a token strip, a form. Laid out as further children of the stack.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-page-hero'"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The eyebrow chip above the heading. Omit for no eyebrow.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The band's heading.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "dek",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph under the heading. Omit for none.",
+              "attribute": "dek"
+            },
+            {
+              "kind": "field",
+              "name": "headingTag",
+              "type": {
+                "text": "string"
+              },
+              "default": "'h1'",
+              "description": "The heading's semantic level. `h1` on a page's primary hero, `h2` where the\nband is a section rather than the page title — a document-outline concern,\nwhich is why it is not fixed.",
+              "attribute": "heading-tag"
+            },
+            {
+              "kind": "field",
+              "name": "headingVariant",
+              "type": {
+                "text": "string"
+              },
+              "default": "'display-md'",
+              "description": "Heading scale. `display-md` is the interior-page default; `display-sm` is what\nan article or project band uses inside the narrower prose measure. Without\nthis the four hand-rolled title bands on this site could not adopt the\ncomponent at all — the variant was hardcoded.",
+              "attribute": "heading-variant"
+            },
+            {
+              "kind": "field",
+              "name": "align",
+              "type": {
+                "text": "'start' | 'center'"
+              },
+              "default": "'start'",
+              "description": "Horizontal alignment of the whole band. `start` is the default; `center` is\nwhat the 404 and quiz pages want, and it has to move the EYEBROW too — the\nchip wrapper pins `align-self: start`, so text-align alone would leave it\nhanging off to the left.",
+              "attribute": "align",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The eyebrow chip above the heading. Omit for no eyebrow.",
+              "fieldName": "label"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The band's heading.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "dek",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph under the heading. Omit for none.",
+              "fieldName": "dek"
+            },
+            {
+              "name": "heading-tag",
+              "type": {
+                "text": "string"
+              },
+              "default": "'h1'",
+              "description": "The heading's semantic level. `h1` on a page's primary hero, `h2` where the\nband is a section rather than the page title — a document-outline concern,\nwhich is why it is not fixed.",
+              "fieldName": "headingTag"
+            },
+            {
+              "name": "heading-variant",
+              "type": {
+                "text": "string"
+              },
+              "default": "'display-md'",
+              "description": "Heading scale. `display-md` is the interior-page default; `display-sm` is what\nan article or project band uses inside the narrower prose measure. Without\nthis the four hand-rolled title bands on this site could not adopt the\ncomponent at all — the variant was hardcoded.",
+              "fieldName": "headingVariant"
+            },
+            {
+              "name": "align",
+              "type": {
+                "text": "'start' | 'center'"
+              },
+              "default": "'start'",
+              "description": "Horizontal alignment of the whole band. `start` is the default; `center` is\nwhat the 404 and quiz pages want, and it has to move the EYEBROW too — the\nchip wrapper pins `align-self: start`, so text-align alone would leave it\nhanging off to the left.",
+              "fieldName": "align"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-page-hero",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLPageHero",
+          "declaration": {
+            "name": "SLPageHero",
+            "module": "components/page-hero/page-hero.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-page-hero",
+          "declaration": {
+            "name": "SLPageHero",
+            "module": "components/page-hero/page-hero.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLPageHero",
+            "module": "components/page-hero/page-hero.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/section-header/section-header.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Component: al-section-header\n\nThe heading block that opens a section of a Southleft page: a mono rule\ncarrying an index and label, an accent kicker, a heading, an optional lead,\nand an optional trailing link.\n\nEarned its place by repetition — two pages import it and five more had\nhand-re-inlined its markup (`services/design-systems.astro:132-138` and four\nsiblings), which is the shape of a component the system was missing.\n\n```html\n<al-section-header\n  index=\"02\"\n  label=\"Insights\"\n  heading=\"We publish our homework\"\n  dek=\"Notes from inside real design-system work.\"\n  link-href=\"/insights\"\n  link-label=\"all insights →\"\n></al-section-header>\n```",
+          "name": "SLSectionHeader",
+          "cssProperties": [
+            {
+              "description": "Space between the header and the section body. Defaults to `--al-theme-space-xl`.",
+              "name": "--al-section-header-margin-block-end"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The mono index/label rule above everything.",
+              "name": "rule"
+            },
+            {
+              "description": "The accent `<label>` kicker.",
+              "name": "kicker"
+            },
+            {
+              "description": "The `<al-heading>`.",
+              "name": "heading"
+            },
+            {
+              "description": "The lead paragraph.",
+              "name": "dek"
+            },
+            {
+              "description": "The trailing mono link.",
+              "name": "link"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The trailing position, for a control the link cannot express — a filter, a segmented toggle. Use it INSTEAD of `linkHref`; both render if both are set.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "el",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'al-section-header'"
+            },
+            {
+              "kind": "field",
+              "name": "index",
+              "type": {
+                "text": "string"
+              },
+              "description": "The ordinal shown before the label in the rule, e.g. `02`. Omit for a label-only rule.",
+              "attribute": "index"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The rule's label, and the source of the kicker slug below it.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The section heading.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "dek",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph under the heading. Omit for none.",
+              "attribute": "dek"
+            },
+            {
+              "kind": "field",
+              "name": "linkHref",
+              "type": {
+                "text": "string"
+              },
+              "description": "Target for the trailing link. Omit (or fill the default slot) for no link.",
+              "attribute": "link-href"
+            },
+            {
+              "kind": "field",
+              "name": "linkLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Text for the trailing link.",
+              "attribute": "link-label"
+            },
+            {
+              "kind": "field",
+              "name": "headingTag",
+              "type": {
+                "text": "string"
+              },
+              "default": "'h2'",
+              "description": "The heading's semantic level — a document-outline concern, so not fixed.",
+              "attribute": "heading-tag"
+            },
+            {
+              "kind": "field",
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "description": "Kicker text without the angle brackets. Derives from `label` when unset; pass an empty string for a rule with no kicker.",
+              "attribute": "kicker"
+            },
+            {
+              "kind": "field",
+              "name": "kickerText",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "description": "`<my-label>` — the brand's kicker form, derived unless `kicker` overrides it.",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "index",
+              "type": {
+                "text": "string"
+              },
+              "description": "The ordinal shown before the label in the rule, e.g. `02`. Omit for a label-only rule.",
+              "fieldName": "index"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The rule's label, and the source of the kicker slug below it.",
+              "fieldName": "label"
+            },
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "The section heading.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "dek",
+              "type": {
+                "text": "string"
+              },
+              "description": "The lead paragraph under the heading. Omit for none.",
+              "fieldName": "dek"
+            },
+            {
+              "name": "link-href",
+              "type": {
+                "text": "string"
+              },
+              "description": "Target for the trailing link. Omit (or fill the default slot) for no link.",
+              "fieldName": "linkHref"
+            },
+            {
+              "name": "link-label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Text for the trailing link.",
+              "fieldName": "linkLabel"
+            },
+            {
+              "name": "heading-tag",
+              "type": {
+                "text": "string"
+              },
+              "default": "'h2'",
+              "description": "The heading's semantic level — a document-outline concern, so not fixed.",
+              "fieldName": "headingTag"
+            },
+            {
+              "name": "kicker",
+              "type": {
+                "text": "string"
+              },
+              "description": "Kicker text without the angle brackets. Derives from `label` when unset; pass an empty string for a rule with no kicker.",
+              "fieldName": "kicker"
+            }
+          ],
+          "superclass": {
+            "name": "ALElement",
+            "module": "/al-web-components/components/ALElement"
+          },
+          "tagName": "al-section-header",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SLSectionHeader",
+          "declaration": {
+            "name": "SLSectionHeader",
+            "module": "components/section-header/section-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "al-section-header",
+          "declaration": {
+            "name": "SLSectionHeader",
+            "module": "components/section-header/section-header.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "SLSectionHeader",
+            "module": "components/section-header/section-header.ts"
+          }
+        }
+      ]
+    }
+  ]
+}

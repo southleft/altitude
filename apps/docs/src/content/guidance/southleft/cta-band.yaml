@@ -1,0 +1,36 @@
+purpose: The closing ask. A full-width band with the brand's grid texture, a kicker, a centred
+  heading and dek, and whatever actions you slot in. It is the last thing on a page and it
+  exists to be acted on.
+whenToUse:
+- A page has finished making its argument and needs one clear next step before the footer.
+- The same ask repeats across several pages and should look identical on every one of them.
+whenNotToUse:
+- text: The action belongs beside the content it relates to rather than at the end of the
+    page. An inline action does not need a full-width band.
+  instead: button
+- text: You are opening the page rather than closing it, and want the landing composition
+    with a supporting panel.
+  instead: hero
+dos:
+- Keep it to one primary action plus at most one secondary. A closing band with four equal
+  choices closes nothing.
+- Slot the actions rather than styling your own; the default slot centres them and wraps them
+  on narrow screens already.
+donts:
+- Do not place two CTA bands on one page. The second is evidence that the first ask was not
+  the real one.
+- Do not use it as a section divider. Its block padding is tuned to end a page, and mid-page
+  it reads as a false ending.
+accessibility:
+- The grid texture is decorative and marked `aria-hidden`, so it is never announced; the heading
+  remains the band's only landmark-relevant content.
+content:
+- The heading is a question or an invitation, not a label. This is the one place on the page
+  addressing the reader directly.
+sources:
+- path: libs/sl-web-components/components/cta-band/cta-band.ts
+  contains: export class SLCtaBand
+  note: The component this guidance describes.
+- path: libs/sl-web-components/components/cta-band/cta-band.ts
+  contains: sl-c-cta-band__texture
+  note: The decorative texture the accessibility note rests on.

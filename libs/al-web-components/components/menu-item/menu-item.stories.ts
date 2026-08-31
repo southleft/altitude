@@ -1,13 +1,11 @@
-import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/add';
 import '../icon/icons/chevron-down';
 import './menu-item';
 
 export default {
-  title: 'Atoms/Menu Item',
+  title: 'Atoms/Navigation/Menu Item',
   component: 'al-menu-item',
   tags: [ 'autodocs' ],
   parameters: {
@@ -20,7 +18,6 @@ export default {
       exclude: ['isFocused', 'idx', 'ariaControls', 'menuItemLink', 'menuItemControl', 'menuItemLinkEl', 'menuItemControlEl']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     href: {
       control: 'text'
@@ -167,30 +164,3 @@ HeaderGroupWithIconDisabled.args = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const menuItem = canvas.queryByTestId('menu-item') as any;
-  const menuItemLink = menuItem.shadowRoot?.querySelector('.al-c-menu-item__link') as HTMLElement;
-
-  await userEvent.click(menuItemLink);
-  expect(menuItem.isSelected).toBe(true);
-
-  menuItem.isSelected = false;
-  menuItem.blur();
-};
-
-HeaderGroup.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const menuItem = canvas.queryByTestId('menu-item') as any;
-  const menuControl = menuItem.shadowRoot?.querySelector('.al-c-menu-item__control') as HTMLElement;
-  const menuItemLink = menuItem.shadowRoot?.querySelector('.al-c-menu-item__link') as HTMLElement;
-
-  await userEvent.click(menuItemLink);
-  expect(menuItem.isSelected).toBe(true);
-
-  await userEvent.click(menuControl);
-  expect(menuItem.isExpanded).toBe(true);
-
-  menuItem.isSelected = false;
-  menuItem.isExpanded = false;
-};

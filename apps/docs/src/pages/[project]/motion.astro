@@ -1,0 +1,22 @@
+---
+/**
+ * ROUTE ONLY — Motion for one non-default project.
+ *
+ * One route per NON-DEFAULT design system in `.altitude/ds-projects.json`
+ * (`projectPaths()`), so adding a project to that file adds a whole
+ * documentation site and removing it takes one away. The body is
+ * `src/components/pages/MotionPage.astro`, the same file the site at the root
+ * renders.
+ */
+import MotionPage from '../../components/pages/MotionPage.astro';
+import { projectPaths } from '../../lib/projects.mjs';
+import { contextFor } from '../../lib/context.mjs';
+
+export function getStaticPaths() {
+  return projectPaths();
+}
+
+const { project } = Astro.props;
+---
+
+<MotionPage context={contextFor(project)} />

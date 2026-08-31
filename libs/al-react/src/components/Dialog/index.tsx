@@ -1,1 +1,3 @@
-export * from './Dialog';
+'use client';
+
+export * from './Dialog.js';

@@ -1,12 +1,11 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../checkbox/checkbox';
 import '../list/list';
 import './list-item';
 
 export default {
-  title: 'Atoms/List Item',
+  title: 'Atoms/Text/List Item',
   component: 'al-list-item',
   tags: [ 'autodocs' ],
   parameters: {
@@ -15,7 +14,6 @@ export default {
       handles: ['select']
     }
   },
-  decorators: [ withActions ],
 };
 
 const Template = (args) => html`<al-list-item ${spread(args)}>List Item</al-list-item>`;

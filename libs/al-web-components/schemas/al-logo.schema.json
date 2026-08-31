@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-logo.schema.json",
+  "title": "ALLogo (al-logo)",
+  "description": "Component: al-logo",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-logo",
+    "className": "ALLogo",
+    "module": "components/logo/logo.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The component content",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-logo"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'southleft'",
+          "type": "string"
+        },
+        "href": {
+          "description": "The logo link URL",
+          "type": "string"
+        },
+        "label": {
+          "description": "A11y — the accessible name of the logo mark.\n\nThe logo renders an inline `<svg>` inside an `<a>`; an `<svg>` with no\n`role`/name contributes nothing to name-from-content, so the link was\nnameless (axe `link-name`). Defaults to the wordmark the variant draws.",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

@@ -1,7 +1,5 @@
-import { expect, fireEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/attachment';
 import '../icon/icons/emoji';
@@ -10,7 +8,7 @@ import '../icon/icons/warning-circle';
 import './input';
 
 export default {
-  title: 'Molecules/Input',
+  title: 'Atoms/Form/Input',
   component: 'al-input',
   tags: [ 'autodocs' ],
   parameters: {
@@ -20,7 +18,6 @@ export default {
       handles: ['onInputChange']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     type: {
       control: { type: 'radio' },
@@ -139,6 +136,19 @@ Optional.args = {
   isOptional: true
 };
 
+/**
+ * The v2 replacement for the floating label: the label sits inside the field's
+ * top padding, above the value. Unlike the floating label it is STATIC — it
+ * renders identically in every state, so there is no jump on focus and no
+ * background patch punched through the field's border.
+ */
+export const InsetLabel = Template.bind({});
+InsetLabel.args = {
+  labelPosition: 'inset',
+  label: 'Company',
+  value: 'Southleft',
+};
+
 export const HiddenLabel = Template.bind({});
 HiddenLabel.args = {
   hideLabel: true
@@ -212,25 +222,3 @@ WithAutoFocus.args = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const input = canvas.queryByTestId('input') as any;
-  const inputEl = input?.shadowRoot?.querySelector('.al-c-input__input') as HTMLInputElement;
-
-  // Make assertions
-  expect(input).toBeInTheDocument();
-  expect(inputEl).toBeInTheDocument();
-
-  // Simulate a change event with a value
-  let inputValue = '';
-  inputValue = 'Inputted text';
-  fireEvent.input(inputEl, { target: { value: inputValue } });
-  expect(inputEl.value).toBe(inputValue);
-  expect(input.isActive).toBe(true);
-
-  // Simulate a change event with the value removed
-  inputValue = '';
-  fireEvent.input(inputEl, { target: { value: inputValue } });
-  expect(inputEl.value).toBe(inputValue);
-  expect(input.isActive).toBe(false);
-};

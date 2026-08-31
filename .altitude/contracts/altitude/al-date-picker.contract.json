@@ -1,0 +1,404 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-date-picker",
+  "name": "Date Picker",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-date-picker",
+  "semantics": {
+    "element": null,
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaDescribedBy",
+      "description": "Aria describedby\n- Used to connect the field note in the field to the input for accessibility",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaDescribedBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "dateFormat",
+      "description": "Specify date format for UI display",
+      "type": "enum",
+      "rawType": "'MMM dd, yyyy' | 'MM/dd/yyyy' | 'dd/MM/yyyy' | 'yyyy/MM/dd' | 'MMM dd yyyy' | 'dd MMM yyyy'",
+      "values": [
+        "MM/dd/yyyy",
+        "MMM dd yyyy",
+        "MMM dd, yyyy",
+        "dd MMM yyyy",
+        "dd/MM/yyyy",
+        "yyyy/MM/dd"
+      ],
+      "default": "'MMM dd, yyyy'",
+      "bindings": {
+        "code": {
+          "attribute": "dateFormat"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "disabledMaxDate",
+      "description": "Maximum date for disabled dates (format: yyyy/mm/dd)",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "disabledMaxDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "disabledMinDate",
+      "description": "Minimum date for disabled dates (format: yyyy/mm/dd)",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "disabledMinDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "errorNote",
+      "description": "Error note displayed beneath the field when in an error state",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "errorNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldId",
+      "description": "The unique id of the field",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldNote",
+      "description": "The field note displayed beneath the field",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hideLabel",
+      "description": "Hide label?",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hideLabel"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isActive",
+      "description": "Indicates whether a date has been selected",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isActive"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDayShortHand",
+      "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDayShortHand"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "The field's disabled attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isError",
+      "description": "Error state indicating an issue with the field",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isError"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isoFormat",
+      "description": "ISO Format for date",
+      "type": "string",
+      "rawType": "string",
+      "default": "'yyyy-MM-dd'",
+      "bindings": {
+        "code": {
+          "attribute": "isoFormat"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isOptional",
+      "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isOptional"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isRequired",
+      "description": "The field's required attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isRequired"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "The field's label",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Date and Time'",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "multiYear",
+      "description": "Amount of years to go before and after the current date",
+      "type": "number",
+      "rawType": "number",
+      "default": "3",
+      "bindings": {
+        "code": {
+          "attribute": "multiYear"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "name",
+      "description": "The field's name attribute",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "name"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "nextButtonText",
+      "description": "Next month button text",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Next Month'",
+      "bindings": {
+        "code": {
+          "attribute": "nextButtonText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "placeholder",
+      "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "placeholder"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "previousButtonText",
+      "description": "Previous month button text",
+      "type": "string",
+      "rawType": "string",
+      "default": "'Previous Month'",
+      "bindings": {
+        "code": {
+          "attribute": "previousButtonText"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "selectedDate",
+      "description": "Holds the selected date value",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "selectedDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "setActiveDate",
+      "description": "Set a specific date to be active",
+      "type": "string",
+      "rawType": "any",
+      "bindings": {
+        "code": {
+          "attribute": "setActiveDate"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "startOnMonday",
+      "description": "Start the day of the week on Monday",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "startOnMonday"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "The field's value attribute",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onDatePickerChange",
+      "description": "Fired when the selected date changes. Detail: `{ value }` — the formatted date string."
+    },
+    {
+      "name": "onDatePickerClose",
+      "description": "Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state."
+    },
+    {
+      "name": "onDatePickerOpen",
+      "description": "Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state."
+    }
+  ],
+  "slots": [
+    {
+      "name": "error",
+      "description": "If content is slotted, it will display in place of the errorNote property"
+    },
+    {
+      "name": "field-note",
+      "description": "If content is slotted, it will display in place of the fieldNote property"
+    }
+  ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-calendar",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-field-note",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-icon",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-input",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
+  "states": [],
+  "anatomySource": "unavailable",
+  "anatomyCase": null,
+  "anatomy": null,
+  "tokens": [],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaDescribedBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/date-picker/date-picker.ts",
+      "tagName": "al-date-picker",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

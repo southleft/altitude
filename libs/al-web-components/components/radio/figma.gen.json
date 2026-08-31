@@ -1,0 +1,15 @@
+{
+  "$comment": "Per-component Figma-generation config (see altitude-figma-generate skill). anatomyCase: sample unchecked+label-shown (alphabetical-first picked hidden-label). caseAxes: measured 'Label' dimension pairs with hideLabel, as the real set's Label=Hidden/Shown axis; Checked auto-maps via isChecked. glyphs: the checked donut is copied VERBATIM from radio.scss's ::before mask data-URI (line ~166), colored by the token that layer binds (background-color: var(--al-theme-color-content-primary-weak), line ~168) over the box's own measured paint — the exact CSS layering. Auto-batch, 2026-08-26.",
+  "anatomyCase": "Checked=Off,Label=shown",
+  "caseAxes": [
+    { "dimension": "Label", "prop": "hideLabel", "property": "Label", "valueMap": { "hidden": "Hidden", "shown": "Shown" } }
+  ],
+  "glyphs": [
+    {
+      "class": "al-c-radio__custom-radio",
+      "when": { "Checked": "On" },
+      "svg": "<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='m11,22c6.08,0,11-4.92,11-11S17.08,0,11,0,0,4.92,0,11s4.92,11,11,11Zm0-5.5c3.04,0,5.5-2.46,5.5-5.5s-2.46-5.5-5.5-5.5-5.5,2.46-5.5,5.5,2.46,5.5,5.5,5.5Z' fill='white' fill-rule='evenodd'/></svg>",
+      "color": "theme/color/content/primary-weak"
+    }
+  ]
+}

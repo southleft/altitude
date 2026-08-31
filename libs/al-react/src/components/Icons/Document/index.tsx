@@ -1,1 +1,3 @@
-export * from './Document';
+'use client';
+
+export * from './Document.js';

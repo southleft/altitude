@@ -1,4 +1,4 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /* ------------------------------------*\
   #ALERT
 \*------------------------------------ */
@@ -6,91 +6,128 @@
 /**
  * Alert
  */
-.al-c-alert {
-  display: none;
-  border-radius: var(--al-theme-border-radius-md);
-  background-color: var(--al-theme-color-background-default);
-  box-shadow: var(--al-theme-box-shadow-lg);
-  padding: var(--al-theme-space);
 
-  &.al-is-active {
+@layer al.component {
+  .al-c-alert {
+    display: none;
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-md));
+
+    /**
+     * v2: an alert states its tone with a soft tinted ground and a hairline of
+     * the same hue — not with elevation. The shadow stays only because an alert
+     * can be rendered floating over content; where it sits inline, the tone
+     * tint is what carries the meaning.
+     */
+    background-color: var(--al-theme-color-background-default);
+    /*
+     * SET THE FOREGROUND, not just the background.
+     *
+     * The tone variants below paint a soft tint and left the text to inherit
+     * from whatever surrounds the alert. Slotted copy lives in the LIGHT DOM,
+     * so it inherited the page's colour: a danger alert on its #FDECEC tint
+     * rendered near-white text at roughly 1.05:1 — measured, and invisible.
+     * The canvas pairs every tint with ink copy and reserves the tone colour
+     * for the icon, which is what these two lines now guarantee.
+     */
+    color: var(--al-theme-color-content-default);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+    /* v2: flat callout — the tint and hairline carry the meaning, not elevation. */
+    padding: var(--al-theme-space-sm) var(--al-theme-space);
+
+    &.al-is-active {
+      display: flex;
+    }
+
+    &--success {
+      background-color: var(--al-theme-color-background-success-weak);
+      border-color: var(--al-theme-color-border-success-weak);
+    }
+
+    &--warning {
+      background-color: var(--al-theme-color-background-warning-weak);
+      border-color: var(--al-theme-color-border-warning-weak);
+    }
+
+    &--danger {
+      background-color: var(--al-theme-color-background-danger-weak);
+      border-color: var(--al-theme-color-border-danger-weak);
+    }
+  }
+
+  .al-c-alert__body {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+
+    .al-has-title & {
+      align-items: flex-end;
+    }
   }
-}
 
-.al-c-alert__body {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  align-items: center;
-
-  .al-has-title & {
-    align-items: flex-end;
+  .al-c-alert__content {
+    display: flex;
+    flex-direction: column;
   }
-}
 
-.al-c-alert__content {
-  display: flex;
-  flex-direction: column;
-}
-
-.al-c-alert__actions {
-  display: flex;
-  gap: var(--al-theme-space-sm);
-}
-
-/**
- * Alert title
- */
-.al-c-alert__title {
-  @include al-theme-typography-body-md-bold;
-  margin-block-end: var(--al-theme-space-xs);
-}
-
-/**
- * Icon that depicts the toast variant:
- * - Default, success, or danger
- */
-.al-c-alert__icon {
-  --al-icon-width: #{var(--al-theme-icon-lg)};
-  --al-icon-height: #{var(--al-theme-icon-lg)};
-  --al-icon-fill: var(--al-theme-color-content-info-default);
-
-  display: flex;
-  align-items: center;
-  margin-inline-end: var(--al-theme-space);
-
-  .al-has-title & {
-    align-items: flex-start;
+  .al-c-alert__actions {
+    display: flex;
+    gap: var(--al-theme-space-sm);
   }
 
   /**
-   * Icon within success alert
+   * Alert title
    */
-   .al-c-alert--success & {
-    --al-icon-fill: var(--al-theme-color-content-success-default);
+  .al-c-alert__title {
+    @include al-theme-typography-body-sm-bold;
+    margin-block-end: var(--al-theme-space-xs);
   }
 
   /**
-   * Icon within warning alert
+   * Icon that depicts the toast variant:
+   * - Default, success, or danger
    */
-   .al-c-alert--warning & {
-    --al-icon-fill: var(--al-theme-color-content-warning-default);
+  .al-c-alert__icon {
+    --al-icon-width: #{var(--al-theme-icon-lg)};
+    --al-icon-height: #{var(--al-theme-icon-lg)};
+    --al-icon-fill: var(--al-theme-color-content-info-default);
+
+    display: flex;
+    align-items: center;
+    margin-inline-end: var(--al-theme-space);
+
+    .al-has-title & {
+      align-items: flex-start;
+    }
+
+    /**
+     * Icon within success alert
+     */
+     .al-c-alert--success & {
+      --al-icon-fill: var(--al-theme-color-content-success-default);
+    }
+
+    /**
+     * Icon within warning alert
+     */
+     .al-c-alert--warning & {
+      --al-icon-fill: var(--al-theme-color-content-warning-default);
+    }
+
+    /**
+     * Icon within danger alert
+     */
+    .al-c-alert--danger & {
+      --al-icon-fill: var(--al-theme-color-content-danger-default);
+    }
   }
 
   /**
-   * Icon within danger alert
+   * Alert close icon
+   * - The X icon in the header to close the alert
    */
-  .al-c-alert--danger & {
-    --al-icon-fill: var(--al-theme-color-content-danger-default);
+   .al-c-alert__icon-close {
+    --al-icon-width: #{var(--al-theme-icon)};
+    --al-icon-height: #{var(--al-theme-icon)};
   }
-}
-
-/**
- * Alert close icon
- * - The X icon in the header to close the alert
- */
- .al-c-alert__icon-close {
-  --al-icon-width: #{var(--al-theme-icon)};
-  --al-icon-height: #{var(--al-theme-icon)};
 }

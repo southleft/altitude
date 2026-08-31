@@ -1,0 +1,96 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL CTA BAND
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * 1. `position: relative` + `overflow: hidden` exist for the texture layer
+   *    below, which is absolutely positioned to the band's bounds and would
+   *    otherwise paint past them. Both are chrome concerns of this element, not
+   *    statements about content.
+   * 2. The band is full-bleed by design and carries only a top hairline — the
+   *    measure is applied to the inner column, so the rule runs edge to edge
+   *    while the copy stays on the page's measure.
+   */
+  .sl-c-cta-band {
+    position: relative; /* 1 */
+    overflow: hidden; /* 1 */
+    border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint}; /* 2 */
+  }
+
+  /**
+   * 3. The 72px grid, radially masked so it fades toward the edges. Sits at
+   *    `z-index: 0` under content raised to `1` — NOT at `-1`. A negative index
+   *    on a child of a `position: relative` parent paints behind the parent's
+   *    own background, which is why the site's page-level `.al-hero__texture`
+   *    has a comment pinning it to a specific stacking context. Keeping both
+   *    layers non-negative inside this component's own stacking context means
+   *    it composes correctly wherever the band is dropped.
+   */
+  .sl-c-cta-band__texture {
+    @include sl-grid-texture; /* 3 */
+  }
+
+  .sl-c-cta-band__inner {
+    position: relative;
+    z-index: 1; /* 3 */
+    inline-size: 100%;
+    max-inline-size: var(--al-cta-band-max-width, 85rem);
+    margin-inline: auto;
+    box-sizing: border-box;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    padding-block: var(--al-cta-band-padding-block, 6rem);
+    text-align: center;
+  }
+
+  @media (min-width: 48rem) {
+    .sl-c-cta-band__inner {
+      padding-block: var(--al-cta-band-padding-block, 8rem);
+    }
+  }
+
+  .sl-c-cta-band__kicker {
+    @include sl-kicker;
+
+    color: var(--al-theme-color-content-primary-default);
+  }
+
+  /**
+   * 4. The heading and lead are capped to DIFFERENT measures — the heading is
+   *    display type and reads at a wider measure than the lead does. Both are
+   *    centred with `margin-inline: auto` rather than by a flex/grid rule on
+   *    the parent, so the band takes no position on how slotted content
+   *    distributes.
+   */
+  .sl-c-cta-band__heading {
+    display: block;
+    margin-inline: auto; /* 4 */
+    margin-block-start: var(--al-theme-space);
+    max-inline-size: var(--al-cta-band-heading-max-width, 48rem);
+  }
+
+  .sl-c-cta-band__dek {
+    margin-inline: auto; /* 4 */
+    margin-block-start: var(--al-theme-space);
+    margin-block-end: 0;
+    max-inline-size: var(--al-cta-band-dek-max-width, 32rem);
+    font-size: $sl-text-lead;
+    line-height: 1.55;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  /**
+   * 5. Spacing only. How the actions themselves sit — row, wrap, centred — is
+   *    the `<al-layout>` the page slots in, which is why there is no `display`
+   *    or `justify-content` here.
+   */
+  .sl-c-cta-band__actions {
+    margin-block-start: var(--al-theme-space-xl); /* 5 */
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-textarea.schema.json",
+  "title": "ALTextarea (al-textarea)",
+  "description": "Component: al-textarea",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-textarea",
+    "className": "ALTextarea",
+    "module": "components/textarea/textarea.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The content that appears before the text in the input",
+        "name": "before"
+      },
+      {
+        "description": "The content that appears after the text in the input",
+        "name": "after"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the fieldNote property",
+        "name": "field-note"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the errorNote property",
+        "name": "error"
+      }
+    ],
+    "events": [
+      {
+        "name": "onTextareaChange",
+        "description": "Fired when the textarea's value changes. Detail: `{ value }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-textarea"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rows": {
+          "description": "Rows attribute\n- Specifies the visible number of lines in a text area",
+          "type": "number"
+        },
+        "cols": {
+          "description": "Cols attribute\n- Specifies the visible width of a text area",
+          "type": "number"
+        },
+        "isActive": {
+          "description": "isActive\n- Dynamically sets to true if the textarea has a value",
+          "type": "boolean"
+        },
+        "isReadonly": {
+          "description": "Readonly attribute\n- Specifies that an input field is read-only",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        "isRequired": {
+          "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form",
+          "type": "boolean"
+        },
+        "isOptional": {
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        "isFocused": {
+          "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads",
+          "type": "boolean"
+        },
+        "hideLabel": {
+          "description": "Hide label?\n- If true, hides the label VISUALLY. The element stays in the DOM with its\n  `for` association intact, so the field keeps an accessible name.\n\nBefore v2 this also revealed the placeholder; the label no longer occupies\nthe placeholder's position, so a `placeholder` renders whenever it is set.",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "Label attribute\n- Specifies what content to enter within the input element",
+          "type": "string"
+        },
+        "placeholder": {
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name attribute\n- Specifies the name of an input element",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value attribute\n- Specifies the value of an input element",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error message\n- An error field note that displays below the input",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "Field note\n- The helper text that displays below the input",
+          "type": "string"
+        },
+        "fieldId": {
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        },
+        "minLength": {
+          "description": "Min length\n- Specifies the minimum number of characters required in an input element",
+          "type": "number"
+        },
+        "maxLength": {
+          "description": "Max length\n- Specifies the maximum number of characters required in an input element",
+          "type": "number"
+        },
+        "maxLengthValue": {
+          "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

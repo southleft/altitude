@@ -1,12 +1,14 @@
 import { TemplateResult, unsafeCSS, html } from 'lit';
-import { property, query } from 'lit/decorators.js';
+import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ALElement } from '../ALElement';
 import styles from './tab.scss';
 
 /**
  * Component: al-tab
- * - **slot**: The tab label
+ * @slot - The tab label
+ *
+ * @event onTabSelect - Fired when this tab is selected. Detail: `{ value, index }` — the tab element itself and its index.
  */
 export class ALTab extends ALElement {
   static el = 'al-tab';
@@ -39,7 +41,13 @@ export class ALTab extends ALElement {
 
   /**
    * Aria controls attribute
-   * - Sets to the id used to connect the tab trigger to the tab panel
+   * - Set by `<al-tabs>` to the id of the matching `<al-tab-panel>`
+   * - **Not rendered as an attribute.** The panel's id lives inside
+   *   `<al-tab-panel>`'s shadow root while this tab's `<button>` lives inside
+   *   `<al-tab>`'s, and an IDREF cannot cross a shadow boundary — axe reported
+   *   every value as `aria-valid-attr-value`. `aria-controls` is a SHOULD for
+   *   `role="tab"`, not a MUST; the selected state still comes through
+   *   `aria-selected`.
    */
   @property()
   accessor ariaControls: string;
@@ -49,6 +57,36 @@ export class ALTab extends ALElement {
    */
   @property({ type: Number })
   accessor idx: number = 0;
+
+  /**
+   * A11y — the role rendered on the internal `<button>`.
+   *
+   * `tab` requires a `tablist` owner, and `<al-tabs>` renders that
+   * `<div role="tablist">` in *its* shadow root. Rendered standalone (the
+   * "Atoms/Navigation/Tab" stories) a hardcoded `role="tab"` has no required
+   * parent and axe reports `aria-required-parent`. Falling back to the
+   * `<button>`'s implicit `button` role is both valid and honest.
+   */
+  @state()
+  accessor _tabRole: 'tab' | undefined = undefined;
+
+  /**
+   * A11y — recompute the role from the flattened tree. Also runs once on the
+   * next frame, because `<al-tabs>` may not have rendered its tablist yet when
+   * this tab first updates.
+   */
+  private syncTabRole() {
+    this._tabRole = this.hasAncestorRole(['tablist']) ? 'tab' : undefined;
+  }
+
+  async firstUpdated() {
+    await this.updateComplete;
+    requestAnimationFrame(() => this.syncTabRole());
+  }
+
+  updated() {
+    this.syncTabRole();
+  }
 
   /**
    * Handle on click
@@ -79,13 +117,12 @@ export class ALTab extends ALElement {
     return html`
       <button
         class="${componentClassNames}"
-        role="tab"
+        role=${ifDefined(this._tabRole)}
         @click=${this.handleOnClick}
         ?disabled=${this.isDisabled}
         tabindex=${this.isActive ? '0' : '-1'}
         id=${ifDefined(this.ariaId)}
-        aria-selected=${ifDefined(this.isActive)}
-        aria-controls=${ifDefined(this.ariaControls)}
+        aria-selected=${ifDefined(this._tabRole ? String(!!this.isActive) : undefined)}
       >
         <slot></slot>
       </button>

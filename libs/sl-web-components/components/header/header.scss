@@ -1,0 +1,204 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL HEADER
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * THE BAR. This component OWNS the `<header>` landmark and its chrome; it no
+   * longer wraps `<al-header>`.
+   *
+   * It used to, and fed the brand's look in through `--al-header-*`. That
+   * stopped being possible the moment this component took the `al-header` TAG
+   * (one namespace, spec 2026-08-23-one-al-namespace-across-brand-and-base):
+   * an `<al-header>` inside `<al-header>` is infinite recursion, not
+   * composition. So the base component's chrome is declared here directly.
+   *
+   * The `--al-header-*` custom properties are KEPT as the outer layer of every
+   * declaration, because they are the component's public API — a consumer
+   * overriding `--al-header-background` must keep working across the change.
+   * What was a value passed to another element is now a value read by this one.
+   *
+   * 1. Grid with `align-content: center`, the base component's arrangement
+   *    opinion, reproduced exactly: one column stretches the single child to
+   *    the full inline size, and centring the block is what makes it read as a
+   *    bar. Horizontal distribution stays the slotted `<al-layout>`'s business.
+   * 2. `min-block-size`, never `height` — a header that wraps to two rows on a
+   *    narrow screen must grow rather than clip.
+   * 3. Padding defaults to 0 because the page measure is the nested
+   *    `<al-layout variant="constrained">`; two sources of inline padding would
+   *    double the gutter.
+   * 4. `<al-input>` reads this to blend a search field's floating label into
+   *    the bar. Carried over from the base component for the same reason.
+   */
+  .sl-c-header {
+    display: grid; /* 1 */
+    align-content: center; /* 1 */
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: var(--al-header-min-height, var(--al-header-height, 4rem)); /* 2 */
+    padding: var(--al-header-padding, 0); /* 3 */
+    background-color: var(
+      --al-header-background,
+      color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent)
+    );
+    border-block-end: var(
+      --al-header-border-block-end,
+      var(--al-theme-border-width) solid #{$sl-border-faint}
+    );
+    backdrop-filter: var(--al-header-backdrop-filter, blur(12px));
+    --al-input-label-background: var(
+      --al-header-background,
+      var(--al-theme-color-background-default-weak)
+    ); /* 4 */
+  }
+
+  /**
+   * `sticky` is a reflected prop on this component now, not a prop forwarded to
+   * `<al-header>`. Same class name (`al-is-sticky`) and same declarations as the
+   * base component, so the behaviour a consumer already relies on is unchanged.
+   */
+  .sl-c-header.al-is-sticky {
+    position: sticky;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: var(--al-z-index-400);
+  }
+
+  @media (min-width: 48rem) {
+    .sl-c-header {
+      min-block-size: var(--al-header-min-height, var(--al-header-height, 5rem));
+    }
+  }
+
+  /**
+   * 3. The measure, as an al-layout recipe rather than a bespoke max-width.
+   *    al-layout's `measure` is the CONTENT column and its gutters are separate
+   *    tracks, so 79rem plus the brand's own clamp reproduces the site's
+   *    1360px border-box container exactly (1360 − 2×48 = 1264px = 79rem).
+   */
+  .sl-c-header__measure {
+    --al-layout-measure: var(--al-header-measure, 79rem); /* 3 */
+    --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /**
+   * 4. The `<nav>` exists for the landmark and its label; the pill row inside
+   *    is an `<al-layout>`, so no alignment or gap lives here. All that remains
+   *    is the responsive show/hide — a decision about the NAV, not about
+   *    arrangement.
+   */
+  .sl-c-header__nav {
+    display: none; /* 4 */
+  }
+
+  @media (min-width: 64rem) {
+    .sl-c-header__nav {
+      display: block; /* 4 */
+    }
+  }
+
+  /**
+   * 5. The pill treatment, applied to whatever the page slots in, so a nav item
+   *    is a plain `<a>` and nothing more. `::slotted()` reaches only top-level
+   *    assigned nodes — which is exactly the contract here: nav links are flat.
+   * 6. `aria-current="page"` IS the active state. Styling the ARIA attribute
+   *    rather than a parallel `--active` class means the visual state cannot
+   *    drift from the announced one — there is only one source of truth.
+   */
+  ::slotted(a[slot='nav']) {
+    display: inline-flex; /* 5 */
+    align-items: center;
+    border-radius: var(--al-theme-border-radius-role-action);
+    padding: var(--al-theme-space-xs) var(--al-theme-space);
+    color: var(--al-theme-color-content-default-weak);
+    text-decoration: none;
+    font-size: var(--al-font-size-14);
+    transition:
+      background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+      color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  ::slotted(a[slot='nav']:hover) {
+    color: var(--al-theme-color-content-default);
+  }
+
+  ::slotted(a[slot='nav'][aria-current='page']) {
+    color: var(--al-theme-color-content-default); /* 6 */
+    background: var(--al-theme-color-background-default-strong); /* 6 */
+  }
+
+  /**
+   * 7. The circular icon button, shared by the menu trigger this component
+   *    renders and any native `<button>` the page slots into `actions`.
+   *    Matching on `button` rather than a class means a slotted `<al-button>`
+   *    CTA is untouched — a custom element never matches `::slotted(button)`.
+   */
+  ::slotted(button[slot='actions']),
+  .sl-c-header__menu-button {
+    display: inline-flex; /* 7 */
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    padding: 0;
+    border-radius: var(--al-theme-border-radius-role-action);
+    border: var(--al-theme-border-width) solid #{$sl-border-faint};
+    background: transparent;
+    color: var(--al-theme-color-content-default-weak);
+    cursor: pointer;
+    transition:
+      color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+      border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+
+  ::slotted(button[slot='actions']:hover),
+  .sl-c-header__menu-button:hover {
+    color: var(--al-theme-color-content-default);
+    border-color: var(--al-theme-color-border-default-weak);
+  }
+
+  /* Non-negotiable per AGENTS.md. The slotted buttons take their ring from the
+     page's own sheet; this one is ours to give. */
+  .sl-c-header__menu-button:focus-visible {
+    @include al-focus;
+  }
+
+  /**
+   * 8. The menu button is the mobile affordance only — above the nav's
+   *    breakpoint the pills are visible and a second way in would be noise.
+   */
+  @media (min-width: 64rem) {
+    .sl-c-header__menu-button {
+      display: none; /* 8 */
+    }
+  }
+
+  .sl-c-header__panel {
+    border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint};
+    padding-block: var(--al-theme-space-lg);
+  }
+
+  /**
+   * 9. `[hidden]` needs restating because the base display rule above would
+   *    otherwise win — `display` on a class beats the UA's `[hidden]` rule.
+   */
+  .sl-c-header__panel[hidden] {
+    display: none; /* 9 */
+  }
+
+  ::slotted(a[slot='mobile']) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--al-theme-space-sm);
+    color: var(--al-theme-color-content-default);
+    text-decoration: none;
+  }
+}

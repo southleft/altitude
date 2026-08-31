@@ -1,4 +1,4 @@
-@import './main';
+@use './main' as *;
 /* ------------------------------------*\
   #DOCS
 \*------------------------------------ */
@@ -13,7 +13,9 @@ h1 {
   @include al-theme-typography-heading-lg-bold;
   margin-bottom: var(--al-theme-space);
   padding-bottom: var(--al-theme-space);
-  border-bottom: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  /* Same reasoning as the table rules below: the content-border token is far
+     too strong for a docs rule. */
+  border-bottom: var(--al-theme-border-width) solid var(--al-docs-line, #262629);
 }
 
 h2 {
@@ -51,10 +53,29 @@ caption {
   }
 }
 
+/* Docs table chrome.
+ *
+ * Two fixes here, both visible on the Foundations/Tokens pages:
+ *
+ * 1. COLOUR. These used `--al-theme-color-border-default`, which resolves to
+ *    `#8a8a8a` in the dark theme. That token is a CONTENT border — sized to be
+ *    clearly visible on inputs and dividers — so as table chrome it drew a
+ *    light grey grid over a near-black page. `--al-docs-line` is the docs
+ *    hairline, inherited from `.sbdocs` in the light DOM (custom properties
+ *    cross the shadow boundary), with a literal fallback for safety.
+ *
+ * 2. THE WHITE EDGES. `th`/`td` declared only `border-top` and `border-left`.
+ *    The right and bottom edges therefore kept the initial `border-color`,
+ *    which is `currentColor` — i.e. the body text colour, near-white on dark.
+ *    Any rule giving those edges a width made them render as bright white
+ *    lines. They are now explicitly zeroed: with `border-collapse: collapse`,
+ *    top+left on every cell plus the table's own border already draws a
+ *    complete grid.
+ */
 table {
   width: 100%;
   border-collapse: collapse;
-  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  border: var(--al-theme-border-width) solid var(--al-docs-line, #262629);
 }
 
 th {
@@ -62,23 +83,27 @@ th {
   text-align: left;
   vertical-align: middle;
   padding: var(--al-theme-space);
-  border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-  border-left: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  border-top: var(--al-theme-border-width) solid var(--al-docs-line, #262629);
+  border-left: var(--al-theme-border-width) solid var(--al-docs-line, #262629);
+  border-right: 0;
+  border-bottom: 0;
 }
 
 td {
   text-align: left;
   margin: 0;
   padding: var(--al-theme-space);
-  border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-  border-left: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  border-top: var(--al-theme-border-width) solid var(--al-docs-line, #262629);
+  border-left: var(--al-theme-border-width) solid var(--al-docs-line, #262629);
+  border-right: 0;
+  border-bottom: 0;
   vertical-align: middle;
 }
 
 hr {
   width: 100%;
   height: var(--al-theme-border-width);
-  background-color: var(--al-theme-color-border-default);
+  background-color: var(--al-docs-line, #262629);
   border: none;
 }
 

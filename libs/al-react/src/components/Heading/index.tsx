@@ -1,1 +1,3 @@
-export * from './Heading';
+'use client';
+
+export * from './Heading.js';

@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALIconUser as ALWebIconUser } from 'al-web-components/dist/components/icon/icons/user';
-import register from 'al-web-components/dist/directives/register';
+import { ALIconUser as ALWebIconUser } from '@southleft/al-web-components/components/icon/icons/user';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../../package.json';
+import PackageJson from '../../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebIconUser.el, ALWebIconUser],

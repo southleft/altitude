@@ -1,0 +1,44 @@
+purpose: 'Southleft''s primary navigation bar, and the brand implementation of `al-header`:
+  sticky, translucent and blurred, with pill nav items, circular icon actions and a numbered
+  mobile panel it opens itself. Altitude''s `al-header` is a bare landmark; this is the whole
+  bar.'
+whenToUse:
+- You are building a page on the Southleft design system and it needs the site's navigation
+  chrome.
+- You want the mobile panel behaviour without writing it. The component owns `menu-open`,
+  renders the toggle and the panel, and dispatches on change.
+whenNotToUse:
+- text: You need a neutral landmark to compose your own bar inside. That is Altitude's header,
+    and this design system deliberately replaces it, so arranging your own chrome means composing
+    the layout primitive instead.
+  instead: layout
+- text: The band you want is a page-level heading rather than site navigation.
+  instead: page-hero
+dos:
+- Put the wordmark in `brand`, links in `nav`, the right-hand cluster in `actions`, and a
+  copy of the links in `mobile`. The panel does not mirror the nav slot for you.
+- Mark the current page with `aria-current` on the matching nav link; the component styles
+  that state but cannot know the route.
+donts:
+- Do not wrap the slotted logo in your own anchor. `al-logo` renders its own, and the nesting
+  is an axe `nested-interactive` failure.
+- Do not build a second menu toggle in the page. The component owns `menu-open`, and two things
+  toggling one menu is how a menu ends up half-open.
+accessibility:
+- The nav landmark and its label live inside the component, so slot plain anchors rather than
+  another `nav` element. A nested navigation landmark makes the bar announce twice.
+content:
+- Nav labels are one or two words. The mobile panel numbers them, so a label that wraps to
+  two lines breaks the alignment of its ordinal.
+sources:
+- path: libs/sl-web-components/components/header/header.ts
+  contains: export class SLHeader
+  note: The brand implementation that registers under the base library tag — the override
+    this guidance opens by describing.
+- path: libs/sl-web-components/components/header/header.ts
+  contains: sl-header-menu-toggle
+  note: The component owns the open state and announces it, which is why a page must not add
+    a second toggle.
+- path: .altitude/ds-projects.json
+  contains: al-header
+  note: The registry declares this as a deliberate same-tag override rather than a collision.

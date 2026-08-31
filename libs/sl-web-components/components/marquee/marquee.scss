@@ -1,0 +1,100 @@
+@use '../../../al-web-components/styles/component' as *;
+@use '../../styles/brand' as *;
+/*------------------------------------*\
+  #SL MARQUEE
+\*------------------------------------*/
+
+@layer al.component {
+  :host {
+    display: block;
+  }
+
+  /**
+   * 1. The slot is a DATA SOURCE, not rendered output — the component reads the
+   *    slotted elements and renders the sequence twice itself, because a
+   *    seamless loop needs it present twice and a slot can only project its
+   *    nodes once. Hidden rather than removed so the light DOM stays readable
+   *    and inspectable as the source of truth.
+   */
+  ::slotted(*) {
+    display: none; /* 1 */
+  }
+
+  .sl-c-marquee {
+    overflow: hidden;
+    border-block: var(--al-theme-border-width) solid #{$sl-border-faint};
+    padding-block: var(--al-marquee-padding-block, clamp(1.25rem, 3vw, 2.5rem));
+    user-select: none;
+  }
+
+  /**
+   * 2. `width: max-content` lets the track be as wide as both copies together,
+   *    which is what makes `translateX(-50%)` land copy two exactly where copy
+   *    one started. A percentage width would break the seam.
+   * 3. Flex here arranges boxes this component renders itself — the belt is a
+   *    single animated track, not a place a consumer arranges anything. That is
+   *    the internal-structure case AGENTS.md exempts.
+   */
+  .sl-c-marquee__track {
+    display: flex; /* 3 */
+    gap: var(--al-marquee-gap, 3rem);
+    inline-size: max-content; /* 2 */
+    animation: al-marquee var(--al-marquee-duration, 36s) linear infinite;
+  }
+
+  .sl-c-marquee:hover .sl-c-marquee__track,
+  :host([paused]) .sl-c-marquee__track {
+    animation-play-state: paused;
+  }
+
+  /**
+   * 4. Outline type: transparent fill with a stroke. `-webkit-text-stroke` is
+   *    the only widely-shipped form; the unprefixed `text-stroke` is written
+   *    alongside it for the day that lands, and is harmless until then.
+   */
+  .sl-c-marquee__item {
+    font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+    font-variation-settings: 'wght' 650, 'wdth' 120;
+    font-size: var(--al-marquee-font-size, clamp(2.5rem, 6vw, 5rem));
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: transparent; /* 4 */
+    -webkit-text-stroke: 1.5px var(--al-theme-color-content-default-weak); /* 4 */
+    text-stroke: 1.5px var(--al-theme-color-content-default-weak); /* 4 */
+  }
+
+  /** Filled, in the accent — the punctuation between phrases. */
+  .sl-c-marquee__item--solid {
+    color: var(--al-theme-color-content-primary-default);
+    -webkit-text-stroke: 0;
+    text-stroke: 0;
+  }
+
+  /** Small mono asides riding at the belt's centre line. */
+  .sl-c-marquee__item--mono {
+    font-family: $sl-font-mono;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    align-self: center;
+    color: var(--al-theme-color-content-default-weak);
+    -webkit-text-stroke: 0;
+    text-stroke: 0;
+    text-transform: none;
+  }
+
+  @keyframes al-marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /**
+   * 5. Decorative motion, so it stops entirely rather than slowing down. The
+   *    belt still reads as a static line of type, which is the point.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .sl-c-marquee__track {
+      animation: none; /* 5 */
+    }
+  }
+}

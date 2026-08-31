@@ -1,0 +1,483 @@
+---
+/** "00 / the-canvas" — the centerpiece. 1:1 port of southleft-v5's
+ *  src/components/GenerativeCanvas.astro (seeded generative compositions
+ *  drawn exclusively from the site's own token layer — palette, grid,
+ *  brackets, and the one allowed curve). Deterministic per seed, so a
+ *  composition is shareable by URL (`/#sl=<seed>`); click a cell to re-roll
+ *  just that cell, "Remix" re-seeds everything.
+ *
+ *  PORT NOTES (where this differs from v5, and why):
+ *
+ *  1. THEME SOURCE. v5 reads `document.documentElement.dataset.theme`. This
+ *     app scopes its theme to `<al-theme id="sl-theme" mode="…">`
+ *     (src/layouts/Base.astro), so dark is detected from that element's
+ *     `mode` attribute and re-renders are driven by a MutationObserver on
+ *     it. `style`/`brand` are watched alongside `mode` because TrySystem's
+ *     "apply to the whole site" writes scoped custom-property overrides
+ *     onto the same element — the direct analogue of v5's `data-custom`.
+ *
+ *  2. PALETTE. `scripts/check-altitude-only.mjs` fails the build on any
+ *     hardcoded hex, so every one of v5's eight palette primitives is read
+ *     at runtime out of a CSS custom property. All eight have an exact
+ *     `--al-color-brand-*` equivalent in the southleft brand recipe (they
+ *     are declared once on `:root` in @southleft/al-web-components/css/main.css and
+ *     are mode-invariant, exactly like v5's `--sl-color-*` scale), so the
+ *     mapping is literal:
+ *
+ *       --sl-color-ink-700/800/900/950 → --al-color-brand-ink-700/800/900/950
+ *       --sl-color-paper-0/50/100/200/400/500 → --al-color-brand-paper-*
+ *       --sl-color-blue-400/600        → --al-color-brand-blue-400/600
+ *       --sl-accent                    → --al-color-brand-red-500
+ *
+ *     The accent deliberately reads the brand PRIMITIVE rather than
+ *     `--al-theme-color-content-primary-default`: layout.css re-points that
+ *     semantic token to near-black under `al-theme[mode='light']` (the
+ *     light-mode link-contrast fix), which would silently drain the accent
+ *     out of the artwork on paper. `--al-theme-color-background-primary-
+ *     default` is kept as a graceful fallback.
+ *
+ *  3. TOASTS. v5 calls a global `window.__slToast`; this app has no toast
+ *     system. Every call site is guarded and degrades silently rather than
+ *     introducing one.
+ *
+ *  4. BUTTONS. v5's bespoke `.btn` markup is replaced by the app's real
+ *     `<al-button>` (default / secondary / tertiary — the same descending
+ *     emphasis ladder as v5's primary / secondary / ghost).
+ *
+ *  5. BOOT. No ClientRouter in this app, so this binds on `DOMContentLoaded`
+ *     (the Header.astro pattern) instead of `astro:page-load`; the interval
+ *     and observer are still torn down on `pagehide`.
+ */
+---
+
+<section class="sl-section sl-gen" id="canvas" data-section-id="generative-canvas">
+  <div class="sl-container">
+    <al-section-header index="00" label="the-canvas" kicker=""></al-section-header>
+
+    <div class="sl-gen-head">
+      <p class="sl-kicker sl-kicker--accent">&lt;generative&gt;</p>
+      <al-heading tagName="h2" variant="lg" isBold={true}>The system, playing itself.</al-heading>
+      <p class="sl-section-header__dek sl-gen-dek">
+        Every composition below is generated from the same tokens this page runs on — the
+        palette, the grid, the brackets. Click any cell to re-roll it. Find one you like?
+        It has a permanent address.
+      </p>
+    </div>
+
+    <div class="sl-gen-stage">
+      <canvas
+        id="gen-canvas"
+        class="sl-gen-canvas"
+        role="img"
+        aria-label="Generative artwork composed from Southleft's design tokens. Use the Remix button to regenerate it."></canvas>
+
+      <div class="sl-gen-controls">
+        <al-button id="gen-remix" type="button">↻ Remix</al-button>
+        <al-button id="gen-share" type="button" variant="secondary">Copy link to this one</al-button>
+        <al-button id="gen-save" type="button" variant="tertiary">↓ PNG</al-button>
+        <span class="sl-token-chip sl-gen-chip" id="gen-seed-chip">--sl-seed: …</span>
+        <span class="sl-gen-note">// deterministic — same seed, same art, any machine</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* v5's section carries its own bottom hairline (`border-b
+   * border-border-faint`); `--sl-border-faint` is declared on `.sl-page`
+   * (layout.css) and inherits down to here. */
+  .sl-gen {
+    border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
+  }
+
+  /* v5: `mt-8` kicker → `mt-3` heading → `mt-4` dek, capped at `max-w-2xl`. */
+  .sl-gen-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-sm);
+  }
+
+  .sl-gen-dek {
+    max-width: 42rem;
+  }
+
+  /* v5: `mt-10` on the canvas block. */
+  .sl-gen-stage {
+    margin-block-start: var(--al-theme-space-xxl);
+  }
+
+  .sl-gen-canvas {
+    display: block;
+    inline-size: 100%;
+    cursor: crosshair;
+    border: var(--al-theme-border-width) solid var(--sl-border-faint);
+    border-radius: var(--al-theme-border-radius);
+  }
+
+  /* v5: `mt-4 flex flex-wrap items-center gap-3`. */
+  .sl-gen-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--al-theme-space-sm);
+    margin-block-start: var(--al-theme-space);
+  }
+
+  /* v5's `.token-chip` is a 12px mono chip; `.sl-token-chip` (layout.css)
+   * supplies everything but the size, which it inherits. */
+  .sl-gen-chip {
+    font-size: 0.75rem;
+  }
+
+  /* v5: `ml-auto hidden font-mono text-[11px] text-fg-subtle sm:inline`. */
+  .sl-gen-note {
+    display: none;
+    margin-inline-start: auto;
+    font-family: var(--sl-font-mono);
+    font-size: 0.6875rem;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  @media (min-width: 40rem) {
+    .sl-gen-note {
+      display: inline;
+    }
+  }
+</style>
+
+<script>
+  // No ClientRouter in this app, so this runs once per document load. The
+  // cleanup list still exists so the ambient interval and the theme
+  // observer are torn down on pagehide (bfcache) rather than leaking.
+  let cleanup: Array<() => void> = [];
+
+  const boot = () => {
+    cleanup.forEach((fn) => fn());
+    cleanup = [];
+
+    const canvas = document.getElementById('gen-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const seedChip = document.getElementById('gen-seed-chip');
+    if (!ctx || !seedChip) return;
+
+    const themeHost = document.getElementById('sl-theme');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Optional global from v5 that this app does not ship. Guarded, never
+    // required — a missing toast degrades to silence, not an error.
+    const toast = (message: string) => {
+      const fn = (window as unknown as Record<string, unknown>).__slToast;
+      if (typeof fn === 'function') (fn as (m: string) => void)(message);
+    };
+
+    // --- deterministic PRNG (mulberry32) --------------------------------
+    const hashSeed = (s: string) => {
+      let h = 1779033703 ^ s.length;
+      for (let i = 0; i < s.length; i++) {
+        h = Math.imul(h ^ s.charCodeAt(i), 3432918353);
+        h = (h << 13) | (h >>> 19);
+      }
+      return h >>> 0;
+    };
+
+    const mulberry = (a: number) => () => {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+
+    const newSeed = () =>
+      Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padStart(6, '0');
+
+    // --- state ------------------------------------------------------------
+    let seed = (location.hash.match(/#sl=([0-9a-f]{6})/) || [])[1] || newSeed();
+    // per-cell nonce so single cells can re-roll while the rest stay put
+    let nonces: number[] = [];
+
+    // Every color in the artwork is READ from a design token at draw time —
+    // never literal in this file (scripts/check-altitude-only.mjs). The
+    // brand primitives live on `:root` (@southleft/al-web-components/css/main.css);
+    // the resolved text color of the canvas itself is the last-ditch
+    // fallback so a missing token can never produce an invalid fillStyle.
+    const cssVar = (name: string) =>
+      getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    const token = (...names: string[]) => {
+      for (const name of names) {
+        const value = cssVar(name);
+        if (value) return value;
+      }
+      return getComputedStyle(canvas).color;
+    };
+
+    const palette = () => {
+      // v5 read `documentElement.dataset.theme`; this app's theme is scoped
+      // to `<al-theme mode>`. Absent host ⇒ dark, matching v5's default.
+      const dark = themeHost?.getAttribute('mode') !== 'light';
+      return {
+        bg: token(dark ? '--al-color-brand-ink-900' : '--al-color-brand-paper-100'),
+        surfaces: dark
+          ? [token('--al-color-brand-ink-800'), token('--al-color-brand-ink-700')]
+          : [token('--al-color-brand-paper-200'), token('--al-color-brand-paper-0')],
+        inks: dark
+          ? [token('--al-color-brand-paper-50'), token('--al-color-brand-paper-400')]
+          : [token('--al-color-brand-ink-900'), token('--al-color-brand-paper-500')],
+        // v5's `--sl-accent`. NOT the semantic content-primary token —
+        // layout.css re-points that to near-black in light mode.
+        accent: token('--al-color-brand-red-500', '--al-theme-color-background-primary-default'),
+        blue: token(dark ? '--al-color-brand-blue-400' : '--al-color-brand-blue-600'),
+        sand: token('--al-color-brand-paper-400'),
+      };
+    };
+
+    const grid = () => {
+      const w = canvas.clientWidth;
+      const cols = w < 560 ? 6 : w < 900 ? 9 : 12;
+      return { cols, rows: 5 };
+    };
+
+    // --- drawing ----------------------------------------------------------
+    const drawCell = (
+      x: number,
+      y: number,
+      s: number,
+      rnd: () => number,
+      p: ReturnType<typeof palette>
+    ) => {
+      const pick = <T,>(arr: T[]) => arr[Math.floor(rnd() * arr.length)];
+      const roll = rnd();
+      const pad = s * 0.08;
+
+      // background of the cell
+      const surface =
+        roll < 0.16 ? p.accent : roll < 0.28 ? p.blue : roll < 0.42 ? p.sand : pick(p.surfaces);
+      const onColor = roll < 0.42 ? token('--al-color-brand-ink-950') : pick(p.inks);
+
+      ctx.fillStyle = surface;
+      ctx.fillRect(x, y, s, s);
+
+      const form = Math.floor(rnd() * 9);
+      ctx.fillStyle = onColor;
+      ctx.strokeStyle = onColor;
+      ctx.lineWidth = Math.max(2, s * 0.09);
+      ctx.lineCap = 'square';
+
+      const cx = x + s / 2;
+      const cy = y + s / 2;
+
+      switch (form) {
+        case 0: // solid inner block
+          ctx.fillRect(x + pad * 2, y + pad * 2, s - pad * 4, s - pad * 4);
+          break;
+        case 1: // circle — the one allowed curve
+          ctx.beginPath();
+          ctx.arc(cx, cy, s * 0.32, 0, Math.PI * 2);
+          ctx.fill();
+          break;
+        case 2: // ring
+          ctx.beginPath();
+          ctx.arc(cx, cy, s * 0.28, 0, Math.PI * 2);
+          ctx.stroke();
+          break;
+        case 3: {
+          // chevron < or >
+          const d = rnd() < 0.5 ? 1 : -1;
+          ctx.beginPath();
+          ctx.moveTo(cx + d * s * 0.18, cy - s * 0.26);
+          ctx.lineTo(cx - d * s * 0.18, cy);
+          ctx.lineTo(cx + d * s * 0.18, cy + s * 0.26);
+          ctx.stroke();
+          break;
+        }
+        case 4: {
+          // stripes
+          const n = 3 + Math.floor(rnd() * 3);
+          const horiz = rnd() < 0.5;
+          for (let i = 0; i < n; i++) {
+            const t = (i + 0.5) / n;
+            ctx.beginPath();
+            if (horiz) {
+              ctx.moveTo(x + pad, y + t * s);
+              ctx.lineTo(x + s - pad, y + t * s);
+            } else {
+              ctx.moveTo(x + t * s, y + pad);
+              ctx.lineTo(x + t * s, y + s - pad);
+            }
+            ctx.stroke();
+          }
+          break;
+        }
+        case 5: {
+          // quarter arc (corner of the S)
+          const corner = Math.floor(rnd() * 4);
+          const px = corner % 2 === 0 ? x : x + s;
+          const py = corner < 2 ? y : y + s;
+          const region = new Path2D();
+          region.moveTo(px, py);
+          region.arc(px, py, s * 0.82, 0, Math.PI * 2);
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x, y, s, s);
+          ctx.clip();
+          ctx.fill(region);
+          ctx.restore();
+          break;
+        }
+        case 6: // plus
+          ctx.beginPath();
+          ctx.moveTo(cx, cy - s * 0.24);
+          ctx.lineTo(cx, cy + s * 0.24);
+          ctx.moveTo(cx - s * 0.24, cy);
+          ctx.lineTo(cx + s * 0.24, cy);
+          ctx.stroke();
+          break;
+        case 7: // dot
+          ctx.beginPath();
+          ctx.arc(cx, cy, s * 0.09, 0, Math.PI * 2);
+          ctx.fill();
+          break;
+        default: // empty — negative space is a design decision
+          break;
+      }
+    };
+
+    const render = () => {
+      const { cols, rows } = grid();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = canvas.clientWidth;
+      if (!w) return;
+      const cell = w / cols;
+      const h = cell * rows;
+      canvas.style.height = `${h}px`;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const p = palette();
+      ctx.fillStyle = p.bg;
+      ctx.fillRect(0, 0, w, h);
+
+      if (nonces.length !== cols * rows) nonces = new Array(cols * rows).fill(0);
+
+      const gap = 2;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const i = r * cols + c;
+          const rnd = mulberry(hashSeed(`${seed}:${c}:${r}:${nonces[i]}`));
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(c * cell + gap / 2, r * cell + gap / 2, cell - gap, cell - gap);
+          ctx.clip();
+          drawCell(c * cell, r * cell, cell, rnd, p);
+          ctx.restore();
+        }
+      }
+
+      seedChip.textContent = `--sl-seed: ${seed}`;
+    };
+
+    // --- interactions -------------------------------------------------------
+    const onCanvasClick = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const { cols, rows } = grid();
+      const cell = rect.width / cols;
+      const c = Math.floor((e.clientX - rect.left) / cell);
+      const r = Math.floor((e.clientY - rect.top) / cell);
+      if (c < 0 || r < 0 || c >= cols || r >= rows) return;
+      nonces[r * cols + c]++;
+      render();
+    };
+    canvas.addEventListener('click', onCanvasClick);
+    cleanup.push(() => canvas.removeEventListener('click', onCanvasClick));
+
+    // `al-button` renders a real <button> in its shadow root; the native
+    // click is composed, so it reaches the host element normally.
+    document.getElementById('gen-remix')?.addEventListener('click', () => {
+      seed = newSeed();
+      nonces = [];
+      history.replaceState(null, '', `#sl=${seed}`);
+      render();
+    });
+
+    document.getElementById('gen-share')?.addEventListener('click', async () => {
+      history.replaceState(null, '', `#sl=${seed}`);
+      try {
+        // origin + pathname (not v5's bare origin) so the permalink survives
+        // this app's configurable base path.
+        await navigator.clipboard.writeText(`${location.origin}${location.pathname}#sl=${seed}`);
+        toast(`// link copied — seed ${seed} renders this exact piece`);
+      } catch {
+        toast('// could not copy — grab the URL from the address bar');
+      }
+    });
+
+    document.getElementById('gen-save')?.addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.download = `southleft-system-${seed}.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      toast('// exported. made of tokens, obviously.');
+    });
+
+    // ambient recomposition: one random cell quietly re-rolls now and then
+    if (!reduced) {
+      const iv = setInterval(() => {
+        if (document.hidden) return;
+        const rect = canvas.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > innerHeight) return;
+        const { cols, rows } = grid();
+        nonces[Math.floor(Math.random() * cols * rows)]++;
+        render();
+      }, 1400);
+      cleanup.push(() => clearInterval(iv));
+    }
+
+    // Re-render on theme change. v5 watched `data-theme` / `data-custom` /
+    // `style` on <html>; the equivalent surface here is `<al-theme
+    // id="sl-theme">` — `mode` is the ink/paper toggle, `brand` the token
+    // recipe, and `style` is where TrySystem writes its live token
+    // overrides (v5's `data-custom`).
+    if (themeHost) {
+      const mo = new MutationObserver(render);
+      mo.observe(themeHost, { attributes: true, attributeFilter: ['mode', 'brand', 'style'] });
+      cleanup.push(() => mo.disconnect());
+    }
+
+    let rT: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(rT);
+      rT = setTimeout(render, 150);
+    };
+    addEventListener('resize', onResize);
+    cleanup.push(() => {
+      clearTimeout(rT);
+      removeEventListener('resize', onResize);
+    });
+
+    render();
+    // `<al-button>` and `<al-theme>` upgrade asynchronously; one more pass
+    // after the definitions land picks up the scoped tokens and the final
+    // control-row height without changing a single seed or nonce.
+    customElements.whenDefined('al-theme').then(render).catch(() => {});
+
+    if (location.hash.startsWith('#sl=')) {
+      canvas.scrollIntoView({ block: 'center' });
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+
+  addEventListener('pagehide', () => {
+    cleanup.forEach((fn) => fn());
+    cleanup = [];
+  });
+</script>

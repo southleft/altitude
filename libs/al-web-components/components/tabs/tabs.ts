@@ -10,15 +10,26 @@ import { ALIconChevronLeft } from '../icon/icons/chevron-left';
 import { ALIconChevronRight } from '../icon/icons/chevron-right';
 import { ALTabPanel } from '../tab-panel/tab-panel';
 import { ALTab } from '../tab/tab';
+import { TabsController } from '../../controllers/tabs';
 import styles from './tabs.scss';
 
 /**
  * Component: al-tabs
- * - **slot**: The tab items for the tabs
- * - **slot** "panel": The tab panels that correspond to the slotted tab items
+ * @slot - The tab items for the tabs
+ * @slot panel - The tab panels that correspond to the slotted tab items
+ *
+ * @event onTabsChange - Fired when the active tab changes, whether by user interaction or programmatically. Detail: `{ value, activeTabIdx }`.
  */
 export class ALTabs extends ALElement {
   static el = 'al-tabs';
+
+  /**
+   * T5.1 — headless TabsController hosts the focus/selectedIndex state.
+   * The host's existing keyboard handler (handleOnTabKeydown) keeps
+   * pre-existing detail-payload behavior; the controller is the
+   * authoritative state owner for tests + downstream framework adapters.
+   */
+  protected tabsCtrl = new TabsController(this, { activation: 'manual' });
 
   private elementMap = register({
     elements: [
@@ -124,13 +135,18 @@ export class ALTabs extends ALElement {
       tab.ariaId = tabAriaId;
       /* 4 */
       const tabPanelAriaId = `al-c-tab-panel__` + nanoid();
-      tab.ariaControls = tabPanelAriaId;
       /* 5 */
       const tabPanel = this.tabPanels[index];
       if (tabPanel) {
         tabPanel.idx = index;
         tabPanel.ariaLabelledBy = tabAriaId;
         tabPanel.ariaId = tabPanelAriaId;
+        /* 4 — only point aria-controls at a panel that actually exists. A tab
+           with more tabs than panels used to reference a generated id that was
+           never rendered (axe `aria-valid-attr-value`). */
+        tab.ariaControls = tabPanelAriaId;
+      } else {
+        tab.ariaControls = undefined;
       }
     });
   }
@@ -379,10 +395,11 @@ export class ALTabs extends ALElement {
                   class="al-c-tabs__arrow al-c-tabs__arrow--prev"
                   variant="bare"
                   ?hideText=${true}
+                  label="Previous"
                   @click=${(e: Event) => this.setActiveAdjacentTab(this.activeTab, true, false, e)}
                 >
                   <${this.iconChevronLeftEl} slot="before"></${this.iconChevronLeftEl}>
-                  Next
+                  Previous
                 </${this.buttonEl}>
               `
             : null}
@@ -401,10 +418,11 @@ export class ALTabs extends ALElement {
                   class="al-c-tabs__arrow al-c-tabs__arrow--next"
                   variant="bare"
                   ?hideText=${true}
+                  label="Next"
                   @click=${(e: Event) => this.setActiveAdjacentTab(this.activeTab, false, false, e)}
                 >
                   <${this.iconChevronRightEl} slot="before"></${this.iconChevronRightEl}>
-                  Previous
+                  Next
                 </${this.buttonEl}>
               `
             : null}

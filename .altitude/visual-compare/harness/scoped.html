@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Altitude — two brands in one page, via &lt;al-theme brand&gt;</title>
+    <script>
+      globalThis.alAutoRegistry = true;
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+    />
+    <!--
+      ONE flat token sheet for the whole document — the ordinary `:root` dark
+      bundle every app already loads. Nothing here links a per-brand stylesheet.
+      Every difference below is produced by `<al-theme brand>` alone, which is
+      the thing `brands.dark.png`'s per-iframe harness could not do.
+    -->
+    <link rel="stylesheet" href="../../../libs/al-web-components/dist/css/main.css" />
+    <link rel="stylesheet" href="./scoped.css" />
+  </head>
+  <body>
+    <header>
+      <h1>One page, one <code>:root</code>, two brands</h1>
+      <p>
+        Each column is <code>&lt;al-theme brand="…" mode="dark"&gt;</code>. Same markup, same
+        document stylesheet, no iframes.
+      </p>
+    </header>
+
+    <div class="grid" id="brands"></div>
+
+    <header>
+      <h1>The other axes, still on the same page</h1>
+    </header>
+    <div class="grid" id="axes"></div>
+
+    <script type="module" src="./scoped.js"></script>
+  </body>
+</html>

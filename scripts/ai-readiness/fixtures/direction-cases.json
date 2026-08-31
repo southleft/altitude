@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "$comment": "T7, spec 2026-08-29-parity-judgement-gates-and-evals. HAND-AUTHORED answer key for Task E. Unlike the drift corpus (drift-cases.altitude.json), no differ can compute these — 'who wins' is a policy question, so the key is the policy itself. Every case cites the rule it tests in `source`; if a case and its source ever disagree, the SOURCE is right and the case is the bug. The set is deliberately BALANCED across code-wins / canvas-wins / ask-a-human: an eval whose answer is always 'code' measures nothing, because an agent that always answers 'code' scores perfectly on it.",
+  "policySource": ".claude/skills/altitude-figma-repair/SKILL.md § 'Who is right — code or canvas?'",
+  "cases": [
+    {
+      "id": "token-value-hex",
+      "expected": "code",
+      "dimension": "token-binding",
+      "scenario": "The Figma variable `theme/color/background/primary-default` resolves to #1F6FEB. The DTCG token `theme.color.background.primary-default` in `styles/tokens-dtcg/` is #1B63D6. Which side should be changed?",
+      "why": "Token VALUES are code's. CLAUDE.md is explicit that Figma Variables are generated FROM the DTCG tokens, never the reverse — so a value disagreement is always Figma's to lose. Fix the Figma variable.",
+      "source": "repair SKILL.md policy table, row 1; CLAUDE.md § Design Tokens"
+    },
+    {
+      "id": "token-value-space",
+      "expected": "code",
+      "dimension": "token-binding",
+      "scenario": "A Figma variable for spacing reads 12px; the DTCG token it was generated from reads 16px. Which side is correct?",
+      "why": "Same rule as any token value: the DTCG tree is the source, Figma is generated from it.",
+      "source": "repair SKILL.md policy table, row 1"
+    },
+    {
+      "id": "which-token-a-part-uses",
+      "expected": "code",
+      "dimension": "token-binding",
+      "scenario": "The Figma set binds al-button's background to `theme/color/background/secondary-default`. The component's `.scss` reads `var(--al-theme-color-background-primary-default)`. Both variables exist and both hold sensible values. Which side should change?",
+      "why": "WHICH token a part uses is decided by the component's source. Fix the Figma binding, not the SCSS.",
+      "source": "repair SKILL.md policy table, row 2"
+    },
+    {
+      "id": "axis-label-rename",
+      "expected": "canvas",
+      "dimension": "variant-axis",
+      "scenario": "The code prop is `variant` with values `horizontal` / `vertical`. The Figma set names the axis `Orientation` with values `Horizontal` / `Vertical`. Which side should change?",
+      "why": "Neither. Axis NAMES and LABELS are the canvas's call — they are a design-surface decision a designer reads. Do not rename the Figma axis to `variant`; curate the pairing (`pairWith: \"Orientation\"`) on the code prop instead.",
+      "source": "repair SKILL.md policy table, row 3, and § 'Curating a pairing the emitter cannot derive'"
+    },
+    {
+      "id": "axis-label-casing",
+      "expected": "canvas",
+      "dimension": "variant-axis",
+      "scenario": "Code declares the enum values as `primary` / `secondary`; the Figma axis lists them as `Primary` / `Secondary`. Which side is wrong?",
+      "why": "Neither is wrong. Title Case variant labels are the library's Figma convention, and labels are the canvas's decision. This is not drift.",
+      "source": "repair SKILL.md policy table, row 3; the Title Case convention in buildAiPrompt's missing-in-figma branch"
+    },
+    {
+      "id": "variant-exists-only-in-figma",
+      "expected": "code",
+      "dimension": "variant-value",
+      "scenario": "The Figma set has a `Variant=Ghost` option. No such value appears in the component's CEM or its contract. Which side decides whether this variant should exist?",
+      "why": "Whether a variant EXISTS AT ALL is code's call — the CEM and the measured states are the source. Delete the Figma variant (or add the variant to the component first, deliberately).",
+      "source": "repair SKILL.md policy table, row 4"
+    },
+    {
+      "id": "state-exists-only-in-code",
+      "expected": "code",
+      "dimension": "state",
+      "scenario": "The component's measured states include `active`. The Figma set's State axis has Default, Hover, Focus and Disabled but no Active. Which side decides?",
+      "why": "Code. Whether a state exists is a code fact; add the missing Figma variant.",
+      "source": "repair SKILL.md policy table, row 4"
+    },
+    {
+      "id": "anatomy-structure-wrong",
+      "expected": "ask-a-human",
+      "dimension": "anatomy",
+      "scenario": "The Figma set's layer tree has the icon nested inside the label frame; the component renders the icon as a sibling of the label. The whole structure is arranged differently. Should you repair this in place?",
+      "why": "No — and this is not a code-vs-canvas question at all. Structure being wrong means this is the wrong tool: the repair lane patches facts in place, and a structural rebuild is a REGENERATION. Regenerating mints new node ids and orphans every instance, so it is a deliberate decision, not a repair.",
+      "source": "repair SKILL.md policy table, row 5 ('if structure is wrong, this is the wrong skill — regenerate') and SKILL.md:28-34"
+    },
+    {
+      "id": "unbound-but-correct-colour",
+      "expected": "code",
+      "dimension": "token-binding",
+      "scenario": "A Figma node's fill is the literal hex #FAF9F8, which is exactly the value the code's token resolves to today. A value comparison passes. Is anything wrong, and if so which side?",
+      "why": "Something is wrong. An unbound fill that happens to be the right colour is still broken: it will not follow a mode switch or a token change. The binding is a code-derived fact — bind the fill to the variable.",
+      "source": "repair SKILL.md trap 4"
+    },
+    {
+      "id": "opacity-percentage",
+      "expected": "code",
+      "dimension": "token-binding",
+      "scenario": "The code token `opacity/40` is 0.4. The Figma variable bound to a node's opacity stores 0.4, and the comparison of the two numbers passes. The disabled state renders invisible on canvas. Which side is wrong?",
+      "why": "Figma. Opacity variables are resolved in the unit the UI shows (percent) and divided by 100, so a stored 0.4 renders as 0.004. The Figma variable should store 40. The trap is that the obvious value comparison SUCCEEDS exactly when every disabled state is broken.",
+      "source": "repair SKILL.md trap 2"
+    },
+    {
+      "id": "two-props-one-axis",
+      "expected": "canvas",
+      "dimension": "variant-axis",
+      "scenario": "al-field-note has both `isError` and `isDisabled` in code. The Figma set collapses both into a single `State = Default | Error | Disabled` axis. Which side should change to make them line up 1:1?",
+      "why": "Neither. Two props legitimately sharing one axis is a sanctioned canvas expression; both props curate `pairWith: \"State\"`. Splitting the Figma axis to mirror the code booleans would be worse design.",
+      "source": "repair SKILL.md § 'Curating a pairing the emitter cannot derive', final paragraph"
+    },
+    {
+      "id": "figma-only-set-no-code",
+      "expected": "ask-a-human",
+      "dimension": "prop",
+      "scenario": "A Figma component set exists with no corresponding code component at all. Should you scaffold the component to make parity green?",
+      "why": "This is explicitly a decision to make WITH A HUMAN — the parity prompt says so. It may be a design exploration that should never ship, or a component the repo deliberately does not build (arrangement belongs to al-layout; no new *-group wrappers). Scaffolding to turn a badge green is the wrong reflex.",
+      "source": "parity.mjs:846 (missing-in-code branch); AGENTS.md arrangement guardrails"
+    },
+    {
+      "id": "both-sides-changed",
+      "expected": "ask-a-human",
+      "dimension": "prop",
+      "scenario": "The parity report says `conflict`: both the component source and the Figma set changed since the last confirmed sync. The code added a prop; the Figma set added a different axis. Which side wins?",
+      "why": "Neither, automatically. `conflict` means both sides carry intent, so overwriting either one loses somebody's work. Merge deliberately per property, with a human, and record the decision.",
+      "source": "parity.mjs:830-835 (conflict branch)"
+    },
+    {
+      "id": "stale-observation",
+      "expected": "ask-a-human",
+      "dimension": "prop",
+      "scenario": "The parity entry reports `figma-drift`, but `figmaLastRefreshed` is three weeks old and `everObserved` is false for this component. Should you start adopting the Figma change into code?",
+      "why": "No. You have no current observation of the Figma side — the status is not trustworthy yet. Refresh first; a plan written against a never-refreshed observation is the failure this field exists to expose. Deciding direction on stale data is not a direction decision at all.",
+      "source": "prompts.mjs:86-88 (everObserved / figmaLastRefreshed); repair SKILL.md:55-59 ('the one everybody skips')"
+    },
+    {
+      "id": "variant-missing-in-figma",
+      "expected": "code",
+      "dimension": "variant-value",
+      "scenario": "The component's contract declares a `tertiary` variant. The Figma set has primary, secondary and bare, but no tertiary. Which side decides?",
+      "why": "Code. Existence is a code fact — add the Figma variant.",
+      "source": "repair SKILL.md policy table, row 4"
+    },
+    {
+      "id": "omitted-prop-present-in-figma",
+      "expected": "code",
+      "dimension": "prop",
+      "scenario": "The code contract marks `fullWidth` with `bindings.figma.omit: true` — a deliberate curation that it should not be expressed in Figma. The Figma set exposes a `Is Full Width` property anyway. Which side is wrong?",
+      "why": "Figma. The omission is a recorded, deliberate code-side decision, so a canvas property that contradicts it is the drift (`present-despite-omission`). Remove it from the set, or change the curation deliberately — do not silently accept it.",
+      "source": "contract-diff.mjs `present-despite-omission`; .altitude/contracts/README.md"
+    },
+    {
+      "id": "ghost-pinned-node",
+      "expected": "canvas",
+      "dimension": "prop",
+      "scenario": "The parity manifest pins al-skeleton's Figma set to node 3435:882. `getNodeByIdAsync` resolves it and returns a COMPONENT_SET whose `removed` is false — but its parent chain reaches no page in the document, and a differently-shaped set of the same name exists on a live page. Which side should be treated as correct?",
+      "why": "The canvas. The live set is the real one; the manifest's pinned id is stale and points at a detached node the owner deleted when the page was rebuilt. Repair the MANIFEST (repin), not the Figma set — and note that 'it resolved' is not proof a node is in the document.",
+      "source": "altitude-figma-repair SKILL.md trap 1 (11 of 20 pinned ids were ghosts, 2026-08-27); scripts/figma-parity/check-pinned-nodes.mjs"
+    },
+    {
+      "id": "figma-set-has-no-padding",
+      "expected": "ask-a-human",
+      "dimension": "token-binding",
+      "scenario": "A verify run reports that the Figma set has no padding where the code declares `theme/space/md`. Adding padding to the Figma set would make the numbers agree. Should you?",
+      "why": "Not yet. 'The Figma set has no padding' is USUALLY a measurement bug, not a Figma bug — the measured side failed to capture it. Changing the canvas to match a bad measurement bakes the error in permanently. Investigate the measurement first; this is not a code-vs-canvas question until you know the measurement is right.",
+      "source": "altitude-figma-repair SKILL.md trap 13"
+    },
+    {
+      "id": "zero-wide-measurement",
+      "expected": "ask-a-human",
+      "dimension": "anatomy",
+      "scenario": "A component declared `width: 100%` measures ZERO WIDE in the captured data, so the generated Figma frame is 0px. Should the Figma frame be corrected to the design width, or the component's CSS changed?",
+      "why": "Neither yet. A percentage-width component measured outside a sized container legitimately measures zero — the defect is in how it was measured, not in either artifact. Fixing the canvas hides it; fixing the CSS breaks a correct component.",
+      "source": "altitude-figma-repair SKILL.md trap 12"
+    },
+    {
+      "id": "refresh-mid-change",
+      "expected": "ask-a-human",
+      "dimension": "prop",
+      "scenario": "You are half way through landing a set of Figma edits. `--refresh` is run and the contract's derived bindings now reflect a partly-updated set, and `--check-drift` fails. Which side should be changed to make the gate green?",
+      "why": "Neither. The gate is reporting a genuinely half-landed state — the snapshot caught the work mid-flight. Finish the change and re-refresh; making either artifact agree with a half-state records a fiction.",
+      "source": "altitude-figma-repair SKILL.md trap 9"
+    },
+    {
+      "id": "two-sets-share-a-name",
+      "expected": "ask-a-human",
+      "dimension": "variant-axis",
+      "scenario": "Two COMPONENT_SETs on the same page are both named 'Button'. One tool resolves by name and reports one axis set; another resolves by pinned id and reports a different one. Which is the source of truth?",
+      "why": "Undecidable from the artifacts — that is the point. Two sets sharing a name is a canvas defect that makes every by-name resolution ambiguous, and picking one silently is how two tools come to disagree about one component. A person has to say which set is the real one, and the duplicate has to go.",
+      "source": "altitude-figma-repair SKILL.md trap 10"
+    },
+    {
+      "id": "contract-overstates-variants",
+      "expected": "canvas",
+      "dimension": "variant-value",
+      "scenario": "A component's contract lists a variant matrix richer than the Figma set: the contract claims six values on an axis where the live set has four, and nobody has edited the set. Which side is describing reality?",
+      "why": "The canvas, for what the SET contains — a contract can both under- and over-state the variant matrix, since its binding is derived from a cached observation. Refresh and re-derive before concluding the Figma set is missing variants; the contract is not an independent witness here.",
+      "source": "altitude-figma-repair SKILL.md trap 11"
+    }
+  ]
+}

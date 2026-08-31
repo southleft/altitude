@@ -1,0 +1,43 @@
+purpose: 'An endless belt of outline display type that reinforces a message without asking
+  to be read. It is decoration with words in it: the type is the texture, not the content.'
+whenToUse:
+- A page needs a band of movement between two dense sections, and the brand's display face
+  is the right texture for it.
+- The words are a refrain the reader has already been told, so nothing is lost if they are
+  never read.
+whenNotToUse:
+- text: The text is information the reader actually needs. The band is hidden from assistive
+    technology and scrolls out of view, so required content placed here is content nobody
+    is guaranteed to see.
+  instead: text-block
+- text: You want a row of logos, moving or static. That is a different component with its
+    own sizing and contrast treatment.
+  instead: logo-wall
+dos:
+- Repeat the item list so the belt loops seamlessly. The component translates by half its
+  track, which only reads as continuous when the second copy matches the first.
+- Use `paused` from the outside when a page needs the motion stopped; it is a reflected attribute,
+  so no page CSS has to reach into the shadow root.
+donts:
+- Do not put a link or a button in it. The whole band is `aria-hidden`, so anything focusable
+  inside becomes a control a keyboard user can reach but a screen reader never announces.
+- Do not lengthen the item list to say more. A longer belt does not make the words more readable,
+  it just slows the loop.
+accessibility:
+- 'The band is `aria-hidden` by design and the animation stops under `prefers-reduced-motion:
+  reduce`, so it is already safe for motion sensitivity. What it is not safe for is carrying
+  meaning.'
+content:
+- 'Items are fragments: a word, a symbol, a short refrain. A sentence in a marquee is a sentence
+  the reader will only ever see half of.'
+sources:
+- path: libs/sl-web-components/components/marquee/marquee.ts
+  contains: export class SLMarquee
+  note: The component this guidance describes.
+- path: libs/sl-web-components/components/marquee/marquee.ts
+  contains: aria-hidden
+  note: The band is hidden from assistive technology, which is the basis for every warning
+    about putting meaning in it.
+- path: libs/sl-web-components/components/marquee/marquee.scss
+  contains: 'prefers-reduced-motion: reduce'
+  note: The animation stops under a reduced-motion preference, so no consumer opt-out is required.

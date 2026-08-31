@@ -1,0 +1,309 @@
+---
+// AI-Ready Design System Scorecard — spec 2026-08-20-southleft-example-app, T10.
+// Content (scale, six dimensions, indicators, advice, score bands) migrated
+// verbatim from southleft-v5's src/pages/scorecard.astro. Interaction
+// reimplemented with plain semantic HTML (fieldset/radio) + vanilla JS,
+// styled only with `.al-u-*` utilities and `--al-theme-*` tokens.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../lib/site';
+import { withBase } from '../lib/url';
+
+const SCALE = [
+  { score: '0', meaning: 'Not in place. This dimension doesn’t exist in any meaningful form.' },
+  { score: '1–2', meaning: 'Early or ad hoc. Some effort exists but it’s inconsistent and undocumented.' },
+  { score: '3', meaning: 'Partially established. Works in some areas but has notable gaps or drift.' },
+  { score: '4–5', meaning: 'Strong foundation. Documented, consistent, and actively maintained.' },
+];
+
+const DIMENSIONS = [
+  {
+    name: 'Token Architecture',
+    why: 'Tokens are the vocabulary AI uses to understand your system. Well-named, tiered tokens (primitive → semantic → component) give AI agents the foundation they need to generate on-brand results.',
+    indicators: [
+      'Your tokens are named semantically (e.g., color.action.primary, not blue-500)',
+      'Token tiers are defined: primitives, semantic aliases, and component-level tokens are distinct',
+      'Tokens are available in a format tools can consume (JSON, CSS variables, Figma Variables)',
+      'Token documentation is current and accessible to the full team',
+    ],
+    lowAdvice: 'This is the highest-leverage fix. Clean, semantic tokens unlock every other dimension. Start here.',
+  },
+  {
+    name: 'Component API Quality',
+    why: 'AI-assisted code generation is only as good as the component API it has to work with. A strong API means less prompt engineering and more reliable output.',
+    indicators: [
+      'Components follow consistent prop naming conventions across the library',
+      'All variants and states are documented and reflected in the codebase',
+      'Component behavior (default, disabled, loading, error) follows predictable patterns',
+      'Props and their expected values are documented in a way an AI tool could reference',
+    ],
+    lowAdvice: 'Inconsistent props and undocumented variants are noise AI has to navigate. Tightening the API means less prompt engineering and more reliable output.',
+  },
+  {
+    name: 'Design-to-Code Parity',
+    why: 'When Figma components don’t match their code counterparts, AI tools working across both surfaces make mistakes. Parity makes the design layer a reliable source of truth.',
+    indicators: [
+      'Figma component names match their code counterparts exactly',
+      'Design tokens in Figma are mapped and synced to code tokens',
+      'Figma component variants reflect what actually exists in production code',
+      'There is a defined process for keeping Figma and code in sync as components evolve',
+    ],
+    lowAdvice: 'This is where most teams bleed time. AI tools working across Figma and code need a single source of truth — without it, generated output will always require correction.',
+  },
+  {
+    name: 'Layer & Structure Hygiene',
+    why: 'AI tools that read Figma files rely on layer names and structure. A file full of "Frame 47" is unreadable to an agent; semantic names let it navigate, extract, and generate accurately.',
+    indicators: [
+      'Layers in your Figma files are named descriptively and consistently',
+      'Components use Auto Layout rather than fixed frames wherever applicable',
+      'Design files are organized with a clear hierarchy (library vs. product vs. drafts)',
+      'Naming conventions are documented and enforced (through review or tooling)',
+    ],
+    lowAdvice: 'Files full of "Frame 47" are unreadable to agents. Naming conventions and Auto Layout are the fix — enforce them in review or with tooling.',
+  },
+  {
+    name: 'Governance & Contribution Model',
+    why: 'AI tools can propose changes and generate new components — without a governance model, those contributions create drift instead of progress.',
+    indicators: [
+      'There is a defined process for proposing and contributing new components',
+      'Component ownership is clear — someone is accountable for quality and updates',
+      'Breaking changes follow a documented versioning and communication process',
+      'At least one person (or team) is responsible for system health and evolution',
+    ],
+    lowAdvice: 'Without a contribution model, AI-generated work quietly corrupts the system instead of enhancing it. Define ownership, review paths, and versioning first.',
+  },
+  {
+    name: 'AI Workflow Readiness',
+    why: 'The teams getting ahead right now have at least one repeatable AI-assisted workflow — not just conversations about it.',
+    indicators: [
+      'Your team has experimented with at least one AI tool in a design system context',
+      'At least one repeatable AI-assisted workflow is in use today (token generation, docs, code review…)',
+      'System documentation is clear and machine-readable, not just human-friendly',
+      'The team shares an understanding of where AI can and cannot be trusted in your workflow',
+    ],
+    lowAdvice: 'Pick one workflow and make it repeatable — token generation, component documentation, accessibility auditing, whatever is highest-friction today. Build the habit before the infrastructure.',
+  },
+];
+
+const BANDS = [
+  { min: 0, max: 10, label: '0–10', title: 'Foundation work needed', body: 'Your design system has gaps that will create real friction when you try to integrate AI tooling. The good news: the lower your score, the more leverage you have.' },
+  { min: 11, max: 20, label: '11–20', title: 'Mixed readiness', body: 'You have a real foundation but meaningful gaps in specific dimensions. AI tools will work in some areas of your workflow and struggle in others.' },
+  { min: 21, max: 30, label: '21–30', title: 'Strong foundation', body: 'Your system is well-positioned to get real value from AI tooling. The question now is whether you’re actually using it.' },
+];
+---
+
+<Base
+  title="AI-Ready Design System Scorecard"
+  description="Is your design system ready for AI? Score yourself across the six dimensions that determine how well a design system supports AI-assisted workflows — in about 10 minutes, right here."
+>
+  <div class="sl-section--tight">
+    <PageHero
+      label="scorecard"
+      heading="Is your design system AI-ready?"
+      dek="Six dimensions determine how well a design system can support AI-assisted workflows. Score yourself honestly — this is for your benefit, not a report card. The gaps you find are exactly where the leverage is."
+    />
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>How to score</al-heading>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+      {SCALE.map((s) => (
+        <div class="al-u-grid__item col:12 col:6@md col:3@lg">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <al-heading tagName="p" variant="sm" isBold={true}>{s.score}</al-heading>
+            <al-text-block>{s.meaning}</al-text-block>
+          </al-card>
+        </div>
+      ))}
+    </al-layout></div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Score yourself</al-heading>
+    <form id="sc-form" style="margin-top: var(--al-theme-space-xl);">
+      <al-layout gap="md">
+        {DIMENSIONS.map((d, i) => (
+          <fieldset class="sc-dim" data-dim={i} style="border: none; padding: 0;">
+            <legend class="al-u-is-vishidden">Dimension {i + 1}: {d.name}</legend>
+            <al-card>
+              <al-layout slot="header" direction="row" justify="between" align="end" wrap gap="lg">
+                <al-heading tagName="h3" variant="sm" isBold={true}>0{i + 1} / {d.name}</al-heading>
+                <al-chip data-dim-chip={i}>— / 5</al-chip>
+              </al-layout>
+              <al-text-block>{d.why}</al-text-block>
+              <al-list>
+                {d.indicators.map((ind) => <al-list-item>{ind}</al-list-item>)}
+              </al-list>
+              <div class="sc-scale" role="radiogroup" aria-label={`${d.name} score, 0 to 5`} style="margin-top: var(--al-theme-space);">
+                {[0, 1, 2, 3, 4, 5].map((n) => (
+                  <label class="sc-opt">
+                    <input type="radio" name={`dim-${i}`} value={n} />
+                    <span>{n}</span>
+                  </label>
+                ))}
+              </div>
+            </al-card>
+          </fieldset>
+        ))}
+      </al-layout>
+    </form>
+    <p class="al-u-theme-typography-body-xs" id="sc-progress" style="margin-top: var(--al-theme-space-lg);">0 of 6 dimensions scored</p>
+  </div>
+
+  <div class="sl-container sl-section" id="sc-results-section">
+    <al-heading tagName="h2" variant="sm" isBold={true}>Your score</al-heading>
+
+    <div id="sc-waiting" style="margin-top: var(--al-theme-space-lg);">
+      <al-text-block maxWidth="md">
+        Score all six dimensions above and your results appear here. No email gate, no iframe — the
+        math runs on this page.
+      </al-text-block>
+    </div>
+
+    <div id="sc-results" hidden style="margin-top: var(--al-theme-space-lg);">
+      <al-layout variant="grid" noCollapse>
+        <div class="al-u-grid__item col:12 col:5@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <al-chip variant="secondary">total</al-chip>
+            <al-heading tagName="p" variant="display-sm" isBold={true} style="margin-top: var(--al-theme-space-sm);"><span id="sc-total">0</span> / 30</al-heading>
+            <p class="al-u-theme-typography-body-xs" id="sc-band-label"></p>
+          </al-card>
+        </div>
+        <div class="al-u-grid__item col:12 col:7@md">
+          <al-heading tagName="h3" variant="md" isBold={true} id="sc-band-title"></al-heading>
+          <al-text-block id="sc-band-body" style="margin-top: var(--al-theme-space-sm);"></al-text-block>
+        </div>
+      </al-layout>
+
+      <div id="sc-gaps-wrap" style="margin-top: var(--al-theme-space-xl);">
+        <al-heading tagName="h3" variant="sm" isBold={true}>Your highest-leverage gaps</al-heading>
+        <al-text-block maxWidth="md">The two or three dimensions where you scored lowest are where the leverage is.</al-text-block>
+        <div style="margin-top: var(--al-theme-space);"><al-layout variant="grid" noCollapse id="sc-gaps"></al-layout></div>
+      </div>
+
+      <div style="margin-top: var(--al-theme-space-xxl);"><al-layout variant="grid" noCollapse>
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-heading tagName="h3" variant="sm" isBold={true}>Want an outside perspective?</al-heading>
+          <al-text-block>
+            We run design system audits and AI-readiness reviews for enterprise teams. No pitch —
+            just a conversation about the gaps and what to do about them.
+          </al-text-block>
+          <div style="margin-top: var(--al-theme-space-lg);">
+            <al-layout direction="row" wrap gap="xs" align="center">
+              <al-button href={withBase('/contact')}>Start a conversation</al-button>
+              <al-button variant="tertiary" href={`mailto:${SITE.email}?subject=Scorecard results`}>Email {SITE.email}</al-button>
+            </al-layout>
+          </div>
+        </div>
+      </al-layout></div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .sc-scale {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--al-theme-space-xs);
+  }
+  .sc-opt {
+    position: relative;
+    cursor: pointer;
+  }
+  .sc-opt input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .sc-opt span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.5rem;
+    padding-block: var(--al-theme-space-xs);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-radius: var(--al-theme-border-radius-sm);
+    transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing), border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+  }
+  .sc-opt:hover span {
+    border-color: var(--al-theme-color-border-primary-default);
+  }
+  .sc-opt input:checked + span {
+    background: var(--al-theme-color-background-primary-default);
+    border-color: var(--al-theme-color-background-primary-default);
+    color: var(--al-theme-color-content-inverse-default);
+  }
+  .sc-opt input:focus-visible + span {
+    outline: var(--al-theme-border-width-md) solid var(--al-theme-color-border-primary-default);
+    outline-offset: 2px;
+  }
+</style>
+
+<script define:vars={{ BANDS, DIMENSIONS: DIMENSIONS.map((d) => ({ name: d.name, lowAdvice: d.lowAdvice })) }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('sc-form');
+    if (!form) return;
+    const dims = Array.from(document.querySelectorAll('.sc-dim'));
+    const scores = dims.map(() => null);
+
+    const update = () => {
+      let answered = 0;
+      let total = 0;
+      dims.forEach((d, i) => {
+        const checked = d.querySelector('input:checked');
+        scores[i] = checked ? Number(checked.value) : null;
+        const chip = document.querySelector(`[data-dim-chip="${i}"]`);
+        if (chip) chip.textContent = checked ? `${checked.value} / 5` : '— / 5';
+        if (checked) {
+          answered++;
+          total += Number(checked.value);
+        }
+      });
+      const progress = document.getElementById('sc-progress');
+      if (progress) progress.textContent = answered < 6 ? `${answered} of 6 dimensions scored` : 'All six scored — your results are below';
+      if (answered === 6) showResults(total);
+    };
+
+    const showResults = (total) => {
+      document.getElementById('sc-waiting')?.setAttribute('hidden', '');
+      const results = document.getElementById('sc-results');
+      const firstReveal = results?.hasAttribute('hidden');
+      results?.removeAttribute('hidden');
+
+      const band = BANDS.find((b) => total >= b.min && total <= b.max) ?? BANDS[0];
+      document.getElementById('sc-total').textContent = String(total);
+      document.getElementById('sc-band-label').textContent = `Band: ${band.label}`;
+      document.getElementById('sc-band-title').textContent = band.title;
+      document.getElementById('sc-band-body').textContent = band.body;
+
+      const ranked = scores.map((s, i) => ({ s: s ?? 0, i })).sort((a, b) => a.s - b.s || a.i - b.i);
+      const cutoff = ranked[1].s === ranked[2]?.s ? 3 : 2;
+      const gaps = ranked.slice(0, cutoff).filter((g) => g.s < 5);
+      const gapsWrap = document.getElementById('sc-gaps-wrap');
+      const gapsEl = document.getElementById('sc-gaps');
+      gapsEl.textContent = '';
+      if (gapsWrap) gapsWrap.hidden = gaps.length === 0;
+      for (const g of gaps) {
+        const wrap = document.createElement('div');
+        wrap.className = 'al-u-grid__item col:12 col:6@md';
+        const card = document.createElement('al-card');
+        const h = document.createElement('p');
+        h.className = 'al-u-theme-typography-body-sm';
+        h.textContent = `${DIMENSIONS[g.i].name} — ${g.s}/5`;
+        const p = document.createElement('p');
+        p.className = 'al-u-theme-typography-body-sm';
+        p.textContent = DIMENSIONS[g.i].lowAdvice;
+        card.append(h, p);
+        wrap.append(card);
+        gapsEl.append(wrap);
+      }
+
+      if (firstReveal) {
+        document.getElementById('sc-results-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    form.addEventListener('change', update);
+  });
+</script>

@@ -1,0 +1,342 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-skeleton",
+  "name": "Skeleton",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-skeleton",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "height",
+      "description": "The height of the skeleton\n- If no value is entered, it defaults to auto",
+      "type": "number",
+      "rawType": "number",
+      "bindings": {
+        "code": {
+          "attribute": "height"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton",
+      "type": "enum",
+      "rawType": "'circle' | 'square'",
+      "values": [
+        "circle",
+        "square"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "width",
+      "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%",
+      "type": "number",
+      "rawType": "number",
+      "bindings": {
+        "code": {
+          "attribute": "width"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "composition": {
+    "renders": []
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Shape=circle",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-skeleton al-c-skeleton--circle",
+      "box": {
+        "w": 32,
+        "h": 32
+      },
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius-round",
+          "figma": "theme/border/radius/round"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius-round",
+          "figma": "theme/border/radius/round"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius-round",
+          "figma": "theme/border/radius/round"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius-round",
+          "figma": "theme/border/radius/round"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius-round",
+          "figma": "theme/border/radius/round"
+        },
+        "padding": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "padding-bottom": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "padding-left": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "padding-right": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "padding-top": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        }
+      },
+      "children": []
+    },
+    "cases": [
+      {
+        "case": "Shape=circle",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-skeleton al-c-skeleton--circle",
+          "box": {
+            "w": 32,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-round",
+              "figma": "theme/border/radius/round"
+            },
+            "padding": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      },
+      {
+        "case": "Shape=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-skeleton",
+          "box": {
+            "w": 32,
+            "h": 16
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "padding": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      },
+      {
+        "case": "Shape=square",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-skeleton al-c-skeleton--square",
+          "box": {
+            "w": 32,
+            "h": 32
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius",
+              "figma": "theme/border/radius/@"
+            },
+            "padding": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": []
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-theme-border-radius-round",
+    "--al-theme-space",
+    "--al-theme-space-xs"
+  ],
+  "conditionalBindings": {
+    "variant": {
+      "circle": {
+        "border-radius": {
+          "code": "--al-theme-border-radius-round",
+          "figma": "theme/border/radius/round"
+        }
+      }
+    }
+  },
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/skeleton/skeleton.ts",
+      "tagName": "al-skeleton",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": null,
+      "nodeId": null,
+      "url": null
+    }
+  }
+}

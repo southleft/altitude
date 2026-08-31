@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALTabs as ALWebTabs } from 'al-web-components/dist/components/tabs/tabs';
-import register from 'al-web-components/dist/directives/register';
+import { ALTabs as ALWebTabs } from '@southleft/al-web-components/components/tabs';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebTabs.el, ALWebTabs],
@@ -14,6 +16,6 @@ export const ALTabs = createComponent({
   tagName: elementMap.get(ALWebTabs.el),
   elementClass: ALWebTabs,
   events: {
-    onTabChange: 'tabChange'
+    onTabsChange: 'onTabsChange'
   }
 });

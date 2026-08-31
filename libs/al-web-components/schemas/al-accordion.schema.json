@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-accordion.schema.json",
+  "title": "ALAccordion (al-accordion)",
+  "description": "Component: al-accordion",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-accordion",
+    "className": "ALAccordion",
+    "module": "components/accordion/accordion.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The accordion content, a set of accordion panels",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-accordion"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expandAll": {
+          "description": "Expand all?\n- All panels will be in expand or open state when it's true",
+          "type": "boolean"
+        },
+        "expandOneOnly": {
+          "description": "Single panel only?\n- Display only a single panel at a time",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

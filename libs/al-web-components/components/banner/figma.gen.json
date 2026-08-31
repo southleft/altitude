@@ -1,0 +1,23 @@
+{
+  "$comment": "Per-component Figma-generation config (see altitude-figma-generate skill). anatomyCase: al-banner lost its tone `variant` on 2026-08-28 (a banner is one structural shape; glyph + glyph colour are slot/custom-property overrides, not axes), so the matrix is Dismissible alone and the code-default case is Dismissible=no. nestedProps: banner.ts renders its dismiss control as `<al-button variant=\"bare\" hideText label=\"Dismiss\">` wrapping an `x` icon, but a nested instance renders its set's DEFAULT variant unless told otherwise - without this it came out as a labelled \"Button\". Bare + an empty Text + Slot Before is the icon-only form; $glyphs swaps the Icon Before wrapper's inner glyph to Phosphor X. sheet.cellWidth: this component's natural width exceeds the library's default 200px sheet pitch (sheet-style.mjs SHEET_CELL_WIDTH_PX), so its instances bled across the border-collapse grid lines and clipped their own helper text. Raised to 660 on 2026-08-28 now that the banner is measured full-bleed at 600px (it is a page-level bar, not a hugging card). This is the documented per-component override the generator expects - do NOT re-measure instances inside the build (the sheet-style.mjs header explains why: ~30s per-call ceiling). al-link curation: the reference frame's trailing CTA is a plain text link with no icon, but Link's set default carries a trailing icon slot. The banner is now MEASURED full-bleed at 600px with its real message and CTA (plan.mjs fill/fillWidth), which is what makes the design's message-left / CTA-hard-right row exist in the anatomy at all - before that it measured a ~245px stub with no link. rootWidth: al-banner is inline-size:100% - a page-level bar - so hugging gave a ~729px stub sized by the message length, with the two variants at different widths; true means take the measured root width (600px, the reference frame's own). nestedIconGlyphs: names the leading glyph Info AND is what triggers the measured-box resize for a nested icon (24px here) - the size step is gated on the tag being declared, independently of whether the glyph itself resolves.",
+  "anatomyCase": "Dismissible=no",
+  "nestedProps": {
+    "al-button": {
+      "Variant": "Bare",
+      "Text": "",
+      "Slot Before": true,
+      "Slot After": false,
+      "$glyphs": [
+        "X"
+      ]
+    },
+    "al-link": {
+      "Text": "Learn more",
+      "Slot After": false
+    }
+  },
+  "rootWidth": true,
+  "nestedIconGlyphs": {
+    "al-icon": "Info"
+  }
+}

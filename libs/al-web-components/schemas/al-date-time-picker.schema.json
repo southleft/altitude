@@ -1,0 +1,208 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-date-time-picker.schema.json",
+  "title": "ALDateTimePicker (al-date-time-picker)",
+  "description": "Component: al-date-time-picker",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-date-time-picker",
+    "className": "ALDateTimePicker",
+    "module": "components/date-time-picker/date-time-picker.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "If content is slotted, it will display in place of the fieldNote property",
+        "name": "field-note"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the errorNote property",
+        "name": "error"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDateTimePickerOpen",
+        "description": "Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state."
+      },
+      {
+        "name": "onDateTimePickerClose",
+        "description": "Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state."
+      },
+      {
+        "name": "onDateTimePickerDateChange",
+        "description": "Fired when the date portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the time portion."
+      },
+      {
+        "name": "onDateTimePickerTimeChange",
+        "description": "Fired when the time portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the date portion."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-date-time-picker"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fieldId": {
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        "label": {
+          "description": "The field's label",
+          "type": "string"
+        },
+        "hideLabel": {
+          "description": "Hide label?",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "The field's name attribute",
+          "type": "string"
+        },
+        "value": {
+          "description": "The field's value attribute",
+          "type": "string"
+        },
+        "placeholder": {
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "The field note displayed beneath the field",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error note displayed beneath the field when in an error state",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria describedby\n- Used to connect the field note in the field to the input for accessibility",
+          "type": "string"
+        },
+        "isRequired": {
+          "description": "The field's required attribute",
+          "type": "boolean"
+        },
+        "isOptional": {
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "The field's disabled attribute",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state indicating an issue with the field",
+          "type": "boolean"
+        },
+        "isActive": {
+          "description": "Indicates whether a date has been selected",
+          "type": "boolean"
+        },
+        "selectedDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "setActiveDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "setActiveTime": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "isoFormat": {
+          "description": "ISO Format for date",
+          "type": "string"
+        },
+        "dateFormat": {
+          "description": "Specify date format for UI display",
+          "type": "string",
+          "enum": [
+            "MMM dd, yyyy",
+            "MM/dd/yyyy",
+            "dd/MM/yyyy",
+            "yyyy/MM/dd",
+            "MMM dd yyyy",
+            "dd MMM yyyy"
+          ]
+        },
+        "disabledMinDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "disabledMaxDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "multiYear": {
+          "description": "Amount of years to go before and after the current date",
+          "type": "number"
+        },
+        "previousButtonText": {
+          "description": "Previous month button text",
+          "type": "string"
+        },
+        "nextButtonText": {
+          "description": "Next month button text",
+          "type": "string"
+        },
+        "isDayShortHand": {
+          "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday",
+          "type": "boolean"
+        },
+        "startOnMonday": {
+          "description": "Start the day of the week on Monday",
+          "type": "boolean"
+        },
+        "is24HourFormat": {
+          "description": "Use 24 hour time format",
+          "type": "boolean"
+        },
+        "timeIncrements": {
+          "description": "Increments of time",
+          "type": "number"
+        },
+        "timeStart": {
+          "description": "Minimum time for between times display (24 hour format, e.g., timeStart=${16} for 4PM)",
+          "type": "number"
+        },
+        "timeEnd": {
+          "description": "Maximum time for between times display (24 hour format, e.g., timeEnd=${16} for 4PM)",
+          "type": "number"
+        },
+        "timeSelectorLabel": {
+          "description": "Time selector heading label",
+          "type": "string"
+        },
+        "cancelLabel": {
+          "description": "Cancel button label",
+          "type": "string"
+        },
+        "submitLabel": {
+          "description": "Submit button label",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

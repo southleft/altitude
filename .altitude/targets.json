@@ -1,0 +1,41 @@
+{
+  "$comment": "T0.5 — committed targets for the v2 refactor: the end-state each subsystem is designed against. NOT machine-read — as of 2026-08-23 the only references to this file anywhere in the repo are the two doc pointers AGENTS.md:47 and CLAUDE.md:164 (`grep -rn targets.json scripts libs apps .github`). An earlier version of this comment claimed scripts read it; they do not. It is a HUMAN/AGENT contract, so drift between it and reality is invisible to CI and must be corrected by hand — every value below should be re-derivable from a file cited in `rationale`.",
+  "schemaVersion": 1,
+  "targets": {
+    "react": "19.x",
+    "reactDom": "19.x",
+    "typesReact": "19.x",
+    "lit": "3.3.x",
+    "litReact": "latest-compat-r19",
+    "styleDictionary": "5.x",
+    "storybook": "10.4.x",
+    "storybookBuilder": "vite",
+    "storybookTestRunner": "jest",
+    "vite": "5.x",
+    "typescript": "5.x-latest",
+    "eslint": "9.x",
+    "eslintConfigStyle": "flat",
+    "tsEslint": "8.x",
+    "dateFns": "4.x",
+    "node": "lts/jod",
+    "packageManager": "pnpm",
+    "cemAnalyzer": "@custom-elements-manifest/analyzer",
+    "vrtTool": "playwright",
+    "decoratorMode": "experimental",
+    "useDefineForClassFields": false
+  },
+  "decisions": {
+    "pilotComponents": ["button", "input", "select", "dialog", "theme-switcher"],
+    "registryModes": ["stable", "versioned", "manual"],
+    "themeAxes": ["brand", "mode", "density", "contrast", "motion"],
+    "cascadeLayers": ["al.reset", "al.base", "al.theme", "al.component", "al.override"],
+    "migrationStates": ["legacy", "dual", "scoped-complete"]
+  },
+  "rationale": {
+    "decoratorMode": "G7: never change build tooling and language semantics in the same step. Standard decorators are deferred to T7.1. WHERE IT IS ENFORCED: the setting that decides the SHIPPED semantics is esbuild's, not tsc's. As of the 2026-08-27 cleanup exactly ONE file sets it: libs/al-web-components/vite.config.mjs:119-123 (`experimentalDecorators: true` + `useDefineForClassFields: false`). This entry previously also cited vite.spike.config.mjs:44-45 and the two Storybook configs (al-web-components/.storybook/main.ts, al-react/.storybook/main.ts); Storybook was retired 2026-08-25 and the Vite-migration spike 2026-08-27, so none of those three paths exist any more. libs/al-web-components/tsconfig.json:21 sets only `useDefineForClassFields: false` and omits `experimentalDecorators`; that is deliberate and harmless because it is `emitDeclarationOnly: true` (it emits .d.ts, never JS) and the codebase uses `@property accessor` auto-accessors, which type-check identically in both decorator modes (verified 2026-08-23 by running `tsc --noEmit` with and without the flag: both exit 0). libs/al-react/tsconfig.json:56-57 does set both because it emits JS.",
+    "storybookTestRunner": "@storybook/test-runner ^0.24 is a JEST runner, not Vitest: libs/al-web-components/test-runner-jest.config.mjs calls getJestConfig() and types its export as @jest/types Config.InitialOptions. This field read \"vitest\" until 2026-08-23; Storybook's Vitest addon is a separate, un-adopted path. Change this only together with the config file.",
+    "packageManager": "User-confirmed pnpm over yarn 4 (stricter dep graph catches phantom deps).",
+    "vrtTool": "User-confirmed Playwright (free, in-repo, runs in CI).",
+    "pilotComponents": "G3 pilot gate: 5 components prove every pattern end-to-end before scaling to ~65."
+  }
+}

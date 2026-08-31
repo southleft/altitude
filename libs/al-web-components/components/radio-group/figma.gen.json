@@ -1,0 +1,74 @@
+{
+  "$comment": "Per-component Figma-generation config (see altitude-figma-generate skill). anatomyCase: legend shown, column direction, no state. caseAxes: Legend pairs with hideLegend. Orientation pairs with the new `direction` prop (2026-08-28) - it forwards to the group's own nested <al-layout> (gap md + wrap), so al-layout still owns arrangement; before that prop existed the plan measured `variant=\"horizontal\"`, which no component ever had, so both cases rendered identically and the axis was honestly dropped while the design library's \"Radio Group example\" kept showing a Horizontal column. State is COMPOUND - driven by isError and isDisabled together, so it names both via `props` rather than one `prop`, and `implicitDefault` says a case with no State key IS State=Default. Both state rows are measurably distinct (Error adds an error-note subtree; Disabled adds theme/opacity/disabled to 11 nodes). sheet.cellWidth: this component's natural width exceeds the library's default 200px sheet pitch (sheet-style.mjs SHEET_CELL_WIDTH_PX), so its instances bled across the border-collapse grid lines and clipped their own helper text. Measured live 2026-08-27 from the widest instance in its own prop sheet, rounded up with breathing room. This is the documented per-component override the generator expects - do NOT re-measure instances inside the build (the sheet-style.mjs header explains why: ~30s per-call ceiling). nestedProps: al-radio's Figma set defaults to a variant this group never renders (Checkbox's default is Checked=Indeterminate, Label=Hidden), so nested instances came out as unlabelled indeterminate boxes; the curation switches them to the code's real default. al-field-note is POSITIONAL - the Error case renders helper-then-error, so entry 2 is the red one. $overrides make a nested instance follow the GROUP's own State axis (a Disabled group's radios read Disabled). Radio's set carries an Error state; Checkbox's does not, so only Radio gets the Error override. sheet.cellWidth raised to 430 for the Horizontal variants, which are ~386px wide and overflowed the narrower column-form pitch.",
+  "anatomyCase": "Orientation=default,Legend=shown",
+  "caseAxes": [
+    {
+      "dimension": "Legend",
+      "prop": "hideLegend",
+      "property": "Legend",
+      "valueMap": {
+        "hidden": "Hidden",
+        "shown": "Shown"
+      }
+    },
+    {
+      "dimension": "Orientation",
+      "prop": "direction",
+      "property": "Orientation",
+      "valueMap": {
+        "default": "Default",
+        "horizontal": "Horizontal"
+      }
+    },
+    {
+      "dimension": "State",
+      "props": [
+        "isError",
+        "isDisabled"
+      ],
+      "property": "State",
+      "implicitDefault": "Default",
+      "valueMap": {
+        "Default": "Default",
+        "Error": "Error",
+        "Disabled": "Disabled"
+      }
+    }
+  ],
+  "nestedProps": {
+    "al-radio": {
+      "Checked": "Off",
+      "Label": "Shown",
+      "$overrides": [
+        {
+          "$when": {
+            "State": "Disabled"
+          },
+          "State": "Disabled"
+        },
+        {
+          "$when": {
+            "State": "Error"
+          },
+          "State": "Error"
+        }
+      ]
+    },
+    "al-field-note": [
+      {
+        "State": "Default",
+        "$overrides": [
+          {
+            "$when": {
+              "State": "Disabled"
+            },
+            "State": "Disabled"
+          }
+        ]
+      },
+      {
+        "State": "Error"
+      }
+    ]
+  }
+}

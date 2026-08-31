@@ -1,1 +1,3 @@
-export * from './ThemeSwitcher';
+'use client';
+
+export * from './ThemeSwitcher.js';

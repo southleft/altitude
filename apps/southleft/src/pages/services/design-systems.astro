@@ -1,0 +1,150 @@
+---
+// Design System Development — spec 2026-08-20-southleft-example-app, T10.
+// Content migrated verbatim from southleft-v5's src/pages/services/design-systems.astro,
+// recomposed from al-* organisms (v5's Terminal/section-rule motifs are not
+// reproduced — see T9 verification notes).
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { CTA } from '../../lib/site';
+import { withBase } from '../../lib/url';
+
+const allWork = await getCollection('work');
+const workBySlug = (slug: string) => allWork.find((w) => w.id.replace(/\.md$/, '') === slug);
+const caseStudies = ['petsmart', 'alps', 'ibm-investor-relations'].map(workBySlug).filter((w) => w !== undefined);
+
+const allPosts = await getCollection('insights');
+const postBySlug = (slug: string) => allPosts.find((p) => p.id.replace(/\.md$/, '') === slug);
+const relatedPosts = [
+  'building-multi-brand-design-systems-the-developers-perspective',
+  'token-naming-conventions',
+  'the-value-of-design-tokens',
+]
+  .map(postBySlug)
+  .filter((p) => p !== undefined);
+
+const audiences = [
+  { title: 'Building or rebuilding', body: 'Product organizations starting a design system from scratch — or replacing one that never earned adoption.' },
+  { title: 'Design and code have drifted', body: 'Teams whose Figma library and code components no longer agree, and who need parity restored before anything else can improve.' },
+  { title: 'One system, many brands', body: 'Multi-brand organizations that need a single system — tokens, theming, governance — to serve many products.' },
+];
+
+const deliverables = [
+  { name: 'Component library development', desc: 'Storybook-based, built on Atomic Design methodology. Everything typed, tokenized, tested.' },
+  { name: 'Design token architecture', desc: 'Clear, well-scoped tokens mapped to real system behavior — not a color dump with aspirational names.' },
+  { name: 'Design system audits', desc: 'Parity checks across the three pillars: design artifacts, component library, and end products.' },
+  { name: 'Documentation ecosystems', desc: 'ZeroHeight and Storybook, wired together so docs stay true to the code they describe.' },
+  { name: 'Multi-brand & theming architecture', desc: 'Theming strategy and native Web Components where framework-agnosticism matters.' },
+  { name: 'Governance & contribution models', desc: 'Guidance on how the system grows after we leave — intake, review, versioning, adoption.' },
+];
+
+const shapes = [
+  { label: 'build', title: 'System builds', body: 'Agile sprints with weekly updates and direct access to the developers doing the work.' },
+  { label: 'audit', title: 'System audits', body: 'A structured parity check across design, code, and product, ending in a prioritized findings report.' },
+  { label: 'scale', title: 'Scale & theming', body: 'Multi-brand and theming engagements scoped per brand — one architecture, extended deliberately.' },
+];
+---
+
+<Base
+  title="Design System Development"
+  description="Southleft builds, audits, and scales design systems — component libraries, token architecture, and documentation ecosystems structured for AI from day one. Proof: PetSmart Sparky, ALPS, IBM."
+>
+  <div class="sl-section--tight">
+    <PageHero
+      label="design-system-development"
+      heading="Design system development"
+      dek="Southleft specializes in design systems engineering: structured tokens, component libraries, and documentation ecosystems that align design and engineering, reduce redundancy, and speed up delivery. Whether you're starting from scratch, auditing a system that's drifted, or scaling one across brands and platforms, we build systems your team — and your AI tooling — can actually use."
+    >
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>Talk to us about your system</al-button>
+          <al-button variant="tertiary" href={withBase('/projects/petsmart')}>See it at PetSmart scale</al-button>
+        </al-layout>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Three situations we see most</al-heading>
+    <al-text-block maxWidth="sm">Design system engagements rarely start from zero context. They start from one of these.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+      {audiences.map((a) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{a.title}</al-heading></div>
+            <al-text-block>{a.body}</al-text-block>
+          </al-card>
+        </div>
+      ))}
+    </al-layout></div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Deliverables, not decks</al-heading>
+    <al-text-block maxWidth="sm">Every engagement produces working artifacts — libraries, tokens, docs, and the governance to keep them honest.</al-text-block>
+    <al-list style="margin-top: var(--al-theme-space-xl);">
+      {deliverables.map((d) => <al-list-item><strong>{d.name}</strong> — {d.desc}</al-list-item>)}
+    </al-list>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Scoped to where your system is</al-heading>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+      {shapes.map((s) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header">
+              <al-chip>{s.label}</al-chip>
+              <al-heading tagName="h3" variant="sm" isBold={true} style="margin-top: var(--al-theme-space-xs);">{s.title}</al-heading>
+            </div>
+            <al-text-block>{s.body}</al-text-block>
+          </al-card>
+        </div>
+      ))}
+    </al-layout></div>
+    <al-text-block maxWidth="md" style="margin-top: var(--al-theme-space-lg);">
+      Our own system, <a href={withBase('/tools/altitude')}>Altitude</a>, seeds client builds — it's the internal
+      accelerator and AI testbed we introduced in 2024, and it means engagements start from proven architecture
+      rather than a blank repo.
+    </al-text-block>
+  </div>
+
+  {caseStudies.length > 0 && (
+    <div class="sl-container sl-section">
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout gap="sm">
+          <al-heading tagName="h2" variant="lg" isBold={true}>Systems in production</al-heading>
+          <al-text-block maxWidth="sm">PetSmart's Sparky system (with Big Medium), ALPS for the Seventh-day Adventist Church's global presence, and Carbon integrated into IBM Investor Relations (with Lullabot).</al-text-block>
+        </al-layout>
+      </div>
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+        {caseStudies.map((w) => <div class="al-u-grid__item col:12 col:4@md"><WorkCard project={w} /></div>)}
+      </al-layout></div>
+    </div>
+  )}
+
+  {relatedPosts.length > 0 && (
+    <div class="sl-container sl-section">
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+          <al-layout gap="sm" grow>
+            <al-heading tagName="h2" variant="lg" isBold={true}>How we think about systems</al-heading>
+            <al-text-block maxWidth="sm">Tokens, theming, and multi-brand architecture — written from the build, not the sidelines.</al-text-block>
+          </al-layout>
+          <al-link href={withBase('/insights')}>All insights →</al-link>
+        </al-layout>
+      </div>
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+        {relatedPosts.map((p) => <div class="al-u-grid__item col:12 col:4@md"><ArticleCard post={p} /></div>)}
+      </al-layout></div>
+    </div>
+  )}
+
+      <CTABand
+      heading="Let's talk about your design system."
+      dek="Building, auditing, or scaling — a 30-minute call with the engineers who'll do the work is the fastest way to scope it."
+    />
+</Base>

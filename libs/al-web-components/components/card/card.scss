@@ -1,132 +1,209 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /* ------------------------------------*\
   #CARD
 \*------------------------------------ */
 
-:host {
-  display: contents;
-}
+@layer al.component {
+  :host {
+    display: contents;
+  }
 
-/**
- * Card
- */
-.al-c-card {
-  width: 100%;
-  display: flex;
-  padding: var(--al-theme-space);
-  gap: var(--al-theme-space-xs);
-  flex-flow: row wrap;
-  border-radius: var(--al-theme-border-radius-lg);
-  color: var(--al-theme-color-content-default);
-  background-color: var(--al-theme-color-background-default);
-  box-shadow: var(--al-theme-box-shadow);
-
-  > * {
+  /**
+   * Card
+   */
+  .al-c-card {
     width: 100%;
+    display: flex;
+    /*
+     * v2: the regions own their padding, not the card. The canvas card is a
+     * header rule, a body and a tinted footer rule — none of which can be drawn
+     * while a single outer padding holds every region away from the edge.
+     */
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+    flex-flow: row wrap;
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-lg));
+    color: var(--al-theme-color-content-default);
+    background-color: var(--al-theme-color-background-default);
+    /**
+     * v2: flat by default. A card is delimited by its hairline border and its
+     * internal dividers, not by elevation — shadows are reserved for surfaces
+     * that genuinely float (dialog, popover, menu, tooltip, drawer).
+     */
+    box-shadow: var(--al-card-box-shadow, none);
+
+    > * {
+      width: 100%;
+    }
   }
-}
 
-/**
- * Card inline
- */
-.al-c-card--inline {
-  gap: var(--al-theme-space);
+  /**
+   * Card inline
+   */
+  .al-c-card--inline {
+    gap: var(--al-theme-space);
 
-  > * {
-    width: auto;
+    > * {
+      width: auto;
+    }
   }
-}
 
-/**
- * Card bare
- */
-.al-c-card--bare {
-  background-color: transparent;
-  border-radius: none;
-  box-shadow: none;
-  padding: 0;
-}
+  /**
+   * Card bare
+   */
+  .al-c-card--bare {
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    padding: 0;
 
-/**
- * Card actions
- */
-.al-c-card__actions {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--al-theme-space);
+    .al-c-card__header,
+    .al-c-card__body,
+    .al-c-card__image,
+    .al-c-card__actions {
+      padding: 0;
+    }
 
-  .al-c-card--inline & {
-    flex-direction: column;
-    order: 4;
+    .al-c-card__header,
+    .al-c-card__footer {
+      border: none;
+      background-color: transparent;
+    }
+
+    .al-c-card__footer {
+      padding: 0;
+    }
   }
-}
 
-/**
- * Card actions start and end
- */
-.al-c-card__actions-start,
-.al-c-card__actions-end {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  gap: var(--al-theme-space);
-}
+  /**
+   * Card footer — the only tinted region. Reads as a footer because of its
+   * rule and tint, not because of elevation.
+   */
+  .al-c-card__footer {
+    padding: var(--al-theme-space-sm) var(--al-theme-space);
+    border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+    background-color: var(--al-theme-color-background-default-weak);
+  }
 
-/**
- * Card actions start
- */
-.al-c-card__actions-start {
-  justify-content: flex-start;
+  /**
+   * Card actions
+   */
+  .al-c-card__actions {
+    display: flex;
+    padding: var(--al-theme-space);
+    justify-content: space-between;
+    gap: var(--al-theme-space);
 
-  .al-c-card--inline & {
+    .al-c-card--inline & {
+      flex-direction: column;
+      order: 4;
+    }
+  }
+
+  /**
+   * Card actions start and end
+   */
+  .al-c-card__actions-start,
+  .al-c-card__actions-end {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--al-theme-space);
+  }
+
+  /**
+   * Card actions start
+   */
+  .al-c-card__actions-start {
+    justify-content: flex-start;
+
+    .al-c-card--inline & {
+      justify-content: flex-end;
+      align-content: flex-start;
+    }
+  }
+
+  /**
+   * Card actions end
+   */
+  .al-c-card__actions-end {
     justify-content: flex-end;
-    align-content: flex-start;
+
+    .al-c-card--inline & {
+      flex: 1;
+      align-content: flex-end;
+    }
   }
-}
 
-/**
- * Card actions end
- */
-.al-c-card__actions-end {
-  justify-content: flex-end;
+  /**
+   * Fill the available block size — for a card in a grid cell that should share
+   * one height with its row.
+   *
+   * Declared on `.al-c-card` and not on `:host`, because the host is
+   * `display: contents` and has no box of its own; `.al-c-card` is the element
+   * that actually becomes the grid or flex item. `box-sizing: border-box` so
+   * the card's own padding stays inside the 100%, which is the other half of
+   * the inline style consumers were writing by hand.
+   */
+  :host([fill]) .al-c-card {
+    block-size: 100%;
+    box-sizing: border-box;
+  }
 
-  .al-c-card--inline & {
+  /**
+   * Card image
+   *
+   * Sits INSIDE the card's padding, taking the full content width. It is not
+   * flush to the card edge and never has been — the slot's JSDoc used to claim
+   * otherwise (fixed). Making it bleed would break the `<al-avatar slot="image">`
+   * usages in apps/angular, apps/astro and apps/svelte.
+   */
+  .al-c-card__image {
+    display: block;
+    height: auto;
+    /*
+     * Kept inset. apps/angular, apps/astro and apps/svelte all slot an
+     * <al-avatar> here; bleeding it to the card edge would wreck all three.
+     */
+    padding: var(--al-theme-space);
+  }
+
+  /**
+   * Card image slotted items
+   */
+  ::slotted([slot='image']) {
+    width: 100%;
+    height: auto;
+  }
+
+  /**
+   * Card header
+   */
+  .al-c-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space-xs);
+    /*
+     * v2 regions own their padding so the dividers reach the card edge.
+     * `space` (16px) is the nearest scale step to the canvas's hand-drawn
+     * 18px inset; an 18px token would sit off the 4px spacing scale for one
+     * component.
+     */
+    padding: var(--al-theme-space);
+    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+  }
+
+  /**
+   * Card body
+   */
+  .al-c-card__body {
     flex: 1;
-    align-content: flex-end;
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-xs);
+    padding: var(--al-theme-space);
   }
-}
-
-/**
- * Card image
- */
-.al-c-card__image {
-  display: block;
-  height: auto;
-}
-
-/**
- * Card image slotted items
- */
-::slotted([slot='image']) {
-  width: 100%;
-  height: auto;
-}
-
-/**
- * Card header
- */
-.al-c-card__header {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--al-theme-space-xs);
-}
-
-/**
- * Card body
- */
-.al-c-card__body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--al-theme-space-xs);
 }

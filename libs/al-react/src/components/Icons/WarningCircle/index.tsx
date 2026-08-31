@@ -1,1 +1,3 @@
-export * from './WarningCircle';
+'use client';
+
+export * from './WarningCircle.js';

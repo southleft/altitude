@@ -1,39 +1,38 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
-import "al-web-components/dist/components/avatar/avatar.js";
-import "al-web-components/dist/components/badge/badge.js";
-import "al-web-components/dist/components/button-group/button-group.js";
-import "al-web-components/dist/components/button/button.js";
-import "al-web-components/dist/components/card/card.js";
-import "al-web-components/dist/components/divider/divider.js";
-import "al-web-components/dist/components/drawer/drawer.js";
-import "al-web-components/dist/components/header/header.js";
-import "al-web-components/dist/components/heading/heading.js";
-import "al-web-components/dist/components/icon/icons/bell.js";
-import "al-web-components/dist/components/icon/icons/calendar.js";
-import "al-web-components/dist/components/icon/icons/chevron-up.js";
-import "al-web-components/dist/components/icon/icons/help.js";
-import "al-web-components/dist/components/icon/icons/home.js";
-import "al-web-components/dist/components/icon/icons/list.js";
-import "al-web-components/dist/components/icon/icons/settings.js";
-import "al-web-components/dist/components/icon/icons/sign-out.js";
-import "al-web-components/dist/components/icon/icons/support.js";
-import "al-web-components/dist/components/icon/icons/user.js";
-import "al-web-components/dist/components/layout-container/layout-container.js";
-import "al-web-components/dist/components/layout/layout.js";
-import "al-web-components/dist/components/list-item/list-item.js";
-import "al-web-components/dist/components/list/list.js";
-import "al-web-components/dist/components/logo/logo.js";
-import "al-web-components/dist/components/menu-item/menu-item.js";
-import "al-web-components/dist/components/menu/menu.js";
-import "al-web-components/dist/components/popover/popover.js";
-import "al-web-components/dist/components/search/search.js";
-import "al-web-components/dist/components/toggle-button/toggle-button.js";
-import "al-web-components/dist/components/theme-switcher/theme-switcher.js";
+import "@southleft/al-web-components/components/avatar";
+import "@southleft/al-web-components/components/badge";
+import "@southleft/al-web-components/components/button";
+import "@southleft/al-web-components/components/card";
+import "@southleft/al-web-components/components/divider";
+import "@southleft/al-web-components/components/drawer";
+import "@southleft/al-web-components/components/header";
+import "@southleft/al-web-components/components/heading";
+import "@southleft/al-web-components/components/icon/icons/bell";
+import "@southleft/al-web-components/components/icon/icons/calendar";
+import "@southleft/al-web-components/components/icon/icons/chevron-up";
+import "@southleft/al-web-components/components/icon/icons/help";
+import "@southleft/al-web-components/components/icon/icons/home";
+import "@southleft/al-web-components/components/icon/icons/list";
+import "@southleft/al-web-components/components/icon/icons/settings";
+import "@southleft/al-web-components/components/icon/icons/sign-out";
+import "@southleft/al-web-components/components/icon/icons/support";
+import "@southleft/al-web-components/components/icon/icons/user";
+import "@southleft/al-web-components/components/layout";
+import "@southleft/al-web-components/components/list-item";
+import "@southleft/al-web-components/components/list";
+import "@southleft/al-web-components/components/logo";
+import "@southleft/al-web-components/components/menu-item";
+import "@southleft/al-web-components/components/menu";
+import "@southleft/al-web-components/components/popover";
+import "@southleft/al-web-components/components/search";
+import "@southleft/al-web-components/components/toggle-button";
+import "@southleft/al-web-components/components/theme-switcher";
 
 @Component({
   selector: 'app-root',
+  standalone: false,
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

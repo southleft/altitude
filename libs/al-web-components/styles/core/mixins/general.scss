@@ -2,6 +2,8 @@
   #GENERAL MIXINS
 \*------------------------------------ */
 
+@use './typography' as *;
+
 /**
  * Size function
  * 1. The size function multiplies a provided value ($number) by the base sizing unit (--size-base-unit)
@@ -63,18 +65,39 @@
  * Input
  */
 @mixin al-input() {
-  @include al-theme-typography-body-md;
+  /*
+   * v2 canvas: a field is 40px tall with 14px/1 text and a 12px inset — and it
+   * takes that height from the CONTROL SCALE, not from padding plus the body
+   * line-height. Deriving it from the type scale is what made every field in
+   * the library 48px against the canvas's 40px, and it coupled control height
+   * to a typographic decision: a body-size change silently resized every
+   * input, select, search and textarea in the system.
+   *
+   * This mixin backs the whole form family, so the fix belongs here rather
+   * than in each component.
+   */
+  @include al-theme-typography-body-sm;
+  line-height: 1;
+  box-sizing: border-box;
   width: 100%;
-  min-height: size(6);
+  min-height: var(--al-input-min-height, var(--al-theme-size-control));
   appearance: none;
   outline: none;
-  padding: size(1.375) var(--al-theme-space);
+  padding: 0 var(--al-theme-space-sm);
   border-width: var(--al-theme-border-width);
   border-style: solid;
   border-color: var(--al-theme-color-border-default);
   border-radius: var(--al-theme-border-radius);
   color: var(--al-theme-color-content-default);
-  background-color: var(--al-theme-color-background-transparent-default);
+  /**
+   * v2: a field is a SURFACE, not a hole. It was transparent, so it took
+   * whatever sat behind it; on the warm paper page that made the field and the
+   * page the same colour and left the border doing all the work. This is also
+   * what the floating label's background patch matches against
+   * (input.scss / textarea.scss `--al-input-label-background`), so the two must
+   * name the same token or the patch shows as a seam across the top border.
+   */
+  background-color: var(--al-input-background, var(--al-theme-color-background-default));
   transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), color var(--al-theme-animation-duration) var(--al-theme-animation-timing), border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), box-shadow var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
   ~ *  {
@@ -102,8 +125,13 @@
   &:active,
   &:focus,
   &:focus-visible {
+    /**
+     * v2 focus: a 1px primary edge plus a 3px soft halo of the same hue. The
+     * halo is decoration — the solid 1px edge is the indicator that carries the
+     * 3:1 WCAG non-text contrast, which a 28%-alpha ring could not.
+     */
     border-color: var(--al-theme-color-border-primary-default);
-    box-shadow: 0px 0px 0px 1px var(--al-theme-color-border-primary-default);
+    box-shadow: 0px 0px 0px 3px var(--al-theme-color-border-primary-weak);
     outline: none;
   }
 
@@ -198,14 +226,21 @@
 \*------------------------------------ */
 
 /**
- * Visible focus outline for elements
+ * Visible focus outline for elements.
+ *
+ * `--al-theme-color-focus-ring` is a REAL tier-3 token (tokens/tier-3/theme/
+ * {light,dark}/colors.json), so no hardcoded fallback belongs here. It used to
+ * read `var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default))`
+ * against a name the pipeline never emitted — the fallback always won, which put
+ * the focus-ring colour outside design-system control: no brand, mode or
+ * `<al-theme>` host could restate it.
  */
 @mixin al-focus() {
-  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default));
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring);
   outline-offset: var(--al-focus-outline-offset, var(--al-theme-border-width-md));
 }
 
 @mixin al-focus-inset() {
-  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring, var(--al-theme-color-border-primary-default));
+  outline: var(--al-theme-border-width-md) solid var(--al-theme-color-focus-ring);
   outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
 }

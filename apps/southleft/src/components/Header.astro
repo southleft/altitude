@@ -1,0 +1,165 @@
+---
+// Sticky primary nav — spec 2026-08-22-southleft-example-1-to-1-parity, T4;
+// rebuilt onto the BRAND header by spec
+// 2026-08-23-one-al-namespace-across-brand-and-base.
+//
+// WHAT CHANGED, AND WHY IT IS SHORTER.
+//
+// This file used to hand-roll the whole bar — the measure, the nav row, the
+// menu button, the mobile panel and the script that opened it — on top of the
+// base `<al-header>`, which is a bare landmark with a single slot. That work
+// has a home now: `@southleft/sl-web-components` ships the Southleft header as
+// a component, and after the namespace unification it IS `<al-header>` in this
+// app (Base.astro imports the brand module in place of the base one). Same tag,
+// brand implementation — the override the design system declares in
+// `.altitude/ds-projects.json`.
+//
+// So the arrangement, the sticky chrome, the blur, the hairline, the menu
+// button and the mobile panel all moved into the component. What is left here
+// is what this SITE contributes: which links, which actions, and the two
+// buttons that drive site-level behaviour.
+//
+// THE SLOTS the brand header exposes (see its story for the canonical shape):
+//   brand    — the wordmark
+//   nav      — the desktop nav links
+//   actions  — the right-hand cluster (icon buttons + CTA)
+//   mobile   — the links inside the panel the component opens
+//
+// STYLING IS UNCHANGED. Slotted children stay in the light DOM, so every
+// `.sl-header__*` rule in src/styles/layout.css still applies to exactly the
+// elements it applied to before. The rules that styled markup now owned by the
+// component (`.sl-header__bar`, `.sl-header__menu-btn`, `.sl-header__mobile-nav`)
+// simply stop matching; they are left in place rather than deleted so the diff
+// is reviewable, and are dead code to be swept separately.
+import { NAV, CTA } from '../lib/site';
+import { withBase } from '../lib/url';
+
+// `Astro.url.pathname` includes the `/southleft` base (astro.config.mjs) in
+// both dev and build — strip it before comparing against NAV's unprefixed
+// hrefs, mirroring v5's own path-based `isActive`.
+const BASE = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
+const rawPath = Astro.url.pathname.startsWith(BASE) ? Astro.url.pathname.slice(BASE.length) : Astro.url.pathname;
+const path = rawPath.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+
+<al-header sticky data-header>
+  <!-- `al-logo` renders its OWN `<a href>` (logo.ts) — wrapping it in a second
+       anchor nests one interactive element inside another (axe
+       `nested-interactive`), so the aria-label lives on the component. -->
+  <al-logo
+    slot="brand"
+    variant="southleft"
+    href={withBase('/')}
+    class="sl-header__logo"
+    aria-label="Southleft home"
+  ></al-logo>
+
+  {
+    NAV.map((item) => (
+      <a
+        slot="nav"
+        href={withBase(item.href)}
+        aria-current={isActive(item.href) ? 'page' : undefined}
+        class:list={[
+          'sl-header__nav-link al-u-theme-typography-body-sm',
+          isActive(item.href) && 'sl-header__nav-link--active',
+        ]}
+      >
+        {item.label}
+      </a>
+    ))
+  }
+
+  <button
+    slot="actions"
+    type="button"
+    id="theme-console-open"
+    class="sl-header__icon-btn sl-header__icon-btn--accent-hover"
+    aria-label="Open theme console — derive your own site theme"
+    title="Derive your own theme"
+    data-sl-ai-trigger
+  >
+    <!-- palette: three token dots + a brush stroke of a ring — copied
+         verbatim from southleft-v5 src/components/Header.astro:48-53 -->
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H15a2 2 0 0 0-1.5 3.3c.6.7.2 1.7-.7 1.7Z"></path>
+      <circle cx="8" cy="10.5" r="0.6" fill="currentColor"></circle>
+      <circle cx="12" cy="7.5" r="0.6" fill="currentColor"></circle>
+      <circle cx="16" cy="10.5" r="0.6" fill="currentColor"></circle>
+    </svg>
+  </button>
+
+  <!-- Ink/paper toggle. v5 ships BOTH a sun and a moon and CSS-swaps them on
+       the active theme (ThemeToggle.astro:36-40); both icons are present and
+       the script below swaps them with the mode. -->
+  <button
+    slot="actions"
+    type="button"
+    class="sl-header__icon-btn"
+    aria-label="Switch to paper (light) mode"
+    title="Ink / paper"
+    data-sl-mode-toggle
+  >
+    <svg data-sl-mode-icon="dark" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+    </svg>
+    <svg data-sl-mode-icon="light" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:none">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+    </svg>
+  </button>
+
+  <span slot="actions" class="sl-header__cta">
+    <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+  </span>
+
+  {
+    NAV.map((item, i) => (
+      <a slot="mobile" href={withBase(item.href)} class="sl-header__mobile-nav-link al-u-theme-typography-body-md">
+        <span>{item.label}</span>
+        <span class="sl-header__mobile-nav-index al-u-theme-typography-body-xs">0{i + 1}</span>
+      </a>
+    ))
+  }
+  <div slot="mobile" class="sl-header__mobile-cta">
+    <al-button href={withBase(CTA.href)} fullWidth>{CTA.label}</al-button>
+  </div>
+</al-header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('[data-sl-ai-trigger]')?.addEventListener('click', () => {
+      // AIDirectionPanel (home page only) still owns the actual `al-drawer`
+      // trigger — `.sl-ai-fab` (visually hidden now the header icon is the
+      // real entry point, see layout.css) — so proxy-click it rather than
+      // reimplementing al-drawer's own open/focus-management logic. A no-op
+      // on pages without the panel is the correct degrade.
+      const fab = document.querySelector<HTMLElement>('.sl-ai-fab');
+      fab?.click();
+    });
+
+    // Keep the mode button's icon and label honest about the CURRENT mode.
+    // `<al-theme mode>` is the source of truth (Base.astro), not a class on
+    // <html>, so read it back rather than tracking a local boolean that can
+    // drift from a mode set anywhere else.
+    const modeBtn = document.querySelector<HTMLElement>('[data-sl-mode-toggle]');
+    const themeEl = document.getElementById('sl-theme');
+    const syncModeIcon = () => {
+      if (!modeBtn || !themeEl) return;
+      const isLight = themeEl.getAttribute('mode') === 'light';
+      modeBtn.querySelector<SVGElement>('[data-sl-mode-icon="dark"]')?.style.setProperty('display', isLight ? 'none' : '');
+      modeBtn.querySelector<SVGElement>('[data-sl-mode-icon="light"]')?.style.setProperty('display', isLight ? '' : 'none');
+      const next = isLight ? 'ink (dark)' : 'paper (light)';
+      modeBtn.setAttribute('aria-label', `Switch to ${next} mode`);
+    };
+    syncModeIcon();
+    if (themeEl) new MutationObserver(syncModeIcon).observe(themeEl, { attributeFilter: ['mode'] });
+
+    // NOTE: the menu button and the mobile panel are the COMPONENT's now —
+    // `<al-header>` owns `menuOpen`, renders the toggle and the panel, and
+    // dispatches `sl-header-menu-toggle`. The ~20 lines that used to open a
+    // panel in this file are deleted rather than kept alongside it, because two
+    // things toggling one menu is how a menu ends up half-open.
+  });
+</script>

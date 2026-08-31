@@ -1,0 +1,5203 @@
+{
+  "al-accordion-panel": {
+    "tag": "al-accordion-panel",
+    "attributes": [
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Active property\n1. Panel is open when set to true. Close when set to false"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled property"
+      },
+      {
+        "name": "isLast",
+        "type": "boolean",
+        "description": "Is last?\n- Dynamically set by the ALAccordion\n- Removes the bottom border if it is the last item"
+      },
+      {
+        "name": "idx",
+        "type": "number",
+        "description": "Index of the panel\n- Dynamically set by the ALAccordion"
+      },
+      {
+        "name": "ariaControls",
+        "type": "string",
+        "description": "Aria Controls attribute\n- Dynamically set for A11y"
+      },
+      {
+        "name": "ariaLabelledBy",
+        "type": "string",
+        "description": "Aria Labelled By attribute\n- Dynamically set for A11y"
+      }
+    ],
+    "events": [
+      {
+        "name": "onAccordionPanelOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the panel expands. Detail: `{ index, expanded }` — the panel's index within the accordion and its new expanded state."
+      },
+      {
+        "name": "onAccordionPanelClose",
+        "type": "CustomEvent",
+        "description": "Fired when the panel collapses. Detail: `{ index, expanded }` — the panel's index within the accordion and its new expanded state."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The accordion panel content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-accordion": {
+    "tag": "al-accordion",
+    "attributes": [
+      {
+        "name": "expandAll",
+        "type": "boolean",
+        "description": "Expand all?\n- All panels will be in expand or open state when it's true"
+      },
+      {
+        "name": "expandOneOnly",
+        "type": "boolean",
+        "description": "Single panel only?\n- Display only a single panel at a time"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The accordion content, a set of accordion panels"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-alert": {
+    "tag": "al-alert",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'success' | 'warning' | 'danger'",
+        "description": "Variants\n- **default** renders a alert that represents an informative state\n- **success** renders a alert that represents a success state\n- **warning** renders a alert that represents a warning state\n- **danger** renders a alert that represents an danger state"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Optional title of the alert"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "isActive boolean\n- If true, the alert displays on the page\n- If false, the alert is hidden from the page"
+      },
+      {
+        "name": "autoClose",
+        "type": "boolean",
+        "description": "Auto close?\n- Set whether you want the alert to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds"
+      },
+      {
+        "name": "autoCloseDelay",
+        "type": "number",
+        "description": "Auto close delay\n1. Number of seconds to close the alert when autoClose is enabled\n2. Default amount is 3"
+      },
+      {
+        "name": "isDismissible",
+        "type": "boolean",
+        "description": "Dismissible?\n- If true, displays a close button with close functionality on the alert"
+      }
+    ],
+    "events": [
+      {
+        "name": "open",
+        "type": "CustomEvent",
+        "description": "Fired when the alert becomes visible. Detail: `{ active }` — the new visibility state. Note this event name is unprefixed, unlike the rest of the library."
+      },
+      {
+        "name": "close",
+        "type": "CustomEvent",
+        "description": "Fired when the alert is dismissed. Detail: `{ active }` — the new visibility state. Note this event name is unprefixed, unlike the rest of the library."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The alert's main content or title"
+      },
+      {
+        "name": "icon",
+        "description": "Slot in an icon to override the default one"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-avatar": {
+    "tag": "al-avatar",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'sm'",
+        "description": "Avatar varaint\n- **default** Renders an avatar with an height & width of 40px\n- **sm** Renders an avatar with an height & width of 28px"
+      },
+      {
+        "name": "hasBadge",
+        "type": "boolean",
+        "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge"
+      },
+      {
+        "name": "badgeVariant",
+        "type": "'success' | 'warning' | 'danger'",
+        "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The avatar content. Slot an `<img alt=\"…\">` for a user photo, a single-letter initial string, or an `<al-icon-*>` placeholder. The host **renders as a circle by default** (no `variant` / `shape` attribute is needed for the circular form). The accessible name comes from slotted content — supply meaningful `alt` text on `<img>` or visible initials; a bare `aria-hidden` decorative avatar leaves the avatar unlabeled."
+      },
+      {
+        "name": "badge",
+        "description": "Optional small status indicator rendered as a corner overlay (only honored when `hasBadge` is set)."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-badge": {
+    "tag": "al-badge",
+    "attributes": [
+      {
+        "name": "isDot",
+        "type": "boolean",
+        "description": "isDot boolean\n- Makes the badge a small dot only"
+      },
+      {
+        "name": "variant",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment"
+      },
+      {
+        "name": "position",
+        "type": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'",
+        "description": "Positions the badge absolutely to its parent container.\n- **top-left** places the badge to the top left\n- **top-right** places the badge to the top right\n- **bottom-left** places the badge to the bottom left\n- **bottom-right** places the badge to the bottom right"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The badge content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-banner": {
+    "tag": "al-banner",
+    "attributes": [
+      {
+        "name": "isDismissible",
+        "type": "boolean",
+        "description": "Whether the banner shows a dismiss control."
+      },
+      {
+        "name": "isDismissed",
+        "type": "boolean",
+        "description": "Whether the banner has been dismissed. Owned state, toggled by `close()`."
+      }
+    ],
+    "events": [
+      {
+        "name": "onBannerClose",
+        "type": "CustomEvent",
+        "description": "Fired when the banner is dismissed. Detail: `{ isDismissed }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The banner's message content."
+      },
+      {
+        "name": "link",
+        "description": "Optional trailing link/CTA (typically an `<al-link>`)."
+      },
+      {
+        "name": "icon",
+        "description": "Slot in an icon to override the default one."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [
+      "--al-banner-icon-fill"
+    ],
+    "doNotFlag": []
+  },
+  "al-breadcrumbs-item": {
+    "tag": "al-breadcrumbs-item",
+    "attributes": [
+      {
+        "name": "href",
+        "type": "string",
+        "description": "Link URL"
+      },
+      {
+        "name": "target",
+        "type": "'_blank' | '_self' | '_parent' | '_top'",
+        "description": "Target attribute for a link (i.e. set to _blank to open in new tab)"
+      },
+      {
+        "name": "isCurrent",
+        "type": "boolean",
+        "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb"
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>"
+      },
+      {
+        "name": "hasSeparator",
+        "type": "boolean",
+        "description": "Indicates whether or not to add a separator icon after the breadcrumb item"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The breadcrumb item's content, typically text"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-breadcrumbs": {
+    "tag": "al-breadcrumbs",
+    "attributes": [
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label attribute\n- Provides an accessible name for the breadcrumbs element"
+      },
+      {
+        "name": "isTruncated",
+        "type": "boolean",
+        "description": "Truncated attribute\n- **true** Collapse items under a ALPanel based on the itemsBefore/AfterCollpase properties\n- **false** Do not collapse any breacrumb items"
+      },
+      {
+        "name": "itemsAfterCollapse",
+        "type": "number",
+        "description": "Number of items to display after the Panel in the Truncated treatment\n- Default is 1"
+      },
+      {
+        "name": "itemsBeforeCollapse",
+        "type": "number",
+        "description": "Number of items to display before the Panel in the Truncated treatment\n- Default is 1"
+      },
+      {
+        "name": "menuId",
+        "type": "string",
+        "description": "Menu id\n- Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The breadcrumbs content, a set of breadcrumb items"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-button": {
+    "tag": "al-button",
+    "attributes": [
+      {
+        "name": "type",
+        "type": "'button' | 'submit' | 'reset'",
+        "description": "Type of button"
+      },
+      {
+        "name": "variant",
+        "type": "'secondary' | 'tertiary' | 'bare' | 'danger'",
+        "description": "Style variant\n- **default** renders the button used for primary actions\n- **secondary** renders the button used for secondary actions\n- **tertiary** renders the button with an outlined style\n- **bare** renders the button with a bare style\n- **danger** renders the button used for caution actions"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'lg'",
+        "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text"
+      },
+      {
+        "name": "isPill",
+        "type": "boolean",
+        "description": "Pill shape\n- **true** renders the button with a fully rounded (pill) radius\n- **false** renders the button with the default action radius"
+      },
+      {
+        "name": "target",
+        "type": "'_blank' | '_self' | '_parent' | '_top'",
+        "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "URL if this is an <a> element - this swaps <button> for <a>"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Indicates the name when submitted with form data."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Indicates the aria label to apply to the button."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Indicates the value associated with the name when submitted with form data."
+      },
+      {
+        "name": "isPressed",
+        "type": "boolean | 'mixed'",
+        "description": "Indicates this button is a toggle button and whether it is pressed or not."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute"
+      },
+      {
+        "name": "isAriaDisabled",
+        "type": "boolean",
+        "description": "Aria-disabled attribute\n- **true** marks the button disabled to assistive tech while leaving it\n  focusable and clickable — use when the button must stay reachable to\n  explain why it is unavailable\n- prefer `isDisabled` (native `disabled`) unless focusability is required"
+      },
+      {
+        "name": "isExpanded",
+        "type": "boolean",
+        "description": "Indicates this button is a toggle button and whether it is pressed or not."
+      },
+      {
+        "name": "hideText",
+        "type": "boolean",
+        "description": "Visually hide button text (but text is still accessible to assistive technology)\n1. Use this for icon-only buttons for accessibility"
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "description": "Full width button"
+      },
+      {
+        "name": "ariaControls",
+        "type": "string",
+        "description": "aria-controls attribute on the button\n1. Used for items like the buttons attached drawers"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The button text content. Omit when rendering an icon-only button (set `hideText` + `label` instead)."
+      },
+      {
+        "name": "before",
+        "description": "Content to display before the button text, typically an icon."
+      },
+      {
+        "name": "after",
+        "description": "Content to display after the button text, typically an icon. Icon-only button pattern: set `hideText` + provide an accessible name via `label`, then place the icon in the `before` slot. Do NOT also include a visible text node — the slot's default text content is hidden but still present in the layout, and a duplicate label produces a redundant accessible name. Example: <al-button hideText label=\"Open actions menu\" ariaControls=\"menu-id\"> <al-icon-dots-vertical slot=\"before\" iconTitle=\"Actions\"></al-icon-dots-vertical> </al-button>"
+      }
+    ],
+    "cssParts": [
+      "button"
+    ],
+    "cssProperties": [],
+    "doNotFlag": [
+      {
+        "pattern": "no-variant-attribute-for-primary",
+        "rule": "A primary `<al-button>` is rendered by OMITTING the variant attribute. \"Primary\" is not in the variant enum (`secondary | tertiary | bare | danger`). Do NOT flag the absence of variant=\"primary\" as a missing variant or a typing bug — the unset value IS the primary state.",
+        "severity": "do-not-flag",
+        "citation": "AGENTS.md Naming and API conventions, \"Primary action\" row"
+      }
+    ]
+  },
+  "al-calendar": {
+    "tag": "al-calendar",
+    "attributes": [
+      {
+        "name": "disabledMinDate",
+        "type": "any",
+        "description": "Minimum date for disabled dates (format: yyyy/mm/dd)"
+      },
+      {
+        "name": "disabledMaxDate",
+        "type": "any",
+        "description": "Maximum date for disabled dates (format: yyyy/mm/dd)"
+      },
+      {
+        "name": "multiYear",
+        "type": "number",
+        "description": "Amount of years to go before and after the current date"
+      },
+      {
+        "name": "previousButtonText",
+        "type": "string",
+        "description": ""
+      },
+      {
+        "name": "nextButtonText",
+        "type": "string",
+        "description": ""
+      },
+      {
+        "name": "days",
+        "type": "Array<any>",
+        "description": "Container for current days in month"
+      },
+      {
+        "name": "years",
+        "type": "Array<any>",
+        "description": "Container for years toggle"
+      },
+      {
+        "name": "showMonthPopup",
+        "type": "boolean",
+        "description": "Value to track month picker display"
+      },
+      {
+        "name": "resetDates",
+        "type": "boolean",
+        "description": "Make active calendar date inactive"
+      },
+      {
+        "name": "selectedDate",
+        "type": "any",
+        "description": "Selected date"
+      },
+      {
+        "name": "setActiveDate",
+        "type": "any",
+        "description": "Set a specific date to be active"
+      },
+      {
+        "name": "datePickerId",
+        "type": "any",
+        "description": "Internal ID only for labeling date picker popup"
+      },
+      {
+        "name": "dateFormat",
+        "type": "'MMM dd, yyyy' | 'MM/dd/yyyy' | 'dd/MM/yyyy' | 'yyyy/MM/dd' | 'MMM dd yyyy' | 'dd MMM yyyy'",
+        "description": "Specify date format for UI display"
+      },
+      {
+        "name": "fullDateFormat",
+        "type": "string",
+        "description": "Specify \"full\" date format for aria role"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "description": "Disabled attribute"
+      },
+      {
+        "name": "iconName",
+        "type": "string",
+        "description": "Field note icon name"
+      },
+      {
+        "name": "isDayShortHand",
+        "type": "boolean",
+        "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday"
+      },
+      {
+        "name": "startOnMonday",
+        "type": "boolean",
+        "description": "Start the day of the week on Monday"
+      },
+      {
+        "name": "monthSelectorLabel",
+        "type": "string",
+        "description": "Accessible name for the month/year picker popup.\n\nThe popup is `role=\"dialog\"` and its content is a grid of year headings and\nmonth buttons, so it had no accessible name at all — a screen reader\nannounced \"dialog\" and nothing else. Settable rather than hardcoded so it\ncan be localised, matching `timeSelectorLabel` / `cancelLabel` on\nal-date-time-picker."
+      }
+    ],
+    "events": [
+      {
+        "name": "onCalendarChange",
+        "type": "CustomEvent",
+        "description": "Fired when a date is selected. Detail: `{ value, rawDate }` — the date formatted per `dateFormat`, and the underlying `Date` object."
+      }
+    ],
+    "slots": [
+      {
+        "name": "before",
+        "description": "If content is slotted, it will override the default \"previous button\" icon"
+      },
+      {
+        "name": "after",
+        "description": "If content is slotted, it will override the default \"next button\" icon"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-card": {
+    "tag": "al-card",
+    "attributes": [
+      {
+        "name": "layout",
+        "type": "'inline'",
+        "description": "Layout\n- **default** Displays the slotted items stacked in a column\n- **row** Displays the slotted items inline in a row"
+      },
+      {
+        "name": "variant",
+        "type": "'bare'",
+        "description": "Variant\n- **default** Renders a card with a background color, box shadow, or border radius\n- **bare** Renders a card without a background color, box shadow, or border radius"
+      },
+      {
+        "name": "fill",
+        "type": "boolean",
+        "description": "Fill the available block size instead of hugging the content.\n\nFor a card in a grid or a stretched flex row, where a row of cards should\nshare one height and their footers should line up. Reflected, so a page can\nalso select `al-card[fill]`.\n\nIt has to be a property rather than something the page sets from outside:\n`:host` is `display: contents`, so `<al-card>` generates no box and a\n`height: 100%` written on the element is dropped entirely. `apps/southleft`\nhit exactly this and worked around it with\n`style=\"height:100%; box-sizing:border-box\"` at 25 call sites across 13\nfiles — that inline style is what this replaces."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The main content of the card (renders below the header)."
+      },
+      {
+        "name": "actions-start",
+        "description": "Trailing-action row, leading edge (bottom-left). Use for a \"View\" / \"Open\" primary action."
+      },
+      {
+        "name": "actions-end",
+        "description": "Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action.\n\n**Canonical bottom-right primary action.** Drop variant for the primary look (omit the attribute); use variant=\"tertiary\" for a secondary action."
+      },
+      {
+        "name": "action-right",
+        "description": "Top-right single control (kebab / overflow menu).\n\n**Kebab / overflow menu composite (canonical).** This slot accepts a self-contained <al-popover variant=\"menu\" position=\"bottom-right\"> whose trigger slot holds an icon-only <al-button hideText label=\"…\"> + chevron icon, and whose default slot holds an <al-menu> with @onMenuItemSelect bound. The popover trigger slot auto-wires open/close — no manual isActive needed. See AGENTS.md \"Kebab menu (3-dot action menu)\" recipe."
+      },
+      {
+        "name": "image",
+        "description": "Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that owns its own padding, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which move the padding onto the content column."
+      },
+      {
+        "name": "header",
+        "description": "Card heading row. Rendered above a hairline rule. Compose the row itself with `<al-layout>` when it carries a title and a control.\n\n**Blessed light-DOM cluster pattern.** Projecting multiple atoms (avatar + name + status badge) into this slot requires inline-flex with theme tokens — al-u-* utilities do NOT adopt into light-DOM slot content. Sanctioned shape: <div slot=\"header\" style=\"display:flex; gap:var(--al-theme-space-sm); align-items:center;\">…</div>. Do NOT hand-roll rem values (token drift)."
+      },
+      {
+        "name": "footer",
+        "description": "Card footer row, below a hairline rule and on a tinted ground. Compose it with `<al-layout>` rather than relying on slot order."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-checkbox-group": {
+    "tag": "al-checkbox-group",
+    "attributes": [
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n- Changes the component's treatment to represent an error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Required attribute\n- Sets the checkbox to be required for validation"
+      },
+      {
+        "name": "hideLegend",
+        "type": "boolean",
+        "description": "Hide legend?\n- If true, hides the legend from displaying"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "Direction\n- **column** (default) stacks the checkboxes\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Checkbox Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label\n- Displays inside the legend"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error message\n- An error field note that displays below the checkbox input"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Field note\n- The helper text that displays below the checkbox input"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Id attribute\n- The ID used for A11y and to associate the label with the input"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y"
+      }
+    ],
+    "events": [
+      {
+        "name": "onCheckboxGroupChange",
+        "type": "CustomEvent",
+        "description": "Fired when any checkbox in the group changes. Detail: `{ checked, value, checkedValues }` — the state and value of the checkbox that changed, plus the values of every currently-checked checkbox in the group."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The component content, a set of checkbox items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`."
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-checkbox": {
+    "tag": "al-checkbox",
+    "attributes": [
+      {
+        "name": "isChecked",
+        "type": "boolean",
+        "description": "Checked attribute\n- Changes the component's treatment to represent an checked state"
+      },
+      {
+        "name": "isIndeterminate",
+        "type": "boolean",
+        "description": "Indeterminate state\n- Changes the component's treatment to represent an indeterminate state\n\nRendered as BOTH `.indeterminate` and `aria-checked=\"mixed\"`. It used to be\nneither — only an `al-is-indeterminate` class — so a tri-state \"select all\"\nlooked mixed and announced as plain unchecked. `.indeterminate` has no\ncontent attribute at all (there is no `?indeterminate` that could work) and\nis what paints the native glyph; `aria-checked` is what a screen reader\nreads. Left undefined when not indeterminate, so the input's own checked\nstate is announced rather than shadowed by a stale value."
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n- Changes the component's treatment to represent an error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Required attribute\n- Sets the checkbox to be required for validation"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?\n- If true, hides the label from displaying"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Value attribute"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error message\n- An error field note that displays below the checkbox input"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Field note\n- The helper text that displays below the checkbox input"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Id attribute\n- The ID used for A11y and to associate the label with the input"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y"
+      }
+    ],
+    "events": [
+      {
+        "name": "onCheckboxChange",
+        "type": "CustomEvent",
+        "description": "Fired when the checked state changes. Detail: `{ checked, indeterminate, value }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The component content that appears next to the checkbox"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-chip": {
+    "tag": "al-chip",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'secondary' | 'info' | 'success' | 'warning' | 'danger'",
+        "description": "Variant\n- **default** A chip with a strong contrast background\n- **secondary** A chip with a outline\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background"
+      },
+      {
+        "name": "type",
+        "type": "'squared'",
+        "description": "Type variant\n- **default** A chip with rounded corners\n- **squared** A chip with squared corners"
+      },
+      {
+        "name": "isDismissible",
+        "type": "boolean",
+        "description": "Dismissible property\n- **true** Adds an X to hide the chip on click\n- **false** Hides the X so the chip can not be hidden"
+      },
+      {
+        "name": "isDismissed",
+        "type": "boolean",
+        "description": "Is dismissed property\n- **true** Hides the chip\n- **false** Shows the chip"
+      }
+    ],
+    "events": [
+      {
+        "name": "onChipClose",
+        "type": "CustomEvent",
+        "description": "Fired when the chip's remove control is activated. Carries no detail payload; read the chip's own properties from `event.target`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The chip content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [
+      "--al-chip-background",
+      "--al-chip-color",
+      "--al-chip-border",
+      "--al-chip-border-radius",
+      "--al-chip-padding",
+      "--al-chip-gap",
+      "--al-chip-font-family",
+      "--al-chip-cursor"
+    ],
+    "doNotFlag": [
+      {
+        "pattern": "controlled-close-without-isDismissed",
+        "rule": "A host that exposes a public close() method without owning an `isDismissed` boolean is a SANCTIONED dismissal model. Do NOT flag \"missing isDismissed property\", \"missing al-is-dismissed hide class\", or \"incomplete dismissal model\" when controlled close() is the chosen shape. The consumer's container manages dismissal state (chip groups, form-managed tag lists). The owned-state recipe is one of TWO acceptable shapes, not the only one.",
+        "severity": "do-not-flag",
+        "citation": "AGENTS.md \"Dismissal model\" row + Reviewer must-read block"
+      },
+      {
+        "pattern": "close-keyboard-handler-optional",
+        "rule": "Escape-key handling via handleOnKeydown is an ENHANCEMENT, not a blocker. Do NOT flag its absence on a small atom.",
+        "severity": "do-not-flag",
+        "citation": "AGENTS.md dismissible-atom recipe severity column"
+      }
+    ]
+  },
+  "al-combobox": {
+    "tag": "al-combobox",
+    "attributes": [
+      {
+        "name": "filterMode",
+        "type": "'auto' | 'manual'",
+        "description": "How `items` is filtered as the user types.\n- **auto** filters `items` client-side by a case-insensitive substring match on `label`\n- **manual** performs no client-side filtering — listen for `onComboboxFilter` and\n  reassign `items` yourself (e.g. after an async request)"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "The unique id of the field"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The combobox's label"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide the label?"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "The current text in the input. Reflects the selected option's label once\nan option has been chosen."
+      },
+      {
+        "name": "selectedValue",
+        "type": "string",
+        "description": "The `value` of the currently selected option, if any. `undefined` while\nthe user is typing a query that doesn't match a committed selection."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder attribute"
+      },
+      {
+        "name": "noResultsText",
+        "type": "string",
+        "description": "Text shown in the popup when no options match the current query."
+      },
+      {
+        "name": "isActiveDropdown",
+        "type": "boolean",
+        "description": "Is the listbox popup open?"
+      },
+      {
+        "name": "align",
+        "type": "'bottom' | 'top'",
+        "description": "**Combobox alignment**\n- **bottom** Popup appears below the field\n- **top** Popup appears above the field"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "The combobox field note"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "The combobox error note"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria describedby"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "The combobox's required attribute"
+      },
+      {
+        "name": "isOptional",
+        "type": "boolean",
+        "description": "Optional state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "The combobox's disabled attribute"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state"
+      }
+    ],
+    "events": [
+      {
+        "name": "onComboboxFilter",
+        "type": "CustomEvent",
+        "description": "Fired as the input text changes, before filtering is applied. Detail: `{ query }`."
+      },
+      {
+        "name": "onComboboxChange",
+        "type": "CustomEvent",
+        "description": "Fired when an option is selected. Detail: `{ value, label, item }`."
+      },
+      {
+        "name": "onComboboxOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the listbox opens. Detail: `{ active }` — always `true`."
+      },
+      {
+        "name": "onComboboxClose",
+        "type": "CustomEvent",
+        "description": "Fired when the listbox closes. Detail: `{ active }` — always `false`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-command-palette": {
+    "tag": "al-command-palette",
+    "attributes": [
+      {
+        "name": "actions",
+        "type": "Array<ALCommandAction>",
+        "description": "Settable as a JSON attribute as well as a property, so the palette can be\ndriven from static HTML and SSR — not only from JavaScript."
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is the palette open?"
+      },
+      {
+        "name": "enableShortcut",
+        "type": "boolean",
+        "description": "Opt-in: when true, a document-level Cmd/Ctrl+K listener toggles the palette open."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Input placeholder text."
+      },
+      {
+        "name": "emptyText",
+        "type": "string",
+        "description": "Text shown when no action matches the query."
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "description": "Accessible label for the dialog surface."
+      },
+      {
+        "name": "searchLabel",
+        "type": "string",
+        "description": "Accessible name for the search input.\n\nNOT the placeholder. A placeholder is not an accessible name — it is\nremoved from the accessibility tree the moment the user types, so the field\na screen-reader user is mid-way through becomes an unnamed combobox. The\ntwo are set separately for that reason."
+      },
+      {
+        "name": "transitionDelay",
+        "type": "number",
+        "description": "Number of ms of the palette's open/close CSS transition delay, used to delay\nfocus trap activation. Mirrors al-dialog's `transitionDelay`."
+      }
+    ],
+    "events": [
+      {
+        "name": "onCommandPaletteOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the palette opens. Detail: `{ active }` — always `true`."
+      },
+      {
+        "name": "onCommandPaletteClose",
+        "type": "CustomEvent",
+        "description": "Fired when the palette closes by any means (Escape, backdrop click, or an action being chosen). Detail: `{ active }` — always `false`."
+      },
+      {
+        "name": "onCommandPaletteAction",
+        "type": "CustomEvent",
+        "description": "Fired when an action is chosen (click or Enter). Detail: `{ action }` — the selected `ALCommandAction`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "Optional content rendered above the results list (e.g. recent-searches)."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-date-picker": {
+    "tag": "al-date-picker",
+    "attributes": [
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "The unique id of the field"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The field's label"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "The field's name attribute"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "The field's value attribute"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "The field note displayed beneath the field"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error note displayed beneath the field when in an error state"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria describedby\n- Used to connect the field note in the field to the input for accessibility"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "The field's required attribute"
+      },
+      {
+        "name": "isOptional",
+        "type": "boolean",
+        "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "The field's disabled attribute"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state indicating an issue with the field"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Indicates whether a date has been selected"
+      },
+      {
+        "name": "selectedDate",
+        "type": "any",
+        "description": "Holds the selected date value"
+      },
+      {
+        "name": "setActiveDate",
+        "type": "any",
+        "description": "Set a specific date to be active"
+      },
+      {
+        "name": "isoFormat",
+        "type": "string",
+        "description": "ISO Format for date"
+      },
+      {
+        "name": "dateFormat",
+        "type": "'MMM dd, yyyy' | 'MM/dd/yyyy' | 'dd/MM/yyyy' | 'yyyy/MM/dd' | 'MMM dd yyyy' | 'dd MMM yyyy'",
+        "description": "Specify date format for UI display"
+      },
+      {
+        "name": "disabledMinDate",
+        "type": "any",
+        "description": "Minimum date for disabled dates (format: yyyy/mm/dd)"
+      },
+      {
+        "name": "disabledMaxDate",
+        "type": "any",
+        "description": "Maximum date for disabled dates (format: yyyy/mm/dd)"
+      },
+      {
+        "name": "multiYear",
+        "type": "number",
+        "description": "Amount of years to go before and after the current date"
+      },
+      {
+        "name": "previousButtonText",
+        "type": "string",
+        "description": "Previous month button text"
+      },
+      {
+        "name": "nextButtonText",
+        "type": "string",
+        "description": "Next month button text"
+      },
+      {
+        "name": "isDayShortHand",
+        "type": "boolean",
+        "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday"
+      },
+      {
+        "name": "startOnMonday",
+        "type": "boolean",
+        "description": "Start the day of the week on Monday"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDatePickerOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state."
+      },
+      {
+        "name": "onDatePickerClose",
+        "type": "CustomEvent",
+        "description": "Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state."
+      },
+      {
+        "name": "onDatePickerChange",
+        "type": "CustomEvent",
+        "description": "Fired when the selected date changes. Detail: `{ value }` — the formatted date string."
+      }
+    ],
+    "slots": [
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-date-time-picker": {
+    "tag": "al-date-time-picker",
+    "attributes": [
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "The unique id of the field"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The field's label"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "The field's name attribute"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "The field's value attribute"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "The field note displayed beneath the field"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error note displayed beneath the field when in an error state"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria describedby\n- Used to connect the field note in the field to the input for accessibility"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "The field's required attribute"
+      },
+      {
+        "name": "isOptional",
+        "type": "boolean",
+        "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "The field's disabled attribute"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state indicating an issue with the field"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Indicates whether a date has been selected"
+      },
+      {
+        "name": "selectedDate",
+        "type": "any",
+        "description": "Holds the selected date value"
+      },
+      {
+        "name": "setActiveDate",
+        "type": "any",
+        "description": "Set a specific date to be active"
+      },
+      {
+        "name": "setActiveTime",
+        "type": "any",
+        "description": "Set a specific time to be active (24 hour format, e.g., setActiveTime=\"16:00\" for 4PM)"
+      },
+      {
+        "name": "isoFormat",
+        "type": "string",
+        "description": "ISO Format for date"
+      },
+      {
+        "name": "dateFormat",
+        "type": "'MMM dd, yyyy' | 'MM/dd/yyyy' | 'dd/MM/yyyy' | 'yyyy/MM/dd' | 'MMM dd yyyy' | 'dd MMM yyyy'",
+        "description": "Specify date format for UI display"
+      },
+      {
+        "name": "disabledMinDate",
+        "type": "any",
+        "description": "Minimum date for disabled dates (format: yyyy/mm/dd)"
+      },
+      {
+        "name": "disabledMaxDate",
+        "type": "any",
+        "description": "Maximum date for disabled dates (format: yyyy/mm/dd)"
+      },
+      {
+        "name": "multiYear",
+        "type": "number",
+        "description": "Amount of years to go before and after the current date"
+      },
+      {
+        "name": "previousButtonText",
+        "type": "string",
+        "description": "Previous month button text"
+      },
+      {
+        "name": "nextButtonText",
+        "type": "string",
+        "description": "Next month button text"
+      },
+      {
+        "name": "isDayShortHand",
+        "type": "boolean",
+        "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday"
+      },
+      {
+        "name": "startOnMonday",
+        "type": "boolean",
+        "description": "Start the day of the week on Monday"
+      },
+      {
+        "name": "is24HourFormat",
+        "type": "boolean",
+        "description": "Use 24 hour time format"
+      },
+      {
+        "name": "timeIncrements",
+        "type": "number",
+        "description": "Increments of time"
+      },
+      {
+        "name": "timeStart",
+        "type": "number",
+        "description": "Minimum time for between times display (24 hour format, e.g., timeStart=${16} for 4PM)"
+      },
+      {
+        "name": "timeEnd",
+        "type": "number",
+        "description": "Maximum time for between times display (24 hour format, e.g., timeEnd=${16} for 4PM)"
+      },
+      {
+        "name": "timeSelectorLabel",
+        "type": "string",
+        "description": "Time selector heading label"
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "description": "Cancel button label"
+      },
+      {
+        "name": "submitLabel",
+        "type": "string",
+        "description": "Submit button label"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDateTimePickerOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the calendar overlay opens. Detail: `{ activeCalendar }` — the new open state."
+      },
+      {
+        "name": "onDateTimePickerClose",
+        "type": "CustomEvent",
+        "description": "Fired when the calendar overlay closes. Detail: `{ activeCalendar }` — the new open state."
+      },
+      {
+        "name": "onDateTimePickerDateChange",
+        "type": "CustomEvent",
+        "description": "Fired when the date portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the time portion."
+      },
+      {
+        "name": "onDateTimePickerTimeChange",
+        "type": "CustomEvent",
+        "description": "Fired when the time portion changes. Detail: `{ value }` — the formatted date-time string. Fires independently of the date portion."
+      }
+    ],
+    "slots": [
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-dialog": {
+    "tag": "al-dialog",
+    "attributes": [
+      {
+        "name": "heading",
+        "type": "string",
+        "description": "Heading text that appears in the header region"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is active?\n- **true** Shows the dialog container\n- **false** Hides the dialog container"
+      },
+      {
+        "name": "ariaLabelledBy",
+        "type": "string",
+        "description": "Aria Labelled By attribute\n- Dynamically set for A11y"
+      },
+      {
+        "name": "disableClickOutside",
+        "type": "boolean",
+        "description": "Disable click outside\n- **true** Disables closing the dialog on click outside of the dialog container\n- **false** Enables closing the dialog on click outside of the dialog container"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "description": "The width of the dialog container\n- If no value is entered, it defaults to 432px"
+      },
+      {
+        "name": "transitionDelay",
+        "type": "number",
+        "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation"
+      },
+      {
+        "name": "dialogTrigger",
+        "type": "any",
+        "description": "The modal trigger if it not slotted in the 'trigger' slot\n- Must be set by the trigger's click callback when it calls the modal's open method"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDialogOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the dialog opens. Detail: `{ active, item }` — the new open state and the dialog element itself."
+      },
+      {
+        "name": "onDialogClose",
+        "type": "CustomEvent",
+        "description": "Fired when the dialog closes by any means, including backdrop click and Escape. Detail: `{ active, item }`."
+      },
+      {
+        "name": "onDialogCloseButton",
+        "type": "CustomEvent",
+        "description": "Fired only when the dialog's close button is activated. Detail: `{ active, item }`. Use `onDialogClose` to catch every close path."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The main body of the dialog"
+      },
+      {
+        "name": "trigger",
+        "description": "The trigger that opens/closes the dialog"
+      },
+      {
+        "name": "header",
+        "description": "The header of the dialog that appears above the main slot"
+      },
+      {
+        "name": "footer",
+        "description": "The footer of the dialog that appears below the main slot"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-divider": {
+    "tag": "al-divider",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'vertical'",
+        "description": "Variant\n- **default** A divider the displays horizontally\n- **vertical** A divider the displays vertically"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-drawer": {
+    "tag": "al-drawer",
+    "attributes": [
+      {
+        "name": "alignment",
+        "type": "'right'",
+        "description": "Alignment\n- **right** Aligns the drawer to the right of the viewport"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "description": "Width of drawer panel when expanded / collapsed as side panel"
+      },
+      {
+        "name": "hasBackdrop",
+        "type": "boolean",
+        "description": "Fade/ghost back the page background content"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is active?\n- **true** Shows the drawer container\n- **false** Hides the drawer container"
+      },
+      {
+        "name": "ariaLabelledBy",
+        "type": "string",
+        "description": "Aria Labelled By attribute\n- Dynamically set for A11y"
+      },
+      {
+        "name": "disableBackdropClick",
+        "type": "boolean",
+        "description": "Disable to close the drawer on outside click"
+      }
+    ],
+    "events": [
+      {
+        "name": "onDrawerOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the drawer opens. Detail: `{ active }` — the new open state."
+      },
+      {
+        "name": "onDrawerClose",
+        "type": "CustomEvent",
+        "description": "Fired when the drawer closes by any means. Detail: `{ active }`."
+      },
+      {
+        "name": "onDrawerCloseButton",
+        "type": "CustomEvent",
+        "description": "Fired only when the drawer's close button is activated. Detail: `{ active }`. Use `onDrawerClose` to catch every close path."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The drawer content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-dropdown-panel": {
+    "tag": "al-dropdown-panel",
+    "attributes": [
+      {
+        "name": "hasScroll",
+        "type": "boolean",
+        "description": "Adds a max height and scrolling of the panel"
+      },
+      {
+        "name": "hasHeader",
+        "type": "boolean",
+        "description": "Changes styling on panel for variant with header"
+      },
+      {
+        "name": "hasFooter",
+        "type": "boolean",
+        "description": "Changes styling on panel for variant with footer"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The dropdown panel content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-empty-state": {
+    "tag": "al-empty-state",
+    "attributes": [
+      {
+        "name": "heading",
+        "type": "string",
+        "description": "The empty-state heading."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Supporting description text."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "icon",
+        "description": "Optional icon or illustration, rendered above the heading."
+      },
+      {
+        "name": "actions",
+        "description": "Optional action row (buttons/links), rendered below the description."
+      }
+    ],
+    "cssParts": [
+      "container"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-field-note": {
+    "tag": "al-field-note",
+    "attributes": [
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n1. Changes the component's treatment to represent an error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n1. Changes the component's treatment to represent a disabled state"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The field note content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-file-upload": {
+    "tag": "al-file-upload",
+    "attributes": [
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Unique ID of the field"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label for the form field"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute for the checkbox"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Value associated with the field"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Text for the field note"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Text for the error note"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria described-by attribute\n- Connects the field note in the select to the select menu for accessibility"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Indicates if the field is required"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Indicates if the field is disabled"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Indicates if the field note is in error state"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Indicates if the label is hidden"
+      },
+      {
+        "name": "textConfig",
+        "type": "FileUploadTextConfig",
+        "description": "Configuration for text messages in file upload\n- Specifies error text for unsupported file formats and size exceeded messages"
+      },
+      {
+        "name": "uploadFiles",
+        "type": "FileUploadProgressStream[]",
+        "description": "Files to be uploaded from the application\n- Represents the status of the files"
+      },
+      {
+        "name": "uploadTime",
+        "type": "number",
+        "description": "Time taken for uploading\n- Defaults to 1 second"
+      },
+      {
+        "name": "fileSizeLimit",
+        "type": "number",
+        "description": "Maximum file size allowed for upload in MB"
+      },
+      {
+        "name": "accept",
+        "type": "string",
+        "description": "Acceptable file types for upload\n- Example: '.jpg, .png, .gif'"
+      },
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "description": "Allows multiple files to be added to the file upload"
+      }
+    ],
+    "events": [
+      {
+        "name": "onFileUploadFileUpload",
+        "type": "CustomEvent",
+        "description": "Fired when files are added. Detail: `{ uploadedFiles }` — the files accepted by this interaction."
+      },
+      {
+        "name": "onFileUploadFileRemove",
+        "type": "CustomEvent",
+        "description": "Fired when a file is removed. Detail: `{ updatedFiles }` — the remaining files after removal, not the removed one."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The component's content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-focus-trap": {
+    "tag": "al-focus-trap",
+    "attributes": [
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is the focus trap active?"
+      },
+      {
+        "name": "transitionDelay",
+        "type": "number",
+        "description": "Delay in milliseconds before the focus trap is activated.\n- Can be set by the component using focus trap, when there is a css transition that needs to complete before the focus trap activates."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The content to trap in the focus trap"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-footer": {
+    "tag": "al-footer",
+    "attributes": [],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The footer content. Wrap each row in an `<al-layout>` to arrange it."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [
+      "--al-footer-gap",
+      "--al-footer-padding-block",
+      "--al-footer-background",
+      "--al-footer-border-block-start"
+    ],
+    "doNotFlag": []
+  },
+  "al-header": {
+    "tag": "al-header",
+    "attributes": [
+      {
+        "name": "sticky",
+        "type": "boolean",
+        "description": "Stick the header to the top of its scroll container."
+      },
+      {
+        "name": "elevated",
+        "type": "boolean",
+        "description": "Cast a shadow under the bar to separate it from the content it scrolls over."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The header content. Wrap it in an `<al-layout>` to arrange it."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [
+      "--al-header-min-height",
+      "--al-header-padding",
+      "--al-header-background",
+      "--al-header-border-block-end",
+      "--al-header-backdrop-filter"
+    ],
+    "doNotFlag": []
+  },
+  "al-heading": {
+    "tag": "al-heading",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'display-lg' | 'display-md' | 'display-sm' | 'lg' | 'md' | 'sm'",
+        "description": "Heading variants\n- **default** renders a heading with the XL font styles\n- **sm** renders a heading with the SM font styles\n- **md** renders a heading with the MD font styles\n- **lg** renders a heading with the LG font styles\n- **display-sm** renders a heading with the Display SM font styles\n- **display-md** renders a heading with the Display MD font styles\n- **display-lg** renders a heading with the Display LG font styles"
+      },
+      {
+        "name": "tagName",
+        "type": "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'",
+        "description": "Heading tag name\n- **h1** renders an `h1` tag\n- **h2** renders an `h2` tag, this is the default\n- **h3** renders an `h3` tag\n- **h4** renders an `h4` tag\n- **h5** renders an `h5` tag\n- **h6** renders an `h6` tag"
+      },
+      {
+        "name": "isBold",
+        "type": "boolean",
+        "description": "Is bold?\n- **true** Renders the heading with semibold font weight\n- **false** Renders the heading with regular font weight"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The heading content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon": {
+    "tag": "al-icon",
+    "attributes": [
+      {
+        "name": "name",
+        "type": "string | undefined",
+        "description": "Phosphor glyph name, kebab-case — e.g. `caret-down`, `magnifying-glass`, `x`.\n\nTyped as `string` rather than a 1,512-member union on purpose: the schema\ngenerator expands string-literal unions into JSON Schema `enum`s, which\nwould produce a ~40 KB schema for this one attribute. Names are validated\nat runtime instead."
+      },
+      {
+        "name": "weight",
+        "type": "ALIconWeight",
+        "description": "Icon weight. Only `regular` is bundled today; other values fall back to it\nwith a dev warning. Declared now so adding weights later is not a breaking\nchange to the manifest/schema contract."
+      },
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "an inline `<svg>`. Rendered only when `name` is not set, which preserves the original slot-based behaviour byte for byte."
+      }
+    ],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": [
+      {
+        "pattern": "phosphor-name-is-canonical",
+        "rule": "AFFIRMATIVE: `<al-icon name=\"...\">` with any of the 1,512 Phosphor regular names is the CURRENT canonical form. Do NOT flag it as an unregistered tag, a missing `<al-icon-*>` element, or an invalid attribute. The 37 `<al-icon-<legacy>>` elements (al-icon-close, al-icon-add, al-icon-chevron-down, ...) still work but are DEPRECATED aliases — do NOT recommend migrating from `name=` back to them. Phosphor names differ from the old Altitude names: x (not close), plus (not add), caret-down (not chevron-down), magnifying-glass (not search), gear (not settings), dots-three-vertical (not dots-vertical).",
+        "severity": "do-not-flag",
+        "citation": "AGENTS.md > Icon system"
+      },
+      {
+        "pattern": "list-name-collision-is-intentional",
+        "rule": "`<al-icon name=\"list\">` (Phosphor hamburger) and `<al-icon-list>` (legacy bulleted list, = Phosphor `list-dashes`) intentionally render DIFFERENT artwork. Name resolution checks the Phosphor catalog BEFORE the legacy alias map, so a legacy name can never shadow a real Phosphor icon. Do NOT flag this divergence as an inconsistency or a mapping bug.",
+        "severity": "do-not-flag",
+        "citation": "icons/legacy-aliases.json shadowed[] + AGENTS.md > Icon system"
+      },
+      {
+        "pattern": "icon-title-not-aria-label",
+        "rule": "On `<al-icon>`, `iconTitle` IS the accessible-name API — it renders `role=\"img\"` plus `aria-label`. An `<al-icon>` with NO iconTitle is intentionally `aria-hidden=\"true\"` / `role=\"presentation\"`, which is correct for a decorative icon next to visible text. Do NOT flag a missing aria-label on `<al-icon>`, and do NOT recommend adding aria-label alongside iconTitle.",
+        "severity": "do-not-flag",
+        "citation": "AGENTS.md > Icon system"
+      },
+      {
+        "pattern": "no-icon-webfont",
+        "rule": "The icon webfont was REMOVED. `.icon-<name>` utility classes and the `iconfont` @font-face no longer exist, and components/icon/fonts/iconfont.css is an intentionally empty deprecation stub. Do NOT flag the empty stub as a broken or truncated file, and do NOT suggest font-based icons.",
+        "severity": "do-not-flag",
+        "citation": "AGENTS.md > Icon system"
+      }
+    ]
+  },
+  "al-icon-add": {
+    "tag": "al-icon-add",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-attachment": {
+    "tag": "al-icon-attachment",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-bell": {
+    "tag": "al-icon-bell",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-bookmark": {
+    "tag": "al-icon-bookmark",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-calendar": {
+    "tag": "al-icon-calendar",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-check": {
+    "tag": "al-icon-check",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-chevron-down": {
+    "tag": "al-icon-chevron-down",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-chevron-left": {
+    "tag": "al-icon-chevron-left",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-chevron-right": {
+    "tag": "al-icon-chevron-right",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-chevron-up": {
+    "tag": "al-icon-chevron-up",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-clock": {
+    "tag": "al-icon-clock",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-close": {
+    "tag": "al-icon-close",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-copy": {
+    "tag": "al-icon-copy",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-document": {
+    "tag": "al-icon-document",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-dots-horizontal": {
+    "tag": "al-icon-dots-horizontal",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-dots-vertical": {
+    "tag": "al-icon-dots-vertical",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-emoji": {
+    "tag": "al-icon-emoji",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-filter": {
+    "tag": "al-icon-filter",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-help": {
+    "tag": "al-icon-help",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-home": {
+    "tag": "al-icon-home",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-info": {
+    "tag": "al-icon-info",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-layout-masonry": {
+    "tag": "al-icon-layout-masonry",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-list": {
+    "tag": "al-icon-list",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-menu": {
+    "tag": "al-icon-menu",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-minus": {
+    "tag": "al-icon-minus",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-pin": {
+    "tag": "al-icon-pin",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-search": {
+    "tag": "al-icon-search",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-send": {
+    "tag": "al-icon-send",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-settings": {
+    "tag": "al-icon-settings",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-sign-in": {
+    "tag": "al-icon-sign-in",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-sign-out": {
+    "tag": "al-icon-sign-out",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-star": {
+    "tag": "al-icon-star",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-success": {
+    "tag": "al-icon-success",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-support": {
+    "tag": "al-icon-support",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-user": {
+    "tag": "al-icon-user",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-warning-circle": {
+    "tag": "al-icon-warning-circle",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-icon-warning-triangle": {
+    "tag": "al-icon-warning-triangle",
+    "attributes": [
+      {
+        "name": "iconTitle",
+        "type": "string",
+        "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'",
+        "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [
+      "svg"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-input-stepper": {
+    "tag": "al-input-stepper",
+    "attributes": [
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "The unique id of the field"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The form field's label"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Checkbox name attribute property"
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Value"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Fieldnote text"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Errornote text"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "Add button icon name"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Add button icon name"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria describedby\n1) Used to connect the field note in select to the select menu for accessibility"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Required attribute"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute"
+      },
+      {
+        "name": "isReadonly",
+        "type": "boolean",
+        "description": "Readonly attribute"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder text"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state"
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "description": "Count state"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Inremental/Decremental range"
+      },
+      {
+        "name": "variant",
+        "type": "'segmented' | 'trailing'",
+        "description": "Variant\n- `segmented` (default): decrement | value | increment, three segments of\n  one bordered box divided by hairlines.\n- `trailing`: the value takes the full width and both steppers stack at the\n  trailing edge. Denser across, so it fits inside a table row — but it is\n  TALLER by default (50px vs 40px), because two stacked controls in 40px\n  would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See\n  input-stepper.scss for the full note and the escape hatch."
+      }
+    ],
+    "events": [
+      {
+        "name": "onInputStepperChange",
+        "type": "CustomEvent",
+        "description": "Fired when the count changes via the increment/decrement controls or direct entry. Detail: `{ value }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-input": {
+    "tag": "al-input",
+    "attributes": [
+      {
+        "name": "type",
+        "type": "'text' | 'email' | 'number' | 'password' | 'url' | 'hidden' | 'tel'",
+        "description": "Type variants\n- Specifies the type input element to display\n- **text** renders a standar text input\n- **email** renders a text input specifically for an email format\n- **number** renders an input for number values only\n- **password** renders an input for a password input format\n- **url** renders an input for urls only\n- **tel** renders an input for telephone number values only"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "isActive\n- Dynamically sets to true if the input has a value"
+      },
+      {
+        "name": "isReadonly",
+        "type": "boolean",
+        "description": "Readonly attribute\n- Specifies that an input field is read-only"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n- Changes the component's treatment to represent an error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form"
+      },
+      {
+        "name": "isOptional",
+        "type": "boolean",
+        "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label"
+      },
+      {
+        "name": "isFocused",
+        "type": "boolean",
+        "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?\n- If true, hides the label VISUALLY. The label element stays in the DOM and\n  keeps its `for` association, so screen readers still announce the field.\n\nBefore v2 this also revealed the placeholder, because the floating label\noccupied the placeholder's position and the two could not both show. The\nlabel no longer sits inside the field, so that coupling is gone: a\n`placeholder` now renders whenever it is set, independently of this."
+      },
+      {
+        "name": "labelPosition",
+        "type": "'top' | 'inset'",
+        "description": "Label position\n- `top` (default) puts the label above the field.\n- `inset` puts it inside the field's top padding, above the value — the v2\n  replacement for the floating label. It is STATIC: unlike the old floating\n  label it never moves between states, so there is no jump on focus and no\n  background patch punched through the field's border."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label attribute\n- Specifies what content to enter within the input element"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute\n- Specifies the name of an input element"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Value attribute\n- Specifies the value of an input element"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error message\n- An error field note that displays below the input"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Field note\n- The helper text that displays below the input"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Id attribute\n- The ID used for A11y and to associate the label with the input"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y"
+      },
+      {
+        "name": "minLength",
+        "type": "number",
+        "description": "Min length\n- Specifies the minimum number of characters required in an input element"
+      },
+      {
+        "name": "maxLength",
+        "type": "number",
+        "description": "Max length\n- Specifies the maximum number of characters required in an input element"
+      },
+      {
+        "name": "maxLengthValue",
+        "type": "number",
+        "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "Minimum value\n- Specifies a minimum value for an input element"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Maximum value\n- Specifies a maximum value for an input element"
+      },
+      {
+        "name": "autoComplete",
+        "type": "'on' | 'off'",
+        "description": "Autocomplete property\n- Specifies whether an input element should have autocomplete enabled"
+      }
+    ],
+    "events": [
+      {
+        "name": "onInputChange",
+        "type": "CustomEvent",
+        "description": "Fired when the input's value changes. Detail: `{ value }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "before",
+        "description": "The content that appears before the text in the input"
+      },
+      {
+        "name": "after",
+        "description": "The content that appears after the text in the input"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-layout": {
+    "tag": "al-layout",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'constrained' | 'grid' | 'bento'",
+        "description": "Style variant\n- **default** a flow layout — a column, or a row with `direction=\"row\"`\n- **constrained** a centred content column with gutter tracks; children\n  marked `bleed` break out edge-to-edge\n- **grid** an N-column grid, sized by `columns`\n- **bento** a 12-column auto-row grid for asymmetric feature tiles"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "Direction\n- **column** (default) stacks children vertically\n- **row** arranges children horizontally, centered on the cross axis"
+      },
+      {
+        "name": "gap",
+        "type": "'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Gap between children (default is 16px)\n- **none** removes the gap\n- **xs** 4px\n- **sm** 8px\n- **md** 16px (same as the default)\n- **lg** 24px\n- **xl** 32px"
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end' | 'stretch'",
+        "description": "Cross-axis alignment\n- Defaults to `stretch` for a column and `center` for a row"
+      },
+      {
+        "name": "justify",
+        "type": "'start' | 'center' | 'end' | 'between'",
+        "description": "Main-axis distribution"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full'",
+        "description": "Measure — the width of the centred content column under\n`variant=\"constrained\"`. Defaults to the theme's container width."
+      },
+      {
+        "name": "gutter",
+        "type": "'none' | 'sm' | 'md' | 'lg'",
+        "description": "Gutter — the width of the tracks either side of the content column under\n`variant=\"constrained\"`. Defaults to a fluid 20px–60px clamp."
+      },
+      {
+        "name": "columns",
+        "type": "number",
+        "description": "Column count under `variant=\"grid\"` (1–12, default 12)"
+      },
+      {
+        "name": "noCollapse",
+        "type": "boolean",
+        "description": "Keep the grid's columns at every width\n- By default a grid collapses to a single column below the medium\n  breakpoint so tiles never become unreadably narrow"
+      },
+      {
+        "name": "wrap",
+        "type": "boolean",
+        "description": "Allow children to wrap onto multiple lines"
+      },
+      {
+        "name": "grow",
+        "type": "boolean",
+        "description": "Absorb the free space of a flex parent\n- Needed when the layout is slotted into a flex container (such as a\n  dialog or popover footer) and `justify` needs room to act on"
+      },
+      {
+        "name": "responsive",
+        "type": "boolean",
+        "description": "Collapse a row into a column on small screens"
+      },
+      {
+        "name": "fullHeight",
+        "type": "boolean",
+        "description": "Fill at least the height of the viewport\n- Opt in for page shells. Override the height with `--al-layout-min-height`"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The layout content. Under `variant=\"constrained\"`, a child carrying the `bleed` attribute breaks out of the content column."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [
+      "--al-layout-gap",
+      "--al-layout-padding",
+      "--al-layout-gutter",
+      "--al-layout-measure",
+      "--al-layout-columns",
+      "--al-layout-min-height"
+    ],
+    "doNotFlag": []
+  },
+  "al-link": {
+    "tag": "al-link",
+    "attributes": [
+      {
+        "name": "href",
+        "type": "string",
+        "description": "The link URL"
+      },
+      {
+        "name": "variant",
+        "type": "'xs' | 'sm' | 'lg'",
+        "description": "Variant\n- **default** renders a link with the al-theme-typography-body-md preset\n- **xs** renders a link with the al-theme-typography-body-xs preset\n- **sm** renders a link with the al-theme-typography-body-sm preset\n- **lg** renders a link with the al-theme-typography-body-lg preset"
+      },
+      {
+        "name": "target",
+        "type": "'_blank' | '_self' | '_parent' | '_top'",
+        "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Aria label attribute\n- Optional aria-label for a11y\n- Most screen readers will read out loud the aria-label attribute in place of the link text. This is used for links that have text such as 'Learn more' or 'Read more'."
+      },
+      {
+        "name": "ariaLabelledBy",
+        "type": "string",
+        "description": "Aria Labelled By attribute\n- Optional aria-labelledby for a11y\n- There may be instances where a nearby headline can act is the perfect label for a general link."
+      },
+      {
+        "name": "linkTitle",
+        "type": "string",
+        "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The link text"
+      },
+      {
+        "name": "after",
+        "description": "Content to display after the link text, typically an icon (an external-link or chevron affordance). The link is `inline-flex` with a `--al-theme-space-xs` gap, and each size variant re-binds `--al-icon-width` / `--al-icon-height`, so a slotted icon is sized by the variant automatically. <al-link href=\"/docs\">Read the docs<al-icon-chevron-right slot=\"after\"></al-icon-chevron-right></al-link>"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-list-item": {
+    "tag": "al-list-item",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'static'",
+        "description": "Variants\n- **static** renders a list item that isn't interactive. Use for typeahead dropdowns"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n1. Changes the component's treatment to represent an error"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute"
+      },
+      {
+        "name": "behavior",
+        "type": "'flyout'",
+        "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **flyout** changes the nested items into flyout menus"
+      },
+      {
+        "name": "flyoutPosition",
+        "type": "'left' | 'bottom' | 'top'",
+        "description": "Flyout position (only use with flyout behavior)\n- **left** positions the flyout menu to the left of the item trigger\n- **bottom** positions the flyout menu below the item trigger"
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "URL if this is an <a> element - this swaps <button> for <a>"
+      },
+      {
+        "name": "value",
+        "type": "string | { label: string; value: any; [key: string]: unknown }",
+        "description": "Value for a list item that needs to return a value to an input in a dropdown. This is required for search/drop-down.\nValue can be a string or object ({lable, value} pair)"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Active state"
+      },
+      {
+        "name": "isCurrent",
+        "type": "boolean",
+        "description": "Current state"
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "description": "Disabled attribute"
+      },
+      {
+        "name": "target",
+        "type": "'_blank' | '_self' | '_parent' | '_top'",
+        "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one.\n  If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The content of the list item"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-list": {
+    "tag": "al-list",
+    "attributes": [
+      {
+        "name": "behavior",
+        "type": "'overflow'",
+        "description": "Behavior\n- **overflow** turns the list into an overflow list"
+      },
+      {
+        "name": "direction",
+        "type": "'row'",
+        "description": "Orientation\n- default renders a stacked list\n- **horizontal** renders the list side-by-side and wraps unless overflow is turned on"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The list items"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-logo": {
+    "tag": "al-logo",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'southleft'",
+        "description": "The logo variant\n- **default** displays the Altitude logo\n- **southleft** displays the Southleft logo"
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "The logo link URL"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "A11y — the accessible name of the logo mark.\n\nThe logo renders an inline `<svg>` inside an `<a>`; an `<svg>` with no\n`role`/name contributes nothing to name-from-content, so the link was\nnameless (axe `link-name`). Defaults to the wordmark the variant draws."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The component content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-menu-item": {
+    "tag": "al-menu-item",
+    "attributes": [
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Selection value surfaced via `e.detail.value` on the bubbled\n`onMenuItemSelect` event. Use this to give the consumer an opaque\nidentifier for the item (e.g. `value=\"edit\"`) so they don't have to\npattern-match on label or DOM ref.\n\nNote on labeling: the **default slot supplies the visible AND\naccessible name** for text items — `<al-menu-item value=\"edit\">Edit profile</al-menu-item>`\nis sufficient. The `label` attribute is only required for\nicon-only menu items where there is no visible text. Setting both\n`label=\"Edit\"` and the slot to \"Edit\" produces a duplicate\naccessible name."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "description": "The optional menu link URL"
+      },
+      {
+        "name": "target",
+        "type": "'_blank' | '_self' | '_parent' | '_top'",
+        "description": "Target attribute for the menu link (i.e. set to _blank to open in new tab)"
+      },
+      {
+        "name": "linkTitle",
+        "type": "string",
+        "description": "Title attribute\n- Optional title for a11y\n- If a link opens a new window or performs an action, use the title attribute to provide a tooltip with additional information."
+      },
+      {
+        "name": "isHeader",
+        "type": "boolean",
+        "description": "isHeader property\n- **true** Applies the header treatment to the menu item"
+      },
+      {
+        "name": "isExpandableHeader",
+        "type": "boolean",
+        "description": "isExpandableHeader property\n- **true** Applies expandable functionality to the menu item"
+      },
+      {
+        "name": "isExpanded",
+        "type": "boolean",
+        "description": "isExpanded property\n- **true** Applies the expanded treatment to a Header item\n- **false** Applies the collapsed treatment to a Header item"
+      },
+      {
+        "name": "isSelected",
+        "type": "boolean",
+        "description": "Selected attribute\n- Changes the component's treatment to represent a selected state"
+      },
+      {
+        "name": "isFocused",
+        "type": "boolean",
+        "description": "Current attribute\n- Changes the component's treatment to represent a focused state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "isHidden",
+        "type": "boolean",
+        "description": "Is hidden property\n- Is set on child menu items based on their Header's expanded state\n- **true** Hide the item\n- **false** Show the item"
+      },
+      {
+        "name": "groupId",
+        "type": "string",
+        "description": "Group id property\n- Dynamically set by the Menu parent component\n- Used to associate menu group headers and group items"
+      },
+      {
+        "name": "idx",
+        "type": "number",
+        "description": "Index property\n- Dynamically set by the Menu parent component\n- Used to track and set focus with keyboard navigation"
+      },
+      {
+        "name": "indentation",
+        "type": "number",
+        "description": "Indentation\n- Dynamically set by the menu parent component\n- Adds padding to a menu item to left-align its text with that of its Header"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label attribute\n- Sets the ariaLabel for A11y"
+      },
+      {
+        "name": "ariaControls",
+        "type": "string",
+        "description": "Aria controls\n- Associates an Expandable Header's control with the items in that group\n- **Not rendered as an attribute.** The ids `<al-menu>` collects here belong\n  to `<al-menu-item>` hosts in the *document*, while the expand control\n  lives inside this component's shadow root, and an IDREF cannot cross a\n  shadow boundary — every value was reported invalid\n  (axe `aria-valid-attr-value`). The disclosure relationship is carried by\n  `aria-expanded` on the control, which needs no IDREF. The property is\n  kept because it is public API and records the grouping.\n- Defaults to `''`: it used to be `undefined`, and `undefined += ' id'`\n  produced the literal id list `\"undefined group-x-item-1\"`."
+      }
+    ],
+    "events": [
+      {
+        "name": "onMenuItemSelect",
+        "type": "CustomEvent",
+        "description": "Fired when the item is selected. Detail: `{ value, selected, item }` — the item's value, its new selected state, and the element itself."
+      },
+      {
+        "name": "onMenuItemExpand",
+        "type": "CustomEvent",
+        "description": "Fired when an item with a submenu expands or collapses. Detail: `{ expanded, item }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The content to display in the menu item"
+      },
+      {
+        "name": "before",
+        "description": "Optional prefix content to display in the menu item"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-menu": {
+    "tag": "al-menu",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'simple'",
+        "description": "Variant\n- **default** Display the menu items with a background and padding\n- **simple** Display the menu items without a background and padding"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "description": "Width property\n- If set, the menu will be constrained to this width in px"
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "description": "Height property\n- If set, the menu will be constrained to this height in px and enable vertical scrolling"
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label attribute\n- Sets ariaLabel for A11y"
+      },
+      {
+        "name": "indentGroupItems",
+        "type": "boolean",
+        "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding"
+      }
+    ],
+    "events": [
+      {
+        "name": "onMenuItemSelect",
+        "type": "CustomEvent",
+        "description": "Bubbled from `<al-menu-item>` (bubbles + composed). Bind the listener HERE on `<al-menu>`, not on each item. `e.detail.value` carries the selected item's `value` attribute. Example: <al-menu @onMenuItemSelect=${(e) => handleSelect(e.detail.value)}> <al-menu-item value=\"edit\">Edit</al-menu-item> </al-menu>"
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The menu items in the menu (children must be `<al-menu-item>`)."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-pagination-item": {
+    "tag": "al-pagination-item",
+    "attributes": [
+      {
+        "name": "href",
+        "type": "string",
+        "description": "Href for link"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled state"
+      },
+      {
+        "name": "isSelected",
+        "type": "boolean",
+        "description": "Selected state"
+      },
+      {
+        "name": "isExpandable",
+        "type": "boolean",
+        "description": "Expandable\n- **true** the item contains a popover with a list of page links\n- **false** the item contains a single page link"
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "description": "Aria label for the link for accessibility"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The pagination item's content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-pagination": {
+    "tag": "al-pagination",
+    "attributes": [
+      {
+        "name": "prevButtonText",
+        "type": "string",
+        "description": "Text displayed on the previous button"
+      },
+      {
+        "name": "nextButtonText",
+        "type": "string",
+        "description": "Text displayed on the next button"
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "description": "Aria label attribute for accessibility\nProvides an accessible name for the navigation element"
+      },
+      {
+        "name": "totalRecords",
+        "type": "number",
+        "description": "Total number of records\nRepresents the total size of the data set"
+      },
+      {
+        "name": "currentItem",
+        "type": "number",
+        "description": "Current page number being displayed"
+      },
+      {
+        "name": "pageSize",
+        "type": "number",
+        "description": "Number of records to display per page"
+      },
+      {
+        "name": "pageSizeOptions",
+        "type": "Array<number>",
+        "description": "Dropdown options for choosing the number of items displayed per page"
+      },
+      {
+        "name": "variant",
+        "type": "'small'",
+        "description": "Variant of pagination (e.g., 'small' for a compact view)"
+      },
+      {
+        "name": "pageSizeLabel",
+        "type": "string",
+        "description": "Label text for the page size dropdown"
+      }
+    ],
+    "events": [
+      {
+        "name": "onPaginationChange",
+        "type": "CustomEvent",
+        "description": "Fired when the page or page size changes. Detail: `{ pageNumber, pageSize, totalRecordSize }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "label",
+        "description": "If content is slotted, it will override the default pagination label"
+      },
+      {
+        "name": "prev",
+        "description": "If content is slotted, it will override the default \"previous\" icon"
+      },
+      {
+        "name": "next",
+        "description": "If content is slotted, it will override the default \"next\" icon"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-popover": {
+    "tag": "al-popover",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'menu'",
+        "description": "Variants\n- **default** Displays the popover panel with padding\n- **menu** Displays the popover panel without padding"
+      },
+      {
+        "name": "heading",
+        "type": "string",
+        "description": "Heading text that appears in the header region"
+      },
+      {
+        "name": "position",
+        "type": "| 'bottom-center'\n    | 'bottom-right'\n    | 'bottom-left'\n    | 'top-center'\n    | 'top-right'\n    | 'top-left'\n    | 'left'\n    | 'left-top'\n    | 'right'\n    | 'right-top'",
+        "description": "Positions the dropdown popover absolutely to the trigger.\n- **default** places the popover to the bottom left\n- **bottom-center** places the popover to the bottom center\n- **bottom-right** places the popover to the bottom right\n- **bottom-left** places the popover to the bottom left\n- **top-center** places the popover to the top center\n- **top-right** places the popover to the top right\n- **top-left** places the popover to the top left\n- **left** places the popover to the left\n- **left-top** places the popover to the left top\n- **right** places the popover to the right\n- **right-top** places the popover to the right top"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is active?\n- **true** Shows the popover container\n- **false** Hides the popover container"
+      },
+      {
+        "name": "isDismissible",
+        "type": "boolean",
+        "description": "Is dismissible?\n- **true** Shows the popover close button\n- **false** Hides the popover close button"
+      },
+      {
+        "name": "ariaLabelledBy",
+        "type": "string",
+        "description": "Aria Labelled By attribute\n- Dynamically set for A11y"
+      },
+      {
+        "name": "transitionDelay",
+        "type": "number",
+        "description": "Number of ms of the dialog's open/close css transition delay\n- Used to delay focus trap activation"
+      }
+    ],
+    "events": [
+      {
+        "name": "onPopoverOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the popover opens. Detail: `{ active }` — the new open state."
+      },
+      {
+        "name": "onPopoverClose",
+        "type": "CustomEvent",
+        "description": "Fired when the popover closes by any means. Detail: `{ active }`."
+      },
+      {
+        "name": "onPopoverCloseButton",
+        "type": "CustomEvent",
+        "description": "Fired only when the popover's close button is activated. Detail: `{ active }`. Use `onPopoverClose` to catch every close path."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The main body of the popover"
+      },
+      {
+        "name": "header",
+        "description": "The header of the popover that appears above the main slot"
+      },
+      {
+        "name": "footer",
+        "description": "The footer of the popover that appears below the main slot"
+      },
+      {
+        "name": "trigger",
+        "description": "The trigger that opens/closes the popover"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-progress": {
+    "tag": "al-progress",
+    "attributes": [
+      {
+        "name": "isCircle",
+        "type": "boolean",
+        "description": "Is circle?\n- **true** Displays a circular progress indicator\n- **false** Displays a linear progress indicator"
+      },
+      {
+        "name": "circleSize",
+        "type": "'md' | 'lg' | 'xl'",
+        "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **default** 16px\n- **md** 24px\n- **lg** 32px\n- **xl** 40px"
+      },
+      {
+        "name": "showLabel",
+        "type": "boolean",
+        "description": "Show label?\n**true** Displays the progress label\n**false** Does not display a progress label"
+      },
+      {
+        "name": "labelType",
+        "type": "'ratio'",
+        "description": "Label type\n**default** Sets the progress label as a percentage\n**ratio** Sets the progress label as a ratio"
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "description": "Duration of the progress in seconds\n- Default is 0"
+      },
+      {
+        "name": "currentProgress",
+        "type": "number",
+        "description": "The current completed value of the progress\n- Default is 0"
+      },
+      {
+        "name": "endProgress",
+        "type": "number",
+        "description": "The value at which the progress will end\n- Default is 100"
+      },
+      {
+        "name": "labelAria",
+        "type": "string",
+        "description": "Aria label for A11y\n- Default is \"progress\""
+      }
+    ],
+    "events": [
+      {
+        "name": "onProgressChange",
+        "type": "CustomEvent",
+        "description": "Fired when the progress label updates. Detail: `{ label }` — the rendered label text, not the numeric value."
+      }
+    ],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-radio-group": {
+    "tag": "al-radio-group",
+    "attributes": [
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n- Changes the component's treatment to represent an error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Required attribute\n- Sets the radio to be required for validation"
+      },
+      {
+        "name": "hideLegend",
+        "type": "boolean",
+        "description": "Hide legend?\n- If true, hides the legend from displaying"
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'column'",
+        "description": "Direction\n- **column** (default) stacks the radios\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Radio Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label\n- Displays inside the legend"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error message\n- An error field note that displays below the radio input"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Field note\n- The helper text that displays below the radio input"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Id attribute\n- The ID used for A11y and to associate the label with the input"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y"
+      }
+    ],
+    "events": [
+      {
+        "name": "onRadioGroupChange",
+        "type": "CustomEvent",
+        "description": "Fired when the group's selection changes. Detail: `{ checked, name, value }` — taken from the newly checked radio."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The radio content, a set of radio items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`."
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-radio": {
+    "tag": "al-radio",
+    "attributes": [
+      {
+        "name": "isChecked",
+        "type": "boolean",
+        "description": "Checked attribute"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n- Changes the component's treatment to represent an error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Required attribute\n- Sets the radio to be required for validation"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Value attribute"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?\n- If true, hides the label from displaying"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error message\n- An error field note that displays below the radio input"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Field note\n- The helper text that displays below the radio input"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Id attribute\n- The ID used for A11y and to associate the label with the input"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y"
+      }
+    ],
+    "events": [
+      {
+        "name": "onRadioChange",
+        "type": "CustomEvent",
+        "description": "Fired when this radio becomes checked. Detail: `{ checked, name, value }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The component content that appears next to the radio"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-range": {
+    "tag": "al-range",
+    "attributes": [
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?\n- If true, hides the label from displaying"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute"
+      },
+      {
+        "name": "handleLabelUnit",
+        "type": "string",
+        "description": "Handle label unit attribute"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "description": "Min property for range"
+      },
+      {
+        "name": "minSelected",
+        "type": "number",
+        "description": "Minselected property for range"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "description": "Max property for range"
+      },
+      {
+        "name": "maxSelected",
+        "type": "number",
+        "description": "Maxselected property for range"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "description": "Step for range"
+      },
+      {
+        "name": "hasOutput",
+        "type": "boolean",
+        "description": "Shows input value"
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "description": "Input value"
+      },
+      {
+        "name": "lowerRangeValue",
+        "type": "number",
+        "description": "Input value for lower range of range"
+      },
+      {
+        "name": "upperRangeValue",
+        "type": "number",
+        "description": "Input value for upper range of range"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Slide Label"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Field note text"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error note text"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria described by\n- Used to connect the field note in select to the select menu for accessibility"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "The unique id of the field"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute forwarded to the underlying `<input type=\"range\">`.\n- Previously hardcoded to `\"range\"`, which silently overrode whatever the\n  consumer submitted the field as."
+      },
+      {
+        "name": "hasTooltip",
+        "type": "boolean",
+        "description": "Displays value label above range"
+      },
+      {
+        "name": "behavior",
+        "type": "'range'",
+        "description": "Behavior property for slide"
+      }
+    ],
+    "events": [
+      {
+        "name": "onRangeDrag",
+        "type": "CustomEvent",
+        "description": "Fired continuously while the thumb is dragged. Prefer `onRangeOutputValueChange` for committed values; this one fires on every move."
+      },
+      {
+        "name": "onRangeOutputValueChange",
+        "type": "CustomEvent",
+        "description": "Fired when the range's output value changes. Detail: `{ value }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "label",
+        "description": "If content is slotted, it will override the default range label"
+      },
+      {
+        "name": "before",
+        "description": "If content is slotted, it will override the default range \"min\" label text"
+      },
+      {
+        "name": "after",
+        "description": "If content is slotted, it will override the default range \"max\" label text"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-search": {
+    "tag": "al-search",
+    "attributes": [
+      {
+        "name": "ariaControlsId",
+        "type": "string",
+        "description": "The unique id of the field"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "The unique id of the field"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label of the form field"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Description for the field"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error message for the field"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Visually hide the label from the UI"
+      },
+      {
+        "name": "buttonText",
+        "type": "string",
+        "description": "Search button text"
+      },
+      {
+        "name": "clearButtonText",
+        "type": "string",
+        "description": "Clear button text"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Active state"
+      },
+      {
+        "name": "isActiveDropdown",
+        "type": "boolean",
+        "description": "Active state"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder text"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Input value"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria describedby\n1. Used to connect the field note and errorNote for accessibility"
+      },
+      {
+        "name": "isDynamic",
+        "type": "boolean",
+        "description": "is Dynamic"
+      },
+      {
+        "name": "position",
+        "type": "'bottom' | 'top'",
+        "description": "Position property"
+      },
+      {
+        "name": "maxlength",
+        "type": "number",
+        "description": "Maxlength of characters for the search"
+      },
+      {
+        "name": "isFocusedIn",
+        "type": "boolean",
+        "description": "Focused in menu toggle"
+      },
+      {
+        "name": "isEmpty",
+        "type": "boolean",
+        "description": "Use this Flag along with emptyMessage named slot to report error message"
+      },
+      {
+        "name": "ariaActiveDescendantId",
+        "type": "string",
+        "description": "Active element in the dropdown panel\n1. This is used to read out the active value to the user"
+      }
+    ],
+    "events": [
+      {
+        "name": "onSearchChange",
+        "type": "CustomEvent",
+        "description": "Fired when the search query changes. Detail: `{ value }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The search's dropdown content"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-select": {
+    "tag": "al-select",
+    "attributes": [
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "is Active"
+      },
+      {
+        "name": "isActiveDropdown",
+        "type": "boolean",
+        "description": "is Active select\n1. Select is open when set to true. Close when set to false"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "The unique id of the select"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "The select's title"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The select's label"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "The select's name attribute"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "The select's value attribute"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "The select field note"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "The select error note"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "The select's required attribute"
+      },
+      {
+        "name": "isOptional",
+        "type": "boolean",
+        "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "The select's disabled attribute"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state"
+      },
+      {
+        "name": "isReadonly",
+        "type": "boolean",
+        "description": "Readonly attribute\n- Specifies that an input field is read-only"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide the label?"
+      },
+      {
+        "name": "hasSearch",
+        "type": "boolean",
+        "description": "Add a search input to the dropdown panel"
+      },
+      {
+        "name": "align",
+        "type": "'bottom' | 'top'",
+        "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top"
+      }
+    ],
+    "events": [
+      {
+        "name": "onSelectOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the option list opens. Detail: `{ active }` — always `true`."
+      },
+      {
+        "name": "onSelectClose",
+        "type": "CustomEvent",
+        "description": "Fired when the option list closes. Detail: `{ active }` — always `false`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The select content"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-skeleton": {
+    "tag": "al-skeleton",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'circle' | 'square'",
+        "description": "Variant\n- **default** renders a rectangular skeleton\n- **circle** renders a round skeleton\n- **square** renders a sqaure skeleton"
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "description": "The width of the skeleton\n- If no value is entered, it defaults to 100%"
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "description": "The height of the skeleton\n- If no value is entered, it defaults to auto"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-spinner": {
+    "tag": "al-spinner",
+    "attributes": [
+      {
+        "name": "inverted",
+        "type": "boolean",
+        "description": "Inverted variant\n1) Used for dark backgrounds"
+      },
+      {
+        "name": "small",
+        "type": "boolean",
+        "description": "Small loader"
+      }
+    ],
+    "events": [],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-stat": {
+    "tag": "al-stat",
+    "attributes": [
+      {
+        "name": "value",
+        "type": "string",
+        "description": "The display value, e.g. \"1,234\" or \"$4.2M\". Typed as a string — the\nconsumer owns locale formatting, digit grouping, and unit suffixes."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "The metric's label, e.g. \"Active users\"."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Optional supporting description rendered below the trend row."
+      },
+      {
+        "name": "trend",
+        "type": "'up' | 'down' | 'none'",
+        "description": "Trend direction.\n- **none** (default) No trend indicator is rendered\n- **up** Renders an up chevron\n- **down** Renders a down chevron"
+      },
+      {
+        "name": "delta",
+        "type": "string",
+        "description": "The delta text, e.g. \"+12%\". Renders next to the trend chevron. The\ntrend row only renders when this is a non-empty string."
+      },
+      {
+        "name": "invertPolarity",
+        "type": "boolean",
+        "description": "Flips ONLY the success/danger color mapping for metrics where a lower\nnumber is better (cost, latency, churn). The chevron direction and the\naccessible \"Trending up/down\" text always reflect the literal `trend`\nvalue — only the color changes."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "icon",
+        "description": "Optional leading icon, rendered above the value."
+      }
+    ],
+    "cssParts": [
+      "container",
+      "value",
+      "trend"
+    ],
+    "cssProperties": [
+      "--al-stat-value-color"
+    ],
+    "doNotFlag": []
+  },
+  "al-stepper-item": {
+    "tag": "al-stepper-item",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'vertical'",
+        "description": "Variant\n- **default** renders a Stepper item with a horizontal layout\n- **vertical** renders a Stepper item with a vertical layout"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is active?\n- A visual representation of a step with an active/current state"
+      },
+      {
+        "name": "isComplete",
+        "type": "boolean",
+        "description": "Is complete?\n- A visual representation of a step with a completed state"
+      },
+      {
+        "name": "isLast",
+        "type": "boolean",
+        "description": "Is last?\n- A visual representation of the last step within an ALStepper\n- Dynamically set by the parent"
+      },
+      {
+        "name": "stepNumber",
+        "type": "number",
+        "description": "Step number\n- The number that appears for each step\n- Dynically set by the parent"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The label for each stepper item"
+      },
+      {
+        "name": "icon",
+        "description": "The icon that displays next to the label"
+      },
+      {
+        "name": "description",
+        "description": "The description that displays below the label"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-stepper": {
+    "tag": "al-stepper",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'vertical'",
+        "description": "Variant\n- **default** renders a Stepper with a horizontal layout\n- **vertical** renders a Stepper with a vertical layout"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The stepper content, a set of stepper items"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-tab-panel": {
+    "tag": "al-tab-panel",
+    "attributes": [
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Active state\n- **true** Renders a tab panel with selected/active state\n- **false** Renders a tab panel without selected/active state"
+      },
+      {
+        "name": "ariaId",
+        "type": "string",
+        "description": "ID used to connect the tab panel to the tab aria-controls"
+      },
+      {
+        "name": "ariaLabelledBy",
+        "type": "string",
+        "description": "Aria labelledby property\n- Used to connect tab trigger and tab panel for accessibility"
+      },
+      {
+        "name": "idx",
+        "type": "number",
+        "description": "Index to track tab panel"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The tab panel content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-tab": {
+    "tag": "al-tab",
+    "attributes": [
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Active state\n- **true** Renders a tab with selected/active state\n- **false** Renders a tab without selected/active state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- **true** Renders a tab with the disabled property and state\n- **false** Renders a tab without the disabled property and state"
+      },
+      {
+        "name": "ariaId",
+        "type": "string",
+        "description": "ID used to connect the tab panel to the tab aria-controls"
+      },
+      {
+        "name": "ariaControls",
+        "type": "string",
+        "description": "Aria controls attribute\n- Set by `<al-tabs>` to the id of the matching `<al-tab-panel>`\n- **Not rendered as an attribute.** The panel's id lives inside\n  `<al-tab-panel>`'s shadow root while this tab's `<button>` lives inside\n  `<al-tab>`'s, and an IDREF cannot cross a shadow boundary — axe reported\n  every value as `aria-valid-attr-value`. `aria-controls` is a SHOULD for\n  `role=\"tab\"`, not a MUST; the selected state still comes through\n  `aria-selected`."
+      },
+      {
+        "name": "idx",
+        "type": "number",
+        "description": "Index to track tab"
+      }
+    ],
+    "events": [
+      {
+        "name": "onTabSelect",
+        "type": "CustomEvent",
+        "description": "Fired when this tab is selected. Detail: `{ value, index }` — the tab element itself and its index."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The tab label"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-table": {
+    "tag": "al-table",
+    "attributes": [
+      {
+        "name": "columns",
+        "type": "Array<ALTableColumn>",
+        "description": "Column definitions for data-driven rendering. Must be paired with `data`.\n\nSettable as a JSON attribute as well as a property. It used to be\n`attribute: false`, which meant the table could only ever be driven from\nJavaScript: any consumer writing static HTML — SSR, a plain page, or this\nlibrary's own generated documentation preview, which serialises a story to\nmarkup — got an empty table with no way to fill it."
+      },
+      {
+        "name": "data",
+        "type": "Array<ALTableRow>",
+        "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`."
+      },
+      {
+        "name": "rowKey",
+        "type": "string",
+        "description": "The property on each row object used to derive a stable row identifier\n(used for selection tracking and the `key` attribute)."
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "description": "Visible table caption. Also used as the accessible name of the scroll\ncontainer so keyboard users know what they're scrolling."
+      },
+      {
+        "name": "hideCaption",
+        "type": "boolean",
+        "description": "Visually hides the caption while keeping it in the accessibility tree."
+      },
+      {
+        "name": "isSelectable",
+        "type": "boolean",
+        "description": "Shows a leading checkbox column for row selection."
+      },
+      {
+        "name": "sortKey",
+        "type": "string",
+        "description": "The `key` of the column currently sorted, if any."
+      },
+      {
+        "name": "sortDirection",
+        "type": "ALTableSortDirection",
+        "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary."
+      }
+    ],
+    "events": [
+      {
+        "name": "onTableSort",
+        "type": "CustomEvent",
+        "description": "Fired when a sortable header is activated. Detail: `{ key, direction }`. `al-table` does not re-sort `data` itself — it tracks and displays the active sort state (`sortKey`/`sortDirection`, reflected via `aria-sort`); re-render with sorted `data` in response to this event."
+      },
+      {
+        "name": "onTableRowSelect",
+        "type": "CustomEvent",
+        "description": "Fired when a row's selection checkbox is toggled. Detail: `{ rowKey, isSelected, selectedRowKeys }`."
+      },
+      {
+        "name": "onTableSelectAll",
+        "type": "CustomEvent",
+        "description": "Fired when the header's select-all checkbox is toggled. Detail: `{ isSelected, selectedRowKeys }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "Slotted `<table>`-internal markup (e.g. `<thead>`/`<tbody>`), used only when `columns` and `data` are not both provided."
+      }
+    ],
+    "cssParts": [
+      "scroll",
+      "table"
+    ],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-tabs": {
+    "tag": "al-tabs",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'stretch'",
+        "description": "Tabs variant\n- **default** Tabs are left-aligned, and the width of each tab is defined by the length of its content\n- **stretch** Tabs stretch horizontally to have equal widths, which is calculated by the width of the screen divided by the number of tabs"
+      },
+      {
+        "name": "activeIndex",
+        "type": "number",
+        "description": "Active tab state\n- Sets the initial active tab (e.g. 0 sets the first tab, 1 sets the second tab, etc.)"
+      }
+    ],
+    "events": [
+      {
+        "name": "onTabsChange",
+        "type": "CustomEvent",
+        "description": "Fired when the active tab changes, whether by user interaction or programmatically. Detail: `{ value, activeTabIdx }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The tab items for the tabs"
+      },
+      {
+        "name": "panel",
+        "description": "The tab panels that correspond to the slotted tab items"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-testimonial": {
+    "tag": "al-testimonial",
+    "attributes": [
+      {
+        "name": "attribution",
+        "type": "string",
+        "description": "The name of the person being quoted."
+      },
+      {
+        "name": "attribution-role",
+        "type": "string",
+        "description": "Job title of the person being quoted, e.g. \"VP of Engineering\".\n\nThe attribute is `attribution-role`, **not** `role`. `role` is the ARIA\nrole attribute: `<al-testimonial role=\"VP of Engineering\">` put a job title\nwhere the accessibility tree expects a role name, and axe reported\n`aria-roles` (\"role attribute must use a valid value\") on every\nTestimonial story. `apps/southleft` had already worked around it by\nwriting the *property* from a `data-testimonial-role` attribute."
+      },
+      {
+        "name": "company",
+        "type": "string",
+        "description": "Company/organization of the person being quoted."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The quote text."
+      },
+      {
+        "name": "avatar",
+        "description": "Optional avatar (typically an `<al-avatar>`)."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-text-block": {
+    "tag": "al-text-block",
+    "attributes": [
+      {
+        "name": "maxWidth",
+        "type": "'sm'",
+        "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm"
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The text passage content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [
+      "--al-text-block-font"
+    ],
+    "doNotFlag": []
+  },
+  "al-textarea": {
+    "tag": "al-textarea",
+    "attributes": [
+      {
+        "name": "rows",
+        "type": "number",
+        "description": "Rows attribute\n- Specifies the visible number of lines in a text area"
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "description": "Cols attribute\n- Specifies the visible width of a text area"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "isActive\n- Dynamically sets to true if the textarea has a value"
+      },
+      {
+        "name": "isReadonly",
+        "type": "boolean",
+        "description": "Readonly attribute\n- Specifies that an input field is read-only"
+      },
+      {
+        "name": "isError",
+        "type": "boolean",
+        "description": "Error state\n- Changes the component's treatment to represent an error state"
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "description": "Required attribute\n- Specifies that an input field must be filled out before submitting the form"
+      },
+      {
+        "name": "isOptional",
+        "type": "boolean",
+        "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label"
+      },
+      {
+        "name": "isFocused",
+        "type": "boolean",
+        "description": "Autofocus attribute\n- When present, it specifies that the text area should automatically get focus when the page loads"
+      },
+      {
+        "name": "hideLabel",
+        "type": "boolean",
+        "description": "Hide label?\n- If true, hides the label VISUALLY. The element stays in the DOM with its\n  `for` association intact, so the field keeps an accessible name.\n\nBefore v2 this also revealed the placeholder; the label no longer occupies\nthe placeholder's position, so a `placeholder` renders whenever it is set."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label attribute\n- Specifies what content to enter within the input element"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute\n- Specifies the name of an input element"
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Value attribute\n- Specifies the value of an input element"
+      },
+      {
+        "name": "errorNote",
+        "type": "string",
+        "description": "Error message\n- An error field note that displays below the input"
+      },
+      {
+        "name": "fieldNote",
+        "type": "string",
+        "description": "Field note\n- The helper text that displays below the input"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Id attribute\n- The ID used for A11y and to associate the label with the input"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y"
+      },
+      {
+        "name": "minLength",
+        "type": "number",
+        "description": "Min length\n- Specifies the minimum number of characters required in an input element"
+      },
+      {
+        "name": "maxLength",
+        "type": "number",
+        "description": "Max length\n- Specifies the maximum number of characters required in an input element"
+      },
+      {
+        "name": "maxLengthValue",
+        "type": "number",
+        "description": "Maxlength value\n- Dynamically outputs the number of characters inside the input field"
+      }
+    ],
+    "events": [
+      {
+        "name": "onTextareaChange",
+        "type": "CustomEvent",
+        "description": "Fired when the textarea's value changes. Detail: `{ value }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "before",
+        "description": "The content that appears before the text in the input"
+      },
+      {
+        "name": "after",
+        "description": "The content that appears after the text in the input"
+      },
+      {
+        "name": "field-note",
+        "description": "If content is slotted, it will display in place of the fieldNote property"
+      },
+      {
+        "name": "error",
+        "description": "If content is slotted, it will display in place of the errorNote property"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-theme-switcher": {
+    "tag": "al-theme-switcher",
+    "attributes": [],
+    "events": [
+      {
+        "name": "onThemeSwitcherChange",
+        "type": "CustomEvent",
+        "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The component content"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-theme": {
+    "tag": "al-theme",
+    "attributes": [
+      {
+        "name": "brand",
+        "type": "'altitude' | 'southleft'",
+        "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'."
+      },
+      {
+        "name": "mode",
+        "type": "'light' | 'dark'",
+        "description": "Color mode."
+      },
+      {
+        "name": "density",
+        "type": "'compact' | 'cozy' | 'comfortable'",
+        "description": "Density axis."
+      },
+      {
+        "name": "contrast",
+        "type": "'normal' | 'more'",
+        "description": "Contrast axis."
+      },
+      {
+        "name": "motion",
+        "type": "'full' | 'reduced' | 'expressive' | undefined",
+        "description": "Motion axis. Falls back to `prefers-reduced-motion` when unset.\n`expressive` lengthens durations and swaps in springier easing on the\n`theme.animation.{duration,timing}.role.*` tokens; `reduced` still wins\nunder `prefers-reduced-motion` unless `full` is set (accessibility-first\n— `expressive` is a decorative upgrade, not an override of the OS\npreference)."
+      },
+      {
+        "name": "shape",
+        "type": "'default' | 'sharp' | 'pill' | undefined",
+        "description": "Shape axis. Repoints the `theme.border.radius.role.*` tokens\n(action/control/surface/indicator) that components map their\nborder-radius usage to. `default` (unset) reproduces today's per-brand\nradii exactly — the role tokens resolve through the existing\n`--al-theme-border-radius{,-lg,-round}` chain, so a brand's own radius\nidentity still shows through until `sharp`/`pill` overrides it."
+      }
+    ],
+    "events": [],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The content tree the theme applies to."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-time-selector-list": {
+    "tag": "al-time-selector-list",
+    "attributes": [
+      {
+        "name": "direction",
+        "type": "'row'",
+        "description": "Determines the direction of the time selector ('row' renders items in a row)."
+      },
+      {
+        "name": "activeTime",
+        "type": "string",
+        "description": "Sets a specific time to be active (24-hour format, e.g., activeTime=\"16:00\" for 4 PM)."
+      },
+      {
+        "name": "times",
+        "type": "{ value: Date; available: boolean }[]",
+        "description": "Container for the current times within the month."
+      },
+      {
+        "name": "timeIncrements",
+        "type": "number",
+        "description": "Increments in minutes for the time display."
+      },
+      {
+        "name": "timeStart",
+        "type": "number",
+        "description": "The minimum time displayed between times (24-hour format, e.g., timeStart=${16} for 4 PM)."
+      },
+      {
+        "name": "timeEnd",
+        "type": "number",
+        "description": "The maximum time displayed between times (24-hour format, e.g., timeEnd=${16} for 4 PM)."
+      },
+      {
+        "name": "disabledMinTime",
+        "type": "string",
+        "description": "The minimum time to disable for time display (24-hour format, e.g., disabledMinTime=\"16:00\" for 4 PM)."
+      },
+      {
+        "name": "disabledMaxTime",
+        "type": "string",
+        "description": "The maximum time to disable for time display (24-hour format, e.g., disabledMaxTime=\"16:00\" for 4 PM)."
+      },
+      {
+        "name": "resetTime",
+        "type": "boolean",
+        "description": "Sets the active time selector to an inactive state."
+      },
+      {
+        "name": "is24HourFormat",
+        "type": "boolean",
+        "description": "Determines whether to use a 24-hour time format."
+      },
+      {
+        "name": "timeFormat",
+        "type": "string",
+        "description": "Specifies the date format for UI display (e.g., 'h:mm a')."
+      },
+      {
+        "name": "timeSelectorLabel",
+        "type": "string",
+        "description": "The label for the time selector heading."
+      }
+    ],
+    "events": [
+      {
+        "name": "onTimeSelectorListChange",
+        "type": "CustomEvent",
+        "description": "Fired when a time is selected. Detail: `{ value }` — formatted per `timeFormat`."
+      }
+    ],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-toast": {
+    "tag": "al-toast",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'info' | 'success' | 'warning' | 'danger'",
+        "description": "Variants\n- **default** renders a toast that represents an informative state\n- **success** renders a toast that represents a success state\n- **warning** renders a toast that represents a warning state\n- **danger** renders a toast that represents an danger state"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "The toast description text"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is active?\n- **true** Displays the toast on the screen\n- **false** Hides the toast on the screen"
+      },
+      {
+        "name": "isDismissible",
+        "type": "boolean",
+        "description": "Is dismissible?\n- **false** If false, the toast will auto close after a delay\n- **true**  If true, this disables auto close and adds the ability for the user close the toast"
+      },
+      {
+        "name": "autoClose",
+        "type": "boolean",
+        "description": "Auto close?\n- Set whether you want the toast to auto close. Adjust the autoCloseDelay if you want longer than 3 seconds"
+      },
+      {
+        "name": "autoCloseDelay",
+        "type": "number",
+        "description": "Delay property\n1. Number of seconds to close the toast when autoClose is enabled\n2. Default amount is 3"
+      },
+      {
+        "name": "showProgress",
+        "type": "boolean",
+        "description": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onToastClose",
+        "type": "CustomEvent",
+        "description": "Fired when the toast is dismissed. Detail: `{ active }`."
+      },
+      {
+        "name": "onToastOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the toast becomes visible. Detail: `{ active }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The toast title or primary text"
+      },
+      {
+        "name": "actions",
+        "description": "Actions to optionally display in the toast"
+      },
+      {
+        "name": "icon",
+        "description": "Slot in an icon to override the default one"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-toggle-button": {
+    "tag": "al-toggle-button",
+    "attributes": [
+      {
+        "name": "variant",
+        "type": "'background'",
+        "description": "Variant\n- **default** renders the toggle button without background styles\n- **background** renders the toggle button with background styles"
+      },
+      {
+        "name": "isSelected",
+        "type": "boolean",
+        "description": "Indicates the selected state of the toggle button."
+      },
+      {
+        "name": "isSmall",
+        "type": "boolean",
+        "description": "If true, a fixed width will be set on the button.\n- Dynamically set based on the slotted component"
+      },
+      {
+        "name": "hasToggle",
+        "type": "boolean",
+        "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state"
+      }
+    ],
+    "events": [
+      {
+        "name": "onToggleButtonSelect",
+        "type": "CustomEvent",
+        "description": "Fired when the button becomes selected. Detail: `{ item, selected }`."
+      },
+      {
+        "name": "onToggleButtonDeselect",
+        "type": "CustomEvent",
+        "description": "Fired when the button becomes deselected. Detail: `{ item, selected }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The content to display in the toggle button"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-toggle": {
+    "tag": "al-toggle",
+    "attributes": [
+      {
+        "name": "isChecked",
+        "type": "boolean",
+        "description": "Checked attribute\n- If true, sets the treatment to represent an on state\n- If false, sets the treatment to represent an off state\n\nRendered with a PROPERTY binding (`.checked`), not `?checked`, matching\ncheckbox.ts. The content attribute only seeds the initial state: a user\nclick sets the input's dirty-checkedness flag, after which the attribute\nno longer drives `.checked`. Bound as an attribute, setting `isChecked`\nfrom code updated the host class and left the native input alone, so form\nresets and state-driven toggles silently stopped working after one click."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state"
+      },
+      {
+        "name": "fieldId",
+        "type": "string",
+        "description": "Field ID\n- Links the label to the toggle\n- By default it is autogenerated by nanoid"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "description": "Label\n- The text inside the label tag\n- Does not display on the front-end, but is used for A11y"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Name attribute\n- The name attribute used on the toggle"
+      }
+    ],
+    "events": [
+      {
+        "name": "onToggleChange",
+        "type": "CustomEvent",
+        "description": "Fired when the toggle's checked state changes. Detail: `{ checked }`."
+      }
+    ],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-tooltip": {
+    "tag": "al-tooltip",
+    "attributes": [
+      {
+        "name": "hasArrow",
+        "type": "boolean",
+        "description": "Displays the arrow on the tooltip container"
+      },
+      {
+        "name": "position",
+        "type": "'top' | 'bottom' | 'left' | 'right'",
+        "description": "Positions the dropdown tooltip absolutely to the trigger.\n- **default** places the tooltip to the top\n- **top** places the tooltip to the top\n- **bottom** places the tooltip to the bottom\n- **left** places the tooltip to the left\n- **right** places the tooltip to the right"
+      },
+      {
+        "name": "isActive",
+        "type": "boolean",
+        "description": "Is active?\n- **true** Shows the tooltip container\n- **false** Hides the tooltip container"
+      },
+      {
+        "name": "isDynamic",
+        "type": "boolean",
+        "description": "Is dynamic?\n- **true** Dynamically position the tooltip container based on it's position in the viewport\n- **false** Positions the tooltip container based on the position property"
+      },
+      {
+        "name": "isInteractive",
+        "type": "boolean",
+        "description": "Is interactive?\n- **true** Tooltip container is visible on click and not hover/focus\n- **false** Tooltip container is visible on hover/focus"
+      },
+      {
+        "name": "ariaDescribedBy",
+        "type": "string",
+        "description": "Aria Described By attribute\n- Dynamically set for A11y"
+      }
+    ],
+    "events": [
+      {
+        "name": "onTooltipOpen",
+        "type": "CustomEvent",
+        "description": "Fired when the tooltip becomes visible. Detail: `{ active }`."
+      },
+      {
+        "name": "onTooltipClose",
+        "type": "CustomEvent",
+        "description": "Fired when the tooltip hides. Detail: `{ active }`."
+      }
+    ],
+    "slots": [
+      {
+        "name": "(default)",
+        "description": "The content that appears inside the tooltip"
+      },
+      {
+        "name": "prefix",
+        "description": "The content that appears before the main content"
+      },
+      {
+        "name": "trigger",
+        "description": "The trigger that opens the tooltip"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": []
+  },
+  "al-tag": {
+    "tag": "al-tag",
+    "status": "eval-fixture",
+    "note": "NOT A REAL COMPONENT - an AI-readiness eval fixture (tasks/C-violation.md). al-chip ships the same use case. Contract: scripts/ai-readiness/fixtures/canonical-contracts.md.",
+    "attributes": [],
+    "events": [],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": [
+      {
+        "pattern": "controlled-close-without-isDismissed",
+        "rule": "Same as al-chip. Controlled close() without owned isDismissed is sanctioned for al-tag too.",
+        "severity": "do-not-flag",
+        "citation": "scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical al-tag contract"
+      },
+      {
+        "pattern": "dispatch-only-handler-IS-controlled-close",
+        "rule": "AFFIRMATIVE: A handler method (named `handleClose`, `onClose`, `dismiss`, or anything else) that ONLY dispatches a close event (no `isDismissed` state mutation, no method literally named `close()`) IS the sanctioned controlled-close shape. It COUNTS as controlled-close. Do NOT flag it as \"incomplete\", \"partial\", \"neither shape\", or \"missing close() method\". The method name does not matter — what matters is that the dismissal decision is delegated to the consumer via the dispatched event. Reviewers reasoning \"this is neither owned-state nor a literal close() method, therefore neither shape\" are misreading the rule.",
+        "severity": "do-not-flag",
+        "citation": "scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical al-tag contract, Dismissal model row"
+      }
+    ]
+  },
+  "al-stat-card": {
+    "tag": "al-stat-card",
+    "status": "eval-fixture",
+    "note": "NOT A REAL COMPONENT - an AI-readiness eval fixture (tasks/B-scaffold.md). al-stat ships the same use case. Contract: scripts/ai-readiness/fixtures/canonical-contracts.md.",
+    "attributes": [],
+    "events": [],
+    "slots": [],
+    "cssParts": [],
+    "cssProperties": [],
+    "doNotFlag": [
+      {
+        "pattern": "molecule-mis-taxonomy",
+        "rule": "A display atom that composes internal `<al-icon>` atoms for decoration remains an Atom. Do NOT flag `title: \"Atoms/Stat Card\"` as a taxonomy violation that \"should be Molecules\" — the Molecules tier is reserved for compositions that combine 2+ semantically meaningful atoms, not for atoms that wrap decorative icons.",
+        "severity": "do-not-flag",
+        "citation": "scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical stat-card contract, Taxonomy row"
+      },
+      {
+        "pattern": "consumed-theme-token-not-cssproperty",
+        "rule": "A consumed `--al-theme-*` token (e.g. --al-theme-color-content-default) is NOT a @cssproperty of the component that reads it. Do NOT flag the absence of @cssproperty entries for global theme tokens; only the component's own --al-<component>-* override hooks are @cssproperty.",
+        "severity": "do-not-flag",
+        "citation": "AGENTS.md @cssproperty semantics + scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical stat-card contract, Owned override hooks row"
+      }
+    ]
+  }
+}

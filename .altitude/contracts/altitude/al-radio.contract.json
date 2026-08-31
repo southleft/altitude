@@ -1,0 +1,4154 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-radio",
+  "name": "Radio",
+  "version": "1.1.0",
+  "status": "source",
+  "description": "Component: al-radio",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "ariaDescribedBy",
+      "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "ariaDescribedBy"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "errorNote",
+      "description": "Error message\n- An error field note that displays below the radio input",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "errorNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldId",
+      "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldId"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "fieldNote",
+      "description": "Field note\n- The helper text that displays below the radio input",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "fieldNote"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "hideLabel",
+      "description": "Hide label?\n- If true, hides the label from displaying",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "hideLabel"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ],
+          "pairWith": "Label"
+        }
+      }
+    },
+    {
+      "name": "isChecked",
+      "description": "Checked attribute",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isChecked"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Checked",
+          "options": [
+            "Off",
+            "On"
+          ],
+          "pairWith": "Checked"
+        }
+      }
+    },
+    {
+      "name": "isDisabled",
+      "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isDisabled"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
+      }
+    },
+    {
+      "name": "isError",
+      "description": "Error state\n- Changes the component's treatment to represent an error state",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isError"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
+      }
+    },
+    {
+      "name": "isRequired",
+      "description": "Required attribute\n- Sets the radio to be required for validation",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isRequired"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "name",
+      "description": "Name attribute",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "name"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "value",
+      "description": "Value attribute",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "onRadioChange",
+      "description": "Fired when this radio becomes checked. Detail: `{ checked, name, value }`."
+    }
+  ],
+  "slots": [
+    {
+      "name": "",
+      "description": "The component content that appears next to the radio"
+    },
+    {
+      "name": "error",
+      "description": "If content is slotted, it will display in place of the errorNote property"
+    },
+    {
+      "name": "field-note",
+      "description": "If content is slotted, it will display in place of the fieldNote property"
+    }
+  ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-field-note",
+        "evidence": [
+          "import"
+        ]
+      }
+    ]
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Checked=Off,Label=shown",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-radio",
+      "box": {
+        "w": 127,
+        "h": 40
+      },
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "column-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        }
+      },
+      "children": [
+        {
+          "tag": "div",
+          "cls": "al-c-radio__container",
+          "box": {
+            "w": 127,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__radio",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "center"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
+                },
+                "height": {
+                  "code": "--al-base-space",
+                  "figma": "base/space"
+                },
+                "width": {
+                  "code": "--al-base-space",
+                  "figma": "base/space"
+                }
+              },
+              "children": [
+                {
+                  "tag": "input",
+                  "cls": "al-c-radio__input",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "border-bottom-left-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-bottom-right-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-top-left-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-top-right-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "al-c-radio__custom-radio",
+                  "box": {
+                    "w": 24,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "border": {
+                      "code": "--al-theme-border-width-md",
+                      "figma": "theme/border/width/md"
+                    },
+                    "border-bottom-left-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-bottom-right-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-top-color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "border-top-left-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-top-right-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-top-width": {
+                      "code": "--al-theme-border-width-md",
+                      "figma": "theme/border/width/md"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "al-c-radio__ripple",
+                  "box": {
+                    "w": 0,
+                    "h": 0
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "border-bottom-left-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-bottom-right-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-top-left-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    },
+                    "border-top-right-radius": {
+                      "code": "--al-theme-border-radius-round",
+                      "figma": "theme/border/radius/round"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "label",
+              "cls": "al-c-radio__label",
+              "box": {
+                "w": 83,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-md",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-md-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": [
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "text": "Radio label",
+                  "box": {
+                    "w": 83,
+                    "h": 19
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Checked=Off,Label=hidden",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-has-hidden-label",
+          "box": {
+            "w": 40,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 42.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=Off,Label=hidden, State=Disabled",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-disabled al-has-hidden-label",
+          "box": {
+            "w": 40,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    },
+                    "opacity": {
+                      "code": "--al-theme-opacity-disabled",
+                      "figma": "theme/opacity/disabled"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 42.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=Off,Label=hidden, State=Error",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-error al-has-hidden-label",
+          "box": {
+            "w": 40,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-danger-default",
+                          "figma": "theme/color/border/danger-default"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-danger-default",
+                          "figma": "theme/color/border/danger-default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 42.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=Off,Label=shown",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio",
+          "box": {
+            "w": 127,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 127,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 83,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 83,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=Off,Label=shown, State=Disabled",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-disabled",
+          "box": {
+            "w": 127,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 127,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 83,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    },
+                    "opacity": {
+                      "code": "--al-theme-opacity-disabled",
+                      "figma": "theme/opacity/disabled"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 83,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=Off,Label=shown, State=Error",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-error",
+          "box": {
+            "w": 127,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 127,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-danger-default",
+                          "figma": "theme/color/border/danger-default"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-danger-default",
+                          "figma": "theme/color/border/danger-default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 83,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 83,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On,Label=hidden",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-has-hidden-label",
+          "box": {
+            "w": 40,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 42.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On,Label=hidden, State=Disabled",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-disabled al-has-hidden-label",
+          "box": {
+            "w": 40,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    },
+                    "opacity": {
+                      "code": "--al-theme-opacity-disabled",
+                      "figma": "theme/opacity/disabled"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 42.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On,Label=hidden, State=Error",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-error al-has-hidden-label",
+          "box": {
+            "w": 40,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 40,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 42.1,
+                        "h": 43
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On,Label=shown",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio",
+          "box": {
+            "w": 127,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 127,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 83,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 83,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On,Label=shown, State=Disabled",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-disabled",
+          "box": {
+            "w": 127,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 127,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 83,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    },
+                    "opacity": {
+                      "code": "--al-theme-opacity-disabled",
+                      "figma": "theme/opacity/disabled"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 83,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        },
+                        "opacity": {
+                          "code": "--al-theme-opacity-disabled",
+                          "figma": "theme/opacity/disabled"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Checked=On,Label=shown, State=Error",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-radio al-is-error",
+          "box": {
+            "w": 127,
+            "h": 40
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-radio__container",
+              "box": {
+                "w": 127,
+                "h": 40
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-radio__radio",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "height": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    },
+                    "width": {
+                      "code": "--al-base-space",
+                      "figma": "base/space"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "input",
+                      "cls": "al-c-radio__input",
+                      "box": {
+                        "w": 40,
+                        "h": 40
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__custom-radio",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-content-primary-weak",
+                          "figma": "theme/color/content/primary-weak"
+                        },
+                        "border": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-color": {
+                          "code": "--al-theme-color-border-primary-default",
+                          "figma": "theme/color/border/primary-default"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-width": {
+                          "code": "--al-theme-border-width-md",
+                          "figma": "theme/border/width/md"
+                        },
+                        "height": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        },
+                        "width": {
+                          "code": "--al-base-space",
+                          "figma": "base/space"
+                        }
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-radio__ripple",
+                      "box": {
+                        "w": 0,
+                        "h": 0
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "background-color": {
+                          "code": "--al-theme-color-background-transparent-default",
+                          "figma": "theme/color/background/transparent-default"
+                        },
+                        "border-bottom-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-bottom-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-left-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        },
+                        "border-top-right-radius": {
+                          "code": "--al-theme-border-radius-round",
+                          "figma": "theme/border/radius/round"
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "label",
+                  "cls": "al-c-radio__label",
+                  "box": {
+                    "w": 83,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-default",
+                      "figma": "theme/color/content/default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-body-md",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "label",
+                      "cls": "al-c-radio__label",
+                      "text": "Radio label",
+                      "box": {
+                        "w": 83,
+                        "h": 19
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-default",
+                          "figma": "theme/color/content/default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-body-md",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-body-md-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "stateOverrides": {
+      "hover": {
+        "0.0.0.2": {
+          "background-color": {
+            "code": "--al-theme-color-background-default-strong",
+            "figma": "theme/color/background/default-strong"
+          }
+        }
+      },
+      "focus": {
+        "0.0.0.0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
+      },
+      "disabled": {
+        "0.0.0.1": {
+          "opacity": {
+            "code": "--al-theme-opacity-disabled",
+            "figma": "theme/opacity/disabled"
+          }
+        }
+      }
+    }
+  },
+  "tokens": [
+    "--al-base-space",
+    "--al-theme-border-radius-round",
+    "--al-theme-border-width-md",
+    "--al-theme-color-background-default-strong",
+    "--al-theme-color-background-transparent-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-focus-ring",
+    "--al-theme-opacity-disabled",
+    "--al-theme-space-xs",
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-md",
+    "--al-theme-typography-body-md-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "ariaDescribedBy"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/radio/radio.ts",
+      "tagName": "al-radio",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Radio",
+      "nodeId": "3543:47540",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47540"
+    }
+  }
+}

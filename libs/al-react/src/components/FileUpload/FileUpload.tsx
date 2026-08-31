@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALFileUpload as ALWebFileUpload } from 'al-web-components/dist/components/file-upload/file-upload';
-import register from 'al-web-components/dist/directives/register';
-import PackageJson from '../../../package.json';
+import { ALFileUpload as ALWebFileUpload } from '@southleft/al-web-components/components/file-upload';
+import register from '@southleft/al-web-components/directives/register';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebFileUpload.el, ALWebFileUpload],
@@ -13,5 +15,8 @@ export const ALFileUpload = createComponent({
   react: React,
   tagName: elementMap.get(ALWebFileUpload.el),
   elementClass: ALWebFileUpload,
-  events: {}
+  events: {
+    onFileUploadFileRemove: 'onFileUploadFileRemove',
+    onFileUploadFileUpload: 'onFileUploadFileUpload'
+  }
 });

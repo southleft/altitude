@@ -1,0 +1,154 @@
+{
+  "$schema": "./ds-projects.schema.json",
+  "$comment": "Design-system PROJECT REGISTRY. One entry per Figma-backed design system this repo drives. Read by libs/altitude-mcp/src/lib/ds-project.mjs, which resolves the active project from --project <id>, the DS_PROJECT env var, or `default` below. Everything that used to be a hardcoded 'Altitude' string in the parity tooling (Figma file key, manifest path, prompt pipeline, Storybook identity) now comes from here.",
+  "default": "altitude",
+  "projects": {
+    "altitude": {
+      "id": "altitude",
+      "name": "Altitude Design System",
+      "brand": "altitude",
+      "figma": {
+        "fileKey": "y83n4o9LOGs74oAoguFcGS",
+        "fileName": "Altitude Design System",
+        "urlBase": "https://www.figma.com/design/{fileKey}/",
+        "componentPagePrefix": "\ud83d\udee0 ",
+        "decoys": [
+          {
+            "fileKey": "NGpu9IJj2pRhNru1QTGmuF",
+            "fileName": "Altitude DS",
+            "why": "Empty scratch file; an earlier pass built 31 component sets into it by mistake. Refuse to write here."
+          }
+        ]
+      },
+      "paths": {
+        "figmaSyncDir": ".altitude/figma-sync",
+        "parityManifest": ".altitude/figma-sync/parity-manifest.json",
+        "opsDir": ".altitude/figma-sync/ops",
+        "instanceMap": "scripts/figma-atoms/instance-map.mjs"
+      },
+      "library": {
+        "workspace": "@southleft/al-web-components",
+        "root": "libs/al-web-components",
+        "tagPrefix": "al-",
+        "//excludeTitlePrefixes": "SCOPE, not presentation. Story titles under these prefixes are not COMPONENTS of this design system, so parity must not report them as missing in Figma. This used to live under `storybook`, which was wrong twice over: it is a library-scope concern, and it made the field disappear when Southleft's Storybook was retired on 2026-08-23.",
+        "excludeTitlePrefixes": [
+          "Foundations/"
+        ]
+      },
+      "prompts": {
+        "skillName": "altitude-figma-sync",
+        "skillPath": ".claude/skills/altitude-figma-sync/SKILL.md",
+        "skillTrapCount": 32,
+        "atomsScriptsDir": "scripts/figma-atoms",
+        "parityScriptsDir": "scripts/figma-parity",
+        "docPath": ".altitude/FIGMA-SYNC.md",
+        "guardrailsDoc": "AGENTS.md"
+      },
+      "excluded": {
+        "al-theme-switcher": "Owns no pixels \u2014 an al-button + al-popover + al-menu composition; a Figma set would duplicate three components (altitude-figma-sync: NOT_COMPONENTS).",
+        "al-icon": "Icons live in Figma as 71 flat components on the \ud83d\udee0 Icons page (resolved by name), not as a component set \u2014 there is nothing for a per-set parity check to bind to."
+      },
+      "docs": {
+        "//": "Altitude's Storybook was retired (2026-08-25), following Southleft's (2026-08-23). The generated docs site at apps/docs is the canonical surface for both, and the axe sweep that used to need a Storybook build now runs against libs/al-web-components/story-fixture, verified at exact parity. `route` is empty because altitude is the default project and serves at the site root.",
+        "route": "",
+        "productionBase": "https://altitude.pages.dev/docs"
+      }
+    },
+    "southleft": {
+      "id": "southleft",
+      "name": "Southleft Design System",
+      "brand": "southleft",
+      "figma": {
+        "fileKey": "2a0kqTG8i8l1q1VI2yq9or",
+        "fileName": "Southleft V5",
+        "urlBase": "https://www.figma.com/design/{fileKey}/",
+        "componentPagePrefix": "\ud83d\udee0 ",
+        "decoys": [
+          {
+            "fileKey": "rdhBS9t89V42E7EfiPjmSa",
+            "fileName": "Southleft V5",
+            "why": "The ORIGINAL Southleft V5 file, retired 2026-08-28 when the project repointed to the copy-of-Altitude being rebuilt as Southleft (spec sl-figma-parity-stress-test). Same display name as the new file of record - a refresh routed here would observe the wrong file silently, hence the decoy guard."
+          }
+        ]
+      },
+      "paths": {
+        "figmaSyncDir": ".altitude/figma-sync/southleft",
+        "parityManifest": ".altitude/figma-sync/southleft/parity-manifest.json",
+        "opsDir": ".altitude/figma-sync/southleft/ops",
+        "instanceMap": "scripts/figma-atoms/instance-map.southleft.mjs"
+      },
+      "library": {
+        "workspace": "@southleft/al-web-components",
+        "root": "libs/al-web-components",
+        "tagPrefix": "al-",
+        "$componentsComment": "SCOPE. Southleft's design system is the subset of @southleft/al-web-components that southleft.com actually ships, not the whole 105-component Altitude catalog. Derived from `grep -rhoE '<al-[a-z0-9-]+' apps/southleft/src --include=*.astro` and re-checkable with scripts/check-sl-scope.mjs. Adding a component to the SITE is what earns it a place here; keep the two in step or the DS documents things Southleft does not use and the parity list fills with noise.",
+        "components": [
+          "al-breadcrumbs",
+          "al-breadcrumbs-item",
+          "al-button",
+          "al-card",
+          "al-chip",
+          "al-drawer",
+          "al-footer",
+          "al-header",
+          "al-heading",
+          "al-icon",
+          "al-input",
+          "al-layout",
+          "al-link",
+          "al-list",
+          "al-list-item",
+          "al-logo",
+          "al-stat",
+          "al-table",
+          "al-testimonial",
+          "al-text-block",
+          "al-theme"
+        ],
+        "//excludeTitlePrefixes": "SCOPE, not presentation. Story titles under these prefixes are not COMPONENTS of this design system, so parity must not report them as missing in Figma. This used to live under `storybook`, which was wrong twice over: it is a library-scope concern, and it made the field disappear when Southleft's Storybook was retired on 2026-08-23.",
+        "excludeTitlePrefixes": [
+          "Foundations/"
+        ]
+      },
+      "$brandLibraryComment": "THE SECOND LAYER. `library` above is SHARED \u2014 Altitude documents all of @southleft/al-web-components and Southleft documents 21 of it \u2014 so nothing brand-specific can live there. The page sections that ARE Southleft (hero, cta band, marquee, media card, logo wall, section header, page hero, and the brand header/footer) are a separate package, @southleft/sl-web-components, built on top of Altitude. They had their own Storybook until it was retired on 2026-08-23, which is when they stopped being documented anywhere: apps/docs read one manifest. Declaring the layer here is what puts them back on /docs/southleft, and it is generic \u2014 any project may declare one.",
+      "brandLibrary": {
+        "workspace": "@southleft/sl-web-components",
+        "root": "libs/sl-web-components",
+        "tagPrefix": "al-",
+        "$supersedesComment": "SAME TAG, BRAND IMPLEMENTATION. A brand layer publishes al-* tags like everything else \u00e2\u0080\u0094 one namespace, so a page is authored in al-* and never mixes two (spec 2026-08-23-one-al-namespace-across-brand-and-base). Where a brand component MODIFIES a base one they share the tag outright: `al-header` and `al-footer` here are Southleft's, and the app imports this package's module instead of the base one, so exactly one definition exists at runtime. `supersedes` maps the tag to itself to say that this is deliberate override rather than an accidental collision \u00e2\u0080\u0094 the docs site documents the brand implementation under that tag and drops the base record for this project.",
+        "supersedes": {
+          "al-card": "al-card",
+          "al-header": "al-header",
+          "al-footer": "al-footer"
+        }
+      },
+      "prompts": {
+        "skillName": "altitude-figma-sync",
+        "skillPath": ".claude/skills/altitude-figma-sync/SKILL.md",
+        "skillTrapCount": 32,
+        "atomsScriptsDir": "scripts/figma-atoms",
+        "parityScriptsDir": "scripts/figma-parity",
+        "docPath": ".altitude/FIGMA-SYNC.md",
+        "guardrailsDoc": "AGENTS.md"
+      },
+      "excluded": {
+        "al-theme-switcher": "Owns no pixels \u2014 an al-button + al-popover + al-menu composition; a Figma set would duplicate three components.",
+        "al-icon": "Icons are a 1,512-glyph Phosphor catalog resolved by name, not a component set \u2014 nothing for a per-set parity check to bind to.",
+        "al-theme": "The theming HOST \u2014 sets brand/mode/density tokens on :host and owns no pixels of its own. Nothing for Figma to mirror.",
+        "al-layout": "Arrangement primitive with no Figma set of its own, by design (COVERAGE.md:19; layout.scss display:contents host) - composites degrade it to a coarse auto-layout frame, which is the documented behaviour, not drift."
+      },
+      "docs": {
+        "//": "Southleft's Storybook was retired (2026-08-23). The multi-brand docs site at apps/docs serves this project at /docs/southleft/, generated from the same CEM, so a second Storybook was duplicating it. `route` is what apps/docs already derives for a non-default project; `productionBase` is where that lands when deployed.",
+        "route": "/southleft",
+        "$componentsComment": "DOCS SCOPE, and deliberately NOT the same thing as `library.components` above. Southleft's docs now show every component in the shared library, so a reader browsing /docs/southleft sees the same catalog Altitude documents, rendered under the Southleft brand. `library.components` is untouched and still means what it always meant \u2014 the subset southleft.com actually ships \u2014 which is what Figma parity builds its list from (the Southleft V5 file has sets for those, not for all 70), what scripts/check-sl-scope.mjs re-derives from apps/southleft/src, and what scripts/check-brand-conformance.mjs reads. Collapsing the two would have flooded the Southleft parity manifest with 50 components that file has never contained and switched the scope gate off entirely. Two fields, two questions: what this system SHIPS vs. what its docs SHOW.",
+        "components": "all",
+        "productionBase": "https://altitude.pages.dev/docs/southleft",
+        "theme": {
+          "//": "southleft.com boots ink (dark) and sets contrast=\"more\" on its <al-theme> (apps/southleft/src/layouts/Base.astro) - the docs previews render under the same axes so a first-time visitor sees the docs the way the site ships (spec 2026-08-28-southleft-docs-parity-with-example-site, R8). The mode toggle still persists and overrides.",
+          "defaultMode": "dark",
+          "contrast": "more"
+        }
+      }
+    }
+  }
+}

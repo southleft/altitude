@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-stepper-item.schema.json",
+  "title": "ALStepperItem (al-stepper-item)",
+  "description": "Component: al-stepper-item",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-stepper-item",
+    "className": "ALStepperItem",
+    "module": "components/stepper-item/stepper-item.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The label for each stepper item",
+        "name": ""
+      },
+      {
+        "description": "The icon that displays next to the label",
+        "name": "icon"
+      },
+      {
+        "description": "The description that displays below the label",
+        "name": "description"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-stepper-item"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'vertical'",
+          "type": "string"
+        },
+        "isActive": {
+          "description": "Is active?\n- A visual representation of a step with an active/current state",
+          "type": "boolean"
+        },
+        "isComplete": {
+          "description": "Is complete?\n- A visual representation of a step with a completed state",
+          "type": "boolean"
+        },
+        "isLast": {
+          "description": "Is last?\n- A visual representation of the last step within an ALStepper\n- Dynamically set by the parent",
+          "type": "boolean"
+        },
+        "stepNumber": {
+          "description": "Step number\n- The number that appears for each step\n- Dynically set by the parent",
+          "type": "number"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

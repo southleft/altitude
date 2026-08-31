@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-avatar.schema.json",
+  "title": "ALAvatar (al-avatar)",
+  "description": "Component: al-avatar",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-avatar",
+    "className": "ALAvatar",
+    "module": "components/avatar/avatar.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The avatar content. Slot an `<img alt=\"…\">` for a user photo, a single-letter initial string, or an `<al-icon-*>` placeholder. The host **renders as a circle by default** (no `variant` / `shape` attribute is needed for the circular form). The accessible name comes from slotted content — supply meaningful `alt` text on `<img>` or visible initials; a bare `aria-hidden` decorative avatar leaves the avatar unlabeled.",
+        "name": ""
+      },
+      {
+        "description": "Optional small status indicator rendered as a corner overlay (only honored when `hasBadge` is set).",
+        "name": "badge"
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-avatar"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'sm'",
+          "type": "string"
+        },
+        "hasBadge": {
+          "description": "Has Badge?\n- If true, shows the badge on the outside of the avatar circle\n- If false, hides the badge",
+          "type": "boolean"
+        },
+        "badgeVariant": {
+          "description": "Badge state variant\n- **default** Displays a badge with the default state\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+          "type": "string",
+          "enum": [
+            "success",
+            "warning",
+            "danger"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

@@ -1,1 +1,3 @@
-export * from './Tab';
+'use client';
+
+export * from './Tab.js';

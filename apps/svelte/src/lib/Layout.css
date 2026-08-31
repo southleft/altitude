@@ -6,6 +6,7 @@
  * Dashboard
  */
 .al-l-dashboard {
+  position: relative;
   max-height: 100vh;
 }
 
@@ -17,16 +18,30 @@
   max-height: 100vh;
 }
 
-/**
+/*
  * Dashboard body
+ * - The block rhythm is set through `--al-layout-padding`, the hook
+ *   `<al-layout>` exposes for exactly this. It needs no wrapper element and
+ *   no `display` override: `:host` is `display: contents`, but custom
+ *   properties still INHERIT through it to the shadow `.al-c-layout` box
+ *   that does the painting (layout.scss). The component also resets every
+ *   `--al-layout-*` hook on `::slotted(*)`, so this value cannot leak into
+ *   the nested layouts inside.
+ * - Block-only on purpose. Under `variant="constrained"` the inline insets
+ *   are gutter TRACKS; inline padding would stack on top of them and push
+ *   the content column off its measure.
  */
 .al-l-dashboard__body {
-  display: flex;
-  padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
+  --al-layout-padding: var(--al-theme-space-lg) 0 var(--al-theme-space-super) 0;
 }
 
 /**
  * Dashboard sidebar
+ * - Kept on a plain wrapper `<div>`, NOT on `<al-layout>` itself, for the
+ *   same `display: contents` reason as `.al-l-dashboard__body` above:
+ *   position/height/z-index/background/box-shadow need a real box to render
+ *   against. Direction/justify/full-height arrangement is owned by a nested
+ *   `<al-layout direction="column" justify="between" fullHeight>`.
  */
 .al-l-dashboard__sidebar {
   position: sticky;
@@ -36,9 +51,6 @@
   z-index: var(--al-z-index-500);
   background-color: var(--al-theme-color-background-default);
   box-shadow: var(--al-theme-box-shadow);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 
   @media all and (max-width: 768px) {
     display: none;
@@ -47,10 +59,11 @@
 
 /**
  * Dashboard sidebar logo
+ * - Same wrapper-`<div>` reasoning as `.al-l-dashboard__sidebar`: min-height/
+ *   padding/border need a real box. Row/align arrangement is owned by a
+ *   nested `<al-layout direction="row" align="center">`.
  */
 .al-l-dashboard__sidebar-logo {
-  display: flex;
-  align-items: center;
   min-height: var(--al-theme-layout-height-header);
   padding: 0 var(--al-theme-space);
   border-bottom: 1px solid var(--al-theme-color-border-default);
@@ -58,6 +71,11 @@
 
 /**
  * Dashboard sidebar menu
+ * - `<al-menu>` is not an `<al-layout>` and has no `grow` prop, so it can't
+ *   pick up flex-growth declaratively; this class overrides the component's
+ *   own `:host { display: contents }` (an unlayered app rule beats the
+ *   layered `al.component` rule) so the menu becomes a real flex child that
+ *   grows to fill the sidebar's free space.
  */
 .al-l-dashboard__sidebar-menu {
   flex: 1;
@@ -79,20 +97,17 @@
 
 /**
  * Dashboard user
+ * - `<al-card>`'s shadow host is ALSO `:host { display: contents }`
+ *   (card.scss), same as `<al-layout>`, so this class stays on the plain
+ *   `<div slot="trigger">` wrapper that holds the card, not on `<al-card>`
+ *   itself. Row/align/justify/gap arrangement is owned by `<al-card
+ *   variant="bare" layout="inline">` (`.al-c-card__body` is already
+ *   `flex: 1`, replacing the old `p { flex: 1 }`); this class keeps only the
+ *   trigger affordance (cursor, click-target padding).
  */
 .al-l-dashboard__user {
   cursor: pointer;
-  width: 100%;
   padding: var(--al-theme-space);
-  display: flex;
-  gap: var(--al-theme-space);
-  align-items: center;
-  justify-content: space-between;
-
-  p {
-    display: flex;
-    flex: 1;
-  }
 }
 
 /**
@@ -121,4 +136,23 @@
 .al-l-dashboard__menu-link--header {
   display: block;
   margin-block-start: 12px;
+}
+
+/**
+ * Dashboard shell - a fixed-width sidebar beside a fluid content column.
+ *
+ * This used to be `<al-layout variant="sidebar-left">`. The design system no
+ * longer ships a sidebar variant; the page owns its own track list via
+ * `--al-layout-template`, which inherits through the shadow boundary into
+ * `<al-layout variant="grid">`. `noCollapse` on the element turns off the
+ * built-in single-column collapse so the responsive story is defined here.
+ */
+.al-l-dashboard__shell {
+  --al-layout-template: 1fr;
+}
+
+@media all and (min-width: 768px) {
+  .al-l-dashboard__shell {
+    --al-layout-template: calc(var(--al-theme-layout-width-sidebar, 40%) - var(--al-theme-space-xs)) minmax(0, 1fr);
+  }
 }

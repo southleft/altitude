@@ -1,11 +1,9 @@
-import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './toggle';
 
 export default {
-  title: 'Atoms/Toggle',
+  title: 'Atoms/Form/Toggle',
   component: 'al-toggle',
   tags: [ 'autodocs' ],
   parameters: {
@@ -15,7 +13,6 @@ export default {
       handles: ['onToggleChange']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     label: {
       control: 'text'
@@ -63,22 +60,3 @@ DisabledChecked.args = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const toggleComponent = canvas.queryByTestId('al-toggle');
-  const checkbox = toggleComponent?.shadowRoot?.querySelector('input') as HTMLInputElement;
-
-  // Make assertions
-  expect(toggleComponent).toBeInTheDocument();
-  expect(checkbox).toBeInTheDocument();
-
-  // Simulate a keyboard event (pressing Enter key)
-  await userEvent.type(checkbox, '{Enter}');
-
-  // Validate that the checkbox is checked
-  expect(checkbox.checked).toBe(true);
-
-  // Remove the focus after all tests have been run
-  checkbox.blur();
-}

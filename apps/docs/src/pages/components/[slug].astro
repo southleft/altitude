@@ -1,0 +1,24 @@
+---
+/**
+ * ROUTE ONLY — one component page per component in the DEFAULT project's scope.
+ *
+ * The body is `src/components/pages/ComponentDetailPage.astro`, shared with
+ * `src/pages/[project]/components/[slug].astro`. `getStaticPaths` is the
+ * generator's contract: the route list IS the scoped registry, so a component
+ * added to the library (or to a project's allowlist) gets a page, and one
+ * removed loses its page, with no edit here.
+ */
+import ComponentDetailPage from '../../components/pages/ComponentDetailPage.astro';
+import { DEFAULT_CONTEXT } from '../../lib/context.mjs';
+
+export function getStaticPaths() {
+  return DEFAULT_CONTEXT.registry.components.map((component) => ({
+    params: { slug: component.slug },
+    props: { component },
+  }));
+}
+
+const { component } = Astro.props;
+---
+
+<ComponentDetailPage context={DEFAULT_CONTEXT} component={component} />

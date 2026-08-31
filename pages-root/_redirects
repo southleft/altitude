@@ -1,0 +1,46 @@
+# Cloudflare Pages redirects for the whole published site.
+#
+# WHY THIS FILE EXISTS. The site root served apps/home (the AI showcase
+# homepage, dist/index.html) while the DOCS — the thing people come here for —
+# sat a click away at /docs/. Landing on the docs is the intent, so the root
+# now sends visitors there.
+#
+# WHY A REDIRECT RATHER THAN SERVING THE DOCS AT `/`. Moving apps/docs to
+# base:'/' would collide with the Southleft marketing site. The docs app emits
+# its scoped design-system pages under `southleft/` (dist/docs/southleft/...,
+# served at /docs/southleft/), and apps/southleft publishes the MARKETING site
+# to dist/southleft/ (astro.config.mjs base:'/southleft'). Rebase the docs to
+# the root and both want /southleft/ — two different sites merging into one
+# directory, with build:all's order silently deciding which files survive.
+# Serving the docs at `/` therefore means relocating the marketing site first;
+# it is not a one-line base change. It would also mean rebasing every docs
+# asset path, the pagefind index (`pagefind --site ../../dist/docs`) and the
+# gates that hardcode dist/docs (gate:docs-panels, check:coverage).
+#
+# NOTHING SERVES `/` ANY MORE. apps/home was dropped from build:all on
+# 2026-08-27 ("i dont want to show it"), so no step writes dist/index.html and
+# this redirect is the only thing answering the root. The app's source is still
+# in the repo, parked and built by nothing -- see the "//build:app-home" note in
+# the root package.json.
+#
+# IT WOULD WORK EITHER WAY. Cloudflare's rule is
+# explicit: "Redirects are always followed, regardless of whether or not an
+# asset matches the incoming request."
+# (developers.cloudflare.com/pages/configuration/redirects/) -- so the rule fired
+# even while dist/index.html still existed, which is how it was verified live
+# before the homepage was dropped.
+#
+# `302`, NOT `301`, ON PURPOSE. A permanent redirect is cached hard by browsers
+# and CDNs and is genuinely painful to walk back — anyone who loaded the root
+# once keeps getting sent to /docs/ long after the rule changes. Keep it
+# temporary until the docs-at-root question above is actually settled, then
+# promote it.
+#
+# SCOPE: `/` matches the root path ONLY. A splat (`/*`) would capture the whole
+# site, including /docs/ itself, and loop.
+#
+# HOW THIS REACHES THE ROOT. `pnpm run copy:pages-root` copies pages-root/ into
+# dist/ during build:all, so this lands at dist/_redirects -- the same mechanism
+# as _headers beside it. See pages-root/README.md.
+
+/    /docs/    302

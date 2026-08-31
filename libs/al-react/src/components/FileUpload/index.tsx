@@ -1,1 +1,3 @@
-export * from './FileUpload';
+'use client';
+
+export * from './FileUpload.js';

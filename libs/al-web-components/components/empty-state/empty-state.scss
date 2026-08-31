@@ -1,0 +1,51 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #EMPTY STATE
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  .al-c-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--al-theme-space-xs);
+    padding: calc(var(--al-theme-space) * 3) var(--al-theme-space);
+    max-inline-size: 32rem;
+    margin-inline: auto;
+  }
+
+  .al-c-empty-state__icon {
+    --al-icon-width: #{var(--al-theme-icon-xxl)};
+    --al-icon-height: #{var(--al-theme-icon-xxl)};
+    --al-icon-fill: var(--al-theme-color-content-default-weak);
+
+    display: flex;
+    margin-block-end: var(--al-theme-space-xs);
+  }
+
+  .al-c-empty-state__heading {
+    @include al-theme-typography-heading-sm-bold;
+    margin: 0;
+    color: var(--al-theme-color-content-default);
+  }
+
+  .al-c-empty-state__description {
+    @include al-theme-typography-body-sm;
+    margin: 0;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .al-c-empty-state__actions {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--al-theme-space-xs);
+    margin-block-start: var(--al-theme-space-sm);
+  }
+}

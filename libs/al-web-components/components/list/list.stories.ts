@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../heading/heading';
 import '../list-item/list-item';
 import './list';
@@ -15,7 +14,6 @@ export default {
       handles: ['select']
     }
   },
-  decorators: [ withActions ],
 };
 
 const Template = (args) => html`
@@ -176,11 +174,11 @@ export const WithExpandableList = () => html`
 
 export const Horizontal = Template.bind({});
 Horizontal.args = {
-  orientation: 'horizontal'
+  direction: 'row'
 };
 
 export const HorizontalOverflow = Template.bind({});
 HorizontalOverflow.args = {
-  orientation: 'horizontal',
+  direction: 'row',
   behavior: 'overflow'
 };

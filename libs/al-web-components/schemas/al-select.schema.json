@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-select.schema.json",
+  "title": "ALSelect (al-select)",
+  "description": "Component: al-select",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-select",
+    "className": "ALSelect",
+    "module": "components/select/select.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The select content",
+        "name": ""
+      },
+      {
+        "description": "If content is slotted, it will display in place of the fieldNote property",
+        "name": "field-note"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the errorNote property",
+        "name": "error"
+      }
+    ],
+    "events": [
+      {
+        "name": "onSelectOpen",
+        "description": "Fired when the option list opens. Detail: `{ active }` — always `true`."
+      },
+      {
+        "name": "onSelectClose",
+        "description": "Fired when the option list closes. Detail: `{ active }` — always `false`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-select"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isActive": {
+          "description": "is Active",
+          "type": "boolean"
+        },
+        "isActiveDropdown": {
+          "description": "is Active select\n1. Select is open when set to true. Close when set to false",
+          "type": "boolean"
+        },
+        "fieldId": {
+          "description": "The unique id of the select",
+          "type": "string"
+        },
+        "title": {
+          "description": "The select's title",
+          "type": "string"
+        },
+        "label": {
+          "description": "The select's label",
+          "type": "string"
+        },
+        "name": {
+          "description": "The select's name attribute",
+          "type": "string"
+        },
+        "value": {
+          "description": "The select's value attribute",
+          "type": "string"
+        },
+        "placeholder": {
+          "description": "Placeholder attribute\n- Specifies a short hint that describes the expected value of an input element",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "The select field note",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "The select error note",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria describedby\n1. Used to connect the field note in select to the select menu for accessibility",
+          "type": "string"
+        },
+        "isRequired": {
+          "description": "The select's required attribute",
+          "type": "boolean"
+        },
+        "isOptional": {
+          "description": "Optional state\n- Specifies that a field is optional and adds the text 'optional' to the label",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "The select's disabled attribute",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state",
+          "type": "boolean"
+        },
+        "isReadonly": {
+          "description": "Readonly attribute\n- Specifies that an input field is read-only",
+          "type": "boolean"
+        },
+        "hideLabel": {
+          "description": "Hide the label?",
+          "type": "boolean"
+        },
+        "hasSearch": {
+          "description": "Add a search input to the dropdown panel",
+          "type": "boolean"
+        },
+        "align": {
+          "description": "**Select alignment**\n- **bottom** Dropdown panel appears on the bottom\n- **top** Dropdown panel appears on the top",
+          "type": "string",
+          "enum": [
+            "bottom",
+            "top"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

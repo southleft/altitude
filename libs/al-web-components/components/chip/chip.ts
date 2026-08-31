@@ -9,8 +9,19 @@ import styles from './chip.scss';
 
 /**
  * Component: al-chip
- * - **slot**: The chip content
- */
+ * @slot - The chip content
+ *
+ * @event onChipClose - Fired when the chip's remove control is activated. Carries no detail payload; read the chip's own properties from `event.target`.
+  *
+ * @cssproperty --al-chip-background - Chip surface. Defaults to `--al-theme-color-background-default-strong`.
+ * @cssproperty --al-chip-color - Label colour. Defaults to `--al-theme-color-content-default-weak`.
+ * @cssproperty --al-chip-border - Border shorthand. Defaults to `none`.
+ * @cssproperty --al-chip-border-radius - Corner radius. Defaults to `4px`.
+ * @cssproperty --al-chip-padding - Padding shorthand. Defaults to `space-xxs space-sm`.
+ * @cssproperty --al-chip-gap - Gap between label and icon. Defaults to `space-xs`.
+ * @cssproperty --al-chip-font-family - Label family. Defaults to `inherit`.
+ * @cssproperty --al-chip-cursor - Defaults to `pointer`; set `default` for a non-interactive chip.
+*/
 export class ALChip extends ALElement {
   static el = 'al-chip';
 

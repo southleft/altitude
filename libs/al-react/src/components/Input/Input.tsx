@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALInput as ALWebInput } from 'al-web-components/dist/components/input/input';
-import register from 'al-web-components/dist/directives/register';
+import { ALInput as ALWebInput } from '@southleft/al-web-components/components/input';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebInput.el, ALWebInput],
@@ -13,5 +15,7 @@ export const ALInput = createComponent({
   react: React,
   tagName: elementMap.get(ALWebInput.el),
   elementClass: ALWebInput,
-  events: {}
+  events: {
+    onInputChange: 'onInputChange'
+  }
 });

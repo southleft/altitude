@@ -1,26 +1,22 @@
-import { ALCalendar } from 'al-react/dist/src';
-import FPo from "./Fpo";
+import { ALCalendar, ALEmptyState, ALLayout } from '@southleft/al-react';
 
 const Home = () => {
+  // gap="md", not "lg": the original class was `al-u-gap--lg`, a dead spelling
+  // (spacing.scss emits single-dash `.al-u-gap-lg` only), so the grid always
+  // rendered `.al-u-grid`'s own base gap — `--al-theme-space` (md).
   return (
-    <div className="al-u-grid al-u-gap--lg" style={{height: "100%"}}>
+    <ALLayout variant="grid" gap="md" fullHeight style={{ '--al-layout-min-height': '100%' }}>
       <div className="al-u-grid__item col:7@md">
-        <FPo>
-          Coming soon
-        </FPo>
+        <ALEmptyState heading="Coming soon"></ALEmptyState>
       </div>
       <ALCalendar className="al-u-grid__item col:5@md row:2@md"></ALCalendar>
       <div className="al-u-grid__item col:7@md">
-        <FPo>
-          Coming soon
-        </FPo>
+        <ALEmptyState heading="Coming soon"></ALEmptyState>
       </div>
       <div className="al-u-grid__item col:12@md">
-        <FPo>
-          Coming soon
-        </FPo>
+        <ALEmptyState heading="Coming soon"></ALEmptyState>
       </div>
-    </div>
+    </ALLayout>
   );
 };
 

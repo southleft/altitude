@@ -1,0 +1,105 @@
+@use '../../styles/component' as *;
+/* ------------------------------------*\
+  #STAT
+\*------------------------------------ */
+
+@layer al.component {
+  :host {
+    display: contents;
+  }
+
+  /**
+   * Bordered KPI tile. Padding/radius/border/background follow the same
+   * shape as the design system's canonical stat-card contract.
+   */
+  .al-c-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--al-theme-space-xs);
+    padding: var(--al-theme-space-md);
+    border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius));
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    background-color: var(--al-theme-color-background-default);
+  }
+
+  .al-c-stat__icon {
+    --al-icon-width: #{var(--al-theme-icon-lg)};
+    --al-icon-height: #{var(--al-theme-icon-lg)};
+    --al-icon-fill: var(--al-theme-color-content-default-weak);
+
+    display: flex;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .al-c-stat__value {
+    @include al-theme-typography-display-sm-bold;
+    color: var(--al-stat-value-color, var(--al-theme-color-content-default));
+  }
+
+  .al-c-stat__label {
+    @include al-theme-typography-body-sm;
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .al-c-stat__description {
+    @include al-theme-typography-body-xs;
+    color: var(--al-theme-color-content-default-weak);
+    margin: 0;
+  }
+
+  .al-c-stat__trend {
+    @include al-theme-typography-body-xs;
+    display: flex;
+    align-items: center;
+    gap: var(--al-theme-space-xxs);
+    margin-block-start: var(--al-theme-space-sm);
+    color: var(--al-theme-color-content-default-weak);
+  }
+
+  .al-c-stat__trend-icon {
+    --al-icon-width: #{var(--al-theme-icon-sm)};
+    --al-icon-height: #{var(--al-theme-icon-sm)};
+  }
+
+  /**
+   * Trend polarity — default mapping: up = success, down = danger.
+   */
+  .al-c-stat--trend-up .al-c-stat__trend {
+    color: var(--al-theme-color-content-success-default);
+
+    .al-c-stat__trend-icon {
+      --al-icon-fill: var(--al-theme-color-content-success-default);
+    }
+  }
+
+  .al-c-stat--trend-down .al-c-stat__trend {
+    color: var(--al-theme-color-content-danger-default);
+
+    .al-c-stat__trend-icon {
+      --al-icon-fill: var(--al-theme-color-content-danger-default);
+    }
+  }
+
+  /**
+   * invertPolarity flips ONLY the color mapping for metrics where lower is
+   * better (cost, latency, churn). The chevron direction never changes.
+   */
+  .al-c-stat--invert-polarity.al-c-stat--trend-up .al-c-stat__trend {
+    color: var(--al-theme-color-content-danger-default);
+
+    .al-c-stat__trend-icon {
+      --al-icon-fill: var(--al-theme-color-content-danger-default);
+    }
+  }
+
+  .al-c-stat--invert-polarity.al-c-stat--trend-down .al-c-stat__trend {
+    color: var(--al-theme-color-content-success-default);
+
+    .al-c-stat__trend-icon {
+      --al-icon-fill: var(--al-theme-color-content-success-default);
+    }
+  }
+}

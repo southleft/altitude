@@ -1,9 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './accordion';
 import '../accordion-panel/accordion-panel';
-import '../../.storybook/components/f-po/f-po';
 
 export default {
   title: 'Molecules/Accordion',
@@ -15,26 +13,25 @@ export default {
       handles: ['onAccordionPanelOpen', 'onAccordionPanelClose']
     },
   },
-  decorators: [ withActions ],
 };
 
 const Template = (args) => html`
   <al-accordion ${spread(args)}>
-    <al-accordion-panel>
-      <div slot="header">Label</div>
-      <f-po>Accordion Panel</f-po>
+    <al-accordion-panel ?isActive=${true}>
+      <div slot="header">What ships in v2?</div>
+      <p>New neutrals, retired floating labels, segmented steppers, pill chips, and a mono metadata layer.</p>
     </al-accordion-panel>
     <al-accordion-panel>
-      <div slot="header">Label</div>
-      <f-po>Accordion Panel</f-po>
+      <div slot="header">Is it breaking?</div>
+      <p>Only where you relied on the floating label or the old stepper markup. Tokens keep their names; a handful change value.</p>
     </al-accordion-panel>
     <al-accordion-panel>
-      <div slot="header">Label</div>
-      <f-po>Accordion Panel</f-po>
+      <div slot="header">Can I theme it?</div>
+      <p>Yes — every value resolves through <code>&lt;al-theme&gt;</code>, so a brand can repoint the ramps without touching component code.</p>
     </al-accordion-panel>
     <al-accordion-panel ?isDisabled=${true}>
-      <div slot="header">Label</div>
-      <f-po>Accordion Panel</f-po>
+      <div slot="header">Migration guide (coming soon)</div>
+      <p>Published alongside the v2 release.</p>
     </al-accordion-panel>
   </al-accordion>
 `;

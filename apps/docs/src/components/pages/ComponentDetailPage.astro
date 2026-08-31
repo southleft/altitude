@@ -1,0 +1,267 @@
+---
+/**
+ * Component detail — the canvas's "Button spec" screen, generalized to every
+ * component in the manifest AND to every design system that documents it.
+ *
+ * The body lives here rather than in a route file because N routes now produce
+ * it: `/components/<slug>` for the registry's default project and
+ * `/<id>/components/<slug>` for every other. Same body, different context.
+ *
+ * The canvas designed one screen, for one component, with its 14 props typed
+ * into the mock's `propRows` array. This page is that screen rebuilt as a
+ * template: the route list, the title, the tag, the React wrapper name, the
+ * playground controls, the emitted HTML/React snippets and every table row
+ * come from `registry.mjs` — i.e. from
+ * `libs/al-web-components/custom-elements.json` and nothing else. Adding a
+ * prop to a component in the library adds a row here.
+ */
+import Shell from '../../layouts/Shell.astro';
+import PropsTable from '../PropsTable.astro';
+import Playground from '../Playground.astro';
+import ParityPanel from '../ParityPanel.astro';
+import ChecksPanel from '../ChecksPanel.astro';
+import GuidancePanel from '../GuidancePanel.astro';
+import { exampleFor } from '../../lib/examples.mjs';
+
+interface Props {
+  /** The design-system context this page belongs to (lib/context.mjs). */
+  context: any;
+  /** The component record, already resolved from that context's registry. */
+  component: any;
+}
+
+const { context, component } = Astro.props;
+const { project, href } = context;
+
+/*
+ * The preview markup, taken from this component's own Storybook story
+ * (lib/examples.mjs). `null`-ish when the story cannot be represented as static
+ * markup, in which case Playground.astro falls back to its manifest-only mount
+ * and says so rather than showing an empty stage without explanation.
+ */
+const example = await exampleFor(component);
+
+/** Two-column rows (name + description) reused for slots / parts / methods. */
+const pairTable = (rows, nameKey = 'name') =>
+  rows.map((row) => ({ name: row[nameKey], description: row.description }));
+---
+
+<Shell
+  context={context}
+  title={component.name}
+  description={component.summary || `${component.name} (${component.tag}) — ${context.site.fullName} component reference.`}
+  active="components"
+  activeSlug={component.slug}
+  liveComponents
+>
+  <div class="page">
+    <!-- EXEMPT: single-line header bars (breadcrumb row, title row) — kept
+         as CSS, matching the topbar/footer exemption (spec
+         2026-08-28-southleft-docs-parity-with-example-site, R4/R5). -->
+    <div class="detail-crumbs">
+      <span class="micro">
+        COMPONENTS / {component.tier.toUpperCase()} / {component.tag}
+      </span>
+      <a class="micro micro--blue" href={href('/components')}>← ALL COMPONENTS</a>
+    </div>
+
+    <div class="detail-title">
+      <h1 class="t-page-title">{component.name}</h1>
+      <span class="chip-tag">&lt;{component.tag}&gt;</span>
+      {component.react && <span class="chip-tag chip-tag--weak">&lt;{component.react}&gt; REACT</span>}
+      {
+        component.status && (
+          <span class={`status status--${component.status}`}>{component.status}</span>
+        )
+      }
+    </div>
+
+    <p class="t-body-md detail-lede">
+      {
+        component.summary ||
+          `Reference generated from the custom elements manifest — ${component.props.length} properties, ${component.slots.length} slots, ${component.events.length} events.`
+      }
+    </p>
+
+    <!-- Playground first: the reader arrives wanting to see the component, so it
+         sits directly under the title/lede, above the authored guidance. -->
+    <Playground component={component} project={project} example={example} />
+
+    <!-- Design guidance — authored, cited to source, and gate-checked. Absent
+         guidance renders as an explicit note rather than nothing; see
+         GuidancePanel.astro. -->
+    <GuidancePanel component={component} project={project} />
+
+    <!-- Status panels, generated at build time from the parity manifests and
+         the axe report. They qualify the component the reader just played with:
+         whether the design file agrees with it, and what a machine found wrong
+         with it. -->
+    <ParityPanel tag={component.tag} project={project} />
+    <ChecksPanel component={component} />
+
+    <div class="section-rule"><span>INSTALL</span><span class="section-rule__raw">{component.importPath}</span></div>
+    <pre class="code code--inline detail-install">{`import '${component.importPath}';${
+      component.react ? `\nimport { ${component.react} } from '@southleft/al-react';` : ''
+    }`}</pre>
+
+    <div class="section-rule">
+      <span>API — {component.props.length} PROPS</span>
+      <span>{component.props.filter((p) => p.description).length} DOCUMENTED</span>
+    </div>
+    <PropsTable rows={component.props} />
+
+    <div class="section-rule"><span>SLOTS</span><span>{component.slots.length}</span></div>
+    {
+      component.slots.length ? (
+        // EXEMPT: .spec-table rows are TABULAR data semantics, not section
+        // arrangement — kept as CSS grid throughout this page.
+        <div class="spec-table spec-table--pair">
+          <div class="spec-table__head">
+            <span>SLOT</span>
+            <span>DESCRIPTION</span>
+          </div>
+          {pairTable(component.slots).map((row) => (
+            <div class="spec-table__row">
+              <span class="spec-table__name">{row.name}</span>
+              <span class="spec-table__type">{row.description || '—'}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="empty-note">THIS COMPONENT DECLARES NO SLOTS IN THE MANIFEST.</p>
+      )
+    }
+
+    <div class="section-rule"><span>EVENTS</span><span>{component.events.length}</span></div>
+    {
+      component.events.length ? (
+        <div class="spec-table spec-table--props">
+          <div class="spec-table__head">
+            <span>EVENT</span>
+            <span>DESCRIPTION</span>
+            <span>TYPE</span>
+          </div>
+          {component.events.map((event) => (
+            <div class="spec-table__row">
+              <span class="spec-table__name">{event.name}</span>
+              <span class="spec-table__type">{event.description || '—'}</span>
+              <span class="spec-table__default">{event.type}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="empty-note">THIS COMPONENT DECLARES NO EVENTS IN THE MANIFEST.</p>
+      )
+    }
+
+    {
+      component.cssParts.length > 0 && (
+        <>
+          <div class="section-rule">
+            <span>CSS PARTS</span>
+            <span>{component.cssParts.length}</span>
+          </div>
+          <div class="spec-table spec-table--pair">
+            <div class="spec-table__head">
+              <span>PART</span>
+              <span>DESCRIPTION</span>
+            </div>
+            {component.cssParts.map((part) => (
+              <div class="spec-table__row">
+                <span class="spec-table__name">{part.name}</span>
+                <span class="spec-table__type">{part.description || '—'}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )
+    }
+
+    {
+      component.cssProperties.length > 0 && (
+        <>
+          <div class="section-rule">
+            <span>CSS CUSTOM PROPERTIES</span>
+            <span>{component.cssProperties.length}</span>
+          </div>
+          <div class="spec-table spec-table--props">
+            <div class="spec-table__head">
+              <span>PROPERTY</span>
+              <span>DESCRIPTION</span>
+              <span>DEFAULT</span>
+            </div>
+            {component.cssProperties.map((prop) => (
+              <div class="spec-table__row">
+                <span class="spec-table__name">{prop.name}</span>
+                <span class="spec-table__type">{prop.description || '—'}</span>
+                <span class="spec-table__default">{prop.default}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )
+    }
+
+    {
+      component.methods.length > 0 && (
+        <>
+          <div class="section-rule">
+            <span>PUBLIC METHODS</span>
+            <span>{component.methods.length}</span>
+          </div>
+          <div class="spec-table spec-table--pair">
+            <div class="spec-table__head">
+              <span>METHOD</span>
+              <span>DESCRIPTION</span>
+            </div>
+            {component.methods.map((method) => (
+              <div class="spec-table__row">
+                <span class="spec-table__name">{method.name}()</span>
+                <span class="spec-table__type">{method.description || '—'}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )
+    }
+
+    <p class="detail-source micro">
+      SOURCE — {component.modulePath} · {component.storyTitle ?? 'NO STORY'}
+    </p>
+  </div>
+</Shell>
+
+<style>
+  .detail-crumbs {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .detail-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 14px 0 8px;
+    flex-wrap: wrap;
+  }
+
+  .detail-title .t-page-title {
+    margin: 0;
+  }
+
+  .detail-lede {
+    margin: 0 0 36px;
+    max-width: 640px;
+  }
+
+  .detail-install {
+    margin-bottom: 44px;
+  }
+
+  .detail-source {
+    padding: 20px 0 64px;
+    border-top: 1px solid var(--line-weak);
+  }
+</style>

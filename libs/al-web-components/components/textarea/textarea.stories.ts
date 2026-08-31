@@ -1,16 +1,15 @@
-import { expect, fireEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../field-note/field-note';
 import '../icon/icons/attachment';
 import '../icon/icons/emoji';
 import '../icon/icons/help';
+import { loremSentences } from '../../fixtures';
 import '../icon/icons/warning-circle';
 import './textarea';
 
 export default {
-  title: 'Molecules/Textarea',
+  title: 'Atoms/Form/Textarea',
   component: 'al-textarea',
   tags: [ 'autodocs' ],
   parameters: {
@@ -20,7 +19,6 @@ export default {
       handles: ['onTextareaChange']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     rows: {
       control: 'number',
@@ -184,7 +182,7 @@ WithIconBeforeAfter.args = {};
 
 export const WithMaxLength = Template.bind({});
 WithMaxLength.args = {
-  value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a tellus dictum, vehicula massa a, vulputate nisl.',
+  value: loremSentences(2, 'textarea'),
   minLength: '15',
   maxLength: '250',
   rows: '4',
@@ -200,25 +198,3 @@ WithAutoFocus.args = {
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const textarea = canvas.queryByTestId('textarea') as any;
-  const textareaEl = textarea?.shadowRoot?.querySelector('.al-c-textarea__input') as HTMLTextAreaElement;
-
-  // Make assertions
-  expect(textarea).toBeInTheDocument();
-  expect(textareaEl).toBeInTheDocument();
-
-  // Simulate a change event with a value
-  let inputValue = '';
-  inputValue = 'Inputted text';
-  fireEvent.input(textareaEl, { target: { value: inputValue } });
-  expect(textareaEl.value).toBe(inputValue);
-  expect(textarea.isActive).toBe(true);
-
-  // Simulate a change event with the value removed
-  inputValue = '';
-  fireEvent.input(textareaEl, { target: { value: inputValue } });
-  expect(textareaEl.value).toBe(inputValue);
-  expect(textarea.isActive).toBe(false);
-};

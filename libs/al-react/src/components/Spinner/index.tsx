@@ -1,1 +1,3 @@
-export * from './Spinner';
+'use client';
+
+export * from './Spinner.js';

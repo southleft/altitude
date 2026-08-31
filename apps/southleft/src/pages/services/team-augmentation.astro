@@ -1,0 +1,137 @@
+---
+// Team Augmentation & Embedded Engineering — spec 2026-08-20-southleft-example-app, T10.
+// Content migrated verbatim from southleft-v5's src/pages/services/team-augmentation.astro.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { CTA } from '../../lib/site';
+import { withBase } from '../../lib/url';
+
+const allWork = await getCollection('work');
+const workBySlug = (slug: string) => allWork.find((w) => w.id.replace(/\.md$/, '') === slug);
+const caseStudies = ['outside-inc', 'ibm-investor-relations', 'better-com-real-estate'].map(workBySlug).filter((w) => w !== undefined);
+
+const allPosts = await getCollection('insights');
+const postBySlug = (slug: string) => allPosts.find((p) => p.id.replace(/\.md$/, '') === slug);
+const relatedPosts = [
+  'how-southleft-partners-with-agencies-and-digital-teams',
+  'partnering-with-enterprise-clients-in-a-modern-approach-to-web-development',
+]
+  .map(postBySlug)
+  .filter((p) => p !== undefined);
+
+const audiences = [
+  { title: 'Roadmap outpacing headcount', body: 'Product orgs with a design systems roadmap but not enough senior hands to ship it on schedule.' },
+  { title: 'Specialist depth, defined push', body: 'Teams that need deep expertise — tokens, Web Components, accessibility, MCP integration — for a specific initiative.' },
+  { title: 'Agencies & studios', body: 'Agencies that need a trusted engineering partner behind the scenes. It\'s a long-standing part of the Southleft model since the beginning.' },
+];
+
+const getItems = [
+  { name: 'Embedded senior engineers', desc: 'Design systems, front-end, and AI-integration engineers working in your tools and rituals — your repos, your standups, your roadmap.' },
+  { name: 'Strategy & stack evaluation', desc: 'Tech stack evaluation and digital strategy input across React, Vue, Svelte, and Web Components — so you make informed decisions, not default ones.' },
+  { name: 'Audits & QA', desc: 'Performance and accessibility audits, plus QA testing woven into the delivery rhythm rather than bolted on at the end.' },
+  { name: 'Deliberate knowledge transfer', desc: 'Pairing, code review, and documentation. The engagement is designed to make your team stronger, not dependent.' },
+];
+
+const flexPoints = [
+  'Retainer-based capacity that fits your planning cycle.',
+  'Part-time or full-time allocations, scoped to your roadmap.',
+  'Scales up or down as the roadmap shifts; no long ramp, no lock-in.',
+  'Weekly 30-minute syncs and a shared Slack channel with the engineers themselves.',
+];
+---
+
+<Base
+  title="Team Augmentation & Embedded Engineering"
+  description="Senior design systems and front-end engineers embedded in your team — augmenting capability, not just capacity. A decade with Outside Inc, IBM Investor Relations, Better.com."
+>
+  <div class="sl-section--tight">
+    <PageHero
+      label="team-augmentation"
+      heading="Team augmentation & embedded engineering"
+      dek="We go beyond traditional consulting to augment your in-house team's capabilities. Our engineers embed directly in your workflows — your repos, your standups, your roadmap — bringing deep design systems and front-end expertise while transferring skills to your team along the way. You gain more than delivery: you acquire skills and insights that pay dividends long after our engagement ends."
+    >
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-layout direction="row" wrap gap="xs" align="center">
+          <al-button href={withBase(CTA.href)}>Discuss an embedded engagement</al-button>
+          <al-button variant="tertiary" href={withBase('/work')}>See the track record</al-button>
+        </al-layout>
+      </div>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Not body-shop staffing</al-heading>
+    <al-text-block maxWidth="sm">Augmentation here means senior engineers who raise the level of the team they join — and leave behind skills, patterns, and documentation when they go.</al-text-block>
+    <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+      {audiences.map((a) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <al-card style="height:100%; box-sizing:border-box;">
+            <div slot="header"><al-heading tagName="h3" variant="sm" isBold={true}>{a.title}</al-heading></div>
+            <al-text-block>{a.body}</al-text-block>
+          </al-card>
+        </div>
+      ))}
+    </al-layout></div>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>What an embed brings</al-heading>
+    <al-text-block maxWidth="sm">Delivery is the floor. The point is what your team can do after we leave.</al-text-block>
+    <al-list style="margin-top: var(--al-theme-space-xl);">
+      {getItems.map((g) => <al-list-item><strong>{g.name}</strong> — {g.desc}</al-list-item>)}
+    </al-list>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-heading tagName="h2" variant="lg" isBold={true}>Capacity that flexes with your roadmap</al-heading>
+    <al-list style="margin-top: var(--al-theme-space-lg);">
+      {flexPoints.map((point) => <al-list-item>{point}</al-list-item>)}
+    </al-list>
+  </div>
+
+  {caseStudies.length > 0 && (
+    <div class="sl-container sl-section">
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout gap="sm">
+          <al-heading tagName="h2" variant="lg" isBold={true}>Embedded, for the long haul</al-heading>
+          <al-text-block maxWidth="sm">Ten years alongside Outside Inc. Augmenting Lullabot's team on IBM Investor Relations. Multi-faceted platform work with Better.com's internal teams.</al-text-block>
+        </al-layout>
+      </div>
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+        {caseStudies.map((w) => <div class="al-u-grid__item col:12 col:4@md"><WorkCard project={w} /></div>)}
+      </al-layout></div>
+      <div style="margin-top: var(--al-theme-space-lg);">
+        <al-testimonial attribution="Todd Hodgson" data-testimonial-role="Director of Product Management, Outside Inc.">
+          Southleft was instrumental in helping us improve our user experience while simultaneously
+          increasing traffic and revenue.
+        </al-testimonial>
+      </div>
+    </div>
+  )}
+
+  {relatedPosts.length > 0 && (
+    <div class="sl-container sl-section">
+      <div style="margin-block-end: var(--al-theme-space-xl);">
+        <al-layout direction="row" justify="between" align="end" wrap gap="lg">
+          <al-layout gap="sm" grow>
+            <al-heading tagName="h2" variant="lg" isBold={true}>How the partnership model works</al-heading>
+            <al-text-block maxWidth="sm">We've documented the agency-partner and embedded model publicly since 2023.</al-text-block>
+          </al-layout>
+          <al-link href={withBase('/insights')}>All insights →</al-link>
+        </al-layout>
+      </div>
+      <div style="margin-top: var(--al-theme-space-xl);"><al-layout variant="grid" noCollapse>
+        {relatedPosts.map((p) => <div class="al-u-grid__item col:12 col:6@md"><ArticleCard post={p} /></div>)}
+      </al-layout></div>
+    </div>
+  )}
+
+      <CTABand
+      heading="Need senior hands on your roadmap?"
+      dek="Tell us where the roadmap outruns the team — we'll tell you honestly whether an embed is the right shape."
+    />
+</Base>

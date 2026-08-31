@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALDivider as ALWebDivider } from 'al-web-components/dist/components/divider/divider';
-import register from 'al-web-components/dist/directives/register';
+import { ALDivider as ALWebDivider } from '@southleft/al-web-components/components/divider';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebDivider.el, ALWebDivider],

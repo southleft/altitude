@@ -1,0 +1,1716 @@
+/* App-layout CSS — spec 2026-08-20-southleft-example-app, T1.
+ *
+ * ALTITUDE-ONLY RULE: this file may only declare GRID / POSITIONING rules
+ * (container widths, sticky header, section rhythm via `--al-theme-space-*`).
+ * No hardcoded colors, radii, fonts or shadows — those all come from the
+ * `southleft` brand tokens through the `.al-u-*` utility classes and the
+ * al-* components themselves. `scripts/check-altitude-only.mjs` greps this
+ * file (and the build output) for violations.
+ */
+
+/* ------------------------------------------------------------------ *\
+   LIGHT-DOM RESET (spec 2026-08-22-southleft-example-1-to-1-parity, T1)
+\* ------------------------------------------------------------------ */
+
+/* Altitude's `core/reset.scss` (the `box-sizing: border-box` reset) is pulled
+ * into `styles/component.scss` — i.e. into every component's SHADOW root —
+ * but NOT into `styles/main.scss`, the global bundle this app imports
+ * (Base.astro:8). So inside an `al-*` component everything is border-box,
+ * while this app's own light-DOM markup silently falls back to the browser
+ * default `content-box` plus `body { margin: 8px }`.
+ *
+ * Two measured consequences before this block existed, both reported as
+ * "the header container isn't matching the ref site":
+ *   1. `body`'s 8px UA margin inset the whole page — the sticky header
+ *      measured x=8 w=1424 in a 1440 viewport instead of the reference's
+ *      x=0 w=1440 full-bleed.
+ *   2. `.sl-header__bar` resolved as content-box, so its `max-width: 85rem`
+ *      capped the CONTENT box at 1360px and the padding pushed the border
+ *      box to 1456px — wider than the available 1424px, so the bar never
+ *      centred and its measure ran 64px wide of the reference's 1360px.
+ *
+ * `.sl-container` already carried a local `box-sizing: border-box` for
+ * exactly this reason; this generalises that one-off fix to the whole app.
+ * The library-level gap is filed separately — it affects every consumer app,
+ * not just this one, and fixing it here keeps that change out of this spec. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* The reference pins its footer to the bottom of short pages with
+ * `body { min-height: 100vh; display: flex; flex-direction: column }` +
+ * `main { flex: 1 }` + `footer { margin-top: auto }`. Altitude's
+ * `core/base.scss` already makes `body` a flex column, so only the height
+ * floor and the growing main are missing. `.sl-page` (this app's painted
+ * canvas, below) is the flex child that has to carry them. */
+.sl-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.sl-page > main {
+  flex: 1;
+}
+
+.sl-container {
+  width: 100%;
+  /* T12 audit-2 round (A2): exact v5 `container-sl` metrics — 1360px max,
+   * `clamp(1.25rem, 4vw, 3rem)` side gutters (resolves to 48px at 1440,
+   * matching the orchestrator's live measurement). Previously 84rem/1344px
+   * with a flat 24px gutter — a round-3-era approximation. */
+  max-width: 85rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  box-sizing: border-box;
+}
+
+.sl-container--prose {
+  max-width: 45rem; /* ~720px, mirrors v5's container-prose */
+  margin-inline: auto;
+}
+
+/* v5's `max-w-md` (28rem/448px) width cap — `al-text-block`'s `maxWidth`
+ * prop only exposes a binary `sm` step, not a scale, so it can't reproduce
+ * this cap (T12 audit-3 round). Used on plain `<p>` elements where the
+ * component's own typography isn't otherwise needed. */
+.sl-measure-md {
+  max-width: 28rem;
+}
+
+/* `<al-theme>` is `display: contents` (theme.scss) — it never paints a box
+ * of its own, only its `:host([mode]/[brand])` custom properties. Without a
+ * painted canvas somewhere INSIDE it, the ink/paper toggle only recolors
+ * individual components (each paints its own shadow-DOM background) and
+ * leaves the page's own background showing through between them. `.sl-page`
+ * is that canvas — a plain DOM child of `<al-theme>`, so it inherits the
+ * scoped token normally (display:contents does not break custom-property
+ * inheritance), sized to at least the viewport so there's no gap below a
+ * short page. */
+.sl-page {
+  min-height: 100vh;
+  /* `--al-theme-color-background-default-weak` directly (not the
+   * `--al-theme-color-body-background` alias `styles/core/base.scss` uses
+   * for `body`): the alias is declared once in the unscoped `:root` bundle
+   * and never restated in `<al-theme>`'s `:host([mode])` partial, so on a
+   * page with a runtime mode TOGGLE (not just a fixed brand/mode at load)
+   * it does not reliably re-resolve when `mode` changes at runtime. The
+   * `-weak` leaf IS restated per mode (dist-v5/scss/host/tokens-mode-*.scss)
+   * and is what the alias points at in the first place. */
+  background: var(--al-theme-color-background-default-weak);
+  /* Same fix, for TEXT color. `styles/core/base.scss` sets `body { color:
+   * var(--al-theme-color-content-default); }` — a regular (non-custom) CSS
+   * property, so what INHERITS down from `body` is the value already
+   * resolved there (against the unscoped `:root` bundle), not a live
+   * formula. Un-slotted content inside `<al-text-block>` etc. (this app's
+   * migrated markdown bodies — plain `<p>`/`<h2>` with no component of
+   * their own) inherits that frozen value straight through al-theme's
+   * `display: contents`, so a runtime mode toggle silently left body copy
+   * unreadable (near-white on the paper background) until this
+   * re-declaration gives it a fresh, correctly-scoped resolution. */
+  color: var(--al-theme-color-content-default);
+  /* v5's "faint" border and grid-line motifs (global.css) are
+   * `color-mix(... var(--sl-border) N%, transparent)` over the SAME
+   * ink-600/paper-300 step the theme already exposes as
+   * `--al-theme-color-border-default-weak` — re-deriving them here (once,
+   * inherited by header/hero/chips/terminal/rules below) keeps every faint
+   * hairline in this app expressed as a token formula, never a raw hex. */
+  --sl-border-faint: color-mix(in srgb, var(--al-theme-color-border-default-weak) 55%, transparent);
+  --sl-grid-line: color-mix(in srgb, var(--al-theme-color-border-default-weak) 45%, transparent);
+  /* T12 audit-2 (A4) — self-hosted IBM Plex Mono (public/fonts/, @font-face
+   * in fonts.css), NOT the generic Altitude `--al-font-family-mono` token
+   * (`ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` — the
+   * `southleft` brand recipe doesn't override it with IBM Plex Mono, a
+   * token-authoring gap documented not fixed here). Every mono surface in
+   * this app reads `--sl-font-mono`, not the Altitude token directly. */
+  --sl-font-mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+  /* v5's `.text-lead` (`--sl-text-lead`, global.css) — fluid 18px→22px,
+   * reaching 22px at wide desktop viewports (T12 audit-3 height closure —
+   * live-measured 22px at 1440, not the flat 18px round-6 approximated). */
+  --sl-text-lead: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+}
+
+/* ------------------------------------------------------------------------
+ * Announcement strip — spec 2026-08-20-southleft-example-app, T12 round 5.
+ * v5's real markup (index.astro ~L100-106) is a bespoke full-width,
+ * CENTERED, mono `text-xs` link on the "sunken" canvas step, no icon, no
+ * underline (`al-banner` renders all three, plus left-alignment) — so this
+ * is a plain `<a>` styled entirely by this file, same rationale as the
+ * header rebuild. `--sl-bg-sunken` (v5) is ink-950 (dark) / paper-200
+ * (light); the dark step has no semantic `--al-theme-color-background-*`
+ * rung of its own (the darkest is `-weak`, one step up from ink-950) so
+ * this reaches for the brand PRIMITIVE directly per mode, the same
+ * escape hatch `.sl-terminal` already documents above.
+ * -------------------------------------------------------------------- */
+.sl-announcement {
+  display: block;
+  border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: var(--al-color-brand-ink-950);
+  padding-block: 0.625rem;
+  text-align: center;
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-default-weak);
+  text-decoration: none;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+al-theme[mode='light'] .sl-announcement {
+  background: var(--al-color-brand-paper-200);
+}
+
+.sl-announcement:hover {
+  color: var(--al-theme-color-content-default);
+}
+
+.sl-announcement__new {
+  color: var(--al-theme-color-content-primary-default);
+}
+
+/* ------------------------------------------------------------------------
+ * Header — spec 2026-08-20-southleft-example-app, T12 (round 4). Structural
+ * transcription of v5's Header.astro: sticky, translucent + blurred, an
+ * 80px/64px bar, wordmark-only logo, nav pushed right via `margin-inline-
+ * start: auto`, rounded-full pill nav items (active = filled well), two
+ * 36px circular icon buttons, a small pill CTA, and a numbered mobile panel.
+ * -------------------------------------------------------------------- */
+/* `<al-header sticky>` (Header.astro) owns the landmark, the stacking context
+ * and the sticky behaviour now; `.sl-header` only feeds it the brand's chrome
+ * through the component's own custom properties. These have to be properties
+ * rather than plain declarations: `al-header`'s `:host` is `display: contents`,
+ * so the shadow-root `<header>` is the only box on the page and nothing out
+ * here can style it directly.
+ *
+ * `padding: 0` because the page measure is the nested
+ * `<al-layout variant="constrained">`, not the header's own padding — two
+ * sources of inline padding would double the gutter. */
+.sl-header {
+  --al-header-padding: 0;
+  --al-header-min-height: 4rem; /* 64px — mobile, v5's `h-16` */
+  --al-header-background: color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent);
+  --al-header-border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
+  --al-header-backdrop-filter: blur(12px);
+}
+
+@media (min-width: 48rem) {
+  .sl-header {
+    --al-header-min-height: 5rem; /* 80px — desktop, v5's `md:h-20` */
+  }
+}
+
+/* The reference's page measure, as an `<al-layout variant="constrained">`
+ * recipe rather than a bespoke max-width wrapper.
+ *
+ * v5's `.container-sl` is `max-width: 1360px` INCLUDING `padding-inline:
+ * clamp(1.25rem, 4vw, 3rem)`, so its CONTENT column is 1360 − 2×48 = 1264px
+ * at desktop. `al-layout`'s `measure` is the content column itself and its
+ * gutters are separate tracks, so 79rem (1264px) + the same clamp reproduces
+ * `.container-sl` exactly at every width — measured x=88 w=1264 at a 1440
+ * viewport, matching the reference. */
+.sl-measure {
+  --al-layout-measure: 79rem;
+  --al-layout-gutter: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* `.sl-header__bar` is now the `<al-layout direction="row">` ITSELF, not a
+ * wrapper around one. Everything this rule used to declare has moved to the
+ * element that properly owns it:
+ *   - measure (max-width / margin-inline / padding-inline) → the enclosing
+ *     `<al-layout variant="constrained">` via `.sl-measure`
+ *   - bar height → `--al-header-min-height` on `<al-header>`
+ *   - row direction / centring / gap → al-layout's own props
+ *
+ * DO NOT reintroduce `display: flex` here. An `<al-layout>` host is
+ * `display: contents` (layout.scss `:host`), and a document rule targeting
+ * the host BEATS the shadow root's `:host` rule — so a `display` here would
+ * re-materialise the host box and make the layout's inner `.al-c-layout` div
+ * the single shrink-to-fit flex item of it. That was the original defect:
+ * with no free space in that box, `margin-inline-start: auto` on `.sl-header__nav`
+ * and `.sl-header__actions` became no-ops and the whole bar hugged the left
+ * gutter with ~270px of dead space at 1440px. */
+
+.sl-header__logo {
+  display: inline-flex;
+  align-items: center;
+  color: var(--al-theme-color-content-default);
+  text-decoration: none;
+  /* ~18px tall wordmark, matches v5's `h-4 md:h-[18px]` — pierces al-logo's
+   * shadow boundary via its own documented `--al-logo-max-height` hook. No
+   * tagline is slotted below (see Header markup) — v5's real header has no
+   * "By Southleft" copy next to the mark, only the wordmark itself. */
+  --al-logo-max-height: 18px;
+}
+
+/* `<nav>` is kept purely for the landmark and its `aria-label` — the pill row
+ * inside it is an `<al-layout direction="row" gap="xs">`, so the alignment and
+ * gap that used to live here are gone. All that remains is the responsive
+ * show/hide, which is a decision about the NAV, not about arrangement. */
+.sl-header__nav {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .sl-header__nav {
+    display: block;
+  }
+}
+
+.sl-header__nav-link {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--al-theme-border-radius-role-action);
+  padding: var(--al-theme-space-xs) var(--al-theme-space);
+  color: var(--al-theme-color-content-default-weak);
+  text-decoration: none;
+  transition:
+    background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-header__nav-link:hover {
+  color: var(--al-theme-color-content-default);
+}
+
+/* Active page = filled pill (well background, full foreground) — matches
+ * v5's `isActive ? 'text-fg bg-bg-well' : 'text-fg-muted hover:text-fg'`. */
+.sl-header__nav-link--active {
+  color: var(--al-theme-color-content-default);
+  background: var(--al-theme-color-background-default-strong);
+}
+
+/* The actions cluster is an `<al-layout direction="row" align="center"
+ * gap="sm">` and needs NO rule of its own. It used to carry
+ * `margin-inline-start: auto` to shove itself right; that could not survive
+ * the move to al-layout, because an al-layout host is `display: contents` and
+ * margins on a `display: contents` box are dropped entirely — its inner
+ * `.al-c-layout` div is the real flex item, and the margin never reaches it.
+ *
+ * Rather than reach through the shadow boundary to re-apply it, the header
+ * row now says what it means: `justify="between"` with exactly two children
+ * (the wordmark, and one group holding nav + actions). That is the same
+ * visual result the two auto margins were approximating, expressed as an
+ * al-layout prop. See Header.astro. */
+
+@media (min-width: 64rem) {
+  .sl-header__actions {
+    /* Nav already claimed the `margin-inline-start: auto` gap above at this
+     * breakpoint — a small fixed gap (v5's `lg:ml-4`) separates the actions
+     * cluster from the last nav pill instead. */
+    margin-inline-start: var(--al-theme-space);
+  }
+}
+
+/* Shared 36px circular bordered icon button — the palette (AI direction)
+ * trigger and the ink/paper toggle both use this shape in v5; neither is an
+ * al-* component there either (Header.astro/ThemeToggle.astro hand-roll
+ * both), so this is app markup + tokens, matching v5's own approach. */
+.sl-header__icon-btn {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0;
+  border-radius: var(--al-theme-border-radius-role-action);
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: transparent;
+  color: var(--al-theme-color-content-default-weak);
+  cursor: pointer;
+  transition:
+    border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-header__icon-btn:hover {
+  border-color: var(--al-theme-color-border-default-weak);
+  color: var(--al-theme-color-content-default);
+}
+
+/* Palette (AI direction) trigger hovers to the accent, not just full
+ * foreground — matches v5's `hover:border-border hover:text-accent`. */
+.sl-header__icon-btn--accent-hover:hover {
+  color: var(--al-theme-color-content-primary-default);
+}
+
+.sl-header__cta {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .sl-header__cta {
+    display: inline-flex;
+  }
+}
+
+.sl-header__cta al-button {
+  /* v5's header CTA is the SMALL button size (`size="sm"`); al-button has
+   * no size prop, so scope its own padding token down via the component's
+   * documented `--al-button-padding` hook. */
+  --al-button-padding: var(--al-theme-space-xs) var(--al-theme-space);
+}
+
+.sl-header__menu-btn {
+  display: inline-flex;
+}
+
+@media (min-width: 64rem) {
+  .sl-header__menu-btn {
+    display: none;
+  }
+}
+
+/* The panel's measure moved to the enclosing `<al-layout variant="constrained">`
+ * (`.sl-measure`); the block padding stayed here rather than moving to the
+ * inner `<al-layout>` alongside it, because that element is an al-layout host
+ * — `display: contents`, which drops padding exactly as it drops margins —
+ * and al-layout exposes no padding hook. The wrapping `<nav>` is the nearest
+ * element that actually generates a box, so the rhythm lives on it. */
+.sl-header__mobile-nav {
+  border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
+  padding-block: var(--al-theme-space);
+}
+
+@media (min-width: 64rem) {
+  .sl-header__mobile-nav {
+    display: none;
+  }
+}
+
+.sl-header__mobile-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--al-theme-border-radius);
+  padding: var(--al-theme-space-sm);
+  color: var(--al-theme-color-content-default);
+  text-decoration: none;
+}
+
+.sl-header__mobile-nav-link:hover {
+  background: var(--al-theme-color-background-default-strong);
+}
+
+.sl-header__mobile-nav-index {
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-header__mobile-cta {
+  margin-block-start: var(--al-theme-space-sm);
+}
+
+.sl-header__mobile-cta al-button {
+  width: 100%;
+}
+
+/* T8 a11y pass — real finding, app-scoped fix. `al-link` (and any plain <a>
+ * slotted into `al-text-block`, which applies the same `@include al-link`
+ * mixin) colors its text with `--al-theme-color-content-primary-default`,
+ * which resolves to the southleft brand's FIXED red-500 in EVERY mode (the
+ * brand's sparse override has no light/dark split — a token-level gap in
+ * `tier-2/brand/southleft/colors.json`, documented here rather than
+ * touched: that file is a shared brand recipe, not something this app
+ * owns, and re-splitting it by mode is a bigger change than this app's
+ * scope). Against the paper (light) canvas that red measures 2.77:1, well
+ * under the 4.5:1 axe/WCAG AA requires — reproduced on the header nav AND
+ * on plain-text-block links (Figma/MCP prose on /tools), so this is
+ * scoped to the WHOLE light-mode page, not just one section. On ink (dark)
+ * the same pairing already passes, so it's untouched there. Re-pointing
+ * the CUSTOM PROPERTY (which pierces the shadow boundary — the same
+ * mechanism `.altitude/AI-THEME.md` documents) fixes every current and
+ * future light-mode text link without touching the shared token file or
+ * any component. Filled PRIMARY buttons are unaffected — those read
+ * `--al-theme-color-background-primary-default` (a different token) with
+ * their own separately-chosen ink color, not this one. */
+al-theme[mode='light'] {
+  --al-theme-color-content-primary-default: var(--al-theme-color-content-default);
+  --al-theme-color-content-primary-strong: var(--al-theme-color-content-default-weak);
+}
+
+/* `al-text-block`'s `::slotted(a)` / `::slotted(code)` styling (its
+ * shadow root's link color + code treatment) only ever matches DIRECT
+ * slotted children — a fundamental `::slotted()` limitation, not
+ * something either side did wrong. `.sl-prose` marks the `<p>` wrappers
+ * this app uses for prose that mixes inline links/code with running text
+ * (needed so the flex-column layout above treats the WHOLE sentence as
+ * one item — see the `<p>` comment at each usage site), so their nested
+ * `<a>`/`<code>` need their own light-DOM styling instead of inheriting
+ * the component's. Same tokens the component itself would have used. */
+.sl-prose a {
+  color: var(--al-theme-color-content-primary-default);
+  text-decoration: underline;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-prose a:hover {
+  color: var(--al-theme-color-content-primary-strong);
+}
+
+.sl-prose code {
+  background: var(--al-theme-color-background-default-weak);
+  padding-inline: var(--al-theme-space-xs);
+  border-radius: var(--al-theme-border-radius-xs);
+}
+
+/* T12 audit-2 (A1) — v5's real `.section-gap` (global.css) is
+ * `padding-block: calc(clamp(6rem, 8vw, 10rem) / 2)`, resolving to 57.6px
+ * top+bottom at 1440 (the orchestrator's live measurement). The previous
+ * `--al-theme-space-xxl` (32px) was a flat token approximation, 44% short.
+ * Reproduced as the literal formula (not a fixed px) so it stays fluid at
+ * other viewports the same way v5's does. */
+.sl-section {
+  padding-block: calc(clamp(6rem, 8vw, 10rem) / 2);
+}
+
+.sl-section--tight {
+  padding-block: calc(clamp(6rem, 8vw, 10rem) / 4);
+}
+
+/* Two-column media/content band, applied to an <al-layout direction="row" wrap>.
+ * This used to be the al-split-content component; it is theme-level layout, not
+ * design-system behaviour, so it lives here now.
+ * The two columns carry DIFFERENT flex bases on purpose - that is what makes the
+ * band stack intrinsically, at whatever width the content stops fitting, with no
+ * media query. Equal columns would lose that. */
+/* NOTE: the gap comes from the layout's own `gap="xl"` prop, not from here -
+ * <al-layout>'s host is `display: contents`, so the real flex container lives in
+ * its shadow root and a `gap` declared on this class would never apply. The
+ * flex bases below DO apply, because slotted children are styled by the
+ * document. */
+
+.sl-split > [slot='media'],
+.sl-split > .sl-split__media {
+  flex: 1 1 20rem;
+  min-inline-size: 0;
+}
+
+.sl-split > [slot='content'],
+.sl-split > .sl-split__content {
+  flex: 1 1 24rem;
+  min-inline-size: 0;
+}
+
+/* Media first. Default is content first, mirroring the old mediaPosition="end". */
+.sl-split--media-start > .sl-split__media {
+  order: -1;
+}
+
+/* Layout REMOVED — `<al-logo-wall>` owns it now. The host is `display: block`
+ * with the wrapping row inside its shadow root, so a `display: flex` here would
+ * fight it. The gap values were identical (`3rem 3.5rem`) and are the
+ * component's own default; `--al-logo-wall-gap` is the hook if that changes. */
+
+/* `al-heading` / `al-text-block` carry no `:host` display rule of their
+ * own (library gap, not touched here — see T8 verification notes), so the
+ * UA default (`display: inline`) applies whenever this app places them as
+ * direct page content rather than inside a component's flex/grid-managed
+ * slot. Left unfixed, two of them as siblings lay out on the same inline
+ * line (heading text running straight into the paragraph that follows).
+ * Safe app-wide: any flex/grid item still blockifies per spec regardless of
+ * its own `display`, so this changes nothing for the many places these tags
+ * already sit inside a component's managed slot (al-hero, al-card, …). */
+al-heading,
+al-text-block {
+  display: block;
+}
+
+/* T12 audit-2 (A5) — v5's section dek is an 18px "lead" paragraph
+ * (`.text-lead`, 2-3 lines, no hard width cap in the markup itself — the
+ * `flex: 1 1 28rem` on the stack above already caps it in practice) — was
+ * unstyled inherited body text (~14-16px). */
+.sl-section-header__dek {
+  margin: 0;
+  font-size: var(--sl-text-lead);
+  line-height: 1.55;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/* Mono "view all" / inline prose links (v5's `.section-rule`-adjacent "all
+ * insights →" / "all case studies →" and prose links like "Read: ... →") —
+ * lowercase mono, underlined at 40% opacity, full opacity + accent on
+ * hover. Reused by SectionHeader.astro and the POV section. */
+.sl-mono-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--al-theme-space-xxs);
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-info-default);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 4px;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-mono-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.sl-section-header__link {
+  align-self: flex-end;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------------
+ * Media-card meta accent — the last surviving rule of what used to be the
+ * whole `.sl-media-card` treatment.
+ *
+ * The card itself is now `<al-card variant="article">` / `variant="work"` from
+ * @southleft/sl-web-components, which owns the flush-top media, the hairline
+ * border, the well background, the content padding, the mono meta row, the
+ * clamped excerpt, the tag chips and the footer cue. This one class is the
+ * exception: it colours ONE node inside the meta row (the category, in accent)
+ * while its siblings stay muted, and the row's nodes are light-DOM children of
+ * a slot — `::slotted()` reaches them all or none, and cannot pick out one.
+ *
+ * So the page names the node it wants coloured. That is the shadow boundary,
+ * not an omission in the component.
+ * -------------------------------------------------------------------- */
+.sl-media-card__meta-accent {
+  color: var(--al-theme-color-content-primary-default);
+}
+
+/* ------------------------------------------------------------------------
+ * Service-card list bullets — the ONLY part of the "<services> What we do"
+ * card that is still page CSS.
+ *
+ * The card itself is now `<al-card variant="service">` from
+ * @southleft/sl-web-components, which owns the well, the border, the 40px
+ * padding step, the display heading, the corner glyph and the list's mono
+ * treatment. What it cannot own is this: the accent chevron is a `::before`
+ * on each `<li>`, the `<li>`s are light-DOM children of a slotted `<ul>`, and
+ * a pseudo-element on a light-DOM descendant is not addressable from a shadow
+ * root in any browser. `::slotted(ul)` reaches the list and stops there.
+ *
+ * So these two rules stay with the page, scoped to the slot so they cannot
+ * touch anything else. The same rules ship in the component's Storybook story
+ * (card.stories.ts), which is what puts the bullets on the docs preview.
+ * -------------------------------------------------------------------- */
+al-card[variant='service'] ul[slot='list'] li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--al-theme-space-xs);
+}
+
+al-card[variant='service'] ul[slot='list'] li::before {
+  content: '›';
+  color: var(--al-theme-color-content-primary-default);
+}
+
+/* ------------------------------------------------------------------------
+ * Try-the-system ("04/try-the-system") — spec
+ * 2026-08-20-southleft-example-app, T12 audit-2 round (E). Transcribed
+ * from v5's TokenPlayground.astro `<style>` block. `--pg-*` custom
+ * properties are the LOCAL preview's own self-contained demo state (set by
+ * TrySystem.astro's script) — not design tokens, so raw px sizing here
+ * mirrors v5's own local-only `<style>` block exactly. Editor chrome
+ * (fieldset/legend/pills/swatches) reads real `--al-theme-*` tokens.
+ * -------------------------------------------------------------------- */
+.sl-pg-grid {
+  display: grid;
+  gap: var(--al-theme-space-lg);
+  margin-block-start: var(--al-theme-space-xl);
+}
+
+@media (min-width: 64rem) {
+  .sl-pg-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+}
+
+.sl-pg-editor {
+  border-radius: var(--al-theme-border-radius-md);
+}
+
+.sl-pg-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-lg);
+  padding: var(--al-theme-space-lg);
+}
+
+.sl-pg-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.sl-pg-legend {
+  display: block;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  color: var(--al-color-brand-paper-400);
+  margin-block-end: var(--al-theme-space-xs);
+}
+
+.sl-pg-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xs);
+}
+
+.sl-pg-swatch,
+.sl-pg-pill {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.sl-pg-swatch input,
+.sl-pg-pill input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sl-pg-swatch {
+  /*
+   * Declared here with a fallback, though every call site sets it inline
+   * (TrySystem.astro:43-55, each to a real `var(--al-color-brand-*)`). Two
+   * reasons: a swatch rendered without the inline style previously had NO
+   * background at all rather than a visible neutral, and a custom property
+   * that only ever exists in a `style` attribute is invisible to
+   * stylelint's value-no-unknown-custom-properties, which cannot read inline
+   * styles and so reported it as a hallucinated token. The inline value still
+   * wins, so nothing about the rendered swatches changes.
+   */
+  --sw: var(--al-theme-color-background-default-strong);
+
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--al-theme-border-radius-role-action);
+  background: var(--sw);
+  border: 2px solid transparent;
+  transition: transform var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-swatch:hover {
+  transform: translateY(-2px);
+}
+
+.sl-pg-swatch:has(input:checked) {
+  border-color: var(--al-color-brand-paper-50);
+  outline: 2px solid var(--al-color-brand-ink-950);
+  outline-offset: 2px;
+}
+
+.sl-pg-swatch:has(input:focus-visible) {
+  outline: 2px solid var(--al-theme-color-content-info-default);
+  outline-offset: 3px;
+}
+
+.sl-pg-pill span {
+  display: inline-block;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  color: var(--al-color-brand-paper-400);
+  border: 1px solid var(--al-color-brand-ink-600);
+  border-radius: var(--al-theme-border-radius-role-action);
+  padding: 0.35rem 0.8rem;
+  transition:
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-pill:hover span {
+  color: var(--al-color-brand-paper-50);
+}
+
+.sl-pg-pill:has(input:checked) span {
+  color: var(--al-color-brand-ink-950);
+  background: var(--al-color-brand-paper-50);
+  border-color: var(--al-color-brand-paper-50);
+}
+
+.sl-pg-pill:has(input:focus-visible) span {
+  outline: 2px solid var(--al-theme-color-content-info-default);
+  outline-offset: 2px;
+}
+
+.sl-pg-slider input[type='range'] {
+  width: 100%;
+  accent-color: var(--al-color-brand-red-500);
+}
+
+.sl-pg-note {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-500);
+}
+
+.sl-pg-reset {
+  align-self: flex-start;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-500);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-reset:hover {
+  color: var(--al-color-brand-paper-50);
+}
+
+.sl-pg-apply {
+  border-block-start: 1px solid var(--al-color-brand-ink-700);
+  padding-block-start: var(--al-theme-space);
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-xs);
+}
+
+.sl-pg-apply p {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-500);
+}
+
+.sl-pg-apply-btn {
+  align-self: flex-start;
+  font-family: var(--sl-font-mono);
+  font-weight: 500;
+  color: var(--al-color-brand-ink-950);
+  background: var(--al-color-brand-paper-50);
+  border: 0;
+  border-radius: var(--al-theme-border-radius-role-action);
+  padding: 0.55rem 1.2rem;
+  cursor: pointer;
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-apply-btn:hover {
+  background: var(--al-color-brand-paper-200);
+}
+
+/* ---- Stage (local preview) ---- */
+.sl-pg-stage {
+  --pg-accent: var(--al-color-brand-red-500);
+  --pg-radius: 4px;
+  --pg-space: 1;
+  --pg-wdth: 125;
+  --pg-bg: var(--al-color-brand-ink-950);
+  --pg-surface: var(--al-color-brand-ink-800);
+  --pg-fg: var(--al-color-brand-paper-50);
+  --pg-fg-muted: var(--al-color-brand-paper-400);
+  --pg-border: var(--al-color-brand-ink-600);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--al-theme-space-sm);
+  background: var(--pg-bg);
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  border-radius: var(--al-theme-border-radius-md);
+  padding: clamp(1rem, 3vw, 2rem);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--pg-border) 30%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--pg-border) 30%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-stage[data-pg-mode='light'] {
+  --pg-bg: var(--al-color-brand-paper-100);
+  --pg-surface: var(--al-color-brand-paper-0);
+  --pg-fg: var(--al-color-brand-ink-900);
+  --pg-fg-muted: var(--al-color-brand-paper-600);
+  --pg-border: var(--al-color-brand-paper-300);
+}
+
+.sl-pg-app {
+  background: var(--pg-surface);
+  color: var(--pg-fg);
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+  overflow: hidden;
+  transition:
+    background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-app-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-block-end: 1px solid var(--pg-border);
+  font-family: var(--sl-font-mono);
+  font-size: 0.6875rem;
+  color: var(--pg-fg-muted);
+}
+
+.sl-pg-dot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: var(--al-theme-border-radius-role-action);
+  background: var(--pg-accent);
+  transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-badge {
+  margin-inline-start: auto;
+  border: 1px solid var(--pg-border);
+  border-radius: calc(var(--pg-radius) / 2);
+  padding: 2px 7px;
+  transition: border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-app-body {
+  padding: calc(1.6rem * var(--pg-space)) calc(1.6rem * var(--pg-space)) calc(1.8rem * var(--pg-space));
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.9rem * var(--pg-space));
+  transition:
+    padding var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    gap var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-kicker {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--pg-accent);
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-heading {
+  margin: 0;
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.1;
+  font-variation-settings: 'wght' 600, 'wdth' var(--pg-wdth);
+  transition: font-variation-settings var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-copy {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--pg-fg-muted);
+  max-width: 46ch;
+}
+
+.sl-pg-stats {
+  display: flex;
+  gap: calc(1.5rem * var(--pg-space));
+  transition: gap var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.sl-pg-stat strong {
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: 1.5rem;
+  font-variation-settings: 'wght' 600, 'wdth' var(--pg-wdth);
+  color: var(--pg-accent);
+  transition:
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    font-variation-settings var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-stat span {
+  font-family: var(--sl-font-mono);
+  font-size: 0.6875rem;
+  color: var(--pg-fg-muted);
+}
+
+.sl-pg-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.6rem * var(--pg-space));
+  align-items: center;
+}
+
+.sl-pg-input {
+  flex: 1 1 160px;
+  background: transparent;
+  border: 1px solid var(--pg-border);
+  border-radius: calc(var(--pg-radius) * 0.75);
+  color: var(--pg-fg);
+  font-size: 0.875rem;
+  padding: calc(0.55rem * var(--pg-space)) 0.9rem;
+  transition:
+    border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    padding var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-input:focus-visible {
+  outline: 2px solid var(--pg-accent);
+  outline-offset: 1px;
+}
+
+.sl-pg-btn {
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: var(--pg-radius);
+  padding: calc(0.55rem * var(--pg-space)) calc(1.1rem * var(--pg-space));
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    padding var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-btn-primary {
+  background: var(--pg-accent);
+  color: var(--al-color-brand-ink-950);
+}
+
+.sl-pg-btn-ghost {
+  background: transparent;
+  color: var(--pg-fg);
+  border-color: var(--pg-border);
+}
+
+.sl-pg-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.sl-pg-tag {
+  font-family: var(--sl-font-mono);
+  font-size: 0.6875rem;
+  color: var(--pg-fg-muted);
+  border: 1px solid var(--pg-border);
+  border-radius: calc(var(--pg-radius) / 2);
+  padding: 2px 8px;
+  transition: border-radius var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-readout {
+  margin: 0;
+  font-family: var(--sl-font-mono);
+  color: var(--al-color-brand-paper-450);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+al-theme[mode='light'] .sl-pg-readout {
+  color: var(--al-color-brand-paper-600);
+}
+
+.sl-pg-act2 {
+  margin-block-start: var(--al-theme-space-xxl);
+}
+
+.sl-pg-act2-grid {
+  display: grid;
+  gap: var(--al-theme-space-xl);
+  align-items: center;
+  margin-block-start: var(--al-theme-space-lg);
+}
+
+@media (min-width: 64rem) {
+  .sl-pg-act2-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  }
+}
+
+.sl-pg-act2-copy {
+  margin: var(--al-theme-space-xs) 0 0;
+  line-height: 1.6;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-pg-act2-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-sm);
+}
+
+.sl-pg-act2-input {
+  flex: 1 1 14rem;
+  min-inline-size: 0;
+  border-radius: var(--al-theme-border-radius-sm);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  background: var(--al-theme-color-background-default);
+  padding: var(--al-theme-space-sm) var(--al-theme-space);
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-default);
+}
+
+.sl-pg-act2-input::placeholder {
+  color: var(--al-theme-color-content-default-weak);
+}
+
+.sl-pg-act2-input:focus-visible {
+  outline: 2px solid var(--al-theme-color-content-primary-default);
+  outline-offset: 2px;
+}
+
+.sl-pg-act2-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--al-theme-space-xs);
+  margin-block-start: var(--al-theme-space);
+}
+
+.sl-pg-act2-chip {
+  cursor: pointer;
+  border: none;
+  transition:
+    border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
+    color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-pg-act2-chip:hover {
+  color: var(--al-theme-color-content-default);
+  border-color: var(--al-theme-color-content-primary-default);
+}
+
+.sl-pg-closing {
+  max-width: 42rem;
+  margin: var(--al-theme-space-xxl) 0 0;
+  line-height: 1.6;
+  color: var(--al-theme-color-content-default-weak);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sl-pg-app,
+  .sl-pg-app *,
+  .sl-pg-stage {
+    transition: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------------
+ * CTA band — REMOVED. The band is now `<al-cta-band>` from
+ * @southleft/sl-web-components (see components/CTABand.astro). Its
+ * `.sl-c-cta-band__*` rules live in that package's cta-band.scss and
+ * reproduce these four blocks exactly; a second copy here would be one more
+ * thing to hold in step.
+ * -------------------------------------------------------------------- */
+
+
+/* ------------------------------------------------------------------------
+ * Quote card ("07/quotes-from-folks") — spec 2026-08-20-southleft-example-
+ * app, T12 audit-3 (final polish round). v5's real anatomy: a well-bg
+ * hairline-bordered card, ~40px padding, a large accent display-font
+ * opening-quote glyph, a 20px display-font quote (a lighter/wider
+ * Agrandir instance via `font-variation-settings`), and a single mono
+ * "Name — Role" attribution line. `al-testimonial`'s left-border-accent
+ * anatomy can't express this — bespoke markup, component left untouched
+ * for its other consumers (ai-design-systems.astro etc).
+ * -------------------------------------------------------------------- */
+.sl-quote-card {
+  margin: 0;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--al-theme-space-xxl);
+  border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  background: var(--al-theme-color-background-default-strong);
+  border-radius: var(--al-theme-border-radius);
+}
+
+.sl-quote-card__glyph {
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--al-theme-color-content-primary-default);
+}
+
+.sl-quote-card__quote {
+  margin: var(--al-theme-space-xs) 0 0;
+  font-family: var(--al-font-family-secondary, Agrandir, sans-serif);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  font-variation-settings: 'wght' 450, 'wdth' 105;
+  color: var(--al-theme-color-content-default);
+}
+
+.sl-quote-card__attribution {
+  margin: var(--al-theme-space-lg) 0 0;
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  color: var(--al-color-brand-paper-450);
+}
+
+al-theme[mode='light'] .sl-quote-card__attribution {
+  color: var(--al-color-brand-paper-600);
+}
+
+.sl-quote-card__name {
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/* ------------------------------------------------------------------------
+ * Section rule + kicker (v5's motifs M5 / M2) — spec
+ * 2026-08-20-southleft-example-app, T12 (round 4). v5 opens every home-page
+ * section with a hairline rule + mono label ("01 / trusted-by", "02 / the-
+ * shift", …, global.css `.section-rule`) and marks sub-headers with a small
+ * accent mono "<kicker>" line (global.css `.kicker`). Transcribed here as
+ * app-level classes since neither has an al-* equivalent; used directly in
+ * src/pages/index.astro and via components/SectionHeader.astro.
+ * -------------------------------------------------------------------- */
+.sl-section-rule {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space);
+  font-family: var(--sl-font-mono);
+  /* T12 audit-2 (A3) — v5's rule label is 12px (its own `--sl-text-caption`
+   * preset, not the inherited 16px body size this rule previously left
+   * unset) at `letter-spacing: 0.08em` (already correct — 0.08em resolves
+   * to 0.96px at 12px, matching the live measurement; the previous 1.28px
+   * reading was 0.08em of the WRONG 16px base, not a tracking bug). Color
+   * is v5's "subtle" step (`--sl-fg-subtle`, paper-450 dark / paper-600
+   * light) — one step past `--al-theme-color-content-default-weak`
+   * (paper-400/600), which has no distinct "subtle" rung of its own in
+   * dark mode, so this reaches for the brand primitive directly per mode,
+   * the same escape hatch already used for `.sl-terminal`/
+   * `.sl-announcement`. */
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--al-color-brand-paper-450);
+  margin-block-end: var(--al-theme-space-xl);
+}
+
+al-theme[mode='light'] .sl-section-rule {
+  color: var(--al-color-brand-paper-600);
+}
+
+.sl-section-rule::before,
+.sl-section-rule::after {
+  content: '';
+  block-size: var(--al-theme-border-width);
+  background: var(--al-theme-color-border-default-weak);
+  flex: 1 1 auto;
+}
+
+.sl-section-rule::before {
+  flex: 0 0 clamp(1.5rem, 4vw, 3rem);
+}
+
+.sl-kicker {
+  font-family: var(--sl-font-mono);
+  /* v5's `.kicker` preset is 13px (`--sl-text-kicker`), one step up from
+   * `.section-rule`'s 12px (`--sl-text-caption`) — was previously unset
+   * (inheriting the 16px body size, same bug as `.sl-section-rule`). */
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--al-theme-color-content-default-weak);
+  margin: 0;
+}
+
+.sl-kicker--accent {
+  color: var(--al-theme-color-content-primary-default);
+}
+
+/* ------------------------------------------------------------------------
+ * Hero — spec 2026-08-20-southleft-example-app, T12 (round 4). Structural
+ * transcription of v5's hero section (index.astro ~L108-151): the grid-
+ * texture background, v5's exact vertical rhythm (py-20/md:py-28/lg:py-32),
+ * an 18ch-capped h1, and a two-column grid (lead copy + CTAs + token chips
+ * on the left, a static terminal panel on the right, lg+ only) below the
+ * full-width kicker/heading. Not wrapped in `<al-hero>`: that component's
+ * media slot groups the WHOLE content column (including the heading)
+ * alongside media, which doesn't reproduce v5's "heading spans full width,
+ * two columns start below it" composition — same "stop fighting the
+ * component" call as the header. `al-heading` / `al-text-block` / `al-
+ * button` are still used as the primitives inside it.
+ * -------------------------------------------------------------------- */
+/* `isolation: isolate` makes this section its own stacking context, which is
+ * what lets the decorative layers below sit at `z-index: -1` — behind the
+ * hero's content but still in front of the page background.
+ *
+ * That replaces the `position: relative` the old `.sl-hero__inner` wrapper
+ * carried purely to lift copy above the absolutely-positioned texture and
+ * canvas. Positioning cannot move onto the `<al-layout>` that replaced it (a
+ * `display: contents` host has no box to position), and inventing a
+ * `--al-layout-position` hook to work around that would be the wrong fix — a
+ * layout primitive has no business creating stacking contexts. Pushing the
+ * decorations back a layer removes the need for the wrapper entirely. */
+.sl-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
+}
+
+/* v5's `.grid-texture` (global.css) — a 72px baseline grid, radially
+ * masked so it fades out toward the hero's edges. `--sl-grid-line` (set on
+ * `.sl-page` above) already reproduces v5's per-mode `color-mix` formula
+ * over the same token step v5 mixes over. */
+.sl-hero__texture {
+  position: absolute;
+  inset: 0;
+  z-index: -1; /* behind the content, ahead of the page — see `.sl-hero` */
+  background-image:
+    linear-gradient(to right, var(--sl-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--sl-grid-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+  pointer-events: none;
+}
+
+/* The hero's block rhythm now rides on the `<al-layout variant="constrained">`
+ * that also owns the measure, via `--al-layout-padding` — one element instead
+ * of the old `.sl-container` + `.sl-hero__inner` pair. Block-only on purpose:
+ * the inline insets under `constrained` are gutter TRACKS, and inline padding
+ * would stack on top of them and shove the content column off the measure. */
+.sl-hero__inner {
+  --al-layout-padding: 5rem 0; /* py-20 */
+}
+
+@media (min-width: 48rem) {
+  .sl-hero__inner {
+    --al-layout-padding: 7rem 0; /* md:py-28 */
+  }
+}
+
+@media (min-width: 64rem) {
+  .sl-hero__inner {
+    --al-layout-padding: 8rem 0; /* lg:py-32 */
+  }
+}
+
+/* The kicker → heading → grid stack carries `gap="none"` in the markup rather
+ * than a rule here: each step of this rhythm is a different size (the
+ * reference's mt-5 then mt-14), which is content rhythm rather than
+ * arrangement, so the children keep their own margins. */
+
+.sl-hero__heading {
+  margin-block-start: var(--al-theme-space-md);
+  /* `ch` is measured against the element's OWN font — al-heading's shadow
+   * root applies the display typeface + size on an INNER node, so without
+   * this the host (which inherits the page's body sans-serif at its
+   * default size) would compute `ch` against the wrong font entirely,
+   * producing a drastically-too-narrow cap. Mirroring the exact `font`
+   * shorthand the bold `display-lg` variant applies inside the shadow root
+   * makes `ch` resolve against the real rendered glyph metrics — the
+   * task's "18ch measured against the display font itself" — without
+   * changing anything visually (the host paints no text of its own; the
+   * shadow content's own explicit font declaration still wins for what's
+   * actually drawn).
+   *
+   * Reaches for `--al-typography-preset-48-bold` (the tier-1 primitive
+   * `al-heading`'s `display-lg`+bold variant actually applies inside its
+   * shadow root — heading.scss's `al-theme-typography-display-lg-bold`
+   * mixin) rather than the `--al-theme-typography-display-lg-bold` tier-2
+   * alias: the brand's dark/light `:host` partials re-declare the tier-1
+   * primitive per-brand (Agrandir/7rem for `southleft`) but do not
+   * re-declare the tier-2 alias, which stays pinned to the Altitude
+   * default (IBM Plex Sans/3rem) everywhere — a token-authoring gap in the
+   * library, not touched here (out of this app's scope), but worth
+   * reaching around so the `ch` unit isn't computed against the wrong
+   * font. */
+  font: var(--al-typography-preset-48-bold);
+  max-width: 18ch;
+  /* v5 applies `text-wrap: balance` to every h1/h2/h3 sitewide (global.css
+   * `@layer base`). It's the real mechanism behind v5's tight 4-line hero
+   * break — `text-wrap` is a normal INHERITED property, so it crosses into
+   * `al-heading`'s shadow root the same way `color`/`font-family` do (the
+   * shadow rule sets neither `.al-c-heading` display-lg variant nor the
+   * `.al-is-bold` modifier ever declares its own `text-wrap`, so nothing in
+   * there blocks inheritance). Without it, the h1's line box fills the
+   * `18ch` cap edge-to-edge — noticeably WIDER than v5's balanced box even
+   * though the `ch` cap itself measures near-identically (see the T12
+   * round-5 verification note below for the measured numbers) — because
+   * `18ch` alone only caps the MAXIMUM width; it doesn't choose a narrower,
+   * more evenly-broken box the way `balance` does. Scoped to the hero
+   * heading only (not sitewide `al-heading`) — matching the rest of v5's
+   * h1/h2/h3 would be a bigger, unscoped change belonging to a future
+   * round. */
+  text-wrap: balance;
+}
+
+/* Now an `<al-layout variant="grid" noCollapse align="end">`. `noCollapse`
+ * because the single-column stack below `lg` is this file's call, not the
+ * component's `md` default; `--al-layout-template` is the documented escape
+ * hatch for the asymmetric track list, and `--al-layout-gap` for a gap the
+ * `gap` prop's scale cannot name. `align="end"` is the prop, not a rule.
+ *
+ * `margin-block-start` still belongs here rather than as a parent gap: the
+ * hero stack's three steps each use a different rhythm. */
+.sl-hero__grid {
+  --al-layout-template: minmax(0, 1fr);
+  --al-layout-gap: var(--al-theme-space-xxl);
+  margin-block-start: var(--al-theme-space-xxl);
+}
+
+@media (min-width: 64rem) {
+  .sl-hero__grid {
+    --al-layout-template: minmax(0, 1fr) minmax(0, 0.85fr);
+    /* 80px — the reference's `lg:gap-20`, measured. `--al-theme-space-super`
+     * (the nearest token) is 64px, which shifted the 1fr / 0.85fr split off
+     * the reference's 640px / 544px columns by 16px each. */
+    --al-layout-gap: 5rem;
+  }
+}
+
+/* Both columns carry `.al-u-grid__item`, which supplies `min-inline-size: 0`
+ * — without it the terminal's `<pre>` sets a `min-content` floor and pushes
+ * the grid past its track. The lead column is itself an `<al-layout>`, and
+ * that class is also what gives its `display: contents` host a box, so it can
+ * be a grid item at all. Its own `gap="none"` is in the markup, for the same
+ * mixed-rhythm reason as the stack above. */
+
+/* The hero's lead copy — the reference's `.text-lead` + `max-w-2xl`, the same
+ * `--sl-text-lead` recipe the section deks use.
+ *
+ * Goes through `--al-text-block-font` rather than a plain `font-size` on the
+ * host: `al-text-block` sets its own type with a `font` SHORTHAND inside its
+ * shadow root, which resets size and line-height and beats anything inherited
+ * from out here. That hook was added for this. `color` still inherits
+ * normally, so it stays a direct declaration. */
+.sl-hero__lead-copy {
+  display: block;
+  max-width: 42rem; /* max-w-2xl */
+  --al-text-block-font: var(--sl-text-lead) / 1.55 var(--al-font-family-primary, 'IBM Plex Sans', sans-serif);
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/* These two are `<al-layout>`s now, so their rhythm is `--al-layout-padding`
+ * (block-start only) rather than `margin-block-start`. A margin here would be
+ * silently dropped: the host is `display: contents` and has no box to carry
+ * it. Padding lands on the layout's own inner box instead, and looks identical
+ * — neither element paints a background or a border. */
+.sl-hero__actions {
+  --al-layout-padding: 2.25rem 0 0; /* the reference's `mt-9`, measured 36px */
+}
+
+.sl-hero__chips {
+  --al-layout-padding: 3rem 0 0; /* the reference's `mt-12`, measured 48px */
+}
+
+.sl-hero__chip-note {
+  margin-block-start: var(--al-theme-space-sm);
+  margin-block-end: 0;
+  font-family: var(--sl-font-mono);
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/* Terminal panel — hidden below `lg`, matching v5's `hidden lg:block`. */
+.sl-hero__terminal {
+  display: none;
+  min-inline-size: 0;
+}
+
+@media (min-width: 64rem) {
+  .sl-hero__terminal {
+    display: block;
+  }
+}
+
+/* Token chip (v5's motif M1, global.css `.token-chip`). One chip's content
+ * is a literal token/value pair rendered as COPY, not styling — see
+ * src/pages/index.astro for why that string is safe under
+ * scripts/check-altitude-only.mjs (it only greps CSS-declaration-shaped
+ * lines, and that one isn't formatted as one; this comment intentionally
+ * doesn't repeat the literal color value, since THIS file is scanned
+ * unconditionally, comments included). */
+/* The token chips are `<al-chip>` now, so the brand's outlined mono treatment is
+ * applied through the component's own hooks. It has to be done from out here:
+ * al-chip's :host is `display: contents`, so this box is unreachable by an app
+ * selector, and custom properties inherit through the shadow boundary. Same
+ * mechanism `--sl-*` and `--al-logo-wall-filter` already use. */
+.sl-token-chip {
+  --al-chip-font-family: var(--sl-font-mono);
+  --al-chip-color: var(--al-theme-color-content-default-weak);
+  --al-chip-border: var(--al-theme-border-width) solid var(--sl-border-faint);
+  --al-chip-border-radius: var(--al-theme-border-radius-xs);
+  --al-chip-padding: var(--al-theme-space-xxs) var(--al-theme-space-xs);
+  --al-chip-gap: 0.5em;
+  --al-chip-background: color-mix(in srgb, var(--al-theme-color-background-default) 65%, transparent);
+  /* Decorative, not interactive — the row is aria-hidden. */
+  --al-chip-cursor: default;
+}
+
+.sl-token-chip__dot {
+  display: inline-block;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--al-theme-border-radius-role-action);
+  background: var(--al-theme-color-content-primary-default);
+}
+
+/* ------------------------------------------------------------------------
+ * Terminal panel — spec 2026-08-20-southleft-example-app, T12 (round 4).
+ * Transcribed from v5's Terminal.astro + global.css `.terminal*`. v5 colors
+ * this with the raw ink/paper PRIMITIVES (not the mode-aware semantic
+ * tokens) — the terminal always renders as a dark panel regardless of
+ * ink/paper site mode, by design (global.css: `.terminal { background:
+ * var(--sl-color-ink-950); ... }`) — so this reaches for the same brand
+ * PRIMITIVE custom properties (`--al-color-brand-*`), which resolve to the
+ * identical value in both modes, rather than the semantic `--al-theme-
+ * color-*` tokens used everywhere else in this file.
+ * -------------------------------------------------------------------- */
+.sl-terminal {
+  background: var(--al-color-brand-ink-950);
+  color: var(--al-color-brand-paper-100);
+  border: var(--al-theme-border-width) solid var(--al-color-brand-ink-600);
+  border-radius: var(--al-theme-border-radius-md);
+  font-family: var(--sl-font-mono);
+  line-height: 1.7;
+  overflow: hidden;
+}
+
+.sl-terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-xs);
+  padding: var(--al-theme-space-sm) var(--al-theme-space);
+  border-block-end: var(--al-theme-border-width) solid var(--al-color-brand-ink-700);
+  background: var(--al-color-brand-ink-900);
+}
+
+.sl-terminal__dot {
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: var(--al-theme-border-radius-role-action);
+}
+
+.sl-terminal__dot--1 {
+  background: var(--al-color-brand-red-500);
+}
+
+.sl-terminal__dot--2 {
+  background: var(--al-color-brand-paper-400);
+}
+
+.sl-terminal__dot--3 {
+  background: var(--al-color-brand-blue-400);
+}
+
+.sl-terminal__title {
+  margin-inline-start: auto;
+  color: var(--al-color-brand-paper-500);
+}
+
+.sl-terminal__body {
+  padding: var(--al-theme-space-md) var(--al-theme-space-lg);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.sl-terminal__prompt {
+  color: var(--al-color-brand-red-500);
+}
+
+.sl-terminal__cmd {
+  color: var(--al-color-brand-paper-50);
+}
+
+.sl-terminal__out {
+  color: var(--al-color-brand-paper-400);
+}
+
+.sl-terminal__ok {
+  color: var(--al-color-brand-green-500);
+}
+
+.sl-terminal__key {
+  color: var(--al-color-brand-blue-400);
+}
+
+/* Logo wall — matches v5's `.logo-wall-img` treatment exactly (global.css
+ * §"Client logo wall"). `brightness(0)`, not `grayscale(1)`, is the load-
+ * bearing part: it forces every non-transparent pixel to solid BLACK
+ * regardless of the source mark's own internal contrast, so every logo
+ * silhouettes identically — a `grayscale`-only treatment (T9 round 1)
+ * preserves each asset's original luminance and washed out low-contrast
+ * sources (DocuSign's real asset is a near-white wordmark on a near-white
+ * fill — grayscale left it a light-gray smear on the ink canvas even after
+ * `invert`; T9 round 3). `invert(1)` on the ink sheet then flips
+ * black → white, same as every other silhouette. */
+/* The wall is `<al-logo-wall>` now, so its treatment is set through the
+ * component's hooks rather than by reaching at the <img> elements. It has to be
+ * done from OUT HERE: mode is a runtime, persisted user toggle on `al-theme`,
+ * and a shadow root cannot see an ancestor's attribute portably. Custom
+ * properties inherit through the boundary, which is what makes this work.
+ *
+ * Light is the important one — the component's default knock-back flips marks
+ * WHITE, which is invisible on the paper canvas. */
+.sl-logo-wall {
+  --al-logo-wall-filter: brightness(0);
+  --al-logo-wall-opacity-hover: 0.85;
+}
+
+al-theme[mode='dark'] .sl-logo-wall {
+  --al-logo-wall-filter: brightness(0) invert(1);
+  /* Dark hover unwinds the silhouette so each mark shows its real colours. */
+  --al-logo-wall-filter-hover: grayscale(0) invert(0) contrast(1);
+}
+
+/* ------------------------------------------------------------------------
+ * AI layout resolver (T5/T6, spec 2026-08-20-southleft-example-app) — the
+ * app-side half of `src/lib/layout-resolver.ts`. `data-sl-content-width` /
+ * `data-sl-grid-density` are written to `.sl-page` only once a theme has
+ * been generated (default/unset renders exactly as before). Unlayered on
+ * purpose, same reasoning as `.sl-page` above: outranks the layered
+ * `.al-u-grid` utility rule without needing `!important`.
+ * -------------------------------------------------------------------- */
+[data-sl-content-width='narrow'] .sl-container {
+  max-width: 60rem;
+}
+
+[data-sl-content-width='wide'] .sl-container {
+  max-width: 100rem;
+}
+
+/* These target `al-layout[variant='grid']`, not `.al-u-grid`, since spec
+ * 2026-08-22-southleft-example-1-to-1-parity (T9) moved every grid wrapper in
+ * this app onto the layout primitive — the old `.al-u-grid` selectors matched
+ * nothing afterwards, silently making generated-theme grid density a no-op.
+ *
+ * `--al-layout-gap` (added to layout.scss in the same spec) is the supported
+ * hook. The obvious alternative — redefining `--al-theme-space` on the grid —
+ * would inherit straight through the shadow boundary into everything slotted
+ * inside it, retuning the cards' internal spacing as well as the gap between
+ * them. `.al-u-grid` is kept as a second selector for the one wrapper that
+ * could not be converted (an `<a>` acting as a grid row in work/index.astro). */
+[data-sl-grid-density='airy'] al-layout[variant='grid'],
+[data-sl-grid-density='airy'] .al-u-grid {
+  --al-layout-gap: var(--al-theme-space-xl);
+  grid-gap: var(--al-theme-space-xl);
+}
+
+[data-sl-grid-density='dense'] al-layout[variant='grid'],
+[data-sl-grid-density='dense'] .al-u-grid {
+  --al-layout-gap: var(--al-theme-space-xs);
+  grid-gap: var(--al-theme-space-xs);
+}
+
+/* AI direction panel (T6) — al-drawer's own host is `display: contents`
+ * (theme.scss), so it paints no box of its own to position; the floating
+ * trigger is the slotted `<al-button>` itself. `position: fixed` blockifies
+ * it regardless of the button's own inline default (CSS Display §2.7), so
+ * this is safe without any library change. */
+/* T9 round 2 — v5's header carries the "derive your own theme" affordance as
+ * a circular icon button next to the nav, not a floating corner FAB (that
+ * was our own T6 addition, not in v5). Header.astro's icon button is now the
+ * visible entry point; this element stays in the DOM (al-drawer's `trigger`
+ * slot mechanics need a real slotted control) and is proxy-clicked from
+ * there, but is no longer painted or in the tab order itself. */
+.sl-ai-fab {
+  position: fixed;
+  inset-block-end: var(--al-theme-space-lg);
+  inset-inline-end: var(--al-theme-space-lg);
+  z-index: var(--al-z-index-top, 999);
+  display: none;
+}
+
+.sl-ai-panel {
+  min-inline-size: 20rem;
+}
+
+.sl-ai-status {
+  color: var(--al-theme-color-content-default-weak);
+}
+
+/* Live token tree (T7 tools page) */
+.sl-token-search {
+  max-width: 28rem;
+  margin-block-end: var(--al-theme-space-lg);
+}
+
+.sl-token-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--al-theme-space-xl);
+  align-items: start;
+}
+
+.sl-token-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-block-start: var(--al-theme-space-sm);
+  max-block-size: 28rem;
+  overflow-y: auto;
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  border-radius: var(--al-theme-border-radius);
+}
+
+.sl-token-row {
+  display: flex;
+  align-items: center;
+  gap: var(--al-theme-space-sm);
+  padding: var(--al-theme-space-xs) var(--al-theme-space-sm);
+  border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+}
+
+.sl-token-row:last-child {
+  border-block-end: none;
+}
+
+.sl-token-swatch {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: 0 0 auto;
+  border-radius: var(--al-theme-border-radius-sm);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+}
+
+.sl-token-name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.sl-token-value {
+  color: var(--al-theme-color-content-default-weak);
+  white-space: nowrap;
+}
+
+/* Drift-check demo (T7 tools page) */
+.sl-drift-demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--al-theme-space-sm);
+  flex-wrap: wrap;
+}
+
+.sl-drift-report {
+  max-block-size: 24rem;
+  overflow: auto;
+  padding: var(--al-theme-space-sm);
+  background: var(--al-theme-color-background-default-weak);
+  border-radius: var(--al-theme-border-radius);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Motion-respecting transition for live token/layout changes (T6) — only
+ * the properties the AI panel actually touches, and only when the visitor
+ * hasn't asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .sl-page {
+    transition:
+      background-color var(--al-theme-animation-duration-long, 0.4s) var(--al-theme-animation-timing),
+      color var(--al-theme-animation-duration-long, 0.4s) var(--al-theme-animation-timing);
+  }
+
+  .sl-container {
+    transition: max-width var(--al-theme-animation-duration-long, 0.4s) var(--al-theme-animation-timing);
+  }
+}
+
+/* Interior-page hero band. Replaces `<al-hero layout="stacked">`, which was
+ * removed from the design system. The arrangement is an <al-layout> stack; the
+ * band's padding and the eyebrow's hug-not-stretch behaviour are page design,
+ * so they live here. */
+/* .sl-page-hero / __eyebrow — REMOVED. The band is `<al-page-hero>` now
+ * (components/PageHero.astro); its rules live in that package's page-hero.scss.
+ * Note the eyebrow rule here was inert anyway: it sat on `<al-chip>`, whose
+ * :host is `display: contents`, so `align-self` never applied. */

@@ -43,7 +43,10 @@ export const defaultTextConfig: FileUploadTextConfig = {
 
 /**
  * Component: al-file-upload
- * - **slot**: The component's content
+ * @slot - The component's content
+ *
+ * @event onFileUploadFileUpload - Fired when files are added. Detail: `{ uploadedFiles }` — the files accepted by this interaction.
+ * @event onFileUploadFileRemove - Fired when a file is removed. Detail: `{ updatedFiles }` — the remaining files after removal, not the removed one.
  */
 export class ALFileUpload extends ALElement {
   static el = 'al-file-upload';

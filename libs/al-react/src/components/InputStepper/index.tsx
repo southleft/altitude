@@ -1,1 +1,3 @@
-export * from './InputStepper';
+'use client';
+
+export * from './InputStepper.js';

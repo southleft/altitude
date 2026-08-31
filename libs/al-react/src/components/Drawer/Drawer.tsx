@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
 import { createComponent } from '@lit/react';
-import { ALDrawer as ALWebDrawer } from 'al-web-components/dist/components/drawer/drawer';
-import register from 'al-web-components/dist/directives/register';
-import PackageJson from '../../../package.json';
+import { ALDrawer as ALWebDrawer } from '@southleft/al-web-components/components/drawer';
+import register from '@southleft/al-web-components/directives/register';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebDrawer.el, ALWebDrawer],
@@ -13,5 +15,9 @@ export const ALDrawer = createComponent({
   react: React,
   tagName: elementMap.get(ALWebDrawer.el),
   elementClass: ALWebDrawer,
-  events: {}
+  events: {
+    onDrawerClose: 'onDrawerClose',
+    onDrawerCloseButton: 'onDrawerCloseButton',
+    onDrawerOpen: 'onDrawerOpen'
+  }
 });

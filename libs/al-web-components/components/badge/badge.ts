@@ -5,7 +5,7 @@ import styles from './badge.scss';
 
 /**
  * Component: al-badge
- * - **slot**: The badge content
+ * @slot - The badge content
  */
 export class ALBadge extends ALElement {
   static el = 'al-badge';

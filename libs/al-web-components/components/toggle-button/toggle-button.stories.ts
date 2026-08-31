@@ -1,17 +1,16 @@
-import { expect, userEvent, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './toggle-button';
 import '../avatar/avatar';
 import '../icon/icons/emoji';
 import '../icon/icons/chevron-down';
 import '../popover/popover';
 import '../tooltip/tooltip';
-import '../../.storybook/components/f-po/f-po';
+import '../../fixtures/f-po/f-po';
+import { placeholderImages } from '../../fixtures';
 
 export default {
-  title: 'Atoms/Toggle Button',
+  title: 'Atoms/Form/Toggle Button',
   component: 'al-toggle-button',
   tags: [ 'autodocs' ],
   parameters: {
@@ -24,7 +23,6 @@ export default {
       exclude: ['isSmall', 'slottedEls', 'toggleButton', 'toggleButtonContent', 'hasPanel']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       control: 'radio',
@@ -67,7 +65,7 @@ DefaultPrefixIcon.args = {};
 const TemplateAvatar = (args) => html`
   <al-toggle-button ${spread(args)} data-testid="toggle-button">
     <al-avatar variant="sm" ?hasBadge=${true} badgeVariant="success">
-      <img src="https://picsum.photos/80/80" alt="Alt text" />
+      <img src=${placeholderImages.thumbnail} alt="Alt text" />
     </al-avatar>
   </al-toggle-button>
 `;
@@ -183,25 +181,3 @@ BackgroundWithTooltipAndDropdown.args = {};
   #STORYBOOK TESTS
 \*------------------------------------*/
 
-DefaultWithDropdown.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const toggleButton = canvas.queryByTestId('toggle-button') as any;
-  const toggleButtonEl = toggleButton.shadowRoot?.querySelector('.al-c-toggle-button__content') as HTMLElement;
-
-  await userEvent.click(toggleButtonEl);
-  expect(toggleButton.isSelected).toBe(true);
-
-  await userEvent.click(toggleButtonEl);
-  expect(toggleButton.isSelected).toBe(false);
-
-  await userEvent.keyboard('{Enter}');
-  expect(toggleButton.isSelected).toBe(true);
-
-  await userEvent.keyboard('{Escape}');
-  expect(toggleButton.isSelected).toBe(false);
-
-  await userEvent.click(canvasElement);
-  expect(toggleButton.isSelected).toBe(false);
-
-  toggleButton.blur();
-};

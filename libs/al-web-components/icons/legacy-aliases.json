@@ -1,0 +1,104 @@
+{
+  "$comment": "Legacy Altitude icon name -> Phosphor regular asset. HAND-AUTHORED, reviewed as data. Consumed by icons/icons-config.mjs, which emits components/icon/icon-aliases.ts. Never edit the generated file.",
+  "version": 1,
+  "weight": "regular",
+  "kinds": {
+    "identity": "Legacy name IS the Phosphor name. Listed for completeness so this file is an exhaustive census of the 37.",
+    "exact": "Different name, same glyph concept. No visual judgment required.",
+    "near": "A human made a judgment call. `note` records the reasoning so the next reviewer does not relitigate it."
+  },
+  "shadowed": ["list"],
+  "aliases": {
+    "add": { "phosphor": "plus", "kind": "exact" },
+    "attachment": { "phosphor": "paperclip", "kind": "exact" },
+    "bell": { "phosphor": "bell", "kind": "identity" },
+    "bookmark": { "phosphor": "bookmark", "kind": "identity" },
+    "calendar": { "phosphor": "calendar", "kind": "identity" },
+    "check": { "phosphor": "check", "kind": "identity" },
+    "chevron-down": {
+      "phosphor": "caret-down",
+      "kind": "exact",
+      "note": "Phosphor regular carets are open chevron strokes, not filled triangles."
+    },
+    "chevron-left": { "phosphor": "caret-left", "kind": "exact" },
+    "chevron-right": { "phosphor": "caret-right", "kind": "exact" },
+    "chevron-up": { "phosphor": "caret-up", "kind": "exact" },
+    "clock": { "phosphor": "clock", "kind": "identity" },
+    "close": { "phosphor": "x", "kind": "exact" },
+    "copy": { "phosphor": "copy", "kind": "identity" },
+    "document": {
+      "phosphor": "file-text",
+      "kind": "exact",
+      "note": "Legacy draws a page outline plus three interior rules. Plain `file` has no interior lines."
+    },
+    "dots-horizontal": { "phosphor": "dots-three", "kind": "exact" },
+    "dots-vertical": { "phosphor": "dots-three-vertical", "kind": "exact" },
+    "emoji": { "phosphor": "smiley", "kind": "exact" },
+    "filter": {
+      "phosphor": "funnel",
+      "kind": "near",
+      "note": "Legacy is a closed funnel outline with a handle. `funnel-simple` is three decreasing horizontal lines - a different glyph."
+    },
+    "help": {
+      "phosphor": "question",
+      "kind": "exact",
+      "note": "Phosphor `question` has concentric circles (r=104/88) enclosing the mark, matching legacy's enclosing circle. It is not a bare mark."
+    },
+    "home": {
+      "phosphor": "house",
+      "kind": "near",
+      "note": "Legacy has a door cutout. `house-simple` omits it."
+    },
+    "info": { "phosphor": "info", "kind": "identity" },
+    "layout-masonry": {
+      "phosphor": "squares-four",
+      "kind": "near",
+      "needsDesignReview": true,
+      "note": "No Phosphor icon is a true masonry. Legacy is 4 staggered unequal panes in 2 columns (left tall+short, right short+tall, no outer frame). `squares-four` preserves pane count, column count and the absence of a frame but equalizes heights. `layout` is only 3 panes inside a frame - worse. FLAGGED for a designer's eye."
+    },
+    "list": {
+      "phosphor": "list-dashes",
+      "kind": "near",
+      "shadowed": true,
+      "note": "Legacy `list` is three hollow squares in the left gutter plus three lines - a bulleted list. `list-dashes` has the same skeleton (square-capped dashes at x40-56, lines at x88-216). `list-bullets` uses circles; `list-checks` adds done/completed semantics. NOTE: the name `list` is shadowed - <al-icon name=\"list\"> resolves to the Phosphor hamburger, NOT this glyph. See the precedence rule in AGENTS.md."
+    },
+    "menu": {
+      "phosphor": "list",
+      "kind": "exact",
+      "note": "Legacy `menu` is three full-width bars at y 5.625/10/14.375 of 20. Phosphor `list` is three full-width bars at y 64/128/184 of 256. Identical glyph."
+    },
+    "minus": { "phosphor": "minus", "kind": "identity" },
+    "pin": {
+      "phosphor": "map-pin-simple-line",
+      "kind": "near",
+      "note": "NOT `push-pin` - that is a thumbtack, a different object. Legacy is a ring head (cy 8.2, outer r 5.2 / inner r 3.8) + a straight vertical stem + a wide flat ground ellipse at y=18 spanning x 3-21. `map-pin-simple-line` is exactly that construction (ring head cy=80 r=40, straight stem to y=208, ground line x 40-216). `map-pin-line` is a teardrop marker - wrong head shape."
+    },
+    "search": { "phosphor": "magnifying-glass", "kind": "exact" },
+    "send": {
+      "phosphor": "paper-plane-tilt",
+      "kind": "near",
+      "note": "Legacy points up-and-right at ~45 degrees with a visible center fold. `paper-plane-right` is axis-aligned."
+    },
+    "settings": {
+      "phosphor": "gear",
+      "kind": "near",
+      "note": "Legacy draws 8 nubs (4 axial + 4 diagonal). `gear-six` has 6."
+    },
+    "sign-in": { "phosphor": "sign-in", "kind": "identity" },
+    "sign-out": { "phosphor": "sign-out", "kind": "identity" },
+    "star": { "phosphor": "star", "kind": "identity" },
+    "success": { "phosphor": "check-circle", "kind": "exact" },
+    "support": {
+      "phosphor": "headset",
+      "kind": "exact",
+      "note": "NOT `lifebuoy`. Legacy draws a headband arc across the top (x 3.8-20.2), two rounded ear-cup rects (x 5.2-8.2 and x 15.8-18.8), and a hook descending right to a chin strap. That is unambiguously a headset."
+    },
+    "user": { "phosphor": "user", "kind": "identity" },
+    "warning-circle": { "phosphor": "warning-circle", "kind": "identity" },
+    "warning-triangle": {
+      "phosphor": "warning",
+      "kind": "exact",
+      "note": "Phosphor `warning` is the triangle-with-bang. Keeps the pair coherent with `warning-circle`, which is an identity match."
+    }
+  }
+}

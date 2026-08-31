@@ -6,15 +6,19 @@ import { nanoid } from 'nanoid';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
+import { ALLayout } from '../layout/layout';
 import { ALFieldNote } from '../field-note/field-note';
 import { ALRadio } from '../radio/radio';
 import styles from './radio-group.scss';
 
 /**
  * Component: al-radio-group
- * - **slot**: The radio content, a set of radio items
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot - The radio content, a set of radio items. Items stack in a column
+ *         by default; for a row, nest them in `<al-layout direction="row" wrap>`.
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onRadioGroupChange - Fired when the group's selection changes. Detail: `{ checked, name, value }` — taken from the newly checked radio.
  */
 export class ALRadioGroup extends ALElement {
   static el = 'al-radio-group';
@@ -22,12 +26,15 @@ export class ALRadioGroup extends ALElement {
   private elementMap = register({
     elements: [
       [ALFieldNote.el, ALFieldNote],
-      [ALRadio.el, ALRadio]
+      [ALRadio.el, ALRadio],
+      [ALLayout.el, ALLayout]
     ],
     suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
   });
 
   private fieldNoteEl = unsafeStatic(this.elementMap.get(ALFieldNote.el));
+
+  private layoutEl = unsafeStatic(this.elementMap.get(ALLayout.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -60,6 +67,22 @@ export class ALRadioGroup extends ALElement {
    */
   @property({ type: Boolean })
   accessor hideLegend: boolean;
+
+  /**
+   * Direction
+   * - **column** (default) stacks the radios
+   * - **row** lays them out inline, wrapping when they run out of room
+   *
+   * This does NOT re-introduce a hand-rolled arrangement prop. The group
+   * already renders an `<al-layout>` around its slotted items; this
+   * parameterises THAT layout rather than styling the items here, so
+   * `<al-layout>` remains the single arrangement primitive. The row form is
+   * a documented variant of the group in the design library (Radio Group
+   * example, "Horizontal" column), which is why it earns a prop instead of
+   * being left to each consumer to compose.
+   */
+  @property()
+  accessor direction: 'row' | 'column';
 
   /**
    * Label
@@ -95,14 +118,6 @@ export class ALRadioGroup extends ALElement {
    */
   @property()
   accessor ariaDescribedBy: string;
-
-  /**
-   * Variant
-   * - **default** Displays the radio items in a column
-   * - **horizontal** Displays the radio items in a row
-   */
-  @property()
-  accessor variant: 'horizontal';
 
   /**
    * The currently checked radio in the radio group
@@ -196,9 +211,22 @@ export class ALRadioGroup extends ALElement {
     } else if (newIndex > radioListLength) {
       newIndex = 0;
     }
-    /* 6 */
-    while (this.radioItems[newIndex].isDisabled) {
+    /*
+     * 6. Bounded, because the unbounded form hung the browser.
+     *
+     * This walked until it found an enabled item, which never terminates when
+     * EVERY item is disabled — an arrow key on such a group span-locked the tab.
+     * The wrap in step 7 is what makes it infinite rather than merely wrong:
+     * the index keeps cycling instead of running off the end.
+     *
+     * One full pass is enough to prove there is nothing to land on. The
+     * `<= radioListLength` bound (not `<`) matches step 5's wrap, which treats
+     * `radioListLength` as a valid index rather than the length.
+     */
+    let stepsRemaining = radioListLength + 1;
+    while (this.radioItems[newIndex].isDisabled && stepsRemaining > 0) {
       newIndex = isPrevious ? newIndex - 1 : newIndex + 1;
+      stepsRemaining -= 1;
       /* 7 */
       if (newIndex < 0) {
         newIndex = radioListLength;
@@ -206,6 +234,13 @@ export class ALRadioGroup extends ALElement {
         newIndex = 0;
       }
     }
+    /*
+     * Every item disabled: there is no legal target, so leave selection and
+     * focus exactly where they are. Returning beats landing on a disabled item
+     * — step 8 would set `isChecked` on it and then call `.focus()` on a
+     * `:not(:disabled)` selector that matches nothing, throwing on null.
+     */
+    if (this.radioItems[newIndex].isDisabled) return;
     /* 8 */
     this.checkedItem = this.radioItems[newIndex];
     this.checkedItem.isChecked = true;
@@ -251,16 +286,19 @@ export class ALRadioGroup extends ALElement {
     const componentClassNames = this.componentClassNames('al-c-radio-group', {
       'al-is-error': this.isError === true,
       'al-is-disabled': this.isDisabled === true,
-      'al-has-hidden-legend': this.hideLegend,
-      'al-c-radio-group--horizontal': this.variant === 'horizontal'
+      'al-has-hidden-legend': this.hideLegend
     });
 
     return html`
       <fieldset class="${componentClassNames}" @keydown=${this.handleOnKeydown}>
         ${this.label && html` <legend class="al-c-radio-group__legend" aria-describedby="${this.ariaDescribedBy}">${this.label}</legend> `}
-        <div class="al-c-radio-group__list">
+        <${this.layoutEl}
+          direction=${ifDefined(this.direction)}
+          gap=${this.direction === 'row' ? 'md' : 'none'}
+          ?wrap=${this.direction === 'row'}
+        >
           <slot></slot>
-        </div>
+        </${this.layoutEl}>
         ${(this.fieldNote || this.slotNotEmpty('field-note')) &&
         html`
           <slot name="field-note">

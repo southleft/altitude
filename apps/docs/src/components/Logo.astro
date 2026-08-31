@@ -1,0 +1,73 @@
+---
+/*
+ * The brand mark for whichever design system's site is being rendered.
+ *
+ * Marks are ASSETS, not code: each one is a file in `src/brand-marks/` named
+ * for the brand it belongs to (`<brand>.svg` for the wordmark,
+ * `<brand>.mark.svg` for the standalone mark). They are picked up by
+ * `import.meta.glob`, which is statically analysable but keyed at runtime — so
+ * a new design system gets its logo by DROPPING A FILE IN, with no branch and
+ * no import added here.
+ *
+ * A brand with no file falls back to a typographic wordmark built from the
+ * project's own name. That is deliberate: an unbranded-but-correct name beats
+ * another system's chevron, and it means a brand can get a docs site before it
+ * has a logo.
+ *
+ * `altitude.svg` / `altitude.mark.svg` are the marks from the approved design
+ * canvas (.mm/specs/2026-08-22-altitude-docs-site/visuals/altitude-ds-site.dc.html,
+ * the sidebar brand block and the Home hero's AL-LOGO / MARK plate), moved out
+ * of this file byte-for-byte. The chevron fills --blue; the wordmark is
+ * currentColor so it inverts with the theme.
+ */
+interface Props {
+  /** The design-system project whose mark to render. */
+  project: { brand: string; shortName: string };
+  variant?: 'wordmark' | 'mark';
+  class?: string;
+  style?: string;
+}
+const { project, variant = 'wordmark', class: className, style } = Astro.props;
+
+const marks = import.meta.glob('../brand-marks/*.svg', { query: '?raw', import: 'default', eager: true });
+const file = variant === 'mark' ? `${project.brand}.mark.svg` : `${project.brand}.svg`;
+const svg = marks[`../brand-marks/${file}`] ?? null;
+
+/** Fallback monogram: the brand's initial, for a project with no mark file. */
+const initial = (project.shortName[0] ?? '?').toUpperCase();
+---
+
+{
+  svg ? (
+    <span class={className} style={style} set:html={svg} />
+  ) : variant === 'mark' ? (
+    <span class:list={['logo-mono', className]} style={style} aria-hidden="true">
+      {initial}
+    </span>
+  ) : (
+    <span class:list={['logo-word', className]} style={style}>
+      {project.shortName}
+    </span>
+  )
+}
+
+<style>
+  .logo-word {
+    display: block;
+    font: 700 20px/1 var(--sans);
+    letter-spacing: -0.02em;
+    text-transform: lowercase;
+  }
+
+  .logo-mono {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    width: 60%;
+    max-width: 220px;
+    margin: 0 auto;
+    background: var(--blue);
+    color: var(--bg);
+    font: 700 clamp(48px, 12vw, 120px) / 1 var(--sans);
+  }
+</style>

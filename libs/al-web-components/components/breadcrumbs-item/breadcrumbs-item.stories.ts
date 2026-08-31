@@ -1,11 +1,10 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../icon/icons/document';
 import './breadcrumbs-item';
 
 export default {
-  title: 'Atoms/Breadcrumbs Item',
+  title: 'Atoms/Navigation/Breadcrumbs Item',
   component: 'al-breadcrumbs-item',
   tags: [ 'autodocs' ],
   parameters: {
@@ -17,7 +16,6 @@ export default {
       exclude: ['isTruncated']
     },
   },
-  decorators: [ withActions ],
   argTypes: {
     href: {
       control: 'text'

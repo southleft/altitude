@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-checkbox-group.schema.json",
+  "title": "ALCheckboxGroup (al-checkbox-group)",
+  "description": "Component: al-checkbox-group",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-checkbox-group",
+    "className": "ALCheckboxGroup",
+    "module": "components/checkbox-group/checkbox-group.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The component content, a set of checkbox items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`.",
+        "name": ""
+      },
+      {
+        "description": "If content is slotted, it will display in place of the fieldNote property",
+        "name": "field-note"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the errorNote property",
+        "name": "error"
+      }
+    ],
+    "events": [
+      {
+        "name": "onCheckboxGroupChange",
+        "description": "Fired when any checkbox in the group changes. Detail: `{ checked, value, checkedValues }` — the state and value of the checkbox that changed, plus the values of every currently-checked checkbox in the group."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-checkbox-group"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isError": {
+          "description": "Error state\n- Changes the component's treatment to represent an error state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute\n- Changes the component's treatment to represent a disabled state",
+          "type": "boolean"
+        },
+        "isRequired": {
+          "description": "Required attribute\n- Sets the checkbox to be required for validation",
+          "type": "boolean"
+        },
+        "hideLegend": {
+          "description": "Hide legend?\n- If true, hides the legend from displaying",
+          "type": "boolean"
+        },
+        "direction": {
+          "description": "Direction\n- **column** (default) stacks the checkboxes\n- **row** lays them out inline, wrapping when they run out of room\n\nThis does NOT re-introduce a hand-rolled arrangement prop. The group\nalready renders an `<al-layout>` around its slotted items; this\nparameterises THAT layout rather than styling the items here, so\n`<al-layout>` remains the single arrangement primitive. The row form is\na documented variant of the group in the design library (Checkbox Group\nexample, \"Horizontal\" column), which is why it earns a prop instead of\nbeing left to each consumer to compose.",
+          "type": "string",
+          "enum": [
+            "row",
+            "column"
+          ]
+        },
+        "label": {
+          "description": "Label\n- Displays inside the legend",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Error message\n- An error field note that displays below the checkbox input",
+          "type": "string"
+        },
+        "fieldNote": {
+          "description": "Field note\n- The helper text that displays below the checkbox input",
+          "type": "string"
+        },
+        "fieldId": {
+          "description": "Id attribute\n- The ID used for A11y and to associate the label with the input",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "aria-describedby attribute\n- Applied to the field note or error note for A11y",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

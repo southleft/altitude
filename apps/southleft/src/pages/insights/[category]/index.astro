@@ -1,0 +1,42 @@
+---
+// Insights, filtered by category — spec 2026-08-20-southleft-example-app, T4.
+// URL preserved exactly: /insights/<category>
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import CTABand from '../../../components/CTABand.astro';
+import { withBase } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights');
+  const categories = [...new Set(posts.map((p) => p.data.category))];
+  return categories.map((category) => ({ params: { category } }));
+}
+
+const { category } = Astro.params;
+const posts = (await getCollection('insights', (p) => p.data.category === category)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const categoryName = posts[0]?.data.categoryName ?? category;
+---
+
+<Base title={categoryName} description={`Insights on ${categoryName} from the Southleft team.`}>
+  <div class="sl-section--tight">
+    <PageHero label="insights" heading={categoryName} dek={`${posts.length} post${posts.length === 1 ? '' : 's'}`}>
+      <al-link href={withBase('/insights')}>← All insights</al-link>
+    </PageHero>
+  </div>
+
+  <div class="sl-container sl-section">
+    <al-layout variant="grid" noCollapse>
+      {posts.map((p) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <ArticleCard post={p} />
+        </div>
+      ))}
+    </al-layout>
+  </div>
+
+      <CTABand />
+</Base>

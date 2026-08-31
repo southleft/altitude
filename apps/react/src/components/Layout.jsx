@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { ALAvatar, ALBadge, ALButtonGroup, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayoutContainer, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton, ALThemeSwitcher } from 'al-react/dist/src';
+import { ALAvatar, ALBadge, ALButton, ALCard, ALDivider, ALDrawer, ALHeader, ALHeading, ALIconBell, ALIconCalendar, ALIconChevronUp, ALIconHelp, ALIconHome, ALIconList, ALLogo, ALIconSettings, ALIconSignOut, ALIconSupport, ALIconUser, ALLayout, ALListItem, ALList, ALMenuItem, ALMenu, ALPopover, ALSearch, ALToggleButton, ALThemeSwitcher } from '@southleft/al-react';
 import './Layout.scss';
 
 export default function Dashboard() {
@@ -18,20 +18,22 @@ export default function Dashboard() {
           <ALHeading slot="header" tagName="h3" variant="sm">Help Center</ALHeading>
           <p>Welcome to our Job Board Help Center! Whether you're a first-time user or seeking a refresher, this guide will walk you through the steps to navigate our platform with ease. Let's get started!</p>
           <p className="al-u-theme-typography-body-xs" slot="footer">1 of 4</p>
-          <ALButtonGroup slot="footer" alignment="right">
+          <ALLayout slot="footer" direction="row" justify="end" grow>
             <ALButton variant="secondary">Learn More</ALButton>
             <ALButton>Next</ALButton>
-          </ALButtonGroup>
+          </ALLayout>
         </ALPopover>
       </div>
-      <ALLayout variant="sidebar-left" gap="none">
+      <ALLayout variant="grid" gap="none" fullHeight noCollapse className="al-l-dashboard__shell">
         <div className="al-l-dashboard__sidebar">
-          <slot name="sidebar">
+          <ALLayout direction="column" justify="between" fullHeight>
             <div className="al-l-dashboard__sidebar-logo">
-              <ALLogo variant={currentLogo !== 'altitude' ? currentLogo : null}>
-                {currentLogo !== 'southleft' ? 'By Southleft • ' : ''}
-                {'React Web Application'}
-              </ALLogo>
+              <ALLayout direction="row" align="center">
+                <ALLogo variant={currentLogo !== 'altitude' ? currentLogo : null}>
+                  {currentLogo !== 'southleft' ? 'By Southleft • ' : ''}
+                  {'React Web Application'}
+                </ALLogo>
+              </ALLayout>
             </div>
             <ALMenu className="al-l-dashboard__sidebar-menu">
               <NavLink to={'/dashboard'}>
@@ -55,9 +57,11 @@ export default function Dashboard() {
                 <ALDivider></ALDivider>
                 <ALPopover position="top-right" variant="menu">
                   <div slot="trigger" className="al-l-dashboard__user">
-                    <ALAvatar>TP</ALAvatar>
-                    <p>TJ Pitre</p>
-                    <ALButton variant="bare" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
+                    <ALCard variant="bare" layout="inline">
+                      <ALAvatar slot="image">TP</ALAvatar>
+                      <p>TJ Pitre</p>
+                      <ALButton slot="actions-end" variant="bare" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
+                    </ALCard>
                   </div>
                   <ALMenu>
                     <ALMenuItem><ALIconUser></ALIconUser>Profile</ALMenuItem>
@@ -67,11 +71,12 @@ export default function Dashboard() {
                   </ALMenu>
                 </ALPopover>
               </div>
-            </slot>
+          </ALLayout>
           </div>
           <div className="al-l-dashboard__content">
-            <ALHeader className="al-l-dashboard__header">
-              <ALSearch slot="before">
+            <ALHeader className="al-l-dashboard__header" sticky elevated>
+              <ALLayout direction="row" align="center" justify="between" gap="md">
+              <ALSearch>
                 <ALList>
                   <ALListItem>Dashboard</ALListItem>
                   <ALListItem>Job Board</ALListItem>
@@ -79,15 +84,13 @@ export default function Dashboard() {
                   <ALListItem>Resources</ALListItem>
                 </ALList>
               </ALSearch>
-              <div slot="after">
+              <ALLayout direction="row" align="center" gap="sm">
                 <ALThemeSwitcher></ALThemeSwitcher>
-              </div>
-              <div slot="after">
                 <ALDrawer alignment="right" hasBackdrop={true} width="400">
                   <ALButton slot="trigger" hideText={true} variant="bare"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
                   <ALHeading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</ALHeading>
-                  <div className="al-u-gap-xs">
-                    <ALCard variant="bare" layout="inline" href="#">
+                  <ALLayout direction="column" gap="sm">
+                    <ALCard variant="bare" layout="inline">
                       <ALAvatar slot="image" hasBadge={true} badgeVariant="success">KP</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@kploransky</strong> sent you a message</p>
                       <p className="al-u-theme-typography-body-xs">Thursday 4:20pm</p>
@@ -95,7 +98,7 @@ export default function Dashboard() {
                       <p slot="actions-end" className="al-u-theme-typography-body-xs">2 hours ago</p>
                     </ALCard>
                     <ALDivider></ALDivider>
-                    <ALCard variant="bare" layout="inline" href="#">
+                    <ALCard variant="bare" layout="inline">
                       <ALAvatar slot="image">EB</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@ebrown</strong> sent you a message</p>
                       <p className="al-u-theme-typography-body-xs">Thursday 5:14pm</p>
@@ -103,17 +106,15 @@ export default function Dashboard() {
                       <p slot="actions-end" className="al-u-theme-typography-body-xs">3 hours ago</p>
                     </ALCard>
                     <ALDivider></ALDivider>
-                    <ALCard variant="bare" layout="inline" href="#">
+                    <ALCard variant="bare" layout="inline">
                       <ALAvatar slot="image">BV</ALAvatar>
                       <p className="al-u-theme-typography-body-sm"><strong>@bvoran</strong> invited you to a <strong>Design Systems Workshop</strong></p>
                       <p className="al-u-theme-typography-body-xs">Wednesday 6:32pm</p>
                       <p slot="actions-end" className="al-u-theme-typography-body-xs">1 day ago</p>
                     </ALCard>
-                  </div>
+                  </ALLayout>
                   <ALButton slot="footer">Mark all as read</ALButton>
                 </ALDrawer>
-              </div>
-              <div slot="after">
                 <ALPopover variant="menu">
                   <ALAvatar slot="trigger">TP</ALAvatar>
                   <ALMenu>
@@ -123,11 +124,12 @@ export default function Dashboard() {
                     <ALMenuItem><ALIconSignOut></ALIconSignOut>Sign Out</ALMenuItem>
                   </ALMenu>
                 </ALPopover>
-              </div>
+              </ALLayout>
+              </ALLayout>
             </ALHeader>
-            <ALLayoutContainer className="al-l-dashboard__body">
-              <Outlet />
-            </ALLayoutContainer>
+            <ALLayout variant="constrained" size="xl" gutter="sm" className="al-l-dashboard__body">
+                <Outlet />
+            </ALLayout>
           </div>
         </ALLayout>
     </div>

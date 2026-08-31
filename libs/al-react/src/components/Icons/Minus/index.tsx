@@ -1,1 +1,3 @@
-export * from './Minus';
+'use client';
+
+export * from './Minus.js';

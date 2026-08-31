@@ -1,9 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
-@import './dist/scss/theme/tokens-dark.scss';
-@import './core/variables';
-@import './core/mixins';
-@import './core/base';
-@import './core/utilities';
+@use './core/variables' as *;
+@use './core/mixins' as *;
+@forward './core/variables';
+@forward './core/mixins';
+// T4.1 — declare cascade layer order before any layered rule.
+@use './core/layers';
+@use './dist/scss/theme/tokens-dark.scss';
+@use './core/base';
+@use './core/utilities';
+
+// v2 type: Public Sans carries the UI, IBM Plex Mono carries the metadata layer
+// (table headers, token names, timestamps). Weights follow what the token
+// pipeline can emit (400/600 via font-weight.regular/bold) plus the 500 and 700
+// the v2 canvas uses for mono meta and display headings.
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* Storybook specific styles */
 .docs-story {

@@ -1,110 +1,136 @@
-@import '../../styles/component';
+@use '../../styles/component' as *;
 /*------------------------------------*\
   #CHIP
 \*------------------------------------*/
 
-:host {
-  display: contents;
-}
-
-/**
- * Chip
- */
-.al-c-chip {
-  @include al-theme-typography-body-sm;
-  display: inline-flex;
-  cursor: pointer;
-  gap: var(--al-theme-space-xs);
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-  margin: 0;
-  padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);
-  border: none;
-  border-radius: size(4);
-  background-color: var(--al-theme-color-background-default-strong);
-  color: var(--al-theme-color-content-default-weak);
-
-  /**
-   * Focus state
-   */
-  &:focus-visible {
-    @include al-focus;
-    outline-offset: 2px;
+@layer al.component {
+  :host {
+    display: contents;
   }
 
   /**
-   * Hides the chips
+   * Chip
    */
-  &.al-is-dismissed {
+  /**
+   * The chip surface is HOOKED rather than fixed. `:host` is `display: contents`, so a
+   * consumer cannot reach this box with its own selector, and the component exposes no
+   * parts — so an app wanting a differently-treated chip (Southleft's outlined mono
+   * token chips) had to hand-roll a <span> and lose the component entirely. Every
+   * default below is the value that was hardcoded here; nothing changes for an
+   * existing consumer.
+   */
+  .al-c-chip {
+    /*
+     * v2 canvas: 32px pill, 13px medium. The chip sits beside 40px controls, so
+     * it takes the small step of the control scale rather than growing to match
+     * the body size.
+     */
+    @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-medium, 500);
+    line-height: 1;
+    box-sizing: border-box;
+    min-height: var(--al-chip-height, var(--al-theme-size-control-sm));
+    display: inline-flex;
+    cursor: var(--al-chip-cursor, pointer);
+    gap: var(--al-chip-gap, var(--al-theme-space-xs));
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    margin: 0;
+    padding: var(--al-chip-padding, 0 var(--al-theme-space-sm));
+    /**
+     * v2: a chip is a pill with a hairline outline on the page ground, not a
+     * filled grey lozenge. The selected/active state is what carries a fill
+     * (ink), so the resting state must not spend one.
+     */
+    border: var(--al-chip-border, var(--al-theme-border-width) solid var(--al-theme-color-border-default));
+    border-radius: var(--al-chip-border-radius, var(--al-theme-border-radius-pill));
+    background: var(--al-chip-background, var(--al-theme-color-background-transparent-default));
+    color: var(--al-chip-color, var(--al-theme-color-content-default));
+    font-family: var(--al-chip-font-family, inherit);
+
+    /**
+     * Focus state
+     */
+    &:focus-visible {
+      @include al-focus;
+      outline-offset: 2px;
+    }
+
+    /**
+     * Hides the chips
+     */
+    &.al-is-dismissed {
+      display: none;
+    }
+  }
+
+  /**
+   * Hide the chip from the DOM
+   */
+  .al-u-is-vishidden {
+    @include al-visually-hidden;
     display: none;
   }
-}
 
-/**
- * Hide the chip from the DOM
- */
-.al-u-is-vishidden {
-  @include al-visually-hidden;
-  display: none;
-}
+  /**
+   * Chip with squared type
+   */
+  .al-c-chip--squared {
+    border-radius: var(--al-theme-border-radius);
+  }
 
-/**
- * Chip with squared type
- */
-.al-c-chip--squared {
-  border-radius: var(--al-theme-border-radius);
-}
+  /**
+   * Chip with secondary variant
+   */
+  .al-c-chip--secondary {
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    background-color: var(--al-theme-color-background-transparent-default);
+    color: var(--al-theme-color-content-default-weak);
+  }
 
-/**
- * Chip with secondary variant
- */
-.al-c-chip--secondary {
-  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-  background-color: var(--al-theme-color-background-transparent-default);
-  color: var(--al-theme-color-content-default-weak);
-}
+  /**
+   * Chip with success variant
+   */
+  .al-c-chip--success {
+    background-color: var(--al-theme-color-background-success-default);
+    color: var(--al-theme-color-content-success-weak);
+  }
 
-/**
- * Chip with success variant
- */
-.al-c-chip--success {
-  background-color: var(--al-theme-color-background-success-default);
-  color: var(--al-theme-color-content-success-weak);
-}
+  /**
+   * Chip with danger variant
+   */
+  .al-c-chip--danger {
+    background-color: var(--al-theme-color-background-danger-default);
+    color: var(--al-theme-color-content-danger-weak);
+  }
 
-/**
- * Chip with danger variant
- */
-.al-c-chip--danger {
-  background-color: var(--al-theme-color-background-danger-default);
-  color: var(--al-theme-color-content-danger-weak);
-}
+  /**
+   * Chip with info variant
+   */
+  .al-c-chip--info {
+    background-color: var(--al-theme-color-background-info-default);
+    color: var(--al-theme-color-content-info-weak);
+  }
 
-/**
- * Chip with info variant
- */
-.al-c-chip--info {
-  background-color: var(--al-theme-color-background-info-default);
-  color: var(--al-theme-color-content-info-weak);
-}
+  /**
+   * Chip with warning variant
+   */
+  .al-c-chip--warning {
+    background-color: var(--al-theme-color-background-warning-default);
+    color: var(--al-theme-color-content-warning-weak);
+  }
 
-/**
- * Chip with warning variant
- */
-.al-c-chip--warning {
-  background-color: var(--al-theme-color-background-warning-default);
-  color: var(--al-theme-color-content-warning-weak);
-}
-
-/**
- * Chip close icon
- */
-.al-c-chip__close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-inline-end: calc(#{var(--al-theme-space-xs)} * -1);
-  width: var(--al-theme-icon-lg);
-  height: var(--al-theme-icon-lg);
+  /**
+   * Chip close icon
+   */
+  .al-c-chip__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline-end: calc(#{var(--al-theme-space-xs)} * -1);
+    width: var(--al-theme-icon-lg);
+    height: var(--al-theme-icon-lg);
+  }
 }

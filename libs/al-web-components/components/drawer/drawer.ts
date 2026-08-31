@@ -1,5 +1,6 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import { state, property, queryAsync, queryAssignedElements } from 'lit/decorators.js';
+import getFocusableElements from '../../directives/getFocusableElements';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -8,10 +9,16 @@ import { ALElement } from '../ALElement';
 import styles from './drawer.scss';
 import { ALButton } from '../button/button';
 import { ALIconClose } from '../icon/icons/close';
+import { ALFocusTrap } from '../focus-trap/focus-trap';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 /**
  * Component: al-drawer
- * - **slot**: The drawer content
+ * @slot - The drawer content
+ *
+ * @event onDrawerOpen - Fired when the drawer opens. Detail: `{ active }` — the new open state.
+ * @event onDrawerClose - Fired when the drawer closes by any means. Detail: `{ active }`.
+ * @event onDrawerCloseButton - Fired only when the drawer's close button is activated. Detail: `{ active }`. Use `onDrawerClose` to catch every close path.
  */
 export class ALDrawer extends ALElement {
   static el = 'al-drawer';
@@ -19,13 +26,15 @@ export class ALDrawer extends ALElement {
   private elementMap = register({
     elements: [
       [ALButton.el, ALButton],
-      [ALIconClose.el, ALIconClose]
+      [ALIconClose.el, ALIconClose],
+      [ALFocusTrap.el, ALFocusTrap]
     ],
     suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
   });
 
   private buttonEl = unsafeStatic(this.elementMap.get(ALButton.el));
   private iconCloseEl = unsafeStatic(this.elementMap.get(ALIconClose.el));
+  private focusTrapEl = unsafeStatic(this.elementMap.get(ALFocusTrap.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -124,7 +133,41 @@ export class ALDrawer extends ALElement {
    * 2. Set aria-expanded on the trigger for A11y
    * 3. Set the width of the drawer container
    */
+  /**
+   * A11y — true when the slotted trigger contains its own focusable control, in
+   * which case the trigger wrapper must not add a second tab stop.
+   */
+  @state()
+  accessor triggerHasOwnFocusable: boolean = false;
+
+  /**
+   * A11y — decide whether the trigger wrapper needs its own tab stop.
+   *
+   * The wrapper is a plain `<div>` carrying `@click`. When the consumer slots a
+   * control that is already focusable (`<al-button slot="trigger">`) the click
+   * a keyboard press produces bubbles up to it and everything works. When they
+   * slot something inert (`<span slot="trigger">`) there was NO keyboard path
+   * at all — measured before this fix: the wrapper was not tabbable and Enter
+   * did nothing, so the component could not be opened without a mouse (WCAG
+   * 2.1.1). al-tooltip already solved this; the same shape is used here.
+   */
+  private syncTriggerFocusability() {
+    const slotted = Array.from(this.querySelectorAll('[slot="trigger"]'));
+    this.triggerHasOwnFocusable = slotted.some((el) => getFocusableElements(el).length > 0);
+  }
+
+  /** A11y — Enter/Space on the wrapper, for the inert-trigger case above. */
+  private handleTriggerKeydown(e: KeyboardEvent) {
+    if (this.triggerHasOwnFocusable) return;
+    if (e.code === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      this.toggleActive();
+    }
+  }
+
   async firstUpdated() {
+    await this.updateComplete;
+    this.syncTriggerFocusability();
     await this.updateComplete; /* 1 */
     this.setAria(); /* 2 */
     this.setWidth(); /* 3 */
@@ -253,6 +296,10 @@ export class ALDrawer extends ALElement {
    */
   public open() {
     this.isActive = true; /* 1 */
+    /* 1a — a backdrop drawer is modal: nothing behind it should be reachable. */
+    if (this.hasBackdrop === true) {
+      this.setOutsideInert(true);
+    }
     /* 2 */
     this.dispatch({
       eventName: 'onDrawerOpen',
@@ -270,6 +317,7 @@ export class ALDrawer extends ALElement {
    */
   public close() {
     this.isActive = false; /* 1 */
+    this.setOutsideInert(false);
     /* 2 */
     if (this.drawerTriggerButton) {
       setTimeout(() => {
@@ -292,19 +340,23 @@ export class ALDrawer extends ALElement {
       'al-is-active': this.isActive
     });
 
-    return html`
-      <div class="${componentClassName}" @keydown=${this.handleOnKeydown}>
-      ${this.slotNotEmpty('trigger') &&
-        html`
-          <div class="al-c-drawer__trigger" @click=${this.toggleActive}>
-            <slot name="trigger"></slot>
-          </div>
-        `}
+    /**
+     * A11y — a drawer with a backdrop *is* a modal: it covers the page and the
+     * user must dismiss it. It used to render `role="region"` with no
+     * `aria-modal` and no focus trap, so Tab walked straight out behind the
+     * backdrop. Without a backdrop it stays a plain `region` (a side panel),
+     * which is the honest description of a non-blocking surface.
+     */
+    const isModal = this.hasBackdrop === true;
+
+    const container = html`
         <div
           class="al-c-drawer__container"
-          role="region"
-          aria-labelledby=${this.ariaLabelledBy}
+          role=${isModal ? 'dialog' : 'region'}
+          aria-modal=${ifDefined(isModal ? (this.isActive ? 'true' : 'false') : undefined)}
+          aria-labelledby=${ifDefined(this.slotNotEmpty('header') ? this.ariaLabelledBy : undefined)}
           aria-hidden=${this.isActive ? false : true}
+          ?inert=${!this.isActive}
         >
         ${this.slotNotEmpty('header') &&
           html`
@@ -327,7 +379,24 @@ export class ALDrawer extends ALElement {
               <slot name="footer"></slot>
             </div>
           `}
-        </div>
+        </div>`;
+
+    return html`
+      <div class="${componentClassName}" @keydown=${this.handleOnKeydown}>
+      ${this.slotNotEmpty('trigger') &&
+        html`
+          <div
+            class="al-c-drawer__trigger"
+            tabindex=${ifDefined(this.triggerHasOwnFocusable ? undefined : '0')}
+            @click=${this.toggleActive}
+            @keydown=${this.handleTriggerKeydown}
+          >
+            <slot name="trigger"></slot>
+          </div>
+        `}
+        ${isModal
+          ? html`<${this.focusTrapEl} ?isActive=${this.isActive}>${container}</${this.focusTrapEl}>`
+          : container}
       </div>
     ` as TemplateResult<1>;
   }

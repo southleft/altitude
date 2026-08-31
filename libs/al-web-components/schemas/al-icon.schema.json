@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-icon.schema.json",
+  "title": "ALIcon (al-icon)",
+  "description": "Component: al-icon",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-icon",
+    "className": "ALIcon",
+    "module": "components/icon/icon.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "an inline `<svg>`. Rendered only when `name` is not set, which preserves the original slot-based behaviour byte for byte.",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [
+      {
+        "name": "svg",
+        "description": "",
+        "inheritedFrom": {
+          "name": "ALIconBase",
+          "module": "components/icon/icon-base.ts"
+        }
+      }
+    ],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-icon"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "typescript: string | undefined",
+          "type": "string"
+        },
+        "weight": {
+          "description": "typescript: ALIconWeight",
+          "type": "string"
+        },
+        "iconTitle": {
+          "description": "Accessible name. When set, the icon is exposed as `role=\"img\"` with this\nlabel; when omitted the icon is hidden from assistive technology, which is\ncorrect for decorative icons sitting next to visible text.",
+          "type": "string"
+        },
+        "size": {
+          "description": "Icon size\n- Default size is 16px\n- **xs** renders a 8px icon\n- **sm** renders a 12px icon\n- **md** renders a 20px icon\n- **lg** renders a 24px icon\n- **xl** renders a 32px icon\n- **xxl** renders a 36px icon\n- **xxxl** renders a 40px icon",
+          "type": "string",
+          "enum": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "xl",
+            "xxl",
+            "xxxl"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

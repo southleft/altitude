@@ -1,0 +1,5 @@
+- [Altitude v2 upgrade plan](project_altitude_v2_plan.md) — authoritative plan + gates for the Altitude design-system refactor
+- [Phase 1 token-pipeline shape](project_phase1_token_pipeline.md) — parallel SD v3+v5 layout, parity gate, contract test, ingest
+- [Layout-first rule](project_layout_first.md) — LOCKED: `<al-layout>` is the only arrangement primitive; removed wrappers; flag/don't-flag list
+- [User profile — Brad / SouthLeft](user_brad.md) — SouthLeft maintainer driving the v2 upgrade
+- [Review-format preference](feedback_review_format.md) — Brad's preferred phase-review deliverable shape

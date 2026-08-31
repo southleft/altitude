@@ -1,1 +1,3 @@
-export * from './Help';
+'use client';
+
+export * from './Help.js';

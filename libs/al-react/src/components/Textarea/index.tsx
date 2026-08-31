@@ -1,1 +1,3 @@
-export * from './Textarea';
+'use client';
+
+export * from './Textarea.js';

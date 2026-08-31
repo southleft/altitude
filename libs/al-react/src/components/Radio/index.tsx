@@ -1,1 +1,3 @@
-export * from './Radio';
+'use client';
+
+export * from './Radio.js';

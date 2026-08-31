@@ -1,0 +1,416 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://altitude.pages.dev/schemas/contract.schema.json",
+  "title": "Altitude component contract",
+  "description": "Per-component, per-project contract: the canvas-expressible API surface (props, events, slots, states, anatomy, token bindings, a11y facts, Figma/code bindings) emitted from the repo's own generated artifacts (CEM, token-map, measure-components output, parity manifest). Adapted from southleft/ds-contracts-poc's contracts/contract.schema.json — see .altitude/contracts/README.md § Deviations for every field dropped or reshaped. Contracts REFERENCE design tokens by their `--al-*` custom-property name; they never define token values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "id", "name", "version", "status", "semantics", "props", "bindings"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Relative path back to this schema, e.g. \"../contract.schema.json\"."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^al-[a-z0-9-]+$",
+      "description": "The custom-element tag name, e.g. \"al-button\". Doubles as the contract's stable identifier."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name — the Figma component-set name when mapped, else a title-cased derivation of the tag."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Contract schema-instance version, independent of the component's own package version. Freshly seeded (--seed) contracts start at 0.1.0; adoption into editable source (status: \"source\") bumps this to 1.0.0. Bump it again on any hand-authored breaking edit to the contract (T10)."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["derived", "source", "draft", "stable", "deprecated"],
+      "description": "\"derived\" — machine-generated, not yet hand-reviewed (scripts/contracts/emit-contracts.mjs's --seed output, before adoption). \"source\" — ADOPTED: this contract is editable, git-tracked source of truth (T10, spec 2026-08-25-contract-backed-figma-parity-and-generation); the emitter no longer regenerates it, hand edits are the reviewable unit of change (contract PR), and drift is checked against it with --check-drift rather than the other way around. \"draft\" / \"stable\" / \"deprecated\" are reserved for a further maturity phase on top of \"source\"."
+    },
+    "description": {
+      "type": "string",
+      "description": "The CEM's class-level description. Currently boilerplate (\"Component: al-button\") for every Altitude component — see README § Deviations."
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["element"],
+      "properties": {
+        "element": {
+          "type": ["string", "null"],
+          "description": "The rendered host HTML element (e.g. \"button\"), read from measured anatomy. `null` when anatomy is unavailable."
+        },
+        "role": {
+          "type": ["string", "null"],
+          "description": "ARIA role, when the CEM or measured anatomy names one. `null` when not determinable from canvas-expressible facts (no live accessibility-tree read is performed)."
+        }
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type", "bindings"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The HTML attribute name, as CEM records it (component authors use camelCase attribute names directly, e.g. \"isDisabled\")."
+          },
+          "description": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["boolean", "string", "number", "enum"],
+            "description": "Normalized from the CEM's TypeScript type text. A type that is a clean union of quoted string literals becomes \"enum\" with `values` populated; everything else falls back to \"boolean\" / \"number\" / \"string\" by best-effort text match, or \"string\" as the default."
+          },
+          "rawType": {
+            "type": "string",
+            "description": "The CEM's original TypeScript type text, preserved verbatim (e.g. \"boolean | 'mixed'\") for cases the normalized `type` cannot represent losslessly."
+          },
+          "values": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Present only when type is \"enum\" — the legal literal values, sorted."
+          },
+          "default": {
+            "description": "The prop's default value, when the CEM records one."
+          },
+          "bindings": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code"],
+            "properties": {
+              "code": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["attribute"],
+                "properties": {
+                  "attribute": { "type": "string", "description": "HTML attribute name." },
+                  "member": { "type": "string", "description": "The backing class field name, when it differs from the attribute name." }
+                }
+              },
+              "figma": {
+                "type": ["object", "null"],
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": ["VARIANT", "BOOLEAN", "TEXT", "INSTANCE_SWAP", "NONE"],
+                    "description": "The Figma component-property type, as observed by scripts/figma-parity/refresh-figma-digests.mjs."
+                  },
+                  "property": { "type": "string", "description": "The Figma component-property name (Title Case, e.g. \"Variant\")." },
+                  "options": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "The raw Figma option labels for a VARIANT property, as observed — NOT mapped value-for-value onto `values` (see README § Deviations: label pairing across the two sides is not attempted here)."
+                  },
+                  "axis": {
+                    "type": "boolean",
+                    "description": "OPTIONAL, hand-curated (T23, spec 2026-08-25-contract-backed-figma-parity-and-generation). PROPERTY MODE IS THE LIBRARY DEFAULT AS OF T31: the real convention across this library's hand-built sets is a LEAN set (State x Variant variants only) with slot/layout booleans expressed as shared BOOLEAN component properties, never as fanned-out VARIANT axes — al-button's own contract no longer curates anything into axis mode (see .altitude/contracts/README.md § Fan-out convention). This field, and the axis-mode fan-out machinery that reads it, remain fully supported for a future component whose REAL Figma set demonstrably fans a boolean out as its own axis — curate `true` there, deliberately, per that set's confirmed live shape, not as a default. When true, this prop should FAN OUT as a Figma VARIANT axis (its own True/False option column, cartesian with every other axis) in a generated set, rather than staying a single shared component PROPERTY. Only meaningful alongside `kind: \"VARIANT\"` (a boolean prop marked as an axis reads `options: [\"False\", \"True\"]`, Figma's own Title Case boolean-variant spelling). Every non-curated boolean is ALSO fanned out this same way, unconditionally, by `generate-figma.mjs --sheet` (T31) — a separate, plugin-free documentation mode that builds a labeled grid of INSTANCES of the (property-mode) generated set next to it, one per property combination, rather than baking the fan-out into the set's own variants."
+                  },
+                  "omit": {
+                    "type": "boolean",
+                    "description": "OPTIONAL, hand-curated OPT-OUT (T27, spec 2026-08-25-contract-backed-figma-parity-and-generation): true when this prop should NOT be expressed in a generated Figma set at all — no axis, no component property, no instance — reserving the right to keep a code-only prop out of the design surface entirely (e.g. al-button's `fullWidth`, owner's call: \"I don't need that in figma\"). Mutually exclusive with `axis` in practice (an omitted prop has nothing left to fan out); when `omit` is true this object typically carries no other keys — there is nothing else to record about a Figma binding this prop deliberately has none of. The differ treats an omitted prop as a named `skipped` fact (`reason: \"intentional-omission\"`), never a `missing-in-canvas` disagreement — but a canvas property THAT STILL PAIRS to an omitted prop's name IS flagged (kind `present-despite-omission`), since the curation says it should not be there. See .altitude/contracts/README.md § Figma-expression opt-out."
+                  },
+                  "pairWith": {"type": "string", "description": "OPTIONAL, hand-curated PAIRING (2026-08-27): names the Figma component-property this code prop pairs with, for the case where the two sides deliberately use DIFFERENT names for the same axis and no normalisation can bridge them — al-divider's code prop `variant` is the Figma set's `Orientation` axis, because \"orientation\" is what a designer reads on the canvas and \"variant\" is what the CEM calls it. `normKey` only lowercases, strips non-alphanumerics, and strips the is/has prefixes in NAME_ALIAS_PREFIXES, so a genuinely semantic rename is UNDERIVABLE and has to be curated. Only the PAIRING is hand-owned: `kind` and `options` are still derived from the parity manifest's observed digest of the real set (refresh-figma-digests.mjs), so this can never assert a Figma axis that is not actually there — if the named property disappears from Figma the whole binding drops back to `null` and --check-drift reports it, exactly like an unaliased prop."}
+                },
+                "description": "`null` when this prop has no matched, OBSERVED Figma component property (never-refreshed manifest, or a prop the Figma set does not expose)."
+              }
+            }
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "description": "Empty string for the default (unnamed) slot." },
+          "description": { "type": "string" },
+          "figmaPlaceholder": {
+            "type": "string",
+            "description": "OPTIONAL, hand-authored (T19, spec 2026-08-25-contract-backed-figma-parity-and-generation): the name of the icon component this slot's Icon Before/After INSTANCE_SWAP property defaults to. As of T28, this name is resolved against the PHOSPHOR Figma library (e.g. \"check-circle\", \"paper-plane\") — NEVER the legacy local \"🛠 Icons\" page, which scripts/contracts/generate-figma.mjs no longer looks up at all. A name, never a node id/key — library components re-mint ids on republish; generate-figma.mjs resolves the actual component BY NAME at generation time (findPhosphorComponentByName), which may itself fail to find a match in a given environment (no team-library component enumeration exists in the Figma plugin API; see .altitude/contracts/README.md § Phosphor icon source for the resolution mechanism and its honest limits) — a resolution failure degrades to no icon instance/property, never a silent fallback to the old page. Absent when no placeholder has been discovered/decided for this slot yet; generate-figma.mjs then builds the Slot Before/After boolean only (or the axis, if curated), with no Icon Before/After property or instance."
+          },
+          "figmaAxis": {
+            "type": "boolean",
+            "description": "OPTIONAL, hand-curated (T23, spec 2026-08-25-contract-backed-figma-parity-and-generation). PROPERTY MODE IS THE LIBRARY DEFAULT AS OF T31 — al-button's own contract no longer curates either slot this way (its real Figma set keeps Slot Before/Slot After as plain BOOLEAN properties; see .altitude/contracts/README.md § Fan-out convention for the corrected reading of the Propstar reference this curation was originally based on). When true, this `before`/`after` slot should FAN OUT as its own True/False Figma VARIANT axis (\"Slot Before\"/\"Slot After\") in a generated set — cartesian with every other axis, each combination a separately-built variant with the slot's icon statically shown or hidden — rather than a single shared BOOLEAN component property toggling visibility across every variant at once. Absent/false is the default (boolean property, T12/T18/T19/T31 behavior) — curate `true` only for a component whose real (or intended) Figma set demonstrably fans it out. Every non-curated slot boolean is ALSO fanned out this same way, unconditionally, by `generate-figma.mjs --sheet` (T31)'s plugin-free documentation-sheet mode — a labeled grid of INSTANCES of the (property-mode) generated set, one per property combination, built next to the set rather than baked into its own variants."
+          },
+          "figmaOmit": {
+            "type": "boolean",
+            "description": "OPTIONAL, hand-curated OPT-OUT (T27, spec 2026-08-25-contract-backed-figma-parity-and-generation): true when this slot should NOT be expressed in a generated Figma set at all — no axis, no BOOLEAN property, no icon instance, no Icon Before/After INSTANCE_SWAP property. Mutually exclusive with `figmaAxis` in practice. The differ treats an omitted slot as a named `skipped` fact (`reason: \"intentional-omission\"`), never a `slot-unpaired` disagreement — but a canvas property that still pairs to an omitted slot's name/convention IS flagged (kind `present-despite-omission`). See .altitude/contracts/README.md § Figma-expression opt-out."
+          }
+        }
+      }
+    },
+    "composition": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["renders"],
+          "properties": {
+            "renders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["tag", "evidence"],
+                "properties": {
+                  "tag": {
+                    "type": "string",
+                    "pattern": "^al-",
+                    "description": "An al-* component this component's OWN source renders internally. A trailing \"-*\" (e.g. \"al-icon-*\") records a dynamically-interpolated tag family (`<al-icon-${...}>`) — a real nesting fact whose concrete member is chosen at runtime."
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "type": "string", "enum": ["template", "import"] },
+                    "description": "How the nesting was observed in source: \"template\" — a literal `<al-...` tag in the component's render; \"import\" — a sibling component module import (composites import the classes of the components they instantiate under the registry's scoped-tag model, so an import is nesting evidence even when the tag is built dynamically)."
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "description": "DERIVED (spec 2026-08-26-contract-coverage…): the code-side NESTING graph — which other al-* components this component renders inside itself, from a deterministic scan of its own committed source (never fabricated, never hand-curated; --refresh re-derives it). This is the contract fact a generator MUST honor for molecules/organisms: a composed component's Figma set nests INSTANCES of these components' own sets rather than rebuilding their internals as raw frames. `null` only when the component's source file could not be read in this environment."
+    },
+    "states": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["hover", "focus", "active", "disabled"] },
+      "description": "Interaction states actually captured by scripts/figma-atoms/measure-components.mjs for this component. Empty when anatomy is unavailable — see `anatomySource`."
+    },
+    "anatomySource": {
+      "type": "string",
+      "enum": ["measured", "unavailable"],
+      "description": "\"measured\" — `anatomy` was built from a real measure-components.mjs run. \"unavailable\" — no measured output existed on disk for this tag; `anatomy` is null. Never fabricated."
+    },
+    "anatomyCase": {
+      "type": ["string", "null"],
+      "description": "The variant `case` string (e.g. \"Variant=default,Width=hug\") sampled to build `anatomy`, for traceability. `null` when anatomySource is \"unavailable\"."
+    },
+    "anatomy": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["root"],
+          "properties": {
+            "root": { "$ref": "#/definitions/anatomyNode" },
+            "cases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["case", "root"],
+                "properties": {
+                  "case": { "type": "string", "description": "The measured case string, e.g. \"Current=Yes,Separator=no\"." },
+                  "root": { "$ref": "#/definitions/anatomyNode" }
+                }
+              },
+              "description": "DERIVED (spec 2026-08-26-contract-coverage…, Breadcrumbs Item walkthrough): the FULL anatomy tree of EVERY measured default-state case, sorted by case string. `root`/`anatomyCase` remain the sampled base (back-compat); these are what let a generator fan a measured case DIMENSION (Current, Separator, Shape…) out as a real Figma variant axis with each combination built from its own true structure — a separator child that only exists in Separator=yes cases, a dot form that replaces the label. Structural facts, not just token deltas, so this is full trees rather than a diff format."
+            },
+            "stateOverrides": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "hover": { "$ref": "#/definitions/nodeTokenDiff" },
+                "focus": { "$ref": "#/definitions/nodeTokenDiff" },
+                "active": { "$ref": "#/definitions/nodeTokenDiff" },
+                "disabled": { "$ref": "#/definitions/nodeTokenDiff" }
+              },
+              "description": "Per-state token deltas against `root`, keyed by node PATH (\"0\" = root, \"0.1\" = its second child, etc. — see anatomyNode traversal order). Only nodes/tokens that actually differ from the default state are present; a state absent here means the same case had no captured delta."
+            }
+          }
+        }
+      ]
+    },
+    "tokens": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^--al-" },
+      "description": "Every `--al-*` custom property referenced anywhere in `anatomy` (root, descendants, and state overrides), deduplicated and sorted. This is a REFERENCE list — token values live in the token pipeline (libs/al-web-components/styles/tokens), never here."
+    },
+    "conditionalBindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/variantBinding" },
+          "description": "Keyed by the SAME lowercase values the `variant` prop's `values`/`bindings.figma.options` already use (BEM modifier class suffix -> variant value, e.g. `.al-c-button--secondary` -> \"secondary\"), PLUS a synthesized default-variant key for the component's unmodified base selector when exactly one Figma option has no corresponding modifier class (e.g. Button's bare `.al-c-button` rule -> \"primary\"). Each entry is CSS property -> token binding for that variant's own declarations (T18, spec 2026-08-25-contract-backed-figma-parity-and-generation)."
+        },
+        "state": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/conditionBindingMap" },
+          "description": "Keyed by the SAME state names `states` already uses (pseudo-class/attribute -> state: `:hover` -> \"hover\", `:focus-visible`/`:focus` -> \"focus\", `:active` -> \"active\", `:disabled`/`[disabled]` -> \"disabled\"). CSS property -> token binding for the GENERIC (variant-agnostic) state rule nested under the component's unmodified base selector — applies to any variant that has no compound override under `variant.<name>.state.<name>`."
+        }
+      },
+      "patternProperties": {
+        "^(?!variant$|state$)[a-z][a-zA-Z0-9]*$": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/variantBinding" },
+          "description": "T25: an enum prop OTHER than `variant` whose BEM modifier classes (`.al-c-<tag>--<value>`) carry their own token-bearing declarations — e.g. Badge's `position` (top-left/top-right/bottom-left/bottom-right share one `z-index` rule). Keyed by the prop's own name; each entry keyed by that prop's lowercase values, same conditionBindingMap/variantBinding shape as `variant` above. Kept fully separate from `variant`'s own key/semantics — never merged into it, even when a component has both."
+        }
+      },
+      "description": "Per-variant and per-state CSS declaration -> token bindings recovered directly from the component's own .scss (T18) — never fabricated: a component whose .scss has no BEM modifier classes or no nested pseudo-class/attribute state rules simply omits the corresponding key (or the whole section). Only declarations whose value resolves to EXACTLY ONE `--al-*` design token (or the `border: <width> solid <color>` two-token shorthand, split into `border-width`/`border-color`; or a two-level `var(--al-A, var(--al-B))` role/fallback chain, resolved to whichever of the two this project's own token tree actually indexes — T25) are captured — a value with an unresolvable custom property (e.g. `--al-button-padding`) or more than one uncorrelated token reference is skipped rather than guessed. This is DERIVED from source that IS available in CI (unlike measured anatomy), so it participates fully in --check-drift and --check-determinism."
+    },
+    "a11y": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ariaAttributes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "CEM attribute names that carry ARIA semantics (name matches /aria/i), e.g. \"ariaControls\"."
+        },
+        "cssParts": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Named `::part()` targets the CEM records — the styleable/inspectable surface for an AT or a design tool."
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "figma"],
+      "properties": {
+        "code": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["importPath", "tagName", "workspace"],
+          "properties": {
+            "importPath": { "type": "string", "description": "Package-relative module path, e.g. \"@southleft/al-web-components/components/button/button.ts\"." },
+            "tagName": { "type": "string" },
+            "workspace": { "type": "string", "description": "The npm workspace this component ships from (the shared library, or a project's brandLibrary)." }
+          }
+        },
+        "figma": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fileKey", "componentSetName", "nodeId"],
+          "properties": {
+            "fileKey": { "type": ["string", "null"] },
+            "componentSetName": { "type": ["string", "null"] },
+            "nodeId": { "type": ["string", "null"] },
+            "url": { "type": ["string", "null"] }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "anatomyNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tag"],
+      "properties": {
+        "tag": { "type": "string", "description": "The rendered HTML tag for this node." },
+        "cls": { "type": ["string", "null"], "description": "The node's authored class, when present." },
+        "text": {
+          "type": "string",
+          "description": "DERIVED (spec 2026-08-26-contract-coverage…, Checkbox walkthrough): the node's rendered text content as measured (capped at 300 chars) — the breadcrumbs '/' separator, a checkbox's 'Checkbox label', a button's 'Button'. Present only on nodes the measurement pass saw text in. This supersedes the interim figma.gen.json textContent curation for components measured after the field landed."
+        },
+        "box": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["w", "h"],
+          "properties": { "w": { "type": "number" }, "h": { "type": "number" } },
+          "description": "DERIVED (spec 2026-08-26-contract-coverage…, Checkbox walkthrough): the node's measured rendered size, rounded to 0.1px. A deliberate revision of the T12-era 'no pixel geometry' rule: container ARRANGEMENT stays coarse (flex facts + tokens — this is still not a layout DSL), but a leaf GLYPH's fixed size (an 18×18 custom-check square, a 40×40 hit target) is itself a canvas-expressible code fact — Sass size() literals never surface as custom-property tokens, so without this a generated checkbox has no box at all. Generators use it for childless glyph nodes; a 0×0 box marks a node invisible in this case (a resting ripple) and is skipped."
+        },
+        "component": {
+          "type": "string",
+          "pattern": "^al-",
+          "description": "DERIVED (spec 2026-08-26-contract-coverage…): present when this node IS another component's root — its class list carries that component's own `al-c-<name>` BEM block class (measured anatomy flattens shadow boundaries, so a nested al-checkbox appears as `div.al-c-checkbox`). The node's subtree is that component's INTERNALS: a generator should place an INSTANCE of that component's set here (same by-name discipline as the DS Icon wrapper) instead of rebuilding the subtree as raw frames. Never set on the anatomy root itself (path \"0\" is this contract's own component)."
+        },
+        "layout": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "display": { "type": "string" },
+                "direction": { "type": "string" },
+                "align": { "type": "string" },
+                "justify": { "type": "string" },
+                "wrap": {"type": ["string", "null"], "description": "`flex-wrap`, recorded ONLY when the node genuinely wraps — measure-lib.js nulls the `nowrap` initial value rather than storing it on every node (measure-lib.js:431). Reaches Figma as `layoutWrap` via build-set-code.mjs's layoutWrapsFor, which Figma honours on HORIZONTAL auto-layout only; `display: grid` implies WRAP regardless of this value."},
+                "grow": {"type": ["number", "null"], "description": "`flex-grow`, recorded ONLY when non-zero — measure-lib.js nulls the 0 initial value rather than storing it on every node. This is the only captured fact that means FILL rather than hug: build-set-code.mjs turns it into `layoutSizingHorizontal`/`layoutSizingVertical` = 'FILL' along the PARENT's main axis. Without it every generated frame hugs, which is why a filling message rendered at its max-content width and overflowed its own container."},
+                "alignSelf": {"type": ["string", "null"], "description": "`align-self`, recorded ONLY when the child overrides its parent's cross-axis alignment — measure-lib.js nulls the 'auto'/'normal' initial values (same discipline as wrap/grow). Consumers combine it with the parent's `align` when deciding cross-axis FILL: a child that opts out of stretch (e.g. `align-self: flex-start`) must not fill even under a stretching parent (spec 2026-08-28-layout-fill-and-grow-facts)."}
+              }
+            }
+          ],
+          "description": "Coarse, canvas-expressible layout facts (no pixel geometry) computed from the measured node."
+        },
+        "tokens": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/tokenBinding" },
+          "description": "CSS property name -> token binding REFERENCED by this node in its default state."
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/anatomyNode" }
+        }
+      }
+    },
+    "tokenBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^--al-", "description": "The `--al-*` custom property this CSS declaration resolves to." },
+        "figma": { "type": ["string", "null"], "description": "The matching Figma variable path from scripts/figma-atoms/token-map.mjs (e.g. \"theme/color/background/primary-default\"), or null when token-map has no entry for this token." }
+      }
+    },
+    "nodeTokenDiff": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/definitions/tokenBinding" }
+      },
+      "description": "Node path -> { cssProperty -> token binding } for tokens that changed (or newly appeared) in this state, relative to the same path in `root`."
+    },
+    "conditionBindingMap": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/tokenBinding" },
+      "description": "CSS property -> token binding recovered from ONE selector's direct declarations (T18)."
+    },
+    "variantBinding": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/tokenBinding" },
+      "properties": {
+        "state": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/conditionBindingMap" },
+          "description": "Compound variant+state overrides found as a pseudo-class/attribute rule NESTED directly inside this variant's own selector block (e.g. `.al-c-button--secondary:hover`) — wins over the generic `conditionalBindings.state.<name>` for this variant."
+        },
+        "parts": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/conditionBindingMap" },
+          "description": "T25: sub-element overrides found as a REVERSED-nesting BEM rule — `.al-c-<tag>__<part> { .al-c-<tag>--<this-variant> & {...} }` (this repo's authored convention for \"this part looks different inside that variant\", verified in alert/banner/toast's `__icon` rules; e.g. the icon's `--al-icon-fill` recolors per tone). Keyed by the part's own BEM suffix (`icon`, not `__icon`)."
+        }
+      },
+      "description": "One variant's own CSS property -> token bindings (additionalProperties), plus an optional `state` map for its compound state overrides and an optional `parts` map for sub-element overrides. `state` and `parts` are reserved and never collide with a real CSS property name."
+    }
+  }
+}

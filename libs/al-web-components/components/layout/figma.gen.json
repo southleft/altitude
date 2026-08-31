@@ -1,0 +1,4 @@
+{
+  "$comment": "Per-component Figma-generation config (see altitude-figma-generate skill). anatomyCase: sample the DEFAULT FLOW form. Alphabetical-first picked 'Variant=bento,Direction=column' (b sorts before c/d/g), so the contract recorded al-layout's root as `display: grid` and its default flex-column behaviour — the arrangement almost every consumer actually gets — was captured nowhere. Same bug class as al-badge's dot-vs-label case (2026-08-26). al-layout has no Figma set of its own by design (arrangement primitive, .altitude/contracts/COVERAGE.md), but its contract IS read: it degrades to a coarse auto-layout frame wherever it appears inside a composite's anatomy, and that frame's axis/gap/padding come from this sampled case. Spec 2026-08-27-layout-figma-auto-layout-parity R5.",
+  "anatomyCase": "Variant=default,Direction=default"
+}

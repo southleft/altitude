@@ -1,0 +1,228 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-text-block",
+  "name": "Text Passage",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-text-block",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "maxWidth",
+      "description": "Prevents the text passage from expanding full width\n- **sm** Add a max width of --al-theme-layout-max-width-sm",
+      "type": "string",
+      "rawType": "'sm'",
+      "bindings": {
+        "code": {
+          "attribute": "maxWidth"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "",
+      "description": "The text passage content"
+    }
+  ],
+  "composition": {
+    "renders": []
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Width=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-text-block",
+      "box": {
+        "w": 440.5,
+        "h": 24
+      },
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "flex-start",
+        "justify": "normal"
+      },
+      "tokens": {
+        "column-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "font": {
+          "code": "--al-typography-preset-16",
+          "figma": null
+        },
+        "gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        },
+        "row-gap": {
+          "code": "--al-theme-space",
+          "figma": "theme/space/@"
+        }
+      },
+      "children": [
+        {
+          "tag": "p",
+          "cls": "",
+          "text": "A passage of body copy used to verify measure and rhythm.",
+          "box": {
+            "w": 440.5,
+            "h": 24
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {},
+          "children": []
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Width=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-text-block",
+          "box": {
+            "w": 440.5,
+            "h": 24
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "font": {
+              "code": "--al-typography-preset-16",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "p",
+              "cls": "",
+              "text": "A passage of body copy used to verify measure and rhythm.",
+              "box": {
+                "w": 440.5,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      },
+      {
+        "case": "Width=sm",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-text-block al-c-text-block--max-width-sm",
+          "box": {
+            "w": 440.5,
+            "h": 24
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "flex-start",
+            "justify": "normal"
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "font": {
+              "code": "--al-typography-preset-16",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "p",
+              "cls": "",
+              "text": "A passage of body copy used to verify measure and rhythm.",
+              "box": {
+                "w": 440.5,
+                "h": 24
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-theme-space",
+    "--al-typography-preset-16"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/text-block/text-block.ts",
+      "tagName": "al-text-block",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Text Passage",
+      "nodeId": "3435:888",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-888"
+    }
+  }
+}

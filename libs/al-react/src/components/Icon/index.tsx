@@ -1,1 +1,3 @@
-export * from './Icon';
+'use client';
+
+export * from './Icon.js';

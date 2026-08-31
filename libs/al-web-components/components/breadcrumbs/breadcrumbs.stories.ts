@@ -5,7 +5,7 @@ import '../icon/icons/document';
 import './breadcrumbs';
 
 export default {
-  title: 'Molecules/Breadcrumbs',
+  title: 'Molecules/Navigation/Breadcrumbs',
   component: 'al-breadcrumbs',
   subcomponents: { ALBreadcrumbsItem: 'al-breadcrumbs-item' },
   tags: [ 'autodocs' ],
@@ -32,15 +32,15 @@ const Template = (args) => html`
   <al-breadcrumbs ${spread(args)}>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 1
+      Components
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 2
+      Forms
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 3
+      Input
     </al-breadcrumbs-item>
   </al-breadcrumbs>
 `;
@@ -52,35 +52,35 @@ const TemplateTruncated = (args) => html`
   <al-breadcrumbs ${spread(args)}>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 1
+      Components
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 2
+      Forms
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 3
+      Input
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 4
+      Anatomy
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 5
+      States
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 6
+      Validation
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 7
+      Error message
     </al-breadcrumbs-item>
     <al-breadcrumbs-item>
       <al-icon-document></al-icon-document>
-      Page Name 8
+      Tokens
     </al-breadcrumbs-item>
   </al-breadcrumbs>
 `;

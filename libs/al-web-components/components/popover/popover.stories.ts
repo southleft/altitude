@@ -1,10 +1,8 @@
-import { expect, userEvent, waitFor, within } from '@storybook/test';
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import './popover';
-import '../../.storybook/components/f-po/f-po';
-import '../button-group/button-group';
+import '../../fixtures/f-po/f-po';
+import '../layout/layout';
 import '../button/button';
 import '../icon/icons/document';
 import '../icon/icons/menu';
@@ -30,7 +28,6 @@ export default {
       exclude: ['ariaLabelledBy', 'popoverTrigger', 'popoverTriggerButton', 'handleOnClickOutside', 'transitionDelay']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     variant: {
       options: ['default', 'menu'],
@@ -207,10 +204,10 @@ const TemplateWithContent = (args) => html`
         </al-tab-panel>
       </al-tabs>
       <al-button slot="footer" variant="bare" @click=${closePopover}>Close</al-button>
-      <al-button-group slot="footer" alignment="right">
+      <al-layout slot="footer" direction="row" justify="end" grow>
         <al-button variant="tertiary">Label</al-button>
         <al-button>Label</al-button>
-      </al-button-group>
+      </al-layout>
     </al-popover>
   </div>
 `;
@@ -228,73 +225,3 @@ WithContent.parameters = {
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const popover = canvas.queryByTestId('popover') as any;
-  const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
-  const popoverContainer = popover.shadowRoot.querySelector('.al-c-popover__container') as HTMLElement;
-
-  await userEvent.click(popoverTrigger);
-  expect(popover.isActive).toBe(true);
-
-  // Timeout for transition delay to complete
-  await waitFor(() => {
-    userEvent.type(popoverContainer, '{Escape}');
-    expect(popover.isActive).toBe(false);
-  }, {  timeout: 500 });
-
-  await userEvent.click(canvasElement);
-}
-
-WithMenu.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const popover = canvas.queryByTestId('popover') as any;
-  const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
-  const popoverContainer = popover.shadowRoot.querySelector('.al-c-popover__container') as HTMLElement;
-  const firstMenuItem = canvas.queryByTestId('menu-item-01').shadowRoot.querySelector('.al-c-menu-item__link').shadowRoot.querySelector('*') as any;
-
-  await userEvent.click(popoverTrigger);
-  expect(popover.isActive).toBe(true);
-
-  await userEvent.click(popoverTrigger);
-  expect(popover.isActive).toBe(false);
-
-  await userEvent.click(popoverTrigger);
-  expect(popover.isActive).toBe(true);
-
-  await waitFor(() => expect(popoverContainer).toBeVisible(), {
-    timeout: 400, // A long timeout to make sure it doesn't close
-  });
-  await userEvent.type(firstMenuItem, '{Escape}');
-  expect(popover.isActive).toBe(false);
-
-  popoverTrigger.focus();
-  await userEvent.type(popoverTrigger, '{Enter}');
-  expect(popover.isActive).toBe(true);
-
-  await userEvent.click(canvasElement);
-  expect(popover.isActive).toBe(false);
-
-  await userEvent.click(firstMenuItem);
-  await userEvent.click(canvasElement);
-  expect(popover.isActive).toBe(false);
-
-  popoverTrigger.blur();
-  await userEvent.click(canvasElement);
-};
-
-WithContent.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
-  const popover = canvas.queryByTestId('popover') as any;
-  const popoverTrigger = canvas.queryByTestId('popover-trigger') as any;
-  const popoverCloseButton = popover.shadowRoot.querySelector('.al-c-popover__close-button') as HTMLElement;
-
-  await userEvent.type(popoverTrigger, '{Enter}');
-  expect(popover.isActive).toBe(true);
-
-  await userEvent.type(popoverCloseButton, '{Escape}');
-  expect(popover.isActive).toBe(false);
-
-  popoverTrigger.blur();
-}

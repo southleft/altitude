@@ -1,31 +1,30 @@
 <script>
-  import 'al-web-components/dist/components/badge/badge';
-  import 'al-web-components/dist/components/button-group/button-group';
-  import 'al-web-components/dist/components/button/button';
-  import 'al-web-components/dist/components/card/card';
-  import 'al-web-components/dist/components/checkbox-group/checkbox-group';
-  import 'al-web-components/dist/components/checkbox/checkbox';
-  import 'al-web-components/dist/components/chip-group/chip-group';
-  import 'al-web-components/dist/components/chip/chip';
-  import 'al-web-components/dist/components/dialog/dialog';
-  import 'al-web-components/dist/components/divider/divider';
-  import 'al-web-components/dist/components/header/header';
-  import 'al-web-components/dist/components/heading/heading';
-  import 'al-web-components/dist/components/icon/icons/filter';
-  import 'al-web-components/dist/components/icon/icons/pin';
-  import 'al-web-components/dist/components/icon/icons/star';
-  import 'al-web-components/dist/components/input/input';
-  import 'al-web-components/dist/components/list-item/list-item';
-  import 'al-web-components/dist/components/list/list';
-  import 'al-web-components/dist/components/radio-group/radio-group';
-  import 'al-web-components/dist/components/radio/radio';
-  import 'al-web-components/dist/components/range/range';
-  import 'al-web-components/dist/components/search/search';
-  import 'al-web-components/dist/components/select/select';
-  import 'al-web-components/dist/components/text-passage/text-passage';
-  import 'al-web-components/dist/components/pagination/pagination';
+  import '@southleft/al-web-components/components/badge';
+  import '@southleft/al-web-components/components/layout';
+  import '@southleft/al-web-components/components/button';
+  import '@southleft/al-web-components/components/card';
+  import '@southleft/al-web-components/components/checkbox-group';
+  import '@southleft/al-web-components/components/checkbox';
+  import '@southleft/al-web-components/components/chip';
+  import '@southleft/al-web-components/components/dialog';
+  import '@southleft/al-web-components/components/divider';
+  import '@southleft/al-web-components/components/header';
+  import '@southleft/al-web-components/components/heading';
+  import '@southleft/al-web-components/components/icon/icons/filter';
+  import '@southleft/al-web-components/components/icon/icons/pin';
+  import '@southleft/al-web-components/components/icon/icons/star';
+  import '@southleft/al-web-components/components/input';
+  import '@southleft/al-web-components/components/list-item';
+  import '@southleft/al-web-components/components/list';
+  import '@southleft/al-web-components/components/radio-group';
+  import '@southleft/al-web-components/components/radio';
+  import '@southleft/al-web-components/components/range';
+  import '@southleft/al-web-components/components/search';
+  import '@southleft/al-web-components/components/select';
+  import '@southleft/al-web-components/components/stat';
+  import '@southleft/al-web-components/components/link';
+  import '@southleft/al-web-components/components/pagination';
   import './JobBoard.css';
-  import { Link } from 'svelte-routing'
 
   export const filterStates  = [
     'All locations', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
@@ -34,12 +33,25 @@
     'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
     'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
   ];
+
+  const jobs = [
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], posted: '1 day ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], posted: '1 day ago' },
+    { title: 'Junior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems', 'Remote'], posted: '1 day ago' },
+    { title: 'Back-end Developer', location: 'New Orleans, LA', tags: ['Software', 'API'], posted: '2 days ago' },
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], posted: '2 days ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], posted: '3 days ago' },
+    { title: 'Junior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems', 'Remote'], posted: '3 days ago' },
+    { title: 'Back-end Developer', location: 'New Orleans, LA', tags: ['Software', 'API'], posted: '3 days ago' },
+    { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], posted: '4 days ago' },
+    { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], posted: '4 days ago' }
+  ];
 </script>
 
-<div class="al-l-job-board al-u-gap-xl">
+<al-layout class="al-l-job-board" gap="xl">
   <al-heading isBold={true} variant="lg" tagName="h2">Job Board</al-heading>
-  <div class="al-u-gap">
-    <div class="al-u-grid">
+  <al-layout gap="md">
+    <al-layout variant="grid">
       <al-search class="al-u-grid__item col:12 col:12@lg col:6@xxl" label="Search by job title, company, keywords">
         <al-list>
           <al-list-item>Senior Designer</al-list-item>
@@ -56,7 +68,7 @@
           </al-list>
         {/each}
       </al-select>
-      <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl" hasBackdrop={true}>
+      <al-dialog class="al-u-grid__item col:12 col:6@lg col:3@xxl">
         <al-input label="Filters" isReadonly={true} slot="trigger">
           <al-icon-filter slot="before"></al-icon-filter>
           <al-badge slot="after">3</al-badge>
@@ -64,7 +76,7 @@
         <al-heading slot="header" isBold={true} variant="md" tagName="h2">
           Filter
         </al-heading>
-        <div class="al-l-job-board__filter-dialog al-u-gap">
+        <al-layout class="al-l-job-board__filter-dialog" gap="md">
           <al-select label="Job Type" value="Full-time">
             <al-list>
               <al-list-item>All job types</al-list-item>
@@ -75,7 +87,7 @@
             </al-list>
           </al-select>
           <al-divider></al-divider>
-          <div class="al-u-grid cols:6@md al-u-grid--align-end">
+          <al-layout variant="grid" columns="2" align="end">
             <al-checkbox-group label="Category">
               <al-checkbox>UX & UI Design</al-checkbox>
               <al-checkbox>Print Design</al-checkbox>
@@ -86,7 +98,7 @@
               <al-checkbox isChecked={true}>Design Systems</al-checkbox>
               <al-checkbox>Software Development</al-checkbox>
             </al-checkbox-group>
-          </div>
+          </al-layout>
           <al-divider></al-divider>
           <al-radio-group label="Posted At">
             <al-radio>Any time</al-radio>
@@ -108,162 +120,46 @@
           <al-range label="Radius" behavior="range" max="1000" step="10"></al-range>
           <al-divider></al-divider>
           <al-checkbox>Only remote jobs</al-checkbox>
-        </div>
-        <al-button-group slot="footer">
+        </al-layout>
+        <al-layout slot="footer" direction="row" grow>
           <al-button>Show Results</al-button>
           <al-button variant="secondary">Reset</al-button>
-        </al-button-group>
+        </al-layout>
       </al-dialog>
-    </div>
-    <al-chip-group class="al-u-gap">
+    </al-layout>
+    <al-layout direction="row" wrap>
       <al-chip isDismissible={true}>Front-end Development</al-chip>
       <al-chip isDismissible={true}>Design Systems</al-chip>
       <al-chip isDismissible={true}>Full-time</al-chip>
-    </al-chip-group>
-  </div>
+    </al-layout>
+  </al-layout>
   <al-divider></al-divider>
-  <div class="al-u-gap">
-    <div class="al-u-grid al-u-grid--align-end">
-      <al-text-passage class="al-u-grid__item col:12 col:5@md col:8@lg col:9@xl"><p>We've found <strong>32</strong> jobs!</p></al-text-passage>
+  <al-layout gap="md">
+    <al-layout variant="grid" align="end">
+      <al-stat class="al-u-grid__item col:12 col:5@md col:8@lg col:9@xl" value="32" label="Jobs found"></al-stat>
       <al-select class="al-u-grid__item col:12 col:7@md col:4@lg col:3@xl" label="Sort by">
         <al-list>
           <al-list-item>Date</al-list-item>
           <al-list-item>Title</al-list-item>
         </al-list>
       </al-select>
-    </div>
+    </al-layout>
+    {#each jobs as job}
     <al-card layout="inline">
       <div slot="image" class="al-l-job-board__card-image">
         <al-icon-star size="xl"></al-icon-star>
       </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">UX Designer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Design</al-chip>
-        <al-chip variant="secondary">Remote</al-chip>
-      </div>
+      <al-heading variant="sm" tagName="h3"><al-link href="#">{job.title}</al-link></al-heading>
+      <al-layout direction="row" gap="sm"><al-icon-pin></al-icon-pin><p>{job.location}</p></al-layout>
+      <al-layout direction="row" gap="sm">
+        {#each job.tags as tag}
+        <al-chip variant="secondary">{tag}</al-chip>
+        {/each}
+      </al-layout>
       <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">1 day ago</div>
+      <div slot="actions-end" class="al-u-theme-typography-body-xs">{job.posted}</div>
     </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">Senior Front-end Developer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Front-end Developer</al-chip>
-        <al-chip variant="secondary">Design Systems</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">1 day ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">Junior Front-end Developer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Front-end Developer</al-chip>
-        <al-chip variant="secondary">Design Systems</al-chip>
-        <al-chip variant="secondary">Remote</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">1 day ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">Back-end Developer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Software</al-chip>
-        <al-chip variant="secondary">API</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">2 days ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">UX Designer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Design</al-chip>
-        <al-chip variant="secondary">Remote</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">2 days ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">Senior Front-end Developer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Front-end Developer</al-chip>
-        <al-chip variant="secondary">Design Systems</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">3 days ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">Junior Front-end Developer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Front-end Developer</al-chip>
-        <al-chip variant="secondary">Design Systems</al-chip>
-        <al-chip variant="secondary">Remote</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">3 days ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">Back-end Developer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Software</al-chip>
-        <al-chip variant="secondary">API</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">3 days ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">UX Designer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Design</al-chip>
-        <al-chip variant="secondary">Remote</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">4 days ago</div>
-    </al-card>
-    <al-card layout="inline">
-      <div slot="image" class="al-l-job-board__card-image">
-        <al-icon-star size="xl"></al-icon-star>
-      </div>
-      <al-heading variant="sm" tagName="h3"><Link to="#">Senior Front-end Developer</Link></al-heading>
-      <div class="al-u-gap-xs al-u-gap--row"><al-icon-pin></al-icon-pin><p>New Orleans, LA</p></div>
-      <div class="al-u-gap-xs al-u-gap--row">
-        <al-chip variant="secondary">Front-end Developer</al-chip>
-        <al-chip variant="secondary">Design Systems</al-chip>
-      </div>
-      <al-button slot="actions-start">Apply</al-button>
-      <div slot="actions-end" class="al-u-theme-typography-body-xs">4 days ago</div>
-    </al-card>
-  </div>
+    {/each}
+  </al-layout>
   <al-pagination totalRecords="32"></al-pagination>
-</div>
+</al-layout>

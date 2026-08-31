@@ -1,0 +1,1173 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-stat",
+  "name": "Stat",
+  "version": "1.0.0",
+  "status": "source",
+  "description": "Component: al-stat\n\nA single KPI tile — value, label, and an optional trend delta with a\ndirectional chevron. Follows the design system's canonical stat-card\ncontract (value/label/trend/delta/invertPolarity). Composes into a \"KPI\nband\" by placing several `<al-stat>` inside a grid (see the KPI Band\nstory) or an `<al-layout variant=\"bento\">`.",
+  "semantics": {
+    "element": "div",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "delta",
+      "description": "The delta text, e.g. \"+12%\". Renders next to the trend chevron. The\ntrend row only renders when this is a non-empty string.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "delta"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "description",
+      "description": "Optional supporting description rendered below the trend row.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "description"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "invertPolarity",
+      "description": "Flips ONLY the success/danger color mapping for metrics where a lower\nnumber is better (cost, latency, churn). The chevron direction and the\naccessible \"Trending up/down\" text always reflect the literal `trend`\nvalue — only the color changes.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "invertPolarity"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "label",
+      "description": "The metric's label, e.g. \"Active users\".",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "trend",
+      "description": "Trend direction.\n- **none** (default) No trend indicator is rendered\n- **up** Renders an up chevron\n- **down** Renders a down chevron",
+      "type": "enum",
+      "rawType": "'up' | 'down' | 'none'",
+      "values": [
+        "down",
+        "none",
+        "up"
+      ],
+      "default": "'none'",
+      "bindings": {
+        "code": {
+          "attribute": "trend"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Trend",
+          "options": [
+            "Default",
+            "Down",
+            "Up"
+          ]
+        }
+      }
+    },
+    {
+      "name": "value",
+      "description": "The display value, e.g. \"1,234\" or \"$4.2M\". Typed as a string — the\nconsumer owns locale formatting, digit grouping, and unit suffixes.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "value"
+        },
+        "figma": null
+      }
+    }
+  ],
+  "events": [],
+  "slots": [
+    {
+      "name": "icon",
+      "description": "Optional leading icon, rendered above the value."
+    }
+  ],
+  "composition": {
+    "renders": [
+      {
+        "tag": "al-icon",
+        "evidence": [
+          "import"
+        ]
+      },
+      {
+        "tag": "al-layout",
+        "evidence": [
+          "template"
+        ]
+      }
+    ]
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Trend=default",
+  "anatomy": {
+    "root": {
+      "tag": "div",
+      "cls": "al-c-stat",
+      "box": {
+        "w": 143.9,
+        "h": 166
+      },
+      "layout": {
+        "display": "flex",
+        "direction": "column",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-default",
+          "figma": "theme/color/background/default"
+        },
+        "border": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        },
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius-role-surface",
+          "figma": "theme/border/radius/role/surface"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius-role-surface",
+          "figma": "theme/border/radius/role/surface"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius-role-surface",
+          "figma": "theme/border/radius/role/surface"
+        },
+        "border-top-color": {
+          "code": "--al-theme-color-border-default",
+          "figma": "theme/color/border/default"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius-role-surface",
+          "figma": "theme/border/radius/role/surface"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius-role-surface",
+          "figma": "theme/border/radius/role/surface"
+        },
+        "border-top-width": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        },
+        "padding": {
+          "code": "--al-theme-space-md",
+          "figma": "theme/space/md"
+        },
+        "padding-bottom": {
+          "code": "--al-theme-space-md",
+          "figma": "theme/space/md"
+        },
+        "padding-left": {
+          "code": "--al-theme-space-md",
+          "figma": "theme/space/md"
+        },
+        "padding-right": {
+          "code": "--al-theme-space-md",
+          "figma": "theme/space/md"
+        },
+        "padding-top": {
+          "code": "--al-theme-space-md",
+          "figma": "theme/space/md"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-xs",
+          "figma": "theme/space/xs"
+        }
+      },
+      "children": [
+        {
+          "tag": "span",
+          "cls": "al-c-stat__value",
+          "text": "128",
+          "box": {
+            "w": 101.9,
+            "h": 60
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default",
+              "figma": "theme/color/content/default"
+            },
+            "font": {
+              "code": "--al-theme-typography-display-sm",
+              "figma": null
+            },
+            "font-weight": {
+              "code": "--al-font-weight-bold",
+              "figma": "typography/font-weight/bold"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-display-sm-bold-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": []
+        },
+        {
+          "tag": "span",
+          "cls": "al-c-stat__label",
+          "text": "Deployments",
+          "box": {
+            "w": 101.9,
+            "h": 20
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-sm",
+              "figma": null
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-sm-letter-spacing",
+              "figma": null
+            }
+          },
+          "children": []
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-stat__trend",
+          "box": {
+            "w": 101.9,
+            "h": 16
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "row",
+            "align": "center",
+            "justify": "normal"
+          },
+          "tokens": {
+            "color": {
+              "code": "--al-theme-color-content-default-weak",
+              "figma": "theme/color/content/default-weak"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "font": {
+              "code": "--al-theme-typography-body-xs",
+              "figma": null
+            },
+            "gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            },
+            "letter-spacing": {
+              "code": "--al-theme-typography-body-xs-letter-spacing",
+              "figma": null
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xxs",
+              "figma": "theme/space/xxs"
+            }
+          },
+          "children": [
+            {
+              "tag": "span",
+              "cls": "",
+              "text": "12%",
+              "box": {
+                "w": 24,
+                "h": 16
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Trend=default",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-stat",
+          "box": {
+            "w": 143.9,
+            "h": 166
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-default",
+              "figma": "theme/color/background/default"
+            },
+            "border": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-default",
+              "figma": "theme/color/border/default"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-left": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-right": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "span",
+              "cls": "al-c-stat__value",
+              "text": "128",
+              "box": {
+                "w": 101.9,
+                "h": 60
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-sm",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-sm-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "al-c-stat__label",
+              "text": "Deployments",
+              "box": {
+                "w": 101.9,
+                "h": 20
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-stat__trend",
+              "box": {
+                "w": 101.9,
+                "h": 16
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-xs",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-xs-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "text": "12%",
+                  "box": {
+                    "w": 24,
+                    "h": 16
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Trend=down",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-stat al-c-stat--trend-down",
+          "box": {
+            "w": 143.9,
+            "h": 166
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-default",
+              "figma": "theme/color/background/default"
+            },
+            "border": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-default",
+              "figma": "theme/color/border/default"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-left": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-right": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "span",
+              "cls": "al-c-stat__value",
+              "text": "128",
+              "box": {
+                "w": 101.9,
+                "h": 60
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-sm",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-sm-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "al-c-stat__label",
+              "text": "Deployments",
+              "box": {
+                "w": 101.9,
+                "h": 20
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-stat__trend",
+              "box": {
+                "w": 101.9,
+                "h": 16
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-danger-default",
+                  "figma": "theme/color/content/danger-default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-xs",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-xs-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-icon al-c-icon--sm",
+                  "component": "al-icon",
+                  "box": {
+                    "w": 12,
+                    "h": 12
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "svg",
+                      "cls": "",
+                      "box": {
+                        "w": 12,
+                        "h": 12
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "height": {
+                          "code": "--al-theme-icon-sm",
+                          "figma": "theme/icon/sm"
+                        },
+                        "width": {
+                          "code": "--al-theme-icon-sm",
+                          "figma": "theme/icon/sm"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "path",
+                          "cls": "",
+                          "box": {
+                            "w": 8.3,
+                            "h": 4.5
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "span",
+                  "cls": "al-u-is-vishidden",
+                  "text": "Trending down,",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "text": "12%",
+                  "box": {
+                    "w": 24,
+                    "h": 16
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Trend=up",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-stat al-c-stat--trend-up",
+          "box": {
+            "w": 143.9,
+            "h": 166
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-default",
+              "figma": "theme/color/background/default"
+            },
+            "border": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-default",
+              "figma": "theme/color/border/default"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-role-surface",
+              "figma": "theme/border/radius/role/surface"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            },
+            "padding": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-left": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-right": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "padding-top": {
+              "code": "--al-theme-space-md",
+              "figma": "theme/space/md"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-xs",
+              "figma": "theme/space/xs"
+            }
+          },
+          "children": [
+            {
+              "tag": "span",
+              "cls": "al-c-stat__value",
+              "text": "128",
+              "box": {
+                "w": 101.9,
+                "h": 60
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default",
+                  "figma": "theme/color/content/default"
+                },
+                "font": {
+                  "code": "--al-theme-typography-display-sm",
+                  "figma": null
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-bold",
+                  "figma": "typography/font-weight/bold"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-display-sm-bold-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "span",
+              "cls": "al-c-stat__label",
+              "text": "Deployments",
+              "box": {
+                "w": 101.9,
+                "h": 20
+              },
+              "layout": {
+                "display": "block",
+                "direction": "row",
+                "align": "normal",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-default-weak",
+                  "figma": "theme/color/content/default-weak"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-sm",
+                  "figma": null
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
+                  "figma": null
+                }
+              },
+              "children": []
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-stat__trend",
+              "box": {
+                "w": 101.9,
+                "h": 16
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "normal"
+              },
+              "tokens": {
+                "color": {
+                  "code": "--al-theme-color-content-success-default",
+                  "figma": "theme/color/content/success-default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "font": {
+                  "code": "--al-theme-typography-body-xs",
+                  "figma": null
+                },
+                "gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-xs-letter-spacing",
+                  "figma": null
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xxs",
+                  "figma": "theme/space/xxs"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "al-c-icon al-c-icon--sm",
+                  "component": "al-icon",
+                  "box": {
+                    "w": 12,
+                    "h": 12
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "svg",
+                      "cls": "",
+                      "box": {
+                        "w": 12,
+                        "h": 12
+                      },
+                      "layout": {
+                        "display": "flex",
+                        "direction": "row",
+                        "align": "center",
+                        "justify": "center"
+                      },
+                      "tokens": {
+                        "height": {
+                          "code": "--al-theme-icon-sm",
+                          "figma": "theme/icon/sm"
+                        },
+                        "width": {
+                          "code": "--al-theme-icon-sm",
+                          "figma": "theme/icon/sm"
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "path",
+                          "cls": "",
+                          "box": {
+                            "w": 8.3,
+                            "h": 4.5
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "span",
+                  "cls": "al-u-is-vishidden",
+                  "text": "Trending up,",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                },
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "text": "12%",
+                  "box": {
+                    "w": 24,
+                    "h": 16
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-font-weight-bold",
+    "--al-theme-border-radius-role-surface",
+    "--al-theme-border-width",
+    "--al-theme-color-background-default",
+    "--al-theme-color-border-default",
+    "--al-theme-color-content-default",
+    "--al-theme-color-content-default-weak",
+    "--al-theme-space-md",
+    "--al-theme-space-xs",
+    "--al-theme-space-xxs",
+    "--al-theme-typography-body-sm",
+    "--al-theme-typography-body-sm-letter-spacing",
+    "--al-theme-typography-body-xs",
+    "--al-theme-typography-body-xs-letter-spacing",
+    "--al-theme-typography-display-sm",
+    "--al-theme-typography-display-sm-bold-letter-spacing"
+  ],
+  "a11y": {
+    "ariaAttributes": [],
+    "cssParts": [
+      "container",
+      "trend",
+      "value"
+    ]
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/stat/stat.ts",
+      "tagName": "al-stat",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "2a0kqTG8i8l1q1VI2yq9or",
+      "componentSetName": "Stat",
+      "nodeId": "19:2580",
+      "url": "https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=19-2580"
+    }
+  }
+}

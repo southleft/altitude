@@ -1,0 +1,129 @@
+purpose: >-
+  A modal that interrupts the page: it traps focus, closes on Escape, and
+  returns focus to whatever opened it. It brings its own trigger — slot the
+  control that opens it into the `trigger` slot and the component wires
+  `aria-expanded` on it — so the open state lives in one place rather than being
+  synchronised by the page.
+
+whenToUse:
+  - >-
+    The user must resolve something before continuing: confirm a destructive
+    action, complete a short required form, acknowledge a consequence.
+  - >-
+    The task is short enough that losing sight of the page behind it costs
+    nothing. A modal is an interruption, and it should be worth interrupting
+    for.
+  - >-
+    You need focus containment. The dialog composes `al-focus-trap`, so tab
+    order is confined to the dialog while it is open.
+
+whenNotToUse:
+  - text: >-
+      You are only reporting the outcome of something the user already did. An
+      interruption that carries no decision is a cost with no payoff.
+    instead: toast
+  - text: >-
+      The content is long, or the user needs to refer back to the page while
+      working through it. A panel that slides in beside the page keeps both
+      visible.
+    instead: drawer
+  - text: >-
+      The content is a small amount of supplementary detail attached to one
+      control, revealed on hover or focus.
+    instead: tooltip
+  - text: >-
+      You are showing a persistent, page-level message about state — an outage,
+      a trial expiring, a validation summary.
+    instead: banner
+
+dos:
+  - >-
+    Slot the trigger into the `trigger` slot instead of calling `open()` from
+    the page. The component sets `aria-expanded` on the slotted control and
+    stores it as the focus-restore target, and neither happens if you open the
+    dialog from outside.
+  - >-
+    Listen for `onDialogClose` when you need to react to the dialog closing at
+    all. `onDialogCloseButton` fires only for the close button — the backdrop
+    click and the Escape key do not reach it.
+  - >-
+    Keep `transitionDelay` in step with your close animation. It is what delays
+    focus-trap activation, so a value shorter than the transition traps focus
+    before the dialog is visible.
+  - >-
+    Set `disableClickOutside` for a dialog the user must answer, so a stray
+    click on the backdrop cannot discard a half-finished decision.
+
+donts:
+  - >-
+    Don't open a dialog from another dialog. Focus restoration targets a single
+    remembered element, and stacking modals produces a focus path the component
+    does not model.
+  - >-
+    Don't rely on the page to restore focus after `close()`. The component
+    already does it — trigger first, then whatever had focus before the dialog
+    opened — and a second focus call from the page will fight it.
+  - >-
+    Don't use a dialog to present a form long enough to scroll. The user loses
+    the context they were working in and cannot get it back without abandoning
+    the task.
+  - >-
+    Don't leave `heading` empty. It is what `aria-labelledby` points at, so an
+    empty heading means the dialog opens with no accessible name.
+
+accessibility:
+  - >-
+    The container renders `role="dialog"` with `aria-modal` and an
+    `aria-labelledby` generated from the heading, so the dialog announces itself
+    and what it is for on open.
+  - >-
+    Focus returns to the invoking control on EVERY close path — close button,
+    backdrop, Escape, and a programmatic `close()`. That last case is called out
+    in the source as a WCAG 2.4.3 fix: calling `close()` from code used to drop
+    focus to `<body>`.
+  - >-
+    The restore target is resolved in order — the focusable element inside the
+    slotted trigger, then the trigger itself, then whatever had focus before the
+    dialog opened — so focus is not lost when a trigger component does not
+    expose a button.
+  - >-
+    Escape is handled by a shared DialogController rather than a local key
+    listener, so the behaviour is the same one every other overlay in the system
+    uses.
+
+content:
+  - >-
+    Make the heading state the decision, not the topic: "Delete this project?"
+    tells the user what they are about to do; "Project settings" does not.
+  - >-
+    Label the confirming button with the action it performs — "Delete", "Send
+    invites" — not "OK". The button text is often the only thing read before it
+    is clicked.
+  - >-
+    Say what is irreversible, in the body, in plain words. "This cannot be
+    undone" is worth the line it costs.
+  - >-
+    Keep the body to what the decision needs. Anything the user could read later
+    belongs on the page, not in the interruption.
+
+sources:
+  - path: libs/al-web-components/components/dialog/dialog.ts
+    contains: WCAG 2.4.3
+    note: >-
+      Focus restoration on every close path, including the programmatic one that
+      previously dropped focus to the document body.
+  - path: libs/al-web-components/components/dialog/dialog.ts
+    contains: aria-modal
+    note: >-
+      The dialog role, modal state and generated `aria-labelledby` — the basis
+      for requiring a heading.
+  - path: libs/al-web-components/components/dialog/dialog.ts
+    contains: onDialogCloseButton
+    note: >-
+      The event that fires only for the close button, and the note pointing
+      consumers at `onDialogClose` to catch every path.
+  - path: libs/al-web-components/components/dialog/dialog.ts
+    contains: transitionDelay
+    note: >-
+      The delay before focus-trap activation, and why it has to match the
+      transition.

@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-time-selector-list.schema.json",
+  "title": "ALTimeSelectorList (al-time-selector-list)",
+  "description": "Component: al-time-selector-list",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-time-selector-list",
+    "className": "ALTimeSelectorList",
+    "module": "components/time-selector-list/time-selector-list.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [],
+    "events": [
+      {
+        "name": "onTimeSelectorListChange",
+        "description": "Fired when a time is selected. Detail: `{ value }` — formatted per `timeFormat`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-time-selector-list"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "description": "typescript: 'row'",
+          "type": "string"
+        },
+        "activeTime": {
+          "description": "Sets a specific time to be active (24-hour format, e.g., activeTime=\"16:00\" for 4 PM).",
+          "type": "string"
+        },
+        "times": {
+          "description": "typescript: { value: Date; available: boolean }[]",
+          "type": "string"
+        },
+        "timeIncrements": {
+          "description": "Increments in minutes for the time display.",
+          "type": "number"
+        },
+        "timeStart": {
+          "description": "The minimum time displayed between times (24-hour format, e.g., timeStart=${16} for 4 PM).",
+          "type": "number"
+        },
+        "timeEnd": {
+          "description": "The maximum time displayed between times (24-hour format, e.g., timeEnd=${16} for 4 PM).",
+          "type": "number"
+        },
+        "disabledMinTime": {
+          "description": "The minimum time to disable for time display (24-hour format, e.g., disabledMinTime=\"16:00\" for 4 PM).",
+          "type": "string"
+        },
+        "disabledMaxTime": {
+          "description": "The maximum time to disable for time display (24-hour format, e.g., disabledMaxTime=\"16:00\" for 4 PM).",
+          "type": "string"
+        },
+        "resetTime": {
+          "description": "Sets the active time selector to an inactive state.",
+          "type": "boolean"
+        },
+        "is24HourFormat": {
+          "description": "Determines whether to use a 24-hour time format.",
+          "type": "boolean"
+        },
+        "timeFormat": {
+          "description": "Specifies the date format for UI display (e.g., 'h:mm a').",
+          "type": "string"
+        },
+        "timeSelectorLabel": {
+          "description": "The label for the time selector heading.",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

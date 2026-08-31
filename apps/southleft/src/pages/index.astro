@@ -1,0 +1,358 @@
+---
+// Home page — spec 2026-08-20-southleft-example-app, T3 + T5/T6/T8, REBUILT
+// T9 round 2 for section-by-section structural parity with v5's real
+// src/pages/index.astro: same section order, same copy/data, same defaults.
+// T12 round 4 (visual fidelity): the hero's grid-texture background, static
+// token-chip row, and static terminal panel are now transcribed too (see
+// src/styles/layout.css `.sl-hero*` / `.sl-token-chip` / `.sl-terminal*`),
+// and every section opens with v5's `.section-rule` (index/label), matching
+// v5's own numbering exactly. T12 audit-2 round (E): "04 / try-the-system"
+// (TokenPlayground.astro) is now built and wired too — see
+// components/TrySystem.astro.
+//
+// Spec 2026-08-22-southleft-example-1-to-1-parity closed the three biggest
+// remaining holes, all previously written off as "animation-driven": the
+// `#hero-murmur` glyph field (components/HeroMurmur.astro), `GenerativeCanvas`
+// ("00 / the-canvas") and `Marquee`. None of them turned out to be animations
+// — the canvas is a deterministic seeded generator, the murmur is the hero's
+// texture, and the ticker is one CSS keyframe — and their absence was most of
+// what made the page read as "not 1:1".
+//
+// Still NOT reproduced, and genuinely interaction/animation work: the token
+// chips' pointer drag, the terminal's type-on, the `hero-squeeze` scroll-driven
+// variable-font compression, and the `.reveal` scroll stagger. Everything else
+// — content, IA, section order, section designs — is transcribed.
+//
+// `data-section-id` on each top-level <section> is the layout resolver's
+// (src/lib/layout-resolver.ts, T5) reorder target — the AI direction panel
+// (T6) can permute logos/services/work/testimonials/insights/cta live. The
+// hero is deliberately NOT one of them (always first, by construction — see
+// that module's doc comment), and the footer lives outside <main> entirely
+// (Base.astro), so it is always last regardless of what a layout carries.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import WorkCard from '../components/WorkCard.astro';
+import CTABand from '../components/CTABand.astro';
+import AIDirectionPanel from '../components/AIDirectionPanel.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import TrySystem from '../components/TrySystem.astro';
+import GenerativeCanvas from '../components/GenerativeCanvas.astro';
+import Marquee from '../components/Marquee.astro';
+import HeroMurmur from '../components/HeroMurmur.astro';
+import { CTA } from '../lib/site';
+import { withBase } from '../lib/url';
+
+const posts = (await getCollection('insights')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+
+const allWork = await getCollection('work');
+const featuredSlugs = ['petsmart', 'stanford-d-school', 'ibm-investor-relations'];
+const featuredWork = featuredSlugs.map((s) => allWork.find((w) => w.id.replace(/\.md$/, '') === s)).filter((w) => w !== undefined);
+
+const logos = [
+  { file: 'ibm.webp', name: 'IBM' },
+  { file: 'google.webp', name: 'Google' },
+  { file: 'petsmart.webp', name: 'PetSmart' },
+  { file: 'toast.webp', name: 'Toast' },
+  { file: 'caterpillar.webp', name: 'Caterpillar' },
+  { file: 'cigna-health.webp', name: 'Cigna Health' },
+  { file: 'conde-nast.webp', name: 'Condé Nast' },
+  { file: 'docusign.webp', name: 'DocuSign' },
+  { file: 'state-farm.webp', name: 'State Farm' },
+  { file: 'ulta-beauty.webp', name: 'Ulta Beauty' },
+  { file: 'chubb.webp', name: 'CHUBB' },
+  { file: 'better-com.svg', name: 'Better.com' },
+];
+
+// Real copy migrated verbatim from southleft-v5's src/pages/index.astro.
+const services = [
+  {
+    href: '/ai-design-systems',
+    name: 'AI + Design Systems',
+    body: 'Your design system is about to become the most important API your company owns. AI-readiness audits, MCP integrations, discovery and research at the edge of what agents and generative UI make possible.',
+    items: ['AI-readiness audits', 'MCP integrations', 'Discovery & research'],
+  },
+  {
+    href: '/services/design-systems',
+    name: 'Design System Engineering',
+    body: 'Build, scale, and govern systems from Figma to production. Component libraries, token architecture, Storybook and docs — everything typed, tokenized, tested.',
+    items: ['Component libraries', 'Token architecture', 'Storybook & docs'],
+  },
+  {
+    href: '/services/workshops-training',
+    name: 'Workshops & Training',
+    body: 'We teach what we practice — hands-on team workshops, conference talks, and the AI & Design Systems course with Brad Frost. No slideware theory; live demos from real client work.',
+    items: ['Team workshops', 'Speaking engagements', 'AI & DS course with Brad Frost'],
+  },
+  {
+    href: '/services/team-augmentation',
+    name: 'Team Augmentation',
+    body: 'Senior design-system and front-end engineers embedded with your team. They slot into your codebase and ship — direct access to the people writing the code, no hand-offs to a B-team.',
+    items: ['Embedded engineers', 'Front-end architecture', 'Training & mentorship'],
+  },
+];
+
+const tools = [
+  { name: 'figma-console-mcp', cmd: 'npx figma-console-mcp', desc: 'AI-powered design system management inside Figma', href: 'https://github.com/southleft/figma-console-mcp' },
+  { name: 'story-ui', cmd: 'npx story-ui init', desc: 'AI layout generation for Storybook via MCP', href: 'https://github.com/southleft/story-ui' },
+  { name: 'figmalint', cmd: 'figma → plugins → FigmaLint', desc: 'Design linting for developer-ready Figma files', href: 'https://github.com/southleft/figmalint' },
+  { name: 'design-systems-mcp', cmd: 'npx design-systems-mcp', desc: 'A design systems knowledge base your AI can query', href: 'https://github.com/southleft/design-systems-mcp' },
+  { name: 'altitude', cmd: 'open /tools/altitude', desc: 'Our in-house design system — and our AI testbed', href: '/tools/altitude' },
+];
+
+// Real, verbatim client quotes migrated from southleft-v5 (all four home-page quotes).
+const testimonials = [
+  { quote: 'They’re excellent! They make work seem easy — always on time and they communicate clearly along the way.', name: 'Jessi Hall', role: 'Producer, Big Medium' },
+  { quote: 'The team was very timely, often delivering even before the deadline and always being responsive.', name: 'Sara Soueidan', role: 'Inclusive Web Design Engineer & Educator' },
+  { quote: 'Southleft was instrumental in helping us improve our user experience while simultaneously increasing traffic and revenue.', name: 'Todd Hodgson', role: 'Director of Product Management, Outside Inc.' },
+  { quote: 'They go through a high level of detail to understand our needs and follow up to ensure their solutions meet them.', name: 'David Baucum', role: 'CTO, CURA Freight' },
+];
+---
+
+<Base title="Southleft">
+  <!-- Announcement strip — v5's real markup (index.astro ~L100-106) is a
+       bespoke full-width centered mono link, not `al-banner` (which forces
+       an icon + left alignment + underlined link — round 5, T12). See
+       src/styles/layout.css `.sl-announcement` for the token treatment. -->
+  <a href={withBase('/insights/business/better-together-southleft-x-baseline-and-a-new-ceo')} class="sl-announcement al-u-theme-typography-body-xs">
+    <span class="sl-announcement__new">new →</span> Better together: Southleft × Baseline, and a new CEO
+  </a>
+
+  <!-- Hero — v5's exact composition (no numbered section-rule here — v5's
+       hero doesn't carry one either): full-width kicker + display headline
+       (18ch cap), then a two-column grid below (lead copy + CTAs + token
+       chips / static terminal panel), over a grid-texture background. Not
+       wrapped in <al-hero> — see src/styles/layout.css's `.sl-hero`
+       comment for why. -->
+  <section class="sl-hero" data-section-id="hero">
+    <div class="sl-hero__texture" aria-hidden="true"></div>
+    <!-- The sparse glyph field over the grid texture — T8. -->
+    <HeroMurmur />
+    <!-- Structure is `<al-layout>` end to end (T12): `constrained` owns the
+         page measure AND — via `--al-layout-padding`, added for this — the
+         hero's block rhythm, so the old `.sl-container` + `.sl-hero__inner`
+         pair collapses into one element. The two-column split below the
+         heading is `variant="grid"` with `--al-layout-template`, and the lead
+         column is a plain flow layout. No hand-rolled flex or grid remains in
+         this section. -->
+    <al-layout variant="constrained" class="sl-measure sl-hero__inner">
+      <al-layout gap="none" class="sl-hero__stack">
+        <p class="sl-kicker sl-kicker--accent al-u-theme-typography-body-xs">&lt;southleft&gt;</p>
+        <al-heading tagName="h1" variant="display-lg" isBold={true} class="sl-hero__heading">
+          AI-powered design systems. Built by the people building the tools.
+        </al-heading>
+        <al-layout variant="grid" noCollapse align="end" class="sl-hero__grid">
+          <al-layout gap="none" class="al-u-grid__item sl-hero__lead">
+            <!-- `maxWidth` was `"md"`, which al-text-block does not accept —
+                 its only value is `"sm"` (text-block.ts), so the attribute was
+                 a no-op. The reference caps this copy at `max-w-2xl` and sets
+                 it in the lead type size; both live in `.sl-hero__lead-copy`,
+                 reusing the same `--sl-text-lead` recipe as the section deks. -->
+            <al-text-block class="sl-hero__lead-copy">
+              We audit, build, and evolve design systems for teams at Caterpillar, Novartis, UPS, and
+              NASDAQ — and we build the open-source AI tooling the design systems community actually
+              uses. We don't just talk about this stuff. We build it.
+            </al-text-block>
+            <al-layout direction="row" wrap gap="sm" align="center" class="sl-hero__actions">
+              <al-button href={withBase(CTA.href)}>{CTA.label}</al-button>
+              <al-button variant="tertiary" href={withBase('/services')}>See how we work</al-button>
+            </al-layout>
+            <al-layout gap="sm" class="sl-hero__chips" aria-hidden="true">
+              <al-layout direction="row" wrap gap="sm" align="center">
+                <al-chip class="sl-token-chip"><span class="sl-token-chip__dot"></span>--sl-color-red-500: #f05735</al-chip>
+                <al-chip class="sl-token-chip">--sl-font-display: Agrandir</al-chip>
+                <al-chip class="sl-token-chip">--sl-ease-out: cubic-bezier(.22,1,.36,1)</al-chip>
+              </al-layout>
+              <p class="sl-hero__chip-note al-u-theme-typography-body-xs">// loose tokens — drag them around</p>
+            </al-layout>
+          </al-layout>
+          <div class="al-u-grid__item sl-hero__terminal">
+            <div class="sl-terminal">
+            <div class="sl-terminal__bar" aria-hidden="true">
+              <span class="sl-terminal__dot sl-terminal__dot--1"></span>
+              <span class="sl-terminal__dot sl-terminal__dot--2"></span>
+              <span class="sl-terminal__dot sl-terminal__dot--3"></span>
+              <span class="sl-terminal__title al-u-theme-typography-body-xs">southleft — mcp</span>
+            </div>
+            <pre class="sl-terminal__body al-u-theme-typography-body-sm"><span class="sl-terminal__prompt">$</span> <span class="sl-terminal__cmd">npx story-ui init</span>
+<span class="sl-terminal__ok">✓</span> <span class="sl-terminal__out">design system detected</span>
+<span class="sl-terminal__ok">✓</span> <span class="sl-terminal__out">tokens parsed · 214 components indexed</span>
+<span class="sl-terminal__ok">✓</span> <span class="sl-terminal__out">MCP server connected</span>
+<span class="sl-terminal__prompt">›</span> <span class="sl-terminal__cmd">"build a pricing page from our system"</span>
+<span class="sl-terminal__key">agent</span> <span class="sl-terminal__out">composing layout… <span class="sl-terminal__ok">done in 9s</span></span>
+<span class="sl-terminal__out">— every component from your library. zero rogue divs.</span></pre>
+          </div>
+        </div>
+      </al-layout>
+      </al-layout>
+    </al-layout>
+  </section>
+
+  <!-- 00 / The canvas — the centerpiece. Built in spec
+       2026-08-22-southleft-example-1-to-1-parity (T7); it was deferred as
+       "animation-driven" by the previous spec, but the reference's version is
+       a deterministic seeded generator, not an animation, and the section was
+       the largest single hole in home-page parity. -->
+  <GenerativeCanvas />
+
+  <!-- 01 / Proof strip -->
+  <section class="sl-container sl-section" data-section-id="logos">
+    <al-section-header index="01" label="trusted-by" kicker=""></al-section-header>
+    <p class="sl-measure-md al-u-theme-typography-body-sm" style="margin-top: 2rem; color: var(--al-theme-color-content-default-weak);">Trusted since 2012 by teams who care what's under the hood.</p>
+    <al-logo-wall class="sl-logo-wall" style="margin-top: 3rem;">
+      {logos.map((logo) => <img src={withBase(`/logos/${logo.file}`)} alt={logo.name} loading="lazy" />)}
+    </al-logo-wall>
+  </section>
+
+  <!-- 02 / The shift (POV) -->
+  <section class="sl-container sl-section">
+    <al-layout variant="grid" noCollapse>
+      <div class="al-u-grid__item col:12 col:7@lg">
+        <div class="sl-section-rule" aria-hidden="true"><span>02 / the-shift</span></div>
+        <p class="sl-kicker sl-kicker--accent" style="margin-top: 2rem;">&lt;why-now&gt;</p>
+        <al-heading tagName="h2" variant="lg" isBold={true} style="margin-top: var(--al-theme-space-sm);">AI doesn't replace your design system. It exposes it.</al-heading>
+      </div>
+      <div class="al-u-grid__item col:12 col:5@lg">
+        <p class="sl-section-header__dek" style="max-width: 42rem;">
+          Systems built with structured context — clean tokens, typed components, real
+          documentation — become force multipliers for AI-assisted teams. Systems without it
+          become bottlenecks. We published a framework for getting from one to the other.
+        </p>
+        <a href={withBase('/insights/design-systems/context-based-design-systems-a-new-model-for-the-ai-driven-product-lifecycle')} class="sl-mono-link" style="margin-top: var(--al-theme-space-lg);">
+          Read: Context-Based Design Systems →
+        </a>
+      </div>
+    </al-layout>
+  </section>
+
+  <!-- 03 / Services -->
+  <section class="sl-container sl-section" data-section-id="services">
+    <SectionHeader
+      index="03"
+      label="services"
+      heading="What we do"
+      dek="AI + design systems is our main practice — audits, workshops, embedded engineering, and ongoing research at the edge of MCP, agents, and generative UI."
+    />
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
+      {services.map((s) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <al-card variant="service" fill href={withBase(s.href)}>
+            <h3 slot="header">{s.name}</h3>
+            <span slot="cue" aria-hidden="true">↗</span>
+            <p>{s.body}</p>
+            <ul slot="list">
+              {s.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </al-card>
+        </div>
+      ))}
+    </al-layout></div>
+  </section>
+
+  <!-- 04 / Try the system — v5's TokenPlayground.astro, transcribed +
+       wired (spec 2026-08-20-southleft-example-app, T12 audit-2 round E). -->
+  <TrySystem />
+
+  <!-- 05 / Open-source tools -->
+  <section class="sl-container sl-section" data-section-id="tools">
+    <SectionHeader
+      index="05"
+      label="open-source"
+      heading="We publish our homework"
+      dek="If we recommend a workflow, it's because we've already built and shipped it. Open-source, in production, used by real teams."
+    />
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
+      {tools.map((t) => (
+        <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+          <al-card
+            variant="tool"
+            fill
+            href={t.href.startsWith('http') ? t.href : withBase(t.href)}
+            target={t.href.startsWith('http') ? '_blank' : undefined}
+            command={t.cmd}
+          >
+            <p>{t.desc}</p>
+            <span slot="footer" aria-hidden="true">{t.href.startsWith('http') ? 'github →' : 'explore →'}</span>
+          </al-card>
+        </div>
+      ))}
+      <div class="al-u-grid__item col:12 col:6@md col:4@lg">
+        <al-card variant="tool" dashed fill command="and the course" command-prefix="//">
+          <p><strong>AI &amp; Design Systems</strong> — a new online course from Brad Frost and Southleft. Grounded, practical, shaped by real work with large-scale teams.</p>
+          <a slot="footer" href={withBase('/services/workshops-training')}>get early access →</a>
+        </al-card>
+      </div>
+    </al-layout></div>
+  </section>
+
+  <!-- 06 / Featured work -->
+  <section class="sl-container sl-section" data-section-id="work">
+    <SectionHeader
+      index="06"
+      label="work"
+      heading="Proof, not promises"
+      dek="Design systems and front ends shipped for enterprises, startups, and everything between."
+      linkHref="/work"
+      linkLabel="all case studies →"
+    />
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
+      {featuredWork.map((w) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <WorkCard project={w} />
+        </div>
+      ))}
+    </al-layout></div>
+  </section>
+
+  <!-- 07 / Testimonials — rebuilt as bespoke `.sl-quote-card` markup, T12
+       audit-3 (final polish round): `al-testimonial`'s left-border-accent
+       anatomy can't express v5's real card (a large display-font opening
+       quote glyph, a well-bg hairline border, a single mono attribution
+       line) — same rationale as the other card rebuilds. `al-testimonial`
+       itself is untouched for any other consumer. -->
+  <section class="sl-container sl-section" data-section-id="testimonials">
+    <al-section-header index="07" label="quotes-from-folks" kicker=""></al-section-header>
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.5);"><al-layout variant="grid" noCollapse>
+      {testimonials.map((t) => (
+        <div class="al-u-grid__item col:12 col:6@md">
+          <figure class="sl-quote-card">
+            <div class="sl-quote-card__glyph" aria-hidden="true">&ldquo;</div>
+            <blockquote class="sl-quote-card__quote">{t.quote}</blockquote>
+            <figcaption class="sl-quote-card__attribution">
+              <span class="sl-quote-card__name">{t.name}</span> — {t.role}
+            </figcaption>
+          </figure>
+        </div>
+      ))}
+    </al-layout></div>
+  </section>
+
+  <!-- Ticker — full-bleed, deliberately unnumbered and outside any container,
+       exactly as the reference places it between 07 and 08 (T6). -->
+  <Marquee />
+
+  <!-- 08 / Insights teasers -->
+  <section class="sl-container sl-section" data-section-id="insights">
+    <SectionHeader
+      index="08"
+      label="insights"
+      heading="Latest thinking"
+      dek="Design systems, AI, and the craft of building for the web — published as we learn it."
+      linkHref="/insights"
+      linkLabel="all insights →"
+    />
+    <div style="margin-top: calc(var(--al-theme-space-xxl) * 1.75);"><al-layout variant="grid" noCollapse>
+      {posts.map((p) => (
+        <div class="al-u-grid__item col:12 col:4@md">
+          <ArticleCard post={p} />
+        </div>
+      ))}
+    </al-layout></div>
+  </section>
+
+  <section data-section-id="cta">
+    <CTABand />
+  </section>
+
+  <AIDirectionPanel />
+</Base>

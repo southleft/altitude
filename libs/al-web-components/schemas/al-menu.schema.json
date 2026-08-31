@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-menu.schema.json",
+  "title": "ALMenu (al-menu)",
+  "description": "Component: al-menu",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-menu",
+    "className": "ALMenu",
+    "module": "components/menu/menu.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The menu items in the menu (children must be `<al-menu-item>`).",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onMenuItemSelect",
+        "description": "Bubbled from `<al-menu-item>` (bubbles + composed). Bind the listener HERE on `<al-menu>`, not on each item. `e.detail.value` carries the selected item's `value` attribute. Example: <al-menu @onMenuItemSelect=${(e) => handleSelect(e.detail.value)}> <al-menu-item value=\"edit\">Edit</al-menu-item> </al-menu>"
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-menu"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "variant": {
+          "description": "typescript: 'simple'",
+          "type": "string"
+        },
+        "width": {
+          "description": "Width property\n- If set, the menu will be constrained to this width in px",
+          "type": "number"
+        },
+        "height": {
+          "description": "Height property\n- If set, the menu will be constrained to this height in px and enable vertical scrolling",
+          "type": "number"
+        },
+        "id": {
+          "description": "Id attribute\n- Unique id used for A11y\n- Associate the menu with the trigger that controls its open/close state",
+          "type": "string"
+        },
+        "label": {
+          "description": "Label attribute\n- Sets ariaLabel for A11y",
+          "type": "string"
+        },
+        "indentGroupItems": {
+          "description": "Indent group items attribute\n**true** - Applies padding to left align the text on group Menu Items with the text of the group Header\n**false** - Does not apply extra padding",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

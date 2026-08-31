@@ -1,14 +1,14 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import { withActions } from '@storybook/addon-actions/decorator';
 import '../checkbox/checkbox';
 import '../field-note/field-note';
 import '../icon/icons/help';
 import '../icon/icons/warning-circle';
 import './checkbox-group';
+import '../layout/layout';
 
 export default {
-  title: 'Molecules/Checkbox Group',
+  title: 'Molecules/Form/Checkbox Group',
   component: 'al-checkbox-group',
   tags: [ 'autodocs' ],
   parameters: {
@@ -17,7 +17,6 @@ export default {
       handles: ['onCheckboxChange']
     }
   },
-  decorators: [ withActions ],
   argTypes: {
     isError: {
       control: 'boolean'
@@ -46,10 +45,6 @@ export default {
     ariaDescribedBy: {
       control: 'text'
     },
-    variant: {
-      control: 'radio',
-      options: ['default', 'horizontal']
-    }
   },
   args: {
     label: 'Checkbox group legend label',
@@ -86,10 +81,22 @@ HiddenLegend.args = {
   hideLegend: true
 };
 
-export const Horizontal = Template.bind({});
-Horizontal.args = {
-  variant: 'horizontal'
-};
+/**
+ * Arrangement belongs to `<al-layout>`. Nest the items in an
+ * `<al-layout direction="row" wrap>`; the group owns only the fieldset
+ * semantics, the field note, and the required/disabled cascade.
+ */
+const TemplateHorizontal = (args) =>
+  html` <al-checkbox-group ${spread(args)}>
+    <al-layout direction="row" wrap gap="md">
+      <al-checkbox name="checkbox-name" value="checkbox-value-1">Checkbox 1</al-checkbox>
+      <al-checkbox name="checkbox-name" value="checkbox-value-2">Checkbox 2</al-checkbox>
+      <al-checkbox name="checkbox-name" value="checkbox-value-3">Checkbox 3</al-checkbox>
+    </al-layout>
+  </al-checkbox-group>`;
+
+export const Horizontal = TemplateHorizontal.bind({});
+Horizontal.args = {};
 
 const TemplateSlottedFieldNote = (args) =>
   html` <al-checkbox-group ${spread(args)}>

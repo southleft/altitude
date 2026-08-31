@@ -1,0 +1,120 @@
+purpose: >-
+  A vertical list of navigation destinations or item-level actions, with roving
+  keyboard focus across its items. It is the list itself, not the popover around
+  it: pair it with a trigger and a floating container when you need it to open
+  and close.
+
+whenToUse:
+  - >-
+    You are presenting several destinations or item actions in one list — a
+    kebab menu on a row, a nav section, an account menu.
+  - >-
+    The list needs keyboard traversal: arrow keys move between items, Home and
+    End jump to the ends, and only one item holds a tab stop at a time.
+  - >-
+    The items group under headings that expand and collapse. Group headers get
+    their `aria-controls` populated with the ids of the items they own.
+
+whenNotToUse:
+  - text: >-
+      The list is a set of values the user picks from and the form then submits.
+      That is a field, not a menu, and it needs the field treatment.
+    instead: select
+  - text: >-
+      You need the floating behaviour — anchored positioning, click-outside,
+      open state. The menu does not position itself; put it inside the component
+      that does.
+    instead: popover
+  - text: >-
+      You are rendering data rows rather than destinations. A menu carries
+      navigation semantics that a plain content list should not claim.
+    instead: list
+  - text: >-
+      There is exactly one action. A single-item menu is a button with an extra
+      click in front of it.
+    instead: button
+
+dos:
+  - >-
+    Bind `onMenuItemSelect` on the `<al-menu>` itself, not on each item. The
+    event bubbles and is composed, and `e.detail.value` carries the selected
+    item's `value`.
+  - >-
+    Give the menu a `label`. It becomes the list's `aria-label`, which is what
+    distinguishes this list from every other list on the page.
+  - >-
+    Set `id` on the menu and point the trigger's `aria-controls` at it, so the
+    control that opens the menu names what it opens.
+  - >-
+    Use `height` when the list can grow beyond the space you have — it
+    constrains the menu and turns on vertical scrolling rather than letting the
+    list push the layout.
+
+donts:
+  - >-
+    Don't add `role="menu"` or `role="menuitem"`. Both were tried and removed:
+    each item renders a real link or button, so `menu` reported missing required
+    children and `menuitem` produced an interactive role wrapping an interactive
+    control.
+  - >-
+    Don't put arbitrary content in the default slot. The children are expected
+    to be `al-menu-item` elements, and the roving tabindex logic walks them to
+    find the focusable control inside each one.
+  - >-
+    Don't manage tab stops yourself. The component assigns `tabIndex` 0 to the
+    active item and -1 to the rest; a competing implementation will break arrow
+    navigation.
+  - >-
+    Don't use a menu as a substitute for showing the two or three actions
+    directly. Hiding a short list behind a click costs discoverability and buys
+    nothing.
+
+accessibility:
+  - >-
+    The list is deliberately a plain list, not a menu. `role="list"` is written
+    out explicitly even though `<ul>` already implies it, because axe's `list`
+    rule does not descend through the role-less item hosts to find the
+    `listitem` inside each shadow root — a bare `<ul>` across a shadow boundary
+    reports a violation even when the flattened tree is correct.
+  - >-
+    Roving tabindex is the reason Tab does not walk every item. Before it, each
+    item was its own tab stop, so Tab and the arrow keys did the same job and
+    the list took as many presses to leave as it had entries.
+  - >-
+    `aria-label` is valid on `role="list"`, which is what makes `label` the
+    right way to name the menu.
+  - >-
+    Expanding a group header rewrites the visible item set and reassigns the
+    keyboard indexes, so arrow navigation never lands on a hidden item.
+
+content:
+  - >-
+    Write items as the action or the destination, in the same grammatical form
+    throughout: all verbs, or all nouns, never a mix.
+  - >-
+    Keep items to a few words. A menu is scanned, and a wrapped item breaks the
+    scan.
+  - >-
+    Name group headers for what the items have in common, not for the number of
+    them.
+
+sources:
+  - path: libs/al-web-components/components/menu/menu.ts
+    contains: nested-interactive
+    note: >-
+      The full recorded reasoning for `role="list"` over `role="menu"`,
+      including the two axe rules that each alternative violated.
+  - path: libs/al-web-components/components/menu/menu.ts
+    contains: roving tabindex
+    note: >-
+      Roving focus across items and the tab-stop problem it fixed.
+  - path: libs/al-web-components/components/menu/menu.ts
+    contains: onMenuItemSelect
+    note: >-
+      The bubbled, composed selection event and the instruction to bind it on
+      the menu rather than each item.
+  - path: libs/al-web-components/components/menu-item/menu-item.ts
+    contains: ALLink
+    note: >-
+      Each item renders a real link or button — the fact that decides the whole
+      role question above.

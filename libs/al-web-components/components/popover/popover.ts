@@ -1,5 +1,7 @@
 import { TemplateResult, unsafeCSS } from 'lit';
-import { property, queryAssignedElements } from 'lit/decorators.js';
+import { state, property, queryAssignedElements } from 'lit/decorators.js';
+import getFocusableElements from '../../directives/getFocusableElements';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { nanoid } from 'nanoid';
 import register from '../../directives/register';
@@ -13,10 +15,14 @@ import styles from './popover.scss';
 
 /**
  * Component: al-popover
- * - **slot**: The main body of the popover
- * - **slot** "header": The header of the popover that appears above the main slot
- * - **slot** "footer": The footer of the popover that appears below the main slot
- * - **slot** "trigger": The trigger that opens/closes the popover
+ * @slot - The main body of the popover
+ * @slot header - The header of the popover that appears above the main slot
+ * @slot footer - The footer of the popover that appears below the main slot
+ * @slot trigger - The trigger that opens/closes the popover
+ *
+ * @event onPopoverOpen - Fired when the popover opens. Detail: `{ active }` — the new open state.
+ * @event onPopoverClose - Fired when the popover closes by any means. Detail: `{ active }`.
+ * @event onPopoverCloseButton - Fired only when the popover's close button is activated. Detail: `{ active }`. Use `onPopoverClose` to catch every close path.
  */
 export class ALPopover extends ALElement {
   static el = 'al-popover';
@@ -165,7 +171,41 @@ export class ALPopover extends ALElement {
    * 1. Wait for slotted components to be loaded
    * 2. Set aria-expanded on the trigger for A11y
    */
+  /**
+   * A11y — true when the slotted trigger contains its own focusable control, in
+   * which case the trigger wrapper must not add a second tab stop.
+   */
+  @state()
+  accessor triggerHasOwnFocusable: boolean = false;
+
+  /**
+   * A11y — decide whether the trigger wrapper needs its own tab stop.
+   *
+   * The wrapper is a plain `<div>` carrying `@click`. When the consumer slots a
+   * control that is already focusable (`<al-button slot="trigger">`) the click
+   * a keyboard press produces bubbles up to it and everything works. When they
+   * slot something inert (`<span slot="trigger">`) there was NO keyboard path
+   * at all — measured before this fix: the wrapper was not tabbable and Enter
+   * did nothing, so the component could not be opened without a mouse (WCAG
+   * 2.1.1). al-tooltip already solved this; the same shape is used here.
+   */
+  private syncTriggerFocusability() {
+    const slotted = Array.from(this.querySelectorAll('[slot="trigger"]'));
+    this.triggerHasOwnFocusable = slotted.some((el) => getFocusableElements(el).length > 0);
+  }
+
+  /** A11y — Enter/Space on the wrapper, for the inert-trigger case above. */
+  private handleTriggerKeydown(e: KeyboardEvent) {
+    if (this.triggerHasOwnFocusable) return;
+    if (e.code === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      this.toggleActive();
+    }
+  }
+
   async firstUpdated() {
+    await this.updateComplete;
+    this.syncTriggerFocusability();
     await this.updateComplete; /* 1 */
     this.setAria(); /* 2 */
   }
@@ -319,7 +359,12 @@ export class ALPopover extends ALElement {
       <div class="${componentClassNames}" @keydown=${this.handleOnKeydown}>
         ${this.slotNotEmpty('trigger') &&
         html`
-          <div class="al-c-popover__trigger" @click=${this.toggleActive}>
+          <div
+            class="al-c-popover__trigger"
+            tabindex=${ifDefined(this.triggerHasOwnFocusable ? undefined : '0')}
+            @click=${this.toggleActive}
+            @keydown=${this.handleTriggerKeydown}
+          >
             <slot name="trigger"></slot>
           </div>
         `}

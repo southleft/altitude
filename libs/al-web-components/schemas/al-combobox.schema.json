@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-combobox.schema.json",
+  "title": "ALCombobox (al-combobox)",
+  "description": "Component: al-combobox\n\nA text input with a filtered listbox popup, following the WAI-ARIA\ncombobox/listbox/option pattern. Reuses `al-dropdown-panel` for the popup\nsurface, `al-list`/`al-list-item` for options, and `al-input` for the\nfield — the same primitives `al-select` and `al-search` are built on —\nrather than reinventing popover positioning or option rendering.\n\nFiltering is either automatic (`filterMode=\"auto\"`, the default —\n`items` is filtered client-side by a case-insensitive substring match on\n`label`) or manual (`filterMode=\"manual\"` — the consumer listens for\n`onComboboxFilter` and reassigns `items` themselves, e.g. from an async\nAPI call).",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-combobox",
+    "className": "ALCombobox",
+    "module": "components/combobox/combobox.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "If content is slotted, it will display in place of the fieldNote property",
+        "name": "field-note"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the errorNote property",
+        "name": "error"
+      }
+    ],
+    "events": [
+      {
+        "name": "onComboboxFilter",
+        "description": "Fired as the input text changes, before filtering is applied. Detail: `{ query }`."
+      },
+      {
+        "name": "onComboboxChange",
+        "description": "Fired when an option is selected. Detail: `{ value, label, item }`."
+      },
+      {
+        "name": "onComboboxOpen",
+        "description": "Fired when the listbox opens. Detail: `{ active }` — always `true`."
+      },
+      {
+        "name": "onComboboxClose",
+        "description": "Fired when the listbox closes. Detail: `{ active }` — always `false`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-combobox"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "filterMode": {
+          "description": "How `items` is filtered as the user types.\n- **auto** filters `items` client-side by a case-insensitive substring match on `label`\n- **manual** performs no client-side filtering — listen for `onComboboxFilter` and\n  reassign `items` yourself (e.g. after an async request)",
+          "type": "string",
+          "enum": [
+            "auto",
+            "manual"
+          ]
+        },
+        "fieldId": {
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        "label": {
+          "description": "The combobox's label",
+          "type": "string"
+        },
+        "hideLabel": {
+          "description": "Hide the label?",
+          "type": "boolean"
+        },
+        "value": {
+          "description": "The current text in the input. Reflects the selected option's label once\nan option has been chosen.",
+          "type": "string"
+        },
+        "selectedValue": {
+          "description": "The `value` of the currently selected option, if any. `undefined` while\nthe user is typing a query that doesn't match a committed selection.",
+          "type": "string"
+        },
+        "placeholder": {
+          "description": "Placeholder attribute",
+          "type": "string"
+        },
+        "noResultsText": {
+          "description": "Text shown in the popup when no options match the current query.",
+          "type": "string"
+        },
+        "isActiveDropdown": {
+          "description": "Is the listbox popup open?",
+          "type": "boolean"
+        },
+        "align": {
+          "description": "**Combobox alignment**\n- **bottom** Popup appears below the field\n- **top** Popup appears above the field",
+          "type": "string",
+          "enum": [
+            "bottom",
+            "top"
+          ]
+        },
+        "fieldNote": {
+          "description": "The combobox field note",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "The combobox error note",
+          "type": "string"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria describedby",
+          "type": "string"
+        },
+        "isRequired": {
+          "description": "The combobox's required attribute",
+          "type": "boolean"
+        },
+        "isOptional": {
+          "description": "Optional state",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "The combobox's disabled attribute",
+          "type": "boolean"
+        },
+        "isError": {
+          "description": "Error state",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

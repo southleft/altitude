@@ -7,17 +7,29 @@ import register from '../../directives/register';
 import PackageJson from '../../package.json';
 import { ALElement } from '../ALElement';
 import { ALFieldNote } from '../field-note/field-note';
+import { FormAssociatedController } from '../../controllers/form-associated';
 import styles from './input.scss';
 
 /**
  * Component: al-input
- * - **slot** "before": The content that appears before the text in the input
- * - **slot** "after": The content that appears after the text in the input
- * - **slot** "field-note": If content is slotted, it will display in place of the fieldNote property
- * - **slot** "error": If content is slotted, it will display in place of the errorNote property
+ * @slot before - The content that appears before the text in the input
+ * @slot after - The content that appears after the text in the input
+ * @slot field-note - If content is slotted, it will display in place of the fieldNote property
+ * @slot error - If content is slotted, it will display in place of the errorNote property
+ *
+ * @event onInputChange - Fired when the input's value changes. Detail: `{ value }`.
  */
 export class ALInput extends ALElement {
   static el = 'al-input';
+
+  /**
+   * T5.3 — form-associated participation.
+   * Makes `<al-input name="…">` carry its `value` into the owning form's
+   * FormData and surface `setValidity` through the constraint validation API.
+   */
+  static formAssociated = true;
+
+  protected formInternals = new FormAssociatedController(this);
 
   private elementMap = register({
     elements: [[ALFieldNote.el, ALFieldNote]],
@@ -46,6 +58,15 @@ export class ALInput extends ALElement {
   /**
    * isActive
    * - Dynamically sets to true if the input has a value
+   *
+   * @deprecated Since v2. This existed to float the label out of the field, and
+   * v2 retired the floating label — the label is now top-aligned and never
+   * moves, so NOTHING in this library styles `.al-is-active` any more. The
+   * property and the class are retained (still derived from "the field has a
+   * value") purely so consumer CSS keyed on that hook does not break silently;
+   * they will be removed in the next major. Note the name is also a misnomer
+   * here: everywhere else in the library `isActive` means open/expanded
+   * (`al-accordion-panel`, `al-alert`), never "has content".
    */
   @property({ type: Boolean })
   accessor isActive: boolean;
@@ -94,10 +115,27 @@ export class ALInput extends ALElement {
 
   /**
    * Hide label?
-   * - If true, hides the label from displaying
+   * - If true, hides the label VISUALLY. The label element stays in the DOM and
+   *   keeps its `for` association, so screen readers still announce the field.
+   *
+   * Before v2 this also revealed the placeholder, because the floating label
+   * occupied the placeholder's position and the two could not both show. The
+   * label no longer sits inside the field, so that coupling is gone: a
+   * `placeholder` now renders whenever it is set, independently of this.
    */
   @property({ type: Boolean })
   accessor hideLabel: boolean;
+
+  /**
+   * Label position
+   * - `top` (default) puts the label above the field.
+   * - `inset` puts it inside the field's top padding, above the value — the v2
+   *   replacement for the floating label. It is STATIC: unlike the old floating
+   *   label it never moves between states, so there is no jump on focus and no
+   *   background patch punched through the field's border.
+   */
+  @property()
+  accessor labelPosition: 'top' | 'inset' = 'top';
 
   /**
    * Label attribute
@@ -204,6 +242,30 @@ export class ALInput extends ALElement {
   accessor beforeEl: any;
 
   /**
+   * Generated id for the ERROR note.
+   *
+   * Separate from `ariaDescribedBy`, which is public API and names the field
+   * note. Both can render at once, and `aria-describedby` takes a LIST, so the
+   * error needs an id of its own rather than borrowing the field note's.
+   */
+  private errorNoteId: string;
+
+  /**
+   * The ids `aria-describedby` should point at, in reading order.
+   *
+   * Only the notes actually RENDERED are listed — the error note is conditional
+   * on `isError`, and pointing at an element that is not in the DOM makes the
+   * whole attribute unreliable rather than merely incomplete.
+   */
+  private get describedBy(): string | undefined {
+    const ids = [
+      this.fieldNote || this.slotNotEmpty('field-note') ? this.ariaDescribedBy : undefined,
+      (this.errorNote || this.slotNotEmpty('error')) && this.isError ? this.errorNoteId : undefined
+    ].filter(Boolean);
+    return ids.length ? ids.join(' ') : undefined;
+  }
+
+  /**
    * Connected callback
    * 1. Dynamically sets the fieldId and ariaDescribedBy for A11y
    */
@@ -213,6 +275,9 @@ export class ALInput extends ALElement {
     this.fieldId = this.fieldId || nanoid();
     if (this.fieldNote) {
       this.ariaDescribedBy = this.ariaDescribedBy || nanoid();
+    }
+    if (this.errorNote) {
+      this.errorNoteId = this.errorNoteId || nanoid();
     }
   }
 
@@ -254,6 +319,9 @@ export class ALInput extends ALElement {
     } else {
       this.isActive = false; /* 3 */
     }
+
+    // T5.3 — mirror the value into the form-internals so it lands in FormData.
+    this.formInternals?.setValue(value);
 
     /* 4 */
     this.dispatch({
@@ -307,15 +375,35 @@ export class ALInput extends ALElement {
   render() {
     const componentClassNames = this.componentClassNames('al-c-input', {
       'al-has-hidden-label': this.hideLabel,
+      'al-has-inset-label': this.labelPosition === 'inset',
       'al-is-disabled': this.isDisabled,
       'al-is-required': this.isRequired,
       'al-is-error': this.isError,
       'al-is-active': this.isActive
     });
 
+    /**
+     * The label is one template rendered in one of two PLACES, not two
+     * templates: `top` puts it in normal flow above the field, `inset` puts it
+     * inside `__container` so it can be positioned against the field box. It
+     * cannot simply live in the container for both — `__before` / `__after` are
+     * absolutely centred against `__container`, so if the container also held a
+     * top-aligned label those slotted icons would centre against label + field
+     * together and sit visibly low.
+     */
+    const labelTpl = html`
+      <label ?hidden="${this.type === 'hidden'}" class="al-c-input__label" for="${this.fieldId}">
+        ${this.isRequired ? html`<span class="al-c-input__asterisk">*</span>` : html``}
+        <span>${this.label}</span>
+        ${this.isOptional ? html`<em class="al-c-input__optional">(Optional)</em>` : html``}
+      </label>
+    `;
+
     return html`
       <div class="${componentClassNames}">
+        ${this.labelPosition === 'inset' ? html`` : labelTpl}
         <div class="al-c-input__container">
+          ${this.labelPosition === 'inset' ? labelTpl : html``}
           <input
             class="al-c-input__input"
             type="${this.type}"
@@ -326,7 +414,7 @@ export class ALInput extends ALElement {
             ?required="${this.isRequired}"
             ?disabled="${this.isDisabled}"
             autocomplete="${this.type === 'password' ? 'off' : this.autoComplete}"
-            aria-describedby="${ifDefined(this.ariaDescribedBy)}"
+            aria-describedby="${ifDefined(this.describedBy)}"
             placeholder="${ifDefined(this.placeholder)}"
             maxlength="${ifDefined(this.maxLength)}"
             minlength=${ifDefined(this.minLength)}
@@ -335,11 +423,6 @@ export class ALInput extends ALElement {
             @input=${(e: Event) => this.handleOnChange(e)}
             .autofocus=${this.isFocused}
           />
-          <label ?hidden="${this.type === 'hidden'}" class="al-c-input__label" for="${this.fieldId}">
-            ${this.isRequired ? html`<span class="al-c-input__asterisk">*</span>` : html``}
-            <span>${this.label}</span>
-            ${this.isOptional ? html`<em class="al-c-input__optional">(Optional)</em>` : html``}
-          </label>
           ${this.slotNotEmpty('before') || (this.isRequired && this.hideLabel)
             ? html`
                 <div class="al-c-input__before">
@@ -374,7 +457,7 @@ export class ALInput extends ALElement {
                   ${(this.errorNote || this.slotNotEmpty('error')) && this.isError
                     ? html`
                         <slot name="error">
-                          <${this.fieldNoteEl} ?isDisabled=${this.isDisabled} ?isError=${true}> ${this.errorNote} </${this.fieldNoteEl}>
+                          <${this.fieldNoteEl} ?isDisabled=${this.isDisabled} ?isError=${true} id=${ifDefined(this.errorNoteId)}> ${this.errorNote} </${this.fieldNoteEl}>
                         </slot>
                       `
                     : html``}

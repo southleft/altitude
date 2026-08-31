@@ -3,7 +3,7 @@ import { spread } from '../../directives/spread';
 import './pagination-item';
 
 export default {
-  title: 'Atoms/Pagination Item',
+  title: 'Atoms/Navigation/Pagination Item',
   component: 'al-pagination-item',
   tags: [ 'autodocs' ],
   parameters: { status: { type: 'beta' } },

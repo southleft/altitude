@@ -1,1 +1,3 @@
-export * from './Link';
+'use client';
+
+export * from './Link.js';

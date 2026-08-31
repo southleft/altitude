@@ -1,0 +1,56 @@
+@layer al.theme {
+  /* T4.2 — base host. Token override values are applied via attribute
+     selectors so two adjacent `<al-theme>` subtrees produce distinct
+     `:host` --al-* values without polluting `:root`. */
+  :host {
+    display: contents;
+  }
+
+  /* ----- mode axis ----- */
+  :host([mode='light']) {
+    --al-theme-color-background-default: #ffffff;
+    --al-theme-color-content-default: #161616;
+  }
+  :host([mode='dark']) {
+    --al-theme-color-background-default: #161616;
+    --al-theme-color-content-default: #f4f4f4;
+  }
+
+  /* ----- density axis (T4.4) ----- */
+  :host([density='compact']) {
+    --al-theme-space-sm: 0.25rem;
+    --al-theme-space-md: 0.5rem;
+    --al-theme-space-lg: 0.75rem;
+  }
+  :host([density='cozy']) {
+    --al-theme-space-sm: 0.5rem;
+    --al-theme-space-md: 0.75rem;
+    --al-theme-space-lg: 1rem;
+  }
+  :host([density='comfortable']) {
+    --al-theme-space-sm: 0.75rem;
+    --al-theme-space-md: 1rem;
+    --al-theme-space-lg: 1.5rem;
+  }
+
+  /* ----- contrast axis (T4.4) ----- */
+  :host([contrast='more']) {
+    --al-theme-color-border-default: currentColor;
+  }
+
+  /* ----- motion axis (T4.4) ----- */
+  :host([motion='reduced']) {
+    --al-theme-animation-duration-2: 0s;
+    --al-theme-animation-duration-4: 0s;
+    --al-theme-animation-duration-6: 0s;
+    --al-theme-animation-duration-8: 0s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :host(:not([motion='full'])) {
+      --al-theme-animation-duration-2: 0s;
+      --al-theme-animation-duration-4: 0s;
+      --al-theme-animation-duration-6: 0s;
+      --al-theme-animation-duration-8: 0s;
+    }
+  }
+}

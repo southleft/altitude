@@ -5,7 +5,7 @@ import styles from './dropdown-panel.scss';
 
 /**
  * Component: al-dropdown-panel
- * - **slot**: The dropdown panel content
+ * @slot - The dropdown panel content
  */
 export class ALDropdownPanel extends ALElement {
   static el = 'al-dropdown-panel';

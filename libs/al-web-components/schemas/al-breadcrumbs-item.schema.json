@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-breadcrumbs-item.schema.json",
+  "title": "ALBreadcrumbsItem (al-breadcrumbs-item)",
+  "description": "Component: al-breadcrumbs-item",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-breadcrumbs-item",
+    "className": "ALBreadcrumbsItem",
+    "module": "components/breadcrumbs-item/breadcrumbs-item.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The breadcrumb item's content, typically text",
+        "name": ""
+      }
+    ],
+    "events": [],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-breadcrumbs-item"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "href": {
+          "description": "Link URL",
+          "type": "string"
+        },
+        "target": {
+          "description": "Target attribute for a link (i.e. set to _blank to open in new tab)",
+          "type": "string",
+          "enum": [
+            "_blank",
+            "_self",
+            "_parent",
+            "_top"
+          ]
+        },
+        "isCurrent": {
+          "description": "Indicates if this the is the currently active breadcrumb item\n- **true** This is the current breadcrumb\n- **false** This is not the current breadcrumb",
+          "type": "boolean"
+        },
+        "isTruncated": {
+          "description": "Truncated attribute\n- Dynamically set by the ALBreadcrumbs\n- **true** The slotted content does not display in an <a></a> or <button></button>\n- **false** The slotted content does displays in an <a></a> or <button></button>",
+          "type": "boolean"
+        },
+        "hasSeparator": {
+          "description": "Indicates whether or not to add a separator icon after the breadcrumb item",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

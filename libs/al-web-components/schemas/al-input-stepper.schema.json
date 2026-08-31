@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-input-stepper.schema.json",
+  "title": "ALInputStepper (al-input-stepper)",
+  "description": "Component: al-input-stepper",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-input-stepper",
+    "className": "ALInputStepper",
+    "module": "components/input-stepper/input-stepper.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "If content is slotted, it will display in place of the fieldNote property",
+        "name": "field-note"
+      },
+      {
+        "description": "If content is slotted, it will display in place of the errorNote property",
+        "name": "error"
+      }
+    ],
+    "events": [
+      {
+        "name": "onInputStepperChange",
+        "description": "Fired when the count changes via the increment/decrement controls or direct entry. Detail: `{ value }`."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-input-stepper"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fieldId": {
+          "description": "The unique id of the field",
+          "type": "string"
+        },
+        "label": {
+          "description": "The form field's label",
+          "type": "string"
+        },
+        "hideLabel": {
+          "description": "Hide label?",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Checkbox name attribute property",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value",
+          "type": "number"
+        },
+        "fieldNote": {
+          "description": "Fieldnote text",
+          "type": "string"
+        },
+        "errorNote": {
+          "description": "Errornote text",
+          "type": "string"
+        },
+        "min": {
+          "description": "Add button icon name",
+          "type": "number"
+        },
+        "max": {
+          "description": "Add button icon name",
+          "type": "number"
+        },
+        "ariaDescribedBy": {
+          "description": "Aria describedby\n1) Used to connect the field note in select to the select menu for accessibility",
+          "type": "string"
+        },
+        "isRequired": {
+          "description": "Required attribute",
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        "isReadonly": {
+          "description": "Readonly attribute",
+          "type": "boolean"
+        },
+        "placeholder": {
+          "description": "Placeholder text",
+          "type": "string"
+        },
+        "isError": {
+          "description": "Error state",
+          "type": "boolean"
+        },
+        "count": {
+          "description": "Count state",
+          "type": "number"
+        },
+        "step": {
+          "description": "Inremental/Decremental range",
+          "type": "number"
+        },
+        "variant": {
+          "description": "Variant\n- `segmented` (default): decrement | value | increment, three segments of\n  one bordered box divided by hairlines.\n- `trailing`: the value takes the full width and both steppers stack at the\n  trailing edge. Denser across, so it fits inside a table row — but it is\n  TALLER by default (50px vs 40px), because two stacked controls in 40px\n  would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See\n  input-stepper.scss for the full note and the escape hatch.",
+          "type": "string",
+          "enum": [
+            "segmented",
+            "trailing"
+          ]
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

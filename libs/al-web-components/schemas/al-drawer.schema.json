@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-drawer.schema.json",
+  "title": "ALDrawer (al-drawer)",
+  "description": "Component: al-drawer",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-drawer",
+    "className": "ALDrawer",
+    "module": "components/drawer/drawer.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "The drawer content",
+        "name": ""
+      }
+    ],
+    "events": [
+      {
+        "name": "onDrawerOpen",
+        "description": "Fired when the drawer opens. Detail: `{ active }` — the new open state."
+      },
+      {
+        "name": "onDrawerClose",
+        "description": "Fired when the drawer closes by any means. Detail: `{ active }`."
+      },
+      {
+        "name": "onDrawerCloseButton",
+        "description": "Fired only when the drawer's close button is activated. Detail: `{ active }`. Use `onDrawerClose` to catch every close path."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-drawer"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "alignment": {
+          "description": "typescript: 'right'",
+          "type": "string"
+        },
+        "width": {
+          "description": "Width of drawer panel when expanded / collapsed as side panel",
+          "type": "number"
+        },
+        "hasBackdrop": {
+          "description": "Fade/ghost back the page background content",
+          "type": "boolean"
+        },
+        "isActive": {
+          "description": "Is active?\n- **true** Shows the drawer container\n- **false** Hides the drawer container",
+          "type": "boolean"
+        },
+        "ariaLabelledBy": {
+          "description": "Aria Labelled By attribute\n- Dynamically set for A11y",
+          "type": "string"
+        },
+        "disableBackdropClick": {
+          "description": "Disable to close the drawer on outside click",
+          "type": "boolean"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

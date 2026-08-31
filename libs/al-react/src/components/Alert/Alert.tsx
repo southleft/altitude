@@ -1,8 +1,10 @@
+'use client';
+
 import { createComponent } from '@lit/react';
-import { ALAlert as ALWebAlert } from 'al-web-components/dist/components/alert/alert';
-import register from 'al-web-components/dist/directives/register';
+import { ALAlert as ALWebAlert } from '@southleft/al-web-components/components/alert';
+import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebAlert.el, ALWebAlert],
@@ -13,5 +15,8 @@ export const ALAlert = createComponent({
   react: React,
   tagName: elementMap.get(ALWebAlert.el),
   elementClass: ALWebAlert,
-  events: {}
+  events: {
+    onClose: 'close',
+    onOpen: 'open'
+  }
 });

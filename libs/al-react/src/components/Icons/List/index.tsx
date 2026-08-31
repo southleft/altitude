@@ -1,1 +1,3 @@
-export * from './List';
+'use client';
+
+export * from './List.js';

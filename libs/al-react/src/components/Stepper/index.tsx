@@ -1,1 +1,3 @@
-export * from './Stepper';
+'use client';
+
+export * from './Stepper.js';

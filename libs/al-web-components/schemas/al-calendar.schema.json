@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-calendar.schema.json",
+  "title": "ALCalendar (al-calendar)",
+  "description": "Component: al-calendar",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-calendar",
+    "className": "ALCalendar",
+    "module": "components/calendar/calendar.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "If content is slotted, it will override the default \"previous button\" icon",
+        "name": "before"
+      },
+      {
+        "description": "If content is slotted, it will override the default \"next button\" icon",
+        "name": "after"
+      }
+    ],
+    "events": [
+      {
+        "name": "onCalendarChange",
+        "description": "Fired when a date is selected. Detail: `{ value, rawDate }` — the date formatted per `dateFormat`, and the underlying `Date` object."
+      }
+    ],
+    "cssParts": [],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-calendar"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "disabledMinDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "disabledMaxDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "multiYear": {
+          "description": "Amount of years to go before and after the current date",
+          "type": "number"
+        },
+        "previousButtonText": {
+          "type": "string"
+        },
+        "nextButtonText": {
+          "type": "string"
+        },
+        "days": {
+          "description": "typescript: Array<any>",
+          "type": "string"
+        },
+        "years": {
+          "description": "typescript: Array<any>",
+          "type": "string"
+        },
+        "showMonthPopup": {
+          "description": "Value to track month picker display",
+          "type": "boolean"
+        },
+        "resetDates": {
+          "description": "Make active calendar date inactive",
+          "type": "boolean"
+        },
+        "selectedDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "setActiveDate": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "datePickerId": {
+          "description": "typescript: any",
+          "type": "string"
+        },
+        "dateFormat": {
+          "description": "Specify date format for UI display",
+          "type": "string",
+          "enum": [
+            "MMM dd, yyyy",
+            "MM/dd/yyyy",
+            "dd/MM/yyyy",
+            "yyyy/MM/dd",
+            "MMM dd yyyy",
+            "dd MMM yyyy"
+          ]
+        },
+        "fullDateFormat": {
+          "description": "Specify \"full\" date format for aria role",
+          "type": "string"
+        },
+        "disabled": {
+          "description": "Disabled attribute",
+          "type": "boolean"
+        },
+        "iconName": {
+          "description": "Field note icon name",
+          "type": "string"
+        },
+        "isDayShortHand": {
+          "description": "Show the day of the week as a short hand, e.g. \"M\" for Monday",
+          "type": "boolean"
+        },
+        "startOnMonday": {
+          "description": "Start the day of the week on Monday",
+          "type": "boolean"
+        },
+        "monthSelectorLabel": {
+          "description": "Accessible name for the month/year picker popup.\n\nThe popup is `role=\"dialog\"` and its content is a grid of year headings and\nmonth buttons, so it had no accessible name at all — a screen reader\nannounced \"dialog\" and nothing else. Settable rather than hardcoded so it\ncan be localised, matching `timeSelectorLabel` / `cancelLabel` on\nal-date-time-picker.",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}

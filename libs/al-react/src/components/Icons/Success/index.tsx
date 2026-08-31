@@ -1,1 +1,3 @@
-export * from './Success';
+'use client';
+
+export * from './Success.js';

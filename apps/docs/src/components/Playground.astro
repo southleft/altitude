@@ -1,0 +1,813 @@
+---
+/**
+ * The live playground + HTML/React framework switcher from the canvas's
+ * Button spec screen — generalized to every component in the manifest.
+ *
+ * The canvas hard-codes Button's five variants and three flags. Here the
+ * controls are DERIVED: any prop whose CEM type is a union of string literals
+ * becomes a segmented control over exactly those literals; any prop typed
+ * `boolean` becomes a flag; a component that declares a default slot gets a
+ * content field. The emitted snippets are built from the same state, so the
+ * code shown is always the code the stage is rendering.
+ *
+ * The stage renders the REAL custom element (registered by LiveRuntime.astro),
+ * not a CSS facsimile — the two things the spec says Storybook structurally
+ * cannot do are this switcher and this copyable, real-markup playground.
+ *
+ * And it renders it IN THIS SITE'S BRAND. The whole shell is already inside
+ * `<al-theme brand=…>` (Shell.astro), so the element on the stage inherits that
+ * project's scoped tokens with no per-brand markup here. The HTML snippet
+ * states the wrapper explicitly, because a consumer copying it gets the
+ * component but not the page it was sitting in — and without the wrapper the
+ * markup they paste renders under the base bundle, not this brand.
+ */
+interface Props {
+  /** The design-system project whose brand the stage renders under. */
+  project: { brand: string; id: string };
+  /** Story-derived preview markup (lib/examples.mjs), or a reason there is none. */
+  example?: { ok: boolean; html?: string; styles?: string; story?: string; reason?: string } | null;
+  component: {
+    tag: string;
+    react: string | null;
+    name: string;
+    tier: string;
+    props: { name: string; field: string; type: string; options: string[]; isBoolean: boolean }[];
+    slots: { name: string; rawName: string }[];
+  };
+}
+
+// The site's configured base. Imported rather than read from `Astro.url`,
+// because the rewrite below must match what the build actually emits.
+import { base } from '../lib/site.mjs';
+import { iconSlotDefaults } from '../lib/contracts.mjs';
+import { ICONS } from '../lib/icons.mjs';
+
+const { component, project, example = null } = Astro.props;
+
+/* Controls, in the canvas's order: enums, then the content field, then flags. */
+const enums = component.props.filter((p) => p.options.length >= 2);
+const flags = component.props.filter((p) => p.isBoolean);
+const hasDefaultSlot = component.slots.some((s) => s.rawName === '');
+
+/*
+ * ICON SLOTS (T24). `before`/`after` are this library's convention for "this
+ * slot's content is typically an icon" — al-button, al-calendar, al-input,
+ * al-menu-item, al-range and al-textarea all declare one or both (see
+ * libs/al-web-components/custom-elements.json). That is specific enough to
+ * demo for real: a toggle switches the slot between empty and an
+ * `<al-icon>`, and a compact search (icon catalog-backed, lib/icons.mjs)
+ * picks which one. Any OTHER slot still has no control — "typically an
+ * icon" is a declared convention, not something inferable from a slot name
+ * generally, so this stays narrow rather than guessing at arbitrary slots.
+ */
+const iconSlots = component.slots.filter((s) => s.rawName === 'before' || s.rawName === 'after');
+/** Contract-sourced starting glyphs (falls back when a slot has none). */
+const iconDefaults = iconSlots.length ? iconSlotDefaults(project.id, component.tag) : null;
+
+/*
+ * `field` matters as much as `name`. The controls drive the element by setting
+ * PROPERTIES, not attributes: `setAttribute` lowercases the name in an HTML
+ * document, so `isDisabled` would land as `isdisabled` and never match the
+ * `observedAttributes` entry Lit registered — the code snippet would claim a
+ * flag the live element had silently ignored. The snippet still prints the
+ * attribute name, which is what a consumer writes in markup.
+ */
+const initialText = component.name;
+
+/*
+ * ORGANISMS GET THE FULL WIDTH. An atom is a thing you look AT — a button
+ * centred in a generous stage reads correctly. An organism is a page SECTION:
+ * a hero, a header, a footer, a CTA band. Centring one in a padded box and
+ * letting it shrink-wrap misrepresents it, because the thing being documented
+ * is precisely how it behaves across the full measure. The tier is already
+ * derived from the component's own story title (registry.mjs), so this asks
+ * the taxonomy rather than listing tags.
+ */
+const fullBleed = component.tier === 'organisms';
+
+/*
+ * WHAT THE STAGE MOUNTS.
+ *
+ * With a story-derived example, the stage renders THAT — the component with the
+ * heading, the actions and the slotted content its author gave it, which is the
+ * markup the retired Storybook showed. `data-pg-el` is injected onto the first
+ * occurrence of the component's own tag so the controls below still drive the
+ * real element.
+ *
+ * Without one, the stage falls back to the manifest-only mount: the bare tag
+ * with its name as default-slot text. That is honest for an atom (a button with
+ * the word "Button" in it IS a button) and threadbare for anything whose
+ * content lives in named slots — which is exactly why the example path exists,
+ * and why the absence of one is stated on the page instead of left to look like
+ * a broken preview.
+ */
+const hasExample = Boolean(example?.ok && example.html);
+
+/**
+ * Root-relative asset URLs in story markup need this site's base.
+ *
+ * A story writes `src="/logos/ibm.webp"` because that is what it means in the
+ * app that owns the file. This site is served under a base (`/docs`), so the
+ * literal path 404s and the preview renders broken-image icons — which is
+ * exactly what the logo wall did. Rewriting here rather than in the story keeps
+ * the story honest about its own asset, and covers every future story with one.
+ *
+ * Deliberately narrow: only `src`/`srcset`/`href` values starting with a single
+ * `/`. A protocol-relative `//cdn…` or an absolute `https://` is left alone,
+ * and so is anything already under the base.
+ */
+const withBase = (markup: string) =>
+  base === '' || base === '/'
+    ? markup
+    : markup.replace(
+        /(src|href|srcset)="\/(?!\/)/g,
+        (_m, attr) => `${attr}="${base.replace(/\/$/, '')}/`,
+      );
+
+const exampleHtml = hasExample
+  ? withBase(example.html).replace(
+      // `\\s` and not `\s`: inside a template literal an unrecognised escape
+      // collapses to the bare character, so `[\s/>]` would compile to `[s/>]`
+      // and match `<sl-heros…`. The lookahead keeps `<al-list` from matching
+      // `<al-list-item`.
+      new RegExp(`<${component.tag}(?=[\\s/>])`),
+      `<${component.tag} data-pg-el`,
+    )
+  : '';
+const mountHtml = hasExample
+  ? exampleHtml
+  : `<${component.tag} data-pg-el>${hasDefaultSlot ? initialText : ''}</${component.tag}>`;
+
+/*
+ * The CONTENT field edits default-slot text by assigning `textContent`, which
+ * would delete every slotted child. With an example on the stage there are
+ * children worth keeping, so the field is withheld rather than shipped as a
+ * control that destroys the preview on first keystroke.
+ */
+const showTextControl = hasDefaultSlot && !hasExample;
+
+/** Counted from what is actually rendered, so the header cannot overstate it. */
+const controlCount = enums.length + flags.length + (showTextControl ? 1 : 0) + iconSlots.length;
+
+/*
+ * The snippet is the markup on the stage, not a reconstruction of it. When an
+ * example is showing, that means the story's own markup — so what a reader
+ * copies is what they are looking at, slots and all. The enum/flag controls
+ * still apply on top, merged into the root element's opening tag by
+ * `mergeRootAttrs` in the script below.
+ */
+const config = {
+  tag: component.tag,
+  /** The brand the stage inherits, restated in the copyable HTML snippet. */
+  brand: project.brand,
+  react: component.react,
+  hasDefaultSlot: showTextControl,
+  hasExample,
+  /* The story's markup WITHOUT `data-pg-el` — that attribute is this
+     playground's internal handle on the element, not something a reader
+     copying the snippet should paste into their app. */
+  exampleHtml: hasExample ? example.html : '',
+  exampleStory: hasExample ? example.story : null,
+  enums: enums.map((p) => ({ name: p.name, field: p.field, options: p.options })),
+  flags: flags.map((p) => ({ name: p.name, field: p.field })),
+  iconSlots: iconSlots.map((s) => ({ name: s.rawName, default: iconDefaults[s.rawName] })),
+};
+---
+
+<div class="section-rule">
+  <span>PLAYGROUND</span>
+  <span>{controlCount} {controlCount === 1 ? 'CONTROL' : 'CONTROLS'}</span>
+</div>
+
+<div class:list={['pg', fullBleed && 'pg--stacked', controlCount === 0 && 'pg--no-controls']}>
+  {/* No blueprint grid behind an organism. The grid reads as stage backdrop
+      around a shrink-wrapped atom; behind a full-bleed page section it shows
+      through the section's own background and gaps, which makes the component
+      look like it ships a grid it does not have. */}
+  {/*
+      `data-pg-loading` ships SET, in the static HTML, and is removed by the
+      inline script below once the element upgrades. That direction matters:
+      the stage's honest state on arrival is "not ready yet", because the
+      markup inside `[data-pg-mount]` is an un-upgraded custom element — bare
+      inline text in a shadow-DOM-shaped hole — until the registry bundle
+      (LiveRuntime.astro, deferred to the end of <body>) evaluates. Rendering
+      the flag rather than adding it with JS means the spinner is showing from
+      the first paint instead of after the first script runs.
+  */}
+  <div
+    class:list={[
+      'pg__stage',
+      !fullBleed && 'blueprint',
+      !fullBleed && 'blueprint--sm',
+      fullBleed && 'pg__stage--full',
+    ]}
+    data-pg-loading
+    data-pg-tag={component.tag}
+  >
+    <span class="pg__stage-label">PREVIEW / {component.tag} / BRAND {project.brand.toUpperCase()}</span>
+    {/* Hand-rolled, not `<al-spinner>`: the one thing this has to survive is
+        the window in which no Altitude element has upgraded yet, so a spinner
+        that is itself an Altitude element would be the bug it exists to hide.
+        Two divs and a keyframe in docs.css, owing nothing to the runtime. */}
+    <div class="pg__loading" role="status">
+      <span class="pg__loading-spinner" aria-hidden="true"></span>
+      <span class="pg__loading-label">Loading preview</span>
+    </div>
+    <div data-pg-mount data-pg-example={hasExample ? '' : undefined} set:html={mountHtml} />
+  </div>
+
+  {/* No JS, no upgrade, and no reveal script either — so the loading state
+      would be permanent. Show the markup instead: a partially-styled preview
+      beats a spinner that never resolves. */}
+  <noscript>
+    {/* `is:inline` is load-bearing: without it Astro extracts this block into
+        the page's bundled stylesheet, where it applies unconditionally and
+        cancels the loading state for everyone. Inline, it stays inside the
+        <noscript> and only the no-JS reader ever parses it. */}
+    <style is:inline>
+      .pg__stage[data-pg-loading] .pg__loading { display: none !important; }
+      .pg__stage[data-pg-loading] [data-pg-mount] { visibility: visible !important; }
+    </style>
+  </noscript>
+
+  <script is:inline>
+    /*
+     * Clears the loading state when the stage is actually ready to be looked at.
+     *
+     * INLINE, and not part of this component's module script below, on purpose.
+     * The module script is bundled and deferred; if that bundle is slow, fails
+     * to parse, or is blocked, the reveal has to happen anyway. This runs as
+     * soon as the parser reaches it and owns nothing but the flag.
+     *
+     * READY means upgraded AND painted, not merely defined: `whenDefined`
+     * resolves when the class is registered, while Lit's first render lands a
+     * microtask later — revealing on `whenDefined` alone swaps the spinner for
+     * an empty box. `updateComplete` is that render, and the rAF is the frame
+     * that paints it.
+     */
+    (function () {
+      var stage = document.querySelector('.pg__stage[data-pg-loading]');
+      if (!stage) return;
+
+      var revealed = false;
+      var reveal = function () {
+        if (revealed) return;
+        revealed = true;
+        stage.removeAttribute('data-pg-loading');
+      };
+
+      var tag = stage.getAttribute('data-pg-tag');
+      if (tag && window.customElements) {
+        window.customElements
+          .whenDefined(tag)
+          .then(function () {
+            var el = stage.querySelector('[data-pg-el]');
+            return el && el.updateComplete ? el.updateComplete : null;
+          })
+          .then(function () {
+            requestAnimationFrame(reveal);
+          })
+          .catch(reveal);
+      }
+
+      /*
+       * BACKSTOP. A tag that never registers must not leave a spinner turning
+       * for the life of the page — the registry bundle can 404, a component
+       * can be documented before it is exported, an extension can block the
+       * module. After this the reader sees whatever did load, which is at
+       * least diagnosable; a permanent spinner is not.
+       */
+      setTimeout(reveal, 6000);
+    })();
+  </script>
+
+  {/* Fixture styles the story ships for its slotted content. Already prefixed
+       with `[data-pg-example]` by lib/examples.mjs, so `.chip` here cannot
+       reach `.chip` anywhere else on the page. */}
+  {hasExample && example.styles && <style set:html={example.styles} />}
+
+  {/* A control column with nothing in it is 280px of dead width beside the one
+      thing the reader came to look at. When the manifest declares no enum and
+      no boolean prop there is nothing to toggle, so the column is dropped and
+      the stage takes the row (`pg--no-controls`). The section rule already says
+      "0 CONTROLS", so nothing is hidden by removing it. */}
+  <div class="pg__controls" hidden={controlCount === 0}>
+    {
+      config.enums.map((control) => (
+        <div>
+          <div class="pg__control-label">{control.name}</div>
+          <div class="pg__opts" role="group" aria-label={control.name}>
+            <button
+              class="pg__opt"
+              type="button"
+              data-enum={control.name}
+              data-field={control.field}
+              data-value=""
+              aria-pressed="true"
+            >
+              default
+            </button>
+            {control.options.map((option) => (
+              <button
+                class="pg__opt"
+                type="button"
+                data-enum={control.name}
+                data-field={control.field}
+                data-value={option}
+                aria-pressed="false"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    {
+      showTextControl && (
+        <div>
+          <div class="pg__control-label">CONTENT</div>
+          <input class="pg__text" type="text" value={initialText} data-pg-text />
+        </div>
+      )
+    }
+
+    {
+      config.flags.length > 0 && (
+        <div>
+          <div class="pg__control-label">FLAGS</div>
+          <div class="pg__flags">
+            {config.flags.map((flag) => (
+              <button
+                class="pg__flag"
+                type="button"
+                data-flag={flag.name}
+                data-field={flag.field}
+                aria-pressed="false"
+              >
+                <span class="pg__box" />
+                <span>{flag.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      /* Icon toggles (T24). One per `before`/`after` slot this component
+         actually declares — a toggle switches the slot between empty and an
+         `<al-icon>`, and the compact search underneath (an `<al-combobox>`,
+         populated and filtered by the script below from the icon catalog)
+         picks which glyph. Search starts hidden: the slot itself starts
+         empty, so there is nothing to search for until the reader turns it
+         on. */
+      config.iconSlots.length > 0 && (
+        <div>
+          <div class="pg__control-label">ICON SLOTS</div>
+          <div class="pg__icon-slots">
+            {config.iconSlots.map((slot) => (
+              <div class="pg__icon-slot" data-icon-slot={slot.name}>
+                <button
+                  class="pg__flag"
+                  type="button"
+                  data-icon-toggle={slot.name}
+                  aria-pressed="false"
+                >
+                  <span class="pg__box" />
+                  <span>Icon {slot.name}</span>
+                </button>
+                <div class="pg__icon-search" data-icon-search={slot.name} hidden>
+                  <al-combobox
+                    data-icon-combobox={slot.name}
+                    label={slot.name === 'before' ? 'Before icon' : 'After icon'}
+                    filterMode="manual"
+                    placeholder="Search icons…"
+                    noResultsText="No icons match"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="pg__code">
+    <div class="pg__tabs" role="tablist" aria-label="Framework">
+      <button class="pg__tab" type="button" role="tab" data-tab="html" aria-selected="true">
+        HTML
+      </button>
+      {
+        component.react && (
+          <button class="pg__tab" type="button" role="tab" data-tab="react" aria-selected="false">
+            REACT
+          </button>
+        )
+      }
+      <button class="pg__copy" type="button" data-pg-copy>COPY</button>
+    </div>
+    <pre class="code" data-pg-code></pre>
+  </div>
+</div>
+
+<script type="application/json" data-pg-config set:html={JSON.stringify(config)} />
+
+{
+  /*
+   * Only shipped on the pages that actually have an icon-slot toggle — a
+   * component with no `before`/`after` slot has nothing to search.
+   *
+   * WHY THIS CARRIES ARTWORK (`viewBox` + `body`) AND NOT JUST NAMES. The
+   * obvious design is `<al-icon name>` plus the library's opt-in lazy
+   * resolver (`components/icon/lazy` — dynamic `import()` per glyph,
+   * `libs/al-web-components/components/icon/lazy.ts`), which is what the
+   * Icons page's own USAGE sample recommends for exactly this situation:
+   * "icon names come from data you do not control." Tried first here; it
+   * breaks `astro build`. `lazy.js` is ITSELF a prior Vite/Rolldown build
+   * output with an inlined `__vitePreload` helper for its per-glyph dynamic
+   * imports, and re-bundling it through this app's OWN Vite/Rolldown pass
+   * re-injects a second one into the same chunk — `Identifier
+   * '__vitePreload' has already been declared`. Serving it unbundled
+   * (a raw asset + native `<script src>`) dodges that crash but breaks the
+   * feature a different way: it would load `registry.js` as a SEPARATE
+   * module instance from the one `LiveRuntime.astro`'s bundled
+   * `@southleft/al-web-components` import uses, so `setIconResolver` would
+   * be setting a resolver the real rendered `<al-icon>` never reads from.
+   * Eagerly registering the whole catalog (`components/icon/all.ts`) is
+   * also out — that module's own header says "Do NOT import it from an
+   * application" (~230 KB gzipped, built for the retired Storybook catalog
+   * page only).
+   *
+   * So the preview paints icons a different way: a plain inline `<svg
+   * viewBox>…</svg>` built from this page's own build-time icon data —
+   * the same `lib/icons.mjs` the Icons page itself inlines artwork from,
+   * just filtered to what a `before`/`after` slot's search can reach. No
+   * registry, no dynamic import, nothing left for a second bundler pass to
+   * collide with. The COPYABLE SNIPPET is unaffected by this — it still
+   * emits real `<al-icon slot name>` markup (see `setSnippetIcon` in the
+   * script below), because that is the API a reader should actually use.
+   */
+  config.iconSlots.length > 0 && (
+    <script
+      type="application/json"
+      data-pg-icons
+      set:html={JSON.stringify(ICONS.map(({ name, haystack, viewBox, body }) => ({ name, haystack, viewBox, body })))}
+    />
+  )
+}
+
+<script>
+  // Playground state machine. Reads the generated config, mutates the real
+  // element on the stage, and re-emits both snippets from the same state.
+  const configEl = document.querySelector<HTMLScriptElement>('[data-pg-config]');
+  const stage = document.querySelector<HTMLElement>('[data-pg-el]');
+  const codeEl = document.querySelector<HTMLElement>('[data-pg-code]');
+
+  if (configEl && stage && codeEl) {
+    const config = JSON.parse(configEl.textContent || '{}') as {
+      tag: string;
+      brand: string;
+      react: string | null;
+      hasDefaultSlot: boolean;
+      hasExample: boolean;
+      exampleHtml: string;
+      exampleStory: string | null;
+      enums: { name: string; field: string; options: string[] }[];
+      flags: { name: string; field: string }[];
+      iconSlots: { name: string; default: string }[];
+    };
+
+    const fieldOf = new Map<string, string>([
+      ...config.enums.map((e) => [e.name, e.field] as [string, string]),
+      ...config.flags.map((f) => [f.name, f.field] as [string, string]),
+    ]);
+
+    /**
+     * Icon-slot state, seeded from what is ACTUALLY on the stage rather than
+     * always starting empty (T24). A story could in principle mount a
+     * `before`/`after` slot already populated; reading the live element's own
+     * light-DOM children means the toggle opens already reflecting that
+     * instead of silently stripping it on first render.
+     */
+    const iconSlotState = (name: string, fallback: string) => {
+      const existing = Array.from(stage.children).find((el) => el.getAttribute('slot') === name);
+      return { on: Boolean(existing), name: existing?.getAttribute('name') || fallback };
+    };
+
+    /**
+     * The icon catalog for this page's search — name, search haystack and
+     * raw SVG artwork, embedded by Playground.astro only when there is an
+     * icon slot to search (see the comment beside `[data-pg-icons]`).
+     */
+    const iconIndexEl = document.querySelector<HTMLScriptElement>('[data-pg-icons]');
+    const iconIndex = iconIndexEl
+      ? (JSON.parse(iconIndexEl.textContent || '[]') as {
+          name: string;
+          haystack: string;
+          viewBox: string;
+          body: string;
+        }[])
+      : [];
+    const iconArt = new Map(iconIndex.map((icon) => [icon.name, icon]));
+
+    const state = {
+      enums: Object.fromEntries(config.enums.map((e) => [e.name, ''])) as Record<string, string>,
+      flags: Object.fromEntries(config.flags.map((f) => [f.name, false])) as Record<string, boolean>,
+      text: (document.querySelector<HTMLInputElement>('[data-pg-text]')?.value ?? '').trim(),
+      icons: Object.fromEntries(
+        config.iconSlots.map((s) => [s.name, iconSlotState(s.name, s.default)])
+      ) as Record<string, { on: boolean; name: string }>,
+      tab: 'html' as 'html' | 'react',
+    };
+
+    const attrPairs = () => {
+      const pairs: [string, string | true][] = [];
+      for (const [name, value] of Object.entries(state.enums)) if (value) pairs.push([name, value]);
+      for (const [name, on] of Object.entries(state.flags)) if (on) pairs.push([name, true]);
+      return pairs;
+    };
+
+    /**
+     * Apply the control state to the opening tag of the story's markup.
+     *
+     * The example is a whole tree — a hero with two buttons, a chip row and a
+     * terminal panel in its slots — and the controls only ever change the ROOT
+     * element's attributes. So the snippet keeps the story's markup verbatim and
+     * rewrites just the first opening tag, which is also the element
+     * `data-pg-el` is on and the one the live stage is mutating. Attribute
+     * values are escaped; an attribute the story already set is replaced rather
+     * than duplicated.
+     */
+    const mergeRootAttrs = (markup: string, tag: string, pairs: [string, string | true][]) => {
+      const open = new RegExp(`<${tag}(\\s[^>]*?)?(/?)>`);
+      const match = markup.match(open);
+      if (!match) return markup;
+      let attrs = match[1] ?? '';
+      for (const [name, value] of pairs) {
+        const existing = new RegExp(`\\s${name}(="[^"]*")?`, 'g');
+        attrs = attrs.replace(existing, '');
+        attrs += value === true ? ` ${name}` : ` ${name}="${String(value).replace(/"/g, '&quot;')}"`;
+      }
+      return markup.replace(open, `<${tag}${attrs}${match[2]}>`);
+    };
+
+    /** Remove whichever element currently occupies `slot="before"|"after"`. */
+    const clearSlot = (root: Element, side: string) => {
+      Array.from(root.children).find((el) => el.getAttribute('slot') === side)?.remove();
+    };
+
+    /**
+     * Paint a `slot="before"|"after"` icon on the REAL, live element (T24).
+     *
+     * Not an `<al-icon name>` — see the long comment beside `[data-pg-icons]`
+     * in this file's markup for why the live preview cannot depend on that
+     * component's icon registry here. Instead this builds a plain inline
+     * `<svg viewBox>…</svg>` straight from this page's own build-time
+     * artwork, which needs no registration and cannot go blank. `slot` works
+     * on any element, not just custom-element children, so the browser
+     * projects it exactly the same way.
+     *
+     * A slotted child is light DOM, so this is plain DOM manipulation and
+     * works whether or not the host has upgraded yet — unlike the
+     * enum/flag controls, which have to go through JS properties because
+     * `setAttribute` cannot reach a Lit `@property` (see the config comment
+     * in this file's frontmatter).
+     */
+    const paintPreviewIcon = (root: Element, side: string, name: string | null) => {
+      clearSlot(root, side);
+      const art = name ? iconArt.get(name) : undefined;
+      if (!art) return;
+      const template = document.createElement('template');
+      // Sized and filled to match `<al-icon>`'s own default rendering
+      // (libs/al-web-components/components/icon/icon.scss's base `svg`
+      // rule) by hand: a bare `<svg>` outside `<al-icon>`'s shadow root
+      // never sees that stylesheet, so without this it paints at the
+      // browser's intrinsic default (300×150) instead of an icon-sized box.
+      template.innerHTML = `<svg slot="${side}" viewBox="${art.viewBox}" aria-hidden="true" style="display:inline-flex;flex:none;width:var(--al-theme-icon,20px);height:var(--al-theme-icon,20px);fill:currentColor;">${art.body}</svg>`;
+      const node = template.content.firstElementChild;
+      if (!node) return;
+      if (side === 'before') root.insertBefore(node, root.firstChild);
+      else root.appendChild(node);
+    };
+
+    /**
+     * The SNIPPET's icon markup, applied to a markup STRING rather than the
+     * live element — and a real `<al-icon slot name>`, unlike
+     * `paintPreviewIcon`, because this is what a reader copying the snippet
+     * should actually use.
+     *
+     * Parsed through a `<template>` rather than regex — the example markup is
+     * a whole tree (see `mergeRootAttrs`'s comment), and finding "the root
+     * element's direct children" correctly in arbitrary nested markup needs a
+     * real parser, not a bracket count.
+     *
+     * HTML tab only (see the call site): a React children tree isn't emitted
+     * as HTML text at all, and `<template>` lowercases tag names on parse,
+     * which would silently mangle a PascalCase React wrapper name.
+     */
+    const withIconSlots = (markup: string, tag: string, icons: Record<string, { on: boolean; name: string }>) => {
+      const template = document.createElement('template');
+      template.innerHTML = markup;
+      const root = template.content.querySelector(tag);
+      if (!root) return markup;
+      for (const side of ['before', 'after']) {
+        const cfg = icons[side];
+        if (!cfg) continue;
+        clearSlot(root, side);
+        if (cfg.on && cfg.name) {
+          const icon = document.createElement('al-icon');
+          icon.setAttribute('slot', side);
+          icon.setAttribute('name', cfg.name);
+          if (side === 'before') root.insertBefore(icon, root.firstChild);
+          else root.appendChild(icon);
+        }
+      }
+      return root.outerHTML;
+    };
+
+    const snippet = (open: string, close: string) => {
+      const pairs = attrPairs();
+      const attrs = pairs
+        .map(([name, value]) => (value === true ? ` ${name}` : ` ${name}="${value}"`))
+        .join('');
+      const body = config.hasDefaultSlot ? state.text : '';
+      // The HTML tab shows what is actually on the stage. The React tab does
+      // not: a wrapper takes children as JSX, so the story's slotted markup
+      // does not transliterate, and a bare element is the honest thing to show.
+      let element =
+        config.hasExample && state.tab !== 'react'
+          ? mergeRootAttrs(config.exampleHtml, config.tag, pairs)
+          : `<${open}${attrs}>${body}</${close}>`;
+      // Icon slots (T24), HTML tab only — see `withIconSlots`'s comment for
+      // why the React tab is excluded.
+      if (config.iconSlots.length > 0 && state.tab !== 'react') {
+        element = withIconSlots(element, config.tag, state.icons);
+      }
+      // The HTML path ships the theme host too: pasted on its own, outside an
+      // <al-theme>, the element renders under the base token bundle rather than
+      // this design system's brand. The React path does not — an app using the
+      // wrappers mounts its theme host once, at the root.
+      return state.tab === 'react'
+        ? element
+        : `<al-theme brand="${config.brand}">
+  ${element}
+</al-theme>`;
+    };
+
+    const render = () => {
+      // Live element: drive it through PROPERTIES (see the config comment in
+      // this component's frontmatter for why attributes are the wrong lever).
+      const target = stage as unknown as Record<string, unknown>;
+      for (const [name, value] of Object.entries(state.enums)) {
+        target[fieldOf.get(name) ?? name] = value || undefined;
+      }
+      for (const [name, on] of Object.entries(state.flags)) {
+        target[fieldOf.get(name) ?? name] = on;
+      }
+      if (config.hasDefaultSlot) stage.textContent = state.text;
+      if (config.iconSlots.length > 0) {
+        for (const [side, icon] of Object.entries(state.icons)) {
+          paintPreviewIcon(stage, side, icon.on ? icon.name : null);
+        }
+        // `slotNotEmpty()` (ALElement.ts) decides whether a component's shadow
+        // DOM even HAS a `<slot name="before">`/`<slot name="after">` to
+        // project into, and it is a plain, non-reactive DOM query — Lit only
+        // re-runs it when a `@property` changes, never in response to light
+        // DOM being mutated directly. Adding the icon above without this
+        // leaves it correctly in the light DOM (the snippet, driven off the
+        // SAME state, is unaffected) but with no `<slot>` to be assigned to,
+        // so nothing paints. `requestUpdate()` is the public, standard
+        // ReactiveElement method for "something not on a tracked property
+        // changed — re-render anyway."
+        (stage as unknown as { requestUpdate?: () => void }).requestUpdate?.();
+      }
+
+      codeEl.textContent =
+        state.tab === 'react' && config.react
+          ? snippet(config.react, config.react)
+          : snippet(config.tag, config.tag);
+    };
+
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-enum]')) {
+      button.addEventListener('click', () => {
+        const name = button.dataset.enum!;
+        state.enums[name] = button.dataset.value ?? '';
+        for (const sibling of document.querySelectorAll<HTMLButtonElement>(
+          `[data-enum="${name}"]`
+        )) {
+          sibling.setAttribute('aria-pressed', String(sibling === button));
+        }
+        render();
+      });
+    }
+
+    for (const button of document.querySelectorAll<HTMLButtonElement>('[data-flag]')) {
+      button.addEventListener('click', () => {
+        const name = button.dataset.flag!;
+        state.flags[name] = !state.flags[name];
+        button.setAttribute('aria-pressed', String(state.flags[name]));
+        render();
+      });
+    }
+
+    document.querySelector<HTMLInputElement>('[data-pg-text]')?.addEventListener('input', (e) => {
+      state.text = (e.target as HTMLInputElement).value;
+      render();
+    });
+
+    /*
+     * ICON SLOTS (T24) — a toggle per `before`/`after` slot, each revealing a
+     * compact <al-combobox> search over the icon catalog once switched on.
+     *
+     * The catalog itself (`iconIndex`, above) is embedded once per page as
+     * `[data-pg-icons]`, only when `config.iconSlots.length > 0` — see the
+     * comment beside that script tag. `filterMode="manual"` on the combobox
+     * (rather than its own auto substring filter) is what caps the popup at
+     * MAX_ICON_RESULTS: with ~1,500 entries, rendering every match on an
+     * empty query would mean ~1,500 `<al-list-item>`s in a popup meant to be
+     * "compact".
+     */
+    const MAX_ICON_RESULTS = 40;
+
+    const matchIcons = (query: string) => {
+      const q = query.trim().toLowerCase();
+      const matches = q ? iconIndex.filter((icon) => icon.haystack.includes(q)) : iconIndex;
+      return matches.slice(0, MAX_ICON_RESULTS).map((icon) => ({ value: icon.name, label: icon.name }));
+    };
+
+    for (const toggle of document.querySelectorAll<HTMLButtonElement>('[data-icon-toggle]')) {
+      const side = toggle.dataset.iconToggle!;
+      const icon = state.icons[side];
+      // Reflect the seeded state (see `iconSlotState` above) rather than the
+      // server-rendered "off" default, for the same reason that default is
+      // seeded from the live element in the first place.
+      toggle.setAttribute('aria-pressed', String(icon.on));
+      const searchWrap = document.querySelector<HTMLElement>(`[data-icon-search="${side}"]`);
+      if (searchWrap) searchWrap.hidden = !icon.on;
+
+      toggle.addEventListener('click', () => {
+        icon.on = !icon.on;
+        toggle.setAttribute('aria-pressed', String(icon.on));
+        if (searchWrap) searchWrap.hidden = !icon.on;
+        render();
+      });
+    }
+
+    for (const combo of document.querySelectorAll<HTMLElement & { value: string; items: unknown }>(
+      '[data-icon-combobox]'
+    )) {
+      const side = combo.dataset.iconCombobox!;
+      const icon = state.icons[side];
+      // Driven through PROPERTIES, same as every other live control — `items`
+      // is `{ attribute: false }` on al-combobox, so an attribute could never
+      // reach it anyway.
+      combo.value = icon.name;
+      combo.items = matchIcons(icon.name);
+
+      combo.addEventListener('onComboboxFilter', ((e: CustomEvent<{ query: string }>) => {
+        combo.items = matchIcons(e.detail.query ?? '');
+      }) as EventListener);
+
+      combo.addEventListener('onComboboxChange', ((e: CustomEvent<{ value: string }>) => {
+        icon.name = e.detail.value;
+        icon.on = true;
+        const toggle = document.querySelector<HTMLButtonElement>(`[data-icon-toggle="${side}"]`);
+        toggle?.setAttribute('aria-pressed', 'true');
+        const searchWrap = document.querySelector<HTMLElement>(`[data-icon-search="${side}"]`);
+        if (searchWrap) searchWrap.hidden = false;
+        render();
+      }) as EventListener);
+    }
+
+    for (const tab of document.querySelectorAll<HTMLButtonElement>('[data-tab]')) {
+      tab.addEventListener('click', () => {
+        state.tab = tab.dataset.tab as 'html' | 'react';
+        for (const sibling of document.querySelectorAll<HTMLButtonElement>('[data-tab]')) {
+          sibling.setAttribute('aria-selected', String(sibling === tab));
+        }
+        render();
+      });
+    }
+
+    const copy = document.querySelector<HTMLButtonElement>('[data-pg-copy]');
+    copy?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(codeEl.textContent ?? '');
+        copy.textContent = 'COPIED ✓';
+      } catch {
+        copy.textContent = 'COPY FAILED';
+      }
+      setTimeout(() => {
+        copy.textContent = 'COPY';
+      }, 1200);
+    });
+
+    render();
+    // Re-run once the element class lands so the first paint reflects the
+    // controls even if the registry bundle resolves after this module.
+    customElements.whenDefined(config.tag).then(render);
+  }
+</script>

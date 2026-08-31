@@ -1,0 +1,155 @@
+{
+  "$schema": "../contract.schema.json",
+  "id": "al-divider",
+  "name": "Divider",
+  "version": "1.1.0",
+  "status": "source",
+  "description": "Component: al-divider",
+  "semantics": {
+    "element": "hr",
+    "role": null
+  },
+  "props": [
+    {
+      "name": "variant",
+      "description": "Variant\n- **default** A divider the displays horizontally\n- **vertical** A divider the displays vertically",
+      "type": "string",
+      "rawType": "'vertical'",
+      "bindings": {
+        "code": {
+          "attribute": "variant"
+        },
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Orientation",
+          "options": [
+            "Horizontal",
+            "Vertical"
+          ],
+          "pairWith": "Orientation"
+        }
+      }
+    }
+  ],
+  "events": [],
+  "slots": [],
+  "composition": {
+    "renders": []
+  },
+  "states": [
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "anatomySource": "measured",
+  "anatomyCase": "Orientation=default",
+  "anatomy": {
+    "root": {
+      "tag": "hr",
+      "cls": "al-c-divider",
+      "box": {
+        "w": 320,
+        "h": 1
+      },
+      "layout": {
+        "display": "block",
+        "direction": "row",
+        "align": "normal",
+        "justify": "normal"
+      },
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-border-default",
+          "figma": "theme/color/border/default"
+        },
+        "height": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        }
+      },
+      "children": []
+    },
+    "cases": [
+      {
+        "case": "Orientation=default",
+        "root": {
+          "tag": "hr",
+          "cls": "al-c-divider",
+          "box": {
+            "w": 320,
+            "h": 1
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-border-default",
+              "figma": "theme/color/border/default"
+            },
+            "height": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            }
+          },
+          "children": []
+        }
+      },
+      {
+        "case": "Orientation=vertical",
+        "root": {
+          "tag": "hr",
+          "cls": "al-c-divider al-c-divider--vertical",
+          "box": {
+            "w": 1,
+            "h": 0
+          },
+          "layout": {
+            "display": "block",
+            "direction": "row",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-border-default",
+              "figma": "theme/color/border/default"
+            },
+            "width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            }
+          },
+          "children": []
+        }
+      }
+    ]
+  },
+  "tokens": [
+    "--al-theme-border-width",
+    "--al-theme-color-border-default"
+  ],
+  "a11y": {
+    "ariaAttributes": [
+      "variant"
+    ],
+    "cssParts": []
+  },
+  "bindings": {
+    "code": {
+      "importPath": "@southleft/al-web-components/components/divider/divider.ts",
+      "tagName": "al-divider",
+      "workspace": "@southleft/al-web-components"
+    },
+    "figma": {
+      "fileKey": "y83n4o9LOGs74oAoguFcGS",
+      "componentSetName": "Divider",
+      "nodeId": "3543:46933",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-46933"
+    }
+  }
+}

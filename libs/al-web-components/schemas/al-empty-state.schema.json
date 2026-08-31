@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://southleft.com/altitude/al-empty-state.schema.json",
+  "title": "ALEmptyState (al-empty-state)",
+  "description": "Component: al-empty-state\n\nA centered \"nothing here yet\" placeholder — empty search results, empty\ntables/lists, zero-data dashboard states.",
+  "type": "object",
+  "altitude": {
+    "tagName": "al-empty-state",
+    "className": "ALEmptyState",
+    "module": "components/empty-state/empty-state.ts",
+    "migration": {
+      "state": "scoped-complete",
+      "react19": true,
+      "headless": false,
+      "ssr": false
+    },
+    "slots": [
+      {
+        "description": "Optional icon or illustration, rendered above the heading.",
+        "name": "icon"
+      },
+      {
+        "description": "Optional action row (buttons/links), rendered below the description.",
+        "name": "actions"
+      }
+    ],
+    "events": [],
+    "cssParts": [
+      {
+        "name": "container",
+        "description": ""
+      }
+    ],
+    "cssProperties": []
+  },
+  "properties": {
+    "tagName": {
+      "const": "al-empty-state"
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "description": "The empty-state heading.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Supporting description text.",
+          "type": "string"
+        }
+      }
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "required": [
+    "tagName"
+  ]
+}
