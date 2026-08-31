@@ -105,7 +105,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (9)
 
-`--al-theme-border-radius`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
+`--al-theme-border-radius`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
 
 ---
 

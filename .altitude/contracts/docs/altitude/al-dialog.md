@@ -106,9 +106,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-dialog`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (12)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
 
 ---
 

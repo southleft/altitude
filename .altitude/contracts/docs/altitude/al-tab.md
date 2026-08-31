@@ -89,7 +89,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font | `--al-theme-typography-body-sm` | — |
+| font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | padding | `--al-theme-space-xs` | `theme/space/xs` |
@@ -173,7 +173,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Tokens referenced (10)
 
-`--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-medium`, `--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

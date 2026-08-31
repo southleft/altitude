@@ -87,19 +87,21 @@ Variant
 | --- | --- | --- |
 | background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
-| border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
-| font | `--al-theme-typography-body-sm` | — |
+| border | `--al-theme-border-width` | `theme/border/width/@` |
+| border-bottom-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-bottom-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-color | `--al-theme-color-border-default-weak` | `theme/color/border/default-weak` |
+| border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
+| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
-| padding | `--al-theme-space-xs` | `theme/space/xs` |
-| padding-bottom | `--al-theme-space-xs` | `theme/space/xs` |
-| padding-left | `--al-theme-space-xs` | `theme/space/xs` |
-| padding-right | `--al-theme-space-xs` | `theme/space/xs` |
-| padding-top | `--al-theme-space-xs` | `theme/space/xs` |
+| min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
+| padding | `--al-theme-space-sm` | `theme/space/sm` |
+| padding-left | `--al-theme-space-sm` | `theme/space/sm` |
+| padding-right | `--al-theme-space-sm` | `theme/space/sm` |
 
 ### State overrides (measured, root node)
 
@@ -127,9 +129,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-toggle-button`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (13)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-13`, `--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default-weak`, `--al-theme-color-content-default`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

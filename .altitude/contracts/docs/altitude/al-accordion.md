@@ -79,7 +79,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (8)
 
-`--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-icon-lg`, `--al-theme-space`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-icon-lg`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
 
 ---
 

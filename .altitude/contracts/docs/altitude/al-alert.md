@@ -100,12 +100,12 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | border-top-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
-| box-shadow | `--al-theme-box-shadow-lg` | `theme/box-shadow/lg` |
-| padding | `--al-theme-space` | `theme/space/@` |
-| padding-bottom | `--al-theme-space` | `theme/space/@` |
+| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| padding | `--al-theme-space-sm` | `theme/space/sm` |
+| padding-bottom | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
 | padding-right | `--al-theme-space` | `theme/space/@` |
-| padding-top | `--al-theme-space` | `theme/space/@` |
+| padding-top | `--al-theme-space-sm` | `theme/space/sm` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -149,7 +149,7 @@ _None._
 
 ## Tokens referenced (9)
 
-`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-border-width`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-danger-weak`, `--al-theme-color-border-danger-weak`, `--al-theme-space`, `--al-theme-space-sm`
+`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-border-width`, `--al-theme-color-background-danger-weak`, `--al-theme-color-border-danger-weak`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-sm`
 
 ---
 

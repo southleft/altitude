@@ -16,8 +16,8 @@ Component: al-badge
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `isDot` | boolean | — | — | — |
-| `position` | enum | `bottom-left`, `bottom-right`, `top-left`, `top-right` | — | — |
+| `isDot` | boolean | — | — | **Shape** (VARIANT): `Dot`, `Label` |
+| `position` | enum | `bottom-left`, `bottom-right`, `top-left`, `top-right` | — | _not expressed in Figma (by design)_ |
 | `variant` | enum | `danger`, `info`, `success`, `warning` | — | **Variant** (VARIANT): `Danger`, `Default`, `Info`, `Success`, `Warning` |
 
 #### `isDot`
@@ -42,7 +42,14 @@ State variant
 - **warning** renders a badge with warning state treatment
 - **danger** renders a badge with danger state treatment
 
+**Figma-expression opt-out (T27):** `position` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
+
+### `isDot` (Figma property "Shape")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Dot`, `Label`
 
 ### `variant` (Figma property "Variant")
 
@@ -78,11 +85,11 @@ _No events declared._
 | --- | --- | --- |
 | background | `--al-theme-color-background-default-stronger` | `theme/color/background/default-stronger` |
 | background-color | `--al-theme-color-background-default-stronger` | `theme/color/background/default-stronger` |
-| border-bottom-left-radius | `--al-base-space` | `base/space` |
-| border-bottom-right-radius | `--al-base-space` | `base/space` |
-| border-radius | `--al-base-space` | `base/space` |
-| border-top-left-radius | `--al-base-space` | `base/space` |
-| border-top-right-radius | `--al-base-space` | `base/space` |
+| border-bottom-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-bottom-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-top-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-top-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
@@ -90,9 +97,9 @@ _No events declared._
 | letter-spacing | `--al-theme-typography-body-xs-bold-letter-spacing` | — |
 | min-height | `--al-base-space` | `base/space` |
 | min-width | `--al-base-space` | `base/space` |
-| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-left | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-right | `--al-theme-space-xxs` | `theme/space/xxs` |
+| padding | `--al-theme-space-xs` | `theme/space/xs` |
+| padding-left | `--al-theme-space-xs` | `theme/space/xs` |
+| padding-right | `--al-theme-space-xs` | `theme/space/xs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -169,9 +176,9 @@ _No events declared._
 - Tag: `al-badge`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (6)
+## Tokens referenced (8)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-color-background-default-stronger`, `--al-theme-color-content-default`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-color-background-default-stronger`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

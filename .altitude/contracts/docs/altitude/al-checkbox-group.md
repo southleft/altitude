@@ -135,9 +135,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-checkbox-group`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (14)
+## Tokens referenced (15)
 
-`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

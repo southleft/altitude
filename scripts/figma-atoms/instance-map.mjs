@@ -8,8 +8,16 @@
  * It is the inverse of `plan.mjs` — plan.mjs turned axis values into attributes to render;
  * this turns rendered attributes back into the axis values that pick a variant.
  *
- * Node ids were read live from `Altitude Design System` (y83n4o9LOGs74oAoguFcGS) on
- * 2026-08-21. They are stable for a file; re-scan if a set is ever rebuilt rather than
+ * Node ids were re-read live from `Altitude Design System` (y83n4o9LOGs74oAoguFcGS) on
+ * 2026-08-31, when an audit found **18 of the 20 pinned ids were GHOSTS**: each still
+ * RESOLVES via getNodeByIdAsync as a COMPONENT_SET with the right name and
+ * `removed === false`, but its parent chain reaches no PAGE, so every molecule nesting
+ * an atom was pointing at a deleted set. "It resolved" is not proof a node is in the
+ * document — walk to a PAGE and check `figma.root.children` contains it. `al-skeleton`
+ * and `al-text-block` have no live set on a 🛠 page and are `null`, which resolves BY
+ * NAME instead. Original note follows; it was read live on 2026-08-21.
+ *
+ * (2026-08-21.) They are stable for a file; re-scan if a set is ever rebuilt rather than
  * repaired (rebuilding mints new ids — one more reason to repair in place).
  *
  * Every variant value below was verified against the set's live
@@ -71,11 +79,11 @@ export const INSTANCE_MAP = {
       }),
     }),
 
-  'al-badge': set('Badge', '2626:541',
-    (a) => ({ Type: on(a.isdot) ? 'Dot' : 'Text', Variant: cap(a.variant) || 'Default', Size: 'sm' }),
+  'al-badge': set('Badge', '3538:35772',
+    (a) => ({ Variant: cap(a.variant) || 'Default', Shape: on(a.isdot) ? 'Dot' : 'Label' }),
     { text: (a, t) => t || '8' }),
 
-  'al-chip': set('Chip', '3435:1086',
+  'al-chip': set('Chip', '3540:43526',
     (a) => ({
       Variant: cap(a.variant) || 'Default',
       Shape: a.type === 'squared' ? 'Squared' : 'Default',
@@ -83,34 +91,34 @@ export const INSTANCE_MAP = {
       State: 'Default',
     })),
 
-  'al-heading': set('Heading', '3435:926',
+  'al-heading': set('Heading', '3543:47001',
     (a) => ({
       Variant: { 'display-lg': 'Display Lg', 'display-md': 'Display Md', 'display-sm': 'Display Sm', lg: 'Lg', md: 'Md', sm: 'Sm' }[a.variant] || 'Default',
       Weight: on(a.isbold) ? 'Bold' : 'Regular',
       State: 'Default',
     })),
 
-  'al-link': set('Link', '3435:964',
+  'al-link': set('Link', '3543:47075',
     (a) => ({ Size: cap(a.variant) || 'Default', State: stateOf(a) })),
 
-  'al-checkbox': set('Checkbox', '3435:1422',
+  'al-checkbox': set('Checkbox', '3539:42167',
     (a) => ({
       Checked: on(a.isindeterminate) ? 'Indeterminate' : on(a.ischecked) ? 'On' : 'Off',
       Label: on(a.hidelabel) ? 'Hidden' : 'Shown',
       State: stateOf(a),
     })),
 
-  'al-radio': set('Radio', '3436:1613',
+  'al-radio': set('Radio', '3543:47540',
     (a) => ({
       Checked: on(a.ischecked) ? 'On' : 'Off',
       Label: on(a.hidelabel) ? 'Hidden' : 'Shown',
       State: stateOf(a),
     })),
 
-  'al-toggle': set('Toggle', '2874:20',
+  'al-toggle': set('Toggle', '3543:48094',
     (a) => ({ Checked: on(a.ischecked) ? 'On' : 'Off', State: stateOf(a) })),
 
-  'al-toggle-button': set('Toggle Button', '3435:1154',
+  'al-toggle-button': set('Toggle Button', '3543:47985',
     (a) => ({
       Variant: a.variant === 'background' ? 'Background' : 'Default',
       Selected: on(a.isselected) ? 'Yes' : 'No',
@@ -118,53 +126,53 @@ export const INSTANCE_MAP = {
       State: 'Default',
     })),
 
-  'al-tab': set('Tab', '3435:1128',
+  'al-tab': set('Tab', '3543:47793',
     (a) => ({ Active: on(a.isactive) ? 'Yes' : 'No', State: stateOf(a) })),
 
-  'al-tab-panel': set('Tab Panel', '3436:2090',
+  'al-tab-panel': set('Tab Panel', '3543:47875',
     () => ({ Active: 'Yes', State: 'Default' })),
 
-  'al-list-item': set('List Item', '3436:1747',
+  'al-list-item': set('List Item', '3543:47175',
     (a) => ({
       Variant: a.variant === 'static' ? 'Static' : 'Default',
       Current: on(a.iscurrent) ? 'Yes' : 'No',
       State: stateOf(a, { isactive: 'Active' }),
     })),
 
-  'al-menu-item': set('Menu Item', '3436:1779',
+  'al-menu-item': set('Menu Item', '3543:47347',
     (a) => ({
       Selected: on(a.isselected) ? 'Yes' : 'No',
       Role: on(a.isheader) ? 'Header' : on(a.isexpandable) ? 'Expandable' : 'Item',
       State: on(a.isdisabled) ? 'Disabled' : 'Default',
     })),
 
-  'al-pagination-item': set('Pagination Item', '3436:1807',
+  'al-pagination-item': set('Pagination Item', '3543:47406',
     (a) => ({
       Selected: on(a.isselected) ? 'Yes' : 'No',
       Kind: on(a.isexpandable) ? 'Expandable' : 'Number',
       State: on(a.isdisabled) ? 'Disabled' : 'Default',
     })),
 
-  'al-breadcrumbs-item': set('Breadcrumbs Item', '3436:1837',
+  'al-breadcrumbs-item': set('Breadcrumbs Item', '3538:36342',
     (a) => ({
       Current: on(a.iscurrent) ? 'Yes' : 'No',
       Separator: on(a.hasseparator) ? 'Yes' : 'No',
       State: 'Default',
     })),
 
-  'al-field-note': set('Field Note', '3435:896',
+  'al-field-note': set('Field Note', '3543:46961',
     (a) => ({ State: stateOf(a) })),
 
-  'al-divider': set('Divider', '3435:877',
+  'al-divider': set('Divider', '3543:46933',
     (a) => ({ Orientation: a.variant === 'vertical' ? 'Vertical' : 'Default', State: 'Default' })),
 
-  'al-skeleton': set('Skeleton', '3435:882',
+  'al-skeleton': set('Skeleton', null,
     (a) => ({ Shape: cap(a.variant) || 'Default', State: 'Default' })),
 
-  'al-text-block': set('Text Block', '3435:888',
+  'al-text-block': set('Text Block', null,
     (a) => ({ Width: a.maxwidth === 'sm' ? 'Sm' : 'Default', State: 'Default' })),
 
-  'al-banner': set('Banner', '729:229',
+  'al-banner': set('Banner', '3570:1351',
     (a) => ({ Variant: cap(a.variant) || 'Info', Expanded: on(a.isexpanded) ? 'True' : 'False' })),
 };
 

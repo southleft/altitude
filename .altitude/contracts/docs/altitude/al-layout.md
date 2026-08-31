@@ -169,9 +169,9 @@ _No events declared._
 - Tag: `al-layout`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (5)
+## Tokens referenced (7)
 
-`--al-theme-border-radius-lg`, `--al-theme-color-background-default`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-xs`
+`--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default-weak`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-xs`
 
 ---
 

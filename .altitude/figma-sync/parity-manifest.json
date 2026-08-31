@@ -2,7 +2,7 @@
   "$comment": "Figma <-> code parity manifest. Seeded by scripts/figma-parity/seed-manifest.mjs; lastSync stamped by scripts/figma-parity/mark-synced.mjs; figmaCurrentDigest updated by scripts/figma-parity/refresh-figma-digests.mjs. Read by libs/altitude-mcp/src/lib/parity.mjs.",
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-08-31T19:32:29.008Z",
+  "figmaLastRefreshed": "2026-08-31T20:09:49.186Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -38,7 +38,7 @@
         "figmaDigest": "d49c0532cf2014a3f9dfaccafe46ac9564b01664",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "e09d6aadcc559145d569afa56c21b2477a59d221",
+      "figmaCurrentDigest": "d3d55e1796261021f72dbab8311eaa3f5983ed2d",
       "figmaContract": {
         "props": {
           "Text": {
@@ -54,14 +54,26 @@
               "Success",
               "Warning"
             ]
+          },
+          "Shape": {
+            "type": "VARIANT",
+            "options": [
+              "Label",
+              "Dot"
+            ]
           }
         },
         "variants": [
-          "Variant=Danger",
-          "Variant=Default",
-          "Variant=Info",
-          "Variant=Success",
-          "Variant=Warning"
+          "Variant=Danger, Shape=Dot",
+          "Variant=Danger, Shape=Label",
+          "Variant=Default, Shape=Dot",
+          "Variant=Default, Shape=Label",
+          "Variant=Info, Shape=Dot",
+          "Variant=Info, Shape=Label",
+          "Variant=Success, Shape=Dot",
+          "Variant=Success, Shape=Label",
+          "Variant=Warning, Shape=Dot",
+          "Variant=Warning, Shape=Label"
         ]
       }
     },
@@ -197,7 +209,7 @@
         "figmaDigest": "18828c1c7395c3b053821c991fa6b7e9f69d9e30",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "50caeb9a27ad274fe2b50657dbca4a6e12b4d298",
+      "figmaCurrentDigest": "ae09085c22527edd334d798bfea762a28f2651d3",
       "figmaContract": {
         "props": {
           "Text": {
@@ -2265,7 +2277,7 @@
     }
   },
   "figmaOnly": [],
-  "updated": "2026-08-31T19:32:29.009Z",
+  "updated": "2026-08-31T20:09:49.187Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }

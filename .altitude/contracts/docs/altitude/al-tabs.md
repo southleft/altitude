@@ -79,7 +79,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (17)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-color-background-danger-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-danger-weak`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-font-weight-medium`, `--al-theme-border-radius-pill`, `--al-theme-color-background-danger-weak`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-danger-default`, `--al-theme-color-content-default`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

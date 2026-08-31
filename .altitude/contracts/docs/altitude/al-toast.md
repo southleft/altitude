@@ -99,9 +99,10 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | border-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
-| box-shadow | `--al-theme-box-shadow-lg` | `theme/box-shadow/lg` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
-| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
+| box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
+| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
+| letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -143,9 +144,9 @@ _None._
 - Tag: `al-toast`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (11)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`
+`--al-base-space`, `--al-font-size-13`, `--al-font-weight-medium`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

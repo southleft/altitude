@@ -148,7 +148,6 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
 | min-width | `--al-base-space` | `base/space` |
 
 ### State overrides (measured, root node)
@@ -735,7 +734,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (23)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-border-width-md`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-icon`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-icon`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
 
 ---
 

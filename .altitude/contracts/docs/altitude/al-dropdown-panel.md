@@ -62,7 +62,7 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
-| box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
+| box-shadow | `--al-theme-box-shadow-lg` | `theme/box-shadow/lg` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -76,7 +76,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (3)
 
-`--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-space-xxs`
+`--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-space-xxs`
 
 ---
 

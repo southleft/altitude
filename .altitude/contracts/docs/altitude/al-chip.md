@@ -97,13 +97,14 @@ Variant
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
+| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
-| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-bottom | `--al-theme-space-xxs` | `theme/space/xxs` |
+| min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
+| padding | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-left | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-right | `--al-theme-space-sm` | `theme/space/sm` |
-| padding-top | `--al-theme-space-xxs` | `theme/space/xxs` |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 ### State overrides (measured, root node)
@@ -183,9 +184,9 @@ Variant
 - Tag: `al-chip`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (13)
 
-`--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-13`, `--al-font-weight-medium`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

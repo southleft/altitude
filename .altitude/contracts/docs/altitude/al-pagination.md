@@ -115,9 +115,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-pagination`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (17)
+## Tokens referenced (18)
 
-`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-weak`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 
