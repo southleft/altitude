@@ -16,12 +16,12 @@ Component: al-input
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
-| `autoComplete` | enum | `off`, `on` | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
-| `hideLabel` | boolean | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `autoComplete` | enum | `off`, `on` | — | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActive` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
@@ -31,15 +31,15 @@ Component: al-input
 | `isRequired` | boolean | — | — | — |
 | `label` | string | — | `'Label'` | _not expressed in Figma (by design)_ |
 | `labelPosition` | enum | `inset`, `top` | `'top'` | **Label Position** (VARIANT): `Top`, `Inset` |
-| `max` | number | — | — | — |
-| `maxLength` | number | — | — | — |
-| `maxLengthValue` | number | — | — | — |
-| `min` | number | — | — | — |
-| `minLength` | number | — | — | — |
-| `name` | string | — | — | — |
-| `placeholder` | string | — | — | — |
-| `type` | enum | `email`, `hidden`, `number`, `password`, `tel`, `text`, `url` | `'text'` | — |
-| `value` | string | — | — | — |
+| `max` | number | — | — | _not expressed in Figma (by design)_ |
+| `maxLength` | number | — | — | _not expressed in Figma (by design)_ |
+| `maxLengthValue` | number | — | — | _not expressed in Figma (by design)_ |
+| `min` | number | — | — | _not expressed in Figma (by design)_ |
+| `minLength` | number | — | — | _not expressed in Figma (by design)_ |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `placeholder` | string | — | — | _not expressed in Figma (by design)_ |
+| `type` | enum | `email`, `hidden`, `number`, `password`, `tel`, `text`, `url` | `'text'` | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `ariaDescribedBy`
 
@@ -177,9 +177,14 @@ Type variants
 Value attribute
 - Specifies the value of an input element
 
-**Figma-expression opt-out (T27):** `isActive`, `label` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `autoComplete`, `errorNote`, `fieldId`, `fieldNote`, `isActive`, `label`, `max`, `maxLength`, `maxLengthValue`, `min`, `minLength`, `name`, `placeholder`, `type`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
+
+### `hideLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
 
 ### `isDisabled` (Figma property "State")
 
