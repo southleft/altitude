@@ -16,11 +16,11 @@ Component: al-toggle
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `fieldId` | string | — | — | — |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `isChecked` | boolean | — | — | **Checked** (VARIANT): `Off`, `On` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
-| `label` | string | — | `'Toggle'` | — |
-| `name` | string | — | — | — |
+| `label` | string | — | `'Toggle'` | _not expressed in Figma (by design)_ |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `fieldId`
 
@@ -56,6 +56,8 @@ Label
 
 Name attribute
 - The name attribute used on the toggle
+
+**Figma-expression opt-out (T27):** `fieldId`, `label`, `name` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

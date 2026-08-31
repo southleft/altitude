@@ -16,14 +16,14 @@ Component: al-pagination
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaLabel` | string | — | — | — |
-| `currentItem` | number | — | `1` | — |
-| `nextButtonText` | string | — | `'Next'` | — |
-| `pageSize` | number | — | `10` | — |
-| `pageSizeLabel` | string | — | `'Show'` | — |
-| `pageSizeOptions` | string | `Array<number>` | `[20, 40, 60, 80, 100]` | — |
-| `prevButtonText` | string | — | `'Previous'` | — |
-| `totalRecords` | number | — | — | — |
+| `ariaLabel` | string | — | — | _not expressed in Figma (by design)_ |
+| `currentItem` | number | — | `1` | _not expressed in Figma (by design)_ |
+| `nextButtonText` | string | — | `'Next'` | _not expressed in Figma (by design)_ |
+| `pageSize` | number | — | `10` | _not expressed in Figma (by design)_ |
+| `pageSizeLabel` | string | — | `'Show'` | _not expressed in Figma (by design)_ |
+| `pageSizeOptions` | string | `Array<number>` | `[20, 40, 60, 80, 100]` | _not expressed in Figma (by design)_ |
+| `prevButtonText` | string | — | `'Previous'` | _not expressed in Figma (by design)_ |
+| `totalRecords` | number | — | — | _not expressed in Figma (by design)_ |
 | `variant` | string | `'small'` | — | **Variant** (VARIANT): `Default`, `Small` |
 
 #### `ariaLabel`
@@ -63,6 +63,8 @@ Represents the total size of the data set
 #### `variant`
 
 Variant of pagination (e.g., 'small' for a compact view)
+
+**Figma-expression opt-out (T27):** `ariaLabel`, `currentItem`, `nextButtonText`, `pageSize`, `pageSizeLabel`, `pageSizeOptions`, `prevButtonText`, `totalRecords` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

@@ -16,12 +16,12 @@ Component: al-menu
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `height` | number | — | — | — |
-| `id` | string | — | — | — |
-| `indentGroupItems` | boolean | — | — | — |
-| `label` | string | — | `'Menu'` | — |
+| `height` | number | — | — | _not expressed in Figma (by design)_ |
+| `id` | string | — | — | _not expressed in Figma (by design)_ |
+| `indentGroupItems` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `label` | string | — | `'Menu'` | _not expressed in Figma (by design)_ |
 | `variant` | string | `'simple'` | — | **Variant** (VARIANT): `Default`, `Simple` |
-| `width` | number | — | — | — |
+| `width` | number | — | — | _not expressed in Figma (by design)_ |
 
 #### `height`
 
@@ -55,6 +55,8 @@ Variant
 
 Width property
 - If set, the menu will be constrained to this width in px
+
+**Figma-expression opt-out (T27):** `height`, `id`, `indentGroupItems`, `label`, `width` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

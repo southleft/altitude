@@ -16,12 +16,12 @@ Component: al-link
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaLabelledBy` | string | — | — | — |
-| `href` | string | — | — | — |
+| `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `href` | string | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | — |
-| `label` | string | — | — | — |
-| `linkTitle` | string | — | — | — |
-| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
+| `label` | string | — | — | _not expressed in Figma (by design)_ |
+| `linkTitle` | string | — | — | _not expressed in Figma (by design)_ |
+| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
 | `variant` | enum | `lg`, `sm`, `xs` | — | — |
 
 #### `ariaLabelledBy`
@@ -65,6 +65,8 @@ Variant
 - **xs** renders a link with the al-theme-typography-body-xs preset
 - **sm** renders a link with the al-theme-typography-body-sm preset
 - **lg** renders a link with the al-theme-typography-body-lg preset
+
+**Figma-expression opt-out (T27):** `ariaLabelledBy`, `href`, `label`, `linkTitle`, `target` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

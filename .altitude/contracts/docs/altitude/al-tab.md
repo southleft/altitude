@@ -16,11 +16,11 @@ Component: al-tab
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaControls` | string | — | — | — |
-| `ariaId` | string | — | — | — |
-| `idx` | number | — | `0` | — |
-| `isActive` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
+| `ariaControls` | string | — | — | _not expressed in Figma (by design)_ |
+| `ariaId` | string | — | — | _not expressed in Figma (by design)_ |
+| `idx` | number | — | `0` | _not expressed in Figma (by design)_ |
+| `isActive` | boolean | — | — | **Active** (VARIANT): `No`, `Yes` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Focus`, `Hover` |
 
 #### `ariaControls`
 
@@ -53,9 +53,19 @@ Disabled attribute
 - **true** Renders a tab with the disabled property and state
 - **false** Renders a tab without the disabled property and state
 
+**Figma-expression opt-out (T27):** `ariaControls`, `ariaId`, `idx` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `isActive` (Figma property "Active")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Focus`, `Hover`
 
 ## States
 

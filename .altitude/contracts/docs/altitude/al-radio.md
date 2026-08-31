@@ -16,17 +16,17 @@ Component: al-radio
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isChecked` | boolean | — | — | **Checked** (VARIANT): `Off`, `On` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isRequired` | boolean | — | — | — |
-| `name` | string | — | — | — |
-| `value` | string | — | — | — |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `ariaDescribedBy`
 
@@ -79,6 +79,8 @@ Name attribute
 #### `value`
 
 Value attribute
+
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `name`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

@@ -16,9 +16,9 @@ Component: al-tab-panel
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaId` | string | — | — | — |
-| `ariaLabelledBy` | string | — | — | — |
-| `idx` | number | — | `0` | — |
+| `ariaId` | string | — | — | _not expressed in Figma (by design)_ |
+| `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `idx` | number | — | `0` | _not expressed in Figma (by design)_ |
 | `isActive` | boolean | — | — | — |
 
 #### `ariaId`
@@ -39,6 +39,8 @@ Index to track tab panel
 Active state
 - **true** Renders a tab panel with selected/active state
 - **false** Renders a tab panel without selected/active state
+
+**Figma-expression opt-out (T27):** `ariaId`, `ariaLabelledBy`, `idx` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

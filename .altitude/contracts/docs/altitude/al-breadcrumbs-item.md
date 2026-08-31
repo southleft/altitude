@@ -16,11 +16,11 @@ Component: al-breadcrumbs-item
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `hasSeparator` | boolean | — | — | — |
-| `href` | string | — | — | — |
-| `isCurrent` | boolean | — | — | — |
-| `isTruncated` | boolean | — | — | — |
-| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
+| `hasSeparator` | boolean | — | — | **Separator** (VARIANT): `No`, `Yes` |
+| `href` | string | — | — | _not expressed in Figma (by design)_ |
+| `isCurrent` | boolean | — | — | **Current** (VARIANT): `No`, `Yes` |
+| `isTruncated` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
 
 #### `hasSeparator`
 
@@ -47,9 +47,19 @@ Truncated attribute
 
 Target attribute for a link (i.e. set to _blank to open in new tab)
 
+**Figma-expression opt-out (T27):** `href`, `isTruncated`, `target` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `hasSeparator` (Figma property "Separator")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
+
+### `isCurrent` (Figma property "Current")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
 
 ## States
 
