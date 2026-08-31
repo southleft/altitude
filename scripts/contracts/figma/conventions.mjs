@@ -136,6 +136,32 @@ export const PHOSPHOR_PRIORITY_PAGE_NAMES = ['🛠 Icons', '🛝 Playground'];
  * PHOSPHOR_KEY_BY_NAME above). Renaming the group breaks resolution loudly
  * rather than silently matching some other same-named component.
  */
+/**
+ * STATUS 2026-08-31 (re-read live, later the same day): this fallback is
+ * currently INERT, and that is fine — but do not delete it, and do not trust
+ * the paragraph above to describe today's file.
+ *
+ * The localization was REVERSED. `🛠 Icons` no longer contains a group by this
+ * name at all; it holds a GROUP called "Group 1" with 1512 REMOTE INSTANCES of
+ * the Phosphor library (`main.remote === true`), so the icons are back to the
+ * shape the remote scan was written for. Verified against the live file: the
+ * `Minus` set (3632:11760) is a COMPONENT_SET with Format ['Outline','Stroke']
+ * and all six weights, which `isVerifiedPhosphorIconSet()` accepts — so
+ * resolution goes through the verified-remote path and never reaches this
+ * constant.
+ *
+ * TWO CONSEQUENCES worth knowing before relying on either path:
+ *
+ *  1. Any node id captured from the localized components is now a GHOST. The
+ *     al-input-stepper repair earlier this session pinned `Minus` 3610:3424 and
+ *     `Plus` 3610:2884; both now resolve to correctly-named COMPONENTs whose
+ *     parent chain reaches no PAGE. Re-pinned to the remote components
+ *     3632:11761 / 3632:11224 (the Outline/Regular variants).
+ *  2. If the icons are ever localized again, the group MUST be given a specific
+ *     name. The container today is literally "Group 1", and an allowlist keyed
+ *     on that would match anything — which is precisely the loose shape the
+ *     note above exists to prevent.
+ */
 export const PHOSPHOR_LOCAL_GROUP_NAME = 'Phosphor Icons — Local';
 export const PHOSPHOR_SCAN_NODE_BUDGET = 2000;
 
