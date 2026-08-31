@@ -56,9 +56,29 @@
     "./package.json": "./package.json"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southleft/altitude.git",
+    "directory": "libs/al-web-components"
+  },
+  "homepage": "https://altitude.pages.dev/docs",
+  "bugs": {
+    "url": "https://github.com/southleft/altitude/issues"
+  },
+  "keywords": [
+    "design-system",
+    "web-components",
+    "custom-elements",
+    "lit",
+    "design-tokens",
+    "altitude",
+    "southleft"
+  ],
   "publishConfig": {
     "access": "public"
   },
+  "//type": "The published tree is pure ESM: vite emits `import`/`export` into dist/*.js and cli/validate.mjs is .mjs. Without this field Node treats every dist/*.js as CommonJS, and `import '@southleft/al-web-components'` throws `Unexpected token 'export'` on any Node before 22.12 — measured: `node --no-experimental-detect-module -e \"import('@southleft/al-web-components')\"` failed until this landed. Node >=22.12 sniffs module syntax by default, which is exactly why the gap survived unnoticed. The two CommonJS files inside this workspace (plop/plop-config, .eslintrc) were renamed to .cjs for this.",
+  "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "start": "pnpm run start:mcp",
@@ -72,7 +92,7 @@
     "build:icons": "node ./icons/icons-config.mjs",
     "build:custom-elements.json": "cem analyze --config custom-elements-manifest.config.mjs --outdir . && node ../../scripts/generate-component-schemas.js && node ../../scripts/generate-schema-index.js && node ../../scripts/ai-readiness/build-cem-digest.mjs",
     "test": "pnpm --dir ../.. exec vitest run --project wc",
-    "plop": "plop --plopfile plop/plop-config.js",
+    "plop": "plop --plopfile plop/plop-config.cjs",
     "validate:usage": "node cli/validate.mjs",
     "start:fixture": "vite -c story-fixture/vite.config.mjs"
   },

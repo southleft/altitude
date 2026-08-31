@@ -29,8 +29,8 @@ Full rule: AGENTS.md "Arrangement vs. semantics" (~lines 247–269).
 Both plop generators refuse a suspiciously-named component
 (`*-group`/`*-container`/`*-wrapper`/…) unless you confirm it owns real
 semantics — that gate is `LAYOUT_SUSPECT` in
-`libs/al-web-components/plop/plop-config.js:9` and
-`libs/al-react/plop/plop-config.js:9`. Don't fight it; if it's really layout,
+`libs/al-web-components/plop/plop-config.cjs:9` and
+`libs/al-react/plop/plop-config.cjs:9`. Don't fight it; if it's really layout,
 stop here.
 
 ### Never hand-roll arrangement — use the primitive, or fix the primitive
@@ -69,7 +69,7 @@ that names an arrangement concept (`spacing`, `orientation`, `alignment`,
 `fullWidth`, `stacked`), stop and check whether `<al-layout>` already says it.
 Full rule: AGENTS.md "Arrangement vs. semantics".
 
-**Where** — base library vs. a brand layer. `libs/al-web-components/plop/plop-config.js`
+**Where** — base library vs. a brand layer. `libs/al-web-components/plop/plop-config.cjs`
 prompts for a target when `.altitude/ds-projects.json` declares more than one
 `brandLibrary`. Every target scaffolds an `al-` tag — a brand layer is a
 different PACKAGE, not a different namespace, so a page never mixes two
@@ -175,7 +175,7 @@ Emits `libs/al-react/src/components/<Pascal>/index.tsx` +
 ### Trap: this plop APPENDS, not alphabetically
 
 The `src/index.ts` action is `type: 'append'`
-(`libs/al-react/plop/plop-config.js:82`) — it adds
+(`libs/al-react/plop/plop-config.cjs:82`) — it adds
 `export * from './components/<Pascal>';` to the END of the file, unlike the
 web-components generator which asks you to insert alphabetically by hand. Do
 not "fix" this by re-sorting `index.ts` unless you mean to touch every line

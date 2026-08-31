@@ -3,9 +3,29 @@
   "description": "The React powered design system for web applications",
   "version": "1.0.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southleft/altitude.git",
+    "directory": "libs/al-react"
+  },
+  "homepage": "https://altitude.pages.dev/docs",
+  "bugs": {
+    "url": "https://github.com/southleft/altitude/issues"
+  },
+  "keywords": [
+    "design-system",
+    "react",
+    "web-components",
+    "lit",
+    "design-tokens",
+    "altitude",
+    "southleft"
+  ],
   "publishConfig": {
     "access": "public"
   },
+  "//type": "See the note of the same name in @southleft/al-web-components. tsc emits ESM here (`module: esnext`), so dist/*.js is ESM and must be declared as such. plop/plop-config was renamed to .cjs for this.",
+  "type": "module",
   "packageManager": "pnpm@9.15.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +44,7 @@
   "scripts": {
     "start": "pnpm --dir ../.. exec vitest run --project react",
     "build": "pnpm exec del-cli dist && tsc && node scripts/copy-dist-assets.mjs",
-    "plop": "plop --plopfile plop/plop-config.js"
+    "plop": "plop --plopfile plop/plop-config.cjs"
   },
   "files": [
     "dist",
@@ -32,7 +52,10 @@
   ],
   "dependencies": {
     "@lit/react": "^1.0.6",
-    "@southleft/al-web-components": "workspace:*",
+    "@southleft/al-web-components": "workspace:*"
+  },
+  "//peerDependencies": "react/react-dom are PEERS, not dependencies. They were plain `dependencies` until now, which let a consumer's install resolve a SECOND copy of React under node_modules/@southleft/al-react — two react instances in one tree means `Invalid hook call` and a dead context/reconciler boundary, and npm would never warn because the constraint was satisfied locally. They stay in devDependencies below so this workspace still builds and tests on its own.",
+  "peerDependencies": {
     "react": "^19",
     "react-dom": "^19"
   },
@@ -44,6 +67,8 @@
     "classnames": "^2.5.1",
     "del-cli": "^5.1.0",
     "plop": "^4.0.1",
+    "react": "^19",
+    "react-dom": "^19",
     "remark-gfm": "4",
     "sass": "^1.70.0",
     "typescript": "^5.7",

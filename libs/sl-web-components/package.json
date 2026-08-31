@@ -3,6 +3,23 @@
   "description": "The Southleft brand design system — opinionated section components built on Altitude",
   "version": "1.0.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/southleft/altitude.git",
+    "directory": "libs/sl-web-components"
+  },
+  "homepage": "https://altitude.pages.dev/docs",
+  "bugs": {
+    "url": "https://github.com/southleft/altitude/issues"
+  },
+  "keywords": [
+    "design-system",
+    "web-components",
+    "custom-elements",
+    "lit",
+    "altitude",
+    "southleft"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -26,6 +43,7 @@
     "README.md",
     "LICENSE"
   ],
+  "//dependencies": "`workspace:^` rather than `workspace:*`: pnpm rewrites `*` to an EXACT pin at pack time, so this package would ship depending on @southleft/al-web-components@<one exact version> and force a duplicate install for any consumer on a later 2.x. al-web-components and al-react are in the changesets `fixed` group and always release together, so an exact pin is harmless there; this package is not in that group.",
   "scripts": {
     "//build": "Wired into the root `build` (and so into `build:all`) as of 2026-08-23. The Southleft Storybook that used to be the only consumer was retired, and apps/docs took its place: /docs/southleft documents this package as Southleft's BRAND LAYER (`brandLibrary` in .altitude/ds-projects.json) and imports `dist/components/bundle/bundle.js` so its playgrounds upgrade. The docs build therefore FAILS if this package has not been built — which is why it can no longer sit outside the pipeline. apps/southleft still does not import it (spec 2026-08-22-southleft-brand-design-system-as-a-linked-layer-on-altitude, T11).",
     "build": "del-cli dist && vite build -c vite.config.mjs && tsc && pnpm run build:custom-elements.json",
@@ -34,7 +52,7 @@
     "lint": "eslint components --ext .ts"
   },
   "dependencies": {
-    "@southleft/al-web-components": "workspace:*",
+    "@southleft/al-web-components": "workspace:^",
     "lit": "^3.3.0"
   },
   "devDependencies": {

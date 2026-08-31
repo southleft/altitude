@@ -4,7 +4,7 @@
  *
  * The "add/change a component" checklist is fragmented across three places
  * that never cross-reference each other: plop's console output
- * (libs/al-web-components/plop/plop-config.js), AGENTS.md's "New component
+ * (libs/al-web-components/plop/plop-config.cjs), AGENTS.md's "New component
  * deliverable checklist", and a handful of steps written down NOWHERE
  * (parity:seed, guidance YAML, llms:build, a11y:report, a changeset). This
  * script is the single mechanical check over that checklist for ONE
