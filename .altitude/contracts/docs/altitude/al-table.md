@@ -24,14 +24,14 @@ inside a `<al-theme density="...">` scope.
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `caption` | string | — | — | — |
-| `columns` | string | `Array<ALTableColumn>` | — | — |
-| `data` | string | `Array<ALTableRow>` | — | — |
-| `hideCaption` | boolean | — | — | — |
+| `caption` | string | — | — | _not expressed in Figma (by design)_ |
+| `columns` | string | `Array<ALTableColumn>` | — | _not expressed in Figma (by design)_ |
+| `data` | string | `Array<ALTableRow>` | — | _not expressed in Figma (by design)_ |
+| `hideCaption` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isSelectable` | boolean | — | — | — |
-| `rowKey` | string | — | `'id'` | — |
-| `sortDirection` | string | `ALTableSortDirection` | `'none'` | — |
-| `sortKey` | string | — | — | — |
+| `rowKey` | string | — | `'id'` | _not expressed in Figma (by design)_ |
+| `sortDirection` | string | `ALTableSortDirection` | `'none'` | **Sort** (VARIANT): `Ascending`, `None` |
+| `sortKey` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `caption`
 
@@ -75,9 +75,14 @@ The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.
 
 The `key` of the column currently sorted, if any.
 
+**Figma-expression opt-out (T27):** `caption`, `columns`, `data`, `hideCaption`, `rowKey`, `sortKey` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `sortDirection` (Figma property "Sort")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Ascending`, `None`
 
 ## States
 
