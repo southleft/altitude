@@ -5,7 +5,7 @@ count below is read from a committed artifact, and `node scripts/build-agent-ski
 --check` (`pnpm run check:skills`) fails when this file has drifted from them. See
 `SKILL.md` for what to do with this and why only this much is generated.
 
-## Component roster (107)
+## Component roster (106)
 
 One entry per custom element, from .altitude/ai-readiness/cem-digest.json (itself generated from
 `libs/al-web-components/custom-elements.json`). Names only — an attribute, slot,
@@ -39,7 +39,7 @@ code that depends on it.
   - events: none
   - parts: none
 - `al-banner`
-  - attrs: variant, isDismissible, isDismissed
+  - attrs: isDismissible, isDismissed
   - slots: (default), link, icon
   - events: onBannerClose
   - parts: none
@@ -74,7 +74,7 @@ code that depends on it.
   - events: onCheckboxChange
   - parts: none
 - `al-checkbox-group`
-  - attrs: isError, isDisabled, isRequired, hideLegend, label, errorNote, fieldNote, fieldId, ariaDescribedBy
+  - attrs: isError, isDisabled, isRequired, hideLegend, direction, label, errorNote, fieldNote, fieldId, ariaDescribedBy
   - slots: (default), field-note, error
   - events: onCheckboxGroupChange
   - parts: none
@@ -349,23 +349,23 @@ code that depends on it.
   - events: none
   - parts: svg
 - `al-input`
-  - attrs: type, isActive, isReadonly, isError, isDisabled, isRequired, isOptional, isFocused, hideLabel, label, placeholder, name, value, errorNote, fieldNote, fieldId, ariaDescribedBy, minLength, maxLength, maxLengthValue, min, max, autoComplete
+  - attrs: type, isActive, isReadonly, isError, isDisabled, isRequired, isOptional, isFocused, hideLabel, labelPosition, label, placeholder, name, value, errorNote, fieldNote, fieldId, ariaDescribedBy, minLength, maxLength, maxLengthValue, min, max, autoComplete
   - slots: before, after, field-note, error
   - events: onInputChange
   - parts: none
 - `al-input-stepper`
-  - attrs: fieldId, label, hideLabel, name, value, fieldNote, errorNote, min, max, ariaDescribedBy, isRequired, isDisabled, isReadonly, placeholder, isError, count, step
+  - attrs: fieldId, label, hideLabel, name, value, fieldNote, errorNote, min, max, ariaDescribedBy, isRequired, isDisabled, isReadonly, placeholder, isError, count, step, variant
   - slots: field-note, error
   - events: onInputStepperChange
   - parts: none
 - `al-layout`
-  - attrs: variant, direction, gap, align, justify, size, gutter, columns, noCollapse, wrap, grow, stretchItems, responsive, fullHeight
+  - attrs: variant, direction, gap, align, justify, size, gutter, columns, noCollapse, wrap, grow, responsive, fullHeight
   - slots: (default)
   - events: none
   - parts: none
 - `al-link`
   - attrs: href, variant, target, label, ariaLabelledBy, linkTitle, isDisabled
-  - slots: (default)
+  - slots: (default), after
   - events: none
   - parts: none
 - `al-list`
@@ -419,7 +419,7 @@ code that depends on it.
   - events: onRadioChange
   - parts: none
 - `al-radio-group`
-  - attrs: isError, isDisabled, isRequired, hideLegend, label, errorNote, fieldNote, fieldId, ariaDescribedBy
+  - attrs: isError, isDisabled, isRequired, hideLegend, direction, label, errorNote, fieldNote, fieldId, ariaDescribedBy
   - slots: (default), field-note, error
   - events: onRadioGroupChange
   - parts: none
@@ -538,11 +538,6 @@ code that depends on it.
   - slots: (default)
   - events: onToggleButtonSelect, onToggleButtonDeselect
   - parts: none
-- `al-toggle-button-group`
-  - attrs: variant
-  - slots: (default)
-  - events: none
-  - parts: none
 - `al-tooltip`
   - attrs: hasArrow, position, isActive, isDynamic, isInteractive, ariaDescribedBy
   - slots: (default), prefix, trigger
@@ -573,7 +568,7 @@ record in the CEM digest, cited back to its source.
 
 ## Token conventions
 
-From .altitude/ai-readiness/tokens-digest.json: 440 tokens across 195 families.
+From .altitude/ai-readiness/tokens-digest.json: 510 tokens across 203 families.
 
 - CSS variable prefix: `--al-`
 - Semantic layer: --al-theme-* (single-layer of indirection over the al-color-* / al-font-size-* primitives)
@@ -581,9 +576,9 @@ From .altitude/ai-readiness/tokens-digest.json: 440 tokens across 195 families.
 - Font sizes: numeric — --al-font-size-10..36 (NOT t-shirt sizes like -sm/-md/-lg/-2xl)
 - Font weights: --al-font-weight-regular and --al-font-weight-bold ONLY (no -light, -medium, -semibold, -heavy)
 
-### Families (195)
+### Families (203)
 
-`animation-distance-lg`, `animation-distance-md`, `animation-distance-sm`, `animation-duration-1`, `animation-duration-12`, `animation-duration-2`, `animation-duration-3`, `animation-duration-4`, `animation-duration-6`, `animation-duration-8`, `animation-timing-cubic`, `animation-timing-ease`, `animation-timing-emphasized`, `animation-timing-entrance`, `animation-timing-exit`, `animation-timing-gentle`, `animation-timing-linear`, `animation-timing-spring`, `animation-timing-standard`, `base-font`, `base-space`, `border-radius-0`, `border-radius-12`, `border-radius-16`, `border-radius-2`, `border-radius-24`, `border-radius-4`, `border-radius-6`, `border-radius-8`, `border-radius-pill`, `border-radius-round`, `border-width-1`, `border-width-2`, `border-width-4`, `box-shadow-16`, `box-shadow-2`, `box-shadow-32`, `box-shadow-4`, `box-shadow-48`, `box-shadow-8`, `box-shadow-hard`, `box-shadow-none`, `breakpoint-lg`, `breakpoint-md`, `breakpoint-sm`, `breakpoint-xl`, `breakpoint-xs`, `breakpoint-xxl`, `color-brand-blue`, `color-brand-green`, `color-brand-ink`, `color-brand-orange`, `color-brand-paper`, `color-brand-red`, `color-brand-taupe`, `color-brand-teal`, `color-brand-violet`, `color-brand-yellow`, `color-neutral-dark`, `color-neutral-light`, `color-shadow-dark`, `color-shadow-light`, `color-shadow-violet`, `color-shadow-warm`, `color-transparent-dark`, `color-transparent-light`, `font-family-editorial`, `font-family-grotesk`, `font-family-modern`, `font-family-mono`, `font-family-primary`, `font-family-secondary`, `font-family-soft`, `font-family-tech`, `font-size-10`, `font-size-112`, `font-size-12`, `font-size-14`, `font-size-16`, `font-size-18`, `font-size-20`, `font-size-24`, `font-size-28`, `font-size-32`, `font-size-36`, `font-size-48`, `font-size-56`, `font-size-64`, `font-size-72`, `font-weight-bold`, `font-weight-regular`, `icon-12`, `icon-16`, `icon-20`, `icon-24`, `icon-32`, `icon-36`, `icon-40`, `icon-8`, `layout-max-width`, `letter-spacing-0`, `letter-spacing-1`, `line-height-110`, `line-height-14`, `line-height-16`, `line-height-20`, `line-height-24`, `line-height-28`, `line-height-32`, `line-height-36`, `line-height-40`, `line-height-44`, `line-height-48`, `line-height-52`, `line-height-60`, `line-height-72`, `opacity-0`, `opacity-100`, `opacity-24`, `opacity-40`, `opacity-80`, `space-12`, `space-16`, `space-2`, `space-20`, `space-24`, `space-28`, `space-32`, `space-36`, `space-4`, `space-40`, `space-44`, `space-48`, `space-52`, `space-56`, `space-60`, `space-64`, `space-8`, `text-decoration-none`, `theme-animation-duration`, `theme-animation-timing`, `theme-border-radius`, `theme-border-width`, `theme-box-shadow`, `theme-color-background`, `theme-color-body`, `theme-color-border`, `theme-color-content`, `theme-color-focus`, `theme-color-header`, `theme-color-shadow`, `theme-icon`, `theme-icon-lg`, `theme-icon-md`, `theme-icon-sm`, `theme-icon-xl`, `theme-icon-xs`, `theme-icon-xxl`, `theme-icon-xxxl`, `theme-layout-height`, `theme-layout-max`, `theme-layout-width`, `theme-opacity-disabled`, `theme-space`, `theme-space-lg`, `theme-space-md`, `theme-space-sm`, `theme-space-super`, `theme-space-xl`, `theme-space-xs`, `theme-space-xxl`, `theme-space-xxs`, `theme-space-xxxl`, `theme-space-xxxs`, `theme-typography-body`, `theme-typography-display`, `theme-typography-heading`, `typography-preset-12`, `typography-preset-14`, `typography-preset-16`, `typography-preset-18`, `typography-preset-20`, `typography-preset-24`, `typography-preset-36`, `typography-preset-40`, `typography-preset-44`, `typography-preset-48`, `z-index-0`, `z-index-100`, `z-index-200`, `z-index-300`, `z-index-400`, `z-index-500`, `z-index-bottom`, `z-index-top`
+`animation-distance-lg`, `animation-distance-md`, `animation-distance-sm`, `animation-duration-1`, `animation-duration-12`, `animation-duration-2`, `animation-duration-3`, `animation-duration-4`, `animation-duration-6`, `animation-duration-8`, `animation-timing-cubic`, `animation-timing-ease`, `animation-timing-emphasized`, `animation-timing-entrance`, `animation-timing-exit`, `animation-timing-gentle`, `animation-timing-linear`, `animation-timing-spring`, `animation-timing-standard`, `base-font`, `base-space`, `border-radius-0`, `border-radius-12`, `border-radius-16`, `border-radius-2`, `border-radius-24`, `border-radius-4`, `border-radius-6`, `border-radius-8`, `border-radius-pill`, `border-radius-round`, `border-width-1`, `border-width-2`, `border-width-4`, `box-shadow-16`, `box-shadow-2`, `box-shadow-32`, `box-shadow-4`, `box-shadow-48`, `box-shadow-8`, `box-shadow-hard`, `box-shadow-none`, `box-shadow-overlay`, `box-shadow-raised`, `breakpoint-lg`, `breakpoint-md`, `breakpoint-sm`, `breakpoint-xl`, `breakpoint-xs`, `breakpoint-xxl`, `color-brand-blue`, `color-brand-cobalt`, `color-brand-crimson`, `color-brand-green`, `color-brand-ink`, `color-brand-jade`, `color-brand-ochre`, `color-brand-orange`, `color-brand-paper`, `color-brand-red`, `color-brand-stone`, `color-brand-taupe`, `color-brand-teal`, `color-brand-violet`, `color-brand-yellow`, `color-neutral-dark`, `color-neutral-light`, `color-shadow-dark`, `color-shadow-light`, `color-shadow-violet`, `color-shadow-warm`, `color-transparent-dark`, `color-transparent-light`, `font-family-editorial`, `font-family-grotesk`, `font-family-modern`, `font-family-mono`, `font-family-plex`, `font-family-primary`, `font-family-secondary`, `font-family-soft`, `font-family-tech`, `font-size-10`, `font-size-112`, `font-size-12`, `font-size-14`, `font-size-16`, `font-size-18`, `font-size-20`, `font-size-24`, `font-size-28`, `font-size-32`, `font-size-36`, `font-size-48`, `font-size-56`, `font-size-64`, `font-size-72`, `font-weight-bold`, `font-weight-regular`, `icon-12`, `icon-16`, `icon-20`, `icon-24`, `icon-32`, `icon-36`, `icon-40`, `icon-8`, `layout-max-width`, `letter-spacing-0`, `letter-spacing-1`, `line-height-110`, `line-height-14`, `line-height-16`, `line-height-20`, `line-height-24`, `line-height-28`, `line-height-32`, `line-height-36`, `line-height-40`, `line-height-44`, `line-height-48`, `line-height-52`, `line-height-60`, `line-height-72`, `opacity-0`, `opacity-100`, `opacity-24`, `opacity-40`, `opacity-80`, `space-12`, `space-16`, `space-2`, `space-20`, `space-24`, `space-28`, `space-32`, `space-36`, `space-4`, `space-40`, `space-44`, `space-48`, `space-52`, `space-56`, `space-60`, `space-64`, `space-8`, `text-decoration-none`, `theme-animation-duration`, `theme-animation-timing`, `theme-border-radius`, `theme-border-width`, `theme-box-shadow`, `theme-color-background`, `theme-color-body`, `theme-color-border`, `theme-color-content`, `theme-color-focus`, `theme-color-header`, `theme-color-shadow`, `theme-icon`, `theme-icon-lg`, `theme-icon-md`, `theme-icon-sm`, `theme-icon-xl`, `theme-icon-xs`, `theme-icon-xxl`, `theme-icon-xxxl`, `theme-layout-height`, `theme-layout-max`, `theme-layout-width`, `theme-opacity-disabled`, `theme-space`, `theme-space-lg`, `theme-space-md`, `theme-space-sm`, `theme-space-super`, `theme-space-xl`, `theme-space-xs`, `theme-space-xxl`, `theme-space-xxs`, `theme-space-xxxl`, `theme-space-xxxs`, `theme-typography-body`, `theme-typography-display`, `theme-typography-heading`, `typography-preset-12`, `typography-preset-14`, `typography-preset-16`, `typography-preset-18`, `typography-preset-20`, `typography-preset-24`, `typography-preset-36`, `typography-preset-40`, `typography-preset-44`, `typography-preset-48`, `z-index-0`, `z-index-100`, `z-index-200`, `z-index-300`, `z-index-400`, `z-index-500`, `z-index-bottom`, `z-index-top`
 
 ### Names that do NOT exist — do not write these (7)
 
@@ -637,9 +632,9 @@ expected-fields shape and failure modes; this is a name + one-line intent index)
 
 ## Accessibility snapshot
 
-axe-core 4.12.1, story by story: 494 stories,
-67 components measured, 0 structural
-violations, 18 contrast violations (reported, not gated — see
+axe-core 4.12.1, story by story: 489 stories,
+66 components measured, 0 structural
+violations, 16 contrast violations (reported, not gated — see
 .altitude/a11y/report.json). A missing row for a component means NOT RECORDED, never a pass.
 
 ## Design systems this library drives (2)

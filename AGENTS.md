@@ -66,6 +66,33 @@ no script can check them, so they are on you and the PR reviewer:
   sha256 with no tolerance. Procedure:
   [`.altitude/TOKENS.md` § "Rebaselining after a token change"](./.altitude/TOKENS.md#rebaselining-after-a-token-change).
 
+## Figma work is skill-gated (2026-08-31)
+
+Not a G-numbered guardrail — those belong to the v2 refactor — but the same
+weight, and it applies to every session.
+
+**Load the matching skill BEFORE touching Figma**: `altitude-figma-generate` to
+build a set from code, `altitude-figma-repair` to fix one fact in an existing set
+(never regenerate for that — it mints a new node id and orphans every instance),
+`altitude-figma-sync` for library repair and token audits, `altitude-figma-snippet`
+for a page section from a rendered route. Each encodes traps that have already
+cost real debugging. See CLAUDE.md § "Figma work" for the table and the two
+non-negotiables that came out of the v2 session:
+
+1. **Verify by eye, against a real surface.** `generate-figma.mjs` exports a
+   verification PNG every run and now exits non-zero on unresolved `missingVars`,
+   because a session read a green exit as success and reported a set as working
+   when it rendered with its nested buttons overlapping into illegible text. The
+   node tree was fully populated and correctly nested — a structure dump could
+   not have caught it. Check the component against the local app, `apps/docs`, or
+   the live site too; a passing build proves nothing about how it looks.
+2. **Confirm the target file positively before writing.** Two files are routinely
+   connected at once and `figma_get_status` has named the wrong one as active.
+   Pin with `lock: true`, then assert `figma.root.name` / `figma.fileKey` from
+   inside the sandbox against `.altitude/ds-projects.json`. The open file must BE
+   the target — never merely "not a known decoy". The lock releases silently when
+   that file disconnects.
+
 ## Where to look for things
 
 | Need | Location |

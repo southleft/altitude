@@ -38,6 +38,39 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Gate self-test: `pnpm gate:self-test`
 - Lint: `pnpm lint`
 
+### Figma work — load the skill FIRST, and verify by eye
+
+**Before ANY Figma generation or repair, load the matching skill.** They are not
+optional background reading; each encodes ~15 traps that have already cost real
+debugging, and skipping them means rediscovering those traps one at a time:
+
+| Doing | Load |
+|---|---|
+| Generating a component set from code | `altitude-figma-generate` |
+| Fixing ONE wrong fact in an existing set | `altitude-figma-repair` (NOT generate — regenerating mints a new node id and orphans every instance) |
+| Hand-repairing the library, token audits | `altitude-figma-sync` |
+| A page/section from a real rendered route | `altitude-figma-snippet` |
+
+`.altitude/FIGMA-CLEANLINESS.md` is binding for all of them, and
+`.altitude/contracts/COVERAGE.md` says whether a component can be generated at all —
+read it before starting, not after a confusing result.
+
+**A structure dump is not a screenshot.** `generate-figma.mjs` now exports a
+verification PNG on every run (`<sync>/generated-shots/<tag>.png`) and exits
+NON-ZERO on any unresolved `missingVars`. Both exist because a v2 session read a
+green exit as success and reported a set as working when it rendered with its
+nested buttons overlapping into illegible text — the node tree was fully populated
+and correctly nested, so only the render showed it. Look at the PNG, and check the
+component against a real surface too (local app, `apps/docs`, or the live site) —
+a build that merely succeeds proves nothing about how it looks.
+
+**Confirm the target file before writing.** Two files are routinely connected at
+once; `figma_get_status` has reported the WRONG one as active while another was
+genuinely focused. Pin with `figma_navigate({lock: true})` and verify positively
+from inside the sandbox (`figma.root.name` + `figma.fileKey` against
+`.altitude/ds-projects.json`) — the open file must BE the target, never merely
+"not a known decoy". The lock releases silently when that file disconnects.
+
 ### Figma ↔ code parity
 - Storybook was retired 2026-08-25; the live surfaces are the `altitude_check_parity` MCP
   tool and the `audit_component_parity` MCP prompt (green = 1:1 with Figma, yellow = that side drifted, red =

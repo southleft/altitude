@@ -219,6 +219,25 @@ node scripts/contracts/generate-figma.mjs --component al-X --check-determinism
 node scripts/figma-atoms/export-png.mjs <sheetFrameId> out.png --scale 1.5
 ```
 
+**Steps 3 and 4 are now ENFORCED, not advisory (2026-08-31).** They used to be
+prose an agent could skip, and one did:
+
+- **A degraded run now EXITS NON-ZERO.** Any `missingVars` entry other than the
+  documented `nested-set-not-found:al-layout` fails the run. `--allow-degraded`
+  accepts it deliberately. Previously a degraded run printed its misses and
+  exited 0 — which is exactly how a session shipped al-input-stepper with
+  `phosphor-component-not-found:minus/plus`, read green as success, and reported
+  the set as "needs two icons" when it in fact rendered with its two nested
+  buttons overlapping into illegible text.
+- **Every run exports a verification PNG** to `<sync>/generated-shots/<tag>.png`
+  and prints the path. The screenshot is now a byproduct of generating, not a
+  discipline to remember.
+
+**LOOK AT THE PNG. A structure dump is not a screenshot.** The stepper regression
+above was invisible in the node tree — the tree was fully populated and correctly
+nested; only the render showed the overlap. Reading `missingVars` and dumping the
+anatomy are both necessary and neither is sufficient.
+
 Read `missingVars` in every run's output — the generator degrades honestly and
 reports every miss; an empty array is the goal, and `nested-set-not-found:al-layout`
 is expected noise (arrangement primitive, no set of its own, by design — but see
@@ -347,6 +366,18 @@ its confirmed environment limits.
 8. **Phosphor glyphs resolve ONLY from existing in-file instances** (no team-library
    enumeration; REST needs a token; import-by-key hangs ~30s). A new glyph needs a
    human to bootstrap ONE instance on 🛠 Icons — then the scan finds it in ms.
+   **Update 2026-08-31 — LOCALIZED SET.** The owner localized Phosphor into the
+   file: ~1500 plain local COMPONENTs under one GROUP named
+   `Phosphor Icons — Local` (`PHOSPHOR_LOCAL_GROUP_NAME` in `conventions.mjs`).
+   Those are not remote instances, so the original scan could not see them, and
+   they carry no Format × Weight axes, so `isVerifiedPhosphorIconSet()` cannot
+   vouch for them either — the GROUP NAME is the positive, allowlist-shaped guard
+   instead. `findPhosphorComponentByName` now falls back to a flat pass over that
+   group's direct children. Bootstrapping single instances is no longer needed for
+   any glyph the localized set contains.
+   Also worth knowing: an INSTANCE_SWAP's `preferredValues` names ONE glyph's
+   component set (its variants are Format × Weight), NOT a catalogue — it is not
+   a route to enumerating available glyphs.
 9. **Variant color inheritance**: case trees are measured on ONE variant; a node whose
    color merely equals the case root's follows the ROW's variant delta (Chip's danger
    label). A genuinely different own color is kept.
