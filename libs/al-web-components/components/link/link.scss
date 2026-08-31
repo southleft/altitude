@@ -67,11 +67,21 @@
    * Menu item link
    */
   .al-c-menu-item-link {
+    /*
+     * v2 canvas: a menu row is 13px medium on the 6px action radius, so the
+     * hovered row reads as a rounded chip inside the menu's own padding. The
+     * square-cornered 14px row here did not match the no-href variant of the
+     * same component, which meant a menu looked different depending on whether
+     * its items happened to carry an href.
+     */
     @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-medium);
+    line-height: 1;
     position: relative;
     display: flex;
     justify-content: flex-start;
-    border-radius: 0;
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
     width: 100%;
     height: var(--al-menu-item-height);
     padding-block: var(--al-theme-space-xs);

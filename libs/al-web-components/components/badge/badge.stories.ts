@@ -27,24 +27,27 @@ export default {
   }
 };
 
-const Template = (args) => html`<al-badge ${spread(args)}>0</al-badge>`;
+const Template = ({ text, ...args }) => html`<al-badge ${spread(args)}>${text ?? 'Neutral'}</al-badge>`;
 
 export const Default = Template.bind({});
 Default.args = {};
 
 export const DefaultInfo = Template.bind({});
 DefaultInfo.args = {
-  variant: 'info'
+  variant: 'info',
+  text: 'v2.0'
 };
 
 export const DefaultSuccess = Template.bind({});
 DefaultSuccess.args = {
-  variant: 'success'
+  variant: 'success',
+  text: 'Active'
 };
 
 export const DefaultWarning = Template.bind({});
 DefaultWarning.args = {
-  variant: 'warning'
+  variant: 'warning',
+  text: 'Pending'
 };
 
 export const DefaultDanger = Template.bind({});

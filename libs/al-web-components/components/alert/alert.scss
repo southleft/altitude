@@ -19,9 +19,20 @@
      * tint is what carries the meaning.
      */
     background-color: var(--al-theme-color-background-default);
+    /*
+     * SET THE FOREGROUND, not just the background.
+     *
+     * The tone variants below paint a soft tint and left the text to inherit
+     * from whatever surrounds the alert. Slotted copy lives in the LIGHT DOM,
+     * so it inherited the page's colour: a danger alert on its #FDECEC tint
+     * rendered near-white text at roughly 1.05:1 — measured, and invisible.
+     * The canvas pairs every tint with ink copy and reserves the tone colour
+     * for the icon, which is what these two lines now guarantee.
+     */
+    color: var(--al-theme-color-content-default);
     border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
-    box-shadow: var(--al-theme-box-shadow-lg);
-    padding: var(--al-theme-space);
+    /* v2: flat callout — the tint and hairline carry the meaning, not elevation. */
+    padding: var(--al-theme-space-sm) var(--al-theme-space);
 
     &.al-is-active {
       display: flex;
@@ -68,7 +79,7 @@
    * Alert title
    */
   .al-c-alert__title {
-    @include al-theme-typography-body-md-bold;
+    @include al-theme-typography-body-sm-bold;
     margin-block-end: var(--al-theme-space-xs);
   }
 

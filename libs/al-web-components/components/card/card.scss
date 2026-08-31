@@ -14,8 +14,15 @@
   .al-c-card {
     width: 100%;
     display: flex;
-    padding: var(--al-theme-space);
-    gap: var(--al-theme-space-xs);
+    /*
+     * v2: the regions own their padding, not the card. The canvas card is a
+     * header rule, a body and a tinted footer rule — none of which can be drawn
+     * while a single outer padding holds every region away from the edge.
+     */
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
     flex-flow: row wrap;
     border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-lg));
     color: var(--al-theme-color-content-default);
@@ -50,7 +57,35 @@
     background-color: transparent;
     border-radius: 0;
     box-shadow: none;
+    border: none;
     padding: 0;
+
+    .al-c-card__header,
+    .al-c-card__body,
+    .al-c-card__image,
+    .al-c-card__actions {
+      padding: 0;
+    }
+
+    .al-c-card__header,
+    .al-c-card__footer {
+      border: none;
+      background-color: transparent;
+    }
+
+    .al-c-card__footer {
+      padding: 0;
+    }
+  }
+
+  /**
+   * Card footer — the only tinted region. Reads as a footer because of its
+   * rule and tint, not because of elevation.
+   */
+  .al-c-card__footer {
+    padding: var(--al-theme-space-sm) var(--al-theme-space);
+    border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+    background-color: var(--al-theme-color-background-default-weak);
   }
 
   /**
@@ -58,6 +93,7 @@
    */
   .al-c-card__actions {
     display: flex;
+    padding: var(--al-theme-space);
     justify-content: space-between;
     gap: var(--al-theme-space);
 
@@ -128,6 +164,11 @@
   .al-c-card__image {
     display: block;
     height: auto;
+    /*
+     * Kept inset. apps/angular, apps/astro and apps/svelte all slot an
+     * <al-avatar> here; bleeding it to the card edge would wreck all three.
+     */
+    padding: var(--al-theme-space);
   }
 
   /**
@@ -143,8 +184,16 @@
    */
   .al-c-card__header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--al-theme-space-xs);
+    /*
+     * v2 regions own their padding so the dividers reach the card edge.
+     * `space` (16px) is the nearest scale step to the canvas's hand-drawn
+     * 18px inset; an 18px token would sit off the 4px spacing scale for one
+     * component.
+     */
+    padding: var(--al-theme-space);
+    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
   }
 
   /**
@@ -155,5 +204,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--al-theme-space-xs);
+    padding: var(--al-theme-space);
   }
 }

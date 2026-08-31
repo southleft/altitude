@@ -48,6 +48,23 @@ export class ALButton extends ALElement {
   accessor variant: 'secondary' | 'tertiary' | 'bare' | 'danger';
 
   /**
+   * Size variant
+   * - **sm** renders a 32px control with 13px text
+   * - **lg** renders a 48px control with 15px text
+   * - omitted renders the default 40px control with 14px text
+   */
+  @property()
+  accessor size: 'sm' | 'lg';
+
+  /**
+   * Pill shape
+   * - **true** renders the button with a fully rounded (pill) radius
+   * - **false** renders the button with the default action radius
+   */
+  @property({ type: Boolean })
+  accessor isPill: boolean;
+
+  /**
    * Target attribute for a link (i.e. set to _blank to open in new tab)
    * - **_blank** yields a link that opens in a new tab
    * - **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior
@@ -93,6 +110,13 @@ export class ALButton extends ALElement {
   @property({ type: Boolean })
   accessor isDisabled: boolean;
 
+  /**
+   * Aria-disabled attribute
+   * - **true** marks the button disabled to assistive tech while leaving it
+   *   focusable and clickable — use when the button must stay reachable to
+   *   explain why it is unavailable
+   * - prefer `isDisabled` (native `disabled`) unless focusability is required
+   */
   @property({ type: Boolean })
   accessor isAriaDisabled: boolean;
 
@@ -179,6 +203,9 @@ export class ALButton extends ALElement {
       'al-c-button--tertiary': this.variant === 'tertiary',
       'al-c-button--bare': this.variant === 'bare',
       'al-c-button--danger': this.variant === 'danger',
+      'al-c-button--sm': this.size === 'sm',
+      'al-c-button--lg': this.size === 'lg',
+      'al-c-button--pill': this.isPill === true,
       'al-c-button--full-width': this.fullWidth === true,
       'al-c-button--icon-only': this.hideText === true,
       'al-is-expanded': this.isExpanded === true,
@@ -191,6 +218,7 @@ export class ALButton extends ALElement {
           role="button"
           class="${componentClassNames}"
           aria-label=${ifDefined(this.label)}
+          aria-disabled=${ifDefined(this.isDisabled || this.isAriaDisabled ? "true" : undefined)}
           aria-pressed=${ifDefined(this.isPressed)}
           aria-expanded=${ifDefined(this.isExpanded)}
           aria-controls=${ifDefined(this.ariaControls)}
@@ -212,7 +240,8 @@ export class ALButton extends ALElement {
           value=${ifDefined(this.value)}
           name=${ifDefined(this.name)}
           aria-label=${ifDefined(this.label)}
-          aria-disabled=${ifDefined(this.isDisabled)}
+          ?disabled=${this.isDisabled}
+          aria-disabled=${ifDefined(this.isAriaDisabled ? "true" : undefined)}
           aria-pressed=${ifDefined(this.isPressed)}
           aria-expanded=${ifDefined(this.isExpanded)}
           part="button"

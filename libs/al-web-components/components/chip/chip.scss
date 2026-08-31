@@ -20,7 +20,17 @@
    * existing consumer.
    */
   .al-c-chip {
+    /*
+     * v2 canvas: 32px pill, 13px medium. The chip sits beside 40px controls, so
+     * it takes the small step of the control scale rather than growing to match
+     * the body size.
+     */
     @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-medium, 500);
+    line-height: 1;
+    box-sizing: border-box;
+    min-height: var(--al-chip-height, var(--al-theme-size-control-sm));
     display: inline-flex;
     cursor: var(--al-chip-cursor, pointer);
     gap: var(--al-chip-gap, var(--al-theme-space-xs));
@@ -28,7 +38,7 @@
     align-items: center;
     white-space: nowrap;
     margin: 0;
-    padding: var(--al-chip-padding, var(--al-theme-space-xxs) var(--al-theme-space-sm));
+    padding: var(--al-chip-padding, 0 var(--al-theme-space-sm));
     /**
      * v2: a chip is a pill with a hairline outline on the page ground, not a
      * filled grey lozenge. The selected/active state is what carries a fill

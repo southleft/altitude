@@ -251,6 +251,7 @@ export const FAMILY_USAGE_RULES = {
   'theme.layout.max-width': 'Content-measure scale (xs…xxl), aliasing tier-1 layout.max-width.*. Legal CSS surface: max-width. layout.scss reads this tier directly as of this session (previously bypassed it — see spec Findings "tier bypass").',
   'theme.layout.width': 'Named layout widths (container, sidebar), aliasing tier-1 layout.max-width.*. Legal CSS surface: width, max-width.',
   'theme.opacity': 'Single member (disabled): 0.40 at contrast="normal", raised to 0.80 (tier-1 opacity.80) at contrast="more" via a dedicated :host([contrast="more"]) reset — the R3 contrast-axis fix this session. Legal CSS surface: opacity, on any component signalling a disabled state.',
+  'theme.size': 'Control heights for interactive form controls (button, input, select, search, stepper) — control-sm 32px / control 40px / control-lg 48px, aliasing tier-1 space.32/40/48. The v2 canvas sizes every control from this scale rather than from padding plus line-height, so a type-scale change cannot silently move a control height. Legal CSS surface: height, min-height, block-size.',
   'theme.space': 'Semantic spacing roles (not a 1:1 alias of the tier-1 space scale — has its own role names). Legal CSS surface: margin, padding, gap.',
 
   // ---- tier-2 typography roles ----

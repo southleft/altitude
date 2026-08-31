@@ -54,6 +54,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "columns": {
+          "description": "typescript: Array<ALTableColumn>",
+          "type": "string"
+        },
+        "data": {
+          "description": "typescript: Array<ALTableRow>",
+          "type": "string"
+        },
         "rowKey": {
           "description": "The property on each row object used to derive a stable row identifier\n(used for selection tracking and the `key` attribute).",
           "type": "string"

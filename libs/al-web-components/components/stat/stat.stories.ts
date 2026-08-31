@@ -24,24 +24,24 @@ const Template = (args) => html`<al-stat ${spread(args)}></al-stat>`;
 
 export const Default = Template.bind({});
 Default.args = {
-  value: '1,234',
-  label: 'Active users'
+  value: '64',
+  label: 'Components'
 };
 
 export const TrendingUp = Template.bind({});
 TrendingUp.args = {
-  value: '95,204',
-  label: 'Monthly signups',
+  value: '87%',
+  label: 'Adoption',
   trend: 'up',
-  delta: '+12%'
+  delta: '+12 pts'
 };
 
 export const TrendingDown = Template.bind({});
 TrendingDown.args = {
-  value: '2.4%',
-  label: 'Churn rate',
+  value: '17',
+  label: 'Open issues',
   trend: 'down',
-  delta: '-0.8%',
+  delta: '−4 this week',
   invertPolarity: true
 };
 

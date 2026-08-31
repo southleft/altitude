@@ -22,8 +22,8 @@ const Template = (args) => html`<al-empty-state ${spread(args)}></al-empty-state
 
 export const Default = Template.bind({});
 Default.args = {
-  heading: 'No results found',
-  description: 'Try adjusting your filters or search terms.'
+  heading: 'No tokens yet',
+  description: 'Import a Style Dictionary file to get started.'
 };
 
 export const WithIcon = (args) => html`

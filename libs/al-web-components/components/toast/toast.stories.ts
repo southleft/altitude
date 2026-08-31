@@ -45,7 +45,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-toast data-testid="toast" ${spread(args)}>Toast title</al-toast>`;
+const Template = (args) => html`<al-toast data-testid="toast" ${spread(args)}>Changes saved</al-toast>`;
 
 export const Default = Template.bind({});
 Default.args = {};

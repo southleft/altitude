@@ -1,6 +1,6 @@
 {
   "source": "libs/al-web-components/styles/dist/tokens.json",
-  "total": 510,
+  "total": 522,
   "conventions": {
     "cssVariablePrefix": "--al-",
     "fontSizeNamingScheme": "numeric — --al-font-size-10..36 (NOT t-shirt sizes like -sm/-md/-lg/-2xl)",
@@ -73,7 +73,8 @@
       "primary": [
         "default",
         "strong",
-        "weak"
+        "weak",
+        "weak-strong"
       ],
       "secondary": [
         "default",
@@ -529,6 +530,14 @@
         "value": "#2549c4"
       },
       {
+        "name": "--al-color-brand-cobalt-800",
+        "value": "#303d66"
+      },
+      {
+        "name": "--al-color-brand-cobalt-825",
+        "value": "#2b3a63"
+      },
+      {
         "name": "--al-color-brand-cobalt-850",
         "value": "#252e4d"
       },
@@ -555,6 +564,10 @@
         "value": "#ff8b92"
       },
       {
+        "name": "--al-color-brand-crimson-350",
+        "value": "#ff6d76"
+      },
+      {
         "name": "--al-color-brand-crimson-400",
         "value": "#f54d47"
       },
@@ -573,6 +586,10 @@
       {
         "name": "--al-color-brand-crimson-600",
         "value": "#bf323c"
+      },
+      {
+        "name": "--al-color-brand-crimson-800",
+        "value": "#4d2327"
       },
       {
         "name": "--al-color-brand-crimson-900",
@@ -659,6 +676,10 @@
       {
         "name": "--al-color-brand-jade-650",
         "value": "#157b46"
+      },
+      {
+        "name": "--al-color-brand-jade-800",
+        "value": "#1e4a2e"
       },
       {
         "name": "--al-color-brand-jade-900",
@@ -1291,10 +1312,22 @@
         "value": "12px"
       }
     ],
+    "font-size-13": [
+      {
+        "name": "--al-font-size-13",
+        "value": "13px"
+      }
+    ],
     "font-size-14": [
       {
         "name": "--al-font-size-14",
         "value": "14px"
+      }
+    ],
+    "font-size-15": [
+      {
+        "name": "--al-font-size-15",
+        "value": "15px"
       }
     ],
     "font-size-16": [
@@ -1367,6 +1400,12 @@
       {
         "name": "--al-font-weight-bold",
         "value": "600"
+      }
+    ],
+    "font-weight-medium": [
+      {
+        "name": "--al-font-weight-medium",
+        "value": "500"
       }
     ],
     "font-weight-regular": [
@@ -1772,7 +1811,7 @@
     "theme-color-background": [
       {
         "name": "--al-theme-color-background-danger-default",
-        "value": "var(--al-color-brand-crimson-400)"
+        "value": "var(--al-color-brand-crimson-350)"
       },
       {
         "name": "--al-theme-color-background-danger-strong",
@@ -1831,6 +1870,10 @@
         "value": "var(--al-color-brand-cobalt-850)"
       },
       {
+        "name": "--al-theme-color-background-primary-weak-strong",
+        "value": "var(--al-color-brand-cobalt-800)"
+      },
+      {
         "name": "--al-theme-color-background-secondary-default",
         "value": "var(--al-color-brand-stone-100)"
       },
@@ -1876,11 +1919,11 @@
     "theme-color-border": [
       {
         "name": "--al-theme-color-border-danger-default",
-        "value": "var(--al-color-brand-crimson-400)"
+        "value": "var(--al-color-brand-crimson-350)"
       },
       {
         "name": "--al-theme-color-border-danger-weak",
-        "value": "var(--al-color-brand-crimson-900)"
+        "value": "var(--al-color-brand-crimson-800)"
       },
       {
         "name": "--al-theme-color-border-default",
@@ -1900,7 +1943,7 @@
       },
       {
         "name": "--al-theme-color-border-info-weak",
-        "value": "var(--al-color-brand-cobalt-850)"
+        "value": "var(--al-color-brand-cobalt-825)"
       },
       {
         "name": "--al-theme-color-border-inverse-default",
@@ -1920,7 +1963,7 @@
       },
       {
         "name": "--al-theme-color-border-success-weak",
-        "value": "var(--al-color-brand-jade-900)"
+        "value": "var(--al-color-brand-jade-800)"
       },
       {
         "name": "--al-theme-color-border-warning-weak",
@@ -1930,7 +1973,7 @@
     "theme-color-content": [
       {
         "name": "--al-theme-color-content-danger-default",
-        "value": "var(--al-color-brand-crimson-400)"
+        "value": "var(--al-color-brand-crimson-350)"
       },
       {
         "name": "--al-theme-color-content-danger-weak",
@@ -2121,6 +2164,20 @@
       {
         "name": "--al-theme-opacity-disabled",
         "value": "var(--al-opacity-40)"
+      }
+    ],
+    "theme-size-control": [
+      {
+        "name": "--al-theme-size-control",
+        "value": "var(--al-space-40)"
+      },
+      {
+        "name": "--al-theme-size-control-lg",
+        "value": "var(--al-space-48)"
+      },
+      {
+        "name": "--al-theme-size-control-sm",
+        "value": "var(--al-space-32)"
       }
     ],
     "theme-space": [

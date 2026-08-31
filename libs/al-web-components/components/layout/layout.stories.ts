@@ -3,6 +3,15 @@ import { spread } from '../../directives/spread';
 import './layout';
 import '../card/card';
 import '../heading/heading';
+import '../text-block/text-block';
+import '../button/button';
+import '../badge/badge';
+import '../avatar/avatar';
+import '../chip/chip';
+import '../popover/popover';
+import '../menu/menu';
+import '../menu-item/menu-item';
+import '../icon/icons/dots-horizontal';
 import '../../fixtures/f-po/f-po';
 
 /**
@@ -46,9 +55,9 @@ export default {
  */
 export const Flow = (args) => html`
   <al-layout ${spread(args)}>
-    <f-po>One</f-po>
-    <f-po>Two</f-po>
-    <f-po>Three</f-po>
+    <al-card><al-heading tagName="h3" variant="sm">Components</al-heading></al-card>
+    <al-card><al-heading tagName="h3" variant="sm">Tokens</al-heading></al-card>
+    <al-card><al-heading tagName="h3" variant="sm">Patterns</al-heading></al-card>
   </al-layout>
 `;
 Flow.args = {};
@@ -105,3 +114,83 @@ export const Bento = (args) => html`
   </al-layout>
 `;
 Bento.args = { variant: 'bento' };
+
+/**
+ * **Composition** (the documented default) — three real cards in a grid, each one built the way the
+ * library intends: the COMPONENT owns its chrome, LAYOUT owns the arrangement.
+ *
+ * This story exists to answer a fair question: if arrangement lives in
+ * `<al-layout>` rather than in each component's slots, does every consumer end
+ * up rebuilding a card by hand every time?
+ *
+ * No — and the split is worth being precise about:
+ *
+ * - `<al-card>` still owns everything that makes a card a card: the hairline
+ *   border, the radius, the region padding, the header rule, the tinted footer.
+ *   None of that is retyped here, and none of it can drift between usages.
+ * - `<al-layout>` only arranges the caller's OWN content inside a region —
+ *   "title left, overflow menu right", "these three chips in a row". That
+ *   genuinely differs per usage, which is exactly why it is not baked in.
+ *
+ * The part that IS repeated is the small recurring pattern below (a title row
+ * with a trailing control). The answer to that is a documented recipe like this
+ * one, not a new `al-card-header` wrapper component — a wrapper that owns no
+ * behaviour, ARIA relationship or state is `<al-layout>` with props, and
+ * shipping one is what the arrangement rule in AGENTS.md exists to prevent.
+ *
+ * One sharp edge worth copying carefully: the header row needs `grow` on the
+ * slotted layout AND on the title's own layout. `<al-popover>` is
+ * `display: contents`, so it never becomes a flex item — its trigger and menu
+ * are hoisted into the row as two separate items, and `justify="between"`
+ * alone would distribute three items instead of two.
+ */
+export const Default = (args) => html`
+  <al-layout ${spread(args)}>
+    ${[
+      { title: 'Flat, minimal, type-first.', owner: 'MK', name: 'M. Kim', when: '4h ago', status: 'success', label: 'Stable' },
+      { title: 'Floating labels, retired.', owner: 'TC', name: 'T. Chen', when: '2d ago', status: 'warning', label: 'In review' },
+      { title: 'A segmented stepper.', owner: 'JR', name: 'J. Ruiz', when: 'now', status: 'danger', label: 'Redesign' },
+    ].map(
+      (card, i) => html`
+        <al-card class="al-u-grid__item col:12 col:4@md">
+          <al-layout slot="header" direction="row" gap="sm" align="center" grow>
+            <al-layout grow>
+              <al-heading tagName="h3" variant="sm" ?isBold=${true}>${card.title}</al-heading>
+            </al-layout>
+            <al-popover menuId=${`composition-menu-${i}`} variant="menu">
+              <al-button slot="trigger" variant="bare" size="sm" ?hideText=${true} label="Card actions">
+                <al-icon-dots-horizontal slot="before"></al-icon-dots-horizontal>
+              </al-button>
+              <al-menu id=${`composition-menu-${i}`}>
+                <al-menu-item>Duplicate</al-menu-item>
+                <al-menu-item>Favorite</al-menu-item>
+                <al-menu-item>Remove</al-menu-item>
+              </al-menu>
+            </al-popover>
+          </al-layout>
+
+          <al-layout direction="column" gap="sm">
+            <al-layout direction="row" gap="sm" align="center">
+              <al-avatar variant="sm">${card.owner}</al-avatar>
+              <al-text-block>${card.name} · ${card.when}</al-text-block>
+              <al-badge variant=${card.status}>${card.label}</al-badge>
+            </al-layout>
+            <al-text-block>
+              Hairline borders on warm paper neutrals, one refined blue, shadows reserved for overlays.
+            </al-text-block>
+            <al-layout direction="row" gap="sm" wrap>
+              <al-chip>Design</al-chip>
+              <al-chip variant="secondary">Engineering</al-chip>
+            </al-layout>
+          </al-layout>
+
+          <al-layout slot="footer" direction="row" gap="sm" align="center" justify="end">
+            <al-button variant="bare" size="sm">Dismiss</al-button>
+            <al-button size="sm">Continue</al-button>
+          </al-layout>
+        </al-card>
+      `,
+    )}
+  </al-layout>
+`;
+Default.args = { variant: 'grid', columns: 12, gutter: 'md' };

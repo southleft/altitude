@@ -10,13 +10,22 @@
 
 @layer al.component {
   .al-c-button {
-    @include al-theme-typography-body-md-bold;
+    /*
+     * v2 canvas: controls are 14px/1 semibold and take their height from the
+     * control scale, NOT from padding + line-height. Deriving height from the
+     * type scale is what let the outline variant render 42px against the 40px
+     * of every other variant — its 1px border had nothing to subtract from.
+     */
+    @include al-theme-typography-body-sm-bold;
+    line-height: 1;
+    box-sizing: border-box;
+    min-height: var(--al-button-height, var(--al-theme-size-control));
     display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: var(--al-theme-space-xs);
     margin: 0;
-    padding: var(--al-button-padding, #{var(--al-theme-space-xs)} #{var(--al-theme-space)});
+    padding: var(--al-button-padding, 0 #{var(--al-theme-space)});
     border: none;
     border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius));
     text-decoration: none;
@@ -56,14 +65,18 @@
    * Secondary button
    */
   .al-c-button--secondary {
-    background-color: var(--al-theme-color-background-secondary-default);
-    color: var(--al-theme-color-content-secondary-weak);
+    /*
+     * v2 canvas "Tonal": a primary-tinted fill with primary text, not a
+     * neutral grey. Hover steps to background-primary-weak-strong.
+     */
+    background-color: var(--al-theme-color-background-primary-weak);
+    color: var(--al-theme-color-content-primary-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-secondary-strong);
+      background-color: var(--al-theme-color-background-primary-weak-strong);
     }
   }
 
@@ -114,6 +127,29 @@
     &:hover:not(:active, :disabled) {
       background-color: var(--al-theme-color-background-danger-strong);
     }
+  }
+
+  /**
+   * Size variants — heights come from the control scale (32 / 40 / 48).
+   */
+  .al-c-button--sm {
+    min-height: var(--al-button-height, var(--al-theme-size-control-sm));
+    padding: var(--al-button-padding, 0 #{var(--al-theme-space-sm)});
+    font-size: var(--al-font-size-13);
+  }
+
+  .al-c-button--lg {
+    min-height: var(--al-button-height, var(--al-theme-size-control-lg));
+    padding: var(--al-button-padding, 0 #{var(--al-theme-space-md)});
+    font-size: var(--al-font-size-15);
+  }
+
+  /**
+   * Pill shape — the canvas ships this as a friendlier alternative to the
+   * default 6px action radius. One radius token flip, nothing else moves.
+   */
+  .al-c-button--pill {
+    border-radius: var(--al-theme-border-radius-pill);
   }
 
   /**

@@ -193,6 +193,14 @@ const within = () => ({});
 const userEvent = {};
 const action = () => () => {};
 
+// Icon registration is a runtime side effect, not markup. A story that calls
+// registerIcons/setIconResolver at module scope (icon, empty-state) threw
+// "registerIcons is not defined" here, because the import that supplies it is
+// stripped with the rest of the component graph — and the whole story was
+// reported as "no example" over a call that cannot affect the output.
+const registerIcons = () => {};
+const setIconResolver = () => {};
+
 export const __issues = __unrepresentable;
 `;
 
@@ -211,7 +219,16 @@ function isolate(source, storyDir) {
   const drop = (text) =>
     text
       .replace(/^\s*import\s+type\s+[\s\S]*?from\s*['"][^'"]+['"];?\s*$/gm, '')
-      .replace(/^\s*import\s*['"][^'"]+['"];?\s*$/gm, '');
+      .replace(/^\s*import\s*['"][^'"]+['"];?\s*$/gm, '')
+      /*
+       * Module-scope icon registration goes with the imports that fed it.
+       * `registerIcons({ plus })` names glyph bindings that came from the
+       * component graph this isolate deliberately strips, so the call threw on
+       * an undefined identifier and cost the whole story its example - over a
+       * side effect that cannot reach the markup. Stubbing the function was not
+       * enough: its ARGUMENTS are undefined too.
+       */
+      .replace(/^\s*(?:registerIcons|setIconResolver)\s*\([\s\S]*?\);\s*$/gm, '');
 
   /*
    * FIXTURES ARE KEPT, NOT DROPPED.
@@ -407,7 +424,28 @@ const SCOPE = '[data-pg-example]';
  * @returns {Promise<{html: string, styles: string, story: string, source: string} | null>}
  */
 export async function exampleFor(component) {
-  const key = `${component.libraryRoot}::${component.slug}`;
+  /*
+   * KEYED ON THE STORY'S MTIME, not just its path.
+   *
+   * The cache used to be keyed on `libraryRoot::slug` alone, and this module
+   * lives for the life of the process. In `astro dev` that meant the first
+   * render of a component page pinned its example for the whole session: the
+   * stories file sits outside the app's own module graph, so editing it
+   * triggers no HMR and no invalidation, and the page kept serving the markup
+   * the server happened to boot with. Reported as "I'm not seeing the updates"
+   * after a story edit — the edit was on disk and correct the whole time.
+   *
+   * Stat is cheap next to evaluating the story, and a miss only costs one
+   * rebuild. A story that cannot be stat'd falls through to the path-only key,
+   * which is the old behaviour.
+   */
+  let stamp = '';
+  try {
+    stamp = String(storyMtime(component));
+  } catch {
+    /* unreadable — fall back to the path-only key */
+  }
+  const key = `${component.libraryRoot}::${component.slug}::${stamp}`;
   if (CACHE.has(key)) return CACHE.get(key);
 
   const result = await build(component).catch((error) => ({
@@ -418,13 +456,23 @@ export async function exampleFor(component) {
   return result;
 }
 
-async function build(component) {
-  const source = path.join(
+/** The story file that backs a component's preview. */
+function storySource(component) {
+  return path.join(
     component.libraryRoot,
     'components',
     component.slug,
     `${component.slug}.stories.ts`,
   );
+}
+
+/** Last-modified time of that story, in ms. Throws if it is not readable. */
+function storyMtime(component) {
+  return fs.statSync(storySource(component)).mtimeMs;
+}
+
+async function build(component) {
+  const source = storySource(component);
 
   let text;
   try {

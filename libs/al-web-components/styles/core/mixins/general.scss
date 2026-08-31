@@ -65,12 +65,25 @@
  * Input
  */
 @mixin al-input() {
-  @include al-theme-typography-body-md;
+  /*
+   * v2 canvas: a field is 40px tall with 14px/1 text and a 12px inset — and it
+   * takes that height from the CONTROL SCALE, not from padding plus the body
+   * line-height. Deriving it from the type scale is what made every field in
+   * the library 48px against the canvas's 40px, and it coupled control height
+   * to a typographic decision: a body-size change silently resized every
+   * input, select, search and textarea in the system.
+   *
+   * This mixin backs the whole form family, so the fix belongs here rather
+   * than in each component.
+   */
+  @include al-theme-typography-body-sm;
+  line-height: 1;
+  box-sizing: border-box;
   width: 100%;
-  min-height: size(6);
+  min-height: var(--al-input-min-height, var(--al-theme-size-control));
   appearance: none;
   outline: none;
-  padding: size(1.375) var(--al-theme-space);
+  padding: 0 var(--al-theme-space-sm);
   border-width: var(--al-theme-border-width);
   border-style: solid;
   border-color: var(--al-theme-color-border-default);

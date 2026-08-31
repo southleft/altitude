@@ -33,8 +33,9 @@
    */
   .al-c-input__input {
     @include al-input;
-    padding-inline-start: var(--al-input-padding-start, var(--al-theme-space));
-    padding-inline-end: var(--al-input-padding-end, var(--al-theme-space));
+    /* v2 canvas: 12px inset, matching the al-input mixin. */
+    padding-inline-start: var(--al-input-padding-start, var(--al-theme-space-sm));
+    padding-inline-end: var(--al-input-padding-end, var(--al-theme-space-sm));
 
     /**
      * v2: the placeholder is just a placeholder.
@@ -113,7 +114,7 @@
     .al-c-input__input {
       padding-block-start: var(--al-theme-space-md);
       padding-block-end: var(--al-theme-space-xxs);
-      min-block-size: var(--al-input-inset-min-height, 56px);
+      min-block-size: var(--al-input-inset-min-height, 52px);
     }
   }
 

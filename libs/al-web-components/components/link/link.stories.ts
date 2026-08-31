@@ -42,7 +42,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-link ${spread(args)} data-testid="link">Link<al-icon-chevron-right></al-icon-chevron-right></al-link>`;
+const Template = (args) => html`<al-link ${spread(args)} data-testid="link">Text link<al-icon-chevron-right></al-icon-chevron-right></al-link>`;
 
 export const Default = Template.bind({});
 Default.args = {};

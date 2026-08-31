@@ -27,7 +27,7 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-avatar ${spread(args)} data-testid="avatar">WW</al-avatar>`;
+const Template = (args) => html`<al-avatar ${spread(args)} data-testid="avatar">TC</al-avatar>`;
 
 const TemplateWithIcon = (args) => html`
   <al-avatar ${spread(args)}>

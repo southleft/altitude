@@ -21,9 +21,11 @@
    * - The background of the progress bar or circle
    */
   .al-c-progress__track {
-    height: var(--al-theme-space-xxs);
+    height: var(--al-progress-track-height, 6px);
     width: 100%;
-    background: var(--al-theme-color-background-default-strong);
+    border-radius: var(--al-theme-border-radius-pill);
+    overflow: hidden;
+    background: var(--al-theme-color-border-default-weak);
     position: relative;
   }
 

@@ -9,12 +9,24 @@
 
 @layer al.component {
   .al-c-toggle-button {
+    /*
+     * v2 canvas: a segment of the segmented control — 32px tall, 13px
+     * semibold, on the 6px action radius. It was a 12px-radius, 14px-regular
+     * control, which read as a small card rather than as one segment of a row.
+     */
     @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-bold);
+    line-height: 1;
+    box-sizing: border-box;
+    min-height: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
     display: flex;
-    padding: var(--al-theme-space-xs);
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--al-theme-space-sm);
     background: var(--al-theme-color-background-transparent-default);
     border: none;
-    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius-lg));
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
     text-decoration: none;
     cursor: pointer;
   }
@@ -24,7 +36,8 @@
    */
   .al-c-toggle-button--background {
     background-color: var(--al-theme-color-background-default);
-    box-shadow: var(--al-theme-box-shadow-md);
+    /* v2: structure from a hairline, not elevation. */
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
   }
 
   /**
@@ -35,8 +48,13 @@
     align-items: center;
     justify-content: var(--al-toggle-button-justify-content, center);
     gap: var(--al-theme-space-xs);
-    height: size(5);
-    min-width: size(5);
+    /*
+     * The inner box is what actually sets the segment height; the 40px here
+     * was overriding the host's control-scale minimum. 32px still clears the
+     * 24x24 of WCAG 2.2 SC 2.5.8 for the icon-only usages.
+     */
+    height: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
+    min-width: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
     width: var(--al-toggle-button-content-width, auto);
     color: var(--al-theme-color-content-default);
     background: var(--al-theme-color-background-transparent-default);

@@ -28,24 +28,27 @@ export default {
   },
 };
 
-const Template = (args) => html`<al-chip ${spread(args)}>Label</al-chip>`;
+const Template = ({ text, ...args }) => html`<al-chip ${spread(args)}>${text ?? 'Design'}</al-chip>`;
 
 export const Default = Template.bind({});
 Default.args = {};
 
 export const Secondary = Template.bind({});
 Secondary.args = {
-  variant: 'secondary'
+  variant: 'secondary',
+  text: 'Engineering'
 };
 
 export const Info = Template.bind({});
 Info.args = {
-  variant: 'info'
+  variant: 'info',
+  text: 'Research'
 };
 
 export const Success = Template.bind({});
 Success.args = {
-  variant: 'success'
+  variant: 'success',
+  text: 'Stable'
 };
 
 export const Warning = Template.bind({});

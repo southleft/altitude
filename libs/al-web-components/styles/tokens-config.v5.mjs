@@ -22,7 +22,23 @@ const WORKSPACE_ROOT = path.resolve(SD_ROOT, '..'); // .../libs/al-web-component
 
 const themePrefix = 'al';
 const themeFontWeightRegular = '400';
+const themeFontWeightMedium = '500';
 const themeFontWeightBold = '600';
+
+/*
+ * Named weight -> CSS numeric. This used to be a BINARY: `'Bold' ? 600 : 400`,
+ * so the pipeline could express exactly two weights and every other name
+ * silently collapsed to 400 — a token authored as "Medium" emitted 400 and gave
+ * no warning that it had been flattened. The v2 canvas uses three (400 body,
+ * 500 chips and the mono metadata face, 600 controls and headings), so the map
+ * is explicit and an unknown name still falls back to regular rather than
+ * throwing.
+ */
+const FONT_WEIGHTS = {
+  Regular: themeFontWeightRegular,
+  Medium: themeFontWeightMedium,
+  Bold: themeFontWeightBold,
+};
 const themeFontBaseSize = 16;
 const themeSpaceBaseSize = 16;
 const themeFontFamilyFallback = 'sans-serif';
@@ -40,7 +56,7 @@ function formatBoxShadowValue(value) {
 }
 
 function formatFontWeightValue(value) {
-  return value === 'Bold' ? themeFontWeightBold : themeFontWeightRegular;
+  return FONT_WEIGHTS[value] ?? themeFontWeightRegular;
 }
 
 function formatTypographyValue(value) {

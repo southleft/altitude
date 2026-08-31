@@ -1,6 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './tooltip';
+import '../layout/layout';
 import { loremSentences } from '../../fixtures';
 
 export default {
@@ -41,7 +42,7 @@ const Template = (args) => html`
   <al-tooltip ${spread(args)} data-testid="tooltip">
     <span slot="trigger">Hover me</span>
     <span slot="prefix">⌘ + C</span>
-    Tooltip Text
+    Tooltip — ink on paper
   </al-tooltip>
 `;
 
@@ -64,34 +65,34 @@ PositionRight.args = {
 };
 
 const TemplatePositionDynamic = (args) => html`
-  <div style="padding: 1rem; height: 100vh; width: 100%; display: flex; flex-direction: column; gap: 1rem; justify-content: space-between;">
-    <div style="display: flex; justify-content: center;">
+  <al-layout direction="column" gap="md" justify="between" ?fullHeight=${true}>
+    <al-layout direction="row" justify="center">
       <al-tooltip ${spread(args)} position="top" data-testid="tooltip-01">
         <span slot="trigger">Hover me</span>
         <span slot="prefix">Text</span>
-        Tooltip Text
+        Tooltip — ink on paper
       </al-tooltip>
-    </div>
-    <div style="display: flex; justify-content: space-between;">
+    </al-layout>
+    <al-layout direction="row" justify="between">
       <al-tooltip ${spread(args)} position="left" data-testid="tooltip-02">
         <span slot="trigger">Hover me</span>
         <span slot="prefix">Text</span>
-        Tooltip Text
+        Tooltip — ink on paper
       </al-tooltip>
       <al-tooltip ${spread(args)} position="right" data-testid="tooltip-03">
         <span slot="trigger">Hover me</span>
         <span slot="prefix">Text</span>
-        Tooltip Text
+        Tooltip — ink on paper
       </al-tooltip>
-    </div>
-    <div style="display: flex; justify-content: center;">
+    </al-layout>
+    <al-layout direction="row" justify="center">
       <al-tooltip ${spread(args)} position="bottom" data-testid="tooltip-04">
         <span slot="trigger">Hover me</span>
         <span slot="prefix">Text</span>
-        Tooltip Text
+        Tooltip — ink on paper
       </al-tooltip>
-    </div>
-  </div>
+    </al-layout>
+  </al-layout>
 `;
 
 export const PositionDynamic = TemplatePositionDynamic.bind({});

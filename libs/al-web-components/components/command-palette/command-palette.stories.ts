@@ -35,7 +35,7 @@ export const Default = {
     return html`
       <div class="al-command-palette-story">
         <al-button variant="secondary" @click=${openPalette}>Open command palette</al-button>
-        <al-command-palette .actions=${actions}></al-command-palette>
+        <al-command-palette actions=${JSON.stringify(actions)}></al-command-palette>
       </div>
     `;
   }
@@ -44,12 +44,12 @@ export const Default = {
 export const KeyboardShortcut = {
   render: () => html`
     <p>Press <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> to open.</p>
-    <al-command-palette .actions=${actions} enableShortcut></al-command-palette>
+    <al-command-palette actions=${JSON.stringify(actions)} enableShortcut></al-command-palette>
   `
 };
 
 export const Empty = {
-  render: () => html` <al-command-palette .actions=${[]} isActive emptyText="No commands registered."></al-command-palette> `
+  render: () => html` <al-command-palette actions="[]" isActive emptyText="No commands registered."></al-command-palette> `
 };
 
 export const NoGroups = {

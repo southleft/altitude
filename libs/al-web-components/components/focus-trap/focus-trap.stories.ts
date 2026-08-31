@@ -48,5 +48,23 @@ const Template = (args) => html`
   </al-dialog>
 `;
 
-export const Default = Template.bind({});
+/**
+ * The trap on its own. Every other story here puts it inside a dialog, which is
+ * its usual home — but that meant the documented default never rendered an
+ * `<al-focus-trap>` at all, so the generated docs page had no example to show.
+ *
+ * Tab through the buttons: focus cycles inside the trap rather than escaping to
+ * the page behind it.
+ */
+export const Default = (args) => html`
+  <al-focus-trap ${spread(args)} ?isActive=${true}>
+    <al-layout direction="row" gap="sm" align="center">
+      <al-button variant="tertiary">Cancel</al-button>
+      <al-button>Continue</al-button>
+    </al-layout>
+  </al-focus-trap>
+`;
 Default.args = {};
+
+export const InsideDialog = Template.bind({});
+InsideDialog.args = {};

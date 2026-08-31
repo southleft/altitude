@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
 import './header';
-import '../../fixtures/f-po/f-po';
+import '../avatar/avatar';
 import { placeholderImages } from '../../fixtures';
 import '../../components/button/button';
 import '../../components/layout/layout';
@@ -29,12 +29,16 @@ export default {
  * These stories are one composition each, not a set of supported configurations.
  * Any arrangement `<al-layout>` can express, the header can hold.
  */
-export const Default = (args) => html`
-  <al-header ${spread(args)} data-testid="header">
+export const Default = ({ sticky, elevated, ...args }) => html`
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
     <al-layout direction="row" align="center" justify="between">
-      <f-po>Start</f-po>
-      <f-po>Middle</f-po>
-      <f-po>End</f-po>
+      <al-logo></al-logo>
+      <al-layout direction="row" gap="md" align="center">
+        <al-link href="#">Components</al-link>
+        <al-link href="#">Tokens</al-link>
+        <al-link href="#">Patterns</al-link>
+      </al-layout>
+      <al-avatar variant="sm">MK</al-avatar>
     </al-layout>
   </al-header>
 `;
@@ -44,8 +48,8 @@ Default.args = { elevated: true };
  * A wordmark, a nav, and an action cluster on one row. The nav takes the free
  * space via `grow`; the other two size to their content.
  */
-export const BrandNavActions = (args) => html`
-  <al-header ${spread(args)} data-testid="header">
+export const BrandNavActions = ({ sticky, elevated, ...args }) => html`
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
     <al-layout direction="row" align="center" gap="lg">
       <al-logo variant="southleft"></al-logo>
       <al-layout direction="row" align="center" gap="md" grow>
@@ -71,7 +75,7 @@ BrandNavActions.args = { sticky: true, elevated: true };
  * fixed value.
  */
 export const TwoRow = (args) => html`
-  <al-header ${spread(args)} data-testid="header">
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
     <al-layout direction="column" gap="sm">
       <al-layout direction="row" align="center" justify="between">
         <al-logo variant="southleft"></al-logo>
@@ -91,7 +95,7 @@ TwoRow.args = { elevated: true };
  * A brand mark is sized by the page, not the header — nothing here constrains it.
  */
 export const WithImageLogo = (args) => html`
-  <al-header ${spread(args)} data-testid="header">
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
     <al-layout direction="row" align="center" justify="between">
       <img src=${placeholderImages.logo} alt="Acme" width="160" height="40" />
       <al-button variant="tertiary">
@@ -108,7 +112,7 @@ WithImageLogo.args = {};
  * landmark, suitable for an embedded or in-page header.
  */
 export const Plain = (args) => html`
-  <al-header ${spread(args)} data-testid="header">
+  <al-header ${spread(args)} ?sticky=${sticky} ?elevated=${elevated} data-testid="header">
     <al-layout direction="row" align="center" justify="between">
       <al-logo variant="southleft"></al-logo>
       <al-button variant="tertiary">Sign in</al-button>

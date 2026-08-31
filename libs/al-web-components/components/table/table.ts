@@ -60,8 +60,14 @@ export class ALTable extends ALElement {
 
   /**
    * Column definitions for data-driven rendering. Must be paired with `data`.
+   *
+   * Settable as a JSON attribute as well as a property. It used to be
+   * `attribute: false`, which meant the table could only ever be driven from
+   * JavaScript: any consumer writing static HTML — SSR, a plain page, or this
+   * library's own generated documentation preview, which serialises a story to
+   * markup — got an empty table with no way to fill it.
    */
-  @property({ attribute: false })
+  @property({ type: Array })
   accessor columns: Array<ALTableColumn>;
 
   /**
@@ -69,7 +75,7 @@ export class ALTable extends ALElement {
    * When either `columns` or `data` is not provided, the default slot is
    * rendered instead so a consumer may supply their own `<thead>`/`<tbody>`.
    */
-  @property({ attribute: false })
+  @property({ type: Array })
   accessor data: Array<ALTableRow>;
 
   /**

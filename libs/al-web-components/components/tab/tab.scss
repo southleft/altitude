@@ -13,6 +13,7 @@
    */
   .al-c-tab {
     @include al-theme-typography-body-sm;
+    font-weight: var(--al-font-weight-medium);
     margin: 0;
     padding: var(--al-theme-space-xs) var(--al-theme-space);
     background-color: var(--al-theme-color-background-transparent-default);
@@ -64,8 +65,8 @@
      */
     &.al-is-active {
       @include al-theme-typography-body-sm-bold;
-      color: var(--al-theme-color-content-default-weak);
-      border-bottom-color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-default);
+      border-bottom-color: var(--al-theme-color-border-primary-default);
     }
   }
 

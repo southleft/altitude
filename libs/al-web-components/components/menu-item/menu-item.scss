@@ -10,7 +10,7 @@
 @layer al.component {
   :host {
     display: contents;
-    --al-menu-item-height: #{size(5)};
+    --al-menu-item-height: var(--al-theme-size-control-sm);
     --al-focus-outline-offset: calc(#{var(--al-theme-border-width-md)} * -1);
   }
 
@@ -59,15 +59,19 @@
   }
 
   .al-c-menu-item--no-href {
-    @include al-theme-typography-body-md-bold;
+    @include al-theme-typography-body-sm;
+    font-size: var(--al-font-size-13);
+    font-weight: var(--al-font-weight-medium);
+    line-height: 1;
     display: flex;
     align-items: center;
     flex: 1;
     gap: size(1);
     height: var(--al-menu-item-height);
+    border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
     padding-block: var(--al-theme-space-xs);
-    padding-inline-end: var(--al-theme-space);
-    padding-inline-start: var(--al-link-padding-inline-start, #{var(--al-theme-space)});
+    padding-inline-end: var(--al-theme-space-sm);
+    padding-inline-start: var(--al-link-padding-inline-start, #{var(--al-theme-space-sm)});
   }
 
   /**

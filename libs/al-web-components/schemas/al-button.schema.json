@@ -64,6 +64,18 @@
             "danger"
           ]
         },
+        "size": {
+          "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text",
+          "type": "string",
+          "enum": [
+            "sm",
+            "lg"
+          ]
+        },
+        "isPill": {
+          "description": "Pill shape\n- **true** renders the button with a fully rounded (pill) radius\n- **false** renders the button with the default action radius",
+          "type": "boolean"
+        },
         "target": {
           "description": "Target attribute for a link (i.e. set to _blank to open in new tab)\n- **_blank** yields a link that opens in a new tab\n- **_self** yields a link that loads the URL into the same browsing context as the current one. This is the default behavior\n- **_parent** yields a link that loads the URL into the parent browsing context of the current one. If there is no parent, this behaves the same way as _self\n- **_top** yields a link that loads the URL into the top-level browsing context. If there is no parent, this behaves the same way as _self.",
           "type": "string",
@@ -109,6 +121,7 @@
           "type": "boolean"
         },
         "isAriaDisabled": {
+          "description": "Aria-disabled attribute\n- **true** marks the button disabled to assistive tech while leaving it\n  focusable and clickable — use when the button must stay reachable to\n  explain why it is unavailable\n- prefer `isDisabled` (native `disabled`) unless focusability is required",
           "type": "boolean"
         },
         "isExpanded": {

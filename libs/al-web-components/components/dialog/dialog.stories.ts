@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { spread } from '../../directives/spread';
-import '../../fixtures/f-po/f-po';
 import '../layout/layout';
 import '../button/button';
 import './dialog';
@@ -27,7 +26,7 @@ export default {
     },
   },
   args: {
-    heading: 'Dialog heading',
+    heading: 'Delete component?',
   },
 };
 
@@ -55,12 +54,12 @@ function closeDialog(e: MouseEvent, id?: string) {
 
 const Template = (args) => html`
   <al-dialog ${spread(args)} data-testid="dialog">
-    <al-button slot="trigger">Open Dialog</al-button>
-    <f-po >Dialog content</f-po>
+    <al-button slot="trigger" variant="danger">Delete component</al-button>
+    <p>"al-input-stepper" will be removed from the library. This can't be undone.</p>
     <al-button slot="footer" variant="bare" @click=${closeDialog}>Close</al-button>
     <al-layout slot="footer" direction="row" justify="end" grow>
-      <al-button variant="tertiary">Label</al-button>
-      <al-button>Label</al-button>
+      <al-button variant="tertiary">Cancel</al-button>
+      <al-button variant="danger">Delete</al-button>
     </al-layout>
   </al-dialog>
 `;
@@ -79,22 +78,22 @@ WithDisableClickOutside.args = {
 };
 
 const TemplateWithTriggerOutside = () => html`
-  <al-button aria-controls="dialog-1" @click=${openDialog}>Open Dialog 1</al-button>
-  <al-button aria-controls="dialog-2" @click=${openDialog}>Open Dialog 2</al-button>
-  <al-dialog id="dialog-1" heading="Dialog 1">
-    <f-po>Dialog content</f-po>
+  <al-button aria-controls="dialog-1" @click=${openDialog}>Delete component</al-button>
+  <al-button aria-controls="dialog-2" @click=${openDialog}>Remove owner</al-button>
+  <al-dialog id="dialog-1" heading="Delete component?">
+    <p>"al-input-stepper" will be removed from the library. This can't be undone.</p>
     <al-button aria-controls="dialog-1" slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-1')}>Close</al-button>
     <al-layout slot="footer" direction="row" justify="end" grow>
-      <al-button variant="tertiary">Label</al-button>
-      <al-button>Label</al-button>
+      <al-button variant="tertiary">Cancel</al-button>
+      <al-button variant="danger">Delete</al-button>
     </al-layout>
   </al-dialog>
-  <al-dialog id="dialog-2" heading="Dialog 2">
-    <f-po>Dialog content</f-po>
+  <al-dialog id="dialog-2" heading="Remove owner?">
+    <p>M. Kim will lose edit access to al-input. They keep read access.</p>
     <al-button slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-2')}>Close</al-button>
     <al-layout slot="footer" direction="row" justify="end" grow>
-      <al-button variant="tertiary">Label</al-button>
-      <al-button>Label</al-button>
+      <al-button variant="tertiary">Cancel</al-button>
+      <al-button variant="danger">Delete</al-button>
     </al-layout>
   </al-dialog>
 `;

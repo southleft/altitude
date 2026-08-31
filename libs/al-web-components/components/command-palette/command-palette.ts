@@ -64,7 +64,11 @@ export class ALCommandPalette extends ALElement {
   /**
    * The action list to search over. The entire action-provider API.
    */
-  @property({ attribute: false })
+  /**
+   * Settable as a JSON attribute as well as a property, so the palette can be
+   * driven from static HTML and SSR — not only from JavaScript.
+   */
+  @property({ type: Array })
   accessor actions: Array<ALCommandAction> = [];
 
   /**

@@ -1388,6 +1388,24 @@
             },
             {
               "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'lg'"
+              },
+              "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "isPill",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Pill shape\n- **true** renders the button with a fully rounded (pill) radius\n- **false** renders the button with the default action radius",
+              "attribute": "isPill"
+            },
+            {
+              "kind": "field",
               "name": "target",
               "type": {
                 "text": "'_blank' | '_self' | '_parent' | '_top'"
@@ -1455,6 +1473,7 @@
               "type": {
                 "text": "boolean"
               },
+              "description": "Aria-disabled attribute\n- **true** marks the button disabled to assistive tech while leaving it\n  focusable and clickable — use when the button must stay reachable to\n  explain why it is unavailable\n- prefer `isDisabled` (native `disabled`) unless focusability is required",
               "attribute": "isAriaDisabled"
             },
             {
@@ -1525,6 +1544,22 @@
               "fieldName": "variant"
             },
             {
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'lg'"
+              },
+              "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text",
+              "fieldName": "size"
+            },
+            {
+              "name": "isPill",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Pill shape\n- **true** renders the button with a fully rounded (pill) radius\n- **false** renders the button with the default action radius",
+              "fieldName": "isPill"
+            },
+            {
               "name": "target",
               "type": {
                 "text": "'_blank' | '_self' | '_parent' | '_top'"
@@ -1585,6 +1620,7 @@
               "type": {
                 "text": "boolean"
               },
+              "description": "Aria-disabled attribute\n- **true** marks the button disabled to assistive tech while leaving it\n  focusable and clickable — use when the button must stay reachable to\n  explain why it is unavailable\n- prefer `isDisabled` (native `disabled`) unless focusability is required",
               "fieldName": "isAriaDisabled"
             },
             {
@@ -2359,8 +2395,12 @@
               "name": "image"
             },
             {
-              "description": "Card heading row.",
+              "description": "Card heading row. Rendered above a hairline rule. Compose the row itself with `<al-layout>` when it carries a title and a control.",
               "name": "header"
+            },
+            {
+              "description": "Card footer row, below a hairline rule and on a tinted ground. Compose it with `<al-layout>` rather than relying on slot order.",
+              "name": "footer"
             }
           ],
           "members": [
@@ -3984,7 +4024,8 @@
                 "text": "Array<ALCommandAction>"
               },
               "default": "[]",
-              "description": "The action list to search over. The entire action-provider API."
+              "description": "Settable as a JSON attribute as well as a property, so the palette can be\ndriven from static HTML and SSR — not only from JavaScript.",
+              "attribute": "actions"
             },
             {
               "kind": "field",
@@ -4235,6 +4276,15 @@
             }
           ],
           "attributes": [
+            {
+              "name": "actions",
+              "type": {
+                "text": "Array<ALCommandAction>"
+              },
+              "default": "[]",
+              "description": "Settable as a JSON attribute as well as a property, so the palette can be\ndriven from static HTML and SSR — not only from JavaScript.",
+              "fieldName": "actions"
+            },
             {
               "name": "isActive",
               "type": {
@@ -22203,7 +22253,8 @@
               "type": {
                 "text": "Array<ALTableColumn>"
               },
-              "description": "Column definitions for data-driven rendering. Must be paired with `data`."
+              "description": "Column definitions for data-driven rendering. Must be paired with `data`.\n\nSettable as a JSON attribute as well as a property. It used to be\n`attribute: false`, which meant the table could only ever be driven from\nJavaScript: any consumer writing static HTML — SSR, a plain page, or this\nlibrary's own generated documentation preview, which serialises a story to\nmarkup — got an empty table with no way to fill it.",
+              "attribute": "columns"
             },
             {
               "kind": "field",
@@ -22211,7 +22262,8 @@
               "type": {
                 "text": "Array<ALTableRow>"
               },
-              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`."
+              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
+              "attribute": "data"
             },
             {
               "kind": "field",
@@ -22385,6 +22437,22 @@
             }
           ],
           "attributes": [
+            {
+              "name": "columns",
+              "type": {
+                "text": "Array<ALTableColumn>"
+              },
+              "description": "Column definitions for data-driven rendering. Must be paired with `data`.\n\nSettable as a JSON attribute as well as a property. It used to be\n`attribute: false`, which meant the table could only ever be driven from\nJavaScript: any consumer writing static HTML — SSR, a plain page, or this\nlibrary's own generated documentation preview, which serialises a story to\nmarkup — got an empty table with no way to fill it.",
+              "fieldName": "columns"
+            },
+            {
+              "name": "data",
+              "type": {
+                "text": "Array<ALTableRow>"
+              },
+              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
+              "fieldName": "data"
+            },
             {
               "name": "rowKey",
               "type": {

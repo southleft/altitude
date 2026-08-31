@@ -55,36 +55,47 @@ function openAlert() {
   }
 }
 
-const Template = (args) =>
-  html`<al-alert ${spread(args)} data-testid="alert">
-    <al-text-block>
-      This is an alert. It is used to notify the user of something important.
-    </al-text-block>
+const DEFAULT_BODY = 'Tokens v2 ships next week.';
+
+const Template = ({ body, isActive, ...args }) =>
+  html`<al-alert ${spread(args)} ?isActive=${isActive} data-testid="alert">
+    <al-text-block>${body ?? DEFAULT_BODY}</al-text-block>
   </al-alert>`;
 
-const TemplateWithAction = (args) =>
-html`<al-alert ${spread(args)} data-testid="alert">
-  <al-text-block>
-    This is an alert. It is used to notify the user of something important.
-  </al-text-block>
-  <al-button slot="action" data-testid="action" variant="tertiary">Action</al-button>
+const TemplateWithAction = ({ body, isActive, ...args }) =>
+html`<al-alert ${spread(args)} ?isActive=${isActive} data-testid="alert">
+  <al-text-block>${body ?? DEFAULT_BODY}</al-text-block>
+  <al-button slot="action" data-testid="action" variant="tertiary" size="sm">View changes</al-button>
 </al-alert>`;
 
 export const Default = Template.bind({});
+Default.args = {
+  isActive: true,
+  title: 'Heads up.'
+};
 
 export const Success = Template.bind({});
 Success.args = {
-  variant: 'success'
+  isActive: true,
+  variant: 'success',
+  title: 'Published.',
+  body: '42 components synced.'
 };
 
 export const Warning = Template.bind({});
 Warning.args = {
-  variant: 'warning'
+  isActive: true,
+  variant: 'warning',
+  title: 'Deprecation.',
+  body: 'Floating labels removed in v2.'
 };
 
 export const Danger = Template.bind({});
 Danger.args = {
+  isActive: true,
   variant: 'danger',
+  title: 'Build failed.',
+  body: '3 token references unresolved.'
 };
 
 export const DefaultDismissible = Template.bind({});
@@ -101,12 +112,12 @@ WithActionDismissible.args = {
 
 export const WithTitle = Template.bind({});
 WithTitle.args = {
-  title: 'Alert Title'
+  title: 'Heads up.'
 };
 
 export const WithTitleAndAction = TemplateWithAction.bind({});
 WithTitleAndAction.args = {
-  title: 'Alert Title'
+  title: 'Heads up.'
 };
 
 export const WithTitleAndActionDismissible = TemplateWithAction.bind({});

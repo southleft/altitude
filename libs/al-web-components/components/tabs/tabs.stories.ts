@@ -32,16 +32,16 @@ export default {
 
 const Template = (args) => html`
   <al-tabs ${spread(args)} data-testid="tabs">
-    <al-tab data-testid="tab-item-01"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 1</span></al-tab>
-    <al-tab data-testid="tab-item-02"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 2</span></al-tab>
-    <al-tab data-testid="tab-item-03">Tab 3<al-badge variant="danger">2</al-badge></al-tab>
-    <al-tab data-testid="tab-item-04">Tab 4</al-tab>
-    <al-tab data-testid="tab-item-05">Tab 5</al-tab>
-    <al-tab data-testid="tab-item-06">Tab 6</al-tab>
-    <al-tab data-testid="tab-item-07">Tab 7</al-tab>
-    <al-tab data-testid="tab-item-08">Tab 8</al-tab>
-    <al-tab data-testid="tab-item-09">Tab 9</al-tab>
-    <al-tab data-testid="tab-item-10" ?isDisabled=${true}>Tab 10</al-tab>
+    <al-tab data-testid="tab-item-01"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Overview</span></al-tab>
+    <al-tab data-testid="tab-item-02"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Usage</span></al-tab>
+    <al-tab data-testid="tab-item-03">Accessibility<al-badge variant="danger">4</al-badge></al-tab>
+    <al-tab data-testid="tab-item-04">Tokens</al-tab>
+    <al-tab data-testid="tab-item-05">Patterns</al-tab>
+    <al-tab data-testid="tab-item-06">Anatomy</al-tab>
+    <al-tab data-testid="tab-item-07">Behavior</al-tab>
+    <al-tab data-testid="tab-item-08">Theming</al-tab>
+    <al-tab data-testid="tab-item-09">Migration</al-tab>
+    <al-tab data-testid="tab-item-10" ?isDisabled=${true}>Changelog</al-tab>
     <al-tab-panel slot="panel">Tab panel 1</al-tab-panel>
     <al-tab-panel slot="panel">Tab panel 2</al-tab-panel>
     <al-tab-panel slot="panel">Tab panel 3</al-tab-panel>
@@ -71,16 +71,16 @@ WithActiveIndex.args = {
 const TemplateWithScroll = (args) => html`
   <div style="max-width: 530px;">
     <al-tabs ${spread(args)} data-testid="tabs">
-      <al-tab data-testid="tab-item-01"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 1</span></al-tab>
-      <al-tab data-testid="tab-item-02"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Tab 2</span></al-tab>
-      <al-tab data-testid="tab-item-03">Tab 3<al-badge variant="danger">2</al-badge></al-tab>
-      <al-tab data-testid="tab-item-04">Tab 4</al-tab>
-      <al-tab data-testid="tab-item-05">Tab 5</al-tab>
-      <al-tab data-testid="tab-item-06">Tab 6</al-tab>
-      <al-tab data-testid="tab-item-07">Tab 7</al-tab>
-      <al-tab data-testid="tab-item-08">Tab 8</al-tab>
-      <al-tab data-testid="tab-item-09">Tab 9</al-tab>
-      <al-tab data-testid="tab-item-10" ?isDisabled=${true}>Tab 10</al-tab>
+      <al-tab data-testid="tab-item-01"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Overview</span></al-tab>
+      <al-tab data-testid="tab-item-02"><al-icon-success></al-icon-success><span class="al-u-is-vishidden">Usage</span></al-tab>
+      <al-tab data-testid="tab-item-03">Accessibility<al-badge variant="danger">4</al-badge></al-tab>
+      <al-tab data-testid="tab-item-04">Tokens</al-tab>
+      <al-tab data-testid="tab-item-05">Patterns</al-tab>
+      <al-tab data-testid="tab-item-06">Anatomy</al-tab>
+      <al-tab data-testid="tab-item-07">Behavior</al-tab>
+      <al-tab data-testid="tab-item-08">Theming</al-tab>
+      <al-tab data-testid="tab-item-09">Migration</al-tab>
+      <al-tab data-testid="tab-item-10" ?isDisabled=${true}>Changelog</al-tab>
       <al-tab-panel slot="panel">Tab panel 1</al-tab-panel>
       <al-tab-panel slot="panel">Tab panel 2</al-tab-panel>
       <al-tab-panel slot="panel">Tab panel 3</al-tab-panel>
