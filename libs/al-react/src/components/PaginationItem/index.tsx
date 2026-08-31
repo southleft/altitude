@@ -1,3 +1,3 @@
 'use client';
 
-export * from './PaginationItem';
+export * from './PaginationItem.js';

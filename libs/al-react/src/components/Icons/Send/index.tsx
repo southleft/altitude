@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Send';
+export * from './Send.js';

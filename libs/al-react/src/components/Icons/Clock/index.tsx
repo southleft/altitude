@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Clock';
+export * from './Clock.js';

@@ -4,7 +4,7 @@ import { createComponent } from '@lit/react';
 import { ALCheckboxGroup as ALWebCheckboxGroup } from '@southleft/al-web-components/components/checkbox-group';
 import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebCheckboxGroup.el, ALWebCheckboxGroup],

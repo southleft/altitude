@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Calendar';
+export * from './Calendar.js';

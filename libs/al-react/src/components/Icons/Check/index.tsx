@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Check';
+export * from './Check.js';

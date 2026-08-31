@@ -1,3 +1,3 @@
 'use client';
 
-export * from './ChevronLeft';
+export * from './ChevronLeft.js';

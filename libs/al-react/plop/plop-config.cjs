@@ -66,7 +66,7 @@ module.exports = (plop) => {
           // any of them. Keep this in sync with templates/component/Component.tsx.hbs.
           template: `'use client';
 
-export * from './{{pascalCase name}}';`
+export * from './{{pascalCase name}}.js';`
         },
         {
           type: 'add',
@@ -76,7 +76,7 @@ export * from './{{pascalCase name}}';`
         {
           type: 'append',
           path: './../src/index.ts',
-          template: "export * from './components/{{pascalCase name}}';"
+          template: "export * from './components/{{pascalCase name}}/index.js';"
         },
         () => {
           const pascal = String(data.name).trim();

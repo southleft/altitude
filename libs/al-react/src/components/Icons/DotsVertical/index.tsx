@@ -1,3 +1,3 @@
 'use client';
 
-export * from './DotsVertical';
+export * from './DotsVertical.js';

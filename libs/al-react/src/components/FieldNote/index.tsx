@@ -1,3 +1,3 @@
 'use client';
 
-export * from './FieldNote';
+export * from './FieldNote.js';

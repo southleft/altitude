@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Layout';
+export * from './Layout.js';

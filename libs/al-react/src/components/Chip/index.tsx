@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Chip';
+export * from './Chip.js';

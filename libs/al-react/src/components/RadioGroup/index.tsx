@@ -1,3 +1,3 @@
 'use client';
 
-export * from './RadioGroup';
+export * from './RadioGroup.js';

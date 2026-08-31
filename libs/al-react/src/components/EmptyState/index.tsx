@@ -1,3 +1,3 @@
 'use client';
 
-export * from './EmptyState';
+export * from './EmptyState.js';

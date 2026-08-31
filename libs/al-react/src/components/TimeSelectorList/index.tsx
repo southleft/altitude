@@ -1,3 +1,3 @@
 'use client';
 
-export * from './TimeSelectorList';
+export * from './TimeSelectorList.js';

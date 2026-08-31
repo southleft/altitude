@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Filter';
+export * from './Filter.js';

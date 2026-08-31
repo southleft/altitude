@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Avatar';
+export * from './Avatar.js';

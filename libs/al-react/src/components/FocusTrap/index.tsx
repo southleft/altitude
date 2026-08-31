@@ -1,3 +1,3 @@
 'use client';
 
-export * from './FocusTrap';
+export * from './FocusTrap.js';

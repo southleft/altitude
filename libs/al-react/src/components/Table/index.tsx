@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Table';
+export * from './Table.js';

@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Emoji';
+export * from './Emoji.js';

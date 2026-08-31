@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Skeleton';
+export * from './Skeleton.js';

@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Add';
+export * from './Add.js';

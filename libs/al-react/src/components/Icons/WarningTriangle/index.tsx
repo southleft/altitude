@@ -1,3 +1,3 @@
 'use client';
 
-export * from './WarningTriangle';
+export * from './WarningTriangle.js';

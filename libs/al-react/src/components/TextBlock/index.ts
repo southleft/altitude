@@ -1,3 +1,3 @@
 'use client';
 
-export * from './TextBlock';
+export * from './TextBlock.js';

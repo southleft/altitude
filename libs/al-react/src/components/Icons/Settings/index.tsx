@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Settings';
+export * from './Settings.js';

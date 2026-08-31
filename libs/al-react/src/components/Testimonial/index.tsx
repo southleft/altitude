@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Testimonial';
+export * from './Testimonial.js';

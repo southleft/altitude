@@ -4,7 +4,7 @@ import { createComponent } from '@lit/react';
 import { ALInputStepper as ALWebInputStepper } from '@southleft/al-web-components/components/input-stepper';
 import register from '@southleft/al-web-components/directives/register';
 import React from 'react';
-import PackageJson from '../../../package.json';
+import PackageJson from '../../../package.json' with { type: 'json' };
 
 const elementMap = register({
   elements: [ALWebInputStepper.el, ALWebInputStepper],

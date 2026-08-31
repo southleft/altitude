@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Bookmark';
+export * from './Bookmark.js';

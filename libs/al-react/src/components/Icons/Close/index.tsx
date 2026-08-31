@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Close';
+export * from './Close.js';

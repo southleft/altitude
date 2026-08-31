@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Support';
+export * from './Support.js';

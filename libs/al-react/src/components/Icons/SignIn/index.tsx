@@ -1,3 +1,3 @@
 'use client';
 
-export * from './SignIn';
+export * from './SignIn.js';

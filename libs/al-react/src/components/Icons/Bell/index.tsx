@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Bell';
+export * from './Bell.js';

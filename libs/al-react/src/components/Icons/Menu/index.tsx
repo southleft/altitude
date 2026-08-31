@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Menu';
+export * from './Menu.js';

@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Copy';
+export * from './Copy.js';

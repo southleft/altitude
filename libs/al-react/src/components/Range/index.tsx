@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Range';
+export * from './Range.js';

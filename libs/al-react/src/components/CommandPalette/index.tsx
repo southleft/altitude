@@ -1,3 +1,3 @@
 'use client';
 
-export * from './CommandPalette';
+export * from './CommandPalette.js';

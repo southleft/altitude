@@ -1,3 +1,3 @@
 'use client';
 
-export * from './DropdownPanel';
+export * from './DropdownPanel.js';

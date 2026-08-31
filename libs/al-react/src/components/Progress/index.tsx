@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Progress';
+export * from './Progress.js';

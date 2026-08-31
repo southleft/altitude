@@ -1,3 +1,3 @@
 'use client';
 
-export * from './CheckboxGroup';
+export * from './CheckboxGroup.js';

@@ -1,3 +1,3 @@
 'use client';
 
-export * from './DatePicker';
+export * from './DatePicker.js';

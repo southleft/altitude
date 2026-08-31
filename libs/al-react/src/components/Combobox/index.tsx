@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Combobox';
+export * from './Combobox.js';

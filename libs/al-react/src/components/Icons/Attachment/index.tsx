@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Attachment';
+export * from './Attachment.js';

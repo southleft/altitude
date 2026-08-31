@@ -1,3 +1,3 @@
 'use client';
 
-export * from './Banner';
+export * from './Banner.js';
