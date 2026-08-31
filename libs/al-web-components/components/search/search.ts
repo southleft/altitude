@@ -654,7 +654,6 @@ export class ALSearch extends ALElement {
             @keyup=${this.handleKeyUp}
             @input=${(e: Event) => this.onChanged(e)}
             maxLength=${ifDefined(this.maxlength)}
-            ?isActive="${this.isActive}"
           >
             <${this.iconSearchEl} slot="before" class="al-c-search__icon-search"></${this.iconSearchEl}>
             ${

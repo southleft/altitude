@@ -46,6 +46,17 @@ HiddenLabel.args = {
   hideLabel: true,
 };
 
+/**
+ * The canvas's denser alternative, meant for table rows: the value takes the
+ * full width and the two steppers stack at the trailing edge. Note it is TALLER
+ * than the default (50px vs 40px) so each stacked button clears the 24x24
+ * minimum in WCAG 2.2 SC 2.5.8 — see input-stepper.scss.
+ */
+export const Trailing = Template.bind({});
+Trailing.args = {
+  variant: 'trailing',
+};
+
 const TemplateSlottedFieldNote = (args) => html`
   <al-input-stepper ${spread(args)}>
     <al-field-note slot="field-note"><al-icon-help></al-icon-help>This is a field note.</al-field-note>

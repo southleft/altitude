@@ -23,23 +23,52 @@
   }
 
   /**
-   * Stepper body
+   * Hidden label — visually hidden, never removed, so the field keeps its
+   * accessible name.
+   */
+  .al-has-hidden-label .al-c-input-stepper__label {
+    @include al-visually-hidden;
+  }
+
+  /**
+   * Stepper body — the segmented control.
+   *
+   * v2: ONE bordered box divided into three segments by hairlines, per the
+   * canvas. Before, the two buttons were absolutely positioned ON TOP of the
+   * input and the input carried `xxxl` inline padding on both sides to clear
+   * them — so the control's width was a guess, the buttons overlapped the
+   * field's own border, and an invisible `::after` reading `attr(data-value)`
+   * tried to auto-size the box from an attribute NOTHING EVER SET (dead since
+   * it was written; removed here).
+   *
+   * The border lives on this element now, not on the input, so the dividers can
+   * be true hairlines between segments rather than two stacked borders.
    */
   .al-c-input-stepper__body {
-    display: inline-grid;
-    position: relative;
+    display: flex;
+    align-items: stretch;
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-radius: var(--al-theme-border-radius);
+    background-color: var(--al-theme-color-background-default);
+    block-size: var(--al-input-stepper-block-size, 40px);
+    overflow: hidden;
+
+    .al-is-error & {
+      border-color: var(--al-theme-color-border-danger-default);
+    }
+
+    .al-is-disabled & {
+      opacity: var(--al-theme-opacity-disabled);
+    }
 
     /**
-     * Pseudo class to resize the input field based on the value
+     * Focus lands on the inner input, but the RING belongs to the whole
+     * segmented box — a ring drawn around the middle segment alone would read
+     * as a separate control from the two buttons flanking it.
      */
-    &:after {
-      content: attr(data-value) ' ';
-      visibility: hidden;
-      white-space: pre-wrap;
-      width: auto;
-      padding: var(--al-theme-space-xs) var(--al-theme-space-xxxl);
-      min-width: 1em;
-      grid-area: 1/2;
+    &:focus-within {
+      border-color: var(--al-theme-color-border-primary-default);
+      box-shadow: 0 0 0 3px var(--al-theme-color-border-primary-weak);
     }
   }
 
@@ -54,45 +83,145 @@
   }
 
   /**
-   * Stepper input
+   * Stepper input — the middle segment.
+   *
+   * `al-input` is deliberately NOT included here any more: that mixin paints a
+   * border, radius, surface and focus ring, all of which now belong to
+   * `__body`. Including it drew a second box inside the first.
    */
   .al-c-input-stepper__input {
-    @include al-input;
-    min-width: size(14);
-    width: auto;
-    padding-inline-start: var(--al-theme-space-xxxl);
-    padding-inline-end: var(--al-theme-space-xxxl);
+    @include al-theme-typography-body-md;
+
+    /**
+     * The value is metadata, so it takes the mono face — a proportional face
+     * makes the number jump sideways as digits change under the stepper
+     * buttons. Declared AFTER the typography include, which emits the `font`
+     * shorthand and would otherwise reset the family.
+     */
+    font-family: var(--al-font-family-mono);
+
+    appearance: none;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    color: var(--al-theme-color-content-default);
     text-align: center;
-    grid-area: 1/2;
+    min-inline-size: var(--al-input-stepper-value-width, #{size(7)});
+    inline-size: var(--al-input-stepper-value-width, #{size(7)});
+    padding-inline: var(--al-theme-space-xs);
+    order: 2;
   }
 
   /**
-   * Stepper increase/decrease buttons
+   * Stepper increase/decrease buttons — the flanking segments.
+   *
+   * The HIT TARGET must be the whole segment, not just the glyph. `al-button`
+   * sizes its inner `<button>` from `--al-button-width` (default `auto`) and has
+   * no height knob, so with `--al-button-padding: 0` the real control collapsed
+   * to the 16x16 icon inside a 40x38 host — measured in the contract anatomy,
+   * not visible on screen, and half the 24x24 minimum in WCAG 2.2 SC 2.5.8.
+   *
+   * `align-items: stretch` on the host makes the shadow root's `.al-c-button`
+   * a full-height flex item; `--al-button-width: 100%` does the same across.
+   * Together they make the button fill the segment it appears to occupy.
    */
   .al-c-input-stepper__button {
-    position: absolute;
-    height: 100%;
-    width: 40px;
-    inset-block-start: 0;
-    inset-block-end: 0;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
+    flex: 0 0 auto;
+    inline-size: var(--al-input-stepper-button-size, 40px);
+    --al-button-border-radius: 0;
+    --al-button-padding: 0;
+    --al-button-width: 100%;
   }
 
   /**
-   * Left button
+   * The hairline dividers. They sit on the BUTTONS rather than the input so a
+   * trailing-variant reflow (below) moves them with the segment they belong to.
    */
   .al-c-input-stepper__button--left {
-    inset-inline-start: 0;
+    order: 1;
+    border-inline-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+  }
+
+  .al-c-input-stepper__button--right {
+    order: 3;
+    border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
   }
 
   /**
-   * Right button
+   * Trailing-controls variant — the canvas's denser alternative, meant for
+   * table rows: the value takes the full width and the two steppers stack at
+   * the trailing edge, native-spinner style.
+   *
+   * Grid rather than flex because the two buttons have to share one column
+   * across two rows while the input spans both — `order` alone cannot express
+   * that, and doing it with a wrapper element would mean different markup per
+   * variant.
+   *
+   * HEIGHT IS DELIBERATELY 50px, NOT THE 40px THE CANVAS DRAWS. Stacking two
+   * controls in 40px leaves each 20px tall, under the 24x24 CSS px minimum in
+   * WCAG 2.2 SC 2.5.8 (Target Size (Minimum)), and neither exception applies —
+   * they are not inline in text and they are not 24px apart.
+   *
+   * 50px, not 48px, because the box is `border-box`: 48px total minus the 1px
+   * border top and bottom leaves a 46px content box, which splits into two 23px
+   * rows — measured, after a first pass that assumed 48px would give 24px and
+   * did not. 50px leaves 48px of content, so each button is exactly 24px.
+   * A consumer who accepts the risk can go denser with
+   * `--al-input-stepper-block-size`.
    */
-  .al-c-input-stepper__button--right {
-    inset-inline-end: 0;
-    --al-button-padding: #{var(--al-theme-space-sm)} #{var(--al-theme-space-sm)};
+  .al-c-input-stepper--trailing {
+    .al-c-input-stepper__body {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: 1fr 1fr;
+      block-size: var(--al-input-stepper-block-size, 50px);
+    }
+
+    .al-c-input-stepper__input {
+      grid-area: 1 / 1 / 3 / 2;
+      text-align: start;
+      inline-size: auto;
+      padding-inline: var(--al-theme-space-xs);
+    }
+
+    /**
+     * increment on top, decrement beneath — the direction the value moves.
+     *
+     * The horizontal divider is a PSEUDO-ELEMENT, not a `border-block-end`. A
+     * border would come out of the button's own box: with two 24px rows, a 1px
+     * bottom border left the increment control 23px tall and back under the
+     * WCAG 2.2 SC 2.5.8 minimum — measured, after the row height had already
+     * been corrected once for the container's border. A divider is decoration
+     * and must not eat the hit target, so it is painted over the box instead.
+     */
+    .al-c-input-stepper__button--right {
+      grid-area: 1 / 2 / 2 / 3;
+      border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: var(--al-theme-border-width);
+        background-color: var(--al-theme-color-border-default-weak);
+        pointer-events: none;
+      }
+    }
+
+    .al-c-input-stepper__button--left {
+      grid-area: 2 / 2 / 3 / 3;
+      border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+      border-inline-end: 0;
+    }
+
+    .al-c-input-stepper__button {
+      inline-size: var(--al-input-stepper-button-size, 28px);
+    }
   }
 
   .al-c-input-stepper__icon-add,

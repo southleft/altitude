@@ -145,6 +145,19 @@ export class ALInputStepper extends ALElement {
   accessor step: number = 1;
 
   /**
+   * Variant
+   * - `segmented` (default): decrement | value | increment, three segments of
+   *   one bordered box divided by hairlines.
+   * - `trailing`: the value takes the full width and both steppers stack at the
+   *   trailing edge. Denser across, so it fits inside a table row — but it is
+   *   TALLER by default (50px vs 40px), because two stacked controls in 40px
+   *   would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See
+   *   input-stepper.scss for the full note and the escape hatch.
+   */
+  @property()
+  accessor variant: 'segmented' | 'trailing' = 'segmented';
+
+  /**
    * Increase
    * 1) Increase the value by 1 if below max count
    * 2) Add disabled state to custom element and inner button element
@@ -224,6 +237,7 @@ export class ALInputStepper extends ALElement {
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-input-stepper', {
+      'al-c-input-stepper--trailing': this.variant === 'trailing',
       'al-has-hidden-label': this.hideLabel,
       'al-is-disabled': this.isDisabled,
       'al-is-error': this.isError

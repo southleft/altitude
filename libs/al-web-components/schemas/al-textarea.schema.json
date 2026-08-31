@@ -86,7 +86,7 @@
           "type": "boolean"
         },
         "hideLabel": {
-          "description": "Hide label?\n- If true, hides the label from displaying",
+          "description": "Hide label?\n- If true, hides the label VISUALLY. The element stays in the DOM with its\n  `for` association intact, so the field keeps an accessible name.\n\nBefore v2 this also revealed the placeholder; the label no longer occupies\nthe placeholder's position, so a `placeholder` renders whenever it is set.",
           "type": "boolean"
         },
         "label": {

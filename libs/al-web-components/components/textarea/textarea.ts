@@ -49,6 +49,10 @@ export class ALTextarea extends ALElement {
   /**
    * isActive
    * - Dynamically sets to true if the textarea has a value
+   *
+   * @deprecated Since v2 — see `al-input`'s `isActive`. The floating label it
+   * drove is retired; the property and `.al-is-active` are retained only so
+   * consumer CSS hooks do not break silently, and go in the next major.
    */
   @property({ type: Boolean })
   accessor isActive: boolean;
@@ -97,7 +101,11 @@ export class ALTextarea extends ALElement {
 
   /**
    * Hide label?
-   * - If true, hides the label from displaying
+   * - If true, hides the label VISUALLY. The element stays in the DOM with its
+   *   `for` association intact, so the field keeps an accessible name.
+   *
+   * Before v2 this also revealed the placeholder; the label no longer occupies
+   * the placeholder's position, so a `placeholder` renders whenever it is set.
    */
   @property({ type: Boolean })
   accessor hideLabel: boolean;
@@ -307,6 +315,11 @@ export class ALTextarea extends ALElement {
 
     return html`
       <div class="${componentClassNames}">
+        <label class="al-c-textarea__label" for="${this.fieldId}">
+          ${this.isRequired ? html`<span class="al-c-textarea__asterisk">*</span>` : html``}
+          <span>${this.label}</span>
+          ${this.isOptional ? html`<em class="al-c-textarea__optional">(Optional)</em>` : html``}
+        </label>
         <div class="al-c-textarea__container">
           <textarea
             class="al-c-textarea__input"
@@ -325,11 +338,6 @@ export class ALTextarea extends ALElement {
             cols=${ifDefined(this.cols)}
             .autofocus=${this.isFocused}
           ></textarea>
-          <label class="al-c-textarea__label" for="${this.fieldId}">
-            ${this.isRequired ? html`<span class="al-c-textarea__asterisk">*</span>` : html``}
-            <span>${this.label}</span>
-            ${this.isOptional ? html`<em class="al-c-textarea__optional">(Optional)</em>` : html``}
-          </label>
           ${this.slotNotEmpty('before') || (this.isRequired && this.hideLabel)
             ? html`
                 <div class="al-c-textarea__before">

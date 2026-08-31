@@ -466,7 +466,6 @@ export class ALSelect extends ALElement {
             @click=${this.toggleActive}
             @keydown=${this.handleOnKeydown}
             @input=${this.handleOnChange}
-            ?isActive="${this.isActive}"
           >
             ${this.slotNotEmpty('before') ? html`<div class="al-c-select__icon-before" slot="before"><slot name="before"></slot></div>` : html``}
             <${this.iconChevronDownEl} size="lg" slot="after" class="al-c-select__icon-arrow"></${this.iconChevronDownEl}>

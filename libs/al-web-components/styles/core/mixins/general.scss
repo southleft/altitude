@@ -76,7 +76,15 @@
   border-color: var(--al-theme-color-border-default);
   border-radius: var(--al-theme-border-radius);
   color: var(--al-theme-color-content-default);
-  background-color: var(--al-theme-color-background-transparent-default);
+  /**
+   * v2: a field is a SURFACE, not a hole. It was transparent, so it took
+   * whatever sat behind it; on the warm paper page that made the field and the
+   * page the same colour and left the border doing all the work. This is also
+   * what the floating label's background patch matches against
+   * (input.scss / textarea.scss `--al-input-label-background`), so the two must
+   * name the same token or the patch shows as a seam across the top border.
+   */
+  background-color: var(--al-input-background, var(--al-theme-color-background-default));
   transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), color var(--al-theme-animation-duration) var(--al-theme-animation-timing), border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), box-shadow var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
   ~ *  {
@@ -104,8 +112,13 @@
   &:active,
   &:focus,
   &:focus-visible {
+    /**
+     * v2 focus: a 1px primary edge plus a 3px soft halo of the same hue. The
+     * halo is decoration — the solid 1px edge is the indicator that carries the
+     * 3:1 WCAG non-text contrast, which a 28%-alpha ring could not.
+     */
     border-color: var(--al-theme-color-border-primary-default);
-    box-shadow: 0px 0px 0px 1px var(--al-theme-color-border-primary-default);
+    box-shadow: 0px 0px 0px 3px var(--al-theme-color-border-primary-weak);
     outline: none;
   }
 

@@ -91,8 +91,16 @@
           "type": "boolean"
         },
         "hideLabel": {
-          "description": "Hide label?\n- If true, hides the label from displaying",
+          "description": "Hide label?\n- If true, hides the label VISUALLY. The label element stays in the DOM and\n  keeps its `for` association, so screen readers still announce the field.\n\nBefore v2 this also revealed the placeholder, because the floating label\noccupied the placeholder's position and the two could not both show. The\nlabel no longer sits inside the field, so that coupling is gone: a\n`placeholder` now renders whenever it is set, independently of this.",
           "type": "boolean"
+        },
+        "labelPosition": {
+          "description": "Label position\n- `top` (default) puts the label above the field.\n- `inset` puts it inside the field's top padding, above the value — the v2\n  replacement for the floating label. It is STATIC: unlike the old floating\n  label it never moves between states, so there is no jump on focus and no\n  background patch punched through the field's border.",
+          "type": "string",
+          "enum": [
+            "top",
+            "inset"
+          ]
         },
         "label": {
           "description": "Label attribute\n- Specifies what content to enter within the input element",

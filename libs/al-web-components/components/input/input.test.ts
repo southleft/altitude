@@ -38,9 +38,13 @@ describe('al-input', () => {
   });
 
   it('sets isActive only while the field has content', async () => {
-    // input.ts:255-259 — this is what floats the label. Asserting both
-    // directions, because a handler that only ever sets `true` would pass a
-    // one-way test.
+    // This used to be what floated the label. v2 retired the floating label, so
+    // `isActive` is deprecated and styles nothing — but it is still DERIVED, and
+    // `.al-is-active` is still emitted, precisely so consumer CSS keyed on that
+    // hook does not break silently. This test pins that retention: if someone
+    // removes the derivation without removing the property, the hook goes dead
+    // with no error. Asserting both directions, because a handler that only ever
+    // sets `true` would pass a one-way test.
     const el = await fixture<ALInput>(html`<al-input label="Email"></al-input>`);
     expect(el.isActive).toBeFalsy();
 
@@ -109,5 +113,76 @@ describe('al-input', () => {
     expect(inner(el).disabled).toBe(true);
     expect(inner(el).readOnly).toBe(true);
     expect(el.shadowRoot!.querySelector('.al-c-input')!.className).toContain('al-is-disabled');
+  });
+
+  // ---- v2: the label is top-aligned and static (spec 2026-08-30) ----------
+
+  it('renders the label OUTSIDE the field container, above it', async () => {
+    // The floating label lived inside `.al-c-input__container` so it could be
+    // absolutely positioned against the field. v2 lifts it out: `__before` /
+    // `__after` are centred against that container, so a label inside it would
+    // drag slotted icons off-centre.
+    const el = await fixture<ALInput>(html`<al-input label="Email"></al-input>`);
+    const label = el.shadowRoot!.querySelector('.al-c-input__label')!;
+    const container = el.shadowRoot!.querySelector('.al-c-input__container')!;
+
+    expect(container.contains(label)).toBe(false);
+    expect(label.parentElement!.classList.contains('al-c-input')).toBe(true);
+    // and it precedes the field in DOM order
+    expect(label.compareDocumentPosition(container) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('keeps the label in the accessibility tree when hideLabel is set', async () => {
+    // hideLabel must hide VISUALLY only. `display:none` / `visibility:hidden` /
+    // the `hidden` attribute would each strip the field's accessible name.
+    const el = await fixture<ALInput>(html`<al-input label="Email" hideLabel></al-input>`);
+    const label = el.shadowRoot!.querySelector('label') as HTMLLabelElement;
+    const cs = getComputedStyle(label);
+
+    expect(label.htmlFor).toBe(inner(el).id);
+    expect(label.textContent!.trim()).toContain('Email');
+    expect(cs.display).not.toBe('none');
+    expect(cs.visibility).not.toBe('hidden');
+    expect(label.hasAttribute('hidden')).toBe(false);
+    // clipped to a 1px box rather than removed
+    expect(cs.position).toBe('absolute');
+  });
+
+  it('shows the placeholder regardless of hideLabel', async () => {
+    // Before v2 the placeholder was hidden by default and only revealed under
+    // `.al-has-hidden-label`, because the floating label sat in its position.
+    // That coupling is gone; a placeholder shows whenever it is set.
+    for (const hide of [false, true]) {
+      const el = await fixture<ALInput>(
+        hide
+          ? html`<al-input label="Email" placeholder="you@example.com" hideLabel></al-input>`
+          : html`<al-input label="Email" placeholder="you@example.com"></al-input>`
+      );
+      const ph = getComputedStyle(inner(el), '::placeholder');
+      expect(inner(el).placeholder).toBe('you@example.com');
+      expect(ph.opacity).not.toBe('0');
+      expect(ph.visibility).not.toBe('hidden');
+    }
+  });
+
+  it('places the label inside the field container for labelPosition="inset"', async () => {
+    // The inset variant is the v2 replacement for the floating label: same
+    // position, but STATIC — it must be inside the container to be positioned
+    // against the field box, and must not move between states.
+    const el = await fixture<ALInput>(
+      html`<al-input label="Company" labelPosition="inset"></al-input>`
+    );
+    const label = el.shadowRoot!.querySelector('.al-c-input__label')!;
+    const container = el.shadowRoot!.querySelector('.al-c-input__container')!;
+
+    expect(container.contains(label)).toBe(true);
+    expect(el.shadowRoot!.querySelector('.al-c-input')!.className).toContain('al-has-inset-label');
+
+    const before = label.getBoundingClientRect();
+    inner(el).focus();
+    await el.updateComplete;
+    const after = label.getBoundingClientRect();
+    expect(after.top).toBeCloseTo(before.top, 1);
+    expect(after.left).toBeCloseTo(before.left, 1);
   });
 });

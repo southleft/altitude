@@ -39,81 +39,40 @@
     padding-inline-end: var(--al-textarea-padding-end, var(--al-theme-space));
 
     /**
-     * Show the placeholder if the label is hidden
-     */
-    .al-has-hidden-label & {
-      &::placeholder {
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-
-    /**
-     * Hide the placeholder by default because the label appears in it's place
+     * v2: the placeholder is just a placeholder — see input.scss for why the
+     * old hide-by-default / reveal-under-hidden-label pair existed and why the
+     * top-aligned label makes it unnecessary.
      */
     &::placeholder {
-      opacity: 0;
-      visibility: hidden;
+      color: var(--al-theme-color-content-default-faint);
+      opacity: 1;
     }
   }
 
   /**
    * Textarea label
-   * - The floating label that appears inside of the textarea
+   *
+   * v2: TOP-ALIGNED AND STATIC — same change as `al-input`, same reasons. The
+   * absolute positioning, the focus/active reposition, the background patch and
+   * the disabled-only `::before` patch are all gone.
    */
   .al-c-textarea__label {
     @include al-label;
-    position: absolute;
-    inset-block-start: var(--al-theme-space-sm);
-    inset-inline-start: var(--al-textarea-padding-start, var(--al-theme-space));
     display: flex;
     align-items: center;
     gap: var(--al-theme-space-xxs);
-    pointer-events: none; /* Allows hover to work properly */
 
-    /**
-     * If the textarea is focused or active, position the label above the textarea
-     */
-    .al-c-textarea__input:focus:not(:read-only) + &,
-    .al-is-active & {
-      @include al-theme-typography-body-xs;
-      padding: 0 var(--al-theme-space-xxs);
-      background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
-      inset-block-start: calc(#{var(--al-theme-space-sm)} * -1);
-      inset-block-end: auto;
-      inset-inline-start: var(--al-theme-space-sm);
+    .al-is-disabled & {
+      opacity: var(--al-theme-opacity-disabled);
     }
+  }
 
-    /**
-     * A fix for the textarea border being visible through the label when filled and disabled
-     */
-    .al-c-textarea__input:disabled + & {
-      opacity: 1;
-
-      /**
-       * Applied the opacity to the text only in the label
-       */
-      span {
-        opacity: var(--al-theme-opacity-disabled);
-      }
-
-      /**
-       * Prevents the textarea border from showing through the label
-       */
-      &::before {
-        background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        margin: auto;
-        z-index: -1;
-        width: 100%;
-        height: 80%;
-      }
-    }
+  /**
+   * Hidden label — visually hidden, never removed, so the field keeps its
+   * accessible name.
+   */
+  .al-has-hidden-label .al-c-textarea__label {
+    @include al-visually-hidden;
   }
 
   /**

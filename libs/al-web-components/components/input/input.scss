@@ -37,82 +37,83 @@
     padding-inline-end: var(--al-input-padding-end, var(--al-theme-space));
 
     /**
-     * Show the placeholder if the label is hidden
-     */
-    .al-has-hidden-label & {
-      &::placeholder {
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-
-    /**
-     * Hide the placeholder by default because the label appears in it's place
+     * v2: the placeholder is just a placeholder.
+     *
+     * It used to be hidden by default and revealed only under
+     * `.al-has-hidden-label`, because the floating label sat in the
+     * placeholder's position and the two could not both be visible. The label
+     * is top-aligned now, so that coupling is gone and a placeholder shows
+     * whenever one is set.
      */
     &::placeholder {
-      opacity: 0;
-      visibility: hidden;
+      color: var(--al-theme-color-content-default-faint);
+      opacity: 1;
     }
   }
 
   /**
    * Input label
-   * - The floating label that appears inside of the input field
+   *
+   * v2: TOP-ALIGNED AND STATIC. This used to be a floating label — absolutely
+   * positioned inside the field, moved above the border on focus/value, with a
+   * background patch painted behind it to punch a hole through the field's top
+   * border (and a second `::before` patch just for the disabled case, because
+   * the border showed through). All of that is gone. The label is now an
+   * ordinary block above the field, so there is no jump, no patch to keep in
+   * sync with the field's surface colour, and no `:focus + &` sibling coupling.
    */
   .al-c-input__label {
     @include al-label;
-    position: absolute;
-    margin: auto;
-    inset-block-start: 0;
-    inset-block-end: 0;
-    inset-inline-start: var(--al-input-padding-start, var(--al-theme-space));
     display: flex;
     align-items: center;
     gap: var(--al-theme-space-xxs);
-    pointer-events:  var(--al-input-label-pointer-events, none); /* Allows hover to work properly */
 
     /**
-     * If the input is focused or active, position the label above the input
+     * The disabled label dims with the field. Applied to the whole label rather
+     * than only its text span, which is what the removed patch forced.
      */
-    .al-c-input__input:focus:not(:read-only) + &,
-    .al-is-active & {
+    .al-is-disabled & {
+      opacity: var(--al-theme-opacity-disabled);
+    }
+  }
+
+  /**
+   * Hidden label
+   *
+   * Visually hidden, NOT removed: the element keeps its `for` association so
+   * assistive tech still announces the field. `display: none` or `hidden` here
+   * would leave the input unlabelled.
+   */
+  .al-has-hidden-label .al-c-input__label {
+    @include al-visually-hidden;
+  }
+
+  /**
+   * Inset label variant — the v2 replacement for the floating label.
+   *
+   * The label sits inside the field's own top padding, above the value. It is
+   * STATIC: it renders identically in every state, so unlike the floating label
+   * it never animates between positions and never needs to mask the border.
+   */
+  .al-has-inset-label {
+    /* `.al-c-input__container` is already `position: relative` above. */
+    .al-c-input__label {
       @include al-theme-typography-body-xs;
-      padding: 0 var(--al-theme-space-xxs);
-      background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
-      inset-block-start: calc(#{var(--al-theme-space-sm)} * -1);
-      inset-block-end: auto;
-      inset-inline-start: var(--al-theme-space-sm);
+      position: absolute;
+      inset-block-start: var(--al-theme-space-xxs);
+      inset-inline-start: var(--al-input-padding-start, var(--al-theme-space));
+      color: var(--al-theme-color-content-default-weak);
+      pointer-events: none; /* clicks fall through to the field beneath */
     }
 
     /**
-     * A fix for the input border being visible through the label when filled and disabled
+     * Make room for the label inside the field. The extra block-start padding
+     * is what keeps the value from colliding with it.
      */
-    .al-c-input__input:disabled + & {
-      opacity: 1;
-
-      /**
-       * Applied the opacity to the text only in the label
-       */
-      span {
-        opacity: var(--al-theme-opacity-disabled);
-      }
-
-      /**
-       * Prevents the input border from showing through the label
-       */
-      &::before {
-        background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        margin: auto;
-        z-index: -1;
-        width: 100%;
-        height: 80%;
-      }
+    .al-c-input__input {
+      padding-block-start: var(--al-theme-space-md);
+      padding-block-end: var(--al-theme-space-xxs);
+      min-block-size: var(--al-input-inset-min-height, 56px);
     }
   }
 

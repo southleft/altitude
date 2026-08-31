@@ -58,6 +58,15 @@ export class ALInput extends ALElement {
   /**
    * isActive
    * - Dynamically sets to true if the input has a value
+   *
+   * @deprecated Since v2. This existed to float the label out of the field, and
+   * v2 retired the floating label — the label is now top-aligned and never
+   * moves, so NOTHING in this library styles `.al-is-active` any more. The
+   * property and the class are retained (still derived from "the field has a
+   * value") purely so consumer CSS keyed on that hook does not break silently;
+   * they will be removed in the next major. Note the name is also a misnomer
+   * here: everywhere else in the library `isActive` means open/expanded
+   * (`al-accordion-panel`, `al-alert`), never "has content".
    */
   @property({ type: Boolean })
   accessor isActive: boolean;
@@ -106,10 +115,27 @@ export class ALInput extends ALElement {
 
   /**
    * Hide label?
-   * - If true, hides the label from displaying
+   * - If true, hides the label VISUALLY. The label element stays in the DOM and
+   *   keeps its `for` association, so screen readers still announce the field.
+   *
+   * Before v2 this also revealed the placeholder, because the floating label
+   * occupied the placeholder's position and the two could not both show. The
+   * label no longer sits inside the field, so that coupling is gone: a
+   * `placeholder` now renders whenever it is set, independently of this.
    */
   @property({ type: Boolean })
   accessor hideLabel: boolean;
+
+  /**
+   * Label position
+   * - `top` (default) puts the label above the field.
+   * - `inset` puts it inside the field's top padding, above the value — the v2
+   *   replacement for the floating label. It is STATIC: unlike the old floating
+   *   label it never moves between states, so there is no jump on focus and no
+   *   background patch punched through the field's border.
+   */
+  @property()
+  accessor labelPosition: 'top' | 'inset' = 'top';
 
   /**
    * Label attribute
@@ -349,15 +375,35 @@ export class ALInput extends ALElement {
   render() {
     const componentClassNames = this.componentClassNames('al-c-input', {
       'al-has-hidden-label': this.hideLabel,
+      'al-has-inset-label': this.labelPosition === 'inset',
       'al-is-disabled': this.isDisabled,
       'al-is-required': this.isRequired,
       'al-is-error': this.isError,
       'al-is-active': this.isActive
     });
 
+    /**
+     * The label is one template rendered in one of two PLACES, not two
+     * templates: `top` puts it in normal flow above the field, `inset` puts it
+     * inside `__container` so it can be positioned against the field box. It
+     * cannot simply live in the container for both — `__before` / `__after` are
+     * absolutely centred against `__container`, so if the container also held a
+     * top-aligned label those slotted icons would centre against label + field
+     * together and sit visibly low.
+     */
+    const labelTpl = html`
+      <label ?hidden="${this.type === 'hidden'}" class="al-c-input__label" for="${this.fieldId}">
+        ${this.isRequired ? html`<span class="al-c-input__asterisk">*</span>` : html``}
+        <span>${this.label}</span>
+        ${this.isOptional ? html`<em class="al-c-input__optional">(Optional)</em>` : html``}
+      </label>
+    `;
+
     return html`
       <div class="${componentClassNames}">
+        ${this.labelPosition === 'inset' ? html`` : labelTpl}
         <div class="al-c-input__container">
+          ${this.labelPosition === 'inset' ? labelTpl : html``}
           <input
             class="al-c-input__input"
             type="${this.type}"
@@ -377,11 +423,6 @@ export class ALInput extends ALElement {
             @input=${(e: Event) => this.handleOnChange(e)}
             .autofocus=${this.isFocused}
           />
-          <label ?hidden="${this.type === 'hidden'}" class="al-c-input__label" for="${this.fieldId}">
-            ${this.isRequired ? html`<span class="al-c-input__asterisk">*</span>` : html``}
-            <span>${this.label}</span>
-            ${this.isOptional ? html`<em class="al-c-input__optional">(Optional)</em>` : html``}
-          </label>
           ${this.slotNotEmpty('before') || (this.isRequired && this.hideLabel)
             ? html`
                 <div class="al-c-input__before">

@@ -14439,6 +14439,16 @@
               "attribute": "step"
             },
             {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'segmented' | 'trailing'"
+              },
+              "default": "'segmented'",
+              "description": "Variant\n- `segmented` (default): decrement | value | increment, three segments of\n  one bordered box divided by hairlines.\n- `trailing`: the value takes the full width and both steppers stack at the\n  trailing edge. Denser across, so it fits inside a table row — but it is\n  TALLER by default (50px vs 40px), because two stacked controls in 40px\n  would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See\n  input-stepper.scss for the full note and the escape hatch.",
+              "attribute": "variant"
+            },
+            {
               "kind": "method",
               "name": "onIncrease",
               "privacy": "private",
@@ -14637,6 +14647,15 @@
               "default": "1",
               "description": "Inremental/Decremental range",
               "fieldName": "step"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'segmented' | 'trailing'"
+              },
+              "default": "'segmented'",
+              "description": "Variant\n- `segmented` (default): decrement | value | increment, three segments of\n  one bordered box divided by hairlines.\n- `trailing`: the value takes the full width and both steppers stack at the\n  trailing edge. Denser across, so it fits inside a table row — but it is\n  TALLER by default (50px vs 40px), because two stacked controls in 40px\n  would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See\n  input-stepper.scss for the full note and the escape hatch.",
+              "fieldName": "variant"
             }
           ],
           "superclass": {
@@ -14752,6 +14771,7 @@
                 "text": "boolean"
               },
               "description": "isActive\n- Dynamically sets to true if the input has a value",
+              "deprecated": "Since v2. This existed to float the label out of the field, and\nv2 retired the floating label — the label is now top-aligned and never\nmoves, so NOTHING in this library styles `.al-is-active` any more. The\nproperty and the class are retained (still derived from \"the field has a\nvalue\") purely so consumer CSS keyed on that hook does not break silently;\nthey will be removed in the next major. Note the name is also a misnomer\nhere: everywhere else in the library `isActive` means open/expanded\n(`al-accordion-panel`, `al-alert`), never \"has content\".",
               "attribute": "isActive"
             },
             {
@@ -14814,8 +14834,18 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Hide label?\n- If true, hides the label from displaying",
+              "description": "Hide label?\n- If true, hides the label VISUALLY. The label element stays in the DOM and\n  keeps its `for` association, so screen readers still announce the field.\n\nBefore v2 this also revealed the placeholder, because the floating label\noccupied the placeholder's position and the two could not both show. The\nlabel no longer sits inside the field, so that coupling is gone: a\n`placeholder` now renders whenever it is set, independently of this.",
               "attribute": "hideLabel"
+            },
+            {
+              "kind": "field",
+              "name": "labelPosition",
+              "type": {
+                "text": "'top' | 'inset'"
+              },
+              "default": "'top'",
+              "description": "Label position\n- `top` (default) puts the label above the field.\n- `inset` puts it inside the field's top padding, above the value — the v2\n  replacement for the floating label. It is STATIC: unlike the old floating\n  label it never moves between states, so there is no jump on focus and no\n  background patch punched through the field's border.",
+              "attribute": "labelPosition"
             },
             {
               "kind": "field",
@@ -15025,6 +15055,7 @@
                 "text": "boolean"
               },
               "description": "isActive\n- Dynamically sets to true if the input has a value",
+              "deprecated": "Since v2. This existed to float the label out of the field, and\nv2 retired the floating label — the label is now top-aligned and never\nmoves, so NOTHING in this library styles `.al-is-active` any more. The\nproperty and the class are retained (still derived from \"the field has a\nvalue\") purely so consumer CSS keyed on that hook does not break silently;\nthey will be removed in the next major. Note the name is also a misnomer\nhere: everywhere else in the library `isActive` means open/expanded\n(`al-accordion-panel`, `al-alert`), never \"has content\".",
               "fieldName": "isActive"
             },
             {
@@ -15080,8 +15111,17 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Hide label?\n- If true, hides the label from displaying",
+              "description": "Hide label?\n- If true, hides the label VISUALLY. The label element stays in the DOM and\n  keeps its `for` association, so screen readers still announce the field.\n\nBefore v2 this also revealed the placeholder, because the floating label\noccupied the placeholder's position and the two could not both show. The\nlabel no longer sits inside the field, so that coupling is gone: a\n`placeholder` now renders whenever it is set, independently of this.",
               "fieldName": "hideLabel"
+            },
+            {
+              "name": "labelPosition",
+              "type": {
+                "text": "'top' | 'inset'"
+              },
+              "default": "'top'",
+              "description": "Label position\n- `top` (default) puts the label above the field.\n- `inset` puts it inside the field's top padding, above the value — the v2\n  replacement for the floating label. It is STATIC: unlike the old floating\n  label it never moves between states, so there is no jump on focus and no\n  background patch punched through the field's border.",
+              "fieldName": "labelPosition"
             },
             {
               "name": "label",
@@ -22986,6 +23026,7 @@
                 "text": "boolean"
               },
               "description": "isActive\n- Dynamically sets to true if the textarea has a value",
+              "deprecated": "Since v2 — see `al-input`'s `isActive`. The floating label it\ndrove is retired; the property and `.al-is-active` are retained only so\nconsumer CSS hooks do not break silently, and go in the next major.",
               "attribute": "isActive"
             },
             {
@@ -23048,7 +23089,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Hide label?\n- If true, hides the label from displaying",
+              "description": "Hide label?\n- If true, hides the label VISUALLY. The element stays in the DOM with its\n  `for` association intact, so the field keeps an accessible name.\n\nBefore v2 this also revealed the placeholder; the label no longer occupies\nthe placeholder's position, so a `placeholder` renders whenever it is set.",
               "attribute": "hideLabel"
             },
             {
@@ -23219,6 +23260,7 @@
                 "text": "boolean"
               },
               "description": "isActive\n- Dynamically sets to true if the textarea has a value",
+              "deprecated": "Since v2 — see `al-input`'s `isActive`. The floating label it\ndrove is retired; the property and `.al-is-active` are retained only so\nconsumer CSS hooks do not break silently, and go in the next major.",
               "fieldName": "isActive"
             },
             {
@@ -23274,7 +23316,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Hide label?\n- If true, hides the label from displaying",
+              "description": "Hide label?\n- If true, hides the label VISUALLY. The element stays in the DOM with its\n  `for` association intact, so the field keeps an accessible name.\n\nBefore v2 this also revealed the placeholder; the label no longer occupies\nthe placeholder's position, so a `placeholder` renders whenever it is set.",
               "fieldName": "hideLabel"
             },
             {

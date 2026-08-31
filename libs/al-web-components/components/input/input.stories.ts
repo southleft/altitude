@@ -136,6 +136,19 @@ Optional.args = {
   isOptional: true
 };
 
+/**
+ * The v2 replacement for the floating label: the label sits inside the field's
+ * top padding, above the value. Unlike the floating label it is STATIC — it
+ * renders identically in every state, so there is no jump on focus and no
+ * background patch punched through the field's border.
+ */
+export const InsetLabel = Template.bind({});
+InsetLabel.args = {
+  labelPosition: 'inset',
+  label: 'Company',
+  value: 'Southleft',
+};
+
 export const HiddenLabel = Template.bind({});
 HiddenLabel.args = {
   hideLabel: true

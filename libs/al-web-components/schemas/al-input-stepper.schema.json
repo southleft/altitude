@@ -108,6 +108,14 @@
         "step": {
           "description": "Inremental/Decremental range",
           "type": "number"
+        },
+        "variant": {
+          "description": "Variant\n- `segmented` (default): decrement | value | increment, three segments of\n  one bordered box divided by hairlines.\n- `trailing`: the value takes the full width and both steppers stack at the\n  trailing edge. Denser across, so it fits inside a table row — but it is\n  TALLER by default (50px vs 40px), because two stacked controls in 40px\n  would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See\n  input-stepper.scss for the full note and the escape hatch.",
+          "type": "string",
+          "enum": [
+            "segmented",
+            "trailing"
+          ]
         }
       }
     },
