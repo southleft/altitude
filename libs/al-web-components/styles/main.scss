@@ -8,7 +8,11 @@
 @use './core/base';
 @use './core/utilities';
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+// v2 type: Public Sans carries the UI, IBM Plex Mono carries the metadata layer
+// (table headers, token names, timestamps). Weights follow what the token
+// pipeline can emit (400/600 via font-weight.regular/bold) plus the 500 and 700
+// the v2 canvas uses for mono meta and display headings.
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* Storybook specific styles */
 .docs-story {

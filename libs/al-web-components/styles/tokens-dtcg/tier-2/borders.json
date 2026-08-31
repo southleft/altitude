@@ -113,7 +113,7 @@
       },
       "radius": {
         "xs": {
-          "$value": "{border.radius.2}",
+          "$value": "{border.radius.4}",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -136,7 +136,7 @@
           }
         },
         "sm": {
-          "$value": "{border.radius.2}",
+          "$value": "{border.radius.4}",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -159,7 +159,7 @@
           }
         },
         "@": {
-          "$value": "{border.radius.4}",
+          "$value": "{border.radius.6}",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -182,7 +182,7 @@
           }
         },
         "md": {
-          "$value": "{border.radius.6}",
+          "$value": "{border.radius.8}",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -205,7 +205,7 @@
           }
         },
         "lg": {
-          "$value": "{border.radius.8}",
+          "$value": "{border.radius.12}",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -247,6 +247,26 @@
             },
             "com.adobe.id": {
               "uuid": "3ca1eeae-1720-4dd9-9878-2ab7c015ae75"
+            }
+          }
+        },
+        "pill": {
+          "$value": "{border.radius.pill}",
+          "$type": "dimension",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "borderRadius"
+            },
+            "org.primer.llm": {
+              "usage": "Semantic corner-radius roles (xs…lg, round), aliasing tier-1 border.radius.*. Wired into 28/30 component call sites this session via var(--role, var(--legacy)) (R3) — 2 defended exceptions (chip--squared, progress track) documented in the spec’s Completed tasks. Legal CSS surface: border-radius."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "border-radius"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "2c21eae7-a5be-4d6d-b115-b126a09cca91"
             }
           }
         }

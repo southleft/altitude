@@ -12,10 +12,14 @@
  * styling: no element anywhere sets `font-family` directly against this
  * name. `al-heading`/`al-text-block` reach it purely through the token.
  *
- * IBM Plex Sans (body/heading) is already fetched by
- * `@southleft/al-web-components/css/main.css` (styles/main.scss:11) — no additional
- * webfont import needed here.
+ * IBM Plex Sans (body/heading) USED to ride along on the base bundle's webfont
+ * import, but the base moved to Public Sans + IBM Plex Mono for the v2 look
+ * (styles/main.scss:11). southleft keeps IBM Plex Sans — its
+ * `typography-primitives.json` pins `{font-family.plex}` — so the face it needs
+ * is now fetched here, next to its other brand faces, and altitude-only
+ * consumers pay nothing for it.
  */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
 @font-face {
   font-family: 'Agrandir';
   src:

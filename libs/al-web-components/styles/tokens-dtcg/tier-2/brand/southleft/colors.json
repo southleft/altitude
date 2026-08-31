@@ -228,6 +228,42 @@
             }
           }
         }
+      },
+      "shadow": {
+        "default": {
+          "$value": "{color.shadow.light}",
+          "$type": "color",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "color"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-3/tier-2 theme-level shadow tint alias (theme.color.shadow.default). Structurally unreadable via var() for the same reason as tier-1 color.shadow: formatBoxShadowValue resolves and string-bakes it at build time before any component CSS runs."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "color",
+                "background-color",
+                "background",
+                "border-color",
+                "border",
+                "outline-color",
+                "outline",
+                "box-shadow",
+                "fill",
+                "stroke",
+                "text-decoration-color",
+                "caret-color",
+                "accent-color",
+                "text-stroke",
+                "scrollbar-color"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "7d64a877-4377-44ce-aeb1-74878c66ca1e"
+            }
+          }
+        }
       }
     }
   }
