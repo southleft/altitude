@@ -370,6 +370,54 @@ function mergeVariantEntry(variantOut, suffix, entry) {
  *     -> `conditionalBindings.<propName>.<value>`, same conditionBindingMap shape as one
  *     variant's own bindings.
  */
+/**
+ * Which interaction states does this component's OWN stylesheet actually author?
+ *
+ * Deliberately BROADER than `matchStateSelector`, which answers a narrower
+ * question for `conditionalBindings` — it only reads rules that are direct
+ * children of the base rule and only recognises the pseudo-class forms. Both
+ * limits lose real states:
+ *
+ *   - `al-pagination-item`'s hover is `&:hover:not(:active, .al-is-disabled &)`
+ *     nested deeper than the base rule's direct children;
+ *   - `al-field-note`'s disabled is the CLASS `.al-is-disabled`, not a pseudo,
+ *     which is this library's convention for a state pushed down from a host.
+ *
+ * So this scans the stylesheet TEXT for the state conventions, after stripping
+ * comments and every `:not(...)` span. Coarser than a rule walk on purpose — the
+ * question is only "does this component author this state at all", and it errs
+ * toward keeping a state: the caller uses it to avoid deleting real states, and a state kept
+ * with thin evidence is a far cheaper mistake than a real one silently dropped.
+ *
+ * A pseudo that appears ONLY inside `:not(...)` is an exclusion, not a state —
+ * `&:hover:not(:active, :disabled)` is a hover rule, not an active or disabled
+ * one — so those occurrences are stripped before matching.
+ */
+function authoredStatesFor({ component, origin, project }) {
+  const files = scssFilesFor({ component, origin, project });
+  const found = new Set();
+  for (const file of files) {
+    let src;
+    try {
+      src = readFileSync(file, 'utf8');
+    } catch {
+      continue;
+    }
+    // Strip comments, then every `:not(...)` span: a pseudo inside :not() is an
+    // EXCLUSION, not a state — `&:hover:not(:active, :disabled)` is a hover rule and
+    // says nothing about active or disabled.
+    const text = src
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')
+      .replace(/\/\/.*/g, ' ')   // `.` excludes newlines, so no escape needed here
+      .replace(/:not\([^()]*\)/g, ' ');
+    if (/(:disabled|\[disabled\]|\[aria-disabled|\.al-is-disabled)/.test(text)) found.add('disabled');
+    if (/:focus(-visible)?\b/.test(text)) found.add('focus');
+    if (/:hover\b/.test(text)) found.add('hover');
+    if (/:active\b/.test(text)) found.add('active');
+  }
+  return found;
+}
+
 function extractConditionalBindings({ tag, props, scssFiles }) {
   if (!scssFiles.length) return null;
 
@@ -683,10 +731,10 @@ function preferredAnatomyCase({ component, origin, project }) {
  * `stateOverrides` (root path only — see README § Deviations).
  */
 function buildAnatomy(measuredSpec, tag, ctx) {
-  if (!measuredSpec) return { anatomy: null, anatomySource: 'unavailable', anatomyCase: null, states: [] };
+  if (!measuredSpec) return { anatomy: null, anatomySource: 'unavailable', anatomyCase: null, measuredStates: [] };
 
   const defaultEntries = (measuredSpec.default ?? []).filter((e) => e.tag === tag && e.root);
-  if (!defaultEntries.length) return { anatomy: null, anatomySource: 'unavailable', anatomyCase: null, states: [] };
+  if (!defaultEntries.length) return { anatomy: null, anatomySource: 'unavailable', anatomyCase: null, measuredStates: [] };
 
   // Case selection (spec 2026-08-26-contract-coverage…, found on al-badge):
   // alphabetical-first sampled "Variant=danger,Shape=dot" — the DOT form —
@@ -732,7 +780,10 @@ function buildAnatomy(measuredSpec, tag, ctx) {
     anatomy: { root, ...(cases.length > 1 ? { cases } : {}), ...(Object.keys(stateOverrides).length ? { stateOverrides } : {}) },
     anatomySource: 'measured',
     anatomyCase: sampled.case,
-    states: STATES.filter((s) => (measuredSpec[s] ?? []).some((e) => e.tag === tag)),
+    // Every state the harness RENDERED. buildContract narrows this to the states
+    // that are real — see the `states` note there; the authored-SCSS signal it needs
+    // is not in scope here.
+    measuredStates: STATES.filter((s) => (measuredSpec[s] ?? []).some((e) => e.tag === tag)),
   };
 }
 
@@ -789,9 +840,45 @@ function buildContract({ tag, component, origin, project, manifestEntry, measure
     knownNames: knownComponentNames(project),
     preferredCase: preferredAnatomyCase({ component, origin, project }),
   };
-  const { anatomy, anatomySource, anatomyCase, states } = buildAnatomy(measuredSpec, tag, ctx);
+  const { anatomy, anatomySource, anatomyCase, measuredStates } = buildAnatomy(measuredSpec, tag, ctx);
   const props = buildProps(component, manifestEntry);
   const conditionalBindings = buildConditionalBindings({ tag, props, component, origin, project });
+
+  /**
+   * A state is real if it LOOKS different or the stylesheet AUTHORS it.
+   *
+   * `states` used to be every state the harness RENDERED, which is a different
+   * question: the harness renders all five for every component, so a component
+   * with no `:active` rule still produced an `active` entry and the contract
+   * declared a state that does not exist. Measured 2026-08-31 across the whole
+   * roster — 224 such phantoms. Each one reached a Figma-side agent as a
+   * `[state] … missing-in-canvas` disagreement telling it to build a variant
+   * that would render pixel-identical to Default (trap 11's phantom, which the
+   * repair skill says to prune, not create): al-button declared `active` with
+   * no `&:active` rule anywhere, al-chip declared `hover`/`active`/`disabled`
+   * against a stylesheet whose only state rule is `&:focus-visible`.
+   *
+   * The union of two signals, because NEITHER alone is right:
+   *
+   *   `anatomy.stateOverrides[s]` — the measured full-tree token diff vs
+   *   default, recorded only when non-empty. Necessary, but not sufficient: it
+   *   is taken on the SAMPLED case only and sees only TOKEN-valued deltas, so
+   *   using it alone dropped 25 states that genuinely have rules — al-tab's
+   *   `active`, al-pagination-item's `hover`, al-range's `focus`, al-toggle's
+   *   `disabled` and more. That over-prune was caught by auditing every dropped
+   *   state against its own .scss before landing this, and is exactly why this
+   *   is a union rather than the obvious one-liner.
+   *
+   *   `authoredStatesFor()` — every state CONVENTION the component's own .scss
+   *   writes anywhere (pseudo-classes and the `.al-is-disabled` class alike), see
+   *   its own note. Also not sufficient alone: a stylesheet can author a state
+   *   whose only declaration has no visual effect.
+   *
+   * Still bounded by what was measured, so an unrendered state cannot sneak in.
+   */
+  const stateOverrides = (anatomy && anatomy.stateOverrides) || {};
+  const authored = authoredStatesFor({ component, origin, project });
+  const states = measuredStates.filter((s) => stateOverrides[s] !== undefined || authored.has(s));
 
   return {
     $schema: '../contract.schema.json',

@@ -70,7 +70,7 @@ consumer owns locale formatting, digit grouping, and unit suffixes.
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+_No interaction states recorded._
 
 ## Slots (1)
 

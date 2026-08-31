@@ -73,7 +73,7 @@ Variant of pagination (e.g., 'small' for a compact view)
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+_No interaction states recorded._
 
 ## Slots (3)
 

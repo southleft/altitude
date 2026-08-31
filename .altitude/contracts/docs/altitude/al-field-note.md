@@ -43,7 +43,7 @@ Error state
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`disabled`
 
 ## Slots (1)
 

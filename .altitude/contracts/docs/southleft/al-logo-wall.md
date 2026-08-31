@@ -46,7 +46,7 @@ the logos are the subject rather than social proof in passing.
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`hover`, `focus`
 
 ## Slots (1)
 

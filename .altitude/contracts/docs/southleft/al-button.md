@@ -128,7 +128,7 @@ Style variant
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`hover`, `focus`, `disabled`
 
 ## Slots (3)
 

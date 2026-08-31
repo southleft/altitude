@@ -59,7 +59,7 @@ Pause the belt. Reflected so a page can stop it from outside
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`hover`
 
 ## Slots (1)
 

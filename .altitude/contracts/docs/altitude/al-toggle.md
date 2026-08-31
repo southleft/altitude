@@ -71,7 +71,7 @@ Name attribute
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`focus`, `disabled`
 
 ## Slots (0)
 

@@ -58,7 +58,7 @@ Variant
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`focus`
 
 ## Slots (1)
 

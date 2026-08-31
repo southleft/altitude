@@ -86,7 +86,7 @@ The `key` of the column currently sorted, if any.
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`hover`, `focus`
 
 ## Slots (1)
 

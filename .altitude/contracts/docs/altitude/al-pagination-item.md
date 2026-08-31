@@ -53,7 +53,7 @@ Selected state
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`hover`, `focus`, `disabled`
 
 ## Slots (1)
 

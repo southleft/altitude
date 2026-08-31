@@ -123,7 +123,7 @@ Value associated with the field
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`hover`, `disabled`
 
 ## Slots (1)
 

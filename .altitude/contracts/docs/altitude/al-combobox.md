@@ -130,7 +130,7 @@ an option has been chosen.
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+`disabled`
 
 ## Slots (2)
 

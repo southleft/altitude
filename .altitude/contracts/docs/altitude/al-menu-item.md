@@ -145,7 +145,7 @@ accessible name.
 
 ## States
 
-`hover`, `focus`, `active`, `disabled`
+_No interaction states recorded._
 
 ## Slots (2)
 
