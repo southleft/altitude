@@ -75,14 +75,26 @@ console.log('\n3. Structured fixture — value-drift, possible-renames, missing-
     const lightDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.default-weak' && d.context === 'theme:-:light');
     assert('value-drift: light-mode default-weak NOT flagged (mode isolation, same path)', !lightDrift);
 
-    // brand-scoped alias value-drift
-    const brandDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.primary-strong' && d.context === 'brand:altitude:default');
-    assert('value-drift: altitude brand primary-strong flagged (alias target differs)', !!brandDrift);
+    /**
+     * Rewritten 2026-08-31. These two used to assert brand-scoped drift and
+     * alias-prefix normalization against `brand:altitude:default`. The v2
+     * restyle DELETED tier-2/brand/altitude/colors.json — altitude is the
+     * neutral reference and now overrides nothing — so that context no longer
+     * exists and both assertions had gone VACUOUS: passing because there was
+     * nothing to compare, not because the comparison worked. southleft is not a
+     * substitute (this report covers the default project only, which the
+     * brand-scoping assertion below pins).
+     *
+     * Both mechanisms are still real and still tested, now on Color Scheme
+     * tokens where a context genuinely exists.
+     */
+    const csDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.default-strong' && d.context.startsWith('theme:'));
+    assert('value-drift: light-mode default-strong flagged (alias target differs)', !!csDrift);
 
     // alias normalization: figma's collection-prefixed alias form must not
     // read as drift when the target is the same token
-    const brandClean = report.valueDrift.find((d) => d.path === 'theme.color.background.primary-default' && d.context === 'brand:altitude:default');
-    assert('value-drift: altitude brand primary-default NOT flagged (Figma alias prefix normalized away)', !brandClean);
+    const normalized = report.valueDrift.find((d) => d.path === 'theme.color.background.default' && d.context.startsWith('theme:'));
+    assert('value-drift: prefixed alias NOT flagged (Figma alias prefix normalized away)', !normalized);
 
     // rename identity
     const rename = report.possibleRenames.find((r) => r.from === 'font-family.editorial');

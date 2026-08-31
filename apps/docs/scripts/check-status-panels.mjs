@@ -182,7 +182,21 @@ for (const { project, registry: scoped } of CONTEXTS) {
     }
 
     // And every contrast violation count must match the axe report.
-    const checks = a11yFor(component.slug);
+    //
+    // Pass the FULL component record, not a bare slug. a11yFor accepts both, but
+    // a bare slug carries no `libraryRoot`, so `fromMeasuredLibrary()` reads
+    // false and the lookup silently degrades to the DOCS report while the page
+    // itself — which passes the whole record — reads the STORYBOOK one. The two
+    // surfaces then disagree and the gate blames the page for the mismatch it
+    // introduced. a11y.mjs calls this out at its own `a11yFor` doc comment:
+    // accepting a bare slug exists so a stale call site degrades instead of
+    // throwing, and this was the stale call site.
+    //
+    // Latent until 2026-08-31: it only surfaces when the two reports disagree
+    // about a component. The v2 restyle made altitude/al-header CLEAN in the
+    // Storybook report while the docs report (2026-08-23) still recorded one
+    // contrast violation, and the gate failed an improvement.
+    const checks = a11yFor(component);
     if (checks.measured) {
       const expected = checks.contrastViolations.length ? 'violations' : 'clean';
       if (!html.includes(`data-a11y-contrast="${expected}"`)) {

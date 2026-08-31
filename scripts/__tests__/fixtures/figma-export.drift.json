@@ -1,15 +1,27 @@
 {
   "Primitive": {
     "space": {
-      "2": { "$value": "2px", "$type": "dimension" }
+      "2": {
+        "$value": "2px",
+        "$type": "dimension"
+      }
     },
     "opacity": {
-      "40": { "$value": "0.5", "$type": "number" },
-      "87": { "$value": "0.87", "$type": "number" }
+      "40": {
+        "$value": "0.5",
+        "$type": "number"
+      },
+      "87": {
+        "$value": "0.87",
+        "$type": "number"
+      }
     },
     "typography": {
       "font-family": {
-        "legacy-editorial": { "$value": "Georgia, Cambria, serif", "$type": "fontFamily" }
+        "legacy-editorial": {
+          "$value": "Georgia, Cambria, serif",
+          "$type": "fontFamily"
+        }
       }
     }
   },
@@ -18,7 +30,18 @@
       "theme": {
         "color": {
           "background": {
-            "default-weak": { "$value": "{color.neutral.light.800}", "$type": "color" }
+            "default-weak": {
+              "$value": "{color.brand.stone.50}",
+              "$type": "color"
+            },
+            "default": {
+              "$value": "{Primitive.color.brand.stone.0}",
+              "$type": "color"
+            },
+            "default-strong": {
+              "$value": "{color.brand.stone.150}",
+              "$type": "color"
+            }
           }
         }
       }
@@ -27,7 +50,10 @@
       "theme": {
         "color": {
           "background": {
-            "default-weak": { "$value": "{color.neutral.dark.900}", "$type": "color" }
+            "default-weak": {
+              "$value": "{color.neutral.dark.900}",
+              "$type": "color"
+            }
           }
         }
       }
@@ -37,10 +63,7 @@
     "Altitude": {
       "theme": {
         "color": {
-          "background": {
-            "primary-default": { "$value": "{Primitive.color.brand.blue.500}", "$type": "color" },
-            "primary-strong": { "$value": "{color.brand.red.400}", "$type": "color" }
-          }
+          "background": {}
         }
       }
     },
@@ -48,7 +71,14 @@
       "theme": {
         "color": {
           "background": {
-            "primary-default": { "$value": "{color.brand.red.500}", "$type": "color" }
+            "primary-default": {
+              "$value": "{Primitive.color.brand.red.500}",
+              "$type": "color"
+            },
+            "primary-strong": {
+              "$value": "{color.brand.red.300}",
+              "$type": "color"
+            }
           }
         }
       }
