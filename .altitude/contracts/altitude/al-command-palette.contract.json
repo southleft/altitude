@@ -11,6 +11,19 @@
   },
   "props": [
     {
+      "name": "actions",
+      "description": "Settable as a JSON attribute as well as a property, so the palette can be\ndriven from static HTML and SSR — not only from JavaScript.",
+      "type": "string",
+      "rawType": "Array<ALCommandAction>",
+      "default": "[]",
+      "bindings": {
+        "code": {
+          "attribute": "actions"
+        },
+        "figma": null
+      }
+    },
+    {
       "name": "ariaLabel",
       "description": "Accessible label for the dialog surface.",
       "type": "string",

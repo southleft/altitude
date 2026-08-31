@@ -23,6 +23,30 @@
       }
     },
     {
+      "name": "columns",
+      "description": "Column definitions for data-driven rendering. Must be paired with `data`.\n\nSettable as a JSON attribute as well as a property. It used to be\n`attribute: false`, which meant the table could only ever be driven from\nJavaScript: any consumer writing static HTML — SSR, a plain page, or this\nlibrary's own generated documentation preview, which serialises a story to\nmarkup — got an empty table with no way to fill it.",
+      "type": "string",
+      "rawType": "Array<ALTableColumn>",
+      "bindings": {
+        "code": {
+          "attribute": "columns"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "data",
+      "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
+      "type": "string",
+      "rawType": "Array<ALTableRow>",
+      "bindings": {
+        "code": {
+          "attribute": "data"
+        },
+        "figma": null
+      }
+    },
+    {
       "name": "hideCaption",
       "description": "Visually hides the caption while keeping it in the accessibility tree.",
       "type": "boolean",

@@ -21,10 +21,11 @@ system section of AGENTS.md) — the palette does not register glyphs on your be
 - Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
 - File: https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/
 
-## Props (7)
+## Props (8)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
+| `actions` | string | `Array<ALCommandAction>` | `[]` | — |
 | `ariaLabel` | string | — | `'Command palette'` | — |
 | `emptyText` | string | — | `'No matching commands'` | — |
 | `enableShortcut` | boolean | — | — | — |
@@ -32,6 +33,11 @@ system section of AGENTS.md) — the palette does not register glyphs on your be
 | `placeholder` | string | — | `'Type a command or search…'` | — |
 | `searchLabel` | string | — | `'Search commands'` | — |
 | `transitionDelay` | number | — | `200` | — |
+
+#### `actions`
+
+Settable as a JSON attribute as well as a property, so the palette can be
+driven from static HTML and SSR — not only from JavaScript.
 
 #### `ariaLabel`
 

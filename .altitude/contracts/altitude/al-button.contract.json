@@ -62,6 +62,7 @@
     },
     {
       "name": "isAriaDisabled",
+      "description": "Aria-disabled attribute\n- **true** marks the button disabled to assistive tech while leaving it\n  focusable and clickable — use when the button must stay reachable to\n  explain why it is unavailable\n- prefer `isDisabled` (native `disabled`) unless focusability is required",
       "type": "boolean",
       "rawType": "boolean",
       "bindings": {
@@ -91,6 +92,18 @@
       "bindings": {
         "code": {
           "attribute": "isExpanded"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "isPill",
+      "description": "Pill shape\n- **true** renders the button with a fully rounded (pill) radius\n- **false** renders the button with the default action radius",
+      "type": "boolean",
+      "rawType": "boolean",
+      "bindings": {
+        "code": {
+          "attribute": "isPill"
         },
         "figma": null
       }
@@ -127,6 +140,22 @@
       "bindings": {
         "code": {
           "attribute": "name"
+        },
+        "figma": null
+      }
+    },
+    {
+      "name": "size",
+      "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text",
+      "type": "enum",
+      "rawType": "'sm' | 'lg'",
+      "values": [
+        "lg",
+        "sm"
+      ],
+      "bindings": {
+        "code": {
+          "attribute": "size"
         },
         "figma": null
       }
@@ -1737,22 +1766,26 @@
         "gap": {
           "code": "--al-theme-space-xs",
           "figma": "theme/space/xs"
+        },
+        "min-height": {
+          "code": "--al-theme-size-control",
+          "figma": "theme/size/control"
         }
       },
       "secondary": {
         "background-color": {
-          "code": "--al-theme-color-background-secondary-default",
-          "figma": "theme/color/background/secondary-default"
+          "code": "--al-theme-color-background-primary-weak",
+          "figma": "theme/color/background/primary-weak"
         },
         "color": {
-          "code": "--al-theme-color-content-secondary-weak",
-          "figma": "theme/color/content/secondary-weak"
+          "code": "--al-theme-color-content-primary-default",
+          "figma": "theme/color/content/primary-default"
         },
         "state": {
           "hover": {
             "background-color": {
-              "code": "--al-theme-color-background-secondary-strong",
-              "figma": "theme/color/background/secondary-strong"
+              "code": "--al-theme-color-background-primary-weak-strong",
+              "figma": "theme/color/background/primary-weak-strong"
             }
           }
         }
@@ -1803,6 +1836,28 @@
         "background-color": {
           "code": "--al-theme-color-background-primary-strong",
           "figma": "theme/color/background/primary-strong"
+        }
+      }
+    },
+    "size": {
+      "lg": {
+        "font-size": {
+          "code": "--al-font-size-15",
+          "figma": "typography/font-size/15"
+        },
+        "min-height": {
+          "code": "--al-theme-size-control-lg",
+          "figma": "theme/size/control-lg"
+        }
+      },
+      "sm": {
+        "font-size": {
+          "code": "--al-font-size-13",
+          "figma": "typography/font-size/13"
+        },
+        "min-height": {
+          "code": "--al-theme-size-control-sm",
+          "figma": "theme/size/control-sm"
         }
       }
     }

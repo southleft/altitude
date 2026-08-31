@@ -106,11 +106,33 @@ function parseEventMap(rawSrc) {
 function main() {
   const pkg = JSON.parse(fs.readFileSync(REACT_PKG, 'utf8'));
 
-  // 1. React 19 pinned
-  const reactSpec = pkg.dependencies?.react;
-  if (!reactSpec || !/^\^?19/.test(reactSpec)) fail(`@southleft/al-react react dep is '${reactSpec}', expected ^19.*`);
-  const reactDomSpec = pkg.dependencies?.['react-dom'];
-  if (!reactDomSpec || !/^\^?19/.test(reactDomSpec)) fail(`@southleft/al-react react-dom dep is '${reactDomSpec}', expected ^19.*`);
+  // 1. React 19 declared, and declared in the RIGHT PLACE.
+  //
+  // This used to read `pkg.dependencies`, which asserted the bug rather than the
+  // contract. react/react-dom were plain runtime dependencies, so a consumer's
+  // installer was free to resolve a SECOND React beneath @southleft/al-react —
+  // two React instances in one tree, which surfaces as `Invalid hook call` and a
+  // dead context boundary, and no installer warns because the constraint is
+  // satisfied locally. A component library that renders into the HOST's React
+  // must declare it as a peer. Both names now have to be peers at ^19, and
+  // appearing in `dependencies` is itself a failure so the fix cannot silently
+  // regress. They stay in devDependencies so this workspace still builds alone.
+  for (const name of ['react', 'react-dom']) {
+    const peer = pkg.peerDependencies?.[name];
+    if (!peer || !/^\^?19/.test(peer)) {
+      fail(`@southleft/al-react ${name} peer is '${peer}', expected ^19.*`);
+    }
+    if (pkg.dependencies?.[name]) {
+      fail(
+        `@southleft/al-react declares ${name} in "dependencies" ('${pkg.dependencies[name]}'). ` +
+          'It must be a peerDependency — as a plain dependency a consumer can end up with a ' +
+          'second copy of React, which breaks hooks and context with no install-time warning.',
+      );
+    }
+    if (!pkg.devDependencies?.[name]) {
+      fail(`@southleft/al-react ${name} is a peer but missing from devDependencies — the workspace cannot build or test alone.`);
+    }
+  }
   if (!pkg.dependencies?.['@lit/react']) fail('@southleft/al-react missing @lit/react');
 
   // 2. Every pilot has a wrapper

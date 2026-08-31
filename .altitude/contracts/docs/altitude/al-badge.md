@@ -103,38 +103,39 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
-| color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
+| background | `--al-theme-color-background-danger-weak` | `theme/color/background/danger-weak` |
+| color | `--al-theme-color-content-danger-default` | `theme/color/content/danger-default` |
 
 #### `default`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background | `--al-theme-color-background-default-stronger` | `theme/color/background/default-stronger` |
+| border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
+| padding | `--al-theme-space-xs` | `theme/space/xs` |
 
 #### `info`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-info-default` | `theme/color/background/info-default` |
-| color | `--al-theme-color-content-info-weak` | `theme/color/content/info-weak` |
+| background | `--al-theme-color-background-info-weak` | `theme/color/background/info-weak` |
+| color | `--al-theme-color-content-info-default` | `theme/color/content/info-default` |
 
 #### `success`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-success-default` | `theme/color/background/success-default` |
-| color | `--al-theme-color-content-success-weak` | `theme/color/content/success-weak` |
+| background | `--al-theme-color-background-success-weak` | `theme/color/background/success-weak` |
+| color | `--al-theme-color-content-success-default` | `theme/color/content/success-default` |
 
 #### `warning`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-warning-default` | `theme/color/background/warning-default` |
-| color | `--al-theme-color-content-warning-weak` | `theme/color/content/warning-weak` |
+| background | `--al-theme-color-background-warning-weak` | `theme/color/background/warning-weak` |
+| color | `--al-theme-color-content-warning-default` | `theme/color/content/warning-default` |
 
 ### Per-`position`
 

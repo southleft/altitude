@@ -12,7 +12,7 @@ Component: al-button
 - Node id: `22:3434` (pinned)
 - [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3434)
 
-## Props (14)
+## Props (16)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
@@ -23,9 +23,11 @@ Component: al-button
 | `isAriaDisabled` | boolean | — | — | — |
 | `isDisabled` | boolean | — | — | — |
 | `isExpanded` | boolean | — | — | — |
+| `isPill` | boolean | — | — | — |
 | `isPressed` | string | `boolean \| 'mixed'` | — | — |
 | `label` | string | — | — | — |
 | `name` | string | — | — | — |
+| `size` | enum | `lg`, `sm` | — | — |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
 | `type` | enum | `button`, `reset`, `submit` | — | — |
 | `value` | string | — | — | — |
@@ -49,6 +51,14 @@ Visually hide button text (but text is still accessible to assistive technology)
 
 URL if this is an <a> element - this swaps <button> for <a>
 
+#### `isAriaDisabled`
+
+Aria-disabled attribute
+- **true** marks the button disabled to assistive tech while leaving it
+  focusable and clickable — use when the button must stay reachable to
+  explain why it is unavailable
+- prefer `isDisabled` (native `disabled`) unless focusability is required
+
 #### `isDisabled`
 
 Disabled attribute
@@ -56,6 +66,12 @@ Disabled attribute
 #### `isExpanded`
 
 Indicates this button is a toggle button and whether it is pressed or not.
+
+#### `isPill`
+
+Pill shape
+- **true** renders the button with a fully rounded (pill) radius
+- **false** renders the button with the default action radius
 
 #### `isPressed`
 
@@ -68,6 +84,13 @@ Indicates the aria label to apply to the button.
 #### `name`
 
 Indicates the name when submitted with form data.
+
+#### `size`
+
+Size variant
+- **sm** renders a 32px control with 13px text
+- **lg** renders a 48px control with 15px text
+- omitted renders the default 40px control with 14px text
 
 #### `target`
 
@@ -214,19 +237,20 @@ _No events declared._
 | border-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
 | color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
+| min-height | `--al-theme-size-control` | `theme/size/control` |
 
 #### `secondary`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-secondary-default` | `theme/color/background/secondary-default` |
-| color | `--al-theme-color-content-secondary-weak` | `theme/color/content/secondary-weak` |
+| background-color | `--al-theme-color-background-primary-weak` | `theme/color/background/primary-weak` |
+| color | `--al-theme-color-content-primary-default` | `theme/color/content/primary-default` |
 
 **On `hover`** (compound — wins over the generic state rule below):
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-secondary-strong` | `theme/color/background/secondary-strong` |
+| background-color | `--al-theme-color-background-primary-weak-strong` | `theme/color/background/primary-weak-strong` |
 
 #### `tertiary`
 
@@ -258,6 +282,22 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-primary-strong` | `theme/color/background/primary-strong` |
+
+### Per-`size`
+
+#### `lg`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| font-size | `--al-font-size-15` | `typography/font-size/15` |
+| min-height | `--al-theme-size-control-lg` | `theme/size/control-lg` |
+
+#### `sm`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
 
 ## Code
 

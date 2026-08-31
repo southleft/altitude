@@ -20,11 +20,13 @@ inside a `<al-theme density="...">` scope.
 - Node id: `3558:62965` (pinned)
 - [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-62965)
 
-## Props (6)
+## Props (8)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `caption` | string | — | — | — |
+| `columns` | string | `Array<ALTableColumn>` | — | — |
+| `data` | string | `Array<ALTableRow>` | — | — |
 | `hideCaption` | boolean | — | — | — |
 | `isSelectable` | boolean | — | — | — |
 | `rowKey` | string | — | `'id'` | — |
@@ -35,6 +37,22 @@ inside a `<al-theme density="...">` scope.
 
 Visible table caption. Also used as the accessible name of the scroll
 container so keyboard users know what they're scrolling.
+
+#### `columns`
+
+Column definitions for data-driven rendering. Must be paired with `data`.
+
+Settable as a JSON attribute as well as a property. It used to be
+`attribute: false`, which meant the table could only ever be driven from
+JavaScript: any consumer writing static HTML — SSR, a plain page, or this
+library's own generated documentation preview, which serialises a story to
+markup — got an empty table with no way to fill it.
+
+#### `data`
+
+Row data for data-driven rendering. Must be paired with `columns`.
+When either `columns` or `data` is not provided, the default slot is
+rendered instead so a consumer may supply their own `<thead>`/`<tbody>`.
 
 #### `hideCaption`
 

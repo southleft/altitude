@@ -66,8 +66,12 @@
       "description": "Trailing-action row, leading edge (bottom-left). Use for a \"View\" / \"Open\" primary action."
     },
     {
+      "name": "footer",
+      "description": "Card footer row, below a hairline rule and on a tinted ground. Compose it with `<al-layout>` rather than relying on slot order."
+    },
+    {
       "name": "header",
-      "description": "Card heading row."
+      "description": "Card heading row. Rendered above a hairline rule. Compose the row itself with `<al-layout>` when it carries a title and a control."
     },
     {
       "name": "image",
@@ -78,6 +82,12 @@
     "renders": [
       {
         "tag": "al-avatar",
+        "evidence": [
+          "template"
+        ]
+      },
+      {
+        "tag": "al-layout",
         "evidence": [
           "template"
         ]
