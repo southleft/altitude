@@ -22,6 +22,7 @@ import ParityPanel from '../ParityPanel.astro';
 import ChecksPanel from '../ChecksPanel.astro';
 import GuidancePanel from '../GuidancePanel.astro';
 import { exampleFor } from '../../lib/examples.mjs';
+import { figmaLinkFor } from '../../lib/parity.mjs';
 
 interface Props {
   /** The design-system context this page belongs to (lib/context.mjs). */
@@ -40,6 +41,13 @@ const { project, href } = context;
  * and says so rather than showing an empty stage without explanation.
  */
 const example = await exampleFor(component);
+
+/**
+ * Deep link to this component's Figma set, shown beside the title. Null when the
+ * component has no mapped set — the chip is simply absent rather than pointing
+ * at a file root the reader would have to search.
+ */
+const figmaLink = figmaLinkFor(component.tag, project);
 
 /** Two-column rows (name + description) reused for slots / parts / methods. */
 const pairTable = (rows, nameKey = 'name') =>
@@ -72,6 +80,19 @@ const pairTable = (rows, nameKey = 'name') =>
       {
         component.status && (
           <span class={`status status--${component.status}`}>{component.status}</span>
+        )
+      }
+      {
+        figmaLink && (
+          <a
+            class="chip-tag chip-tag--figma"
+            href={figmaLink.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`Open the “${figmaLink.setName}” component set in ${figmaLink.projectName}’s Figma file`}
+          >
+            OPEN IN FIGMA ↗
+          </a>
         )
       }
     </div>

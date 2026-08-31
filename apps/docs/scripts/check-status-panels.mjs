@@ -61,16 +61,29 @@ const notes = [];
 const registry = JSON.parse(
   fs.readFileSync(path.join(APP_ROOT, '..', '..', '.altitude', 'ds-projects.json'), 'utf8'),
 );
+/**
+ * A component page now ships a deliberate "Open in Figma" deep link beside its
+ * title (owner decision 2026-08-31), so a REGISTERED project's own file key and
+ * `figma.com/design/` are no longer leaks — they are the feature. Everything
+ * else this scan ever caught is still a leak, and the two that matter most are
+ * the ones that would be easiest to lose track of:
+ *
+ *   * DECOY file keys stay forbidden. Publishing one would send a reader (or an
+ *     agent reading the site) into the wrong file — the exact failure
+ *     `.altitude/ds-projects.json` records decoys to prevent.
+ *   * The repo's own ops/scripts/skill PATHS stay forbidden. They are internal
+ *     layout, useless to a reader and a standing invitation to fetch them.
+ *
+ * `aiPrompt` also stays out: it is an agent instruction, not documentation.
+ */
 const leakPatterns = [
   ...Object.values(registry.projects).flatMap((project) => [
-    { what: `Figma file key for ${project.id}`, needle: project.figma.fileKey },
     ...(project.figma.decoys ?? []).map((d) => ({ what: `decoy file key (${d.fileName})`, needle: d.fileKey })),
     { what: `ops directory for ${project.id}`, needle: project.paths.opsDir },
     { what: `figma scripts dir for ${project.id}`, needle: project.prompts.atomsScriptsDir },
     { what: `parity scripts dir for ${project.id}`, needle: project.prompts.parityScriptsDir },
     { what: `skill path for ${project.id}`, needle: project.prompts.skillPath },
   ]),
-  { what: 'a Figma deep link', needle: 'figma.com/design/' },
   { what: 'the AI reconciliation prompt field', needle: 'aiPrompt' },
 ];
 

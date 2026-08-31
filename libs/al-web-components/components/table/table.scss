@@ -124,8 +124,19 @@
    * Selection checkbox column
    */
   .al-c-table__select-cell {
+    /**
+     * `size(5)` is exactly `.al-c-checkbox__checkbox`'s own width — the 40px HIT
+     * AREA around the 18px visible mark (`__custom-check`, `size(2.25)`), so the
+     * cell is already the size of the control it holds.
+     *
+     * It also carried `padding-inline: var(--al-theme-space-md)`. With
+     * border-box that is 40px of padding inside a 40px box: content width ZERO,
+     * and the checkbox could only overflow its own cell. The hit area is what
+     * provides the visual inset around the mark, so the padding was both
+     * redundant and impossible — removed rather than widening the column, which
+     * would have doubled it to 80px for no gain.
+     */
     width: size(5);
-    padding-inline: var(--al-theme-space-md);
   }
 
   /**

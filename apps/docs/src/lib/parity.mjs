@@ -98,7 +98,7 @@ const PARITY = await (async () => {
     projects.push(report);
     for (const entry of report.components) {
       if (!byTag.has(entry.tag)) byTag.set(entry.tag, []);
-      byTag.get(entry.tag).push({ ...entry, project: report.project, projectName: report.projectName });
+      byTag.get(entry.tag).push({ ...entry, project: report.project, projectName: report.projectName, figmaFileUrl: report.figmaFileUrl ?? null });
     }
   }
 
@@ -198,6 +198,28 @@ export const PARITY_TOTALS = (() => {
 export function parityForProject(tag, project) {
   const rows = parityFor(tag);
   return project.isDefault ? rows : rows.filter((row) => row.project === project.id);
+}
+
+/**
+ * Deep link to a component's Figma set, or null when there is nothing to point at.
+ *
+ * Built from the two fields `publicParityReport` publishes for exactly this
+ * purpose (owner decision 2026-08-31, reversing the older "name only" rule):
+ * the project's file URL and the component's node id. Returns null rather than
+ * a file-root link when the component has no mapped set — a link that lands the
+ * reader nowhere is worse than no link.
+ *
+ * Node ids are `1:23` in the API and `1-23` in a URL.
+ */
+export function figmaLinkFor(tag, project) {
+  const row = parityForProject(tag, project).find((r) => r.figmaFileUrl && r.figmaNodeId);
+  if (!row) return null;
+  const base = String(row.figmaFileUrl).replace(/\/+$/, '');
+  return {
+    href: `${base}?node-id=${String(row.figmaNodeId).replace(':', '-')}`,
+    setName: row.figmaSetName,
+    projectName: row.projectName,
+  };
 }
 
 /** The overview roll-up for one project's site, filtered the same way. */

@@ -1108,6 +1108,20 @@ html[data-booting] .shell {
   color: var(--fg-weak);
 }
 
+/* The "Open in Figma" chip sits in the same title row as the tag chips, so it
+   inherits their shape and only differs by being a link. Underline on hover
+   rather than always, so a row of chips still reads as one row. */
+.chip-tag--figma {
+  color: var(--blue);
+  border-color: var(--line);
+  text-decoration: none;
+}
+
+.chip-tag--figma:hover,
+.chip-tag--figma:focus-visible {
+  text-decoration: underline;
+}
+
 /* -------------------------------------------------------------- playground */
 
 .pg {

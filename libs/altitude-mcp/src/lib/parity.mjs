@@ -900,8 +900,19 @@ export function publicParityReport(project) {
     project: full.project,
     projectName: full.projectName,
     brand: full.brand,
-    /** Name only — never `figmaFileId`, and never a node-scoped deep link. */
     figmaFileName: full.figmaFileName,
+    /**
+     * The file URL and, per component below, the node id — so the docs can offer
+     * "Open in Figma" on each component page (owner decision 2026-08-31).
+     *
+     * This REVERSES the previous rule here ("Name only — never `figmaFileId`,
+     * and never a node-scoped deep link"). What has NOT changed: the decoy file
+     * keys, the ops/scripts/skill paths and the `aiPrompt` reconciliation string
+     * are still withheld, and apps/docs/scripts/check-status-panels.mjs still
+     * fails the build if any of those reach the published HTML. The relaxation
+     * is exactly one link target, not the whole projection.
+     */
+    figmaFileUrl: full.figmaFileUrl ?? null,
     manifestPresent: full.manifestPresent,
     observation: {
       figmaLastRefreshed: full.observation.figmaLastRefreshed,
@@ -920,8 +931,10 @@ export function publicParityReport(project) {
       origin: c.origin,
       driftBasis: c.driftBasis,
       figmaObserved: c.figmaObserved,
-      /** The Figma SET NAME is a design-system fact; the node id is not. */
       figmaSetName: c.figma?.name ?? null,
+      /** Node id — published so the docs can deep-link to THIS component's set
+       * rather than dropping the reader at the file root. See figmaFileUrl. */
+      figmaNodeId: c.figma?.nodeId ?? null,
       lastSyncDate: c.lastSync?.date ?? null,
       contractShape: c.contractShape,
       contractDiff: c.contractDiff
