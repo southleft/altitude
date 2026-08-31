@@ -2,7 +2,7 @@
   "$comment": "Figma <-> code parity manifest. Seeded by scripts/figma-parity/seed-manifest.mjs; lastSync stamped by scripts/figma-parity/mark-synced.mjs; figmaCurrentDigest updated by scripts/figma-parity/refresh-figma-digests.mjs. Read by libs/altitude-mcp/src/lib/parity.mjs.",
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-08-31T21:07:34.040Z",
+  "figmaLastRefreshed": "2026-08-31T22:18:06.234Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -1188,7 +1188,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "697963f5fb14b04b2c75dd5ae77e4c8a3a8b7df7",
+      "figmaCurrentDigest": "8e934e82e9457db470e71bb92e52de46ce1eb2d4",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1220,21 +1220,40 @@
               "Hidden",
               "Shown"
             ]
+          },
+          "Label Position": {
+            "type": "VARIANT",
+            "options": [
+              "Top",
+              "Inset"
+            ]
           }
         },
         "variants": [
-          "State=Active, Label=Hidden",
-          "State=Active, Label=Shown",
-          "State=Default, Label=Hidden",
-          "State=Default, Label=Shown",
-          "State=Disabled, Label=Hidden",
-          "State=Disabled, Label=Shown",
-          "State=Error, Label=Hidden",
-          "State=Error, Label=Shown",
-          "State=Focus, Label=Hidden",
-          "State=Focus, Label=Shown",
-          "State=Hover, Label=Hidden",
-          "State=Hover, Label=Shown"
+          "State=Active, Label=Hidden, Label Position=Inset",
+          "State=Active, Label=Hidden, Label Position=Top",
+          "State=Active, Label=Shown, Label Position=Inset",
+          "State=Active, Label=Shown, Label Position=Top",
+          "State=Default, Label=Hidden, Label Position=Inset",
+          "State=Default, Label=Hidden, Label Position=Top",
+          "State=Default, Label=Shown, Label Position=Inset",
+          "State=Default, Label=Shown, Label Position=Top",
+          "State=Disabled, Label=Hidden, Label Position=Inset",
+          "State=Disabled, Label=Hidden, Label Position=Top",
+          "State=Disabled, Label=Shown, Label Position=Inset",
+          "State=Disabled, Label=Shown, Label Position=Top",
+          "State=Error, Label=Hidden, Label Position=Inset",
+          "State=Error, Label=Hidden, Label Position=Top",
+          "State=Error, Label=Shown, Label Position=Inset",
+          "State=Error, Label=Shown, Label Position=Top",
+          "State=Focus, Label=Hidden, Label Position=Inset",
+          "State=Focus, Label=Hidden, Label Position=Top",
+          "State=Focus, Label=Shown, Label Position=Inset",
+          "State=Focus, Label=Shown, Label Position=Top",
+          "State=Hover, Label=Hidden, Label Position=Inset",
+          "State=Hover, Label=Hidden, Label Position=Top",
+          "State=Hover, Label=Shown, Label Position=Inset",
+          "State=Hover, Label=Shown, Label Position=Top"
         ]
       }
     },
@@ -2277,7 +2296,7 @@
     }
   },
   "figmaOnly": [],
-  "updated": "2026-08-31T21:07:34.041Z",
+  "updated": "2026-08-31T22:18:06.236Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }
