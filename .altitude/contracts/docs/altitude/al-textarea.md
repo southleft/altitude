@@ -16,27 +16,27 @@ Component: al-textarea
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
-| `cols` | number | — | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
-| `hideLabel` | boolean | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `cols` | number | — | — | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActive` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
-| `isFocused` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isFocused` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isOptional` | boolean | — | — | — |
 | `isReadonly` | boolean | — | — | — |
 | `isRequired` | boolean | — | — | — |
 | `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
-| `maxLength` | number | — | — | — |
-| `maxLengthValue` | number | — | — | — |
-| `minLength` | number | — | — | — |
-| `name` | string | — | — | — |
-| `placeholder` | string | — | — | — |
-| `rows` | number | — | `1` | — |
-| `value` | string | — | — | — |
+| `maxLength` | number | — | — | _not expressed in Figma (by design)_ |
+| `maxLengthValue` | number | — | — | _not expressed in Figma (by design)_ |
+| `minLength` | number | — | — | _not expressed in Figma (by design)_ |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `placeholder` | string | — | — | _not expressed in Figma (by design)_ |
+| `rows` | number | — | `1` | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `ariaDescribedBy`
 
@@ -147,9 +147,29 @@ Rows attribute
 Value attribute
 - Specifies the value of an input element
 
-**Figma-expression opt-out (T27):** `isActive` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `cols`, `errorNote`, `fieldId`, `fieldNote`, `isActive`, `maxLength`, `maxLengthValue`, `minLength`, `name`, `placeholder`, `rows`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
+
+### `hideLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isFocused` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ### `label` (Figma property "Label")
 
