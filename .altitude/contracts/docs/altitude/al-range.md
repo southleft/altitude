@@ -16,27 +16,27 @@ Component: al-range
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
 | `behavior` | string | `'range'` | — | **Behavior** (VARIANT): `Default`, `Range` |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
-| `handleLabelUnit` | string | — | — | — |
-| `hasOutput` | boolean | — | — | — |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `handleLabelUnit` | string | — | — | _not expressed in Figma (by design)_ |
+| `hasOutput` | boolean | — | — | **Output** (VARIANT): `No`, `Yes` |
 | `hasTooltip` | boolean | — | — | — |
 | `hideLabel` | boolean | — | — | — |
 | `isDisabled` | boolean | — | — | — |
 | `isError` | boolean | — | — | — |
-| `label` | string | — | — | — |
-| `lowerRangeValue` | number | — | — | — |
-| `max` | number | — | `100` | — |
-| `maxSelected` | number | — | — | — |
-| `min` | number | — | `0` | — |
+| `label` | string | — | — | _not expressed in Figma (by design)_ |
+| `lowerRangeValue` | number | — | — | _not expressed in Figma (by design)_ |
+| `max` | number | — | `100` | _not expressed in Figma (by design)_ |
+| `maxSelected` | number | — | — | _not expressed in Figma (by design)_ |
+| `min` | number | — | `0` | _not expressed in Figma (by design)_ |
 | `minSelected` | number | — | — | — |
-| `name` | string | — | — | — |
-| `step` | number | — | `1` | — |
-| `upperRangeValue` | number | — | — | — |
-| `value` | number | — | — | — |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `step` | number | — | `1` | _not expressed in Figma (by design)_ |
+| `upperRangeValue` | number | — | — | _not expressed in Figma (by design)_ |
+| `value` | number | — | — | _not expressed in Figma (by design)_ |
 
 #### `ariaDescribedBy`
 
@@ -126,12 +126,19 @@ Input value for upper range of range
 
 Input value
 
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `handleLabelUnit`, `label`, `lowerRangeValue`, `max`, `maxSelected`, `min`, `name`, `step`, `upperRangeValue`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
 ### `behavior` (Figma property "Behavior")
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Range`
+
+### `hasOutput` (Figma property "Output")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
 
 ## States
 

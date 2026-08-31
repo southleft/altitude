@@ -28,23 +28,23 @@ API call).
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `align` | enum | `bottom`, `top` | `'bottom'` | — |
-| `ariaDescribedBy` | string | — | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
-| `filterMode` | enum | `auto`, `manual` | `'auto'` | — |
-| `hideLabel` | boolean | — | — | — |
+| `align` | enum | `bottom`, `top` | `'bottom'` | _not expressed in Figma (by design)_ |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `filterMode` | enum | `auto`, `manual` | `'auto'` | _not expressed in Figma (by design)_ |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActiveDropdown` | boolean | — | — | — |
 | `isDisabled` | boolean | — | — | — |
 | `isError` | boolean | — | — | — |
 | `isOptional` | boolean | — | — | — |
 | `isRequired` | boolean | — | — | — |
-| `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
-| `noResultsText` | string | — | `'No results found'` | — |
-| `placeholder` | string | — | — | — |
-| `selectedValue` | string | — | — | — |
-| `value` | string | — | `''` | — |
+| `label` | string | — | `'Label'` | _not expressed in Figma (by design)_ |
+| `noResultsText` | string | — | `'No results found'` | _not expressed in Figma (by design)_ |
+| `placeholder` | string | — | — | _not expressed in Figma (by design)_ |
+| `selectedValue` | string | — | — | _not expressed in Figma (by design)_ |
+| `value` | string | — | `''` | _not expressed in Figma (by design)_ |
 
 #### `align`
 
@@ -121,9 +121,11 @@ the user is typing a query that doesn't match a committed selection.
 The current text in the input. Reflects the selected option's label once
 an option has been chosen.
 
+**Figma-expression opt-out (T27):** `align`, `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `filterMode`, `label`, `noResultsText`, `placeholder`, `selectedValue`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-### `label` (Figma property "Label")
+### `hideLabel` (Figma property "Label")
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
