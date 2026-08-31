@@ -85,14 +85,17 @@ Variant
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| border-bottom-left-radius | `--al-base-space` | `base/space` |
-| border-bottom-right-radius | `--al-base-space` | `base/space` |
-| border-radius | `--al-base-space` | `base/space` |
-| border-top-left-radius | `--al-base-space` | `base/space` |
-| border-top-right-radius | `--al-base-space` | `base/space` |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
+| background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
+| border | `--al-theme-border-width` | `theme/border/width/@` |
+| border-bottom-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-bottom-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-top-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
+| color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
@@ -136,8 +139,9 @@ Variant
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
+| border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 #### `info`
@@ -176,9 +180,9 @@ Variant
 - Tag: `al-chip`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (11)
 
-`--al-base-space`, `--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-content-default-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

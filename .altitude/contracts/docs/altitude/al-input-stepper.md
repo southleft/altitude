@@ -12,7 +12,7 @@ Component: al-input-stepper
 - Node id: `3558:61366` (pinned)
 - [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-61366)
 
-## Props (17)
+## Props (18)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
@@ -33,6 +33,7 @@ Component: al-input-stepper
 | `placeholder` | string | — | — | — |
 | `step` | number | — | `1` | — |
 | `value` | number | — | — | — |
+| `variant` | enum | `segmented`, `trailing` | `'segmented'` | **Variant** (VARIANT): `Segmented`, `Trailing` |
 
 #### `ariaDescribedBy`
 
@@ -103,12 +104,28 @@ Inremental/Decremental range
 
 Value
 
+#### `variant`
+
+Variant
+- `segmented` (default): decrement | value | increment, three segments of
+  one bordered box divided by hairlines.
+- `trailing`: the value takes the full width and both steppers stack at the
+  trailing edge. Denser across, so it fits inside a table row — but it is
+  TALLER by default (50px vs 40px), because two stacked controls in 40px
+  would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See
+  input-stepper.scss for the full note and the escape hatch.
+
 ## Variant axes
 
 ### `label` (Figma property "Label")
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `variant` (Figma property "Variant")
+
+- Code values: `segmented`, `trailing`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Segmented`, `Trailing`
 
 ## States
 
@@ -129,12 +146,12 @@ Value
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaDescribedBy`
+- ARIA-bearing attributes: `ariaDescribedBy`, `variant`
 - CSS parts: —
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Label=shown` (source: `measured`)
+**Anatomy case measured:** `Label=shown,Variant=segmented` (source: `measured`)
 
 ### Root — `<div class="al-c-input-stepper">`
 
@@ -143,39 +160,6 @@ Value
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-
-### State overrides (measured, root node)
-
-**`hover`**
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| border-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
-| border-top-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
-
-**`focus`**
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| box-shadow | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-
-**`active`**
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| box-shadow | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-
-**`disabled`**
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| border-color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| border-top-color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -187,9 +171,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-input-stepper`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (22)
+## Tokens referenced (20)
 
-`--al-base-space`, `--al-button-padding`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-space-xxxl`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-button-padding`, `--al-button-width`, `--al-font-family-mono`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

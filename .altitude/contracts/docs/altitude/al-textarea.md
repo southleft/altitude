@@ -22,7 +22,7 @@ Component: al-textarea
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
 | `hideLabel` | boolean | — | — | — |
-| `isActive` | boolean | — | — | — |
+| `isActive` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | — |
 | `isError` | boolean | — | — | — |
 | `isFocused` | boolean | — | — | — |
@@ -66,7 +66,11 @@ Field note
 #### `hideLabel`
 
 Hide label?
-- If true, hides the label from displaying
+- If true, hides the label VISUALLY. The element stays in the DOM with its
+  `for` association intact, so the field keeps an accessible name.
+
+Before v2 this also revealed the placeholder; the label no longer occupies
+the placeholder's position, so a `placeholder` renders whenever it is set.
 
 #### `isActive`
 
@@ -143,6 +147,8 @@ Rows attribute
 Value attribute
 - Specifies the value of an input element
 
+**Figma-expression opt-out (T27):** `isActive` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
 ### `label` (Figma property "Label")
@@ -195,24 +201,13 @@ Value attribute
 | border-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
 | border-top-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
 
-**`focus`** (node #0.0.0)
+**`focus`**
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 | border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| box-shadow | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-
-**`focus`** (node #0.0.1)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-default-weak` | `theme/color/background/default-weak` |
-| font | `--al-theme-typography-body-xs` | — |
-| letter-spacing | `--al-theme-typography-body-xs-letter-spacing` | — |
-| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-left | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-right | `--al-theme-space-xxs` | `theme/space/xxs` |
+| box-shadow | `--al-theme-color-border-primary-weak` | `theme/color/border/primary-weak` |
 
 **`active`**
 
@@ -220,20 +215,14 @@ Value attribute
 | --- | --- | --- |
 | border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 | border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| box-shadow | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| box-shadow | `--al-theme-color-border-primary-weak` | `theme/color/border/primary-weak` |
 
-**`disabled`** (node #0.0.0)
+**`disabled`**
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | border-color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | border-top-color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.0.1.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
 | opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -246,9 +235,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-textarea`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (20)
+## Tokens referenced (18)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default-weak`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
+`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-border-primary-weak`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

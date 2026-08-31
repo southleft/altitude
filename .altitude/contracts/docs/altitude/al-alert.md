@@ -90,12 +90,16 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-danger-weak` | `theme/color/background/danger-weak` |
+| border | `--al-theme-border-width` | `theme/border/width/@` |
 | border-bottom-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-bottom-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
+| border-color | `--al-theme-color-border-danger-weak` | `theme/color/border/danger-weak` |
 | border-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
+| border-top-color | `--al-theme-color-border-danger-weak` | `theme/color/border/danger-weak` |
 | border-top-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | box-shadow | `--al-theme-box-shadow-lg` | `theme/box-shadow/lg` |
 | padding | `--al-theme-space` | `theme/space/@` |
 | padding-bottom | `--al-theme-space` | `theme/space/@` |
@@ -143,9 +147,9 @@ _None._
 - Tag: `al-alert`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (7)
+## Tokens referenced (9)
 
-`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-sm`
+`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-border-width`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-danger-weak`, `--al-theme-color-border-danger-weak`, `--al-theme-space`, `--al-theme-space-sm`
 
 ---
 

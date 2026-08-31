@@ -12,7 +12,7 @@ Component: al-input
 - Node id: `3544:48650` (pinned)
 - [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-48650)
 
-## Props (23)
+## Props (24)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
@@ -22,7 +22,7 @@ Component: al-input
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
 | `hideLabel` | boolean | — | — | — |
-| `isActive` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isActive` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isFocused` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
@@ -30,6 +30,7 @@ Component: al-input
 | `isReadonly` | boolean | — | — | — |
 | `isRequired` | boolean | — | — | — |
 | `label` | string | — | `'Label'` | _not expressed in Figma (by design)_ |
+| `labelPosition` | enum | `inset`, `top` | `'top'` | **Label Position** (VARIANT): `Top`, `Inset` |
 | `max` | number | — | — | — |
 | `maxLength` | number | — | — | — |
 | `maxLengthValue` | number | — | — | — |
@@ -68,7 +69,13 @@ Field note
 #### `hideLabel`
 
 Hide label?
-- If true, hides the label from displaying
+- If true, hides the label VISUALLY. The label element stays in the DOM and
+  keeps its `for` association, so screen readers still announce the field.
+
+Before v2 this also revealed the placeholder, because the floating label
+occupied the placeholder's position and the two could not both show. The
+label no longer sits inside the field, so that coupling is gone: a
+`placeholder` now renders whenever it is set, independently of this.
 
 #### `isActive`
 
@@ -109,6 +116,15 @@ Required attribute
 
 Label attribute
 - Specifies what content to enter within the input element
+
+#### `labelPosition`
+
+Label position
+- `top` (default) puts the label above the field.
+- `inset` puts it inside the field's top padding, above the value — the v2
+  replacement for the floating label. It is STATIC: unlike the old floating
+  label it never moves between states, so there is no jump on focus and no
+  background patch punched through the field's border.
 
 #### `max`
 
@@ -161,14 +177,9 @@ Type variants
 Value attribute
 - Specifies the value of an input element
 
-**Figma-expression opt-out (T27):** `label` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `isActive`, `label` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
-
-### `isActive` (Figma property "State")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ### `isDisabled` (Figma property "State")
 
@@ -184,6 +195,11 @@ Value attribute
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `labelPosition` (Figma property "Label Position")
+
+- Code values: `inset`, `top`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Top`, `Inset`
 
 ## States
 
@@ -211,7 +227,7 @@ Value attribute
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Label=shown` (source: `measured`)
+**Anatomy case measured:** `Label=shown,Label Position=top` (source: `measured`)
 
 ### Root — `<div class="al-c-input">`
 
@@ -230,24 +246,13 @@ Value attribute
 | border-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
 | border-top-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
 
-**`focus`** (node #0.0.0)
+**`focus`**
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 | border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| box-shadow | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-
-**`focus`** (node #0.0.1)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-default-weak` | `theme/color/background/default-weak` |
-| font | `--al-theme-typography-body-xs` | — |
-| letter-spacing | `--al-theme-typography-body-xs-letter-spacing` | — |
-| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-left | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-right | `--al-theme-space-xxs` | `theme/space/xxs` |
+| box-shadow | `--al-theme-color-border-primary-weak` | `theme/color/border/primary-weak` |
 
 **`active`**
 
@@ -255,20 +260,14 @@ Value attribute
 | --- | --- | --- |
 | border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 | border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
-| box-shadow | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
+| box-shadow | `--al-theme-color-border-primary-weak` | `theme/color/border/primary-weak` |
 
-**`disabled`** (node #0.0.0)
+**`disabled`**
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | border-color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | border-top-color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
-
-**`disabled`** (node #0.0.1.0)
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
 | opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -281,9 +280,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-input`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (20)
+## Tokens referenced (18)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default-weak`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
+`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-border-primary-weak`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 
