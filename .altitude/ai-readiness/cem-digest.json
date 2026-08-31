@@ -2803,6 +2803,11 @@
         "name": "step",
         "type": "number",
         "description": "Inremental/Decremental range"
+      },
+      {
+        "name": "variant",
+        "type": "'segmented' | 'trailing'",
+        "description": "Variant\n- `segmented` (default): decrement | value | increment, three segments of\n  one bordered box divided by hairlines.\n- `trailing`: the value takes the full width and both steppers stack at the\n  trailing edge. Denser across, so it fits inside a table row — but it is\n  TALLER by default (50px vs 40px), because two stacked controls in 40px\n  would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See\n  input-stepper.scss for the full note and the escape hatch."
       }
     ],
     "events": [
@@ -2872,7 +2877,12 @@
       {
         "name": "hideLabel",
         "type": "boolean",
-        "description": "Hide label?\n- If true, hides the label from displaying"
+        "description": "Hide label?\n- If true, hides the label VISUALLY. The label element stays in the DOM and\n  keeps its `for` association, so screen readers still announce the field.\n\nBefore v2 this also revealed the placeholder, because the floating label\noccupied the placeholder's position and the two could not both show. The\nlabel no longer sits inside the field, so that coupling is gone: a\n`placeholder` now renders whenever it is set, independently of this."
+      },
+      {
+        "name": "labelPosition",
+        "type": "'top' | 'inset'",
+        "description": "Label position\n- `top` (default) puts the label above the field.\n- `inset` puts it inside the field's top padding, above the value — the v2\n  replacement for the floating label. It is STATIC: unlike the old floating\n  label it never moves between states, so there is no jump on focus and no\n  background patch punched through the field's border."
       },
       {
         "name": "label",
@@ -4665,7 +4675,7 @@
       {
         "name": "hideLabel",
         "type": "boolean",
-        "description": "Hide label?\n- If true, hides the label from displaying"
+        "description": "Hide label?\n- If true, hides the label VISUALLY. The element stays in the DOM with its\n  `for` association intact, so the field keeps an accessible name.\n\nBefore v2 this also revealed the placeholder; the label no longer occupies\nthe placeholder's position, so a `placeholder` renders whenever it is set."
       },
       {
         "name": "label",

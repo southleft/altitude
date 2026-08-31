@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-25T11:16:43.558Z",
+  "generated": "2026-08-30T14:08:53.044Z",
   "source": {
     "storybookDir": "libs/al-web-components/story-fixture/dist",
     "storybookVersion": 5,
@@ -19,22 +19,22 @@
     "gateConfig": "libs/al-web-components/story-fixture/src/main.ts"
   },
   "totals": {
-    "stories": 494,
+    "stories": 489,
     "storiesErrored": 0,
-    "componentsMeasured": 67,
-    "componentsClean": 67,
+    "componentsMeasured": 66,
+    "componentsClean": 66,
     "structuralViolations": 0,
-    "contrastViolations": 18,
+    "contrastViolations": 16,
     "unattributedStories": 0
   },
   "components": {
-    "accordion": {
-      "slug": "accordion",
-      "tag": "al-accordion",
+    "accordion-panel": {
+      "slug": "accordion-panel",
+      "tag": "al-accordion-panel",
       "storyCount": 3,
       "errored": [],
       "defaultState": {
-        "storyId": "accordion--Default",
+        "storyId": "accordion-panel--Default",
         "name": "Default",
         "structural": [],
         "contrast": [],
@@ -52,13 +52,13 @@
       "contrastViolations": [],
       "clean": true
     },
-    "accordion-panel": {
-      "slug": "accordion-panel",
-      "tag": "al-accordion-panel",
+    "accordion": {
+      "slug": "accordion",
+      "tag": "al-accordion",
       "storyCount": 3,
       "errored": [],
       "defaultState": {
-        "storyId": "accordion-panel--Default",
+        "storyId": "accordion--Default",
         "name": "Default",
         "structural": [],
         "contrast": [],
@@ -151,74 +151,25 @@
     "banner": {
       "slug": "banner",
       "tag": "al-banner",
-      "storyCount": 5,
+      "storyCount": 3,
       "errored": [],
       "defaultState": {
-        "storyId": "banner--Danger",
-        "name": "Danger",
+        "storyId": "banner--CustomIcon",
+        "name": "CustomIcon",
         "structural": [],
-        "contrast": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "help": "Elements must meet minimum color contrast ratio thresholds",
-            "tags": [
-              "wcag2aa",
-              "wcag143"
-            ],
-            "nodes": 1,
-            "stories": [
-              "banner--Danger"
-            ]
-          }
-        ],
+        "contrast": [],
         "error": null
       },
       "advancedStates": {
-        "storyCount": 4,
+        "storyCount": 2,
         "structural": [],
-        "contrast": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "help": "Elements must meet minimum color contrast ratio thresholds",
-            "tags": [
-              "wcag2aa",
-              "wcag143"
-            ],
-            "nodes": 4,
-            "stories": [
-              "banner--Default",
-              "banner--Dismissible",
-              "banner--Success",
-              "banner--Warning"
-            ]
-          }
-        ]
+        "contrast": []
       },
       "interaction": {
         "playFnStories": []
       },
       "violations": [],
-      "contrastViolations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "help": "Elements must meet minimum color contrast ratio thresholds",
-          "tags": [
-            "wcag2aa",
-            "wcag143"
-          ],
-          "nodes": 5,
-          "stories": [
-            "banner--Danger",
-            "banner--Default",
-            "banner--Dismissible",
-            "banner--Success",
-            "banner--Warning"
-          ]
-        }
-      ],
+      "contrastViolations": [],
       "clean": true
     },
     "breadcrumbs": {
@@ -936,62 +887,19 @@
         "storyId": "header--BrandNavActions",
         "name": "BrandNavActions",
         "structural": [],
-        "contrast": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "help": "Elements must meet minimum color contrast ratio thresholds",
-            "tags": [
-              "wcag2aa",
-              "wcag143"
-            ],
-            "nodes": 6,
-            "stories": [
-              "header--BrandNavActions"
-            ]
-          }
-        ],
+        "contrast": [],
         "error": null
       },
       "advancedStates": {
         "storyCount": 4,
         "structural": [],
-        "contrast": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "help": "Elements must meet minimum color contrast ratio thresholds",
-            "tags": [
-              "wcag2aa",
-              "wcag143"
-            ],
-            "nodes": 3,
-            "stories": [
-              "header--TwoRow"
-            ]
-          }
-        ]
+        "contrast": []
       },
       "interaction": {
         "playFnStories": []
       },
       "violations": [],
-      "contrastViolations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "help": "Elements must meet minimum color contrast ratio thresholds",
-          "tags": [
-            "wcag2aa",
-            "wcag143"
-          ],
-          "nodes": 9,
-          "stories": [
-            "header--BrandNavActions",
-            "header--TwoRow"
-          ]
-        }
-      ],
+      "contrastViolations": [],
       "clean": true
     },
     "heading": {
@@ -1045,7 +953,7 @@
     "input": {
       "slug": "input",
       "tag": "al-input",
-      "storyCount": 16,
+      "storyCount": 17,
       "errored": [],
       "defaultState": {
         "storyId": "input--Default",
@@ -1055,7 +963,7 @@
         "error": null
       },
       "advancedStates": {
-        "storyCount": 15,
+        "storyCount": 16,
         "structural": [],
         "contrast": [
           {
@@ -1099,7 +1007,7 @@
     "input-stepper": {
       "slug": "input-stepper",
       "tag": "al-input-stepper",
-      "storyCount": 6,
+      "storyCount": 7,
       "errored": [],
       "defaultState": {
         "storyId": "input-stepper--Default",
@@ -1109,7 +1017,7 @@
         "error": null
       },
       "advancedStates": {
-        "storyCount": 5,
+        "storyCount": 6,
         "structural": [],
         "contrast": [
           {
@@ -2132,30 +2040,6 @@
       },
       "advancedStates": {
         "storyCount": 17,
-        "structural": [],
-        "contrast": []
-      },
-      "interaction": {
-        "playFnStories": []
-      },
-      "violations": [],
-      "contrastViolations": [],
-      "clean": true
-    },
-    "toggle-button-group": {
-      "slug": "toggle-button-group",
-      "tag": "al-toggle-button-group",
-      "storyCount": 5,
-      "errored": [],
-      "defaultState": {
-        "storyId": "toggle-button-group--Background",
-        "name": "Background",
-        "structural": [],
-        "contrast": [],
-        "error": null
-      },
-      "advancedStates": {
-        "storyCount": 4,
         "structural": [],
         "contrast": []
       },
