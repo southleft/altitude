@@ -72,5 +72,4 @@ The schemas are consumed by the T3.4 contract validator.
 | `toast` | scoped-complete | ALToast | [`al-toast.schema.json`](./al-toast.schema.json) |
 | `toggle` | scoped-complete | ALToggle | [`al-toggle.schema.json`](./al-toggle.schema.json) |
 | `toggle-button` | scoped-complete | ALToggleButton | [`al-toggle-button.schema.json`](./al-toggle-button.schema.json) |
-| `toggle-button-group` | scoped-complete | _missing_ | _no schema — investigate_ |
 | `tooltip` | scoped-complete | ALTooltip | [`al-tooltip.schema.json`](./al-tooltip.schema.json) |
