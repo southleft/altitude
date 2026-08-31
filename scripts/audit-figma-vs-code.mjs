@@ -103,13 +103,42 @@ function codeVal(raw) {
   const n = num(raw);
   return typeof n === 'number' ? { num: n } : { other: n };
 }
-/** Figma value -> comparable form. */
+/**
+ * Figma value -> comparable form.
+ *
+ * The dump's per-mode cell is an OBJECT — `{alias: "space/4"}` for a
+ * VARIABLE_ALIAS, `{value: <raw>}` otherwise — never the `"{space/4}"` STRING
+ * this function used to test for. Every aliased variable therefore fell through
+ * to `{other: <the object>}`, which `same()` can never match against the code's
+ * `{alias: "space.4"}`, so all 300-odd aliased tokens reported as VALUE
+ * MISMATCH and the audit printed `matching: 5` out of 492. That is noise dense
+ * enough to hide the real drift completely, which is the only reason this
+ * function is worth this comment.
+ *
+ * COLOR literals arrive as {r,g,b,a} floats in 0..1, not as a hex string.
+ */
 function figVal(raw) {
   if (raw == null) return null;
+
+  // Dump cell shapes.
+  if (typeof raw === 'object' && !Array.isArray(raw)) {
+    if (typeof raw.alias === 'string') return { alias: figmaToCode(raw.alias) };
+    if ('value' in raw) return figVal(raw.value);
+    if (typeof raw.r === 'number' && typeof raw.g === 'number' && typeof raw.b === 'number') {
+      const ch = (n) => Math.round(n * 255).toString(16).padStart(2, '0').toUpperCase();
+      const a = typeof raw.a === 'number' ? raw.a : 1;
+      return { hex: normHex('#' + ch(raw.r) + ch(raw.g) + ch(raw.b) + (a < 1 ? ch(a) : '')) };
+    }
+  }
+
+  // Legacy/flat shapes.
   if (typeof raw === 'string' && raw.startsWith('{')) return { alias: figmaToCode(raw.slice(1, -1)) };
-  if (typeof raw === 'string' && raw.startsWith('#')) return { hex: normHex(raw) };
+  if (typeof raw === 'string' && /^#|^rgba?\(/i.test(raw)) {
+    return { hex: raw.startsWith('#') ? normHex(raw) : normHex(rgbaToHex(raw)) };
+  }
   if (typeof raw === 'number') return { num: raw };
-  return { other: raw };
+  const n = num(raw);
+  return typeof n === 'number' ? { num: n } : { other: n };
 }
 function same(a, b) {
   if (!a || !b) return false;
@@ -127,12 +156,27 @@ const report = {
 };
 
 const seenCode = new Set();
-const themeCollections = new Set(['Tier 2 Theme']);
+
+/**
+ * Collection names have been observed with AND without the pipe separator —
+ * `Tier 2 Theme` (2026-08-20) vs `Tier 2 | Theme` (live-read 2026-08-26 and
+ * again 2026-08-31). Matching one spelling literally meant that against the
+ * live file NEITHER the theme branch nor the brand branch below ever ran: every
+ * theme variable skipped its per-mode Light/Dark comparison and fell through to
+ * the generic name diff, every brand override was audited as if it were a plain
+ * variable, and the summary line at the bottom dereferenced `.modes` on the
+ * `undefined` returned by `.find()` — a TypeError that took the whole audit down
+ * before it printed anything. Normalise instead of matching a spelling.
+ */
+const collKey = (n) => String(n).replace(/\s*\|\s*/g, ' ').trim();
+const isTheme = (n) => collKey(n) === 'Tier 2 Theme';
+const isBrand = (n) => collKey(n) === 'Tier 2 Brand';
+const themeCollections = { has: (n) => isTheme(n) };
 
 for (const v of live.variables) {
   const codeName = figmaToCode(v.name);
 
-  if (v.collection === 'Tier 2 Brand') {
+  if (isBrand(v.collection)) {
     (report.brandModes[v.name] = report.brandModes[v.name] || []).push(v.values);
     continue; // brand overrides are audited separately below
   }
@@ -186,4 +230,4 @@ p('VALUE MISMATCH', report.valueMismatch);
 p('IN FIGMA, NOT IN CODE', report.figmaOnly);
 p('IN CODE, NOT IN FIGMA', report.codeOnly);
 p('THEME MODE GAPS', report.modeGap);
-console.log(`\nTier 2 Brand overrides: ${Object.keys(report.brandModes).length} variables x modes ${live.collections.find(c => c.name === 'Tier 2 Brand').modes.join(', ')}`);
+console.log(`\nTier 2 Brand overrides: ${Object.keys(report.brandModes).length} variables x modes ${(live.collections.find(c => isBrand(c.name))?.modes ?? []).map((m) => (typeof m === 'string' ? m : m.name)).join(', ')}`);

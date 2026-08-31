@@ -113,6 +113,10 @@ playwright-report
 # (`/*` not `/`: git cannot re-include a file whose parent DIRECTORY is excluded)
 .altitude/figma-sync/*
 !.altitude/figma-sync/parity-manifest.json
+# Recovery records for DESTRUCTIVE Figma edits. Deleting a variable MODE discards
+# the values it held and Figma cannot read them back, so one of these files is the
+# only surviving copy — durable state by the same argument as the manifest above.
+!.altitude/figma-sync/deleted-*.json
 # Parity is MULTI-PROJECT (.altitude/ds-projects.json): every design system other
 # than the default keeps its manifest in its own subdirectory. Re-admit those
 # directories, re-ignore their contents, then carve out each manifest — the same
