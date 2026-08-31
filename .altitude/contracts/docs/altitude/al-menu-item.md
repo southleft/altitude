@@ -16,13 +16,13 @@ Component: al-menu-item
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaControls` | string | — | `''` | — |
-| `groupId` | string | — | — | — |
-| `href` | string | — | — | — |
-| `idx` | number | — | — | — |
-| `indentation` | number | — | `0` | — |
-| `isDisabled` | boolean | — | — | — |
-| `isExpandableHeader` | boolean | — | — | — |
+| `ariaControls` | string | — | `''` | _not expressed in Figma (by design)_ |
+| `groupId` | string | — | — | _not expressed in Figma (by design)_ |
+| `href` | string | — | — | _not expressed in Figma (by design)_ |
+| `idx` | number | — | — | _not expressed in Figma (by design)_ |
+| `indentation` | number | — | `0` | _not expressed in Figma (by design)_ |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled` |
+| `isExpandableHeader` | boolean | — | — | **Role** (VARIANT): `Expandable`, `Header`, `Item` |
 | `isExpanded` | boolean | — | — | — |
 | `isFocused` | boolean | — | — | — |
 | `isHeader` | boolean | — | — | — |
@@ -30,8 +30,8 @@ Component: al-menu-item
 | `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
 | `label` | string | — | — | — |
 | `linkTitle` | string | — | — | — |
-| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
-| `value` | string | — | — | — |
+| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `ariaControls`
 
@@ -136,7 +136,19 @@ icon-only menu items where there is no visible text. Setting both
 `label="Edit"` and the slot to "Edit" produces a duplicate
 accessible name.
 
+**Figma-expression opt-out (T27):** `ariaControls`, `groupId`, `href`, `idx`, `indentation`, `target`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`
+
+### `isExpandableHeader` (Figma property "Role")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Expandable`, `Header`, `Item`
 
 ### `isSelected` (Figma property "Selected")
 

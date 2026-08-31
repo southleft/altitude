@@ -16,23 +16,23 @@ Component: al-file-upload
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `accept` | string | — | — | — |
-| `ariaDescribedBy` | string | — | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
-| `fileSizeLimit` | number | — | `75` | — |
-| `hideLabel` | boolean | — | — | — |
+| `accept` | string | — | — | _not expressed in Figma (by design)_ |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fileSizeLimit` | number | — | `75` | _not expressed in Figma (by design)_ |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
 | `isRequired` | boolean | — | — | — |
 | `label` | string | — | — | _not expressed in Figma (by design)_ |
-| `multiple` | boolean | — | — | — |
-| `name` | string | — | — | — |
-| `textConfig` | string | `FileUploadTextConfig` | `{ fileFormatErrorText: defaultTextConfig.fileFormatErrorText, fileSizeErrorText: defaultTextConfig.fileSizeErrorText }` | — |
-| `uploadFiles` | string | `FileUploadProgressStream[]` | — | — |
-| `uploadTime` | number | — | `1` | — |
-| `value` | string | — | — | — |
+| `multiple` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `textConfig` | string | `FileUploadTextConfig` | `{ fileFormatErrorText: defaultTextConfig.fileFormatErrorText, fileSizeErrorText: defaultTextConfig.fileSizeErrorText }` | _not expressed in Figma (by design)_ |
+| `uploadFiles` | string | `FileUploadProgressStream[]` | — | _not expressed in Figma (by design)_ |
+| `uploadTime` | number | — | `1` | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `accept`
 
@@ -107,9 +107,14 @@ Time taken for uploading
 
 Value associated with the field
 
-**Figma-expression opt-out (T27):** `label` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `accept`, `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `fileSizeLimit`, `label`, `multiple`, `name`, `textConfig`, `uploadFiles`, `uploadTime`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
+
+### `hideLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
 
 ### `isDisabled` (Figma property "State")
 
