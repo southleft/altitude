@@ -16,14 +16,14 @@ Component: al-checkbox-group
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
 | `direction` | enum | `column`, `row` | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
-| `hideLegend` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `hideLegend` | boolean | — | — | **Legend** (VARIANT): `Hidden`, `Shown` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
 | `isRequired` | boolean | — | — | — |
 | `label` | string | — | — | — |
 
@@ -86,9 +86,24 @@ Required attribute
 Label
 - Displays inside the legend
 
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `hideLegend` (Figma property "Legend")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
 
 ## States
 

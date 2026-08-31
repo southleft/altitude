@@ -2,7 +2,7 @@
   "$comment": "Figma <-> code parity manifest. Seeded by scripts/figma-parity/seed-manifest.mjs; lastSync stamped by scripts/figma-parity/mark-synced.mjs; figmaCurrentDigest updated by scripts/figma-parity/refresh-figma-digests.mjs. Read by libs/altitude-mcp/src/lib/parity.mjs.",
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-08-31T22:55:58.835Z",
+  "figmaLastRefreshed": "2026-08-31T22:59:15.514Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -416,7 +416,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "6c144feb6d31936da17871d34eae2ead52530209",
+      "figmaCurrentDigest": "cb527afddffe7ee22fc158a21d84554e76ee7ef8",
       "figmaContract": {
         "props": {
           "Text": {
@@ -426,7 +426,8 @@
           "Legend": {
             "type": "VARIANT",
             "options": [
-              "Shown"
+              "Shown",
+              "Hidden"
             ]
           },
           "Orientation": {
@@ -446,6 +447,12 @@
           }
         },
         "variants": [
+          "Legend=Hidden, Orientation=Default, State=Default",
+          "Legend=Hidden, Orientation=Default, State=Disabled",
+          "Legend=Hidden, Orientation=Default, State=Error",
+          "Legend=Hidden, Orientation=Horizontal, State=Default",
+          "Legend=Hidden, Orientation=Horizontal, State=Disabled",
+          "Legend=Hidden, Orientation=Horizontal, State=Error",
           "Legend=Shown, Orientation=Default, State=Default",
           "Legend=Shown, Orientation=Default, State=Disabled",
           "Legend=Shown, Orientation=Default, State=Error",
@@ -1657,7 +1664,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "0f751a898383aa093f7b09fc029e55f51b40c1d8",
+      "figmaCurrentDigest": "427dafa3a165d89b1508680965c6fb0986e9ab20",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1667,7 +1674,8 @@
           "Legend": {
             "type": "VARIANT",
             "options": [
-              "Shown"
+              "Shown",
+              "Hidden"
             ]
           },
           "Orientation": {
@@ -1687,6 +1695,12 @@
           }
         },
         "variants": [
+          "Legend=Hidden, Orientation=Default, State=Default",
+          "Legend=Hidden, Orientation=Default, State=Disabled",
+          "Legend=Hidden, Orientation=Default, State=Error",
+          "Legend=Hidden, Orientation=Horizontal, State=Default",
+          "Legend=Hidden, Orientation=Horizontal, State=Disabled",
+          "Legend=Hidden, Orientation=Horizontal, State=Error",
           "Legend=Shown, Orientation=Default, State=Default",
           "Legend=Shown, Orientation=Default, State=Disabled",
           "Legend=Shown, Orientation=Default, State=Error",
@@ -2296,7 +2310,7 @@
     }
   },
   "figmaOnly": [],
-  "updated": "2026-08-31T22:55:58.836Z",
+  "updated": "2026-08-31T22:59:15.515Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }
