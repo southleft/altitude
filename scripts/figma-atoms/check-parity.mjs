@@ -76,20 +76,13 @@ const generatedOpsFor = (key) => {
   }
 };
 
-/** Measured geometry, keyed by the variant name the measured lane used. Absent
- * for a component nobody has measured since the matrix changed — that is a
- * reported gap, not a failure, and never a pass. */
-const measuredBoxes = (key) => {
-  const p = join(sc.dirs.ops, `${key}.json`);
-  const out = new Map();
-  try {
-    const m = JSON.parse(readFileSync(p, 'utf8'));
-    for (const r of m.rows ?? []) if (r.expected && r.variant) out.set(r.variant, r.expected);
-  } catch { /* no measured lane for this component — reported per variant below */ }
-  return out;
-};
+// Geometry now rides on the SAME artifact as the matrix: generate-figma.mjs
+// joins each variant's measured browser box onto it (figma/measured-boxes.mjs),
+// matching on the component's case DIMENSIONS rather than on a variant name
+// string, so the two lanes no longer have to agree on naming. A variant with
+// no `expected` is one nothing measured — reported as size-unverified, never
+// passed.
 const opsByKey = new Map(targets.map((k) => [k, generatedOpsFor(k)]));
-const boxesByKey = new Map(targets.map((k) => [k, measuredBoxes(k)]));
 
 const code = `
 await figma.loadAllPagesAsync();
@@ -171,7 +164,6 @@ for (const key of targets) {
     results[key] = { figmaSetName: null, sourceKey: sourceKeyFor(rosterByTag, key), ok: false, checked: 0, off: 0, missing: 0, unverifiable: 'ops file has no componentSetName' };
     continue;
   }
-  const boxes = boxesByKey.get(key);
   const built = live[setName];
   if (built && built.__ambiguous) {
     console.log(`${setName.padEnd(18)} AMBIGUOUS — ${built.__ambiguous} sets named "${setName}" on its page`);
@@ -194,12 +186,13 @@ for (const key of targets) {
   const byName = new Map(built.map((b) => [b.n, b]));
   // The matrix the generator actually built, not the measured lane's fan-out.
   const wantVariants = (ops.variants ?? []).map((v) => v.name);
+  const expectedByName = new Map((ops.variants ?? []).filter((v) => v.expected).map((v) => [v.name, v.expected]));
   const offs = []; const missing = []; const unmeasured = [];
   let checkedHere = 0;
   for (const name of wantVariants) {
     const b = byName.get(name);
     if (!b) { missing.push(name); totalMissing++; continue; }
-    const expected = boxes.get(name);
+    const expected = expectedByName.get(name);
     if (!expected) { unmeasured.push(name); continue; }
     totalChecked++; checkedHere++;
     const dw = Math.abs(b.w - expected.w); const dh = Math.abs(b.h - expected.h);
@@ -236,7 +229,7 @@ for (const key of targets) {
     // existence verified but not its size, and the receipt says so.
     ...(wantVariants.length === 0 ? { unverifiable: 'the contract declares no variants — nothing to compare' } : {}),
     ...(checkedHere === 0 && wantVariants.length > 0
-      ? { geometryUnverified: `no measured box matched any of the ${wantVariants.length} declared variant name(s) — the measured lane is keyed to a different matrix; re-run the measurement pass` }
+      ? { geometryUnverified: `none of the ${wantVariants.length} declared variant(s) carried a measured box — re-run the measurement pass (scripts/figma-atoms/measure-components.mjs), then regenerate ops` }
       : {}),
   };
 }
