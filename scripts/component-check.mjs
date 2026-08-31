@@ -444,7 +444,23 @@ function main() {
     }));
     console.log(JSON.stringify(all ? payload : payload[0], null, 2));
     const anyFailed = payload.some((p) => !p.ok);
-    process.exit(anyFailed ? 1 : 0);
+    /**
+     * `process.exitCode`, NOT `process.exit()`.
+     *
+     * On Linux a write to a PIPE goes async once the 64KB pipe buffer fills,
+     * and process.exit() discards whatever is still queued. `--all --json` is
+     * ~146KB, so a caller reading stdout through a pipe got the JSON chopped
+     * mid-string while the process still reported a clean exit code.
+     *
+     * Invisible on Windows, where those writes complete synchronously, and
+     * invisible for a single component, whose payload never reaches the buffer
+     * limit — so it presented as "CI-only, --all-only, cannot reproduce
+     * locally" (2026-08-31, scripts/__tests__/component-check.test.mjs).
+     *
+     * Setting exitCode lets Node drain stdout and exit with the same status.
+     */
+    process.exitCode = anyFailed ? 1 : 0;
+    return;
   }
 
   let anyFailed = false;
@@ -455,7 +471,8 @@ function main() {
   if (all) {
     console.log(`\n[component-check] checked ${results.length} component(s).`);
   }
-  process.exit(anyFailed ? 1 : 0);
+  // Same reasoning as the JSON branch above: let stdout drain.
+  process.exitCode = anyFailed ? 1 : 0;
 }
 
 main();
