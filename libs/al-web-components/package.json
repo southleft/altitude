@@ -1,7 +1,7 @@
 {
   "name": "@southleft/al-web-components",
   "description": "The Web Component powered design system for web applications",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "exports": {
     ".": {
       "//": "The JS chunk is RENAMED by rollup (vite.config.mjs:185 maps the `bundle` entry to components/bundle/bundle.js), but tsc emits the declaration from the SOURCE layout — components/bundle.ts -> dist/components/bundle.d.ts. `types` pointed at the renamed JS directory, where no .d.ts has ever existed, so every TypeScript consumer of the root import silently got `any`. Do not 'tidy' these two into the same directory: bundle.d.ts re-exports './ALElement' and './<component>/<component>' relative to dist/components/, and moving it one level deeper breaks all 1,652 of those paths.",
