@@ -16,23 +16,23 @@ Component: al-input-stepper
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
-| `count` | number | — | `0` | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
-| `hideLabel` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `count` | number | — | `0` | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | — |
 | `isReadonly` | boolean | — | — | — |
 | `isRequired` | boolean | — | `false` | — |
 | `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
-| `max` | number | — | — | — |
-| `min` | number | — | — | — |
-| `name` | string | — | — | — |
-| `placeholder` | string | — | — | — |
-| `step` | number | — | `1` | — |
-| `value` | number | — | — | — |
+| `max` | number | — | — | _not expressed in Figma (by design)_ |
+| `min` | number | — | — | _not expressed in Figma (by design)_ |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `placeholder` | string | — | — | _not expressed in Figma (by design)_ |
+| `step` | number | — | `1` | _not expressed in Figma (by design)_ |
+| `value` | number | — | — | _not expressed in Figma (by design)_ |
 | `variant` | enum | `segmented`, `trailing` | `'segmented'` | **Variant** (VARIANT): `Segmented`, `Trailing` |
 
 #### `ariaDescribedBy`
@@ -115,7 +115,19 @@ Variant
   would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See
   input-stepper.scss for the full note and the escape hatch.
 
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `count`, `errorNote`, `fieldId`, `fieldNote`, `max`, `min`, `name`, `placeholder`, `step`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
+
+### `hideLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Focus`, `Hover`
 
 ### `label` (Figma property "Label")
 
