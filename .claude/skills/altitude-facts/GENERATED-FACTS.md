@@ -54,7 +54,7 @@ code that depends on it.
   - events: none
   - parts: none
 - `al-button`
-  - attrs: type, variant, target, href, name, label, value, isPressed, isDisabled, isAriaDisabled, isExpanded, hideText, fullWidth, ariaControls
+  - attrs: type, variant, size, isPill, target, href, name, label, value, isPressed, isDisabled, isAriaDisabled, isExpanded, hideText, fullWidth, ariaControls
   - slots: (default), before, after
   - events: none
   - parts: button
@@ -65,7 +65,7 @@ code that depends on it.
   - parts: none
 - `al-card`
   - attrs: layout, variant, fill
-  - slots: (default), actions-start, actions-end, action-right, image, header
+  - slots: (default), actions-start, actions-end, action-right, image, header, footer
   - events: none
   - parts: none
 - `al-checkbox`
@@ -89,7 +89,7 @@ code that depends on it.
   - events: onComboboxFilter, onComboboxChange, onComboboxOpen, onComboboxClose
   - parts: none
 - `al-command-palette`
-  - attrs: isActive, enableShortcut, placeholder, emptyText, ariaLabel, searchLabel, transitionDelay
+  - attrs: actions, isActive, enableShortcut, placeholder, emptyText, ariaLabel, searchLabel, transitionDelay
   - slots: (default)
   - events: onCommandPaletteOpen, onCommandPaletteClose, onCommandPaletteAction
   - parts: none
@@ -479,7 +479,7 @@ code that depends on it.
   - events: none
   - parts: none
 - `al-table`
-  - attrs: rowKey, caption, hideCaption, isSelectable, sortKey, sortDirection
+  - attrs: columns, data, rowKey, caption, hideCaption, isSelectable, sortKey, sortDirection
   - slots: (default)
   - events: onTableSort, onTableRowSelect, onTableSelectAll
   - parts: scroll, table
@@ -568,7 +568,7 @@ record in the CEM digest, cited back to its source.
 
 ## Token conventions
 
-From .altitude/ai-readiness/tokens-digest.json: 510 tokens across 203 families.
+From .altitude/ai-readiness/tokens-digest.json: 522 tokens across 207 families.
 
 - CSS variable prefix: `--al-`
 - Semantic layer: --al-theme-* (single-layer of indirection over the al-color-* / al-font-size-* primitives)
@@ -576,9 +576,9 @@ From .altitude/ai-readiness/tokens-digest.json: 510 tokens across 203 families.
 - Font sizes: numeric — --al-font-size-10..36 (NOT t-shirt sizes like -sm/-md/-lg/-2xl)
 - Font weights: --al-font-weight-regular and --al-font-weight-bold ONLY (no -light, -medium, -semibold, -heavy)
 
-### Families (203)
+### Families (207)
 
-`animation-distance-lg`, `animation-distance-md`, `animation-distance-sm`, `animation-duration-1`, `animation-duration-12`, `animation-duration-2`, `animation-duration-3`, `animation-duration-4`, `animation-duration-6`, `animation-duration-8`, `animation-timing-cubic`, `animation-timing-ease`, `animation-timing-emphasized`, `animation-timing-entrance`, `animation-timing-exit`, `animation-timing-gentle`, `animation-timing-linear`, `animation-timing-spring`, `animation-timing-standard`, `base-font`, `base-space`, `border-radius-0`, `border-radius-12`, `border-radius-16`, `border-radius-2`, `border-radius-24`, `border-radius-4`, `border-radius-6`, `border-radius-8`, `border-radius-pill`, `border-radius-round`, `border-width-1`, `border-width-2`, `border-width-4`, `box-shadow-16`, `box-shadow-2`, `box-shadow-32`, `box-shadow-4`, `box-shadow-48`, `box-shadow-8`, `box-shadow-hard`, `box-shadow-none`, `box-shadow-overlay`, `box-shadow-raised`, `breakpoint-lg`, `breakpoint-md`, `breakpoint-sm`, `breakpoint-xl`, `breakpoint-xs`, `breakpoint-xxl`, `color-brand-blue`, `color-brand-cobalt`, `color-brand-crimson`, `color-brand-green`, `color-brand-ink`, `color-brand-jade`, `color-brand-ochre`, `color-brand-orange`, `color-brand-paper`, `color-brand-red`, `color-brand-stone`, `color-brand-taupe`, `color-brand-teal`, `color-brand-violet`, `color-brand-yellow`, `color-neutral-dark`, `color-neutral-light`, `color-shadow-dark`, `color-shadow-light`, `color-shadow-violet`, `color-shadow-warm`, `color-transparent-dark`, `color-transparent-light`, `font-family-editorial`, `font-family-grotesk`, `font-family-modern`, `font-family-mono`, `font-family-plex`, `font-family-primary`, `font-family-secondary`, `font-family-soft`, `font-family-tech`, `font-size-10`, `font-size-112`, `font-size-12`, `font-size-14`, `font-size-16`, `font-size-18`, `font-size-20`, `font-size-24`, `font-size-28`, `font-size-32`, `font-size-36`, `font-size-48`, `font-size-56`, `font-size-64`, `font-size-72`, `font-weight-bold`, `font-weight-regular`, `icon-12`, `icon-16`, `icon-20`, `icon-24`, `icon-32`, `icon-36`, `icon-40`, `icon-8`, `layout-max-width`, `letter-spacing-0`, `letter-spacing-1`, `line-height-110`, `line-height-14`, `line-height-16`, `line-height-20`, `line-height-24`, `line-height-28`, `line-height-32`, `line-height-36`, `line-height-40`, `line-height-44`, `line-height-48`, `line-height-52`, `line-height-60`, `line-height-72`, `opacity-0`, `opacity-100`, `opacity-24`, `opacity-40`, `opacity-80`, `space-12`, `space-16`, `space-2`, `space-20`, `space-24`, `space-28`, `space-32`, `space-36`, `space-4`, `space-40`, `space-44`, `space-48`, `space-52`, `space-56`, `space-60`, `space-64`, `space-8`, `text-decoration-none`, `theme-animation-duration`, `theme-animation-timing`, `theme-border-radius`, `theme-border-width`, `theme-box-shadow`, `theme-color-background`, `theme-color-body`, `theme-color-border`, `theme-color-content`, `theme-color-focus`, `theme-color-header`, `theme-color-shadow`, `theme-icon`, `theme-icon-lg`, `theme-icon-md`, `theme-icon-sm`, `theme-icon-xl`, `theme-icon-xs`, `theme-icon-xxl`, `theme-icon-xxxl`, `theme-layout-height`, `theme-layout-max`, `theme-layout-width`, `theme-opacity-disabled`, `theme-space`, `theme-space-lg`, `theme-space-md`, `theme-space-sm`, `theme-space-super`, `theme-space-xl`, `theme-space-xs`, `theme-space-xxl`, `theme-space-xxs`, `theme-space-xxxl`, `theme-space-xxxs`, `theme-typography-body`, `theme-typography-display`, `theme-typography-heading`, `typography-preset-12`, `typography-preset-14`, `typography-preset-16`, `typography-preset-18`, `typography-preset-20`, `typography-preset-24`, `typography-preset-36`, `typography-preset-40`, `typography-preset-44`, `typography-preset-48`, `z-index-0`, `z-index-100`, `z-index-200`, `z-index-300`, `z-index-400`, `z-index-500`, `z-index-bottom`, `z-index-top`
+`animation-distance-lg`, `animation-distance-md`, `animation-distance-sm`, `animation-duration-1`, `animation-duration-12`, `animation-duration-2`, `animation-duration-3`, `animation-duration-4`, `animation-duration-6`, `animation-duration-8`, `animation-timing-cubic`, `animation-timing-ease`, `animation-timing-emphasized`, `animation-timing-entrance`, `animation-timing-exit`, `animation-timing-gentle`, `animation-timing-linear`, `animation-timing-spring`, `animation-timing-standard`, `base-font`, `base-space`, `border-radius-0`, `border-radius-12`, `border-radius-16`, `border-radius-2`, `border-radius-24`, `border-radius-4`, `border-radius-6`, `border-radius-8`, `border-radius-pill`, `border-radius-round`, `border-width-1`, `border-width-2`, `border-width-4`, `box-shadow-16`, `box-shadow-2`, `box-shadow-32`, `box-shadow-4`, `box-shadow-48`, `box-shadow-8`, `box-shadow-hard`, `box-shadow-none`, `box-shadow-overlay`, `box-shadow-raised`, `breakpoint-lg`, `breakpoint-md`, `breakpoint-sm`, `breakpoint-xl`, `breakpoint-xs`, `breakpoint-xxl`, `color-brand-blue`, `color-brand-cobalt`, `color-brand-crimson`, `color-brand-green`, `color-brand-ink`, `color-brand-jade`, `color-brand-ochre`, `color-brand-orange`, `color-brand-paper`, `color-brand-red`, `color-brand-stone`, `color-brand-taupe`, `color-brand-teal`, `color-brand-violet`, `color-brand-yellow`, `color-neutral-dark`, `color-neutral-light`, `color-shadow-dark`, `color-shadow-light`, `color-shadow-violet`, `color-shadow-warm`, `color-transparent-dark`, `color-transparent-light`, `font-family-editorial`, `font-family-grotesk`, `font-family-modern`, `font-family-mono`, `font-family-plex`, `font-family-primary`, `font-family-secondary`, `font-family-soft`, `font-family-tech`, `font-size-10`, `font-size-112`, `font-size-12`, `font-size-13`, `font-size-14`, `font-size-15`, `font-size-16`, `font-size-18`, `font-size-20`, `font-size-24`, `font-size-28`, `font-size-32`, `font-size-36`, `font-size-48`, `font-size-56`, `font-size-64`, `font-size-72`, `font-weight-bold`, `font-weight-medium`, `font-weight-regular`, `icon-12`, `icon-16`, `icon-20`, `icon-24`, `icon-32`, `icon-36`, `icon-40`, `icon-8`, `layout-max-width`, `letter-spacing-0`, `letter-spacing-1`, `line-height-110`, `line-height-14`, `line-height-16`, `line-height-20`, `line-height-24`, `line-height-28`, `line-height-32`, `line-height-36`, `line-height-40`, `line-height-44`, `line-height-48`, `line-height-52`, `line-height-60`, `line-height-72`, `opacity-0`, `opacity-100`, `opacity-24`, `opacity-40`, `opacity-80`, `space-12`, `space-16`, `space-2`, `space-20`, `space-24`, `space-28`, `space-32`, `space-36`, `space-4`, `space-40`, `space-44`, `space-48`, `space-52`, `space-56`, `space-60`, `space-64`, `space-8`, `text-decoration-none`, `theme-animation-duration`, `theme-animation-timing`, `theme-border-radius`, `theme-border-width`, `theme-box-shadow`, `theme-color-background`, `theme-color-body`, `theme-color-border`, `theme-color-content`, `theme-color-focus`, `theme-color-header`, `theme-color-shadow`, `theme-icon`, `theme-icon-lg`, `theme-icon-md`, `theme-icon-sm`, `theme-icon-xl`, `theme-icon-xs`, `theme-icon-xxl`, `theme-icon-xxxl`, `theme-layout-height`, `theme-layout-max`, `theme-layout-width`, `theme-opacity-disabled`, `theme-size-control`, `theme-space`, `theme-space-lg`, `theme-space-md`, `theme-space-sm`, `theme-space-super`, `theme-space-xl`, `theme-space-xs`, `theme-space-xxl`, `theme-space-xxs`, `theme-space-xxxl`, `theme-space-xxxs`, `theme-typography-body`, `theme-typography-display`, `theme-typography-heading`, `typography-preset-12`, `typography-preset-14`, `typography-preset-16`, `typography-preset-18`, `typography-preset-20`, `typography-preset-24`, `typography-preset-36`, `typography-preset-40`, `typography-preset-44`, `typography-preset-48`, `z-index-0`, `z-index-100`, `z-index-200`, `z-index-300`, `z-index-400`, `z-index-500`, `z-index-bottom`, `z-index-top`
 
 ### Names that do NOT exist — do not write these (7)
 
@@ -632,8 +632,8 @@ expected-fields shape and failure modes; this is a name + one-line intent index)
 
 ## Accessibility snapshot
 
-axe-core 4.12.1, story by story: 489 stories,
-66 components measured, 0 structural
+axe-core 4.12.1, story by story: 500 stories,
+67 components measured, 0 structural
 violations, 16 contrast violations (reported, not gated — see
 .altitude/a11y/report.json). A missing row for a component means NOT RECORDED, never a pass.
 
