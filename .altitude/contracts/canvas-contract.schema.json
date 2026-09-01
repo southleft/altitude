@@ -5,7 +5,13 @@
   "description": "Per-component, per-project contract extracted LIVE from a Figma component set over scripts/figma-atoms/mcp-shim.mjs, by scripts/contracts/extract-canvas.mjs. This is the CANVAS leg of the three-way contract <-> code <-> canvas comparison T6 performs; contract.schema.json is the CODE leg. The two are deliberately NOT the same schema: canvas can observe variant axes, component properties, bound-variable NAMES and text-style names, but it cannot observe a code attribute name, a `--al-*` custom-property name, an ARIA attribute, or a CSS part — those facts are recorded as `degradations` instead of fabricated. See .altitude/contracts/README.md.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "component", "figma", "bindings", "degradations"],
+  "required": [
+    "$schema",
+    "component",
+    "figma",
+    "bindings",
+    "degradations"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -19,11 +25,32 @@
     "figma": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "nodeId", "fileKey"],
+      "required": [
+        "name",
+        "nodeId",
+        "fileKey"
+      ],
       "properties": {
-        "name": { "type": ["string", "null"], "description": "The Figma component-SET name, as observed." },
-        "nodeId": { "type": ["string", "null"], "description": "The COMPONENT_SET node id, when the manifest pins one (atoms). `null` for a set resolved by name only (molecules — ids re-mint on rebuild)." },
-        "fileKey": { "type": ["string", "null"] }
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The Figma component-SET name, as observed."
+        },
+        "nodeId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The COMPONENT_SET node id, when the manifest pins one (atoms). `null` for a set resolved by name only (molecules — ids re-mint on rebuild)."
+        },
+        "fileKey": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "variantAxes": {
@@ -32,10 +59,20 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "values"],
+        "required": [
+          "name",
+          "values"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "values": { "type": "array", "items": { "type": "string" } }
+          "name": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       }
     },
@@ -45,68 +82,170 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "type"],
+        "required": [
+          "name",
+          "type"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "type": { "type": "string", "enum": ["VARIANT", "BOOLEAN", "TEXT", "INSTANCE_SWAP"] },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "VARIANT",
+              "BOOLEAN",
+              "TEXT",
+              "INSTANCE_SWAP"
+            ]
+          },
           "values": {
-            "anyOf": [{ "type": "null" }, { "type": "array", "items": { "type": "string" } }]
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
           }
         }
       }
     },
     "states": {
       "type": "array",
-      "items": { "type": "string", "enum": ["hover", "focus", "active", "disabled"] },
+      "items": {
+        "type": "string",
+        "enum": [
+          "hover",
+          "focus",
+          "active",
+          "disabled"
+        ]
+      },
       "description": "Interaction states represented as values of a \"State\" variant axis on this set, normalized and matched against the same enum contract.schema.json `states` uses. Empty when the set has no State axis."
     },
     "textStyles": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Named Figma text-style names bound to TEXT nodes anywhere in the sampled default-variant anatomy, deduplicated and sorted."
     },
     "tokens": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Every Figma VARIABLE name (slash-path, e.g. \"theme/color/background/primary-default\") bound anywhere in `anatomy`, deduplicated and sorted. Unlike contract.schema.json's `tokens` (which lists `--al-*` code custom-property names), this lists the FIGMA side of that same binding — see `degradations` for why the two are not joined here."
+    },
+    "tokensOwn": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Every Figma VARIABLE name bound anywhere in the set EXCLUDING the subtrees of nested al-* INSTANCEs, unioned across ALL variants (not just the `anatomyCase` sample in `anatomy`). Null when the dump predates the cross-variant walk, which `degradations` then names. This is the honest answer to \"does this set bind X itself\", because a binding that exists only on a state variant is real and a binding inside a nested instance belongs to that component."
+    },
+    "tokensNested": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "description": "Figma VARIABLE names bound inside nested al-* INSTANCE subtrees, keyed by that instance name (e.g. \"al-tab\"), unioned across all variants. Kept separate from `tokensOwn` so a composite is not charged for bindings its children own — contract-diff.mjs delegates those to the child's own diff. Null when the dump predates the cross-variant walk."
     },
     "anatomySource": {
       "type": "string",
-      "enum": ["observed", "unavailable"],
+      "enum": [
+        "observed",
+        "unavailable"
+      ],
       "description": "\"observed\" — `anatomy` was read from a live default-variant node. \"unavailable\" — the shim was unreachable, the set was not found live, or it has no default variant; `anatomy` is null. Never fabricated."
     },
     "anatomyCase": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "The default variant's own Figma node name (its full \"Axis=Value, ...\" case string), for traceability."
     },
     "anatomy": {
-      "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/canvasNode" }]
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/canvasNode"
+        }
+      ]
     },
     "bindings": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["figma"],
+      "required": [
+        "figma"
+      ],
       "properties": {
         "code": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "description": "Always null — a canvas-only extraction has no code-side facts. See `degradations`."
         },
         "figma": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["fileKey", "componentSetName", "nodeId"],
+          "required": [
+            "fileKey",
+            "componentSetName",
+            "nodeId"
+          ],
           "properties": {
-            "fileKey": { "type": ["string", "null"] },
-            "componentSetName": { "type": ["string", "null"] },
-            "nodeId": { "type": ["string", "null"] },
-            "url": { "type": ["string", "null"] }
+            "fileKey": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "componentSetName": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "nodeId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
           }
         }
       }
     },
     "degradations": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Every contract.schema.json fact this canvas extraction could NOT express, named explicitly rather than silently omitted or guessed — e.g. code attribute names, `--al-*` token names, ARIA attributes, CSS parts, events, slots. Adapted from ds-contracts-poc's provenance/degradation convention (see .altitude/contracts/README.md)."
     }
   },
@@ -114,19 +253,43 @@
     "canvasNode": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "type", "boundVariables", "children"],
+      "required": [
+        "name",
+        "type",
+        "boundVariables",
+        "children"
+      ],
       "properties": {
-        "name": { "type": "string", "description": "The Figma layer name." },
-        "type": { "type": "string", "description": "The Figma node type (FRAME, TEXT, INSTANCE, ...)." },
-        "textStyle": { "type": ["string", "null"], "description": "Bound text-style name, TEXT nodes only." },
+        "name": {
+          "type": "string",
+          "description": "The Figma layer name."
+        },
+        "type": {
+          "type": "string",
+          "description": "The Figma node type (FRAME, TEXT, INSTANCE, ...)."
+        },
+        "textStyle": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Bound text-style name, TEXT nodes only."
+        },
         "boundVariables": {
           "type": "object",
-          "additionalProperties": { "type": ["string", "null"] },
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "description": "Node/paint property (e.g. \"fills[0].color\", \"itemSpacing\", \"cornerRadius\") -> the bound Figma VARIABLE name. Never a resolved value."
         },
         "children": {
           "type": "array",
-          "items": { "$ref": "#/definitions/canvasNode" },
+          "items": {
+            "$ref": "#/definitions/canvasNode"
+          },
           "description": "Named layers, walked `--depth` child levels deep from the default variant root (see extract-canvas.mjs DEFAULT_ANATOMY_DEPTH/--depth), capped at MAX_ANATOMY_NODES total visited nodes across the whole tree — this is a landmark read, not a guaranteed full tree dump. A walk the cap cut short is named in `degradations`, never silently truncated."
         }
       }

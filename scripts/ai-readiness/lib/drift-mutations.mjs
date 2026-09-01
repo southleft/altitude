@@ -173,22 +173,34 @@ export const MUTATIONS = [
     // only `anatomy` and was invisible; a later one touched only `tokens` and
     // went invisible again the moment the walk landed. Mutate what is actually
     // compared, on every path that compares it.
-    applicable: (pair) => (pair.canvasContract.tokens ?? []).length > 0
+    applicable: (pair) => (pair.canvasContract.tokensOwn ?? pair.canvasContract.tokens ?? []).length > 0
       && pair.codeContract.anatomySource === 'measured'
       && pair.canvasContract.anatomySource === 'observed',
     apply: (pair) => {
       const next = clone(pair);
-      const from = [...next.canvasContract.tokens].sort()[0];
+      const from = [...(next.canvasContract.tokensOwn ?? next.canvasContract.tokens)].sort()[0];
       const to = 'theme/color/content/nonexistent-eval-token';
-      next.canvasContract.tokens = next.canvasContract.tokens.map((t) => (t === from ? to : t)).sort();
-      const rebind = (node) => {
-        if (!node) return;
-        for (const [key, value] of Object.entries(node.boundVariables ?? {})) {
-          if (value === from) node.boundVariables[key] = to;
+      // Deep rename across the WHOLE canvas contract rather than a named list
+      // of fields. The differ has now changed which surface it reads three
+      // times -- flat `tokens`, then the `anatomy` walk, then `tokensOwn` /
+      // `tokensNested` -- and each time a field-by-field mutation silently
+      // stopped moving it while still "passing" its own applicability check.
+      // Renaming every occurrence cannot fall out of step with that choice.
+      const renameDeep = (node) => {
+        if (Array.isArray(node)) {
+          for (let i = 0; i < node.length; i += 1) {
+            if (node[i] === from) node[i] = to;
+            else renameDeep(node[i]);
+          }
+          return;
         }
-        for (const child of node.children ?? []) rebind(child);
+        if (!node || typeof node !== 'object') return;
+        for (const [key, value] of Object.entries(node)) {
+          if (value === from) node[key] = to;
+          else renameDeep(value);
+        }
       };
-      rebind(next.canvasContract.anatomy ?? null);
+      renameDeep(next.canvasContract);
       return { pair: next, target: { from, to } };
     },
   },

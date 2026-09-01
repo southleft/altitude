@@ -157,11 +157,16 @@ function snapshotCode(wanted) {
     await figma.loadAllPagesAsync();
     const WANTED = ${JSON.stringify(wanted)};
 
+    const VAR_NAME_CACHE = {};
     async function resolveVar(id) {
+      if (Object.prototype.hasOwnProperty.call(VAR_NAME_CACHE, id)) return VAR_NAME_CACHE[id];
+      let name = null;
       try {
         const v = await figma.variables.getVariableByIdAsync(id);
-        return v ? v.name : null;
-      } catch (e) { return null; }
+        name = v ? v.name : null;
+      } catch (e) { name = null; }
+      VAR_NAME_CACHE[id] = name;
+      return name;
     }
 
     async function collectBoundVariables(n) {
@@ -249,7 +254,48 @@ function snapshotCode(wanted) {
       const budget = { visited: 0, max: ${MAX_ANATOMY_NODES}, truncated: false };
       const anatomy = base ? await anatomyNode(base, ${ANATOMY_DEPTH}, budget) : null;
 
+      // TOKEN UNION ACROSS EVERY VARIANT. \`anatomy\` above is ONE variant (the
+      // default), which is honest for STRUCTURE and wrong for the token list: a
+      // binding that exists only on State=Focus is invisible in it. Measured
+      // 2026-08-31 -- al-button's 30 Focus variants all bind
+      // theme/color/focus-ring, and extraction reported it absent, so the
+      // differ called a correct set broken and pointed a repair at it. The CODE
+      // side already unions the base anatomy with every stateOverride; this is
+      // what makes the canvas side symmetric.
+      //
+      // Attributed as it goes: a binding inside a nested al-* INSTANCE belongs
+      // to THAT component's set, so it is kept separate rather than folded in.
+      const ownTokens = new Set();
+      const nestedTokens = {};
+      const tokBudget = { visited: 0, max: 20000, truncated: false };
+      async function collectVariantTokens(n, depth, nestedTag) {
+        if (tokBudget.visited >= tokBudget.max) { tokBudget.truncated = true; return; }
+        tokBudget.visited += 1;
+        let tag = nestedTag;
+        if (!tag && n.type === 'INSTANCE' && /^al-[a-z0-9-]+$/.test(n.name || '')) tag = n.name;
+        const bv = await collectBoundVariables(n);
+        for (const key in bv) {
+          const name = bv[key];
+          if (!name) continue;
+          if (tag) { if (!nestedTokens[tag]) nestedTokens[tag] = {}; nestedTokens[tag][name] = true; }
+          else ownTokens.add(name);
+        }
+        if (depth > 0 && 'children' in n && n.children) {
+          for (const c of n.children) await collectVariantTokens(c, depth - 1, tag);
+        }
+      }
+      if (node.type === 'COMPONENT_SET') {
+        for (const child of node.children) await collectVariantTokens(child, ${ANATOMY_DEPTH}, null);
+      } else {
+        await collectVariantTokens(node, ${ANATOMY_DEPTH}, null);
+      }
+      const nestedTokensOut = {};
+      for (const t in nestedTokens) nestedTokensOut[t] = Object.keys(nestedTokens[t]).sort();
+
       out.push({
+        tokensOwn: [...ownTokens].sort(),
+        tokensNested: nestedTokensOut,
+        tokensUnionTruncated: tokBudget.truncated,
         tag: w.tag,
         fileKey: figma.fileKey || null,
         name: node.name,
@@ -326,7 +372,17 @@ export function buildCanvasContract(tag, raw, project, manifestEntry) {
   const stateAxis = variantAxes.find((a) => normState(a.name) === 'state');
   const states = stateAxis ? STATE_NAMES.filter((s) => stateAxis.values.some((v) => normState(v) === s)) : [];
 
-  const { anatomy, tokens, textStyles } = buildAnatomy(raw?.anatomy ?? null);
+  const { anatomy, tokens: anatomyTokens, textStyles } = buildAnatomy(raw?.anatomy ?? null);
+
+  // `tokens` is the union across EVERY variant when the sandbox supplied one
+  // (it walks all of them; `anatomy` is still the single default-variant
+  // sample). Fixtures and older dumps carry neither field, so fall back to the
+  // anatomy-only set rather than reporting an empty token list.
+  const tokensOwn = raw?.tokensOwn ?? null;
+  const tokensNested = raw?.tokensNested ?? null;
+  const tokens = tokensOwn
+    ? [...new Set([...tokensOwn, ...Object.values(tokensNested ?? {}).flat()])].sort()
+    : anatomyTokens;
 
   const degradations = [
     'props[].bindings.code — canvas has no code attribute names; see componentProperties for the Figma-side property list only.',
@@ -345,6 +401,12 @@ export function buildCanvasContract(tag, raw, project, manifestEntry) {
   if (raw?.anatomyTruncated) {
     degradations.push(`anatomy — node visit cap (${MAX_ANATOMY_NODES}) reached before the full tree was walked; anatomy/tokens is a partial read.`);
   }
+  if (raw?.tokensUnionTruncated) {
+    degradations.push('tokens — the cross-variant walk hit its node cap before every variant was read; the token union is a partial read.');
+  }
+  if (tokensOwn === null) {
+    degradations.push('tokens — read from the default variant only (no cross-variant union in this dump), so a binding that exists solely on a state variant is not listed.');
+  }
 
   const figmaName = raw?.name ?? manifestEntry?.figma?.name ?? null;
   const nodeId = raw?.nodeId ?? manifestEntry?.figma?.nodeId ?? null;
@@ -359,6 +421,8 @@ export function buildCanvasContract(tag, raw, project, manifestEntry) {
     states,
     textStyles,
     tokens,
+    tokensOwn,
+    tokensNested,
     anatomySource: anatomy ? 'observed' : 'unavailable',
     anatomyCase: anatomy ? (raw?.defaultVariantName ?? null) : null,
     anatomy,

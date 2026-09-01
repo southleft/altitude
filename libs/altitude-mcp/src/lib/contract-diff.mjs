@@ -259,7 +259,7 @@ function findCanvasProp(index, name) {
  * token bound only on hover, say, still counts as "code expects this Figma
  * variable to be bound somewhere".
  */
-function collectCodeFigmaTokens(anatomy, delegated = new Set()) {
+function collectCodeFigmaTokens(anatomy, delegated = new Set(), conditionalBindings = null) {
   const out = new Map(); // figmaVarName -> Set(alTokenName)
   const add = (binding) => {
     if (!binding?.figma) return;
@@ -278,11 +278,26 @@ function collectCodeFigmaTokens(anatomy, delegated = new Set()) {
     for (const child of node.children ?? []) walkNode(child);
   };
   walkNode(anatomy?.root ?? null);
+  // Every per-variant case too. The canvas side unions across ALL variants, so
+  // reading only `root` here charges the canvas for Variant=Danger / Shape=Pill
+  // bindings that code does express -- just in a case, not in the default tree.
+  for (const c of anatomy?.cases ?? []) walkNode(c?.root ?? null);
   for (const perNode of Object.values(anatomy?.stateOverrides ?? {})) {
     for (const perProp of Object.values(perNode ?? {})) {
       for (const binding of Object.values(perProp ?? {})) add(binding);
     }
   }
+  // conditionalBindings is per-VARIANT and per variant-plus-STATE (Danger+Hover
+  // binds background/danger-strong and nothing else does). Walked shape-
+  // agnostically -- any object carrying a string `figma` is a binding -- so a
+  // future nesting level cannot silently drop tokens the way a hand-written
+  // three-deep loop would.
+  const walkConditional = (node, depth = 0) => {
+    if (!node || typeof node !== 'object' || depth > 8) return;
+    if (typeof node.figma === 'string') { add(node); return; }
+    for (const value of Object.values(node)) walkConditional(value, depth + 1);
+  };
+  walkConditional(conditionalBindings);
   return out;
 }
 
@@ -299,7 +314,7 @@ const NESTED_TAG_RE = /^al-[a-z0-9-]+$/;
  * canvas FLATTENED it instead, the parent's own frames carry those tokens
  * inline, so the comparison is fair as-is and nothing is excluded.
  */
-function delegatedNestedTags(codeAnatomy, canvasAnatomy) {
+function delegatedNestedTags(codeAnatomy, canvasContract) {
   const inCode = new Set();
   const walkCode = (node) => {
     if (!node) return;
@@ -307,14 +322,23 @@ function delegatedNestedTags(codeAnatomy, canvasAnatomy) {
     for (const child of node.children ?? []) walkCode(child);
   };
   walkCode(codeAnatomy?.root ?? null);
+  for (const c of codeAnatomy?.cases ?? []) walkCode(c?.root ?? null);
 
   const delegated = new Set();
+  // Prefer `tokensNested`, which the extractor attributes across EVERY variant.
+  // The anatomy walk sees only the default-variant sample, so a child instanced
+  // solely on a state variant would not be delegated there.
+  const nested = canvasContract?.tokensNested;
+  if (nested) {
+    for (const tag of Object.keys(nested)) if (inCode.has(tag)) delegated.add(tag);
+    return delegated;
+  }
   const walkCanvas = (node) => {
     if (!node) return;
     if (node.type === 'INSTANCE' && inCode.has(node.name)) delegated.add(node.name);
     for (const child of node.children ?? []) walkCanvas(child);
   };
-  walkCanvas(canvasAnatomy ?? null);
+  walkCanvas(canvasContract?.anatomy ?? null);
   return delegated;
 }
 
@@ -326,6 +350,17 @@ function delegatedNestedTags(codeAnatomy, canvasAnatomy) {
  * so the refinement is a strict subset, never a different answer.
  */
 function collectCanvasFigmaTokens(canvasContract, delegated = new Set()) {
+  // Best source: the extractor's cross-variant union, already split own/nested.
+  // `anatomy` alone is the default variant, so a state-only binding (every
+  // focus ring in the library) reads as absent -- see the extractor's note.
+  if (canvasContract?.tokensOwn) {
+    const out = new Set(canvasContract.tokensOwn);
+    for (const [tag, names] of Object.entries(canvasContract.tokensNested ?? {})) {
+      if (delegated.has(tag)) continue;
+      for (const n of names) out.add(n);
+    }
+    return out;
+  }
   const anatomy = canvasContract?.anatomy;
   if (!anatomy) return new Set(canvasContract?.tokens ?? []);
   const out = new Set();
@@ -609,7 +644,7 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
   } else if (canvasContract.anatomySource !== 'observed') {
     skipped.push({ dimension: 'token-binding', reason: 'canvas anatomy unavailable (anatomySource !== "observed") — nothing to compare against.' });
   } else {
-    const delegated = delegatedNestedTags(codeContract.anatomy, canvasContract.anatomy);
+    const delegated = delegatedNestedTags(codeContract.anatomy, canvasContract);
     if (delegated.size) {
       skipped.push({
         dimension: 'token-binding',
@@ -619,7 +654,7 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
         delegated: [...delegated].sort(),
       });
     }
-    const codeFigmaTokens = collectCodeFigmaTokens(codeContract.anatomy, delegated);
+    const codeFigmaTokens = collectCodeFigmaTokens(codeContract.anatomy, delegated, codeContract.conditionalBindings ?? null);
     const canvasTokenSet = collectCanvasFigmaTokens(canvasContract, delegated);
     compared.tokens = new Set([...codeFigmaTokens.keys(), ...canvasTokenSet]).size;
 

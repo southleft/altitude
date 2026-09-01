@@ -131,8 +131,9 @@ console.log('\n6. retoken mutates what the differ actually reads');
   // exactly how this test caught the nested-instance delegation landing.
   assert('the flat tokens list changed',
     JSON.stringify(applied.pair.canvasContract.tokens) !== JSON.stringify(pair.canvasContract.tokens));
-  assert('and anatomy.boundVariables changed too — the surface the differ actually walks',
-    JSON.stringify(applied.pair.canvasContract.anatomy) !== JSON.stringify(pair.canvasContract.anatomy));
+  assert('and every other surface carrying that name changed too — the differ has switched which one it reads three times',
+    JSON.stringify(applied.pair.canvasContract) !== JSON.stringify(pair.canvasContract)
+    && !JSON.stringify(applied.pair.canvasContract).includes(JSON.stringify(applied.target.from)));
   const baseKeys = new Set(diffContracts(pair).disagreements.map((d) => `${d.dimension}|${d.key}|${d.kind}`));
   const injected = diffContracts(applied.pair).disagreements.filter((d) => !baseKeys.has(`${d.dimension}|${d.key}|${d.kind}`));
   assert('and it injects a token-binding disagreement', injected.some((d) => d.dimension === 'token-binding'));
