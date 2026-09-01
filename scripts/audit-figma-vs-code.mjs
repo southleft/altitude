@@ -9,14 +9,32 @@
  * The two systems do NOT share a naming scheme, so a raw name diff is noise.
  * ALIASES below encodes every known rename; anything left over is real drift.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isTokenLeaf, normalizeLeaf } from './lib/dtcg-token.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens-dtcg');
-const live = JSON.parse(readFileSync(join(ROOT, '.altitude/figma-sync/figma-live-vars.json'), 'utf8'));
+/*
+ * This file is a SNAPSHOT, not a live read, and a stale one silently produces a
+ * confident wrong diff. The 2026-08-31 dump survived the Figma restructure and
+ * still described 504 variables and the deleted color/brand namespace while the
+ * file held 367 — porting from it would have re-created what had just been
+ * removed. It is now date-stamped rather than kept under a name that reads as
+ * current, so re-dump before auditing instead of trusting whatever is on disk.
+ */
+const LIVE_VARS = join(ROOT, '.altitude/figma-sync/figma-live-vars.json');
+if (!existsSync(LIVE_VARS)) {
+  console.error(`[audit] missing ${LIVE_VARS}`);
+  console.error("        Dump the CURRENT variables out of Figma first:");
+  console.error("          node scripts/figma-atoms/bridge-io.mjs --port 9229");
+  console.error("          then figma_execute a getLocalVariablesAsync() dump POSTed to");
+  console.error("          http://localhost:9229/figma-live-vars.json");
+  console.error("        Dated snapshots in .altitude/figma-sync/ are history, not input.");
+  process.exit(2);
+}
+const live = JSON.parse(readFileSync(LIVE_VARS, 'utf8'));
 
 /** Figma name prefix -> code token prefix. Longest match wins. */
 const ALIASES = [
