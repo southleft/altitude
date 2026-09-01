@@ -72,6 +72,9 @@ _No interaction states recorded._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| border-block-end | `--al-theme-border-width` | `theme/border/width/@` |
+| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | padding | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-bottom | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
@@ -88,9 +91,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-banner`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (12)
 
-`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-xs`, `--al-theme-color-background-default`, `--al-theme-color-content-primary-default`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
+`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-xs`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-content-primary-default`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 

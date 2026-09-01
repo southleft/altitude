@@ -73,6 +73,9 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
+| border-inline-start | `--al-theme-border-width-md` | `theme/border/width/md` |
+| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 | column-gap | `--al-theme-space-md` | `theme/space/md` |
 | gap | `--al-theme-space-md` | `theme/space/md` |
 | padding-left | `--al-theme-space-md` | `theme/space/md` |
@@ -88,9 +91,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-testimonial`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (10)
+## Tokens referenced (12)
 
-`--al-font-weight-bold`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-width-md`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
 
 ---
 

@@ -83,7 +83,10 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ### Root — `<div class="al-c-accordion-panel al-is-last">`
 
-_None._
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| border-block-end | `--al-theme-border-width` | `theme/border/width/@` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 
 ### State overrides (measured, root node)
 
@@ -109,9 +112,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-accordion-panel`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (7)
+## Tokens referenced (8)
 
-`--al-font-weight-bold`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-icon-lg`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-icon-lg`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
 
 ---
 

@@ -97,6 +97,7 @@ Disabled attribute
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
+| border-bottom | `--al-theme-border-width-md` | `theme/border/width/md` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
