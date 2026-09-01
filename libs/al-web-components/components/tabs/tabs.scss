@@ -21,8 +21,8 @@
      * Adding margin to account for the prev/next arrows when scrollable
      */
     .al-is-scrollable & {
-      width: calc(100% - #{size(10.5)});
-      margin: 0 size(5.25);
+      width: calc(100% - #{84px});
+      margin: 0 42px;
       border: none;
 
       /**
@@ -32,11 +32,11 @@
         content: "";
         display: block;
         height: var(--al-theme-border-width);
-        width: calc(100% + #{size(10.5)});
+        width: calc(100% + #{84px});
         background-color: var(--al-theme-color-border-default);
         position: absolute;
         inset-block-end: 0;
-        inset-inline-start: size(-5.25);
+        inset-inline-start: -42px;
         z-index: -1;
       }
     }
@@ -84,14 +84,14 @@
    * Tabs previous arrow
    */
   .al-c-tabs__arrow--prev {
-    inset-inline-start: size(-5.25);
+    inset-inline-start: -42px;
   }
 
   /**
    * Tabs next arrow
    */
   .al-c-tabs__arrow--next {
-    inset-inline-end: size(-5.25);
+    inset-inline-end: -42px;
   }
 
   /**

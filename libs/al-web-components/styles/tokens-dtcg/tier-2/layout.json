@@ -3,7 +3,7 @@
     "layout": {
       "max-width": {
         "xs": {
-          "$value": "{layout.max-width.320}",
+          "$value": "320px",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -31,7 +31,7 @@
           }
         },
         "sm": {
-          "$value": "{layout.max-width.600}",
+          "$value": "600px",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -58,8 +58,33 @@
             }
           }
         },
+        "prose": {
+          "$value": "720px",
+          "$type": "dimension",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "sizing"
+            },
+            "org.primer.llm": {
+              "usage": "Content-measure scale (xs…xxl), aliasing tier-1 layout.max-width.*. Legal CSS surface: max-width. layout.scss reads this tier directly as of this session (previously bypassed it — see spec Findings \"tier bypass\")."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "width",
+                "height",
+                "min-width",
+                "min-height",
+                "max-width",
+                "max-height"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "6a8ca27a-ba5c-4c4e-b6d1-4bc7ae8cbd82"
+            }
+          }
+        },
         "md": {
-          "$value": "{layout.max-width.800}",
+          "$value": "800px",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -87,7 +112,7 @@
           }
         },
         "lg": {
-          "$value": "{layout.max-width.1000}",
+          "$value": "1000px",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -115,7 +140,7 @@
           }
         },
         "@": {
-          "$value": "{layout.max-width.1260}",
+          "$value": "1260px",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -142,8 +167,33 @@
             }
           }
         },
+        "xl": {
+          "$value": "1360px",
+          "$type": "dimension",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "sizing"
+            },
+            "org.primer.llm": {
+              "usage": "Content-measure scale (xs…xxl), aliasing tier-1 layout.max-width.*. Legal CSS surface: max-width. layout.scss reads this tier directly as of this session (previously bypassed it — see spec Findings \"tier bypass\")."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "width",
+                "height",
+                "min-width",
+                "min-height",
+                "max-width",
+                "max-height"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "20e9e807-7509-4560-ae2b-16045284adca"
+            }
+          }
+        },
         "xxl": {
-          "$value": "{layout.max-width.1440}",
+          "$value": "1440px",
           "$type": "dimension",
           "$extensions": {
             "org.altitude.token": {
@@ -167,64 +217,6 @@
             },
             "com.adobe.id": {
               "uuid": "f1dd341b-f513-4f27-95e5-a0aa45054d66"
-            }
-          }
-        }
-      },
-      "width": {
-        "container": {
-          "$value": "{layout.max-width.1260}",
-          "$type": "dimension",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "sizing"
-            },
-            "org.primer.llm": {
-              "usage": "Named layout widths (container, sidebar), aliasing tier-1 layout.max-width.*. Legal CSS surface: width, max-width."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "width",
-                "height",
-                "min-width",
-                "min-height",
-                "max-width",
-                "max-height"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "72d1548f-3a02-4840-a992-276e64781791"
-            }
-          }
-        },
-        "sidebar": {
-          "$value": "{layout.max-width.320}",
-          "$type": "dimension",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "sizing"
-            },
-            "org.primer.llm": {
-              "usage": "Named layout widths (container, sidebar), aliasing tier-1 layout.max-width.*. Legal CSS surface: width, max-width."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "width",
-                "height",
-                "min-width",
-                "min-height",
-                "max-width",
-                "max-height"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "66c502c2-bcbd-43a6-9e59-6e38302c07cb"
             }
           }
         }

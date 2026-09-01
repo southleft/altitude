@@ -37,20 +37,20 @@
 
      There is deliberately NO `[density='comfortable']` rule. It used to write
      `--al-theme-space-md: 1rem` while the emitted bundle says
-     `var(--al-space-20)` (1.25rem), so the axis could not be written at its
+     `20px`, so the axis could not be written at its
      own default value without silently reflowing the page — which is why five
      of the six Storybook presets leave `density` unset
      (`.storybook/presets.ts`, and `.mm/notes/preset-toolbar-switcher-handoff`
      §2.1). The base ramp IS comfortable; naming it now costs nothing. */
   :host([density='compact']) {
-    --al-theme-space-sm: var(--al-space-4);
-    --al-theme-space-md: var(--al-space-8);
-    --al-theme-space-lg: var(--al-space-12);
+    --al-theme-space-sm: 4px;
+    --al-theme-space-md: 8px;
+    --al-theme-space-lg: 12px;
   }
   :host([density='cozy']) {
-    --al-theme-space-sm: var(--al-space-8);
-    --al-theme-space-md: var(--al-space-12);
-    --al-theme-space-lg: var(--al-space-16);
+    --al-theme-space-sm: 8px;
+    --al-theme-space-md: 12px;
+    --al-theme-space-lg: 16px;
   }
 
   /* ----- contrast axis (T4.4, opacity remedy added

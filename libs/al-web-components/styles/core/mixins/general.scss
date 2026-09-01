@@ -4,15 +4,6 @@
 
 @use './typography' as *;
 
-/**
- * Size function
- * 1. The size function multiplies a provided value ($number) by the base sizing unit (--size-base-unit)
- * 2. $number should be limited to integers (e.g. 3) or half integers (e.g. 1.5)
- */
-@function size($number) {
-  @return calc(var(--al-base-space) * #{$number});
-}
-
 /* ------------------------------------*\
   #VISIBILITY
 \*------------------------------------ */

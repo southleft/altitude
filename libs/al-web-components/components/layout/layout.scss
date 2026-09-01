@@ -261,7 +261,7 @@
       [full-start]
         minmax(var(--al-layout-gutter), 1fr)
       [content-start]
-        min(100% - (var(--al-layout-gutter) * 2), var(--al-layout-measure, var(--al-theme-layout-width-container))) /* 2 */
+        min(100% - (var(--al-layout-gutter) * 2), var(--al-layout-measure, var(--al-theme-layout-max-width))) /* 2 */
       [content-end]
         minmax(var(--al-layout-gutter), 1fr)
       [full-end];
@@ -373,7 +373,7 @@
   }
 
   .al-c-layout--size-xl {
-    --al-layout-measure: var(--al-theme-layout-width-container);
+    --al-layout-measure: var(--al-theme-layout-max-width);
   }
 
   .al-c-layout--size-xxl {

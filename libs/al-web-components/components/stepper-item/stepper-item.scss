@@ -37,7 +37,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--al-theme-space-sm);
-    inset-inline-start: size(6.5);
+    inset-inline-start: 52px;
 
     /**
      * Vertical variant
@@ -54,9 +54,9 @@
    * - The container that holds the step number or check icon
    */
   .al-c-stepper-item__counter {
-    min-width: size(4);
-    max-width: size(4);
-    height: size(4);
+    min-width: 32px;
+    max-width: 32px;
+    height: 32px;
     border-radius: 50%;
     background-color: var(--al-theme-color-background-transparent-default);
     border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
@@ -124,7 +124,7 @@
     flex-direction: row;
     gap: var(--al-theme-space-xs);
     width: max-content;
-    max-width: size(17);
+    max-width: 136px;
     color: var(--al-theme-color-content-default);
     --al-icon-width: #{var(--al-theme-icon-md)};
     --al-icon-height: #{var(--al-theme-icon-md)};
@@ -171,7 +171,7 @@
      * Vertical variant
      */
     .al-c-stepper-item--vertical & {
-      margin-block-start: size(0.125);
+      margin-block-start: 1px;
       align-items: flex-start;
     }
   }

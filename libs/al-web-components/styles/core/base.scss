@@ -19,7 +19,12 @@
 }
 
 html {
-  font-size: var(--al-base-font);
+  /*
+   * Was `var(--al-base-font)`, which resolved to 16px. That primitive is gone —
+   * Figma has no counterpart and the value is the rem basis, not a design
+   * choice anything restates. Behaviour is byte-identical.
+   */
+  font-size: 16px;
 }
 
 body {

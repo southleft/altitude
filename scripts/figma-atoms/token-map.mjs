@@ -44,15 +44,28 @@ const ALIASES = [
 ];
 
 const readJson = (p) => JSON.parse(readFileSync(join(TOKENS, p), 'utf8'));
-const FILES = [
-  'tier-1/animations.json', 'tier-1/base.json', 'tier-1/borders.json', 'tier-1/breakpoints.json',
-  'tier-1/colors.json', 'tier-1/icons.json', 'tier-1/layout.json', 'tier-1/opacity.json',
-  'tier-1/shadows.json', 'tier-1/spacing.json', 'tier-1/typography.json', 'tier-1/z-index.json',
-  'tier-2/animations.json', 'tier-2/borders.json', 'tier-2/icons.json', 'tier-2/layout.json',
-  'tier-2/opacity.json', 'tier-2/shadows.json', 'tier-2/spacing.json', 'tier-2/typography.json',
-  'tier-2/theme/light/colors.json', 'tier-3/theme/light/colors.json',
-  'tier-2/theme/dark/colors.json', 'tier-3/theme/dark/colors.json',
-];
+/*
+ * Discovered, not enumerated. This was a hardcoded list naming every tier-1 and
+ * tier-2 file, so deleting tier-1/{base,spacing,icons,layout}.json — after their
+ * values were folded into the tier-2 theme tokens to match Figma — made this
+ * throw ENOENT and took gate:contracts down with it. A token tree that is
+ * allowed to be reorganised must not be mirrored in a literal somewhere else.
+ */
+const walkJson = (dir) => {
+  const abs = join(TOKENS, dir);
+  if (!existsSync(abs)) return [];
+  const out = [];
+  for (const e of readdirSync(abs, { withFileTypes: true })) {
+    const rel = `${dir}/${e.name}`;
+    if (e.isDirectory()) out.push(...walkJson(rel));
+    else if (e.name.endsWith('.json')) out.push(rel);
+  }
+  return out;
+};
+// tier-2/brand is added per-BRAND below, never wholesale
+const FILES = [...walkJson('tier-1'), ...walkJson('tier-2'), ...walkJson('tier-3')]
+  .filter((f) => !f.startsWith('tier-2/brand/'))
+  .sort();
 
 // A BRAND may introduce tokens the base tiers never declare (southleft's
 // theme.border.radius.role-surface / role-action are brand-only). Without these the

@@ -37,7 +37,7 @@
      * Add extra padding to fit the close button
      */
     &.al-is-dismissible {
-      padding-inline-end: size(5.5);
+      padding-inline-end: 44px;
     }
 
     /*
@@ -51,7 +51,7 @@
      * Add extra padding to fit the controls
      */
     &.al-has-controls {
-      padding-inline-start: size(18);
+      padding-inline-start: 144px;
     }
   }
 
@@ -63,10 +63,10 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding-block-start: size(2);
-    padding-inline-end: size(3);
-    padding-block-end: size(2);
-    padding-inline-start: size(3);
+    padding-block-start: var(--al-theme-space);
+    padding-inline-end: var(--al-theme-space-lg);
+    padding-block-end: var(--al-theme-space);
+    padding-inline-start: var(--al-theme-space-lg);
     gap: var(--al-theme-space);
   }
 

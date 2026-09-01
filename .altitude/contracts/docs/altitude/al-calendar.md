@@ -148,7 +148,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| min-width | `--al-base-space` | `base/space` |
+| min-width | `--al-base-space` | — |
 
 ### State overrides (measured, root node)
 

@@ -220,7 +220,7 @@
   .al-c-range__output-range-one,
   .al-c-range__output-range-two {
     @include al-input;
-    min-width: size(7);
+    min-width: 56px;
     width: max-content;
   }
 
@@ -235,7 +235,7 @@
     transform: translateX(var(--rtlTranslateX, -50%));
     text-align: start;
     overflow: visible;
-    min-width: size(3.75);
+    min-width: 30px;
     width: max-content;
     z-index: var(--al-z-index-200);
     background-color: var(--al-theme-color-background-default-strong);
@@ -250,12 +250,12 @@
       content: '';
       display: block;
       position: absolute;
-      inset-block-end: calc(-1 * size(1.25) / 2);
-      inset-inline-start: calc(50% - size(1.25) / 2);
+      inset-block-end: calc(-1 * 10px / 2);
+      inset-inline-start: calc(50% - 10px / 2);
       background-color: var(--al-theme-color-background-default-strong);
       transform: rotate(45deg);
-      width: size(1.25);
-      height: size(1.25);
+      width: 10px;
+      height: 10px;
       box-shadow: var(--al-theme-box-shadow);
     }
   }
@@ -466,7 +466,7 @@
    */
   .al-c-range__output {
     @include al-input;
-    min-width: size(7);
+    min-width: 56px;
     width: max-content;
   }
 
@@ -479,7 +479,7 @@
 
     .al-c-range--range &,
     .al-has-tooltip & {
-      padding-block-end: size(5);
+      padding-block-end: 40px;
     }
 
     .al-c-range--range.al-has-output & {
