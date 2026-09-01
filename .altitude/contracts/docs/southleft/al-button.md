@@ -243,14 +243,14 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-primary-weak` | `theme/color/background/primary-weak` |
+| background-color | `--al-theme-color-background-primary-faint` | `theme/color/background/primary-faint` |
 | color | `--al-theme-color-content-primary-default` | `theme/color/content/primary-default` |
 
 **On `hover`** (compound — wins over the generic state rule below):
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-primary-weak-strong` | `theme/color/background/primary-weak-strong` |
+| background-color | `--al-theme-color-background-primary-weak` | `theme/color/background/primary-weak` |
 
 #### `tertiary`
 

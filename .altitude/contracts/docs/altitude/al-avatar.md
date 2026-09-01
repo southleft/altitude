@@ -70,8 +70,8 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-stronger` | `theme/color/background/default-stronger` |
-| background-color | `--al-theme-color-background-default-stronger` | `theme/color/background/default-stronger` |
+| background | `--al-theme-color-background-default-stronger` | — |
+| background-color | `--al-theme-color-background-default-stronger` | — |
 | border-bottom-left-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | border-bottom-right-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | border-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |

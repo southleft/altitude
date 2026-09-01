@@ -81,7 +81,7 @@ export const MODE_SEMANTICS = {
   dark: {
     '--al-theme-color-background-default': 'var(--al-color-neutral-dark-700)',
     '--al-theme-color-background-default-strong': 'var(--al-color-neutral-dark-600)',
-    '--al-theme-color-background-default-stronger': 'var(--al-color-neutral-dark-500)',
+    '--al-theme-color-background-default-bold': 'var(--al-color-neutral-dark-500)',
     '--al-theme-color-background-default-weak': 'var(--al-color-neutral-dark-800)',
     '--al-theme-color-background-inverse-default': 'var(--al-color-neutral-light-100)',
     '--al-theme-color-background-success-default': 'var(--al-color-success-500)',
@@ -99,7 +99,7 @@ export const MODE_SEMANTICS = {
   light: {
     '--al-theme-color-background-default': 'var(--al-color-neutral-light-600)',
     '--al-theme-color-background-default-strong': 'var(--al-color-neutral-light-400)',
-    '--al-theme-color-background-default-stronger': 'var(--al-color-neutral-light-300)',
+    '--al-theme-color-background-default-bold': 'var(--al-color-neutral-light-300)',
     '--al-theme-color-background-default-weak': 'var(--al-color-neutral-light-800)',
     '--al-theme-color-background-inverse-default': 'var(--al-color-neutral-dark-900)',
     '--al-theme-color-background-success-default': 'var(--al-color-success-400)',

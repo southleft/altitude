@@ -67,16 +67,16 @@
   .al-c-button--secondary {
     /*
      * v2 canvas "Tonal": a primary-tinted fill with primary text, not a
-     * neutral grey. Hover steps to background-primary-weak-strong.
+     * neutral grey. Hover steps to background-primary-weak.
      */
-    background-color: var(--al-theme-color-background-primary-weak);
+    background-color: var(--al-theme-color-background-primary-faint);
     color: var(--al-theme-color-content-primary-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-primary-weak-strong);
+      background-color: var(--al-theme-color-background-primary-weak);
     }
   }
 

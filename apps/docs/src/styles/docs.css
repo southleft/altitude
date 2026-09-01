@@ -326,7 +326,7 @@ al-theme {
    */
   --al-bg-default: var(--al-theme-color-background-default, #e9e7e2);
   --al-bg-strong: var(--al-theme-color-background-default-strong, #f2f1ee);
-  --al-bg-stronger: var(--al-theme-color-background-default-stronger, #f4f3f1);
+  --al-bg-stronger: var(--al-theme-color-background-default-bold, #f4f3f1);
   --al-content: var(--al-theme-color-content-default, #101010);
   --al-content-weak: var(--al-theme-color-content-default-weak, #3a3a3a);
   --al-border: var(--al-theme-color-border-default, #b0b0b0);
@@ -370,8 +370,11 @@ al-theme {
    * #dbe5ff) and a warm soft red for southleft. The dark mix over
    * `--blue-ink` is a looser match (#… vs blue-800's #0c3197) — acceptable
    * for its two usages, both decorative fills (OverviewPage swatch strip,
-   * MotionPage demo panel). If a `background-primary-weak` rung ever ships,
-   * bind to it and delete both mixes.
+   * MotionPage demo panel). That rung now EXISTS as
+   * `background-primary-faint` (primary-800 dark / primary-100 light, ported
+   * from Figma 2026-09-01) — bind to it and delete both mixes. Left as a mix
+   * for now only because the tuned values are load-bearing for two
+   * decorative fills and swapping them changes rendered output.
    */
   --blue-ink: var(--al-theme-color-content-primary-weak, #000b29);
   --blue-soft: color-mix(in srgb, var(--blue) 20%, #ffffff);
