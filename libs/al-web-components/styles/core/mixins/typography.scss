@@ -212,6 +212,18 @@
   letter-spacing: var(--al-theme-typography-body-xs-letter-spacing);
 }
 
+@mixin al-theme-typography-body-xs-medium {
+  @include al-theme-typography-body-xs();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-body-xs-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-body-xs-semibold {
+  @include al-theme-typography-body-xs();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-body-xs-semibold-letter-spacing) !important;
+}
+
 @mixin al-theme-typography-body-xs-bold {
   @include al-theme-typography-body-xs();
   font-weight: var(--al-font-weight-bold) !important;
@@ -221,6 +233,18 @@
 @mixin al-theme-typography-body-sm($responsive: true) {
   font: var(--al-theme-typography-body-sm);
   letter-spacing: var(--al-theme-typography-body-sm-letter-spacing);
+}
+
+@mixin al-theme-typography-body-sm-medium {
+  @include al-theme-typography-body-sm();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-body-sm-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-body-sm-semibold {
+  @include al-theme-typography-body-sm();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-body-sm-semibold-letter-spacing) !important;
 }
 
 @mixin al-theme-typography-body-sm-bold {
@@ -234,6 +258,18 @@
   letter-spacing: var(--al-theme-typography-body-md-letter-spacing);
 }
 
+@mixin al-theme-typography-body-md-medium {
+  @include al-theme-typography-body-md();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-body-md-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-body-md-semibold {
+  @include al-theme-typography-body-md();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-body-md-semibold-letter-spacing) !important;
+}
+
 @mixin al-theme-typography-body-md-bold {
   @include al-theme-typography-body-md();
   font-weight: var(--al-font-weight-bold) !important;
@@ -243,6 +279,18 @@
 @mixin al-theme-typography-body-lg($responsive: true) {
   font: var(--al-theme-typography-body-lg);
   letter-spacing: var(--al-theme-typography-body-lg-letter-spacing);
+}
+
+@mixin al-theme-typography-body-lg-medium {
+  @include al-theme-typography-body-lg();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-body-lg-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-body-lg-semibold {
+  @include al-theme-typography-body-lg();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-body-lg-semibold-letter-spacing) !important;
 }
 
 @mixin al-theme-typography-body-lg-bold {
@@ -267,6 +315,18 @@
   }
 }
 
+@mixin al-theme-typography-heading-sm-medium {
+  @include al-theme-typography-heading-sm();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-heading-sm-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-heading-sm-semibold {
+  @include al-theme-typography-heading-sm();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-heading-sm-semibold-letter-spacing) !important;
+}
+
 @mixin al-theme-typography-heading-sm-bold {
   @include al-theme-typography-heading-sm();
   font-weight: var(--al-font-weight-bold) !important;
@@ -285,6 +345,18 @@
   }
 }
 
+@mixin al-theme-typography-heading-md-medium {
+  @include al-theme-typography-heading-md();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-heading-md-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-heading-md-semibold {
+  @include al-theme-typography-heading-md();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-heading-md-semibold-letter-spacing) !important;
+}
+
 @mixin al-theme-typography-heading-md-bold {
   @include al-theme-typography-heading-md();
   font-weight: var(--al-font-weight-bold) !important;
@@ -301,6 +373,18 @@
       letter-spacing: var(--al-theme-typography-heading-md-letter-spacing);
     }
   }
+}
+
+@mixin al-theme-typography-heading-lg-medium {
+  @include al-theme-typography-heading-lg();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-heading-lg-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-heading-lg-semibold {
+  @include al-theme-typography-heading-lg();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-heading-lg-semibold-letter-spacing) !important;
 }
 
 @mixin al-theme-typography-heading-lg-bold {
@@ -325,6 +409,18 @@
   }
 }
 
+@mixin al-theme-typography-display-sm-medium {
+  @include al-theme-typography-display-sm();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-display-sm-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-display-sm-semibold {
+  @include al-theme-typography-display-sm();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-display-sm-semibold-letter-spacing) !important;
+}
+
 @mixin al-theme-typography-display-sm-bold {
   @include al-theme-typography-display-sm();
   font-weight: var(--al-font-weight-bold) !important;
@@ -343,6 +439,18 @@
   }
 }
 
+@mixin al-theme-typography-display-md-medium {
+  @include al-theme-typography-display-md();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-display-md-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-display-md-semibold {
+  @include al-theme-typography-display-md();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-display-md-semibold-letter-spacing) !important;
+}
+
 @mixin al-theme-typography-display-md-bold {
   @include al-theme-typography-display-md();
   font-weight: var(--al-font-weight-bold) !important;
@@ -359,6 +467,18 @@
       letter-spacing: var(--al-theme-typography-display-md-letter-spacing);
     }
   }
+}
+
+@mixin al-theme-typography-display-lg-medium {
+  @include al-theme-typography-display-lg();
+  font-weight: var(--al-font-weight-medium) !important;
+  letter-spacing: var(--al-theme-typography-display-lg-medium-letter-spacing) !important;
+}
+
+@mixin al-theme-typography-display-lg-semibold {
+  @include al-theme-typography-display-lg();
+  font-weight: var(--al-font-weight-semibold) !important;
+  letter-spacing: var(--al-theme-typography-display-lg-semibold-letter-spacing) !important;
 }
 
 @mixin al-theme-typography-display-lg-bold {

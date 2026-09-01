@@ -305,14 +305,14 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| font-size | `--al-font-size-15` | `typography/font-size/15` |
+| font-size | `--al-font-size-16` | `typography/font-size/16` |
 | min-height | `--al-theme-size-control-lg` | `theme/size/control-lg` |
 
 #### `sm`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-size | `--al-font-size-12` | `typography/font-size/12` |
 | min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
 
 ## Code

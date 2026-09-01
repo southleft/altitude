@@ -102,7 +102,7 @@ Variant
 | border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
-| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-size | `--al-font-size-13` | — |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |

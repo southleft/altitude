@@ -16,7 +16,7 @@
      * type scale is what let the outline variant render 42px against the 40px
      * of every other variant — its 1px border had nothing to subtract from.
      */
-    @include al-theme-typography-body-sm-bold;
+    @include al-theme-typography-body-sm-semibold;
     line-height: 1;
     box-sizing: border-box;
     min-height: var(--al-button-height, var(--al-theme-size-control));
@@ -135,13 +135,13 @@
   .al-c-button--sm {
     min-height: var(--al-button-height, var(--al-theme-size-control-sm));
     padding: var(--al-button-padding, 0 #{var(--al-theme-space-sm)});
-    font-size: var(--al-font-size-13);
+    font-size: var(--al-font-size-12);
   }
 
   .al-c-button--lg {
     min-height: var(--al-button-height, var(--al-theme-size-control-lg));
     padding: var(--al-button-padding, 0 #{var(--al-theme-space-md)});
-    font-size: var(--al-font-size-15);
+    font-size: var(--al-font-size-16);
   }
 
   /**

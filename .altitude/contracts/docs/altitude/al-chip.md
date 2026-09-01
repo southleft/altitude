@@ -104,7 +104,7 @@ Variant
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-size | `--al-font-size-13` | — |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
@@ -150,7 +150,7 @@ Variant
 | background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-size | `--al-font-size-12` | `typography/font-size/12` |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |

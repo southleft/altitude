@@ -23,7 +23,8 @@ const WORKSPACE_ROOT = path.resolve(SD_ROOT, '..'); // .../libs/al-web-component
 const themePrefix = 'al';
 const themeFontWeightRegular = '400';
 const themeFontWeightMedium = '500';
-const themeFontWeightBold = '600';
+const themeFontWeightSemibold = '600';
+const themeFontWeightBold = '700';
 
 /*
  * Named weight -> CSS numeric. This used to be a BINARY: `'Bold' ? 600 : 400`,
@@ -31,12 +32,23 @@ const themeFontWeightBold = '600';
  * silently collapsed to 400 — a token authored as "Medium" emitted 400 and gave
  * no warning that it had been flattened. The v2 canvas uses three (400 body,
  * 500 chips and the mono metadata face, 600 controls and headings), so the map
- * is explicit and an unknown name still falls back to regular rather than
- * throwing.
+ * is explicit.
+ *
+ * 2026-09-01: SemiBold added and Bold moved 600 -> 700, to match the Figma
+ * file, which carries both as distinct faces across all 60 text styles. What
+ * code called "Bold" always emitted 600 — semibold — so every preset that
+ * rendered at 600 was renamed to `semibold` in the same change and a genuine
+ * 700 `bold` added beside it. Renaming without remapping (or the reverse)
+ * would silently restyle 29 call sites.
+ *
+ * The fallback no longer swallows a typo. An unknown name still degrades to
+ * regular so a build cannot fail on one token, but it now says so — the
+ * previous silent collapse is exactly how "Medium" emitted 400 unnoticed.
  */
 const FONT_WEIGHTS = {
   Regular: themeFontWeightRegular,
   Medium: themeFontWeightMedium,
+  SemiBold: themeFontWeightSemibold,
   Bold: themeFontWeightBold,
 };
 const themeFontBaseSize = 16;
@@ -55,8 +67,14 @@ function formatBoxShadowValue(value) {
   return `${value.x}px ${value.y}px ${value.blur}px ${value.spread}px ${value.color}`;
 }
 
+const unknownFontWeights = new Set();
 function formatFontWeightValue(value) {
-  return FONT_WEIGHTS[value] ?? themeFontWeightRegular;
+  const mapped = FONT_WEIGHTS[value];
+  if (mapped === undefined && !unknownFontWeights.has(value)) {
+    unknownFontWeights.add(value);
+    console.warn(`[tokens:v5] unknown font weight "${value}" -> falling back to ${themeFontWeightRegular}. Add it to FONT_WEIGHTS.`);
+  }
+  return mapped ?? themeFontWeightRegular;
 }
 
 function formatTypographyValue(value) {

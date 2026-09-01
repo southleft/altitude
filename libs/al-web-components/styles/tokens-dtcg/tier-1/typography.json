@@ -604,6 +604,27 @@
         }
       }
     },
+    "semibold": {
+      "$value": "SemiBold",
+      "$type": "fontWeight",
+      "$extensions": {
+        "org.altitude.token": {
+          "cssType": "fontWeights"
+        },
+        "org.primer.llm": {
+          "usage": "Tier-1 font-weight primitive scale. Has no design meaning of its own, only its position in the ramp — consumed exclusively through tier-2 semantic aliases (theme.*). Do not read one of these directly from component code."
+        },
+        "com.salesforce.styling": {
+          "cssProperties": [
+            "font-weight",
+            "font"
+          ]
+        },
+        "com.adobe.id": {
+          "uuid": "712d30a6-cf11-4a45-859d-e94e663cf23f"
+        }
+      }
+    },
     "bold": {
       "$value": "Bold",
       "$type": "fontWeight",
@@ -702,30 +723,6 @@
         }
       }
     },
-    "13": {
-      "$value": "13px",
-      "$type": "dimension",
-      "$extensions": {
-        "org.altitude.token": {
-          "cssType": "fontSizes"
-        },
-        "org.primer.llm": {
-          "usage": "Tier-1 font-size primitive scale. Has no design meaning of its own, only its position in the ramp — consumed exclusively through tier-2 semantic aliases (theme.*). Do not read one of these directly from component code."
-        },
-        "com.salesforce.styling": {
-          "cssProperties": [
-            "font-size",
-            "font"
-          ]
-        },
-        "com.atlassian.token": {
-          "introduced": "2026-08-31"
-        },
-        "com.adobe.id": {
-          "uuid": "05cfe421-1a2c-4cd7-b611-0bf03195f489"
-        }
-      }
-    },
     "14": {
       "$value": "14px",
       "$type": "dimension",
@@ -750,30 +747,6 @@
         }
       }
     },
-    "15": {
-      "$value": "15px",
-      "$type": "dimension",
-      "$extensions": {
-        "org.altitude.token": {
-          "cssType": "fontSizes"
-        },
-        "org.primer.llm": {
-          "usage": "Tier-1 font-size primitive scale. Has no design meaning of its own, only its position in the ramp — consumed exclusively through tier-2 semantic aliases (theme.*). Do not read one of these directly from component code."
-        },
-        "com.salesforce.styling": {
-          "cssProperties": [
-            "font-size",
-            "font"
-          ]
-        },
-        "com.atlassian.token": {
-          "introduced": "2026-08-31"
-        },
-        "com.adobe.id": {
-          "uuid": "11e0a35d-d34e-4143-801a-af0ea55c5328"
-        }
-      }
-    },
     "16": {
       "$value": "16px",
       "$type": "dimension",
@@ -795,30 +768,6 @@
         },
         "com.adobe.id": {
           "uuid": "94eee01d-a49b-430f-be86-1b4e479b180c"
-        }
-      }
-    },
-    "18": {
-      "$value": "18px",
-      "$type": "dimension",
-      "$extensions": {
-        "org.altitude.token": {
-          "cssType": "fontSizes"
-        },
-        "org.primer.llm": {
-          "usage": "Tier-1 font-size primitive scale. Has no design meaning of its own, only its position in the ramp — consumed exclusively through tier-2 semantic aliases (theme.*). Do not read one of these directly from component code."
-        },
-        "com.salesforce.styling": {
-          "cssProperties": [
-            "font-size",
-            "font"
-          ]
-        },
-        "com.atlassian.token": {
-          "introduced": "2024-03-05"
-        },
-        "com.adobe.id": {
-          "uuid": "a2123ff9-2bc8-4f34-9431-8af981debbe9"
         }
       }
     },
@@ -1192,6 +1141,93 @@
             }
           }
         },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.20}",
+            "fontSize": "{font-size.12}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 12px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "006a37b3-4bfe-4dde-91e0-d969825046a1"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.20}",
+            "fontSize": "{font-size.12}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 12px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "d5c1290b-1b93-4437-b56c-eb8bc9ed7c23"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.20}",
+            "fontSize": "{font-size.12}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 12px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "18ad5b99-0f8f-4407-880b-e4875ca66f91"
+            }
+          }
+        },
         "italic": {
           "$value": {
             "fontFamily": "{font-family.primary}",
@@ -1251,36 +1287,6 @@
               "uuid": "706f39b9-686c-405a-ac18-06dc352695c9"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.20}",
-            "fontSize": "{font-size.12}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 12px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "d5c1290b-1b93-4437-b56c-eb8bc9ed7c23"
-            }
-          }
         }
       },
       "14": {
@@ -1311,6 +1317,93 @@
             },
             "com.adobe.id": {
               "uuid": "31518ff0-3a36-4212-baf2-75e9810342e1"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.20}",
+            "fontSize": "{font-size.14}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 14px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "ceb3f9b8-a646-43e3-9dd9-6fc4c78b7206"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.20}",
+            "fontSize": "{font-size.14}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 14px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "f3a0b78d-3a88-490f-94fd-231d3bc52d29"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.20}",
+            "fontSize": "{font-size.14}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 14px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "b6e1ba8f-23ed-437b-ba84-7ef1852a341c"
             }
           }
         },
@@ -1373,36 +1466,6 @@
               "uuid": "845f8183-024b-42e1-96c5-ed84af557a5c"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.20}",
-            "fontSize": "{font-size.14}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 14px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "f3a0b78d-3a88-490f-94fd-231d3bc52d29"
-            }
-          }
         }
       },
       "16": {
@@ -1433,6 +1496,93 @@
             },
             "com.adobe.id": {
               "uuid": "29bcacf0-ce84-48c2-b4c9-279b7bcda991"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.24}",
+            "fontSize": "{font-size.16}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 16px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "287ff857-df39-4006-a756-4c6bf588bad8"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.24}",
+            "fontSize": "{font-size.16}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 16px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "110137bb-9765-4eb4-b9d4-430d158f534f"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.24}",
+            "fontSize": "{font-size.16}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 16px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "9c065c60-d588-4836-83fa-176f98ae6e23"
             }
           }
         },
@@ -1495,158 +1645,6 @@
               "uuid": "7454e28f-2af4-4152-a37f-45f8748f4754"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.24}",
-            "fontSize": "{font-size.16}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 16px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "110137bb-9765-4eb4-b9d4-430d158f534f"
-            }
-          }
-        }
-      },
-      "18": {
-        "regular": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.regular}",
-            "lineHeight": "{line-height.28}",
-            "fontSize": "{font-size.18}",
-            "letterSpacing": "{letter-spacing.0}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 18px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "788cd054-22b8-4b84-b2d3-250a638b1aa5"
-            }
-          }
-        },
-        "italic": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.italic}",
-            "lineHeight": "{line-height.28}",
-            "fontSize": "{font-size.18}",
-            "letterSpacing": "{letter-spacing.0}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 18px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "7d58270c-c43e-4817-abc3-35e0629dc9ad"
-            }
-          }
-        },
-        "underline": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.regular}",
-            "lineHeight": "{line-height.28}",
-            "fontSize": "{font-size.18}",
-            "letterSpacing": "{letter-spacing.0}",
-            "textDecoration": "{text-decoration.underline}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 18px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "dab36a7b-4961-4cc7-8273-2feddd20a9f6"
-            }
-          }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.28}",
-            "fontSize": "{font-size.18}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 18px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "74300d7d-7d4f-446c-afd7-fb09a18fc028"
-            }
-          }
         }
       },
       "20": {
@@ -1677,6 +1675,93 @@
             },
             "com.adobe.id": {
               "uuid": "6f0115ba-5f82-499a-a31f-d44c75f7a77c"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.28}",
+            "fontSize": "{font-size.20}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 20px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "28824723-ed3b-4dc5-9e24-96e4da0b72bf"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.28}",
+            "fontSize": "{font-size.20}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 20px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "6d0db684-528c-4641-b6c0-76c2ca83ba8f"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.28}",
+            "fontSize": "{font-size.20}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 20px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "cf63bbc6-69d4-4d9e-858e-a877b90cfce3"
             }
           }
         },
@@ -1739,36 +1824,6 @@
               "uuid": "6d737b1b-1e9e-4727-b053-8eda079d6db6"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.28}",
-            "fontSize": "{font-size.20}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 20px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "6d0db684-528c-4641-b6c0-76c2ca83ba8f"
-            }
-          }
         }
       },
       "24": {
@@ -1799,6 +1854,93 @@
             },
             "com.adobe.id": {
               "uuid": "e2340a33-dcfb-44bc-a319-17d86e53f765"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.32}",
+            "fontSize": "{font-size.24}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 24px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "3deb47f9-19d4-40bd-9a75-acdc07ba6f5b"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.32}",
+            "fontSize": "{font-size.24}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 24px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "b404fe10-d50c-4647-a95b-c11e2b4bdf6a"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.32}",
+            "fontSize": "{font-size.24}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 24px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "4d4a1b1d-38f9-41fc-938b-d4b7a37704ef"
             }
           }
         },
@@ -1861,36 +2003,6 @@
               "uuid": "56246376-4d3e-42cc-9432-ea06db1922b6"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.32}",
-            "fontSize": "{font-size.24}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 24px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "b404fe10-d50c-4647-a95b-c11e2b4bdf6a"
-            }
-          }
         }
       },
       "36": {
@@ -1921,6 +2033,93 @@
             },
             "com.adobe.id": {
               "uuid": "8e573469-b19d-425b-96ad-00246c0e4794"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.36}",
+            "fontSize": "{font-size.28}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 36px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "29080c2d-dda0-4a4d-ba01-b8b0e73498b0"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.36}",
+            "fontSize": "{font-size.28}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 36px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "8fa90223-d676-45ec-b4d1-e31a49632033"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.36}",
+            "fontSize": "{font-size.28}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 36px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "8bd9be2e-0730-49ec-8842-5db51a0eb930"
             }
           }
         },
@@ -1983,36 +2182,6 @@
               "uuid": "dea808e6-ba65-4f1a-9241-ec37a31ec771"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.36}",
-            "fontSize": "{font-size.28}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 36px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "8fa90223-d676-45ec-b4d1-e31a49632033"
-            }
-          }
         }
       },
       "40": {
@@ -2043,6 +2212,93 @@
             },
             "com.adobe.id": {
               "uuid": "f01d9fc8-0622-48ad-a181-8a3d78d3718d"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.40}",
+            "fontSize": "{font-size.32}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 40px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "364bfaa3-f55d-44bd-902c-e51522908421"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.40}",
+            "fontSize": "{font-size.32}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 40px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "aa6dd331-2b08-4b5a-be91-7250910ce63e"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.40}",
+            "fontSize": "{font-size.32}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 40px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "592dac84-e61e-45b3-8913-90e709056674"
             }
           }
         },
@@ -2105,36 +2361,6 @@
               "uuid": "dbcea6fe-9de8-43d8-9f5f-f4bf6042ae78"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.40}",
-            "fontSize": "{font-size.32}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 40px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "aa6dd331-2b08-4b5a-be91-7250910ce63e"
-            }
-          }
         }
       },
       "44": {
@@ -2165,6 +2391,93 @@
             },
             "com.adobe.id": {
               "uuid": "0cc581f0-f515-4a8e-bf2a-37c762c76f1d"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.44}",
+            "fontSize": "{font-size.36}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 44px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "86a108cd-82bb-4a79-b72b-58b124f5e098"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.44}",
+            "fontSize": "{font-size.36}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 44px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "4a4a78b6-0fc1-4190-8b21-f3ba8f87284d"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.44}",
+            "fontSize": "{font-size.36}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 44px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "3b28e304-f99c-43a8-802d-b5e418f8df5f"
             }
           }
         },
@@ -2227,36 +2540,6 @@
               "uuid": "49d97a0d-cea4-460b-9c8f-9ef8ad60978e"
             }
           }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.44}",
-            "fontSize": "{font-size.36}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 44px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "4a4a78b6-0fc1-4190-8b21-f3ba8f87284d"
-            }
-          }
         }
       },
       "48": {
@@ -2287,6 +2570,93 @@
             },
             "com.adobe.id": {
               "uuid": "17448bc9-22a6-4848-8137-984f55814c5b"
+            }
+          }
+        },
+        "medium": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.medium}",
+            "lineHeight": "{line-height.52}",
+            "fontSize": "{font-size.48}",
+            "letterSpacing": "{letter-spacing.0}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 48px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "e0708f5c-4f26-45be-9846-ac53a0879715"
+            }
+          }
+        },
+        "semibold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.semibold}",
+            "lineHeight": "{line-height.52}",
+            "fontSize": "{font-size.48}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 48px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2024-03-05"
+            },
+            "com.adobe.id": {
+              "uuid": "3bcfec29-702c-4145-bbe1-fb5e6c8e1de4"
+            }
+          }
+        },
+        "bold": {
+          "$value": {
+            "fontFamily": "{font-family.primary}",
+            "fontWeight": "{font-weight.bold}",
+            "lineHeight": "{line-height.52}",
+            "fontSize": "{font-size.48}",
+            "letterSpacing": "{letter-spacing.1}",
+            "textDecoration": "{text-decoration.none}"
+          },
+          "$type": "typography",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "typography"
+            },
+            "org.primer.llm": {
+              "usage": "Tier-1 composite preset at 48px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "font"
+              ]
+            },
+            "com.atlassian.token": {
+              "introduced": "2026-08-25"
+            },
+            "com.adobe.id": {
+              "uuid": "b7ef049c-7c4d-4602-a1a1-c1ce4f81cb0e"
             }
           }
         },
@@ -2347,36 +2717,6 @@
             },
             "com.adobe.id": {
               "uuid": "7496ffc6-9ac4-478b-b78c-13306f4853b0"
-            }
-          }
-        },
-        "bold": {
-          "$value": {
-            "fontFamily": "{font-family.primary}",
-            "fontWeight": "{font-weight.bold}",
-            "lineHeight": "{line-height.52}",
-            "fontSize": "{font-size.48}",
-            "letterSpacing": "{letter-spacing.1}",
-            "textDecoration": "{text-decoration.none}"
-          },
-          "$type": "typography",
-          "$extensions": {
-            "org.altitude.token": {
-              "cssType": "typography"
-            },
-            "org.primer.llm": {
-              "usage": "Tier-1 composite preset at 48px: bundles fontFamily/fontWeight/fontSize/lineHeight/letterSpacing/textDecoration for one physical size. Referenced only by tier-2 theme.typography.* role aliases (body/heading/display) — never read directly by component code."
-            },
-            "com.salesforce.styling": {
-              "cssProperties": [
-                "font"
-              ]
-            },
-            "com.atlassian.token": {
-              "introduced": "2024-03-05"
-            },
-            "com.adobe.id": {
-              "uuid": "3bcfec29-702c-4145-bbe1-fb5e6c8e1de4"
             }
           }
         }

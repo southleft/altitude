@@ -100,7 +100,7 @@ _No interaction states recorded._
 | border-top-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
-| font-size | `--al-font-size-13` | `typography/font-size/13` |
+| font-size | `--al-font-size-13` | — |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 
