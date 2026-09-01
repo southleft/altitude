@@ -16,12 +16,14 @@ Component: al-text-block
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `maxWidth` | string | `'sm'` | — | — |
+| `maxWidth` | string | `'sm'` | — | _not expressed in Figma (by design)_ |
 
 #### `maxWidth`
 
 Prevents the text passage from expanding full width
 - **sm** Add a max width of --al-theme-layout-max-width-sm
+
+**Figma-expression opt-out (T27):** `maxWidth` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

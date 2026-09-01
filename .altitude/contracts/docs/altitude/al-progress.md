@@ -17,12 +17,12 @@ Component: al-progress
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `circleSize` | enum | `lg`, `md`, `xl` | — | **Size** (VARIANT): `Default`, `Lg`, `Md`, `Xl` |
-| `currentProgress` | number | — | `0` | — |
-| `duration` | number | — | `0` | — |
-| `endProgress` | number | — | `100` | — |
+| `currentProgress` | number | — | `0` | _not expressed in Figma (by design)_ |
+| `duration` | number | — | `0` | _not expressed in Figma (by design)_ |
+| `endProgress` | number | — | `100` | _not expressed in Figma (by design)_ |
 | `isCircle` | boolean | — | `false` | **Shape** (VARIANT): `Bar`, `Circle` |
-| `labelAria` | string | — | `'progress'` | — |
-| `labelType` | string | `'ratio'` | — | — |
+| `labelAria` | string | — | `'progress'` | _not expressed in Figma (by design)_ |
+| `labelType` | string | `'ratio'` | — | _not expressed in Figma (by design)_ |
 | `showLabel` | boolean | — | `false` | **Label** (VARIANT): `Hidden`, `Shown` |
 
 #### `circleSize`
@@ -71,6 +71,8 @@ Label type
 Show label?
 **true** Displays the progress label
 **false** Does not display a progress label
+
+**Figma-expression opt-out (T27):** `currentProgress`, `duration`, `endProgress`, `labelAria`, `labelType` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

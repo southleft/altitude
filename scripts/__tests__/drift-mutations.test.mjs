@@ -125,8 +125,14 @@ console.log('\n6. retoken mutates what the differ actually reads');
 {
   const applied = applyMutation('retoken', pair);
   assert('it applies to al-button', !!applied);
-  assert('the flat tokens list changed — NOT anatomy.boundVariables, which the differ does not walk',
+  // Both surfaces, deliberately. The differ WALKS anatomy boundVariables and
+  // falls back to the flat `tokens` list, so a mutation that moves only one of
+  // them goes invisible the moment the differ prefers the other — which is
+  // exactly how this test caught the nested-instance delegation landing.
+  assert('the flat tokens list changed',
     JSON.stringify(applied.pair.canvasContract.tokens) !== JSON.stringify(pair.canvasContract.tokens));
+  assert('and anatomy.boundVariables changed too — the surface the differ actually walks',
+    JSON.stringify(applied.pair.canvasContract.anatomy) !== JSON.stringify(pair.canvasContract.anatomy));
   const baseKeys = new Set(diffContracts(pair).disagreements.map((d) => `${d.dimension}|${d.key}|${d.kind}`));
   const injected = diffContracts(applied.pair).disagreements.filter((d) => !baseKeys.has(`${d.dimension}|${d.key}|${d.kind}`));
   assert('and it injects a token-binding disagreement', injected.some((d) => d.dimension === 'token-binding'));

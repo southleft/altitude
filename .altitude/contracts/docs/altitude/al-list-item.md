@@ -16,16 +16,16 @@ Component: al-list-item
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `behavior` | string | `'flyout'` | — | — |
-| `flyoutPosition` | enum | `bottom`, `left`, `top` | — | — |
-| `href` | string | — | — | — |
+| `behavior` | string | `'flyout'` | — | _not expressed in Figma (by design)_ |
+| `flyoutPosition` | enum | `bottom`, `left`, `top` | — | _not expressed in Figma (by design)_ |
+| `href` | string | — | — | _not expressed in Figma (by design)_ |
 | `isActive` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isCurrent` | boolean | — | — | **Current** (VARIANT): `No`, `Yes` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
-| `onClick` | string | `() => void` | — | — |
-| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
-| `value` | string | `string \| { label: string; value: any; [key: string]: unknown }` | — | — |
+| `onClick` | string | `() => void` | — | _not expressed in Figma (by design)_ |
+| `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
+| `value` | string | `string \| { label: string; value: any; [key: string]: unknown }` | — | _not expressed in Figma (by design)_ |
 | `variant` | string | `'static'` | — | **Variant** (VARIANT): `Default`, `Static` |
 
 #### `behavior`
@@ -82,6 +82,8 @@ Value can be a string or object ({lable, value} pair)
 
 Variants
 - **static** renders a list item that isn't interactive. Use for typeahead dropdowns
+
+**Figma-expression opt-out (T27):** `behavior`, `flyoutPosition`, `href`, `onClick`, `target`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

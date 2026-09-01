@@ -19,8 +19,8 @@ tables/lists, zero-data dashboard states.
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `description` | string | — | — | — |
-| `heading` | string | — | — | — |
+| `description` | string | — | — | _not expressed in Figma (by design)_ |
+| `heading` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `description`
 
@@ -29,6 +29,8 @@ Supporting description text.
 #### `heading`
 
 The empty-state heading.
+
+**Figma-expression opt-out (T27):** `description`, `heading` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

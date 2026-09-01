@@ -166,11 +166,13 @@ export const MUTATIONS = [
     side: 'canvas',
     describe: (t) => `rebound the canvas from Figma variable "${t.from}" to "${t.to}"`,
     // `contract-diff.mjs` compares token bindings at the level of the FIGMA
-    // VARIABLE NAME, reading the canvas side from its flat `tokens` list --
-    // NOT by walking anatomy, because the two anatomy trees are keyed by
-    // unrelated naming schemes with no reliable 1:1 mapping. An earlier draft
-    // mutated `anatomy.*.boundVariables` and was invisible for exactly that
-    // reason. Mutate what is actually compared.
+    // VARIABLE NAME. It reads the canvas side by WALKING `anatomy`
+    // boundVariables (so it can skip nested-instance subtrees whose bindings
+    // belong to their own set), falling back to the flat `tokens` list when a
+    // canvas dump carries no anatomy. So mutate BOTH: an earlier draft touched
+    // only `anatomy` and was invisible; a later one touched only `tokens` and
+    // went invisible again the moment the walk landed. Mutate what is actually
+    // compared, on every path that compares it.
     applicable: (pair) => (pair.canvasContract.tokens ?? []).length > 0
       && pair.codeContract.anatomySource === 'measured'
       && pair.canvasContract.anatomySource === 'observed',
@@ -179,6 +181,14 @@ export const MUTATIONS = [
       const from = [...next.canvasContract.tokens].sort()[0];
       const to = 'theme/color/content/nonexistent-eval-token';
       next.canvasContract.tokens = next.canvasContract.tokens.map((t) => (t === from ? to : t)).sort();
+      const rebind = (node) => {
+        if (!node) return;
+        for (const [key, value] of Object.entries(node.boundVariables ?? {})) {
+          if (value === from) node.boundVariables[key] = to;
+        }
+        for (const child of node.children ?? []) rebind(child);
+      };
+      rebind(next.canvasContract.anatomy ?? null);
       return { pair: next, target: { from, to } };
     },
   },

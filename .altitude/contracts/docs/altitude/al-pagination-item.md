@@ -16,10 +16,10 @@ Component: al-pagination-item
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaLabel` | string | — | — | — |
-| `href` | string | — | — | — |
-| `isDisabled` | boolean | — | — | — |
-| `isExpandable` | boolean | — | — | — |
+| `ariaLabel` | string | — | — | _not expressed in Figma (by design)_ |
+| `href` | string | — | — | _not expressed in Figma (by design)_ |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Hover` |
+| `isExpandable` | boolean | — | — | **Kind** (VARIANT): `Expandable`, `Number` |
 | `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
 
 #### `ariaLabel`
@@ -44,7 +44,19 @@ Expandable
 
 Selected state
 
+**Figma-expression opt-out (T27):** `ariaLabel`, `href` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Hover`
+
+### `isExpandable` (Figma property "Kind")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Expandable`, `Number`
 
 ### `isSelected` (Figma property "Selected")
 

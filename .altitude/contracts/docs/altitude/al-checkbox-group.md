@@ -17,7 +17,7 @@ Component: al-checkbox-group
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
-| `direction` | enum | `column`, `row` | — | — |
+| `direction` | enum | `column`, `row` | — | **Orientation** (VARIANT): `Default`, `Horizontal` |
 | `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
@@ -89,6 +89,11 @@ Label
 **Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
+
+### `direction` (Figma property "Orientation")
+
+- Code values: `column`, `row`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Horizontal`
 
 ### `hideLegend` (Figma property "Legend")
 

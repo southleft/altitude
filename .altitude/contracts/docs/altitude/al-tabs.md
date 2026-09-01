@@ -16,7 +16,7 @@ Component: al-tabs
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `activeIndex` | number | — | — | — |
+| `activeIndex` | number | — | — | _not expressed in Figma (by design)_ |
 | `variant` | string | `'stretch'` | — | **Variant** (VARIANT): `Default`, `Stretch` |
 
 #### `activeIndex`
@@ -29,6 +29,8 @@ Active tab state
 Tabs variant
 - **default** Tabs are left-aligned, and the width of each tab is defined by the length of its content
 - **stretch** Tabs stretch horizontally to have equal widths, which is calculated by the width of the screen divided by the number of tabs
+
+**Figma-expression opt-out (T27):** `activeIndex` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

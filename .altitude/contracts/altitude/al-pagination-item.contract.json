@@ -19,7 +19,9 @@
         "code": {
           "attribute": "ariaLabel"
         },
-        "figma": null
+        "figma": {
+          "omit": true
+        }
       }
     },
     {
@@ -31,7 +33,9 @@
         "code": {
           "attribute": "href"
         },
-        "figma": null
+        "figma": {
+          "omit": true
+        }
       }
     },
     {
@@ -43,7 +47,16 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -55,7 +68,15 @@
         "code": {
           "attribute": "isExpandable"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Kind",
+          "options": [
+            "Expandable",
+            "Number"
+          ],
+          "pairWith": "Kind"
+        }
       }
     },
     {

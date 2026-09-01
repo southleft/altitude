@@ -32,7 +32,7 @@ Component: al-range
 | `max` | number | — | `100` | _not expressed in Figma (by design)_ |
 | `maxSelected` | number | — | — | _not expressed in Figma (by design)_ |
 | `min` | number | — | `0` | _not expressed in Figma (by design)_ |
-| `minSelected` | number | — | — | — |
+| `minSelected` | number | — | — | _not expressed in Figma (by design)_ |
 | `name` | string | — | — | _not expressed in Figma (by design)_ |
 | `step` | number | — | `1` | _not expressed in Figma (by design)_ |
 | `upperRangeValue` | number | — | — | _not expressed in Figma (by design)_ |
@@ -126,7 +126,7 @@ Input value for upper range of range
 
 Input value
 
-**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `handleLabelUnit`, `label`, `lowerRangeValue`, `max`, `maxSelected`, `min`, `name`, `step`, `upperRangeValue`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `handleLabelUnit`, `label`, `lowerRangeValue`, `max`, `maxSelected`, `min`, `minSelected`, `name`, `step`, `upperRangeValue`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

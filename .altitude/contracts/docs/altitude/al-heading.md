@@ -16,8 +16,8 @@ Component: al-heading
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `isBold` | boolean | — | — | — |
-| `tagName` | enum | `h1`, `h2`, `h3`, `h4`, `h5`, `h6` | `'h2'` | — |
+| `isBold` | boolean | — | — | **Weight** (VARIANT): `Default` |
+| `tagName` | enum | `h1`, `h2`, `h3`, `h4`, `h5`, `h6` | `'h2'` | _not expressed in Figma (by design)_ |
 | `variant` | enum | `display-lg`, `display-md`, `display-sm`, `lg`, `md`, `sm` | — | **Variant** (VARIANT): `Default`, `Display Lg`, `Display Md`, `Display Sm`, `Lg`, `Md`, `Sm` |
 
 #### `isBold`
@@ -47,7 +47,14 @@ Heading variants
 - **display-md** renders a heading with the Display MD font styles
 - **display-lg** renders a heading with the Display LG font styles
 
+**Figma-expression opt-out (T27):** `tagName` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
+
+### `isBold` (Figma property "Weight")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`
 
 ### `variant` (Figma property "Variant")
 

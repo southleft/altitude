@@ -16,9 +16,9 @@ Component: al-toggle-button
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `hasToggle` | boolean | — | — | — |
+| `hasToggle` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isSelected` | boolean | — | `false` | **Selected** (VARIANT): `No`, `Yes` |
-| `isSmall` | boolean | — | — | — |
+| `isSmall` | boolean | — | — | **Size** (VARIANT): `Default`, `Small` |
 | `variant` | string | `'background'` | — | **Variant** (VARIANT): `Background`, `Default` |
 
 #### `hasToggle`
@@ -43,12 +43,19 @@ Variant
 - **default** renders the toggle button without background styles
 - **background** renders the toggle button with background styles
 
+**Figma-expression opt-out (T27):** `hasToggle` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
 ### `isSelected` (Figma property "Selected")
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
+
+### `isSmall` (Figma property "Size")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Small`
 
 ### `variant` (Figma property "Variant")
 

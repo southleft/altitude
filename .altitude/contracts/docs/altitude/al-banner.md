@@ -25,7 +25,7 @@ glyph via the `icon` slot and its color via `--al-banner-icon-fill`.
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `isDismissed` | boolean | — | — | — |
+| `isDismissed` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDismissible` | boolean | — | — | — |
 
 #### `isDismissed`
@@ -35,6 +35,8 @@ Whether the banner has been dismissed. Owned state, toggled by `close()`.
 #### `isDismissible`
 
 Whether the banner shows a dismiss control.
+
+**Figma-expression opt-out (T27):** `isDismissed` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

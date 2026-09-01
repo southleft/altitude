@@ -259,7 +259,7 @@ function findCanvasProp(index, name) {
  * token bound only on hover, say, still counts as "code expects this Figma
  * variable to be bound somewhere".
  */
-function collectCodeFigmaTokens(anatomy) {
+function collectCodeFigmaTokens(anatomy, delegated = new Set()) {
   const out = new Map(); // figmaVarName -> Set(alTokenName)
   const add = (binding) => {
     if (!binding?.figma) return;
@@ -268,6 +268,12 @@ function collectCodeFigmaTokens(anatomy) {
   };
   const walkNode = (node) => {
     if (!node) return;
+    // A node marked with a nested component tag is that component's subtree,
+    // not this one's. When the canvas nests the same component as an INSTANCE,
+    // its bindings live in ITS set and are compared when IT is diffed — see
+    // `delegatedNestedTags()`. Skip the whole subtree, both sides, or every
+    // composite reports its children's tokens as missing from its own canvas.
+    if (node.component && delegated.has(node.component)) return;
     for (const binding of Object.values(node.tokens ?? {})) add(binding);
     for (const child of node.children ?? []) walkNode(child);
   };
@@ -277,6 +283,61 @@ function collectCodeFigmaTokens(anatomy) {
       for (const binding of Object.values(perProp ?? {})) add(binding);
     }
   }
+  return out;
+}
+
+/** `al-tab`-shaped custom-element tag, as used for nested-component markers. */
+const NESTED_TAG_RE = /^al-[a-z0-9-]+$/;
+
+/**
+ * The nested component tags whose token bindings BOTH sides agree belong to a
+ * separate set: marked `component: "<tag>"` in the code anatomy AND present as
+ * a Figma INSTANCE of that name in the canvas anatomy.
+ *
+ * The intersection is deliberate. If the canvas nests the component, its tokens
+ * are the child's to bind and are compared when the child is diffed. If the
+ * canvas FLATTENED it instead, the parent's own frames carry those tokens
+ * inline, so the comparison is fair as-is and nothing is excluded.
+ */
+function delegatedNestedTags(codeAnatomy, canvasAnatomy) {
+  const inCode = new Set();
+  const walkCode = (node) => {
+    if (!node) return;
+    if (node.component && NESTED_TAG_RE.test(node.component)) inCode.add(node.component);
+    for (const child of node.children ?? []) walkCode(child);
+  };
+  walkCode(codeAnatomy?.root ?? null);
+
+  const delegated = new Set();
+  const walkCanvas = (node) => {
+    if (!node) return;
+    if (node.type === 'INSTANCE' && inCode.has(node.name)) delegated.add(node.name);
+    for (const child of node.children ?? []) walkCanvas(child);
+  };
+  walkCanvas(canvasAnatomy ?? null);
+  return delegated;
+}
+
+/**
+ * Figma variable names bound anywhere in the CANVAS anatomy, skipping the
+ * subtrees of nested instances in `delegated`. Falls back to the canvas
+ * contract's flat `tokens` list when no anatomy was captured — verified
+ * 2026-08-31 to reproduce that list exactly across all 36 canvas contracts,
+ * so the refinement is a strict subset, never a different answer.
+ */
+function collectCanvasFigmaTokens(canvasContract, delegated = new Set()) {
+  const anatomy = canvasContract?.anatomy;
+  if (!anatomy) return new Set(canvasContract?.tokens ?? []);
+  const out = new Set();
+  const walk = (node) => {
+    if (!node) return;
+    if (node.type === 'INSTANCE' && delegated.has(node.name)) return;
+    for (const value of Object.values(node.boundVariables ?? {})) {
+      if (typeof value === 'string') out.add(value);
+    }
+    for (const child of node.children ?? []) walk(child);
+  };
+  walk(anatomy);
   return out;
 }
 
@@ -548,8 +609,18 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
   } else if (canvasContract.anatomySource !== 'observed') {
     skipped.push({ dimension: 'token-binding', reason: 'canvas anatomy unavailable (anatomySource !== "observed") — nothing to compare against.' });
   } else {
-    const codeFigmaTokens = collectCodeFigmaTokens(codeContract.anatomy);
-    const canvasTokenSet = new Set(canvasContract.tokens ?? []);
+    const delegated = delegatedNestedTags(codeContract.anatomy, canvasContract.anatomy);
+    if (delegated.size) {
+      skipped.push({
+        dimension: 'token-binding',
+        reason:
+          `token bindings for nested component(s) ${[...delegated].sort().join(', ')} are delegated — ` +
+          'the canvas nests them as INSTANCEs, so those bindings belong to their own set and are compared when it is diffed.',
+        delegated: [...delegated].sort(),
+      });
+    }
+    const codeFigmaTokens = collectCodeFigmaTokens(codeContract.anatomy, delegated);
+    const canvasTokenSet = collectCanvasFigmaTokens(canvasContract, delegated);
     compared.tokens = new Set([...codeFigmaTokens.keys(), ...canvasTokenSet]).size;
 
     for (const [figmaVar, alTokens] of codeFigmaTokens) {

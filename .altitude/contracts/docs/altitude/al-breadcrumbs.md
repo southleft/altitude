@@ -16,11 +16,11 @@ Component: al-breadcrumbs
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `isTruncated` | boolean | — | — | — |
-| `itemsAfterCollapse` | number | — | `1` | — |
-| `itemsBeforeCollapse` | number | — | `1` | — |
+| `isTruncated` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `itemsAfterCollapse` | number | — | `1` | _not expressed in Figma (by design)_ |
+| `itemsBeforeCollapse` | number | — | `1` | _not expressed in Figma (by design)_ |
 | `label` | string | — | `'Breadcrumb'` | — |
-| `menuId` | string | — | — | — |
+| `menuId` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `isTruncated`
 
@@ -47,6 +47,8 @@ Label attribute
 
 Menu id
 - Unique id that associates the menu and popover components used in truncated breadcrumbs, so that the popover closes when a menu item is selected
+
+**Figma-expression opt-out (T27):** `isTruncated`, `itemsAfterCollapse`, `itemsBeforeCollapse`, `menuId` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 
