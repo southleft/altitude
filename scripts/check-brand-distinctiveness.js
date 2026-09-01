@@ -41,7 +41,7 @@ const MARKERS = [
   '--al-theme-space-xs',
   '--al-theme-space',
   '--al-theme-box-shadow',
-  '--al-typography-preset-16',
+  '--al-typography-preset-body-md',
 ];
 
 const AXES = {

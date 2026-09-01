@@ -41,13 +41,14 @@ Type variant
 
 #### `variant`
 
-Variant
-- **default** A chip with a strong contrast background
-- **secondary** A chip with a outline
-- **info** A chip with a info background
-- **success** A chip with a success background
-- **warning** A chip with a warning background
-- **danger** A chip with a danger background
+Variant — an EMPHASIS axis, matching `al-button`. Status is not on this
+axis: `al-badge` and `al-alert` carry info/success/warning/danger.
+- **default** the resting outlined pill (the `tertiary` treatment)
+- **primary** a chip filled with the primary role
+- **secondary** a chip filled with the secondary role
+- **tertiary** an outlined chip on a transparent ground
+- **neutral** a low-emphasis filled chip
+- **bare** no fill and no border
 
 **Figma-expression opt-out (T27):** `isDismissed` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 

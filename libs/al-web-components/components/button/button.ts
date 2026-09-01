@@ -37,12 +37,13 @@ export class ALButton extends ALElement {
   accessor type: 'button' | 'submit' | 'reset';
 
   /**
-   * Style variant
-   * - **default** renders the button used for primary actions
-   * - **secondary** renders the button used for secondary actions
-   * - **tertiary** renders the button with an outlined style
-   * - **bare** renders the button with a bare style
-   * - **danger** renders the button used for caution actions
+   * Style variant — an EMPHASIS axis, strongest to weakest. Status is not on
+   * this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
+   * - **default** renders the primary button, the strongest emphasis
+   * - **secondary** renders the secondary colour role's own fill
+   * - **tertiary** renders an outlined button on a transparent ground
+   * - **neutral** renders a low-emphasis filled button
+   * - **bare** renders the button with no fill and no border
    */
   @property()
   accessor variant: 'neutral' | 'bare' | 'secondary' | 'tertiary';

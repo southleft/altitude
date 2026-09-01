@@ -110,12 +110,13 @@ Indicates the value associated with the name when submitted with form data.
 
 #### `variant`
 
-Style variant
-- **default** renders the button used for primary actions
-- **secondary** renders the button used for secondary actions
-- **tertiary** renders the button with an outlined style
-- **bare** renders the button with a bare style
-- **danger** renders the button used for caution actions
+Style variant — an EMPHASIS axis, strongest to weakest. Status is not on
+this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
+- **default** renders the primary button, the strongest emphasis
+- **secondary** renders the secondary colour role's own fill
+- **tertiary** renders an outlined button on a transparent ground
+- **neutral** renders a low-emphasis filled button
+- **bare** renders the button with no fill and no border
 
 **Figma-expression opt-out (T27):** `ariaControls`, `fullWidth`, `hideText`, `href`, `isAriaDisabled`, `isExpanded`, `isPressed`, `name`, `target`, `type`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
