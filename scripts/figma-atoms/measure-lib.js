@@ -67,6 +67,17 @@
     'text-decoration-line', 'text-transform',
     'outline-color', 'outline-width', 'outline-style', 'outline-offset',
     'width', 'height', 'min-width', 'min-height',
+    // PER-SIDE and LOGICAL border shorthands. `border:` was read but none of these
+    // were, so a component that draws a single edge lost BOTH its tokens — the width
+    // and the colour. Found 2026-08-31 on al-tabs, whose header is
+    // `border-bottom: var(--al-theme-border-width) solid var(--al-theme-color-border-default)`
+    // (tabs.scss:18) and whose contract bound neither; al-table's row divider
+    // (`border-block-end`, table.scss:62) was missing the same way. Same family as the
+    // logical-padding gap above and the `background:` shorthand below: the probe has to
+    // name the property the SCSS actually writes.
+    'border-top', 'border-right', 'border-bottom', 'border-left',
+    'border-block-start', 'border-block-end', 'border-inline-start', 'border-inline-end',
+    'border-block', 'border-inline',
     // shorthands
     'padding', 'border-radius', 'border', 'border-width', 'border-color', 'border-style',
     'outline', 'font',
@@ -186,6 +197,18 @@
       if (c.width) out['border-top-width'] = c.width;
       if (c.style) out['border-top-style'] = c.style;
       if (c.color) out['border-top-color'] = c.color;
+    }
+    // Fold every per-side / logical border onto the canonical `border-top-*` keys this
+    // file already uses as the single representative of "the border". LTR assumed, the
+    // same assumption expand() makes for logical padding.
+    for (const side of ['border-bottom', 'border-top', 'border-left', 'border-right',
+                        'border-block-end', 'border-block-start', 'border-inline-start', 'border-inline-end',
+                        'border-block', 'border-inline']) {
+      if (!out[side]) continue;
+      const c = classifyBorder(parts(out[side]));
+      if (c.width) out['border-top-width'] = out['border-top-width'] || c.width;
+      if (c.style) out['border-top-style'] = out['border-top-style'] || c.style;
+      if (c.color) out['border-top-color'] = out['border-top-color'] || c.color;
     }
     if (out['border-width']) out['border-top-width'] = out['border-top-width'] || box(parts(out['border-width']))[0];
     if (out['border-color']) out['border-top-color'] = out['border-top-color'] || box(parts(out['border-color']))[0];
