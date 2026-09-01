@@ -41,6 +41,7 @@ interface Props {
 import { base } from '../lib/site.mjs';
 import { iconSlotDefaults } from '../lib/contracts.mjs';
 import { ICONS } from '../lib/icons.mjs';
+import { COMPONENTS } from '../lib/registry.mjs';
 
 const { component, project, example = null } = Astro.props;
 
@@ -171,6 +172,32 @@ const config = {
   enums: enums.map((p) => ({ name: p.name, field: p.field, options: p.options })),
   flags: flags.map((p) => ({ name: p.name, field: p.field })),
   iconSlots: iconSlots.map((s) => ({ name: s.rawName, default: iconDefaults[s.rawName] })),
+  /*
+   * TAG -> REACT WRAPPER + ATTRIBUTE -> FIELD, for every component in the
+   * library rather than just this page's one.
+   *
+   * The React tab used to print a bare `<ALCard></ALCard>` on the grounds
+   * that slotted markup "does not transliterate". It does — mechanically, and
+   * from data this site already holds. HTML lowercases attribute names, so
+   * `tagName` comes back as `tagname` and would be an unknown prop in JSX;
+   * the CEM knows the real field name. A nested `<al-heading>` needs the same
+   * treatment, which is why this map covers the whole library.
+   *
+   * Anything NOT in this map is left exactly as it is: React 19 renders custom
+   * elements natively, so an unmapped tag still works. The rule is never to
+   * emit a guess.
+   */
+  reactMap: Object.fromEntries(
+    COMPONENTS.map((c) => [
+      c.tag,
+      {
+        react: c.react,
+        fields: Object.fromEntries(
+          c.props.map((prop) => [prop.name.toLowerCase(), { field: prop.field, boolean: prop.isBoolean }]),
+        ),
+      },
+    ]),
+  ),
 };
 ---
 
@@ -478,6 +505,7 @@ const config = {
       enums: { name: string; field: string; options: string[] }[];
       flags: { name: string; field: string }[];
       iconSlots: { name: string; default: string }[];
+      reactMap: Record<string, { react: string | null; fields: Record<string, { field: string; boolean: boolean }> }>;
     };
 
     const fieldOf = new Map<string, string>([
@@ -628,19 +656,103 @@ const config = {
       return root.outerHTML;
     };
 
+    /*
+     * HTML -> JSX, for the React tab.
+     *
+     * Only mechanical, data-backed rewrites happen here; anything this cannot
+     * map faithfully is passed through unchanged rather than guessed at:
+     *
+     *   al-card        -> ALCard          (only when a wrapper exists)
+     *   class=         -> className=
+     *   tagname="h3"   -> tagName="h3"    (HTML lowercases; the CEM knows the field)
+     *   isBold=""      -> isBold          (a bare JSX prop is `true`)
+     *   slot="header"  -> slot="header"   (unchanged - React passes it through)
+     *
+     * A tag with no wrapper keeps its custom-element name, which React 19
+     * renders natively, so the output stays valid either way.
+     */
+    const toJsx = (html: string): string => {
+      const doc = new DOMParser().parseFromString(`<div>${html}</div>`, 'text/html');
+      const root = doc.body.firstElementChild;
+      if (!root) return html;
+
+      const emit = (node: Node, indent: string): string => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = (node.textContent || '').replace(/\s+/g, ' ');
+          if (!text.trim()) return '';
+          // Braces are JSX syntax; a literal one has to be escaped.
+          return indent + text.trim().replace(/[{}]/g, (c) => `{'${c}'}`) + '\n';
+        }
+        if (node.nodeType !== Node.ELEMENT_NODE) return '';
+        const el = node as Element;
+        const tag = el.tagName.toLowerCase();
+        const entry = config.reactMap[tag];
+        const name = entry?.react || tag;
+
+        const attrs = [...el.attributes]
+          .filter((a) => a.name !== 'data-pg-el')
+          .map((a) => {
+            if (a.name === 'class') return ` className="${a.value}"`;
+            const known = entry?.fields[a.name];
+            const attrName = known?.field ?? a.name;
+            // An empty value on a known boolean is HTML's "present = true".
+            if (a.value === '' && known?.boolean) return ` ${attrName}`;
+            /*
+             * A JSON-valued attribute becomes a JSX EXPRESSION, not a string.
+             * `columns='[{"key":"a"}]'` is how HTML has to carry an array;
+             * pasting that between double quotes in JSX closes the attribute on
+             * the first inner quote and produces code that does not parse. It is
+             * also simply not how React is written - an array prop is `{[...]}`.
+             */
+            if (/^[[{]/.test(a.value)) {
+              try {
+                JSON.parse(a.value);
+                return ` ${attrName}={${a.value}}`;
+              } catch {
+                /* not JSON after all - fall through to the quoted forms */
+              }
+            }
+            // Any other value carrying a double quote also has to be an expression.
+            if (a.value.includes('"')) return ` ${attrName}={${JSON.stringify(a.value)}}`;
+            return ` ${attrName}="${a.value}"`;
+          })
+          .join('');
+
+        const children = [...el.childNodes].map((c) => emit(c, indent + '  ')).join('');
+        return children
+          ? `${indent}<${name}${attrs}>
+${children}${indent}</${name}>
+`
+          : `${indent}<${name}${attrs} />
+`;
+      };
+
+      return [...root.childNodes].map((c) => emit(c, '')).join('').trimEnd();
+    };
+
     const snippet = (open: string, close: string) => {
       const pairs = attrPairs();
       const attrs = pairs
         .map(([name, value]) => (value === true ? ` ${name}` : ` ${name}="${value}"`))
         .join('');
       const body = config.hasDefaultSlot ? state.text : '';
-      // The HTML tab shows what is actually on the stage. The React tab does
-      // not: a wrapper takes children as JSX, so the story's slotted markup
-      // does not transliterate, and a bare element is the honest thing to show.
-      let element =
-        config.hasExample && state.tab !== 'react'
-          ? mergeRootAttrs(config.exampleHtml, config.tag, pairs)
-          : `<${open}${attrs}>${body}</${close}>`;
+      /*
+       * BOTH tabs show what is actually on the stage.
+       *
+       * The React tab used to print a bare element, on the reasoning that
+       * slotted markup "does not transliterate". It does: `toJsx` above does
+       * it mechanically from the CEM, and passes through anything it cannot
+       * map rather than inventing it. A reader on the React tab was otherwise
+       * handed `<ALCard></ALCard>` — an empty box for a component whose whole
+       * point is what you put in it.
+       */
+      let element: string;
+      if (config.hasExample) {
+        const merged = mergeRootAttrs(config.exampleHtml, config.tag, pairs);
+        element = state.tab === 'react' ? toJsx(merged) : merged;
+      } else {
+        element = `<${open}${attrs}>${body}</${close}>`;
+      }
       // Icon slots (T24), HTML tab only — see `withIconSlots`'s comment for
       // why the React tab is excluded.
       if (config.iconSlots.length > 0 && state.tab !== 'react') {

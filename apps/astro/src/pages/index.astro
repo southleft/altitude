@@ -4,9 +4,19 @@ import '@southleft/al-web-components/css/main.css';
 // .al-l-* classes are not part of main.css, so without this the dashboard
 // grid/sidebar is unstyled and the page doesn't match the other demos.
 import '../styles/dashboard.css';
+import NotificationCard from '../components/NotificationCard.astro';
+import JobCard from '../components/JobCard.astro';
 
 // Job Board listing data. Each entry drives one `<al-card>` in the results
 // list below instead of 10 hand-duplicated cards.
+// Notification data. Each entry drives one <NotificationCard>; the arrangement
+// lives in that component instead of being inlined once per row here.
+const notifications = [
+  { initials: 'KP', handle: 'kploransky', body: 'sent you a message', when: 'Thursday 4:20pm', ago: '2 hours ago', unread: true },
+  { initials: 'EB', handle: 'ebrown', body: 'sent you a message', when: 'Thursday 5:14pm', ago: '3 hours ago', unread: true },
+  { initials: 'BV', handle: 'bvoran', body: 'invited you to a <strong>Design Systems Workshop</strong>', when: 'Wednesday 6:32pm', ago: '1 day ago', unread: false },
+];
+
 const jobs = [
   { title: 'UX Designer', location: 'New Orleans, LA', tags: ['Design', 'Remote'], postedAgo: '1 day ago' },
   { title: 'Senior Front-end Developer', location: 'New Orleans, LA', tags: ['Front-end Developer', 'Design Systems'], postedAgo: '1 day ago' },
@@ -106,28 +116,20 @@ const jobs = [
             <al-button slot="trigger" hideText="true" variant="bare"><al-badge variant="danger" slot="after" isDot="true" class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
             <al-heading slot="header" tagName="h3" variant="sm" isBold="true">Notifications</al-heading>
             <al-layout gap="sm">
-              <al-card variant="bare" layout="inline">
-                <al-avatar slot="image" hasBadge="true" badgeVariant="success">KP</al-avatar>
-                <p class="al-u-theme-typography-body-sm"><strong>@kploransky</strong> sent you a message</p>
-                <p class="al-u-theme-typography-body-xs">Thursday 4:20pm</p>
-                <al-badge slot="actions-start" variant="warning" isDot="true"></al-badge>
-                <p slot="actions-end" class="al-u-theme-typography-body-xs">2 hours ago</p>
-              </al-card>
-              <al-divider></al-divider>
-              <al-card variant="bare" layout="inline">
-                <al-avatar slot="image">EB</al-avatar>
-                <p class="al-u-theme-typography-body-sm"><strong>@ebrown</strong> sent you a message</p>
-                <p class="al-u-theme-typography-body-xs">Thursday 5:14pm</p>
-                <al-badge slot="actions-start" variant="warning" isDot="true"></al-badge>
-                <p slot="actions-end" class="al-u-theme-typography-body-xs">3 hours ago</p>
-              </al-card>
-              <al-divider></al-divider>
-              <al-card variant="bare" layout="inline">
-                <al-avatar slot="image">BV</al-avatar>
-                <p class="al-u-theme-typography-body-sm"><strong>@bvoran</strong> invited you to a <strong>Design Systems Workshop</strong></p>
-                <p class="al-u-theme-typography-body-xs">Wednesday 6:32pm</p>
-                <p slot="actions-end" class="al-u-theme-typography-body-xs">1 day ago</p>
-              </al-card>
+              {notifications.map((n, i) => (
+                <>
+                  {i > 0 && <al-divider></al-divider>}
+                  <NotificationCard
+                    initials={n.initials}
+                    handle={n.handle}
+                    when={n.when}
+                    ago={n.ago}
+                    unread={n.unread}
+                  >
+                    <Fragment set:html={n.body} />
+                  </NotificationCard>
+                </>
+              ))}
             </al-layout>
             <al-button slot="footer">Mark all as read</al-button>
           </al-drawer>
@@ -237,20 +239,12 @@ const jobs = [
                 </al-select>
               </al-layout>
               {jobs.map((job) => (
-                <al-card layout="inline">
-                  <div slot="image" class="al-l-job-board__card-image">
-                    <al-icon-star size="xl"></al-icon-star>
-                  </div>
-                  <al-heading variant="sm" tagName="h3"><a href="#">{job.title}</a></al-heading>
-                  <al-layout direction="row" gap="sm"><al-icon-pin></al-icon-pin><p>{job.location}</p></al-layout>
-                  <al-layout direction="row" gap="sm" wrap>
-                    {job.tags.map((tag) => (
-                      <al-chip variant="secondary">{tag}</al-chip>
-                    ))}
-                  </al-layout>
-                  <al-button slot="actions-start">Apply</al-button>
-                  <div slot="actions-end" class="al-u-theme-typography-body-xs">{job.postedAgo}</div>
-                </al-card>
+                <JobCard
+                  title={job.title}
+                  location={job.location}
+                  tags={job.tags}
+                  postedAgo={job.postedAgo}
+                />
               ))}
             </al-layout>
             <al-pagination totalRecords="32"></al-pagination>

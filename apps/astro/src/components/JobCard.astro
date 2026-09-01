@@ -1,0 +1,36 @@
+---
+/*
+ * One job listing, as a component — the same idea as NotificationCard.astro.
+ *
+ * The page passes a job object in and gets a card out; the arrangement lives
+ * here once instead of inside the loop at every call site.
+ */
+interface Props {
+  title: string;
+  location: string;
+  tags: string[];
+  postedAgo: string;
+}
+
+const { title, location, tags, postedAgo } = Astro.props;
+---
+
+<al-card layout="inline">
+  <div slot="image" class="al-l-job-board__card-image">
+    <al-icon-star size="xl"></al-icon-star>
+  </div>
+
+  <al-heading variant="sm" tagName="h3"><a href="#">{title}</a></al-heading>
+
+  <al-layout direction="row" gap="sm">
+    <al-icon-pin></al-icon-pin>
+    <p>{location}</p>
+  </al-layout>
+
+  <al-layout direction="row" gap="sm" wrap>
+    {tags.map((tag) => <al-chip variant="secondary">{tag}</al-chip>)}
+  </al-layout>
+
+  <al-button slot="actions-start">Apply</al-button>
+  <div slot="actions-end" class="al-u-theme-typography-body-xs">{postedAgo}</div>
+</al-card>

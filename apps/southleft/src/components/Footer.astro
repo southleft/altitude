@@ -200,14 +200,14 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
    * footer.scss for this (spec 2026-08-22-southleft-example-1-to-1-parity),
    * mirroring the hooks al-header grew in the same pass. */
   .sl-footer {
-    --al-footer-background: var(--al-color-brand-ink-950);
+    --al-footer-background: var(--al-color-southleft-neutral-dark-950);
     --al-footer-border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
     /* v5 `py-14 md:py-20` */
     --al-footer-padding-block: 3.5rem;
   }
 
   :global(al-theme[mode='light']) .sl-footer {
-    --al-footer-background: var(--al-color-brand-paper-200);
+    --al-footer-background: var(--al-color-southleft-neutral-light-200);
   }
 
   @media (min-width: 48rem) {
@@ -287,7 +287,7 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
   .sl-token-chip__dot--blue {
     /* Labelled `--sl-color-blue-500`; the southleft brand ships no blue ramp of
      * its own, so this is the shared brand primitive. */
-    background: var(--al-color-brand-blue-500);
+    background: var(--al-color-primary-500);
   }
 
   .sl-footer__chip-link {

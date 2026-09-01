@@ -102,7 +102,7 @@ describe('theme-engine WCAG enforcement', () => {
   });
 
   it('does not let the looser focus-ring/bg-weak pairing regress the stricter primary/500 one', () => {
-    // enforceAll() solves both pairings on the SAME `--al-color-brand-blue-500`
+    // enforceAll() solves both pairings on the SAME `--al-color-primary-500`
     // stop and keeps whichever candidate is more extreme, specifically so a
     // later, looser fix (focus-ring/bg-weak, 3:1) can never undo an earlier,
     // stricter one (primary/500, 4.5:1). Assert both hold at once, not just

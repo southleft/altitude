@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ALBadge, ALButton, ALCard, ALCheckboxGroup, ALCheckbox, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALIconStar, ALInput, ALLayout, ALLink, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALStat } from '@southleft/al-react';
+import { ALBadge, ALButton, ALCheckboxGroup, ALCheckbox, ALChip, ALDialog, ALDivider, ALHeading, ALIconFilter, ALIconPin, ALInput, ALLayout, ALList, ALListItem, ALPagination, ALRadioGroup, ALRadio, ALRange, ALSearch, ALSelect, ALStat } from '@southleft/al-react';
+import JobCard from './JobCard';
 import './JobBoard.scss';
 
 const jobs = [
@@ -120,20 +121,13 @@ export default function JobBoard({ children }) {
           </ALSelect>
         </ALLayout>
         {jobs.map((job) => (
-          <ALCard key={job.id} layout="inline">
-            <div slot="image" className="al-l-job-board__card-image">
-              <ALIconStar size="xl"></ALIconStar>
-            </div>
-            <ALHeading variant="sm" tagName="h3"><ALLink href="#">{job.title}</ALLink></ALHeading>
-            <ALLayout direction="row" gap="sm"><ALIconPin></ALIconPin><p>{job.location}</p></ALLayout>
-            <ALLayout direction="row" gap="sm">
-              {job.chips.map((chip) => (
-                <ALChip key={chip} variant="secondary">{chip}</ALChip>
-              ))}
-            </ALLayout>
-            <ALButton slot="actions-start">Apply</ALButton>
-            <div slot="actions-end" className="al-u-theme-typography-body-xs">{job.posted}</div>
-          </ALCard>
+          <JobCard
+            key={job.id}
+            title={job.title}
+            location={job.location}
+            chips={job.chips}
+            posted={job.posted}
+          />
         ))}
       </ALLayout>
       <ALPagination totalRecords="32"></ALPagination>

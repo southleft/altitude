@@ -73,7 +73,7 @@ const terminal = html`
  * fixtures (`.sl-token-chip` / `.sl-terminal` in
  * apps/southleft/src/styles/layout.css), because the docs playground executes
  * this story as its preview: any drift here renders as docs↔site drift. The
- * terminal deliberately uses the brand PRIMITIVES (`--al-color-brand-*`) —
+ * terminal deliberately uses the brand PRIMITIVES (`--al-color-southleft-*`) —
  * the site's terminal is always an ink panel regardless of mode, by design.
  */
 const fixtureStyles = html`
@@ -103,9 +103,9 @@ const fixtureStyles = html`
       color: var(--al-theme-color-content-default-weak);
     }
     .term {
-      background: var(--al-color-brand-ink-950);
-      color: var(--al-color-brand-paper-100);
-      border: var(--al-theme-border-width) solid var(--al-color-brand-ink-600);
+      background: var(--al-color-southleft-neutral-dark-950);
+      color: var(--al-color-southleft-neutral-light-100);
+      border: var(--al-theme-border-width) solid var(--al-color-southleft-neutral-dark-600);
       border-radius: var(--al-theme-border-radius-md);
       font-family: var(--sl-font-mono, 'IBM Plex Mono', monospace);
       line-height: 1.7;
@@ -116,8 +116,8 @@ const fixtureStyles = html`
       align-items: center;
       gap: var(--al-theme-space-xs);
       padding: var(--al-theme-space-sm) var(--al-theme-space);
-      border-block-end: var(--al-theme-border-width) solid var(--al-color-brand-ink-700);
-      background: var(--al-color-brand-ink-900);
+      border-block-end: var(--al-theme-border-width) solid var(--al-color-southleft-neutral-dark-700);
+      background: var(--al-color-southleft-neutral-dark-900);
     }
     .term__dot {
       inline-size: 0.625rem;
@@ -125,18 +125,18 @@ const fixtureStyles = html`
       border-radius: var(--al-theme-border-radius-role-action);
     }
     .term__dot--1 {
-      background: var(--al-color-brand-red-500);
+      background: var(--al-color-danger-500);
     }
     .term__dot--2 {
-      background: var(--al-color-brand-paper-400);
+      background: var(--al-color-southleft-neutral-light-400);
     }
     .term__dot--3 {
-      background: var(--al-color-brand-blue-400);
+      background: var(--al-color-primary-400);
     }
     .term__title {
       margin-inline-start: auto;
       font-size: 0.6875rem;
-      color: var(--al-color-brand-paper-500);
+      color: var(--al-color-southleft-neutral-light-500);
     }
     .term__body {
       margin: 0;
@@ -146,19 +146,19 @@ const fixtureStyles = html`
       white-space: pre-wrap;
     }
     .term__prompt {
-      color: var(--al-color-brand-red-500);
+      color: var(--al-color-danger-500);
     }
     .term__cmd {
-      color: var(--al-color-brand-paper-50);
+      color: var(--al-color-southleft-neutral-light-50);
     }
     .term__out {
-      color: var(--al-color-brand-paper-400);
+      color: var(--al-color-southleft-neutral-light-400);
     }
     .term__ok {
-      color: var(--al-color-brand-green-500);
+      color: var(--al-color-success-500);
     }
     .term__key {
-      color: var(--al-color-brand-blue-400);
+      color: var(--al-color-primary-400);
     }
   </style>
 `;

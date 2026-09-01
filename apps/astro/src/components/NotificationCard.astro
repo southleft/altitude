@@ -1,0 +1,40 @@
+---
+/*
+ * One notification row, as a component.
+ *
+ * THIS IS THE COMPOSITION LAYER, and it belongs to the app rather than to the
+ * design system. "Notification card" is not a design-system concept — it is
+ * this app's arrangement of `al-card` + `al-avatar` + `al-badge`. Altitude
+ * ships the vocabulary; a file like this one makes the phrase, and every page
+ * that needs a notification imports it and passes props.
+ *
+ * The page previously inlined this markup three times, identical apart from
+ * the initials, the name and the timestamp.
+ */
+interface Props {
+  /** Initials shown in the avatar. */
+  initials: string;
+  /** Handle of the person who triggered the notification, without the @. */
+  handle: string;
+  /** What they did — may contain markup, so it is passed through a slot below. */
+  when: string;
+  /** Relative age, shown at the trailing edge. */
+  ago: string;
+  /** Unread notifications carry a dot and a status ring on the avatar. */
+  unread?: boolean;
+}
+
+const { initials, handle, when, ago, unread = false } = Astro.props;
+---
+
+<al-card variant="bare" layout="inline">
+  {unread
+    ? <al-avatar slot="image" hasBadge="true" badgeVariant="success">{initials}</al-avatar>
+    : <al-avatar slot="image">{initials}</al-avatar>}
+
+  <p class="al-u-theme-typography-body-sm"><strong>@{handle}</strong> <slot /></p>
+  <p class="al-u-theme-typography-body-xs">{when}</p>
+
+  {unread && <al-badge slot="actions-start" variant="warning" isDot="true"></al-badge>}
+  <p slot="actions-end" class="al-u-theme-typography-body-xs">{ago}</p>
+</al-card>

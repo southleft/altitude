@@ -133,7 +133,7 @@ export class SLHero extends ALElement {
 
     ctx.clearRect(x, y, CELL, CELL);
     ctx.strokeStyle = accent
-      ? this.cssVar('--al-color-brand-red-500') || this.cssVar('--al-theme-color-background-primary-default')
+      ? this.cssVar('--al-color-danger-500') || this.cssVar('--al-theme-color-background-primary-default')
       : this.cssVar('--al-theme-color-border-default-weak');
     ctx.fillStyle = ctx.strokeStyle;
     ctx.globalAlpha = accent ? 0.5 : 0.55;

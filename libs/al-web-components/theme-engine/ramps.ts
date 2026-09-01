@@ -4,7 +4,7 @@
  *
  * A derived theme re-hues these ramps rather than inventing its own. That is
  * the whole trick: every tier-2/tier-3 semantic token already indirects
- * through `var(--al-color-brand-*)` / `var(--al-color-neutral-*)`, so
+ * through `var(--al-color-{primary,secondary,danger,success,warning}-*)` / `var(--al-color-neutral-*)`, so
  * overriding the 36 primitives below re-skins all 48 semantic colour tokens
  * for free — and because the lightness curve is preserved, every semantic
  * pairing keeps the contrast relationship the design system was built on.
@@ -84,7 +84,7 @@ export const MODE_SEMANTICS = {
     '--al-theme-color-background-default-stronger': 'var(--al-color-neutral-dark-500)',
     '--al-theme-color-background-default-weak': 'var(--al-color-neutral-dark-800)',
     '--al-theme-color-background-inverse-default': 'var(--al-color-neutral-light-100)',
-    '--al-theme-color-background-success-default': 'var(--al-color-brand-green-500)',
+    '--al-theme-color-background-success-default': 'var(--al-color-success-500)',
     '--al-theme-color-background-transparent-strong': 'var(--al-color-transparent-dark-80)',
     '--al-theme-color-border-default': 'var(--al-color-neutral-dark-300)',
     '--al-theme-color-border-default-weak': 'var(--al-color-neutral-dark-400)',
@@ -102,7 +102,7 @@ export const MODE_SEMANTICS = {
     '--al-theme-color-background-default-stronger': 'var(--al-color-neutral-light-300)',
     '--al-theme-color-background-default-weak': 'var(--al-color-neutral-light-800)',
     '--al-theme-color-background-inverse-default': 'var(--al-color-neutral-dark-900)',
-    '--al-theme-color-background-success-default': 'var(--al-color-brand-green-400)',
+    '--al-theme-color-background-success-default': 'var(--al-color-success-400)',
     '--al-theme-color-background-transparent-strong': 'var(--al-color-transparent-dark-60)',
     '--al-theme-color-border-default': 'var(--al-color-neutral-dark-200)',
     '--al-theme-color-border-default-weak': 'var(--al-color-neutral-dark-100)',

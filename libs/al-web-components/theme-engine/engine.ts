@@ -285,9 +285,9 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   const palette: Record<string, string> = {
     ...ramp('--al-color-neutral-light', NEUTRAL_LIGHT_L, neutralLightC, neutralHue),
     ...ramp('--al-color-neutral-dark', NEUTRAL_DARK_L, neutralDarkC, neutralHue),
-    ...ramp('--al-color-brand-blue', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, chroma), accentHue),
+    ...ramp('--al-color-primary', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, chroma), accentHue),
     ...ramp(
-      '--al-color-brand-taupe',
+      '--al-color-secondary',
       SECONDARY_L,
       scaleChroma(SECONDARY_C, SECONDARY_PEAK_C, Math.min(chroma * 0.55, 0.12)),
       secondaryHue
@@ -296,9 +296,9 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
     // theme's saturation so they sit in the same world as the accent. The
     // 500-stop chroma is named below too — `enforce()` re-solves at that
     // same C/H so a WCAG fix never drifts off the hue `ramp()` just painted.
-    ...ramp('--al-color-brand-red', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, dangerC500), 25),
-    ...ramp('--al-color-brand-green', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, successC500), 148),
-    ...ramp('--al-color-brand-orange', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, warningC500), 62),
+    ...ramp('--al-color-danger', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, dangerC500), 25),
+    ...ramp('--al-color-success', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, successC500), 148),
+    ...ramp('--al-color-warning', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, warningC500), 62),
   };
 
   // Pin the semantic layer to the derived mode. Only one theme sheet is ever
@@ -407,14 +407,14 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   enforce(borderVar, TARGETS.border, 'border/default', borderC, neutralHue);
   // content/{danger,warning,success}-default (tier-2) read these same
   // red/orange/green-500 peaks as TEXT — see TARGETS.statusText in ramps.ts.
-  enforce('--al-color-brand-red-500', TARGETS.statusText, 'content/danger', dangerC500, 25);
-  enforce('--al-color-brand-orange-500', TARGETS.statusText, 'content/warning', warningC500, 62);
-  enforce('--al-color-brand-green-500', TARGETS.statusText, 'content/success', successC500, 148);
+  enforce('--al-color-danger-500', TARGETS.statusText, 'content/danger', dangerC500, 25);
+  enforce('--al-color-warning-500', TARGETS.statusText, 'content/warning', warningC500, 62);
+  enforce('--al-color-success-500', TARGETS.statusText, 'content/success', successC500, 148);
   // primary/500 (page bg, 4.5 — text-level, stricter) and focus-ring/bg-weak
   // (a card/input surface, 3 — non-text) both live on brand-blue-500, so they
   // go through enforceAll rather than two independent enforce() calls.
   enforceAll(
-    '--al-color-brand-blue-500',
+    '--al-color-primary-500',
     [
       { against: bg, target: TARGETS.accent, label: 'primary/500' },
       { against: bgWeak, target: TARGETS.focusRing, label: 'focus-ring/bg-weak' },
@@ -424,7 +424,7 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   );
 
   // The ink that rides on top of a filled accent surface.
-  const accent = palette['--al-color-brand-blue-500'];
+  const accent = palette['--al-color-primary-500'];
   const inkDark = palette['--al-color-neutral-dark-900'];
   const inkLight = palette['--al-color-neutral-light-100'];
   let onAccent = bestInk(accent, inkDark, inkLight);
@@ -433,13 +433,13 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
     const idx = stopIndex(500);
     let L = ACCENT_L[idx];
     const step = onAccent === inkDark ? 0.015 : -0.015;
-    for (let i = 0; i < 24 && contrast(onAccent, palette['--al-color-brand-blue-500']) < TARGETS.onAccent; i++) {
+    for (let i = 0; i < 24 && contrast(onAccent, palette['--al-color-primary-500']) < TARGETS.onAccent; i++) {
       L = Math.min(0.98, Math.max(0.08, L + step));
-      palette['--al-color-brand-blue-500'] = toHex(L, chroma, accentHue);
-      onAccent = bestInk(palette['--al-color-brand-blue-500'], inkDark, inkLight);
+      palette['--al-color-primary-500'] = toHex(L, chroma, accentHue);
+      onAccent = bestInk(palette['--al-color-primary-500'], inkDark, inkLight);
     }
   }
-  record('on-accent', onAccent, palette['--al-color-brand-blue-500'], TARGETS.onAccent);
+  record('on-accent', onAccent, palette['--al-color-primary-500'], TARGETS.onAccent);
 
   /* ---- shape ---- */
   const [r2, r4, r6, r8, rRound] = RADIUS_SCALES[radius];

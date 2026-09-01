@@ -40,19 +40,19 @@ import SectionHeader from './SectionHeader.astro';
           <fieldset class="sl-pg-fieldset">
             <legend class="sl-pg-legend">--sl-accent</legend>
             <div class="sl-pg-options">
-              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-red-500)">
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-danger-500)">
                 <input type="radio" name="pg-accent" value="red" checked />
                 <span class="al-u-is-vishidden">Brand red</span>
               </label>
-              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-blue-500)">
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-primary-500)">
                 <input type="radio" name="pg-accent" value="blue" />
                 <span class="al-u-is-vishidden">Brand blue</span>
               </label>
-              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-green-500)">
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-success-500)">
                 <input type="radio" name="pg-accent" value="green" />
                 <span class="al-u-is-vishidden">Success green</span>
               </label>
-              <label class="sl-pg-swatch" style="--sw: var(--al-color-brand-paper-400)">
+              <label class="sl-pg-swatch" style="--sw: var(--al-color-southleft-neutral-light-400)">
                 <input type="radio" name="pg-accent" value="sand" />
                 <span class="al-u-is-vishidden">Brand sand</span>
               </label>
@@ -205,10 +205,10 @@ import SectionHeader from './SectionHeader.astro';
     const wdthOut = document.getElementById('pg-wdth-out');
 
     const ACCENT_VARS: Record<string, string> = {
-      red: '--al-color-brand-red-500',
-      blue: '--al-color-brand-blue-500',
-      green: '--al-color-brand-green-500',
-      sand: '--al-color-brand-paper-400',
+      red: '--al-color-danger-500',
+      blue: '--al-color-primary-500',
+      green: '--al-color-success-500',
+      sand: '--al-color-southleft-neutral-light-400',
     };
 
     if (editor && stage && readout) {

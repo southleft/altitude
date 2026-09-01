@@ -59,7 +59,7 @@
       // mode switch or a derived theme repaints correctly — and so this file
       // stays clear of the altitude-only gate's no-hex rule.
       ctx.strokeStyle = accent
-        ? cssVar('--al-color-brand-red-500') || cssVar('--al-theme-color-background-primary-default')
+        ? cssVar('--al-color-danger-500') || cssVar('--al-theme-color-background-primary-default')
         : cssVar('--al-theme-color-border-default-weak');
       ctx.fillStyle = ctx.strokeStyle;
       ctx.globalAlpha = accent ? 0.5 : 0.55;

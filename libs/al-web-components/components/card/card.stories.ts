@@ -64,7 +64,7 @@ const Template = (args) => html`
     <al-layout grow>
       <al-heading tagName="h3" variant="sm" ?isBold=${true}>Flat, minimal, type-first.</al-heading>
     </al-layout>
-    <al-popover menuId="card-actions" variant="menu">
+    <al-popover variant="menu">
       <al-button slot="trigger" variant="bare" size="sm" ?hideText=${true} label="Card actions">
         <al-icon-dots-horizontal slot="before"></al-icon-dots-horizontal>
       </al-button>
@@ -117,7 +117,7 @@ LayoutInline.args = {
 const TemplateWithContent = (args) => html`
 <al-card ${spread(args)}>
   <al-chip slot="actions-start">Label</al-chip>
-    <al-popover slot="actions-end" menuId="card-menu" variant="menu">
+    <al-popover slot="actions-end" variant="menu">
       <al-button slot="trigger" variant="bare" ?hideText=${true} label="Card actions">
         <al-icon-dots-horizontal slot="before"></al-icon-dots-horizontal>
       </al-button>

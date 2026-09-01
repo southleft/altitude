@@ -124,7 +124,18 @@ const reactWrappers = (() => {
   const set = new Set();
   try {
     const source = fs.readFileSync(REACT_INDEX, 'utf8');
-    for (const m of source.matchAll(/from '\.\/components\/([A-Za-z0-9]+)'/g)) set.add(m[1]);
+    /*
+     * The subpath is OPTIONAL, and that is the whole bug this guards against.
+     *
+     * The barrel exports `from './components/Card/index.js'`, but this pattern
+     * used to require the closing quote immediately after the component name.
+     * Nothing matched, `reactWrappers` stayed empty, every record's `react` came
+     * out null, and the docs playground silently dropped its REACT tab for all
+     * 67 components - while 68 wrappers shipped and the snippet code to render
+     * them sat there fully built. A React consumer got no React code to copy,
+     * and nothing failed to say so.
+     */
+    for (const m of source.matchAll(/from '\.\/components\/([A-Za-z0-9]+)(?:\/[^']*)?'/g)) set.add(m[1]);
   } catch {
     /* @southleft/al-react not present (partial checkout) — the switcher degrades to HTML only. */
   }

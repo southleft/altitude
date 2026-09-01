@@ -157,7 +157,7 @@ export const Default = (args) => html`
             <al-layout grow>
               <al-heading tagName="h3" variant="sm" ?isBold=${true}>${card.title}</al-heading>
             </al-layout>
-            <al-popover menuId=${`composition-menu-${i}`} variant="menu">
+            <al-popover variant="menu">
               <al-button slot="trigger" variant="bare" size="sm" ?hideText=${true} label="Card actions">
                 <al-icon-dots-horizontal slot="before"></al-icon-dots-horizontal>
               </al-button>
