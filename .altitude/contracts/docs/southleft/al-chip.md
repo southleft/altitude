@@ -19,7 +19,7 @@ Component: al-chip
 | `isDismissed` | boolean | — | — | — |
 | `isDismissible` | boolean | — | — | — |
 | `type` | string | `'squared'` | — | — |
-| `variant` | enum | `danger`, `info`, `secondary`, `success`, `warning` | — | **Variant** (VARIANT): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning` |
+| `variant` | enum | `bare`, `neutral`, `primary`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning` |
 
 #### `isDismissed`
 
@@ -53,7 +53,7 @@ Variant
 
 ### `variant` (Figma property "Variant")
 
-- Code values: `danger`, `info`, `secondary`, `success`, `warning`
+- Code values: `bare`, `neutral`, `primary`, `secondary`, `tertiary`
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning`
 
 ## States
@@ -128,54 +128,42 @@ Variant
 
 ### Per-variant (`variant`)
 
-#### `danger`
+#### `bare`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
-| color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
-
-#### `default`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| font-size | `--al-font-size-12` | `typography/font-size/12` |
-| font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
-| gap | `--al-theme-space-xs` | `theme/space/xs` |
-| min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
 
-#### `info`
+#### `neutral`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-info-default` | `theme/color/background/info-default` |
-| color | `--al-theme-color-content-info-weak` | `theme/color/content/info-weak` |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+
+#### `primary`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
+| color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
 
 #### `secondary`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-secondary-default` | `theme/color/background/secondary-default` |
+| color | `--al-theme-color-content-secondary-weak` | `theme/color/content/secondary-weak` |
+
+#### `tertiary`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | border-color | `--al-theme-color-border-default` | `theme/color/border/default` |
 | border-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
-
-#### `success`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-success-default` | `theme/color/background/success-default` |
-| color | `--al-theme-color-content-success-weak` | `theme/color/content/success-weak` |
-
-#### `warning`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-warning-default` | `theme/color/background/warning-default` |
-| color | `--al-theme-color-content-warning-weak` | `theme/color/content/warning-weak` |
+| color | `--al-theme-color-content-default` | `theme/color/content/default` |
 
 ## Code
 

@@ -50,13 +50,13 @@
       "name": "variant",
       "description": "Variant\n- **default** A chip with a strong contrast background\n- **secondary** A chip with a outline\n- **info** A chip with a info background\n- **success** A chip with a success background\n- **warning** A chip with a warning background\n- **danger** A chip with a danger background",
       "type": "enum",
-      "rawType": "'secondary' | 'info' | 'success' | 'warning' | 'danger'",
+      "rawType": "'neutral' | 'bare' | 'primary' | 'secondary' | 'tertiary'",
       "values": [
-        "danger",
-        "info",
+        "bare",
+        "neutral",
+        "primary",
         "secondary",
-        "success",
-        "warning"
+        "tertiary"
       ],
       "bindings": {
         "code": {
@@ -5847,57 +5847,47 @@
   ],
   "conditionalBindings": {
     "variant": {
-      "danger": {
+      "bare": {
         "background-color": {
-          "code": "--al-theme-color-background-danger-default",
-          "figma": "theme/color/background/danger-default"
-        },
-        "color": {
-          "code": "--al-theme-color-content-danger-weak",
-          "figma": "theme/color/content/danger-weak"
-        }
-      },
-      "default": {
-        "background": {
           "code": "--al-theme-color-background-transparent-default",
           "figma": "theme/color/background/transparent-default"
-        },
-        "border-radius": {
-          "code": "--al-theme-border-radius-pill",
-          "figma": "theme/border/radius/pill"
         },
         "color": {
           "code": "--al-theme-color-content-default",
           "figma": "theme/color/content/default"
-        },
-        "font-size": {
-          "code": "--al-font-size-12",
-          "figma": "typography/font-size/12"
-        },
-        "font-weight": {
-          "code": "--al-font-weight-medium",
-          "figma": "typography/font-weight/medium"
-        },
-        "gap": {
-          "code": "--al-theme-space-xs",
-          "figma": "theme/space/xs"
-        },
-        "min-height": {
-          "code": "--al-theme-size-control-sm",
-          "figma": "theme/size/control-sm"
         }
       },
-      "info": {
+      "neutral": {
         "background-color": {
-          "code": "--al-theme-color-background-info-default",
-          "figma": "theme/color/background/info-default"
+          "code": "--al-theme-color-background-default-strong",
+          "figma": "theme/color/background/default-strong"
         },
         "color": {
-          "code": "--al-theme-color-content-info-weak",
-          "figma": "theme/color/content/info-weak"
+          "code": "--al-theme-color-content-default",
+          "figma": "theme/color/content/default"
+        }
+      },
+      "primary": {
+        "background-color": {
+          "code": "--al-theme-color-background-primary-default",
+          "figma": "theme/color/background/primary-default"
+        },
+        "color": {
+          "code": "--al-theme-color-content-primary-weak",
+          "figma": "theme/color/content/primary-weak"
         }
       },
       "secondary": {
+        "background-color": {
+          "code": "--al-theme-color-background-secondary-default",
+          "figma": "theme/color/background/secondary-default"
+        },
+        "color": {
+          "code": "--al-theme-color-content-secondary-weak",
+          "figma": "theme/color/content/secondary-weak"
+        }
+      },
+      "tertiary": {
         "background-color": {
           "code": "--al-theme-color-background-transparent-default",
           "figma": "theme/color/background/transparent-default"
@@ -5911,28 +5901,8 @@
           "figma": "theme/border/width/@"
         },
         "color": {
-          "code": "--al-theme-color-content-default-weak",
-          "figma": "theme/color/content/default-weak"
-        }
-      },
-      "success": {
-        "background-color": {
-          "code": "--al-theme-color-background-success-default",
-          "figma": "theme/color/background/success-default"
-        },
-        "color": {
-          "code": "--al-theme-color-content-success-weak",
-          "figma": "theme/color/content/success-weak"
-        }
-      },
-      "warning": {
-        "background-color": {
-          "code": "--al-theme-color-background-warning-default",
-          "figma": "theme/color/background/warning-default"
-        },
-        "color": {
-          "code": "--al-theme-color-content-warning-weak",
-          "figma": "theme/color/content/warning-weak"
+          "code": "--al-theme-color-content-default",
+          "figma": "theme/color/content/default"
         }
       }
     }

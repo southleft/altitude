@@ -46,7 +46,7 @@ export class ALChip extends ALElement {
    * - **danger** A chip with a danger background
    */
   @property()
-  accessor variant: 'secondary' | 'info' | 'success' | 'warning' | 'danger';
+  accessor variant: 'neutral' | 'bare' | 'primary' | 'secondary' | 'tertiary';
 
   /**
    * Type variant
@@ -98,10 +98,10 @@ export class ALChip extends ALElement {
   render() {
     const componentClassNames = this.componentClassNames('al-c-chip', {
       'al-c-chip--secondary': this.variant === 'secondary',
-      'al-c-chip--success': this.variant === 'success',
-      'al-c-chip--info': this.variant === 'info',
-      'al-c-chip--warning': this.variant === 'warning',
-      'al-c-chip--danger': this.variant === 'danger',
+      'al-c-chip--neutral': this.variant === 'neutral',
+      'al-c-chip--bare': this.variant === 'bare',
+      'al-c-chip--primary': this.variant === 'primary',
+      'al-c-chip--tertiary': this.variant === 'tertiary',
       'al-c-chip--squared': this.type === 'squared',
       'al-is-dismissible': this.isDismissible,
       'al-is-dismissed': this.isDismissed

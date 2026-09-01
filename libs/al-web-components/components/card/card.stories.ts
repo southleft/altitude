@@ -91,7 +91,7 @@ const Template = (args) => html`
     <al-layout direction="row" gap="sm" wrap>
       <al-chip>Design</al-chip>
       <al-chip variant="secondary">Engineering</al-chip>
-      <al-chip variant="info">Research</al-chip>
+      <al-chip variant="neutral">Research</al-chip>
     </al-layout>
   </al-layout>
 

@@ -97,12 +97,12 @@ describe('al-button', () => {
       ['secondary', 'al-c-button--secondary'],
       ['tertiary', 'al-c-button--tertiary'],
       ['bare', 'al-c-button--bare'],
-      ['danger', 'al-c-button--danger'],
+      ['neutral', 'al-c-button--neutral'],
     ] as const) {
       const el = await fixture<ALButton>(html`<al-button variant=${variant}>x</al-button>`);
       const className = q(el, '.al-c-button')!.className;
       expect(className, variant).toContain(cls);
-      const others = ['secondary', 'tertiary', 'bare', 'danger'].filter((v) => v !== variant);
+      const others = ['secondary', 'tertiary', 'bare', 'neutral'].filter((v) => v !== variant);
       for (const other of others) expect(className, `${variant} must not carry --${other}`).not.toContain(`al-c-button--${other}`);
     }
   });

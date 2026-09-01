@@ -82,44 +82,41 @@
   }
 
   /**
-   * Chip with secondary variant
+   * Emphasis variants.
+   *
+   * A chip's axis is emphasis, not status — status belongs to al-badge and
+   * al-alert, which keep info/success/warning/danger. The resting chip (no
+   * variant) is the outlined pill, i.e. the same treatment as `tertiary`;
+   * `--tertiary` restates it so the axis can be named explicitly.
    */
+  .al-c-chip--neutral {
+    border-color: transparent;
+    background-color: var(--al-theme-color-background-default-strong);
+    color: var(--al-theme-color-content-default);
+  }
+
+  .al-c-chip--bare {
+    border-color: transparent;
+    background-color: var(--al-theme-color-background-transparent-default);
+    color: var(--al-theme-color-content-default);
+  }
+
+  .al-c-chip--primary {
+    border-color: transparent;
+    background-color: var(--al-theme-color-background-primary-default);
+    color: var(--al-theme-color-content-primary-weak);
+  }
+
   .al-c-chip--secondary {
+    border-color: transparent;
+    background-color: var(--al-theme-color-background-secondary-default);
+    color: var(--al-theme-color-content-secondary-weak);
+  }
+
+  .al-c-chip--tertiary {
     border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
     background-color: var(--al-theme-color-background-transparent-default);
-    color: var(--al-theme-color-content-default-weak);
-  }
-
-  /**
-   * Chip with success variant
-   */
-  .al-c-chip--success {
-    background-color: var(--al-theme-color-background-success-default);
-    color: var(--al-theme-color-content-success-weak);
-  }
-
-  /**
-   * Chip with danger variant
-   */
-  .al-c-chip--danger {
-    background-color: var(--al-theme-color-background-danger-default);
-    color: var(--al-theme-color-content-danger-weak);
-  }
-
-  /**
-   * Chip with info variant
-   */
-  .al-c-chip--info {
-    background-color: var(--al-theme-color-background-info-default);
-    color: var(--al-theme-color-content-info-weak);
-  }
-
-  /**
-   * Chip with warning variant
-   */
-  .al-c-chip--warning {
-    background-color: var(--al-theme-color-background-warning-default);
-    color: var(--al-theme-color-content-warning-weak);
+    color: var(--al-theme-color-content-default);
   }
 
   /**

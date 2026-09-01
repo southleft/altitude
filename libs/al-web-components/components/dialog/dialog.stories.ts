@@ -54,12 +54,12 @@ function closeDialog(e: MouseEvent, id?: string) {
 
 const Template = (args) => html`
   <al-dialog ${spread(args)} data-testid="dialog">
-    <al-button slot="trigger" variant="danger">Delete component</al-button>
+    <al-button slot="trigger">Delete component</al-button>
     <p>"al-input-stepper" will be removed from the library. This can't be undone.</p>
     <al-button slot="footer" variant="bare" @click=${closeDialog}>Close</al-button>
     <al-layout slot="footer" direction="row" justify="end" grow>
       <al-button variant="tertiary">Cancel</al-button>
-      <al-button variant="danger">Delete</al-button>
+      <al-button>Delete</al-button>
     </al-layout>
   </al-dialog>
 `;
@@ -85,7 +85,7 @@ const TemplateWithTriggerOutside = () => html`
     <al-button aria-controls="dialog-1" slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-1')}>Close</al-button>
     <al-layout slot="footer" direction="row" justify="end" grow>
       <al-button variant="tertiary">Cancel</al-button>
-      <al-button variant="danger">Delete</al-button>
+      <al-button>Delete</al-button>
     </al-layout>
   </al-dialog>
   <al-dialog id="dialog-2" heading="Remove owner?">
@@ -93,7 +93,7 @@ const TemplateWithTriggerOutside = () => html`
     <al-button slot="footer" variant="bare" @click=${(e) => closeDialog(e, 'dialog-2')}>Close</al-button>
     <al-layout slot="footer" direction="row" justify="end" grow>
       <al-button variant="tertiary">Cancel</al-button>
-      <al-button variant="danger">Delete</al-button>
+      <al-button>Delete</al-button>
     </al-layout>
   </al-dialog>
 `;

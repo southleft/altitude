@@ -9,7 +9,8 @@
 
 @layer al.component {
    :host {
-    --al-range-thumb-size: #{var(--al-theme-space-lg)};
+    /* 16px: the 24px knob read as oversized against the 4px track. */
+    --al-range-thumb-size: #{var(--al-theme-space)};
     --al-range-track-height: 0.25rem;
   }
 

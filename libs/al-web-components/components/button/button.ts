@@ -45,7 +45,7 @@ export class ALButton extends ALElement {
    * - **danger** renders the button used for caution actions
    */
   @property()
-  accessor variant: 'secondary' | 'tertiary' | 'bare' | 'danger';
+  accessor variant: 'neutral' | 'bare' | 'secondary' | 'tertiary';
 
   /**
    * Size variant
@@ -202,7 +202,7 @@ export class ALButton extends ALElement {
       'al-c-button--secondary': this.variant === 'secondary',
       'al-c-button--tertiary': this.variant === 'tertiary',
       'al-c-button--bare': this.variant === 'bare',
-      'al-c-button--danger': this.variant === 'danger',
+      'al-c-button--neutral': this.variant === 'neutral',
       'al-c-button--sm': this.size === 'sm',
       'al-c-button--lg': this.size === 'lg',
       'al-c-button--pill': this.isPill === true,

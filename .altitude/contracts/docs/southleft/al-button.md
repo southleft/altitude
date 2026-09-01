@@ -31,7 +31,7 @@ Component: al-button
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
 | `type` | enum | `button`, `reset`, `submit` | — | — |
 | `value` | string | — | — | — |
-| `variant` | enum | `bare`, `danger`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary` |
+| `variant` | enum | `bare`, `neutral`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `ariaControls`
 
@@ -123,7 +123,7 @@ Style variant
 
 ### `variant` (Figma property "Variant")
 
-- Code values: `bare`, `danger`, `secondary`, `tertiary`
+- Code values: `bare`, `neutral`, `secondary`, `tertiary`
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary`
 
 ## States
@@ -214,43 +214,31 @@ _No events declared._
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
 
-#### `danger`
+#### `neutral`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-danger-default` | `theme/color/background/danger-default` |
-| color | `--al-theme-color-content-danger-weak` | `theme/color/content/danger-weak` |
+| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| color | `--al-theme-color-content-default` | `theme/color/content/default` |
 
 **On `hover`** (compound — wins over the generic state rule below):
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-danger-strong` | `theme/color/background/danger-strong` |
-
-#### `primary`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| --al-icon-height | `--al-theme-icon-lg` | `theme/icon/lg` |
-| --al-icon-width | `--al-theme-icon-lg` | `theme/icon/lg` |
-| background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
-| border-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
-| color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
-| gap | `--al-theme-space-xs` | `theme/space/xs` |
-| min-height | `--al-theme-size-control` | `theme/size/control` |
+| background-color | `--al-theme-color-background-default-bold` | `theme/color/background/default-bold` |
 
 #### `secondary`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-primary-faint` | `theme/color/background/primary-faint` |
-| color | `--al-theme-color-content-primary-default` | `theme/color/content/primary-default` |
+| background-color | `--al-theme-color-background-secondary-default` | `theme/color/background/secondary-default` |
+| color | `--al-theme-color-content-secondary-weak` | `theme/color/content/secondary-weak` |
 
 **On `hover`** (compound — wins over the generic state rule below):
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-primary-weak` | `theme/color/background/primary-weak` |
+| background-color | `--al-theme-color-background-secondary-strong` | `theme/color/background/secondary-strong` |
 
 #### `tertiary`
 

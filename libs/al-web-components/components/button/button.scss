@@ -66,17 +66,19 @@
    */
   .al-c-button--secondary {
     /*
-     * v2 canvas "Tonal": a primary-tinted fill with primary text, not a
-     * neutral grey. Hover steps to background-primary-weak.
+     * Emphasis axis (Figma "Secondary"): the secondary role's own fill, not a
+     * primary tint. This used to be primary-faint + primary content, which
+     * made secondary read as a second primary and left the secondary colour
+     * role unused by any control.
      */
-    background-color: var(--al-theme-color-background-primary-faint);
-    color: var(--al-theme-color-content-primary-default);
+    background-color: var(--al-theme-color-background-secondary-default);
+    color: var(--al-theme-color-content-secondary-weak);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-primary-weak);
+      background-color: var(--al-theme-color-background-secondary-strong);
     }
   }
 
@@ -115,17 +117,22 @@
   }
 
   /**
-   * Danger button
+   * Neutral button
+   *
+   * Replaces the danger variant. Status is carried by al-badge and al-alert,
+   * which keep their info/success/warning/danger axes; a button's axis is
+   * EMPHASIS (bare -> neutral -> tertiary -> secondary -> primary). A
+   * destructive confirm is now a primary button with destructive copy.
    */
-  .al-c-button--danger {
-    background-color: var(--al-theme-color-background-danger-default);
-    color: var(--al-theme-color-content-danger-weak);
+  .al-c-button--neutral {
+    background-color: var(--al-theme-color-background-default-strong);
+    color: var(--al-theme-color-content-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-danger-strong);
+      background-color: var(--al-theme-color-background-default-bold);
     }
   }
 
