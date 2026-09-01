@@ -305,6 +305,45 @@ function collectCodeFigmaTokens(anatomy, delegated = new Set(), conditionalBindi
 const NESTED_TAG_RE = /^al-[a-z0-9-]+$/;
 
 /**
+ * Figma variables that cannot be compared as BOUND VARIABLES, with the reason.
+ *
+ * font-weight: Figma carries text weight in `fontName.style` (a font style
+ * NAME), not a bindable numeric field. The Tier-1 font-weight variables are
+ * STRINGs holding style names — `typography/font-weight/bold` is "Bold" — while
+ * the shipped CSS renders `--al-font-weight-bold: 600`, which is Public Sans
+ * SemiBold, and every text node in the library is set to SemiBold accordingly.
+ * Code and canvas therefore AGREE on what is drawn; only the variable's string
+ * disagrees with both, so binding it to `fontStyle` would change the render
+ * from SemiBold to Bold. Measured 2026-08-31: no set in the library binds a
+ * font-weight variable, and 9 components were reporting one as missing.
+ *
+ * Weight is still compared — through `textStyles`, which reads the style
+ * actually applied. This suppresses a binding comparison that cannot be made
+ * honestly, not the fact itself.
+ */
+const UNBINDABLE_TOKEN_PREFIXES = [
+  { prefix: 'typography/font-weight/', why: 'Figma stores text weight in fontName.style, not a bindable field; the variables hold style names that do not match the weight the shipped CSS renders (see textStyles for the comparison that is valid)' },
+  { prefix: 'font-weight/', why: 'as typography/font-weight/* — text weight is fontName.style in Figma, not a bindable field' },
+  // z-index: Figma has no z-index field at all. Stacking is the layer ORDER in
+  // the node tree, so there is nothing a variable could be bound to.
+  { prefix: 'z-index/', why: 'Figma has no z-index field — stacking is layer order in the node tree, so no variable can be bound to it' },
+  // base/space: reaches the contract through the SCSS size() helper, which is
+  // calc(var(--al-base-space) * n) — measured 2026-08-31, 258 of its uses are
+  // `height` and 249 are `width`. What Figma can bind is a value, not a
+  // multiplier, so a `width: size(5)` node correctly carries a literal 40 and
+  // no variable. Comparing the two as bindings can only ever report a false
+  // miss. (This is the calc() half of the gap noted in altitude-figma-repair
+  // trap 13.)
+  { prefix: 'base/space', why: 'authored via size(n) = calc(var(--al-base-space) * n); Figma binds values, not multipliers, so the canvas correctly carries a computed literal instead' },
+];
+
+/** The reason `figmaVar` cannot be compared as a binding, or null if it can. */
+export function unbindableReason(figmaVar) {
+  const hit = UNBINDABLE_TOKEN_PREFIXES.find((e) => figmaVar.startsWith(e.prefix));
+  return hit ? hit.why : null;
+}
+
+/**
  * The nested component tags whose token bindings BOTH sides agree belong to a
  * separate set: marked `component: "<tag>"` in the code anatomy AND present as
  * a Figma INSTANCE of that name in the canvas anatomy.
@@ -654,8 +693,30 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
         delegated: [...delegated].sort(),
       });
     }
-    const codeFigmaTokens = collectCodeFigmaTokens(codeContract.anatomy, delegated, codeContract.conditionalBindings ?? null);
-    const canvasTokenSet = collectCanvasFigmaTokens(canvasContract, delegated);
+    const codeFigmaTokensAll = collectCodeFigmaTokens(codeContract.anatomy, delegated, codeContract.conditionalBindings ?? null);
+    const canvasTokenSetAll = collectCanvasFigmaTokens(canvasContract, delegated);
+
+    // Drop the tokens no bound-variable comparison can settle, and SAY which.
+    const unbindable = new Map();
+    const codeFigmaTokens = new Map();
+    for (const [figmaVar, codeNames] of codeFigmaTokensAll) {
+      const why = unbindableReason(figmaVar);
+      if (why) unbindable.set(figmaVar, why);
+      else codeFigmaTokens.set(figmaVar, codeNames);
+    }
+    const canvasTokenSet = new Set();
+    for (const figmaVar of canvasTokenSetAll) {
+      const why = unbindableReason(figmaVar);
+      if (why) unbindable.set(figmaVar, why);
+      else canvasTokenSet.add(figmaVar);
+    }
+    if (unbindable.size) {
+      skipped.push({
+        dimension: 'token-binding',
+        reason: `not comparable as bound variables: ${[...unbindable.keys()].sort().join(', ')} — ${[...new Set(unbindable.values())].join('; ')}.`,
+        tokens: [...unbindable.keys()].sort(),
+      });
+    }
     compared.tokens = new Set([...codeFigmaTokens.keys(), ...canvasTokenSet]).size;
 
     for (const [figmaVar, alTokens] of codeFigmaTokens) {

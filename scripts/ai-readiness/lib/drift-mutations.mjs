@@ -28,7 +28,7 @@
  * agent that always finds drift; the balanced set is the point.
  */
 
-import { PAIRING_CONVENTIONS, normKey } from '../../../libs/altitude-mcp/src/lib/contract-diff.mjs';
+import { PAIRING_CONVENTIONS, normKey, unbindableReason } from '../../../libs/altitude-mcp/src/lib/contract-diff.mjs';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 
@@ -173,12 +173,19 @@ export const MUTATIONS = [
     // only `anatomy` and was invisible; a later one touched only `tokens` and
     // went invisible again the moment the walk landed. Mutate what is actually
     // compared, on every path that compares it.
-    applicable: (pair) => (pair.canvasContract.tokensOwn ?? pair.canvasContract.tokens ?? []).length > 0
+    applicable: (pair) => (pair.canvasContract.tokensOwn ?? pair.canvasContract.tokens ?? []).some((t) => !unbindableReason(t))
       && pair.codeContract.anatomySource === 'measured'
       && pair.canvasContract.anatomySource === 'observed',
     apply: (pair) => {
       const next = clone(pair);
-      const from = [...(next.canvasContract.tokensOwn ?? next.canvasContract.tokens)].sort()[0];
+      // Pick a token the differ actually COMPARES. Some families (font-weight,
+      // z-index, base/space) are skipped as unbindable, and several of them
+      // sort first, so "the alphabetically first token" would silently mutate
+      // something the differ ignores and inject no disagreement at all.
+      const candidates = [...(next.canvasContract.tokensOwn ?? next.canvasContract.tokens)]
+        .sort()
+        .filter((t) => !unbindableReason(t));
+      const from = candidates[0];
       const to = 'theme/color/content/nonexistent-eval-token';
       // Deep rename across the WHOLE canvas contract rather than a named list
       // of fields. The differ has now changed which surface it reads three
