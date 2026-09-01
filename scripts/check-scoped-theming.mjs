@@ -80,8 +80,22 @@ const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(e.message));
 page.on('console', (m) => m.type() === 'error' && pageErrors.push(m.text()));
 
-await page.goto(`http://localhost:${PORT}${PAGE}`, { waitUntil: 'load' });
-await page.waitForFunction(() => document.documentElement.dataset.ready === 'true', null, { timeout: 30_000 });
+/*
+ * Waiting on `load` at the default 30s made this gate flaky in a way that read
+ * exactly like a regression: the FIRST run after a dependency change pays
+ * Vite's cold dep pre-bundle, which on its own can outlast the budget, and
+ * `load` additionally blocks on the Google Fonts stylesheet. Both times it
+ * timed out here the assertions below then passed unchanged on a warm cache.
+ *
+ * `data-ready` is the real readiness signal — scoped.js sets it once every
+ * column has rendered — so wait for THAT, and give the navigation a budget
+ * that a cold pre-bundle fits inside. `document.fonts.ready` is awaited
+ * separately because the PNG this writes is an artifact people look at, and a
+ * screenshot taken mid-webfont-swap is its own false alarm.
+ */
+await page.goto(`http://localhost:${PORT}${PAGE}`, { waitUntil: 'domcontentloaded', timeout: 120_000 });
+await page.waitForFunction(() => document.documentElement.dataset.ready === 'true', null, { timeout: 120_000 });
+await page.evaluate(() => document.fonts.ready);
 
 // `[data-probe]` and not a tag selector, so the versioned-registry column
 // (`<al-theme-9-9-9>`) is reachable by exactly the same helpers.
