@@ -105,13 +105,13 @@ export function gapModifiers() {
 
 /**
  * Every typography utility, split by TIER — which is the whole point of the
- * pair. A tier-1 class (`al-typography-preset-16`) pins a literal ramp step; a
+ * pair. A tier-1 class (`al-typography-preset-body-md`) pins a literal ramp step; a
  * tier-2 class (`al-u-theme-typography-body-md`) names a ROLE, and the role is
  * what a brand or a density setting is allowed to repoint. Prefer tier 2.
  *
  * The token behind each class is resolved so the table shows a size, not just a
  * name — `al-u-theme-typography-body-md` resolving through
- * `--al-theme-typography-body-md` → `--al-typography-preset-16` → the font
+ * `--al-theme-typography-body-md` → `--al-typography-preset-body-md` → the font
  * shorthand is exactly the chain a reader is trying to see.
  */
 export function typographyClasses() {

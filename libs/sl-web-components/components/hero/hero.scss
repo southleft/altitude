@@ -117,7 +117,7 @@
    *    renders at 7rem, so the cap was measured at 48px while the text drew at
    *    112px and the headline broke to two or three words a line.
    *
-   *    `--al-typography-preset-48-bold` is the TIER-1 primitive
+   *    `--al-typography-preset-display-lg-bold` is the TIER-1 primitive
    *    `al-heading`'s `display-lg` + bold variant actually applies. Reaching
    *    past the tier-2 `--al-theme-typography-display-lg-bold` alias is
    *    deliberate: the brand's `:host` partials re-declare the tier-1
@@ -133,7 +133,7 @@
   .sl-c-hero__heading {
     display: block;
     margin-block-start: var(--al-theme-space-md);
-    font: var(--al-typography-preset-48-bold); /* 3 */
+    font: var(--al-typography-preset-display-lg-bold); /* 3 */
     max-inline-size: var(--al-hero-heading-max-width, 18ch); /* 3 */
     text-wrap: balance; /* 4 */
   }

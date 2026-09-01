@@ -73,7 +73,7 @@ pilot at `brand="southleft"` — mechanism unchanged, only the brand under test)
 |---|---|
 | `<al-theme>` has a shadow root | `true` (from the DSD template, no JS) |
 | `customElements.get('al-theme')` | `undefined` — nothing upgraded |
-| probe `font` (southleft) | `16px/20px ui-monospace, …` — southleft's mono type ramp (`--al-typography-preset-16`, `tokens-southleft-dark.css`) |
+| probe `font` (southleft) | `16px/20px ui-monospace, …` — southleft's mono type ramp (`--al-typography-preset-body-md`, `tokens-southleft-dark.css`) |
 | probe `color` (southleft) | `#f05735` — southleft's red accent (`--al-theme-color-background-primary-default`) |
 
 Two things this exposed, both fixed in the same change:

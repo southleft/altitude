@@ -19,7 +19,7 @@
  *      (`docs.theme.defaultMode` boots the page in that mode,
  *      `docs.theme.contrast` lands on the host attribute);
  *   3. asserts the display heading's computed font-family matches the family
- *      the brand's own `--al-typography-preset-48-bold` names — the trap this
+ *      the brand's own `--al-typography-preset-display-lg-bold` names — the trap this
  *      guards is real: the `--al-theme-typography-*` aliases resolve at
  *      `:root` against the BASE presets, so a binding through them renders
  *      the default brand's face under every brand (docs.css, type-ramp block);
@@ -113,7 +113,7 @@ try {
         hostContrast: host?.getAttribute('contrast') ?? null,
         h1Family: h1 ? getComputedStyle(h1).fontFamily : null,
         presetFamily: host
-          ? getComputedStyle(host).getPropertyValue('--al-typography-preset-48-bold').split('/').pop()?.trim() ?? ''
+          ? getComputedStyle(host).getPropertyValue('--al-typography-preset-display-lg-bold').split('/').pop()?.trim() ?? ''
           : '',
         layoutDefined: Boolean(customElements.get('al-layout')),
         heroTracks: heroGrid ? getComputedStyle(heroGrid).gridTemplateColumns.split(' ').length : 0,

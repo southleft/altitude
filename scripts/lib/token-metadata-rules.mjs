@@ -228,16 +228,16 @@ export const FAMILY_USAGE_RULES = {
   'color.transparent.light': brandRamp('transparent-light (alpha-over-light)'),
 
   // ---- tier-1 typography presets ----
-  'typography.preset.12': typographyPreset(12),
-  'typography.preset.14': typographyPreset(14),
-  'typography.preset.16': typographyPreset(16),
-  'typography.preset.18': typographyPreset(18),
-  'typography.preset.20': typographyPreset(20),
-  'typography.preset.24': typographyPreset(24),
-  'typography.preset.36': typographyPreset(36),
-  'typography.preset.40': typographyPreset(40),
-  'typography.preset.44': typographyPreset(44),
-  'typography.preset.48': typographyPreset(48),
+  'typography.preset.body-xs': typographyPreset(12),
+  'typography.preset.body-sm': typographyPreset(14),
+  'typography.preset.body-md': typographyPreset(16),
+  'typography.preset.body-lg': typographyPreset(18),
+  'typography.preset.heading-sm': typographyPreset(20),
+  'typography.preset.heading-md': typographyPreset(24),
+  'typography.preset.heading-lg': typographyPreset(36),
+  'typography.preset.display-sm': typographyPreset(40),
+  'typography.preset.display-md': typographyPreset(44),
+  'typography.preset.display-lg': typographyPreset(48),
 
   // ---- tier-2 semantic color roles ----
   'theme.color.background': 'Fill colour for a surface (button/card/panel/etc. background). Legal CSS surface: background-color (mostly), background (shorthand contexts). 50 members spanning default/primary/secondary/info/success/warning/danger/inverse/transparent/disabled roles across the altitude+southleft brand deltas and light+dark modes. The disabled-default member is DEPRECATED — see its own `com.atlassian.token` entry; disabled state is expressed via opacity everywhere else in this family, not a colour swap.',

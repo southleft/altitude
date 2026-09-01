@@ -114,8 +114,8 @@ and southleft brands) was **inert**.
 preset:
 
 ```css
---al-typography-preset-16-bold: 600 1rem/1.5rem IBM Plex Sans, sans-serif;
---al-typography-preset-16-bold-letter-spacing: 0.01em;
+--al-typography-preset-body-md-bold: 600 1rem/1.5rem IBM Plex Sans, sans-serif;
+--al-typography-preset-body-md-bold-letter-spacing: 0.01em;
 ```
 
 Figma authors letter-spacing as a percentage of the font size and CSS

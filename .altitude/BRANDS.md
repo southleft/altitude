@@ -101,13 +101,13 @@ typography call sites in component SCSS goes through a Sass mixin:
 
 ```
 components/button/button.scss:13     @include al-theme-typography-body-md-bold;
-styles/core/mixins/typography.scss:161-163  → @include al-typography-preset-16-bold;
-styles/core/mixins/typography.scss:25-27    → font: var(--al-typography-preset-16);
+styles/core/mixins/typography.scss:161-163  → @include al-typography-preset-body-md-bold;
+styles/core/mixins/typography.scss:25-27    → font: var(--al-typography-preset-body-md);
 ```
 
 The rendered custom property is the **tier-1** `--al-typography-preset-N`.
 The tier-2 token is emitted (`--al-theme-typography-body-md:
-var(--al-typography-preset-16)`) and read by nothing.
+var(--al-typography-preset-body-md)`) and read by nothing.
 
 So a brand file overriding `theme.typography.*` changes a variable nobody
 reads. **The only working lever is the tier-1 `typography.preset.N.*`
@@ -123,7 +123,7 @@ bundle only**.
 
 Proven empirically (scratch build, southleft, 2026-07-28):
 
-| Bundle | `--al-typography-preset-16` |
+| Bundle | `--al-typography-preset-body-md` |
 |---|---|
 | `brand/tokens-southleft-dark.css` (scratch override → `{font-size.14}`) | `400 0.875rem/1.25rem IBM Plex Sans, sans-serif` |
 | `brand/tokens-northright-dark.css` (control) | `400 1rem/1.5rem IBM Plex Sans, sans-serif` |
@@ -158,21 +158,21 @@ named `typography.json` under `tier-2/brand/` would be inert.
 scratch build (`{letter-spacing.1}` produced no tracking in the output). Do not
 use tracking as a brand lever through presets.
 
-Consequence of the mixin hardcoding `--al-typography-preset-16`: under
+Consequence of the mixin hardcoding `--al-typography-preset-body-md`: under
 branding, `preset.N` names a **slot** ("the body-md slot"), not a literal size.
-northright's `preset.16` legitimately renders at 14px.
+northright's `preset.body-md` legitimately renders at 14px.
 
 Preset → mixin traffic, so you know which presets are worth overriding:
 
 | Preset | Tier-2 role | Component call sites |
 |---|---|---:|
-| `preset.14` | `body-sm` | 19 |
-| `preset.16` | `body-md` | 13 |
-| `preset.12` | `body-xs` | 11 |
-| `preset.18` | `body-lg` | 3 |
-| `preset.20` | `heading-sm` | 3 |
-| `preset.24` | `heading-md` | 3 |
-| `preset.36` | `heading-lg` | 3 |
+| `preset.body-sm` | `body-sm` | 19 |
+| `preset.body-md` | `body-md` | 13 |
+| `preset.body-xs` | `body-xs` | 11 |
+| `preset.body-lg` | `body-lg` | 3 |
+| `preset.heading-sm` | `heading-sm` | 3 |
+| `preset.heading-md` | `heading-md` | 3 |
+| `preset.heading-lg` | `heading-lg` | 3 |
 | `preset.{40,44,48}` | `display-{sm,md,lg}` | 3 each |
 
 ---
@@ -347,7 +347,7 @@ pnpm brands:compare     # rendered check + regenerates brands.dark.png
 
 - every pair of brands differs on non-colour properties, on at least 3 of the
   5 marker properties (`--al-theme-border-radius`, `--al-theme-space-xs`,
-  `--al-theme-space`, `--al-theme-box-shadow`, `--al-typography-preset-16`);
+  `--al-theme-space`, `--al-theme-box-shadow`, `--al-typography-preset-body-md`);
 - every expressive brand varies at least 3 non-colour axes vs `altitude`;
 - `--al-theme-border-radius-xs` is present in every bundle (R4);
 - no `--al-theme-typography-*` override appears without a matching

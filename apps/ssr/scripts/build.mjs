@@ -33,7 +33,7 @@ const PILOTS = [
     ssr: true,
     attrs: `brand="southleft" mode="dark"`,
     innerHTML:
-      '<p style="color: var(--al-theme-color-background-primary-default); font: var(--al-typography-preset-16)">' +
+      '<p style="color: var(--al-theme-color-background-primary-default); font: var(--al-typography-preset-body-md)">' +
       'Branded with JavaScript disabled.</p>',
   },
 ];

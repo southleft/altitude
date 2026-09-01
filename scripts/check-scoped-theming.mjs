@@ -16,7 +16,7 @@
  *   2. two distinct computed `font` shorthands on a rendered element INSIDE
  *      each column's shadow root (a custom-property diff proves the token
  *      moved; only a computed style proves it reached the component);
- *   3. the tier-1 properties brands override (`--al-typography-preset-16`,
+ *   3. the tier-1 properties brands override (`--al-typography-preset-body-md`,
  *      `--al-box-shadow`, `--al-theme-border-radius`) are carried by the scoped
  *      output — a `--al-theme-*`-only emission would silently drop every
  *      brand's typography;
@@ -120,7 +120,7 @@ console.log('\n[scoped-theming] two <al-theme brand> siblings, one document, one
 
 const PROPS = [
   '--al-theme-color-background-primary-default', // tier-2, what brands already varied
-  '--al-typography-preset-16',                   // tier-1 — the silent-drop canary
+  '--al-typography-preset-body-md',                   // tier-1 — the silent-drop canary
   '--al-theme-border-radius',
   '--al-theme-box-shadow',
 ];
