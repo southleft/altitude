@@ -23,8 +23,8 @@ Component: al-menu-item
 | `indentation` | number | — | `0` | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled` |
 | `isExpandableHeader` | boolean | — | — | **Role** (VARIANT): `Expandable`, `Header`, `Item` |
-| `isExpanded` | boolean | — | — | — |
-| `isFocused` | boolean | — | — | — |
+| `isExpanded` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isFocused` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled` |
 | `isHeader` | boolean | — | — | **Role** (VARIANT): `Expandable`, `Header`, `Item` |
 | `isHidden` | boolean | — | `false` | _not expressed in Figma (by design)_ |
 | `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
@@ -136,7 +136,7 @@ icon-only menu items where there is no visible text. Setting both
 `label="Edit"` and the slot to "Edit" produces a duplicate
 accessible name.
 
-**Figma-expression opt-out (T27):** `ariaControls`, `groupId`, `href`, `idx`, `indentation`, `isHidden`, `linkTitle`, `target`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaControls`, `groupId`, `href`, `idx`, `indentation`, `isExpanded`, `isHidden`, `linkTitle`, `target`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 
@@ -149,6 +149,11 @@ accessible name.
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Expandable`, `Header`, `Item`
+
+### `isFocused` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`
 
 ### `isHeader` (Figma property "Role")
 

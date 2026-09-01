@@ -24,8 +24,8 @@ Component: al-input-stepper
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | — |
-| `isReadonly` | boolean | — | — | — |
-| `isRequired` | boolean | — | `false` | — |
+| `isReadonly` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isRequired` | boolean | — | `false` | _not expressed in Figma (by design)_ |
 | `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
 | `max` | number | — | — | _not expressed in Figma (by design)_ |
 | `min` | number | — | — | _not expressed in Figma (by design)_ |
@@ -115,7 +115,7 @@ Variant
   would each be 20px and miss the 24x24 minimum in WCAG 2.2 SC 2.5.8. See
   input-stepper.scss for the full note and the escape hatch.
 
-**Figma-expression opt-out (T27):** `ariaDescribedBy`, `count`, `errorNote`, `fieldId`, `fieldNote`, `max`, `min`, `name`, `placeholder`, `step`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `count`, `errorNote`, `fieldId`, `fieldNote`, `isReadonly`, `isRequired`, `max`, `min`, `name`, `placeholder`, `step`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

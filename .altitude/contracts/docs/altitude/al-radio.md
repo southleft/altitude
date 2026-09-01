@@ -24,7 +24,7 @@ Component: al-radio
 | `isChecked` | boolean | — | — | **Checked** (VARIANT): `Off`, `On` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
-| `isRequired` | boolean | — | — | — |
+| `isRequired` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `name` | string | — | — | _not expressed in Figma (by design)_ |
 | `value` | string | — | — | _not expressed in Figma (by design)_ |
 
@@ -80,7 +80,7 @@ Name attribute
 
 Value attribute
 
-**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `name`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `isRequired`, `name`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

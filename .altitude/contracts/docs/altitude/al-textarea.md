@@ -27,7 +27,7 @@ Component: al-textarea
 | `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isFocused` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isOptional` | boolean | — | — | — |
-| `isReadonly` | boolean | — | — | — |
+| `isReadonly` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isRequired` | boolean | — | — | — |
 | `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
 | `maxLength` | number | — | — | _not expressed in Figma (by design)_ |
@@ -147,7 +147,7 @@ Rows attribute
 Value attribute
 - Specifies the value of an input element
 
-**Figma-expression opt-out (T27):** `ariaDescribedBy`, `cols`, `errorNote`, `fieldId`, `fieldNote`, `isActive`, `maxLength`, `maxLengthValue`, `minLength`, `name`, `placeholder`, `rows`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `cols`, `errorNote`, `fieldId`, `fieldNote`, `isActive`, `isReadonly`, `maxLength`, `maxLengthValue`, `minLength`, `name`, `placeholder`, `rows`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

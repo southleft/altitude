@@ -25,7 +25,7 @@ Component: al-file-upload
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Hover` |
-| `isRequired` | boolean | — | — | — |
+| `isRequired` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `label` | string | — | — | _not expressed in Figma (by design)_ |
 | `multiple` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `name` | string | — | — | _not expressed in Figma (by design)_ |
@@ -107,7 +107,7 @@ Time taken for uploading
 
 Value associated with the field
 
-**Figma-expression opt-out (T27):** `accept`, `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `fileSizeLimit`, `label`, `multiple`, `name`, `textConfig`, `uploadFiles`, `uploadTime`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `accept`, `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `fileSizeLimit`, `isRequired`, `label`, `multiple`, `name`, `textConfig`, `uploadFiles`, `uploadTime`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

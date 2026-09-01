@@ -24,7 +24,7 @@ Component: al-radio-group
 | `hideLegend` | boolean | — | — | **Legend** (VARIANT): `Hidden`, `Shown` |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
-| `isRequired` | boolean | — | — | — |
+| `isRequired` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `label` | string | — | — | — |
 
 #### `ariaDescribedBy`
@@ -86,7 +86,7 @@ Required attribute
 Label
 - Displays inside the legend
 
-**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `isRequired` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

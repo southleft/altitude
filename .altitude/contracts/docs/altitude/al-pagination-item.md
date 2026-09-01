@@ -84,7 +84,7 @@ _No events declared._
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Selected=No,Kind=expandable` (source: `measured`)
+**Anatomy case measured:** `Selected=No,Kind=number` (source: `measured`)
 
 ### Root — `<li class="al-c-pagination-item">`
 
@@ -92,6 +92,38 @@ _No events declared._
 | --- | --- | --- |
 | font | `--al-theme-typography-body-sm` | — |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
+
+### State overrides (measured, root node)
+
+**`hover`** (node #0.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+
+**`hover`** (node #0.0.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+
+**`focus`** (node #0.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| outline | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
+
+**`focus`** (node #0.0.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| outline | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -103,9 +135,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-pagination-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (2)
+## Tokens referenced (10)
 
-`--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-theme-border-radius`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-color-focus-ring`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

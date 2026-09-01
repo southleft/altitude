@@ -72,7 +72,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## States
 
-`hover`, `focus`
+`hover`, `focus`, `disabled`
 
 ## Slots (2)
 

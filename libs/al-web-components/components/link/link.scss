@@ -15,6 +15,22 @@
     @include al-link;
     --al-icon-height: #{var(--al-theme-icon-md)};
     --al-icon-width: #{var(--al-theme-icon-md)};
+
+    /**
+     * Disabled state
+     *
+     * `link.ts` has always put `al-is-disabled` on this element and set
+     * `aria-disabled`, but nothing here ever styled it — the class appeared
+     * only inside `:hover:not(…, .al-is-disabled)` guards, which suppress the
+     * hover and leave the resting state identical to an enabled link. So a
+     * disabled link announced itself to assistive tech and looked, to everyone
+     * else, exactly like one you could click. This is the same treatment every
+     * other disableable component uses (pagination-item, list-item, tab).
+     */
+    &.al-is-disabled {
+      cursor: not-allowed;
+      opacity: var(--al-theme-opacity-disabled);
+    }
   }
 
   /**
