@@ -88,7 +88,7 @@ a {
   --al-popover-trigger-width: 100%;
   --al-popover-offset: 0;
   --al-popover-shift: 0;
-  --al-popover-container-width: calc(var(--al-theme-layout-width-sidebar) - var(--al-theme-space-xs));
+  --al-popover-container-width: calc(var(--al-theme-layout-max-width-xs) - var(--al-theme-space-xs));
   --al-popover-container-padding: 0;
 }
 
@@ -157,6 +157,6 @@ a {
 
 @media all and (min-width: 768px) {
   .al-l-dashboard__shell {
-    --al-layout-template: calc(var(--al-theme-layout-width-sidebar, 40%) - var(--al-theme-space-xs)) minmax(0, 1fr);
+    --al-layout-template: calc(var(--al-theme-layout-max-width-xs, 40%) - var(--al-theme-space-xs)) minmax(0, 1fr);
   }
 }
