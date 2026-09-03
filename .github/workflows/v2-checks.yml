@@ -187,6 +187,27 @@ jobs:
       # unverified judgement point must not land unrecorded.
       - name: Judgement ledger still true
         run: pnpm run check:judgement-ledger
+      # Added 2026-09-02. These four are zero-dependency and read only committed
+      # files, so this job — which deliberately skips `pnpm install` — is their
+      # natural home. They are STEPS in an existing required job rather than new
+      # jobs on purpose: a new job would not be in the `main` ruleset's required
+      # list and so could go red without blocking anything, which is the exact
+      # failure the ruleset was added to close.
+      #
+      # Documentation rot: every backticked path, script and flag in a doc must
+      # resolve. Fourteen documents survived a Storybook retirement still
+      # instructing it, and a skill invoked a script deleted four days earlier.
+      - name: Documentation anchors resolve
+        run: pnpm run check:doc-anchors
+      # The gate inventory must keep matching the workflow, both directions.
+      - name: Gate manifest matches CI
+        run: pnpm run gates:check-ci
+      # Public prop vocabulary ratchet — `variant` currently does seven jobs.
+      - name: API vocabulary ratchet
+        run: pnpm run gate:api-vocabulary
+      # Documented slots/parts must actually be rendered.
+      - name: Documented slots and parts exist
+        run: pnpm run gate:cem-render
 
   baselines-vrt:
     # No component count in the name: components.vrt.spec.ts derives its list

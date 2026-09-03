@@ -1,0 +1,1523 @@
+{
+  "version": 1,
+  "hand_authored": true,
+  "readme": ".altitude/GATES.md",
+  "runner": "scripts/run-gates.mjs",
+  "workflow": ".github/workflows/v2-checks.yml",
+  "about": "The declarative inventory of every runnable verification in this repo. HAND-AUTHORED, not generated: `ci` values are facts read out of the workflow and `purpose` text is quoted from the `//`-prefixed sibling keys in the root package.json. `scripts/run-gates.mjs --check-ci` is the drift gate that keeps `ci` honest in both directions.",
+  "ciScope": "The `ci` field names jobs in .github/workflows/v2-checks.yml ONLY. release.yml and ai-readiness-eval.yml are deliberately out of scope: the first publishes, the second is label-gated real-spend. A gate that runs only in those workflows carries ci:null and says so in `note`.",
+  "needsVocabulary": {
+    "none": "Runs on a bare clone with nothing but node. No install, no build.",
+    "install": "Needs `pnpm install` (node_modules present at the repo root).",
+    "tokens": "Needs built design tokens - libs/al-web-components/styles/dist/tokens.json (pnpm --filter @southleft/al-web-components build:tokens).",
+    "tokens-v5": "Needs the Style Dictionary v5 brand/mode bundles - libs/al-web-components/styles/dist-v5/css/.",
+    "cem": "Needs libs/al-web-components/custom-elements.json (build:custom-elements.json).",
+    "libs": "Needs the built component libraries - libs/al-web-components/dist and libs/al-react/dist (pnpm run build).",
+    "fixtures": "Needs the built example-app / story fixtures (pnpm run build:fixtures, build:story-fixture).",
+    "docs": "Needs the built docs site at dist/docs (pnpm --filter al-app-docs build).",
+    "browser": "Needs a Playwright chromium install (pnpm exec playwright install chromium).",
+    "git-history": "Needs real git history and a base ref to diff against - shallow clones and detached snapshots cannot satisfy it.",
+    "clean-tree": "Needs an uncommitted-change-free working tree for the paths it diffs; a dirty tree makes the check report someone else's edits.",
+    "capture": "Needs the docs ground-truth PNGs under .altitude/figma-sync/shots/docs (pnpm run capture:docs).",
+    "canvas": "Needs extracted Figma canvas contracts under .altitude/figma-sync/**/canvas-contracts/. These are GITIGNORED live observations - absent on a clone, which is why the gates that read them cannot be CI gates.",
+    "figma-export": "Needs a saved figma_export_tokens JSON (.altitude/figma-sync/last-export.json).",
+    "figma-shim": "Needs the Figma MCP shim reachable on 127.0.0.1:9401 (scripts/figma-atoms/mcp-shim.mjs, Figma desktop running).",
+    "network": "Needs outbound network access, or a deployed URL to check."
+  },
+  "tiers": {
+    "fast": "No build required. needs are a subset of {none, install, git-history, clean-tree}.",
+    "build": "Requires built output of some kind - tokens, CEM, libraries, fixtures, docs, a browser, or captured shots.",
+    "live": "Requires something outside the repo - the Figma shim, a live canvas extraction, a saved Figma export, or the network."
+  },
+  "fields": {
+    "id": "The npm script name where one exists; otherwise a stable slug for a CI step that runs `node scripts/...` with no alias (npmScript:null).",
+    "npmScript": "The root package.json script name, or null when the gate has no alias.",
+    "command": "What actually runs, verbatim.",
+    "purpose": "One line. Quoted or condensed from `purposeSource` - never invented.",
+    "purposeSource": "Where `purpose` came from: package.json-comment | workflow-step-name | script-header.",
+    "needs": "Prerequisite tokens from needsVocabulary. The runner probes each and NAMES every skip.",
+    "blocking": "true = a failure fails the run. false = warning tier; reported loudly, exit code unchanged.",
+    "ci": "The exact `name:` of the v2-checks.yml job(s) this runs inside, as a string or array; null when nothing in that workflow invokes it; \"unknown\" when it has not been determined.",
+    "ciVia": "When ci is null but the gate still runs in CI transitively, the gate id that pulls it in.",
+    "tier": "fast | build | live.",
+    "group": "Family, for --group.",
+    "note": "Anything a reader would otherwise get wrong.",
+    "autorun": "false = never selected by --tier/--group; it must be named with --only. Used for builds and for anything that MUTATES a committed artifact."
+  },
+  "gates": [
+    {
+      "id": "a11y-fixture",
+      "npmScript": null,
+      "command": "node scripts/check-a11y.js",
+      "purpose": "T6.3 a11y gate - axe-core over the apps/web-components fixture pages, asserting no critical/serious violations.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "libs",
+        "fixtures",
+        "browser",
+        "network"
+      ],
+      "blocking": true,
+      "ci": "T6.3 a11y CI gate (axe-core)",
+      "ciVia": null,
+      "tier": "live",
+      "group": "a11y",
+      "note": "No npm alias. Needs the fixture preview server running on :5174 - CI starts it with nohup, which is why this is not a plain build-tier gate."
+    },
+    {
+      "id": "a11y-stories",
+      "npmScript": null,
+      "command": "node scripts/build-a11y-report.mjs --storybook libs/al-web-components/story-fixture/dist --out /tmp/a11y.json && node scripts/assert-a11y-clean.mjs /tmp/a11y.json",
+      "purpose": "Axe every story in the story fixture, then assert no structural violations and no unrendered stories. The report GENERATES; assert-a11y-clean is the half that fails.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "libs",
+        "fixtures",
+        "browser"
+      ],
+      "blocking": true,
+      "ci": "T2.4 axe sweep over every story (story fixture)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "a11y",
+      "note": "No npm alias for this exact pair. `a11y:report:fixture` builds the fixture and generates the report but does NOT assert."
+    },
+    {
+      "id": "ai-readiness-dry-run",
+      "npmScript": null,
+      "command": "node scripts/ai-readiness/run-probe.mjs --dry-run --fleet=2 --tasks=A,B,C,D,E,F,G --models=claude --treatments=all",
+      "purpose": "Dry-run job-list explosion across the FULL treatment matrix - spends $0, no child process spawned.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "ai-readiness harness — dry-run job-list explosion + deterministic tests",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "ai-readiness",
+      "note": "No npm alias. The label-gated real-spend workflow is .github/workflows/ai-readiness-eval.yml, out of this manifest's ci scope."
+    },
+    {
+      "id": "ai-readiness-grader",
+      "npmScript": null,
+      "command": "node scripts/ai-readiness/test/grader.test.mjs",
+      "purpose": "Deterministic grader tests (R4) - regression-testable for $0, no claude/codex binary needed.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "ai-readiness harness — dry-run job-list explosion + deterministic tests",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "ai-readiness",
+      "note": "No npm alias."
+    },
+    {
+      "id": "ai-readiness-metrics",
+      "npmScript": null,
+      "command": "node scripts/ai-readiness/test/metrics.test.mjs",
+      "purpose": "Metrics extraction tests (R6 cost/latency).",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "ai-readiness harness — dry-run job-list explosion + deterministic tests",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "ai-readiness",
+      "note": "No npm alias."
+    },
+    {
+      "id": "ai-readiness-treatment",
+      "npmScript": null,
+      "command": "node scripts/ai-readiness/test/treatment.test.mjs",
+      "purpose": "Treatment axis + MCP tool-call trace tests (R3/R5).",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "ai-readiness harness — dry-run job-list explosion + deterministic tests",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "ai-readiness",
+      "note": "No npm alias."
+    },
+    {
+      "id": "baselines:bundle",
+      "npmScript": "baselines:bundle",
+      "command": "pnpm run baselines:bundle",
+      "purpose": "Re-snapshots per-file and per-package bundle sizes; CI compares totalBytes to the committed snapshot with a 1% tolerance.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "libs"
+      ],
+      "blocking": true,
+      "ci": "T0.1 - bundle snapshot equal",
+      "ciVia": null,
+      "tier": "build",
+      "group": "baselines",
+      "note": "MUTATES the committed snapshot; the comparison half is inline workflow shell.",
+      "autorun": false
+    },
+    {
+      "id": "baselines:tokens",
+      "npmScript": "baselines:tokens",
+      "command": "pnpm run baselines:tokens",
+      "purpose": "Re-snapshots every --al-* CSS variable to .altitude/baselines/tokens/snapshot.json; CI compares its hash to the committed one.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "tokens"
+      ],
+      "blocking": true,
+      "ci": "T0.1 - tokens snapshot equal",
+      "ciVia": null,
+      "tier": "build",
+      "group": "baselines",
+      "note": "MUTATES the committed snapshot. The comparison half lives inline in the workflow step, not in a script - running this alone proves nothing.",
+      "autorun": false
+    },
+    {
+      "id": "build",
+      "npmScript": "build",
+      "command": "pnpm run build",
+      "purpose": "Builds @southleft/al-web-components, then the Southleft brand layer, then @southleft/al-react.",
+      "purposeSource": "script-body",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": [
+        "libraries are publishable",
+        "T0.3 fixtures build green",
+        "T0.1 - VRT vs committed baselines (pilots + every component)",
+        "T0.1 - bundle snapshot equal",
+        "bundle.ts completeness (no component drift)",
+        "T6.3 bundle-size budget",
+        "R6 package exports map vs built output",
+        "T2.4 axe sweep over every story (story fixture)",
+        "T6.3 a11y CI gate (axe-core)",
+        "unit tests (vitest browser) + coverage floor"
+      ],
+      "ciVia": null,
+      "tier": "build",
+      "group": "build",
+      "note": "Not a gate in its own right - it is the prerequisite ten CI jobs run first. Present here because --check-ci requires every `pnpm run` in the workflow to be declared.",
+      "autorun": false
+    },
+    {
+      "id": "build:all",
+      "npmScript": "build:all",
+      "command": "pnpm run build:all",
+      "purpose": "THE CLOUDFLARE PAGES DEPLOY COMMAND (build output directory: dist). Order is load-bearing, not alphabetical.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "build:all (Cloudflare parity)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "build",
+      "note": "Excluded from the runner's default selection - it is the full deploy build (libs, docs, and five framework apps). Run it explicitly with --only build:all.",
+      "autorun": false
+    },
+    {
+      "id": "build:fixtures",
+      "npmScript": "build:fixtures",
+      "command": "pnpm run build:fixtures",
+      "purpose": "Builds the web-components, react, mfe, ssr and story fixtures the VRT webServers serve.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install",
+        "libs"
+      ],
+      "blocking": true,
+      "ci": [
+        "T0.3 fixtures build green",
+        "T0.1 - VRT vs committed baselines (pilots + every component)"
+      ],
+      "ciVia": null,
+      "tier": "build",
+      "group": "build",
+      "autorun": false
+    },
+    {
+      "id": "build:story-fixture",
+      "npmScript": "build:story-fixture",
+      "command": "pnpm run build:story-fixture",
+      "purpose": "Renders every component story with real Lit - the accessibility sweep's fixture, replacing the storybook-static build.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "libs"
+      ],
+      "blocking": true,
+      "ci": "T2.4 axe sweep over every story (story fixture)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "build",
+      "autorun": false
+    },
+    {
+      "id": "bundle-budget",
+      "npmScript": null,
+      "command": "node scripts/check-bundle-budget.js",
+      "purpose": "T6.3 - compares the bundle baseline snapshot against .altitude/bundle-budget.json.",
+      "purposeSource": "script-header",
+      "needs": [
+        "libs"
+      ],
+      "blocking": true,
+      "ci": "T6.3 bundle-size budget",
+      "ciVia": null,
+      "tier": "build",
+      "group": "release",
+      "note": "No npm alias."
+    },
+    {
+      "id": "bundle-completeness",
+      "npmScript": null,
+      "command": "node scripts/check-bundle-completeness.js",
+      "purpose": "T2.2 drift gate - bundle.ts must re-export every ALElement-extending component the build picks up.",
+      "purposeSource": "script-header",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "bundle.ts completeness (no component drift)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "release",
+      "note": "No npm alias. It reads component source, not dist - the CI job builds first for unrelated reasons."
+    },
+    {
+      "id": "capability-matrix",
+      "npmScript": null,
+      "command": "pnpm --filter @southleft/altitude-mcp capability-matrix:check",
+      "purpose": "CAPABILITY-MATRIX.md is generated from the live server's registrations; the smoke test proves the tools work, this proves the doc still describes them.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install",
+        "tokens",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "altitude-mcp tool contract (all 8 tools)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "generated-docs",
+      "note": "No root npm alias. check:mcp-docs also runs this generator's --check mode - a generated artifact is gated by re-running its generator, not by a second, independently-drifting parser."
+    },
+    {
+      "id": "cem-artifacts-in-sync",
+      "npmScript": null,
+      "command": "git diff --exit-code -- libs/al-web-components/custom-elements.json libs/al-web-components/schemas .altitude/ai-readiness",
+      "purpose": "The generated chain - custom-elements.json, the per-component schemas, and both AI-readiness digests - must match a fresh regeneration.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "cem",
+        "clean-tree"
+      ],
+      "blocking": true,
+      "ci": "T3.1/T3.2/T3.4 CEM + schemas + contract validator",
+      "ciVia": null,
+      "tier": "build",
+      "group": "api",
+      "note": "Inline workflow shell, no script file. Only meaningful straight after a regeneration - it skips locally whenever those paths are already dirty."
+    },
+    {
+      "id": "cem-coverage",
+      "npmScript": null,
+      "command": "node scripts/check-cem-coverage.js",
+      "purpose": "T3.1 - every migration-tracked component has a class declaration in the freshly-built custom-elements.json.",
+      "purposeSource": "script-header",
+      "needs": [
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "T3.1/T3.2/T3.4 CEM + schemas + contract validator",
+      "ciVia": null,
+      "tier": "build",
+      "group": "api",
+      "note": "No npm alias. NOT the same thing as gate:coverage, which is V8 test coverage."
+    },
+    {
+      "id": "check:audit",
+      "npmScript": "check:audit",
+      "command": "pnpm run check:audit",
+      "purpose": "Dependency-vulnerability gate, scoped rather than a bare `pnpm audit` - shipped packages are fatal at high, dev tooling is reported.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "network"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "live",
+      "group": "release",
+      "note": "`pnpm audit` queries the registry, so this is a network gate despite living in a fast-looking job."
+    },
+    {
+      "id": "check:brand-conformance",
+      "npmScript": "check:brand-conformance",
+      "command": "pnpm run check:brand-conformance",
+      "purpose": "For each brandLibrary supersession, fails if base public surface is missing from the brand override; also reports base components the project's scope has never considered.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": false,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "theming",
+      "note": "WARNING TIER on purpose. CI runs it as `... || echo \"::warning::...\"` until the real al-header/al-footer gaps are fixed. Its self-test is likewise excluded from test:scripts."
+    },
+    {
+      "id": "check:changesets",
+      "npmScript": "check:changesets",
+      "command": "pnpm run check:changesets",
+      "purpose": "Validates .changeset/config.json against the workspaces that actually exist - a stale `ignore` entry broke the release pipeline while CI stayed green.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "Changesets present on public-API PRs",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "release"
+    },
+    {
+      "id": "check:contract-docs",
+      "npmScript": "check:contract-docs",
+      "command": "pnpm run check:contract-docs",
+      "purpose": "The generated per-component reference docs (.altitude/contracts/docs/<project>/<tag>.md) diffed against what the contracts + parity manifest would produce, byte-for-byte, orphans included.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "build",
+      "group": "contracts"
+    },
+    {
+      "id": "check:contract-docs:sl",
+      "npmScript": "check:contract-docs:sl",
+      "command": "pnpm run check:contract-docs:sl",
+      "purpose": "check:contract-docs for the southleft design system.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "build",
+      "group": "contracts"
+    },
+    {
+      "id": "check:contract-fidelity",
+      "npmScript": "check:contract-fidelity",
+      "command": "pnpm run check:contract-fidelity",
+      "purpose": "Is a contract a faithful enough description of its component to REBUILD it? GATES on a zero-width root box; REPORTS (never gates) the structure shortfall against what the docs render.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "capture"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "build",
+      "group": "contracts",
+      "note": "LOCAL ONLY - nothing in v2-checks.yml invokes it. Needs `pnpm run capture:docs` first; it refuses to run without that ground truth rather than passing vacuously."
+    },
+    {
+      "id": "check:doc-anchors",
+      "npmScript": "check:doc-anchors",
+      "command": "pnpm run check:doc-anchors",
+      "purpose": "Documentation-rot gate. Every backticked repo path, pnpm script, --filter workspace and `node script --flag` written in a Markdown doc or SKILL.md must resolve against the real tree. Dated exceptions live in .altitude/doc-anchors-allowlist.json; an expired one fails on purpose.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "docs",
+      "note": "Added 2026-09-02 after fourteen documents survived a Storybook retirement still instructing it, and a skill invoked a script deleted four days earlier."
+    },
+    {
+      "id": "check:ds-projects",
+      "npmScript": "check:ds-projects",
+      "command": "pnpm run check:ds-projects",
+      "purpose": "Validates .altitude/ds-projects.json - a typo does not crash, it silently points a whole design system at the wrong Figma file.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "registry"
+    },
+    {
+      "id": "check:exports",
+      "npmScript": "check:exports",
+      "command": "pnpm run check:exports",
+      "purpose": "Each package's `exports` map matches built output - phantom targets, zero-match patterns, unreachable specifiers and unpacked targets.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "libs"
+      ],
+      "blocking": true,
+      "ci": "R6 package exports map vs built output",
+      "ciVia": null,
+      "tier": "build",
+      "group": "release"
+    },
+    {
+      "id": "check:figma-conventions",
+      "npmScript": "check:figma-conventions",
+      "command": "pnpm run check:figma-conventions",
+      "purpose": "The library conventions an agent is told to apply BY HAND (Title Case axis names/values, the State axis vocabulary, set name vs manifest), linted OFFLINE over the extracted canvas contracts.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "canvas"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "figma",
+      "note": "STILL NOT IN CI, and the two defects it first found were not the blocker: canvas contracts are gitignored and absent on a clone, so it would fail every CI run on principle. It prints the oldest extraction timestamp on every run - read that line before believing a violation."
+    },
+    {
+      "id": "check:figma-conventions:sl",
+      "npmScript": "check:figma-conventions:sl",
+      "command": "pnpm run check:figma-conventions:sl",
+      "purpose": "check:figma-conventions for the southleft design system.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "canvas"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "figma"
+    },
+    {
+      "id": "check:jsdoc",
+      "npmScript": "check:jsdoc",
+      "command": "pnpm run check:jsdoc",
+      "purpose": "Two gates over the JSDoc -> CEM pipeline: no component may reintroduce the legacy prose form, and every CEM event must carry a description.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "R1/R2 JSDoc tag dialect + CEM event descriptions",
+      "ciVia": null,
+      "tier": "build",
+      "group": "api",
+      "note": "The empty-event-description half reads the generated CEM, so CI regenerates it first rather than trusting the committed copy."
+    },
+    {
+      "id": "check:judgement-ledger",
+      "npmScript": "check:judgement-ledger",
+      "command": "pnpm run check:judgement-ledger",
+      "purpose": "Is .altitude/judgement-ledger.json still true? Every ledger anchor still resolves, and every file carrying a judgement-call marker is either backed or acknowledged.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails"
+    },
+    {
+      "id": "check:llms",
+      "npmScript": "check:llms",
+      "command": "pnpm run check:llms",
+      "purpose": "The root llms.txt is GENERATED; this fails when it has drifted from its sources, and when any repo-relative link it emits is missing or untracked.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "generated-docs"
+    },
+    {
+      "id": "check:llms-content-type",
+      "npmScript": "check:llms-content-type",
+      "command": "pnpm run check:llms-content-type -- https://altitude.pages.dev",
+      "purpose": "Asserts the deployed machine artifacts arrive as text/plain and are not SPA shells. Takes a base URL.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "network"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "generated-docs",
+      "note": "Deliberately NOT part of any local gate: a check that passes when nothing is deployed is the lie it exists to catch. It takes a base URL as an argument, so it is manual-only — point it at the preview URL you actually want checked.",
+      "autorun": false
+    },
+    {
+      "id": "check:mcp-docs",
+      "npmScript": "check:mcp-docs",
+      "command": "pnpm run check:mcp-docs",
+      "purpose": "Asserts every hand-written surface listing the Altitude MCP's tools matches what the server registers - the roster drifted to 'six tools' in three places while the server registered eight.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "generated-docs"
+    },
+    {
+      "id": "check:palette-contrast",
+      "npmScript": "check:palette-contrast",
+      "command": "pnpm run check:palette-contrast",
+      "purpose": "WCAG AA gate over the EMITTED semantic palette (both modes) - distinct from test:contrast-axis, which cannot see a palette re-point.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "tokens-v5"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "build",
+      "group": "tokens",
+      "note": "LOCAL ONLY - nothing in v2-checks.yml invokes it. Needs build:tokens first (dist-v5 is gitignored)."
+    },
+    {
+      "id": "check:publishable",
+      "npmScript": "check:publishable",
+      "command": "pnpm run check:publishable",
+      "purpose": "Asserts the publish contract directly - `npm publish --dry-run` short-circuits on `private: true` and could not fail by construction.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "libs"
+      ],
+      "blocking": true,
+      "ci": "libraries are publishable",
+      "ciVia": null,
+      "tier": "build",
+      "group": "release"
+    },
+    {
+      "id": "check:skills",
+      "npmScript": "check:skills",
+      "command": "pnpm run check:skills",
+      "purpose": "Fails when .claude/skills/altitude-facts/GENERATED-FACTS.md has drifted from its sources - the same discipline as check:llms and check:mcp-docs.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "generated-docs"
+    },
+    {
+      "id": "check:sl-scope",
+      "npmScript": "check:sl-scope",
+      "command": "pnpm run check:sl-scope",
+      "purpose": "Keeps a scoped design system's component allowlist honest by re-deriving it from the consuming app's own source.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "docs",
+      "note": "Also runs transitively inside gate:docs."
+    },
+    {
+      "id": "check:token-metadata",
+      "npmScript": "check:token-metadata",
+      "command": "pnpm run check:token-metadata",
+      "purpose": "THE drift gate for the metadata generate:token-metadata writes: every token has a uuid, no two share one, no existing uuid changed since HEAD, and every replacement path resolves.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "git-history"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "tokens",
+      "note": "Compares against `git show HEAD:<file>`, so there is no separate baseline file. Files absent from HEAD compare against nothing."
+    },
+    {
+      "id": "check:token-usage",
+      "npmScript": "check:token-usage",
+      "command": "pnpm run check:token-usage",
+      "purpose": "The full report - phantom tokens AND dead ones. DEAD tokens stay a report: a tier-1 palette reserve is a legitimate design choice, a phantom never is.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "tokens"
+      ],
+      "blocking": false,
+      "ci": null,
+      "ciVia": "gate:token-usage",
+      "tier": "build",
+      "group": "tokens",
+      "note": "LOCAL report tier. CI runs the --fail-on-phantom form (gate:token-usage) instead."
+    },
+    {
+      "id": "component:check",
+      "npmScript": "component:check",
+      "command": "pnpm run component:check -- --all",
+      "purpose": "Mechanical component-deliverable checklist: bundle.ts export, migration.json entry, CEM presence+freshness, source files (blockers); parity manifest, React wrapper, guidance YAML, llms.txt, changeset (warnings).",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "build",
+      "group": "authoring",
+      "note": "LOCAL ONLY - nothing in v2-checks.yml invokes it, though its self-test runs there via test:scripts. The prose flow lives in the altitude-component-authoring skill."
+    },
+    {
+      "id": "contracts:check",
+      "npmScript": "contracts:check",
+      "command": "pnpm run contracts:check",
+      "purpose": "Contract<->code DRIFT CHECK - re-derives every tracked component from CEM, manifest, token-map and measurements and diffs it against the on-disk contract. Exit 1 on any drift.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "build",
+      "group": "contracts"
+    },
+    {
+      "id": "contracts:check-determinism",
+      "npmScript": "contracts:check-determinism",
+      "command": "pnpm run contracts:check-determinism",
+      "purpose": "Re-derives every tracked component's contract TWICE in memory and byte-compares - same inputs must produce byte-identical output.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "build",
+      "group": "contracts"
+    },
+    {
+      "id": "contracts:check-determinism:sl",
+      "npmScript": "contracts:check-determinism:sl",
+      "command": "pnpm run contracts:check-determinism:sl",
+      "purpose": "contracts:check-determinism for the southleft design system.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "build",
+      "group": "contracts"
+    },
+    {
+      "id": "contracts:check:sl",
+      "npmScript": "contracts:check:sl",
+      "command": "pnpm run contracts:check:sl",
+      "purpose": "contracts:check for the southleft design system - needs both CEMs built and fresh for its roster.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "build",
+      "group": "contracts"
+    },
+    {
+      "id": "contracts:diff",
+      "npmScript": "contracts:diff",
+      "command": "pnpm run contracts:diff -- --all",
+      "purpose": "Property-level CODE<->CANVAS contract diff: which props, variant values, states and token bindings disagree, degradation-aware.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "canvas"
+      ],
+      "blocking": false,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "contracts",
+      "note": "Reports rather than gates - a missing canvas dump is one clean line and exit 0. Canvas contracts are gitignored live observations, so this can never be a CI gate."
+    },
+    {
+      "id": "contracts:diff:sl",
+      "npmScript": "contracts:diff:sl",
+      "command": "pnpm run contracts:diff:sl -- --all",
+      "purpose": "contracts:diff for the southleft design system.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "canvas"
+      ],
+      "blocking": false,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "contracts"
+    },
+    {
+      "id": "contracts:ops-determinism",
+      "npmScript": "contracts:ops-determinism",
+      "command": "pnpm run contracts:ops-determinism",
+      "purpose": "The 'ops' half of the byte-identical claim: derives al-button's Figma ops artifact twice in memory and byte-compares. Checks the ops DERIVATION, not a live build - no Figma connection needed.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "build",
+      "group": "contracts",
+      "note": "Pilot-scoped to al-button, altitude only."
+    },
+    {
+      "id": "contracts:validate",
+      "npmScript": "contracts:validate",
+      "command": "pnpm run contracts:validate",
+      "purpose": "Contract SCHEMA validation - ajv-validates the on-disk contracts, refusing an illegal contract file BY NAME rather than a bare exit code.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "fast",
+      "group": "contracts"
+    },
+    {
+      "id": "contracts:validate:sl",
+      "npmScript": "contracts:validate:sl",
+      "command": "pnpm run contracts:validate:sl",
+      "purpose": "contracts:validate for the southleft design system.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "gate:contracts",
+      "tier": "fast",
+      "group": "contracts"
+    },
+    {
+      "id": "controllers",
+      "npmScript": null,
+      "command": "node scripts/test-controllers.js",
+      "purpose": "T5.1 - unit tests for the headless behavior controllers, independent of any styled component.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "T5.1 headless controllers",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "api",
+      "note": "No npm alias."
+    },
+    {
+      "id": "css-layers",
+      "npmScript": null,
+      "command": "node scripts/check-css-layers.js --strict",
+      "purpose": "T4.1 - every component stylesheet declares @layer al.component and stays inside the 0,3,0 specificity budget.",
+      "purposeSource": "script-header",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "T4.1/T6.1 css layers strict",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "lint",
+      "note": "No npm alias - CI runs the file directly."
+    },
+    {
+      "id": "evals:drift-cases:check",
+      "npmScript": "evals:drift-cases:check",
+      "command": "pnpm run evals:drift-cases:check",
+      "purpose": "Drift gate on the reconciliation eval corpus built from the repo's own contracts by applying each named deterministic mutation - no human labelling, no LLM in the grading path.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "canvas"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "ai-readiness",
+      "note": "NOT A CI GATE and it cannot be one: canvas contracts are gitignored live observations, absent on a clone. The tracked corpus' invariants ARE checked in CI, by drift-mutations.test.mjs via test:scripts."
+    },
+    {
+      "id": "evals:traps:check",
+      "npmScript": "evals:traps:check",
+      "command": "pnpm run evals:traps:check",
+      "purpose": "Drift gate on the tracked trap index - 52 numbered traps across the four Figma skills, and how many are cited by an eval case. Coverage is by CITATION, never by resemblance.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "fast",
+      "group": "ai-readiness",
+      "note": "LOCAL ONLY, but it runs offline against tracked skills - it works on a clone and is a CI candidate. The number it reports is a GAP REPORT and is meant to be low."
+    },
+    {
+      "id": "evals:vision-calibration",
+      "npmScript": "evals:vision-calibration",
+      "command": "pnpm run evals:vision-calibration",
+      "purpose": "May a vision judge screen visual fidelity yet? Reads .altitude/ai-readiness/vision-calibration.json and refuses to certify below 12 balanced labelled cases at 75% agreement.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": false,
+      "ci": null,
+      "ciVia": null,
+      "tier": "fast",
+      "group": "ai-readiness",
+      "note": "Bare invocation REPORTS and exits 0 by design. CURRENTLY BLOCKED, and the reason is the finding: the labelled cases do not exist."
+    },
+    {
+      "id": "evals:vision-calibration:certify",
+      "npmScript": "evals:vision-calibration:certify",
+      "command": "pnpm run evals:vision-calibration:certify",
+      "purpose": "The assertion form of evals:vision-calibration - exits 1 when not certified.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "fast",
+      "group": "ai-readiness",
+      "note": "Expected to FAIL today: the calibration corpus does not exist yet. Excluded from every tier's default selection - name it with --only.",
+      "autorun": false
+    },
+    {
+      "id": "gate:api-vocabulary",
+      "npmScript": "gate:api-vocabulary",
+      "command": "pnpm run gate:api-vocabulary",
+      "purpose": "API vocabulary ratchet. Pins the measured count of props outside the canonical axis/boolean vocabulary and fails in BOTH directions — a rise is a new violation, a fall without --update means somebody fixed something and should tighten the pin.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "api",
+      "note": "Seeded at 75 violations on 2026-09-02: variant does seven jobs across 22 elements, placement is spelled four ways, 44 booleans sit outside is*/has*."
+    },
+    {
+      "id": "gate:baselines",
+      "npmScript": "gate:baselines",
+      "command": "node scripts/check-baselines-gate.js",
+      "purpose": "G8 - fails when a PR changes dependency versions or build config without updating .altitude/baselines/.",
+      "purposeSource": "script-header",
+      "needs": [
+        "git-history"
+      ],
+      "blocking": true,
+      "ci": "G8 - baselines updated on build/dep change",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails",
+      "note": "CI invokes it as `node scripts/check-baselines-gate.js --base=origin/<base_ref>`."
+    },
+    {
+      "id": "gate:cem-render",
+      "npmScript": "gate:cem-render",
+      "command": "pnpm run gate:cem-render",
+      "purpose": "Every @slot and @csspart documented in the CEM must actually be rendered. The existing CEM gate checks that members are DOCUMENTED, never that documented members EXIST.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "api",
+      "note": "Seeded at 5 absent slots/parts on 2026-09-02, including al-card action-right, which the docs, the MCP and llms.txt all taught consumers."
+    },
+    {
+      "id": "gate:contracts",
+      "npmScript": "gate:contracts",
+      "command": "pnpm run gate:contracts",
+      "purpose": "The CI contract gate, five legs, both projects: schema validation, CEM<->contract drift, contract determinism, the Figma ops determinism half, and generated per-component doc drift.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "contracts",
+      "note": "Umbrella. Its nine legs are listed individually below with ci:null + ciVia:gate:contracts - they run in CI, just not by name."
+    },
+    {
+      "id": "gate:coverage",
+      "npmScript": "gate:coverage",
+      "command": "pnpm run gate:coverage",
+      "purpose": "V8 code coverage against the one-way floor in .altitude/baselines/coverage.json. NOT the same thing as CEM coverage.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "unit tests (vitest browser) + coverage floor",
+      "ciVia": null,
+      "tier": "build",
+      "group": "tests",
+      "note": "Reads coverage/ output - run test:unit:coverage first or it gates on a stale report."
+    },
+    {
+      "id": "gate:docs",
+      "npmScript": "gate:docs",
+      "command": "pnpm run gate:docs",
+      "purpose": "The SCOPE gate then the docs coverage gate: every component in the manifest has a generated page and every project's scope resolves.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "docs"
+      ],
+      "blocking": true,
+      "ci": "build:all (Cloudflare parity)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "docs"
+    },
+    {
+      "id": "gate:docs-generalises",
+      "npmScript": "gate:docs-generalises",
+      "command": "pnpm run gate:docs-generalises",
+      "purpose": "Runs a THROWAWAY third design-system project through the same functions the real sites are built from, to prove a new client brand costs a registry entry and no code.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "build:all (Cloudflare parity)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "docs",
+      "note": "The package.json comment states it needs no build, even though CI happens to run it after build:all."
+    },
+    {
+      "id": "gate:docs-panels",
+      "npmScript": "gate:docs-panels",
+      "command": "pnpm run gate:docs-panels",
+      "purpose": "Reads the built html in dist/docs to prove the status panels shipped no Figma file keys, node ids or internal script paths, and that every rendered status matches the parity engine and the axe report.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "docs"
+      ],
+      "blocking": true,
+      "ci": "build:all (Cloudflare parity)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "docs"
+    },
+    {
+      "id": "gate:guidance",
+      "npmScript": "gate:guidance",
+      "command": "pnpm run gate:guidance",
+      "purpose": "Covers the AUTHORED half of the docs - fails on guidance for a non-component, a page stating neither guidance nor its absence, a missing required section, a dead citation, or coverage below the floor.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "docs"
+      ],
+      "blocking": true,
+      "ci": "build:all (Cloudflare parity)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "docs"
+    },
+    {
+      "id": "gate:lit-a11y",
+      "npmScript": "gate:lit-a11y",
+      "command": "pnpm run gate:lit-a11y",
+      "purpose": "Accessibility lint over the Lit templates; three non-error rules are pinned by a one-way ratchet so known-bad cannot grow.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "lint"
+    },
+    {
+      "id": "gate:migration",
+      "npmScript": "gate:migration",
+      "command": "node scripts/check-migration-gate.js",
+      "purpose": "G2 - fails when a PR modifies a `legacy` component beyond migration scope without flipping its state in migration.json.",
+      "purposeSource": "script-header",
+      "needs": [
+        "git-history"
+      ],
+      "blocking": true,
+      "ci": "G2 - migration manifest gate",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails",
+      "note": "CI invokes it as `node scripts/check-migration-gate.js --base=origin/<base_ref>`, not via the npm alias."
+    },
+    {
+      "id": "gate:self-test",
+      "npmScript": "gate:self-test",
+      "command": "pnpm run gate:self-test",
+      "purpose": "Builds a synthetic git history and asserts the G2/G8 gate scripts produce the expected exit codes.",
+      "purposeSource": "script-header",
+      "needs": [
+        "git-history"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails",
+      "note": "Bash. Creates and removes a throwaway git worktree and branch."
+    },
+    {
+      "id": "gate:styles-new",
+      "npmScript": "gate:styles-new",
+      "command": "node scripts/check-styles-changed.mjs",
+      "purpose": "Stylelint on the lines a branch actually changed, in any .scss or .css file - what holds the line over the site CSS lint:styles cannot gate.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "git-history"
+      ],
+      "blocking": true,
+      "ci": "T2.3.c ESLint 9 flat + changed-line styles",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "lint",
+      "note": "PR-only in CI (`if: github.event_name == 'pull_request'`), invoked as `node scripts/check-styles-changed.mjs --base origin/<base_ref>` so argv stays clean."
+    },
+    {
+      "id": "gate:token-usage",
+      "npmScript": "gate:token-usage",
+      "command": "pnpm run gate:token-usage",
+      "purpose": "Fails on PHANTOM tokens only - a name read through var() that the pipeline never emits, so it silently falls back and its value is outside design-system control.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "tokens"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "tokens",
+      "note": "Reads styles/dist/tokens.json, so build:tokens is enough - no full build needed."
+    },
+    {
+      "id": "gates:check-ci",
+      "npmScript": "gates:check-ci",
+      "command": "pnpm run gates:check-ci",
+      "purpose": "Drift gate on this manifest, both directions: every `ci` job name a gate claims must exist in v2-checks.yml and actually invoke it, and every `pnpm run` the workflow invokes must be declared here.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails",
+      "note": "Renaming a CI job is a breaking change to this file, for the same reason it is one for .github/rulesets/main.json."
+    },
+    {
+      "id": "lint",
+      "npmScript": "lint",
+      "command": "pnpm run lint",
+      "purpose": "ESLint 9 flat config over the repo.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "T2.3.c ESLint 9 flat + changed-line styles",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "lint"
+    },
+    {
+      "id": "lint:styles",
+      "npmScript": "lint:styles",
+      "command": "pnpm run lint:styles",
+      "purpose": "THE HARD STYLE GATE. Stylelint over every .scss file in both component libraries and every example app.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "lint"
+    },
+    {
+      "id": "mcp-smoke",
+      "npmScript": null,
+      "command": "pnpm --filter @southleft/altitude-mcp test",
+      "purpose": "A real MCP handshake over stdio, calling every registered tool. It existed and nothing ran it, so it had rotted to asserting 6 of 8 tools against a pruned brand.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install",
+        "tokens",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "altitude-mcp tool contract (all 8 tools)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "generated-docs",
+      "note": "No root npm alias - it is a workspace script."
+    },
+    {
+      "id": "migration-schema",
+      "npmScript": null,
+      "command": "node -e \"const Ajv=require('ajv');const ajv=new Ajv({strict:false});const v=ajv.compile(require('./.altitude/migration.schema.json'));if(!v(require('./.altitude/migration.json'))){console.error(JSON.stringify(v.errors,null,2));process.exit(1);}console.log('migration.json validates against schema.')\"",
+      "purpose": "G2 - migration.json validates against .altitude/migration.schema.json.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "G2 - migration.json schema validation",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails",
+      "note": "Inline workflow `node -e`, no script file. `ajv` is a root devDependency."
+    },
+    {
+      "id": "parity:freshness",
+      "npmScript": "parity:freshness",
+      "command": "node scripts/check-parity-freshness.mjs",
+      "purpose": "Prints figmaLastRefreshed age, everObserved and unreachable statuses per DS project. Exit 0 by default - the Figma loop is deliberately operator-driven.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": false,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "figma",
+      "note": "WARNING TIER. CI runs it as `node scripts/check-parity-freshness.mjs || echo \"::warning::...\"`, not through the npm alias. --max-age-days N turns it into a gate."
+    },
+    {
+      "id": "parity:pins",
+      "npmScript": "parity:pins",
+      "command": "pnpm run parity:pins",
+      "purpose": "Are the manifest's PINNED Figma node ids still live? getNodeByIdAsync returns a DETACHED node after its page is deleted, so 'it resolved' is not proof it is in the document - 11 of 20 were ghosts on 2026-08-27.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "figma-shim"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "figma",
+      "note": "Needs the shim running. --repin rewrites ids only where exactly one live set carries that name; two sets sharing a name is reported, never guessed."
+    },
+    {
+      "id": "parity:pins:sl",
+      "npmScript": "parity:pins:sl",
+      "command": "pnpm run parity:pins:sl",
+      "purpose": "parity:pins for the southleft design system.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "figma-shim"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "figma"
+    },
+    {
+      "id": "parity:tokens-drift",
+      "npmScript": "parity:tokens-drift",
+      "command": "pnpm run parity:tokens-drift -- .altitude/figma-sync/last-export.json",
+      "purpose": "Token-level Figma<->code drift: value comparison, brand/mode-aware bucketing, rename detection. Exit 1 on any drift.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "figma-export"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "figma",
+      "note": "LOCAL ONLY. The export-shape assumption is best-effort until a real export is captured - see the script header."
+    },
+    {
+      "id": "react-wrapper-contract",
+      "npmScript": null,
+      "command": "node scripts/check-react-wrapper-contract.js",
+      "purpose": "@southleft/al-react wrapper SURFACE check (static) - it reads source files; read a green run as \"the surface is intact\", nothing more.",
+      "purposeSource": "script-header",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "T4.7 React 19 wrapper contract",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "api",
+      "note": "No npm alias. The CI job name calls it a contract test; the script's own header says it is not."
+    },
+    {
+      "id": "register-altitude",
+      "npmScript": null,
+      "command": "node scripts/check-register-altitude.js",
+      "purpose": "T4.6 - registry-modes smoke test: stable registers a plain tag, versioned a suffixed one, manual nothing, and dev-mode warns on collision.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "T4.6 registry modes",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "api",
+      "note": "No npm alias."
+    },
+    {
+      "id": "sl-cem-in-sync",
+      "npmScript": null,
+      "command": "git diff --exit-code -- libs/sl-web-components/custom-elements.json",
+      "purpose": "The brand-layer CEM is the sole source for the /docs/southleft component pages; a stale committed copy is a hard failure.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "clean-tree"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "api",
+      "note": "Inline workflow shell. Requires `pnpm --filter @southleft/sl-web-components build` first to be meaningful."
+    },
+    {
+      "id": "test:brands",
+      "npmScript": "test:brands",
+      "command": "pnpm run test:brands",
+      "purpose": "Token-level gate for the brand-identity contract - a brand that only re-points colour tokens is a skin, not a brand.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "tokens-v5"
+      ],
+      "blocking": true,
+      "ci": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "theming"
+    },
+    {
+      "id": "test:contrast-axis",
+      "npmScript": "test:contrast-axis",
+      "command": "pnpm run test:contrast-axis",
+      "purpose": "Behavioural verification for <al-theme contrast> - proves contrast='more' raises the disabled opacity on a REAL rendered component and clears WCAG AA in both modes, and that nesting resets rather than inherits.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "libs",
+        "browser"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "build",
+      "group": "theming",
+      "note": "LOCAL ONLY - nothing in v2-checks.yml invokes it. First run compiles the whole component graph on demand and can take a minute."
+    },
+    {
+      "id": "test:scoped-theming",
+      "npmScript": "test:scoped-theming",
+      "command": "pnpm run test:scoped-theming -- --no-screenshot",
+      "purpose": "The regression guard for scoped <al-theme> theming - two brands, one document, one :root. The attribute stayed inert for a whole release while three documents advertised it.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "libs",
+        "browser"
+      ],
+      "blocking": true,
+      "ci": "T0.1 - VRT vs committed baselines (pilots + every component)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "theming",
+      "note": "Deliberately not a pixel baseline - the brands differentiate through system font stacks, so a golden screenshot would be permanently red."
+    },
+    {
+      "id": "test:scripts",
+      "npmScript": "test:scripts",
+      "command": "pnpm run test:scripts",
+      "purpose": "The offline, zero-dependency self-tests under scripts/__tests__/ - they existed and NOTHING RAN THEM.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails",
+      "note": "check-brand-conformance.test.mjs is deliberately excluded from the chain - it fails today against known-open al-header/al-footer gaps."
+    },
+    {
+      "id": "test:unit",
+      "npmScript": "test:unit",
+      "command": "pnpm run test:unit",
+      "purpose": "Vitest 3 in BROWSER MODE (Playwright/chromium) over both component libraries; a min-count reporter fails the run if either project collects fewer tests than its floor.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "libs",
+        "browser"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": "test:unit:coverage",
+      "tier": "build",
+      "group": "tests",
+      "note": "CI runs the coverage form instead. Run `pnpm run build` first or the React project tests a stale library."
+    },
+    {
+      "id": "test:unit:coverage",
+      "npmScript": "test:unit:coverage",
+      "command": "pnpm run test:unit:coverage",
+      "purpose": "test:unit with V8 coverage collection - the input gate:coverage ratchets against.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "libs",
+        "browser"
+      ],
+      "blocking": true,
+      "ci": "unit tests (vitest browser) + coverage floor",
+      "ciVia": null,
+      "tier": "build",
+      "group": "tests"
+    },
+    {
+      "id": "test:vrt",
+      "npmScript": "test:vrt",
+      "command": "pnpm run test:vrt",
+      "purpose": "Playwright visual regression against the committed baselines, for the pilots and every component.",
+      "purposeSource": "workflow-step-name",
+      "needs": [
+        "install",
+        "libs",
+        "fixtures",
+        "browser"
+      ],
+      "blocking": true,
+      "ci": "T0.1 - VRT vs committed baselines (pilots + every component)",
+      "ciVia": null,
+      "tier": "build",
+      "group": "tests",
+      "note": "Baselines are Linux-only, captured on CI. A local recapture on macOS or Windows poisons them."
+    },
+    {
+      "id": "validate-contracts",
+      "npmScript": null,
+      "command": "node scripts/validate-contracts.js",
+      "purpose": "T3.4 - validates a deliberately-invalid and a deliberately-valid fixture against each per-component schema, confirming the validator behaves.",
+      "purposeSource": "script-header",
+      "needs": [
+        "install",
+        "cem"
+      ],
+      "blocking": true,
+      "ci": "T3.1/T3.2/T3.4 CEM + schemas + contract validator",
+      "ciVia": null,
+      "tier": "build",
+      "group": "api",
+      "note": "No npm alias. Unrelated to .altitude/contracts/ - it validates libs/al-web-components/schemas/."
+    }
+  ]
+}
