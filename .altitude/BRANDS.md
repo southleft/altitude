@@ -413,6 +413,7 @@ bundles. Details: `.altitude/baselines/README.md`.
 ```
 libs/al-web-components/styles/tokens-dtcg/tier-2/brand/<brand>/
   colors.json                  # required
+  color-primitives.json        # optional — tier-1 role-ramp overrides (§9.1.1)
   borders.json                 # optional
   shadows.json                 # optional
   typography-primitives.json   # optional — tier-1 exception (§2)
@@ -420,6 +421,34 @@ libs/al-web-components/styles/tokens-dtcg/tier-2/brand/<brand>/
   mode/light/colors.json       # optional — see 9.2
   mode/dark/colors.json
 ```
+
+#### 9.1.1 Overriding a role ramp — and the alpha ramp that shadows it
+
+A brand has two ways to recolour. It can repoint the SEMANTIC layer
+(`colors.json`, `theme.color.*`) at different stops of the shared ramp, or it can
+override the RAMP ITSELF in `color-primitives.json` — declaring
+`color.primary.100-900` / `color.neutral.100-900` with its own values, emitted
+only into `:host([brand=<brand>])`.
+
+Prefer the ramp override. Southleft did the other thing first: it declared a
+parallel `color.southleft.*` namespace and pointed its semantics there, which
+gave the brand a private vocabulary, duplicated every variable in its Figma file,
+and — the part that actually bit — left a component styled against
+`color.neutral.600` resolving to the BASE neutral under the brand, because only
+tokens explicitly routed through the private names were ever recoloured.
+
+**If you override a ramp, override its alpha ramp too.** `color.<family>.alpha.*`
+is a set of hard-coded eight-digit hex literals, NOT a function of the ramp it is
+named after, so it does not follow. Southleft repointed `color.primary` to orange
+and `--al-color-primary-alpha-500-30` stayed Altitude blue, which surfaced as blue
+`border-primary-weak` and `shadow-primary` on an orange brand. The stops that
+exist are `primary` at 100/500/900 and `neutral` at 100/300/500/900, each at
+10/30/60/80 — derive them from the brand's own values rather than restating them
+by hand. A brand that does NOT override a family (Southleft leaves `secondary`
+and `tertiary` alone) must leave that family's alphas alone too.
+
+Two ramps are consumed by tier-2 but have no tier-1 default of their own, so a
+brand emits them or nothing does — see `theme.border.radius.role-*`.
 
 DTCG shape (`$value`/`$type`), hand-authored — this tree *is* the source, there
 is no other one to keep in sync. Copy

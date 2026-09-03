@@ -59,8 +59,8 @@ system built on the same library.
 ## Figma
 
 - Component set: **Card**
-- Node id: `25:8878` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=25-8878)
+- Node id: `5301:276` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=5301-276)
 
 ## Props (17)
 
@@ -82,7 +82,7 @@ system built on the same library.
 | `layout` | string | `'inline'` | — | — |
 | `rel` | string | — | — | — |
 | `target` | string | — | — | — |
-| `variant` | enum | `article`, `bare`, `service`, `tool`, `work` | — | **Variant** (VARIANT): `Article`, `Bare`, `Default`, `Service`, `Tool`, `Work` |
+| `variant` | enum | `article`, `bare`, `service`, `tool`, `work` | — | **Variant** (VARIANT): `Article` |
 
 #### `command`
 
@@ -185,7 +185,7 @@ Variant
 ### `variant` (Figma property "Variant")
 
 - Code values: `article`, `bare`, `service`, `tool`, `work`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Article`, `Bare`, `Default`, `Service`, `Tool`, `Work`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Article`
 
 ## States
 
@@ -252,6 +252,17 @@ _No events declared._
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
 ### Per-variant (`variant`)
+
+#### `article`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| border-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
+| box-shadow | `--al-theme-box-shadow` | `theme/box-shadow/@` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
+| gap | `--al-theme-space-xs` | `theme/space/xs` |
+| padding | `--al-theme-space` | `theme/space/@` |
 
 #### `service`
 

@@ -9,8 +9,8 @@ Component: al-breadcrumbs
 ## Figma
 
 - Component set: **Breadcrumbs**
-- Node id: `19:2021` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=19-2021)
+- Node id: `3558:60804` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=3558-60804)
 
 ## Props (5)
 

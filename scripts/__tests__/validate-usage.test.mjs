@@ -152,8 +152,8 @@ pair('ERR_PHANTOM_TOKEN',
    * assertion caught the change rather than sleeping through it.
    *
    * `border-radius-role-surface` is brand-only today for a structural reason
-   * that is unlikely to change: role radii have no tier-2 default (see
-   * .altitude/AXES.md, "Why role tokens have no tier-2 default"), so they are
+   * that is unlikely to change: role radii have no tier-2 `:root` default
+   * (.altitude/AXES.md, the paragraph under the role-token table), so they are
    * emitted by a brand or not at all.
    */
   const brand = run('<style>al-button { border-radius: var(--al-theme-border-radius-role-surface); }</style><al-button>Go</al-button>');

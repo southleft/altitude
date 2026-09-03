@@ -9,8 +9,8 @@ Component: al-text-block
 ## Figma
 
 - Component set: **Text Block**
-- Node id: `22:3577` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3577)
+- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
+- File: https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/
 
 ## Props (1)
 

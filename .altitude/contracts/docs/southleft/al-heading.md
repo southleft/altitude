@@ -9,8 +9,8 @@ Component: al-heading
 ## Figma
 
 - Component set: **Heading**
-- Node id: `22:3531` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3531)
+- Node id: `3543:47001` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=3543-47001)
 
 ## Props (3)
 

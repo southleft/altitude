@@ -13,8 +13,8 @@ proof rows, case-study pull-quotes). Composes `<al-avatar>` via the
 ## Figma
 
 - Component set: **Testimonial**
-- Node id: `19:2589` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=19-2589)
+- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
+- File: https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/
 
 ## Props (3)
 

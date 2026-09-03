@@ -9,8 +9,8 @@ Component: al-chip
 ## Figma
 
 - Component set: **Chip**
-- Node id: `22:3296` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3296)
+- Node id: `3540:43526` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=3540-43526)
 
 ## Props (4)
 
@@ -19,7 +19,7 @@ Component: al-chip
 | `isDismissed` | boolean | — | — | — |
 | `isDismissible` | boolean | — | — | — |
 | `type` | string | `'squared'` | — | — |
-| `variant` | enum | `bare`, `neutral`, `primary`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning` |
+| `variant` | enum | `bare`, `neutral`, `primary`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Danger`, `Neutral`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `isDismissed`
 
@@ -55,7 +55,7 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 ### `variant` (Figma property "Variant")
 
 - Code values: `bare`, `neutral`, `primary`, `secondary`, `tertiary`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Danger`, `Neutral`, `Primary`, `Secondary`, `Tertiary`
 
 ## States
 
@@ -135,6 +135,18 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
+
+#### `danger`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
+| border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
+| font-size | `--al-font-size-12` | `typography/font-size/12` |
+| font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
+| gap | `--al-theme-space-xs` | `theme/space/xs` |
+| min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
 
 #### `neutral`
 
