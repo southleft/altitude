@@ -283,6 +283,7 @@ try {
         { tool: 'altitude_get_component', reads: 'CEM + component JSON Schema + story metadata', desc: 'Full detail for one component — attributes, slots, events, schema, Storybook docs URL.' },
         { tool: 'altitude_validate', reads: 'cli/validate.mjs --json', desc: 'Validates markup or a file against Altitude usage rules.' },
         { tool: 'altitude_get_tokens', reads: 'dist/css/{tokens,aliases}.json + tokens-dtcg/**', desc: 'Queries the resolved token set, or a specific tier/brand/mode.' },
+        { tool: 'altitude_resolve_token', reads: 'the AI-readiness token digest (palette derived from the emitted per-brand/per-mode CSS)', desc: 'Resolves an intent — surface + role + emphasis — to exactly one token, with the near misses it beat and the emphasis steps that resolve to the same value.' },
         { tool: 'altitude_search_icons', reads: 'icon catalog', desc: 'Finds an icon by name, tag, or category, with an import snippet.' },
         { tool: 'altitude_generate_theme', reads: 'dist/theme-engine — the SAME deterministic OKLCH engine this page uses', desc: 'Generates a WCAG-AA theme from a prompt or explicit direction — never calls an LLM.' },
         { tool: 'altitude_check_parity', reads: 'parity manifest + live source hashing', desc: 'Figma ↔ code parity per component, per design system — each drifted entry carries a ready-to-run AI fix prompt.' },

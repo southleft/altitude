@@ -168,11 +168,11 @@ const ndaClients = ['Caterpillar', 'NASDAQ', 'Novartis', 'Indeed', 'TaxAct', 'Wo
       </al-layout>
     </div>
 
-    <ul id="sl-ledger" style="margin-top: var(--al-theme-space-lg); list-style: none; padding: 0; border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);">
+    <ul id="sl-ledger" style="margin-top: var(--al-theme-space-lg); list-style: none; padding: 0; border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);">
       {allProjects.map((p, i) => (
         <li
           data-groups={groupsFor(p)}
-          style={`border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak); padding-block: var(--al-theme-space-sm);`}
+          style={`border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak); padding-block: var(--al-theme-space-sm);`}
         >
           <a href={withBase(`/projects/${slugOf(p)}`)} class="al-u-grid" style="align-items: center; text-decoration: none;">
             <span class="al-u-grid__item col:1" aria-hidden="true">
