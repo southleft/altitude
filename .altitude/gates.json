@@ -640,6 +640,22 @@
       "group": "release"
     },
     {
+      "id": "check:ruleset-contexts",
+      "npmScript": "check:ruleset-contexts",
+      "command": "pnpm run check:ruleset-contexts",
+      "purpose": "The main ruleset's required checks must name jobs that actually run. GitHub validates neither direction: a renamed job leaves an unsatisfiable required context, and a new job that nobody required can go red without blocking a merge.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "network"
+      ],
+      "blocking": true,
+      "ci": null,
+      "ciVia": null,
+      "tier": "live",
+      "group": "guardrails",
+      "note": "Falls back to the checked-in .github/rulesets/main.json when the API is unreachable, and prints a named not-verified line when neither is readable."
+    },
+    {
       "id": "check:skills",
       "npmScript": "check:skills",
       "command": "pnpm run check:skills",

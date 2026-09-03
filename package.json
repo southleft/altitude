@@ -217,6 +217,8 @@
     "//skills:build": "Regenerates .claude/skills/altitude-facts/GENERATED-FACTS.md (R10) — the mechanical half of the altitude-facts agent skill: component roster, per-tag doNotFlag caveats, token conventions/do-not-invent list and the MCP tool/resource/prompt roster, all read from the same committed artifacts llms.txt and the MCP capability matrix already read. The judgement half (SKILL.md) stays hand-written; see its §0.",
     "skills:build": "node scripts/build-agent-skill.mjs",
     "//check:skills": "Fails when .claude/skills/altitude-facts/GENERATED-FACTS.md has drifted from its sources — same discipline as check:llms and check:mcp-docs, applied to the agent skill instead of a doc page.",
+    "//check:ruleset-contexts": "Are the main ruleset's required checks the jobs that actually run? GitHub matches a required check by its check-run NAME, and validates nothing: rename a job and the old context is still required, so the PR waits forever while every visible check is green. Add a job and forget the ruleset, and a red job blocks nothing. Both directions are checked. Needs the network (reads the live ruleset via gh) and falls back to the checked-in .github/rulesets/main.json, printing a NAMED not-verified line when neither is reachable.",
+    "check:ruleset-contexts": "node scripts/check-ruleset-contexts.mjs",
     "check:skills": "node scripts/build-agent-skill.mjs --check"
   },
   "devDependencies": {
