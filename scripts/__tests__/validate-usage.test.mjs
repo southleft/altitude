@@ -143,8 +143,21 @@ pair('ERR_PHANTOM_TOKEN',
   const local = run('<style>al-button { --al-local-accent: red; color: var(--al-local-accent); }</style><al-button>Go</al-button>');
   assert('a custom property DECLARED in the same file is readable', !has(local, 'ERR_PHANTOM_TOKEN'), seen(local));
 
-  const brand = run('<style>al-button { color: var(--al-color-southleft-primary-500); }</style><al-button>Go</al-button>');
-  assert('a brand-only token (DTCG, absent from the base build) is accepted', !has(brand, 'ERR_PHANTOM_TOKEN'), seen(brand));
+  /*
+   * A token that a BRAND emits and the base build does not. This used to be
+   * `--al-color-southleft-primary-500`, which stopped existing on 2026-09-03
+   * when the Southleft brand moved onto the real color.primary / color.neutral
+   * role ramps instead of a parallel `color.southleft.*` namespace — and the
+   * rule correctly began reporting it as a phantom, which is how this
+   * assertion caught the change rather than sleeping through it.
+   *
+   * `border-radius-role-surface` is brand-only today for a structural reason
+   * that is unlikely to change: role radii have no tier-2 default (see
+   * .altitude/AXES.md, "Why role tokens have no tier-2 default"), so they are
+   * emitted by a brand or not at all.
+   */
+  const brand = run('<style>al-button { border-radius: var(--al-theme-border-radius-role-surface); }</style><al-button>Go</al-button>');
+  assert('a brand-only token (emitted by a brand, absent from the base build) is accepted', !has(brand, 'ERR_PHANTOM_TOKEN'), seen(brand));
 
   const composite = run('<style>al-button { font: var(--al-theme-typography-body-md); letter-spacing: var(--al-theme-typography-body-md-letter-spacing); }</style><al-button>Go</al-button>');
   assert('composite typography shorthand + sub-property are accepted', !has(composite, 'ERR_PHANTOM_TOKEN'), seen(composite));

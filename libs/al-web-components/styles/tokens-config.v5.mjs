@@ -718,6 +718,13 @@ async function build() {
     byBrand.get(brand).push(theme);
   }
 
+  /**
+   * Every property ANY non-default brand overrides, and in which modes. The
+   * default brand needs this to write a RESET block — see the emit below.
+   */
+  const DEFAULT_BRAND = 'altitude';
+  const overriddenByOthers = new Map(); // name -> Set(theme)
+
   for (const [brand, brandModes] of byBrand) {
     const deltas = new Map();
     for (const theme of brandModes) {
@@ -729,6 +736,14 @@ async function build() {
       deltas.set(theme, d);
     }
     const allNames = new Set([...deltas.values()].flatMap((d) => [...d.keys()]));
+    if (brand !== DEFAULT_BRAND) {
+      for (const theme of brandModes) {
+        for (const name of deltas.get(theme).keys()) {
+          if (!overriddenByOthers.has(name)) overriddenByOthers.set(name, new Set());
+          overriddenByOthers.get(name).add(theme);
+        }
+      }
+    }
     const invariant = new Set();
     const perMode = new Set();
     for (const name of allNames) {
@@ -756,6 +771,64 @@ async function build() {
         { onlyNames: names, omitEqualTo: themeDecls[theme] },
         theme,
         brand
+      );
+    }
+  }
+
+  // 2b. THE DEFAULT BRAND'S RESET BLOCK.
+  //
+  //     `altitude` is the neutral reference, so its delta against the base is
+  //     empty and for a long time no file was written for it. That was a real
+  //     hole, not an elegance: custom properties INHERIT, so
+  //     `<al-theme brand="altitude">` nested inside `<al-theme brand="southleft">`
+  //     had nothing to re-declare and simply inherited southleft's values.
+  //
+  //     It looked fixed on 2026-08-31, but only by accident — the v2 restyle
+  //     had moved `background.primary-default` into the MODE partials, which
+  //     every host re-declares regardless of brand, so the one property the
+  //     probe read happened to reset. `tests`' own note said so plainly: "this
+  //     does NOT make empty-delta nesting safe in general: a property that
+  //     lives ONLY in a brand partial still inherits through."
+  //
+  //     2026-09-03 proved it: moving southleft onto the real `color.primary`
+  //     and `color.neutral` role ramps put those properties in a brand-only
+  //     partial, and the nested-altitude probe went red immediately.
+  //
+  //     The structural fix is to stop relying on emptiness. For the union of
+  //     every property ANY other brand overrides, altitude now restates the
+  //     BASE value on its own host. Absence stops being the assertion of
+  //     neutrality; an explicit restatement is. It costs one small generated
+  //     block and makes nesting work for every property, not the lucky ones.
+  if (overriddenByOthers.size > 0) {
+    const defaultModes = byBrand.get(DEFAULT_BRAND) ?? themes;
+    const resetInvariant = new Set();
+    const resetPerMode = new Map(themes.map((t) => [t, new Set()]));
+    for (const [name, inThemes] of overriddenByOthers) {
+      if (modeVarying.has(name)) {
+        for (const t of inThemes) resetPerMode.get(t)?.add(name);
+      } else {
+        resetInvariant.add(name);
+      }
+    }
+
+    if (resetInvariant.size > 0) {
+      await emitHost(
+        `tokens-brand-${DEFAULT_BRAND}.scss`,
+        `:host([brand='${DEFAULT_BRAND}'])`,
+        { onlyNames: resetInvariant },
+        defaultModes[0],
+        DEFAULT_BRAND
+      );
+    }
+    for (const theme of themes) {
+      const names = resetPerMode.get(theme);
+      if (!names || names.size === 0) continue;
+      await emitHost(
+        `tokens-brand-${DEFAULT_BRAND}-${theme}.scss`,
+        `:host([brand='${DEFAULT_BRAND}'][mode='${theme}'])`,
+        { onlyNames: names },
+        theme,
+        DEFAULT_BRAND
       );
     }
   }

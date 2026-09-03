@@ -200,14 +200,14 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
    * footer.scss for this (spec 2026-08-22-southleft-example-1-to-1-parity),
    * mirroring the hooks al-header grew in the same pass. */
   .sl-footer {
-    --al-footer-background: var(--al-color-southleft-neutral-dark-950);
+    --al-footer-background: var(--sl-art-ink-deepest);
     --al-footer-border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
     /* v5 `py-14 md:py-20` */
     --al-footer-padding-block: 3.5rem;
   }
 
   :global(al-theme[mode='light']) .sl-footer {
-    --al-footer-background: var(--al-color-southleft-neutral-light-200);
+    --al-footer-background: var(--al-color-neutral-300);
   }
 
   @media (min-width: 48rem) {

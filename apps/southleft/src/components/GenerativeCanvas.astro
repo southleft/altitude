@@ -19,15 +19,19 @@
  *  2. PALETTE. `scripts/check-altitude-only.mjs` fails the build on any
  *     hardcoded hex, so every one of v5's eight palette primitives is read
  *     at runtime out of a CSS custom property. All eight have an exact
- *     `--al-color-southleft-*` equivalent in the southleft brand recipe (they
- *     are declared once on `:root` in @southleft/al-web-components/css/main.css and
- *     are mode-invariant, exactly like v5's `--sl-color-*` scale), so the
- *     mapping is literal:
+ *     equivalent on the ROLE ramps, which the southleft brand now overrides
+ *     directly (2026-09-03) rather than through a parallel
+ *     `color.southleft.*` namespace, so the mapping is literal:
  *
- *       --sl-color-ink-700/800/900/950 → --al-color-southleft-neutral-dark-700/800/900/950
- *       --sl-color-paper-0/50/100/200/400/500 → --al-color-southleft-neutral-light-*
+ *       --sl-color-ink-700/800/900     → --al-color-neutral-800/850/900
+ *       --sl-color-paper-0/50/100/200  → --al-color-neutral-100/100/200/300
+ *       --sl-color-paper-400           → --al-color-neutral-500
  *       --sl-color-blue-400/600        → --al-color-primary-400/600
  *       --sl-accent                    → --al-color-danger-500
+ *
+ *     Two exceptions are PAGE ART rather than roles and are declared locally
+ *     in src/styles/layout.css: --sl-art-sand-deep and --sl-art-ink-deepest
+ *     (was paper-500 and ink-950).
  *
  *     The accent deliberately reads the brand PRIMITIVE rather than
  *     `--al-theme-color-content-primary-default`: layout.css re-points that
@@ -220,18 +224,18 @@
       // to `<al-theme mode>`. Absent host ⇒ dark, matching v5's default.
       const dark = themeHost?.getAttribute('mode') !== 'light';
       return {
-        bg: token(dark ? '--al-color-southleft-neutral-dark-900' : '--al-color-southleft-neutral-light-100'),
+        bg: token(dark ? '--al-color-neutral-900' : '--al-color-neutral-200'),
         surfaces: dark
-          ? [token('--al-color-southleft-neutral-dark-800'), token('--al-color-southleft-neutral-dark-700')]
-          : [token('--al-color-southleft-neutral-light-200'), token('--al-color-southleft-neutral-light-0')],
+          ? [token('--al-color-neutral-850'), token('--al-color-neutral-800')]
+          : [token('--al-color-neutral-300'), token('--al-color-neutral-100')],
         inks: dark
-          ? [token('--al-color-southleft-neutral-light-50'), token('--al-color-southleft-neutral-light-400')]
-          : [token('--al-color-southleft-neutral-dark-900'), token('--al-color-southleft-neutral-light-500')],
+          ? [token('--al-color-neutral-100'), token('--al-color-neutral-500')]
+          : [token('--al-color-neutral-900'), token('--sl-art-sand-deep')],
         // v5's `--sl-accent`. NOT the semantic content-primary token —
         // layout.css re-points that to near-black in light mode.
         accent: token('--al-color-danger-500', '--al-theme-color-background-primary-default'),
         blue: token(dark ? '--al-color-primary-400' : '--al-color-primary-600'),
-        sand: token('--al-color-southleft-neutral-light-400'),
+        sand: token('--al-color-neutral-500'),
       };
     };
 
@@ -256,7 +260,7 @@
       // background of the cell
       const surface =
         roll < 0.16 ? p.accent : roll < 0.28 ? p.blue : roll < 0.42 ? p.sand : pick(p.surfaces);
-      const onColor = roll < 0.42 ? token('--al-color-southleft-neutral-dark-950') : pick(p.inks);
+      const onColor = roll < 0.42 ? token('--sl-art-ink-deepest') : pick(p.inks);
 
       ctx.fillStyle = surface;
       ctx.fillRect(x, y, s, s);

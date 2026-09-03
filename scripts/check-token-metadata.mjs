@@ -34,7 +34,7 @@
 'use strict';
 
 import { execFileSync } from 'node:child_process';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -127,6 +127,29 @@ function main() {
   // key kept its identity, which is a pass. They are still PRINTED, because a
   // silent rename is exactly how a real removal would hide.
   const renames = [];
+  /**
+   * Deliberate deletions, recorded by uuid in `.altitude/token-removals.json`.
+   * Without this the gate makes the token tree append-only: every other
+   * exception in this repo is a dated record with a reason, so this is one too.
+   * Keyed by uuid because that is the one identifier a rename cannot forge.
+   */
+  const removed = [];
+  const removals = new Map();
+  {
+    const removalsPath = join(REPO, '.altitude', 'token-removals.json');
+    if (existsSync(removalsPath)) {
+      try {
+        const doc = JSON.parse(readFileSync(removalsPath, 'utf8'));
+        for (const r of doc.removed ?? []) {
+          if (r && r.uuid) {
+            removals.set(r.uuid, { reason: r.reason ?? '(no reason given)', date: r.date ?? 'undated' });
+          }
+        }
+      } catch (e) {
+        failures.push(`.altitude/token-removals.json is not valid JSON: ${e.message}`);
+      }
+    }
+  }
   let comparedAgainstHead = 0;
   for (const { abs, rel } of allFiles) {
     const repoRel = relative(REPO, abs).replace(/\\/g, '/');
@@ -168,8 +191,26 @@ function main() {
         const movedTo = uuidOwners.get(headUuid);
         if (movedTo && movedTo.length > 0) {
           renames.push(`uuid moved: ${rel}#${path} -> ${movedTo[0].relFile}#${movedTo[0].path} (uuid ${headUuid} preserved)`);
+        } else if (removals.has(headUuid)) {
+          /**
+           * DELETING A TOKEN ON PURPOSE has to be expressible, or the gate
+           * makes the tree append-only. Every other exception in this repo is
+           * a dated record with a reason (audit-allowlist, doc-anchors,
+           * judgement-ledger), so this is one too:
+           * `.altitude/token-removals.json`, keyed by the uuid that is going
+           * away — the one identifier a rename cannot forge.
+           *
+           * It stays REPORTED, never silent. The point is to distinguish "we
+           * meant this" from "something ate a token", not to stop mentioning
+           * it.
+           */
+          const record = removals.get(headUuid);
+          removed.push(`uuid removed ON PURPOSE: ${rel}#${path} — ${record.reason} (${record.date})`);
         } else {
-          failures.push(`uuid removed: ${rel}#${path} had ${headUuid} at HEAD, and that uuid is nowhere in the tree now`);
+          failures.push(
+            `uuid removed: ${rel}#${path} had ${headUuid} at HEAD, and that uuid is nowhere in the tree now. ` +
+              `If that was deliberate, record it in .altitude/token-removals.json with a reason.`,
+          );
         }
       } else if (curUuid !== headUuid) {
         failures.push(`uuid CHANGED: ${rel}#${path} was ${headUuid} at HEAD, now ${curUuid}`);
@@ -217,6 +258,10 @@ function main() {
     if (renames.length) {
       console.log(`\nRENAMES (${renames.length}) — identity preserved, not a violation:`);
       for (const r of renames) console.log(`  ${r}`);
+    }
+    if (removed.length) {
+      console.log(`\nDELIBERATE REMOVALS (${removed.length}) — recorded in .altitude/token-removals.json:`);
+      for (const r of removed) console.log(`  ${r}`);
     }
     if (warnings.length) {
       console.log(`\nWARNINGS (${warnings.length}):`);
