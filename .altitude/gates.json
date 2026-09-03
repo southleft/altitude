@@ -778,7 +778,8 @@
       "ciVia": null,
       "tier": "build",
       "group": "authoring",
-      "note": "LOCAL ONLY - nothing in v2-checks.yml invokes it, though its self-test runs there via test:scripts. The prose flow lives in the altitude-component-authoring skill."
+      "note": "LOCAL ONLY - nothing in v2-checks.yml invokes it, though its self-test runs there via test:scripts. The prose flow lives in the altitude-component-authoring skill. autorun:false — it is a PER-COMPONENT tool and exits 2 (usage) with no tag. The runner must not invoke it bare.",
+      "autorun": false
     },
     {
       "id": "contracts:check",
