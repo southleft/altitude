@@ -456,11 +456,11 @@
         "capture"
       ],
       "blocking": true,
-      "ci": null,
+      "ci": "build:all (Cloudflare parity)",
       "ciVia": null,
       "tier": "build",
       "group": "contracts",
-      "note": "LOCAL ONLY - nothing in v2-checks.yml invokes it. Needs `pnpm run capture:docs` first; it refuses to run without that ground truth rather than passing vacuously."
+      "note": "Was local-only although it needs no Figma connection: it reads the committed contracts, with the built docs as optional evidence, and degrades to a named no-evidence list rather than guessing."
     },
     {
       "id": "check:doc-anchors",
