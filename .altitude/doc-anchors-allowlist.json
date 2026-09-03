@@ -2,13 +2,13 @@
   "//": "Dated exceptions for scripts/check-doc-anchors.mjs — the documentation-rot gate. Every entry needs EITHER an exact `anchor` (the string the gate printed, e.g. `scripts/foo.mjs` or `pnpm run build:x`) OR a `pattern` (a JS regex tested against that string), plus a `reason` explaining why the doc is allowed to name something that does not resolve. `expires` (YYYY-MM-DD) is optional but strongly preferred: an entry past its expiry FAILS the gate deliberately, so an exception is a decision that gets revisited rather than a permanent hole. `files` is an optional substring of the doc path, narrowing the entry to one document. An entry that matches nothing is reported as STALE — delete it. Prefer fixing the doc: this list is for anchors that are correct to write down even though they cannot resolve on disk (paths a consumer creates, files a generator emits at build time, and TOMBSTONES — a doc naming what was deliberately deleted, in a sentence that says so).",
   "allowed": [
     {
-      "pattern": "^dist/",
-      "reason": "Build outputs. Docs correctly describe files under dist/ that only exist after `pnpm run build:all`; the gate runs on a clean checkout where dist/ is absent.",
+      "pattern": "(^|/)dist(-v5)?(/|$)",
+      "reason": "Build outputs, gitignored and absent on a clean checkout. Docs correctly name dist/, libs/*/dist, story-fixture/dist and styles/dist-v5 when explaining what the build produces. This replaced a ^dist/ pattern that was anchored to the start of the string and so matched NOTHING — every real anchor is libs/<pkg>/dist..., which is why the gate passed locally (where the builds exist) and failed on CI.",
       "expires": "2027-01-01"
     },
     {
-      "pattern": "styles/dist-v5",
-      "reason": "Build output. tokens-config.v5.mjs emits libs/al-web-components/styles/dist-v5/ (the :host brand and mode partials, the aliases map); it is gitignored and absent on a clean checkout, exactly like the dist/ entry above. Docs correctly name it when explaining where the scoped partials come from.",
+      "pattern": "^.altitude/figma-sync/",
+      "reason": "Gitignored Figma working artifacts (the variable payload, the last export, the canvas dumps). Only parity-manifest.json and canvas-projection.json are tracked — see .altitude/README.md. FIGMA-SYNC.md correctly names the others while describing the sync loop that produces them.",
       "expires": "2027-01-01"
     },
     {
