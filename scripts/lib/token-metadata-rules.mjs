@@ -170,10 +170,22 @@ const TIER1_SCALE = (label) =>
  * The post-rename tier-1 ramps are named for the ROLE they back, not the hue
  * they happen to be, and run 100 (lightest) -> 900 (darkest).
  */
+/*
+ * NO CURLY BRACES IN DESCRIPTION PROSE.
+ *
+ * These strings are written into `$description` in the DTCG tree, and Style
+ * Dictionary resolves `{...}` inside a token's own fields as a REFERENCE. A
+ * shorthand like `theme.color.{background,content,border}.danger-*` therefore
+ * reads as a reference to a token named `background,content,border`, which
+ * does not exist. Twelve of them failed the whole token build on 2026-09-03 —
+ * and because the build deletes styles/dist-v5 before it writes, the failure
+ * left no token output at all, which then failed 30 unit tests and every gate
+ * downstream of the built CSS. Spell the alternatives out in prose instead.
+ */
 const roleRamp = (role, purpose) =>
   `Tier-1 "${role}" colour ramp — nine stops, 100 (lightest) to 900 (darkest), backing the ` +
   `${purpose} role. Never referenced directly by a component: always through a tier-2 ` +
-  `theme.color.{background,content,border}.${role}-* semantic alias, so a brand can repoint the ` +
+  `theme.color.background / content / border ${role}-* semantic alias, so a brand can repoint the ` +
   `hue without touching component code.`;
 
 const legacyNeutralRamp = (name, half) =>
@@ -185,7 +197,7 @@ const alphaRamp = (role) =>
   `Tier-1 "${role}" alpha overlay scale — a ramp stop at 10/30/60/80% opacity, named ` +
   `<stop>-<alpha> (e.g. 900-60). Used where a semantic token needs a translucent fill (scrims, ` +
   `shadow tints, hover washes) that must sit over arbitrary content. Consumed through tier-2 ` +
-  `theme.color.{background.transparent-*, shadow.*} aliases, not read directly.`;
+  `theme.color.background.transparent-* and theme.color.shadow.* aliases, not read directly.`;
 
 const brandDelta = (brand, ramp) =>
   `Tier-2 BRAND delta: the "${brand}" override of the tier-1 ${ramp} ramp. Lives in ` +

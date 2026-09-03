@@ -7,6 +7,11 @@
       "expires": "2027-01-01"
     },
     {
+      "pattern": "styles/dist-v5",
+      "reason": "Build output. tokens-config.v5.mjs emits libs/al-web-components/styles/dist-v5/ (the :host brand and mode partials, the aliases map); it is gitignored and absent on a clean checkout, exactly like the dist/ entry above. Docs correctly name it when explaining where the scoped partials come from.",
+      "expires": "2027-01-01"
+    },
+    {
       "pattern": "^\\.(ai/|github/copilot)",
       "files": "AI-DIRECTORY-EVALUATION.md",
       "reason": "This doc surveys how OTHER AI tools lay out their context directories (Cursor's .ai/memory, Copilot's .github/copilot-instructions) in order to argue for .altitude/. Those paths are correctly absent from this repo — that is the point of the comparison.",
