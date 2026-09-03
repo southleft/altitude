@@ -65,11 +65,7 @@ const DIST = path.resolve(argOf('--dist') ?? path.join(REPO_ROOT, 'dist', 'docs'
  *
  * One base guidance file serves every project site that documents that
  * component, and a brand layer's file serves exactly one, so pages is the unit
- * that reflects what a reader can actually reach. 25 is where it stands after
- * the nine Southleft brand components were authored.
- *
- * Raise it when guidance is written for more components; never lower it to make
- * a red gate green.
+ * that reflects what a reader can actually reach.
  */
 const BASELINE_PATH = path.join(REPO_ROOT, '.altitude', 'baselines', 'guidance-coverage.json');
 
