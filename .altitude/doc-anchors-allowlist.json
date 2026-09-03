@@ -12,6 +12,11 @@
       "expires": "2027-01-01"
     },
     {
+      "anchor": ".claude/worktrees",
+      "reason": "Exists only on a machine that has created session worktrees; untracked, so absent on a clean checkout. CLAUDE.md names it in the search-scoping rule precisely so an agent EXCLUDES it — the reference has to survive even where the directory does not.",
+      "expires": "2027-01-01"
+    },
+    {
       "pattern": "^\\.(ai/|github/copilot)",
       "files": "AI-DIRECTORY-EVALUATION.md",
       "reason": "This doc surveys how OTHER AI tools lay out their context directories (Cursor's .ai/memory, Copilot's .github/copilot-instructions) in order to argue for .altitude/. Those paths are correctly absent from this repo — that is the point of the comparison.",
