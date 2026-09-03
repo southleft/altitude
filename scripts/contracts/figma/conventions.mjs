@@ -41,7 +41,7 @@ export const BOOLEAN_AXIS_CANONICAL_ORDER = ['Slot Before', 'Slot After', 'Is Fu
  * `libs/al-web-components/styles/core/base.scss:29` (`body { background: var(
  * --al-theme-color-body-background); }`), i.e. the literal CSS `<body>`
  * background, not a guess and not the same token T18's page-background
- * workaround used (`theme/color/background/default` — a general-purpose
+ * workaround used (`theme/color/background/neutral-default` — a general-purpose
  * surface token, plausible but not the one the app's own body rule reads).
  * Used for BOTH the presentation frame's fill (a real bound variable — unlike
  * PageNode, FrameNode.fills CAN bind variables) and the page-background
@@ -199,7 +199,7 @@ export const ICON_WRAPPER_COMPONENT_NAME = 'Icon';
  * on the frame's own explicit-mode fill instead of defaulting to Figma's
  * built-in black-text default (invisible against a dark surface — the bug
  * T18/T21 already fixed once for the live set's own label/icon paint). */
-export const SHEET_LABEL_COLOR_FIGMA_VAR = 'theme/color/content/default';
+export const SHEET_LABEL_COLOR_FIGMA_VAR = 'theme/color/content/neutral-default';
 
 /**
  * RESOLVE THE SET STRUCTURALLY — never by layout.

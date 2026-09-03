@@ -12,8 +12,8 @@
 const V = {};
 for (const v of await figma.variables.getLocalVariablesAsync()) V[v.name] = v;
 const need = [
-  'theme/color/background/default-strong', 'theme/color/background/primary-default',
-  'theme/color/content/default', 'theme/opacity/disabled', 'theme/color/border/primary-default',
+  'theme/color/background/neutral-strong', 'theme/color/background/primary-default',
+  'theme/color/content/neutral-default', 'theme/opacity/disabled', 'theme/color/border/primary-default',
 ];
 const missing = need.filter((n) => !V[n]);
 if (missing.length) return 'MISSING VARS: ' + missing.join(', ');
@@ -44,7 +44,7 @@ for (const comp of set.children) {
   const e = { v: comp.name, ops: [] };
 
   // 1. track fill — same for Default/Hover/Focus/Disabled (code never swaps it)
-  comp.fills = [await boundSolid(checked ? 'theme/color/background/primary-default' : 'theme/color/background/default-strong')];
+  comp.fills = [await boundSolid(checked ? 'theme/color/background/primary-default' : 'theme/color/background/neutral-strong')];
   e.ops.push('trackFill');
 
   // 2. disabled: dim via the opacity VARIABLE (percentage in Figma — trap #5)
@@ -58,7 +58,7 @@ for (const comp of set.children) {
   // 3. knob: content/default + box-shadow/xs geometry, colour bound if the var exists
   for (const k of comp.children) {
     if (k.type === 'ELLIPSE' && k.name === 'Knob') {
-      k.fills = [await boundSolid('theme/color/content/default')];
+      k.fills = [await boundSolid('theme/color/content/neutral-default')];
       const sc = shadowVar ? await rgbOf(shadowVar) : { r: 0, g: 0, b: 0, a: 0.6 };
       let fx = {
         type: 'DROP_SHADOW',

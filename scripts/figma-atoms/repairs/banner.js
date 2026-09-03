@@ -1,13 +1,13 @@
 /* Banner repair — run via figma_execute against set 729:229 in
  * Altitude Design System. Truth: libs/al-web-components/components/banner/banner.scss
  *
- *   container  fill    theme/color/background/default
- *              border  bottom only, theme/border/width solid theme/color/border/default
+ *   container  fill    theme/color/background/neutral-default
+ *              border  bottom only, theme/border/width solid theme/color/border/neutral-default
  *              radius  0 (page-level bar, not a card)
  *              pad     theme/space/sm (12) vert, theme/space/@ (16) horiz
  *              gap     theme/space/@ (16)   [lives on the Main Content row]
  *   tone icon  fill    theme/color/content/{info|success|warning|danger}-default
- *   text       fill    theme/color/content/default (anatomy Figma adds beyond the
+ *   text       fill    theme/color/content/neutral-default (anatomy Figma adds beyond the
  *                      code — Title/Description — keeps its type styles, colors bound)
  *
  * Instances inside (Button (Icon), tone icon) are only OVERRIDDEN for the tone
@@ -16,7 +16,7 @@
 const V = {};
 for (const v of await figma.variables.getLocalVariablesAsync()) V[v.name] = v;
 const need = [
-  'theme/color/background/default', 'theme/color/border/default', 'theme/color/content/default',
+  'theme/color/background/neutral-default', 'theme/color/border/neutral-default', 'theme/color/content/neutral-default',
   'theme/color/content/info-default', 'theme/color/content/success-default',
   'theme/color/content/warning-default', 'theme/color/content/danger-default',
   'theme/space/@', 'theme/space/sm', 'theme/border/width/@',
@@ -52,7 +52,7 @@ for (const comp of set.children) {
   const entry = { variant: comp.name, ops: [] };
 
   // 1. container fill
-  comp.fills = [await boundSolid('theme/color/background/default')];
+  comp.fills = [await boundSolid('theme/color/background/neutral-default')];
   entry.ops.push('fill');
 
   // 2. radius -> 0 (unbind first)
@@ -70,7 +70,7 @@ for (const comp of set.children) {
   entry.ops.push('padding');
 
   // 4. bottom border only
-  comp.strokes = [await boundSolid('theme/color/border/default')];
+  comp.strokes = [await boundSolid('theme/color/border/neutral-default')];
   comp.strokeAlign = 'INSIDE';
   comp.strokeTopWeight = 0; comp.strokeLeftWeight = 0; comp.strokeRightWeight = 0;
   try { comp.setBoundVariable('strokeBottomWeight', V['theme/border/width/@']); } catch (e) { comp.strokeBottomWeight = 1; }
@@ -101,7 +101,7 @@ for (const comp of set.children) {
       const unbound = !(n.fills && n.fills[0] && n.fills[0].boundVariables && n.fills[0].boundVariables.color);
       if (unbound) {
         try {
-          n.fills = [await boundSolid('theme/color/content/default')];
+          n.fills = [await boundSolid('theme/color/content/neutral-default')];
           entry.ops.push('text:' + n.name);
         } catch (e) { entry.ops.push('text-FAIL:' + n.name); }
       }

@@ -12,7 +12,7 @@
 const V = {};
 for (const v of await figma.variables.getLocalVariablesAsync()) V[v.name] = v;
 const need = [
-  'theme/color/background/default-stronger', 'theme/color/content/default',
+  'theme/color/background/neutral-bold', 'theme/color/content/neutral-default',
   'theme/color/background/info-default', 'theme/color/content/info-weak',
   'theme/color/background/success-default', 'theme/color/content/success-weak',
   'theme/color/background/warning-default', 'theme/color/content/warning-weak',
@@ -38,7 +38,7 @@ async function boundSolid(name) {
 }
 
 const TONE = {
-  Default: { bg: 'theme/color/background/default-stronger', fg: 'theme/color/content/default' },
+  Default: { bg: 'theme/color/background/neutral-bold', fg: 'theme/color/content/neutral-default' },
   Info: { bg: 'theme/color/background/info-default', fg: 'theme/color/content/info-weak' },
   Success: { bg: 'theme/color/background/success-default', fg: 'theme/color/content/success-weak' },
   Warning: { bg: 'theme/color/background/warning-default', fg: 'theme/color/content/warning-weak' },

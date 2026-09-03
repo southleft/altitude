@@ -82,7 +82,7 @@ function page(mode) {
 ${TOKENS_HREF[mode] ? `<link rel="stylesheet" href="${TOKENS_HREF[mode]}">` : ''}
 <style>
   html, body { margin: 0; padding: 0; }
-  body { background: var(--al-theme-color-background-default, #fff); }
+  body { background: var(--al-theme-color-background-neutral-default, #fff); }
   section { display: block; padding: 0; }
   .case { display: inline-block; margin: 0; padding: 0; }
   /* fullWidth is width:100% on the inner element - it needs a sized block parent,

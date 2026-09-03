@@ -31,7 +31,7 @@
  */
 @mixin al-label() {
   @include al-theme-typography-body-md;
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
   display: block;
   transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
@@ -39,7 +39,7 @@
    * Disabled state
    */
   .al-is-disabled & {
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     opacity: var(--al-theme-opacity-disabled);
     cursor: not-allowed;
   }
@@ -77,9 +77,9 @@
   padding: 0 var(--al-theme-space-sm);
   border-width: var(--al-theme-border-width);
   border-style: solid;
-  border-color: var(--al-theme-color-border-default);
+  border-color: var(--al-theme-color-border-neutral-default);
   border-radius: var(--al-theme-border-radius);
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
   /**
    * v2: a field is a SURFACE, not a hole. It was transparent, so it took
    * whatever sat behind it; on the warm paper page that made the field and the
@@ -88,12 +88,12 @@
    * (input.scss / textarea.scss `--al-input-label-background`), so the two must
    * name the same token or the patch shows as a seam across the top border.
    */
-  background-color: var(--al-input-background, var(--al-theme-color-background-default));
+  background-color: var(--al-input-background, var(--al-theme-color-background-neutral-default));
   transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), color var(--al-theme-animation-duration) var(--al-theme-animation-timing), border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing), box-shadow var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
   ~ *  {
     transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
   }
 
   &:read-only {
@@ -105,7 +105,7 @@
    * - Prevents hover while others states are present
    */
   &:hover:not(:active, :focus, :focus-visible, :disabled) {
-    border-color: var(--al-theme-color-border-default-strong);
+    border-color: var(--al-theme-color-border-neutral-strong);
   }
 
   /**
@@ -132,11 +132,11 @@
   &:disabled {
     cursor: not-allowed;
     opacity: var(--al-theme-opacity-disabled);
-    color: var(--al-theme-color-content-default);
-    border-color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
+    border-color: var(--al-theme-color-content-neutral-default);
 
     ~ * {
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
       opacity: var(--al-theme-opacity-disabled);
     }
   }
@@ -145,7 +145,7 @@
    * Placeholder text
    */
   &::placeholder {
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   /**
