@@ -110,6 +110,23 @@ export const INSTANCE_MAP = {
     })),
 
   'al-breadcrumbs': set('Breadcrumbs', '3558:60804', () => ({ State: 'Default' })),
+
+  /*
+   * The brand organisms (@southleft/sl-web-components). They live in this file
+   * like everything else, and their ids are what the docs site's "OPEN IN FIGMA"
+   * chip and the generated contract docs deep-link to. Axes read live from each
+   * set on 2026-09-03 rather than assumed: three carry State=Default only, and
+   * Logo Wall carries `Vivid` INSTEAD of State, driven by its `vivid` boolean.
+   *
+   * "Footer" was named "Sl Footer" in Figma until 2026-09-03, the one brand set
+   * that carried the prefix while Card / Hero / Section Header / Logo Wall did
+   * not. It was renamed to match its siblings and the name the code already
+   * expected, rather than teaching the code about the outlier.
+   */
+  'al-footer': set('Footer', '5301:1484', () => ({ State: 'Default' })),
+  'al-hero': set('Hero', '5301:1427', () => ({ State: 'Default' })),
+  'al-section-header': set('Section Header', '5301:1242', () => ({ State: 'Default' })),
+  'al-logo-wall': set('Logo Wall', '5301:1263', (a) => ({ Vivid: on(a.vivid) ? 'Vivid' : 'Default' })),
 };
 
 /**
