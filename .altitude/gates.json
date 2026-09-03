@@ -399,6 +399,22 @@
       "group": "release"
     },
     {
+      "id": "check:code-connect",
+      "npmScript": "check:code-connect",
+      "command": "pnpm run check:code-connect",
+      "purpose": "Figma Code Connect is generated from the component contracts; this regenerates it and byte-compares, so a contract change that did not reach the Code Connect files fails.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "figma",
+      "note": "34 of 102 components covered — a pinned Figma node id is the requirement. southleft is refused: its node ids were orphaned by the 2026-09-02 repoint."
+    },
+    {
       "id": "check:context-budget",
       "npmScript": "check:context-budget",
       "command": "pnpm run check:context-budget",

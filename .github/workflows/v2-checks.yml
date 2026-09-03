@@ -228,6 +228,10 @@ jobs:
       # the gitignored canvas dumps are absent, which is always the CI case.
       - name: Figma set conventions
         run: pnpm run check:figma-conventions
+      # Code Connect is generated from the same contracts that drive generation
+      # and parity, so it must regenerate byte-identically or it has drifted.
+      - name: Code Connect matches the contracts
+        run: pnpm run check:code-connect
 
   baselines-vrt:
     # No component count in the name: components.vrt.spec.ts derives its list
