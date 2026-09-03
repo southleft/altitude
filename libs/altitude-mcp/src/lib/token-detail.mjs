@@ -29,7 +29,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { PATHS, HINTS, requireFile } from './paths.mjs';
+import { PATHS, HINTS, requireFile, MissingArtifactError } from './paths.mjs';
 import { queryTokens } from './tokens.mjs';
 
 const ALTITUDE_EXT = 'org.altitude.token';
@@ -109,6 +109,64 @@ export function loadTokenMetadata() {
   return index;
 }
 
+// ── the DERIVED description layer (2026-09-03) ─────────────────────────────
+//
+// NOT ONE token in styles/tokens-dtcg/** carries a DTCG `$description`, and the
+// `org.primer.llm.usage` strings a handful of tier-3 tokens carry are PROSE
+// about a value — the kind that goes stale the instant the value moves. So the
+// description a caller actually gets is COMPUTED: `scripts/lib/token-describe.mjs`
+// derives one sentence per token from its name, authored `cssType`, tier and
+// value resolved PER MODE, and `scripts/ai-readiness/build-tokens-digest.mjs`
+// bakes it into `.altitude/ai-readiness/tokens-digest.json`.
+//
+// This server READS that artifact rather than re-deriving it, for the same
+// reason it reads every other one: `package.json`'s `files` ships `src/` only,
+// so `scripts/lib` is not published with this package, and a second copy of the
+// derivation here would be a second source of truth free to drift.
+
+let digestCache = null;
+let digestCachePath = null;
+
+/** The AI-readiness token digest, or a structured error naming the command that writes it. */
+export function loadTokenDigest() {
+  const path = PATHS.aiReadinessTokensDigest;
+  if (digestCache && digestCachePath === path) return digestCache;
+  if (!existsSync(path)) throw new MissingArtifactError(path, HINTS.aiReadinessTokensDigest);
+  let doc;
+  try {
+    doc = JSON.parse(readFileSync(path, 'utf8'));
+  } catch (err) {
+    const e = new Error(`Token digest at ${path} is not valid JSON: ${err.message}`);
+    e.code = 'ERR_INVALID_TOKEN_DIGEST';
+    e.path = path;
+    e.hint = HINTS.aiReadinessTokensDigest;
+    throw e;
+  }
+  digestCache = doc;
+  digestCachePath = path;
+  return doc;
+}
+
+/** token name -> derived sentence. Empty (never thrown) when no digest is built. */
+export function loadTokenDescriptions() {
+  const out = new Map();
+  let digest;
+  try {
+    digest = loadTokenDigest();
+  } catch {
+    // A missing digest must not break a plain token QUERY — the values and the
+    // authored metadata are still correct without it. `queryTokensDetailed()`
+    // reports the absence in `descriptionsNote` instead of failing.
+    return out;
+  }
+  for (const list of Object.values(digest.groups ?? {})) {
+    for (const entry of list) {
+      if (entry?.description) out.set(String(entry.name).replace(/^--/, ''), entry.description);
+    }
+  }
+  return out;
+}
+
 /**
  * `queryTokens()` plus the authored metadata on every returned token.
  *
@@ -120,9 +178,17 @@ export function loadTokenMetadata() {
 export function queryTokensDetailed(options = {}) {
   const result = queryTokens(options);
   const metadata = loadTokenMetadata();
+  const derived = loadTokenDescriptions();
 
   return {
     ...result,
+    // Named, not implied: without this a caller cannot tell "this token has no
+    // description" from "no digest was built in this checkout".
+    descriptionsNote:
+      derived.size > 0
+        ? null
+        : 'No derived token descriptions are available in this checkout — the AI-readiness token digest ' +
+          `is missing or predates them. Run: ${HINTS.aiReadinessTokensDigest}`,
     tokens: result.tokens.map((token) => {
       const meta = metadata.get(token.name) ?? {};
       return {
@@ -136,7 +202,17 @@ export function queryTokensDetailed(options = {}) {
         cssProperties: meta.cssProperties ?? [],
         /** The DTCG standard type, for a caller that needs conformance not intent. */
         dtcgType: meta.dtcgType ?? token.type ?? null,
-        description: meta.description ?? null,
+        /**
+         * The DERIVED sentence takes precedence over the authored one, and the
+         * authored one is kept alongside rather than dropped. Precedence, not
+         * preference: the derived sentence states the value the token resolves
+         * to in each mode and cannot disagree with the build, while an authored
+         * `usage` string is prose somebody wrote against a value that has since
+         * moved. Where both exist a caller can compare them — and where they
+         * disagree, the authored one is the stale one.
+         */
+        description: derived.get(token.name) ?? meta.description ?? null,
+        authoredDescription: meta.description ?? null,
       };
     }),
   };

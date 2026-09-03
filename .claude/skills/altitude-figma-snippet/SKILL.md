@@ -22,22 +22,19 @@ human's eyeballs. When output diverges: read the verify report, classify each
 miss (generic rule / measurement fact / curation), fix at that layer, re-run.
 Never hand-edit the canvas.
 
-**The verify is no longer geometry-only (T4, spec
-2026-08-29-parity-judgement-gates-and-evals).** Every paired row in
-`<section>-verify.json` now carries `facts[]` alongside its box deltas:
-`text` (measured words vs the Figma TEXT node's characters), `fill` (colour,
-canonicalized both ways — a TEXT node compares against `computed.fc`, anything
-else against `computed.bg`), and `fill-binding` (is the paint bound to a
-variable, or a literal that will not follow a mode switch — repair-skill trap
-4; note the `fill` check PASSES on such a node, which is why binding is
-separate). `skipped` is a real outcome with a reason attached: a gradient is
-not comparable to a flat paint and never counts as agreement.
+**The verify is not geometry-only.** Every paired row in `<section>-verify.json` carries
+`facts[]` alongside its box deltas: `text` (measured words vs the Figma TEXT node's
+characters), `fill` (colour, canonicalized both ways — a TEXT node compares against
+`computed.fc`, anything else against `computed.bg`), and `fill-binding` (is the paint
+bound to a variable, or a literal that will not follow a mode switch —
+altitude-figma-repair#4; the `fill` check PASSES on such a node, which is why binding is
+separate). `skipped` is a real outcome with a reason attached: a gradient is not
+comparable to a flat paint and never counts as agreement.
 
-They **report** by default. `--gate-facts` makes them fail the run. Nobody has
-run them against a live build yet, so their false-positive rate is unmeasured
-— read the volume on the first real run before turning them on. This is the
-direct answer to trap 9 below: colour and copy are now compared by number
-instead of by eye.
+Facts **report** by default; `--gate-facts` makes them fail the run. Their
+false-positive rate is unmeasured against a live build — read the volume on the first
+real run before turning them on. This is the machine answer to trap 9: colour and copy
+compared by number instead of by eye.
 
 ## The one command
 
@@ -98,41 +95,40 @@ INNER text node's width (hero heading: 764 inside a 1264 container, breaks at
 "Built"), and measured height ÷ fsPx decides one-line (never wrap) vs
 multi-line.
 
-## Traps — every one cost real time TODAY
+## Traps
 
-1. **The childless-glyph branch eats leaves silently**: its hasPaint check
-   `continue`s nodes with empty tokens — no miss, no trace. Both hero
-   background layers vanished. When a node disappears with clean missingVars,
-   INSTRUMENT THE WALK FIRST (`misses.add` per visit).
-2. **Element screenshots are page clips, not element isolations** — the texture
-   raster contained the whole hero (the "doubling"). Driver rasterization hides
-   sibling subtrees first — with **opacity:0, NOT visibility:hidden** (reveal
-   animations set explicit `visibility:visible` on descendants, which pierces a
-   hidden ancestor).
-3. **`loadFontAsync` can hang forever** (same class as importComponentByKeyAsync)
-   — it silently ate the whole 30s bridge ceiling. All family loads race a 3s
-   timeout → fall back to the library family → named `font-load-timeout` miss.
-4. **Backticks in comments inside the String.raw templates** (skill
-   altitude-figma-generate trap 3) — hit THREE times in one day, twice writing
-   about CSS. Run `node scripts/contracts/figma/check-parse.mjs` after touching
-   generator files; it parses every module in ~1s.
-5. **An instance's inner TEXT cannot be resized directly** (silently locked,
-   like nested-instance geometry) — impose wrap width by resizing the INSTANCE
-   and setting the inner text FILL.
-6. **Symptom-gated rules are order-dependent**: the conform trigger checked for
-   a size mismatch, another rule made the ancestor definite first, the mismatch
-   vanished, the wrap policy never ran (lead collapsed to one 1742px line).
-   When applying a measured fact is idempotent, apply it UNCONDITIONALLY.
-7. **Silent no-op consumers hide their own failure**: the runs reader used
-   offset/length against an emitter writing start/end — nothing applied, no
-   error, two rounds to notice. Read the emitter first.
-8. **Exports mint new ids every regen** — hand over the CURRENT presentation
-   frame id; never cache node ids across regens.
-9. **Perception is not a comparator** — the chips "looked right" red at
-   thumbnail scale; the measured facts (dark translucent + warm border) were
-   correct and the eyeball was wrong. Numbers first, screenshots as evidence.
-10. **deviceScaleFactor 2 quadruples raster payloads** for zero fill-quality
-    gain — page captures run at 1x.
+One rule each. Dated incident narrative for every trap below lives in
+`.altitude/ai-readiness/trap-index.json` (`provenance`), with its lifecycle
+(`open` / `evaluated` / `gated`) — read that, not this file, when you want the story.
+
+1. **When a node disappears with a clean `missingVars`, instrument the walk first**
+   (`misses.add` per visit). The childless-glyph branch `continue`s nodes with empty
+   tokens — no miss, no trace — and both hero background layers vanished that way.
+2. **Rasterizing an element: hide siblings with `opacity: 0`, not `visibility: hidden`.**
+   Element screenshots are page CLIPS, not element isolations, and reveal animations set
+   explicit `visibility: visible` on descendants, which pierces a hidden ancestor.
+3. **Race every `loadFontAsync` against a 3s timeout**, fall back to the library family
+   and record a named `font-load-timeout` miss. It can hang forever (same class as
+   `importComponentByKeyAsync`) and silently eat the whole 30s bridge ceiling.
+4. **Run `scripts/contracts/figma/check-parse.mjs` after touching a generator file** —
+   it parses every module in ~1s. canonical: altitude-figma-generate#3.
+5. **Impose wrap width by resizing the INSTANCE and setting the inner text FILL.** An
+   instance's inner TEXT cannot be resized directly — silently locked, like
+   nested-instance geometry.
+6. **When applying a measured fact is idempotent, apply it UNCONDITIONALLY.**
+   Symptom-gated rules are order-dependent: the conform trigger checked for a size
+   mismatch, another rule made the ancestor definite first, the mismatch vanished, and
+   the wrap policy never ran (the lead collapsed to one 1742px line).
+7. **Read the emitter before writing its consumer.** A silent no-op consumer hides its
+   own failure — the runs reader used offset/length against an emitter writing
+   start/end: nothing applied, no error.
+8. **Never cache a node id across a regen** — exports mint new ones; hand over the
+   CURRENT presentation frame id. Canonical: altitude-figma-generate#2.
+9. **Numbers gate; screenshots are evidence. Perception is not a comparator** — chips
+   that "looked right" red at thumbnail scale were dark translucent with a warm border,
+   and the measured facts were the ones telling the truth.
+10. **Capture pages at deviceScaleFactor 1** — 2 quadruples raster payloads for zero
+    fill-quality gain.
 11. `argOf(flag)` from scripts/lib/argv.mjs takes an argv ARRAY as its second
     parameter, not a default value.
 

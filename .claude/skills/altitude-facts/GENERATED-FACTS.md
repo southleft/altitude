@@ -561,14 +561,14 @@ record in the CEM digest, cited back to its source.
   - **no-icon-webfont**: The icon webfont was REMOVED. `.icon-<name>` utility classes and the `iconfont` @font-face no longer exist, and components/icon/fonts/iconfont.css is an intentionally empty deprecation stub. Do NOT flag the empty stub as a broken or truncated file, and do NOT suggest font-based icons. (AGENTS.md > Icon system)
 - `al-stat-card`
   - **molecule-mis-taxonomy**: A display atom that composes internal `<al-icon>` atoms for decoration remains an Atom. Do NOT flag `title: "Atoms/Stat Card"` as a taxonomy violation that "should be Molecules" — the Molecules tier is reserved for compositions that combine 2+ semantically meaningful atoms, not for atoms that wrap decorative icons. (scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical stat-card contract, Taxonomy row)
-  - **consumed-theme-token-not-cssproperty**: A consumed `--al-theme-*` token (e.g. --al-theme-color-content-default) is NOT a @cssproperty of the component that reads it. Do NOT flag the absence of @cssproperty entries for global theme tokens; only the component's own --al-<component>-* override hooks are @cssproperty. (AGENTS.md @cssproperty semantics + scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical stat-card contract, Owned override hooks row)
+  - **consumed-theme-token-not-cssproperty**: A consumed `--al-theme-*` token (e.g. --al-theme-color-content-neutral-default) is NOT a @cssproperty of the component that reads it. Do NOT flag the absence of @cssproperty entries for global theme tokens; only the component's own --al-<component>-* override hooks are @cssproperty. (AGENTS.md @cssproperty semantics + scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical stat-card contract, Owned override hooks row)
 - `al-tag`
   - **controlled-close-without-isDismissed**: Same as al-chip. Controlled close() without owned isDismissed is sanctioned for al-tag too. (scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical al-tag contract)
   - **dispatch-only-handler-IS-controlled-close**: AFFIRMATIVE: A handler method (named `handleClose`, `onClose`, `dismiss`, or anything else) that ONLY dispatches a close event (no `isDismissed` state mutation, no method literally named `close()`) IS the sanctioned controlled-close shape. It COUNTS as controlled-close. Do NOT flag it as "incomplete", "partial", "neither shape", or "missing close() method". The method name does not matter — what matters is that the dismissal decision is delegated to the consumer via the dispatched event. Reviewers reasoning "this is neither owned-state nor a literal close() method, therefore neither shape" are misreading the rule. (scripts/ai-readiness/fixtures/canonical-contracts.md > Canonical al-tag contract, Dismissal model row)
 
 ## Token conventions
 
-From .altitude/ai-readiness/tokens-digest.json: 539 tokens across 226 families.
+From .altitude/ai-readiness/tokens-digest.json: 607 tokens across 226 families.
 
 - CSS variable prefix: `--al-`
 - Semantic layer: --al-theme-* (single-layer of indirection over the al-color-* / al-font-size-* primitives)
@@ -586,7 +586,7 @@ Each has been observed being invented because it looks like it should exist.
 
 - `--al-theme-focus-ring-*`
 - `--al-theme-transition-duration-* (use --al-animation-duration-*)`
-- `--al-theme-color-content-default-stronger`
+- `--al-theme-color-content-neutral-bold`
 - `--al-theme-color-content-default-weaker`
 - `--al-font-weight-semibold`
 - `--al-font-weight-medium`

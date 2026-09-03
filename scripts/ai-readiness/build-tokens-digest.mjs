@@ -13,15 +13,23 @@
 //         .altitude/ai-readiness/tokens-digest.json (durable copy)
 
 import { EOL } from 'node:os';
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
+import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { TMPDIR } from './lib.mjs';
+import { authoredType, dtcgType, isTokenLeaf } from '../lib/dtcg-token.mjs';
+import { describeToken, findCollapsedLadders, inkPair, contrastRatio, parseTokenName } from '../lib/token-describe.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const TOKENS_PATH = resolve(ROOT, 'libs/al-web-components/styles/dist/tokens.json');
+const DTCG_DIR = resolve(ROOT, 'libs/al-web-components/styles/tokens-dtcg');
+const BRAND_CSS_DIR = resolve(ROOT, 'libs/al-web-components/styles/dist-v5/css/brand');
 const TMP_OUT = resolve(TMPDIR, 'ai-readiness-tokens-digest.json');
 const REPO_OUT = resolve(ROOT, '.altitude/ai-readiness/tokens-digest.json');
+
+/** The brand every `description` sentence quotes values from (the base identity). */
+const DESCRIPTION_BRAND = 'altitude';
+const BUILD_TOKENS_HINT = 'pnpm --filter @southleft/al-web-components build:tokens';
 
 const t = JSON.parse(readFileSync(TOKENS_PATH, 'utf8'));
 const keys = Object.keys(t).sort();
@@ -115,6 +123,211 @@ const notExistDoNotInvent = CANDIDATE_NON_EXISTENT.filter((entry) => {
   return !exists;
 });
 
+// --- per-token DESCRIPTIONS + the emphasis-ladder map (2026-09-03) ---------
+//
+// WHY HERE, AND NOT IN THE TOKEN SOURCE. Not one of the tokens in
+// styles/tokens-dtcg/** carries a DTCG `$description`, and the answer is NOT to
+// hand-write 607 of them: prose about a value goes stale the moment the value
+// moves, which is the exact failure the `conventions` block above was rewritten
+// to stop. So each description is COMPUTED, here, at build time, by
+// scripts/lib/token-describe.mjs — from the token's name, its authored
+// `cssType`, its tier, and its value RESOLVED PER MODE. The token tree is not
+// written to at all.
+//
+// The resolved-per-mode part is what makes the descriptions worth reading, and
+// it needs the EMITTED bundles rather than tokens.json: `styles/dist/tokens.json`
+// is one build (altitude brand, light mode), so it cannot say what a token
+// becomes in dark, and it cannot say that `background.neutral-{weak,strong}` are
+// the same colour in light and different in dark. `styles/dist-v5/css/brand/
+// tokens-<brand>-<mode>.css` is a full flat `:root` block per (brand, mode) —
+// measured truth, the same artifact scripts/check-palette-contrast.mjs gates on.
+//
+// dist-v5/ is gitignored, so a checkout that has not run `build:tokens` has none
+// of it. That degrades to a NAMED miss (`palette.available: false` with the
+// command that fixes it) and descriptions are simply absent — never guessed, and
+// never silently skipped.
+
+/** Every `--al-*` declaration in one emitted bundle, with `var()` chains dereferenced. */
+function readBrandScope(file) {
+  const css = readFileSync(file, 'utf8');
+  const vars = {};
+  for (const m of css.matchAll(/(--al-[a-z0-9-]+)\s*:\s*([^;]+);/g)) vars[m[1]] = m[2].trim();
+  const deref = (v, depth = 0) => {
+    if (depth > 16) return v;
+    const m = /^var\(\s*(--al-[a-z0-9-]+)\s*\)$/.exec(String(v).trim());
+    return m && vars[m[1]] !== undefined ? deref(vars[m[1]], depth + 1) : String(v).trim();
+  };
+  const out = {};
+  for (const name of Object.keys(vars)) out[name.slice(2)] = deref(vars[name]);
+  return out;
+}
+
+/** `{ 'altitude:light': {name: value}, … }` — every (brand, mode) bundle on disk. */
+function discoverScopes() {
+  if (!existsSync(BRAND_CSS_DIR)) return {};
+  const scopes = {};
+  for (const file of readdirSync(BRAND_CSS_DIR)) {
+    const m = /^tokens-([a-z0-9]+)-(light|dark)\.css$/.exec(file);
+    if (!m) continue;
+    scopes[`${m[1]}:${m[2]}`] = readBrandScope(join(BRAND_CSS_DIR, file));
+  }
+  return scopes;
+}
+
+/** name -> { cssType, dtcgType, tier, cssProperties }, walked straight off the DTCG source. */
+function tokenMetadataIndex() {
+  const index = {};
+  const walk = (node, segs, tier) => {
+    if (isTokenLeaf(node)) {
+      const name = `al-${segs.join('-')}`;
+      const entry = (index[name] ??= {});
+      entry.cssType ??= authoredType(node) ?? null;
+      entry.dtcgType ??= dtcgType(node) ?? null;
+      entry.tier ??= tier;
+      entry.cssProperties ??= node.$extensions?.['com.salesforce.styling']?.cssProperties ?? [];
+      return;
+    }
+    if (!node || typeof node !== 'object') return;
+    for (const [k, child] of Object.entries(node)) {
+      if (k.startsWith('$')) continue;
+      walk(child, [...segs, k], tier);
+    }
+  };
+  const visit = (dir, tier) => {
+    if (!existsSync(dir)) return;
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) visit(full, tier);
+      else if (entry.name.endsWith('.json')) {
+        try {
+          walk(JSON.parse(readFileSync(full, 'utf8')), [], tier);
+        } catch {
+          // One malformed file must not blind the whole index; the token gates
+          // (pnpm run generate:token-metadata) own that failure, and the honest
+          // outcome here is metadata missing for that file's tokens.
+        }
+      }
+    }
+  };
+  for (const [dir, tier] of [['tier-1', 1], ['tier-2', 2], ['tier-3', 3]]) visit(join(DTCG_DIR, dir), tier);
+  return index;
+}
+
+const scopes = discoverScopes();
+const scopeIds = Object.keys(scopes).sort();
+const metadata = tokenMetadataIndex();
+
+const descriptionModes = ['light', 'dark'].filter((m) => scopes[`${DESCRIPTION_BRAND}:${m}`]);
+const lookup = (name, mode) => scopes[`${DESCRIPTION_BRAND}:${mode}`]?.[name];
+
+/** name -> the one-sentence derived description, for the default brand. */
+const descriptions = {};
+if (descriptionModes.length) {
+  const named = new Set();
+  for (const m of descriptionModes) for (const n of Object.keys(scopes[`${DESCRIPTION_BRAND}:${m}`])) named.add(n);
+  for (const n of [...named].sort()) {
+    const modeValues = {};
+    for (const m of descriptionModes) if (lookup(n, m) != null) modeValues[m] = lookup(n, m);
+    const meta = metadata[n] ?? {};
+    descriptions[n] = describeToken({
+      name: n,
+      cssType: meta.cssType ?? null,
+      dtcgType: meta.dtcgType ?? null,
+      tier: meta.tier ?? null,
+      cssProperties: meta.cssProperties ?? [],
+      modeValues,
+      lookup,
+    });
+  }
+}
+
+// Descriptions ride along with the token they describe, rather than in a
+// parallel map a consumer has to join by hand.
+for (const list of Object.values(groups)) {
+  for (const entry of list) {
+    const d = descriptions[entry.name.replace(/^--/, '')];
+    if (d) entry.description = d;
+  }
+}
+
+/** Colour tokens only — the family the emphasis ladder exists in. */
+const paletteScopes = {};
+const collapsedLadders = {};
+for (const id of scopeIds) {
+  const colours = {};
+  for (const [name, value] of Object.entries(scopes[id])) {
+    if (parseTokenName(name)?.family === 'color') colours[name] = value;
+  }
+  paletteScopes[id] = colours;
+  collapsedLadders[id] = findCollapsedLadders(colours);
+}
+
+/**
+ * The measured contrast for every ink/fill pair the naming scheme implies.
+ *
+ * `content.<role>-weak` is the ink painted ON `background.<role>-default` —
+ * the single most misleading name in the set (see token-describe.mjs's
+ * `inkPair()` and check-palette-contrast.mjs's header). Recording the ratio per
+ * scope means a caller can be told which pair a token is legible on without
+ * re-deriving WCAG maths from raw hexes.
+ */
+const inkContrast = {};
+for (const id of scopeIds) {
+  // The rungs a ladder actually ships decide whether `-weak` is the misleading
+  // "ink" name or an honest muted tint — see inkPair() in token-describe.mjs.
+  const rungsOf = new Map();
+  for (const name of Object.keys(paletteScopes[id])) {
+    const p = parseTokenName(name);
+    if (!p?.surface || !p.role || !p.emphasis) continue;
+    const key = `${p.surface}-${p.role}`;
+    if (!rungsOf.has(key)) rungsOf.set(key, new Set());
+    rungsOf.get(key).add(p.emphasis);
+  }
+  for (const name of Object.keys(paletteScopes[id])) {
+    const p = parseTokenName(name);
+    const pair = inkPair(name, { rungs: [...(rungsOf.get(`${p?.surface}-${p?.role}`) ?? [])] });
+    if (!pair) continue;
+    const r = contrastRatio(paletteScopes[id][name], paletteScopes[id][pair.fill]);
+    if (r == null) continue;
+    const entry = (inkContrast[name] ??= {
+      fill: pair.fill,
+      min: pair.minRatio,
+      /**
+       * True only where the `-weak` name genuinely reads backwards: the token is
+       * the ink PAINTED ON its own fill (a button/badge label), not a muted tint
+       * of the hue. False for neutral/inverse/disabled, where `-weak` means what
+       * it says.
+       */
+      misleadingName: pair.misleadingName,
+      byScope: {},
+    });
+    entry.byScope[id] = { ratio: Number(r.toFixed(2)), passes: r >= pair.minRatio };
+  }
+}
+
+const palette = scopeIds.length
+  ? {
+      available: true,
+      source: 'libs/al-web-components/styles/dist-v5/css/brand/tokens-<brand>-<mode>.css',
+      descriptionBrand: DESCRIPTION_BRAND,
+      scopes: scopeIds,
+      values: paletteScopes,
+      /**
+       * Emphasis ladders where two rungs resolve to the SAME value — i.e. the
+       * ladder advertises a distinction the palette does not make. A fact about
+       * the token set, deliberately REPORTED and not fixed here.
+       */
+      collapsedLadders,
+      inkContrast,
+    }
+  : {
+      available: false,
+      reason:
+        'libs/al-web-components/styles/dist-v5/css/brand/ is absent (it is a gitignored build artifact), ' +
+        `so no per-mode values, descriptions, ladder or contrast facts could be derived. Run: ${BUILD_TOKENS_HINT}`,
+      hint: BUILD_TOKENS_HINT,
+    };
+
 const digest = {
   source: 'libs/al-web-components/styles/dist/tokens.json',
   total: keys.length,
@@ -135,7 +348,29 @@ const digest = {
     backgroundColorSuffixesByRole: roleMatrix('al-theme-color-background-'),
     borderColorSuffixesByRole: roleMatrix('al-theme-color-border-'),
     notExistDoNotInvent,
+    /**
+     * The emphasis ladder, and the warning that it is not always a ladder.
+     *
+     * Both strings are assembled from the measured `palette` block below, so
+     * neither can claim a step count or a collapse the emitted CSS does not
+     * show.
+     */
+    emphasisLadder:
+      'weakest → strongest: faint → weak → default → strong → bold. NOT every role ships every rung, ' +
+      'and NOT every rung that ships resolves to a different value — see palette.collapsedLadders, ' +
+      'which lists every ladder where two steps are the same colour in a given brand+mode.',
+    inkNamingWarning:
+      'content.<role>-weak is the INK PAINTED ON background.<role>-default (button labels, badge labels; ' +
+      '26 call sites), NOT a muted tint of the hue. Use it as a foreground for its own fill, never as ' +
+      'body text. palette.inkContrast carries the measured ratio for every such pair.',
+    descriptions:
+      'Every token in `groups` carries a `description` DERIVED at build time by ' +
+      'scripts/lib/token-describe.mjs — surface, role, emphasis step, the value it resolves to in each ' +
+      `mode (for the "${DESCRIPTION_BRAND}" brand), any rung it collapses onto, and the measured contrast ` +
+      'pair where one exists. Nothing here is hand-written prose, so nothing here can go stale ' +
+      'independently of the token it describes.',
   },
+  palette,
   groups,
 };
 
@@ -153,6 +388,25 @@ if (existsNow.length) {
     `[tokens-digest] dropped ${existsNow.length} stale "does not exist" claim(s) — ` +
       `these token(s) DO exist now:${EOL}${bullets}`
   );
+}
+
+if (!palette.available) {
+  // A NAMED miss, not a silent skip: the digest is still written and still
+  // useful, but a consumer must be able to tell "no descriptions were derived"
+  // from "these tokens have no description".
+  console.warn(`[tokens-digest] ${palette.reason}`);
+} else {
+  const described = Object.keys(descriptions).length;
+  const collapsedTotal = scopeIds.reduce((n, id) => n + collapsedLadders[id].length, 0);
+  console.log(
+    `Derived ${described} descriptions from ${scopeIds.length} brand+mode bundles ` +
+      `(${scopeIds.join(', ')}); ${collapsedTotal} collapsed emphasis ladder(s) across them:`
+  );
+  for (const id of scopeIds) {
+    const c = collapsedLadders[id];
+    const collisions = c.reduce((n, l) => n + l.collisions.length, 0);
+    console.log(`  ${id}: ${c.length} ladder(s), ${collisions} colliding step group(s)`);
+  }
 }
 
 console.log(`Wrote ${keys.length} tokens across ${Object.keys(groups).length} families`);

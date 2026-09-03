@@ -14,7 +14,8 @@ own build already produced, or shells out to an existing script:
 | `altitude_list_components` | `libs/al-web-components/custom-elements.json` (CEM) + `.altitude/migration.json` + `dist/docs[/<project>]/guidance.json` |
 | `altitude_get_component` | CEM + `libs/al-web-components/schemas/*.schema.json` + migration state + `*.stories.ts` `title:` + `dist/docs[/<project>]/examples.json` (executed stories) + `dist/docs[/<project>]/guidance.json` + `libs/al-react/src/components/**` (wrapper + event props) + `.altitude/a11y/report.json` + the component contract |
 | `altitude_validate` | shells to `libs/al-web-components/cli/validate.mjs --json` |
-| `altitude_get_tokens` | `libs/al-web-components/dist/css/{tokens,aliases}.json` + `styles/tokens-dtcg/**` (for `cssType`, the `cssProperties` allow-list and each token's description) |
+| `altitude_get_tokens` | `libs/al-web-components/dist/css/{tokens,aliases}.json` + `styles/tokens-dtcg/**` (for `cssType` and the `cssProperties` allow-list) + `.altitude/ai-readiness/tokens-digest.json` (for each token's derived `description`) |
+| `altitude_resolve_token` | `.altitude/ai-readiness/tokens-digest.json` — its `palette` block, which `scripts/ai-readiness/build-tokens-digest.mjs` derives from the emitted `styles/dist-v5/css/brand/tokens-<brand>-<mode>.css` bundles via `scripts/lib/token-describe.mjs` |
 | `altitude_search_icons` | `libs/al-web-components/components/icon/catalog.ts` |
 | `altitude_generate_theme` | `libs/al-web-components/dist/theme-engine/index.js` (built barrel; falls back to `theme-engine/` TS source) |
 | `altitude_check_parity` | `.altitude/ds-projects.json` + the project's parity manifest (`.altitude/figma-sync/**/parity-manifest.json`) + live source hashing |
@@ -137,7 +138,7 @@ always to set `repoRoot` / `ALTITUDE_REPO_ROOT` to a real Altitude checkout (or 
 the same generated artifacts) before registering, not to change the tools.
 
 **Subset filter.** `registerAltitudeTools` (and therefore `buildServer`) accepts `include` /
-`exclude` to register fewer than all eight tools:
+`exclude` to register fewer than all nine tools:
 
 ```js
 registerAltitudeTools(server, { include: ['altitude_list_components', 'altitude_get_component'] });
@@ -239,7 +240,7 @@ check (not wired into any automated gate — it needs `pnpm dlx`, a real port, a
 2. Decide the actual public origin policy — rate limiting, WAF rules, geographic restrictions —
    all Cloudflare dashboard features, none configurable from a checkout.
 3. Decide whether `altitude-hosted`'s two-tool/five-resource subset is worth publishing at all
-   given it is materially smaller than the loopback server's eight tools, or whether the tools
+   given it is materially smaller than the loopback server's nine tools, or whether the tools
    left out (see table above) are worth the larger, genuinely harder port before shipping.
 4. Actually deploy, and confirm the live URL the same way `check-llms-content-type.mjs` verified
    the docs site's machine artifacts against a real branch preview rather than trusting local output.

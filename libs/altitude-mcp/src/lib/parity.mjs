@@ -37,7 +37,7 @@
 // the scripts/figma-parity CLIs. Keep it dependency-free (node: builtins only).
 
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync, renameSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, mkdirSync, renameSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 import { WC_ROOT, REPO_ROOT } from './paths.mjs';
@@ -394,12 +394,42 @@ function readCanvasContract(p, tag) {
  *
  * @returns {null|{disagreements: Array, compared: object, skipped: Array}}
  */
+/**
+ * `<figma-sync dir>/canvas-projection.json` — the TRACKED projection of those
+ * dumps (scripts/figma-parity/build-canvas-projection.mjs). Read ONCE per
+ * project and cached by path+mtime: computeParity() walks ~105 components and
+ * this file is ~100KB, so a per-component read would be 105 of them; keying on
+ * mtime means a regeneration under a long-running MCP server invalidates the
+ * cache instead of serving yesterday's facts forever.
+ */
+const projectionCache = new Map();
+function readCanvasProjection(p) {
+  const path = join(p.resolved.figmaSyncDir, 'canvas-projection.json');
+  if (!existsSync(path)) return null;
+  const key = `${path}::${statSync(path).mtimeMs}`;
+  if (projectionCache.has(key)) return projectionCache.get(key);
+  let doc = null;
+  try {
+    doc = JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    doc = null;
+  }
+  projectionCache.set(key, doc);
+  return doc;
+}
+
 function canvasContractDiffFor(p, tag) {
-  const canvasContract = readCanvasContract(p, tag);
-  if (!canvasContract) return null; // the fast path this whole layer must not slow down
   const codeContract = readCodeContract(p, tag);
   if (!codeContract) return null; // contract not emitted yet — nothing to diff against
-  return diffContracts({ codeContract, canvasContract });
+  const canvasContract = readCanvasContract(p, tag);
+  // FALLBACK, not a substitute: the canvas dumps are gitignored, so in CI and on
+  // the deployed docs site there are none and this layer compared zero pairs —
+  // which rendered identically to "zero disagreements". The projection carries
+  // the same facts (verified: 36 pairs, 259 disagreements, byte-identical), and
+  // every consumer is told which source it got.
+  const canvasProjection = canvasContract ? null : readCanvasProjection(p);
+  if (!canvasContract && !canvasProjection?.components?.[tag]) return null;
+  return diffContracts({ codeContract, canvasContract, canvasProjection });
 }
 
 // ── status computation ──────────────────────────────────────────────────
@@ -690,7 +720,17 @@ export function computeParity(project) {
       ...(canvasDiff
         ? {
             disagreements: canvasDiff.disagreements,
-            canvasContractDiff: { compared: canvasDiff.compared, skipped: canvasDiff.skipped },
+            canvasContractDiff: {
+              compared: canvasDiff.compared,
+              skipped: canvasDiff.skipped,
+              /** 'live-dump' | 'projection'. A projected comparison is a
+               * point-in-time read of a file nobody opened during this run — a
+               * consumer that renders the two identically is lying about how
+               * fresh its facts are. */
+              source: canvasDiff.source,
+              ...(canvasDiff.sourceStamp ? { sourceStamp: canvasDiff.sourceStamp } : {}),
+            },
+            disagreementSource: canvasDiff.source,
           }
         : {}),
       /** OPTIONAL — present only when `mark-synced.mjs` stamped a contract
@@ -794,6 +834,14 @@ export function computeParity(project) {
   const disagreementSummary = {
     pairsCompared: withDisagreements.length,
     pairsClean: withDisagreements.filter((e) => e.disagreements.length === 0).length,
+    /** Where each compared pair's facts came from. A run that compared 36
+     * pairs from the tracked projection is a different claim from one that
+     * read 36 live canvas dumps, and must not report as the same thing. */
+    bySource: withDisagreements.reduce((acc, e) => {
+      const src = e.disagreementSource ?? 'live-dump';
+      acc[src] = (acc[src] ?? 0) + 1;
+      return acc;
+    }, {}),
     total: withDisagreements.reduce((n, e) => n + e.disagreements.length, 0),
     byKind: withDisagreements.reduce((acc, e) => {
       for (const d of e.disagreements) {
@@ -1079,6 +1127,9 @@ export function publicParityReport(project) {
        * Figma file key, node id or script path — safe for the public site;
        * apps/docs/scripts/check-status-panels.mjs still re-checks the built
        * output for those leaks regardless. */
+      /** 'live-dump' | 'projection' | null — see canvasContractDiffFor(). A
+       * hash-free provenance label; no file key, node id or path. */
+      disagreementSource: c.disagreementSource ?? null,
       disagreements: c.disagreements
         ? c.disagreements.map((d) => ({
             dimension: d.dimension,

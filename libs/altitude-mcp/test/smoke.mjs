@@ -12,15 +12,15 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SERVER_PATH = join(HERE, '..', 'src', 'server.mjs');
 
-// Must stay in lockstep with every server.registerTool() call in
-// ../src/server.mjs — the LENGTH is asserted against listTools() below, so
-// registering a ninth tool without adding a smoke case here fails CI rather
-// than shipping an untested tool.
+// Must stay in lockstep with every tool in ../src/lib/tools.mjs — the LENGTH is
+// asserted against listTools() below, so registering a tenth tool without
+// adding a smoke case here fails CI rather than shipping an untested tool.
 const EXPECTED_TOOLS = [
   'altitude_list_components',
   'altitude_get_component',
   'altitude_validate',
   'altitude_get_tokens',
+  'altitude_resolve_token',
   'altitude_search_icons',
   'altitude_generate_theme',
   'altitude_check_parity',
@@ -231,6 +231,25 @@ async function main() {
       radius?.cssProperties?.includes('border-radius'),
       'the allow-list names the concrete CSS property the token may set'
     );
+    /*
+     * Not one token in styles/tokens-dtcg/** carries a DTCG `$description`, so
+     * a `description` here can only be the DERIVED sentence (token-describe.mjs
+     * -> the AI-readiness digest). `descriptionsNote` is the named degradation
+     * for a checkout with no digest — exactly one of the two must be present,
+     * which is what makes "no description" distinguishable from "nothing built".
+     */
+    const described = data.tokens.filter((t) => t.description);
+    ok(
+      described.length > 0 || typeof data.descriptionsNote === 'string',
+      'tokens carry a derived description, or descriptionsNote says why none could be'
+    );
+    if (described.length > 0) {
+      ok(data.descriptionsNote === null, 'descriptionsNote is null when descriptions ARE available');
+      ok(
+        described.some((t) => /resolves to/.test(t.description)),
+        'the derived description states the value the token resolves to (it cannot go stale against the build)'
+      );
+    }
   }
 
   // altitude + southleft are the only brands the repo ships — see
@@ -256,6 +275,81 @@ async function main() {
       rejected = true;
     }
     ok(rejected, 'brand enum rejects a brand the repo no longer ships');
+  }
+
+  /*
+   * altitude_resolve_token — intent -> exactly one token.
+   *
+   * The assertions below are about the ONE behaviour that makes this tool worth
+   * having over `altitude_get_tokens`'s substring filter: the emphasis ladder is
+   * not monotonic (35 collapses across the four emitted brand+mode bundles), so
+   * "one step stronger" is NOT "the next word in the list". A regression that
+   * re-implemented this as a naive index+1 would still return a token, still
+   * return a plausible name, and be silently wrong — so the tests check that a
+   * collapsed rung is SAID OUT LOUD, not merely that a name came back.
+   */
+  console.log('\naltitude_resolve_token({ surface: "background", role: "neutral", emphasis: "stronger" })');
+  {
+    const res = await client.callTool({
+      name: 'altitude_resolve_token',
+      arguments: { surface: 'background', role: 'neutral', emphasis: 'stronger' },
+    });
+    const data = parseToolJson(res);
+    ok(typeof data.token === 'string' && data.token.startsWith('al-theme-color-background-neutral-'), `one token returned (${data.token})`);
+    ok(data.cssVar === `var(--${data.token})`, 'the ready-to-paste custom property is included');
+    ok(!!data.values?.light && !!data.values?.dark, 'resolved value in BOTH modes, not just the default build');
+    ok(typeof data.reason === 'string' && data.reason.length > 0, 'the choice carries a reason');
+    ok(Array.isArray(data.nearMisses) && data.nearMisses.length > 0, 'the tokens it beat are named');
+    ok(data.nearMisses.every((n) => n.token !== data.token), 'no near miss is the recommendation itself');
+    // background.neutral in LIGHT is weak=#f1f0ea, default=#ffffff,
+    // strong=#f1f0ea — weak and strong are the same colour. The tool must say so.
+    ok(
+      data.ladder?.collapsed?.some((c) => c.mode === 'light' && c.steps.includes('weak') && c.steps.includes('strong')),
+      'the non-monotonic ladder is reported, not silently papered over',
+    );
+  }
+
+  console.log('\naltitude_resolve_token({ surface: "fill", role: "error", state: "hover" }) — aliases + state');
+  {
+    const res = await client.callTool({
+      name: 'altitude_resolve_token',
+      arguments: { surface: 'fill', role: 'error', state: 'hover', property: 'background-color' },
+    });
+    const data = parseToolJson(res);
+    // "fill" -> background and "error" -> danger are INTENT aliases; hover is
+    // one rung up, which is what button.scss actually paints.
+    ok(data.token === 'al-theme-color-background-danger-strong', `alias + state resolved to ${data.token}`);
+    ok(data.propertyCheck?.inAllowList === true, 'the CSS property was checked against the token allow-list');
+  }
+
+  console.log('\naltitude_resolve_token({ report: true }) — the collapsed-ladder report');
+  {
+    const res = await client.callTool({ name: 'altitude_resolve_token', arguments: { report: true } });
+    const data = parseToolJson(res);
+    ok(data.totals?.collapsedLadders > 0, `collapsed ladders counted (${data.totals?.collapsedLadders})`);
+    ok(Array.isArray(data.scopes) && data.scopes.length > 0, `reported per brand+mode scope (${data.scopes?.join(', ')})`);
+    ok(
+      data.scopes.every((id) => typeof data.byScope?.[id]?.collapsedLadders === 'number'),
+      'every scope carries its own count — the report is per mode, not aggregated away',
+    );
+  }
+
+  console.log('\naltitude_resolve_token({ surface: "background", role: "nope" }) — an unknown role');
+  {
+    const res = await client.callTool({
+      name: 'altitude_resolve_token',
+      arguments: { surface: 'background', role: 'nope' },
+    });
+    const data = parseToolJson(res);
+    ok(data.code === 'ERR_UNKNOWN_TOKEN_ROLE', 'unknown role returns a structured, stable code');
+    ok(Array.isArray(data.knownRoles) && data.knownRoles.includes('neutral'), 'the error names the roles that DO exist');
+  }
+
+  console.log('\naltitude_resolve_token({}) — an incomplete intent');
+  {
+    const res = await client.callTool({ name: 'altitude_resolve_token', arguments: {} });
+    const data = parseToolJson(res);
+    ok(data.code === 'ERR_INCOMPLETE_TOKEN_INTENT', 'a missing role/surface is named, not guessed at');
   }
 
   console.log('\naltitude_search_icons({ query: "trash" })');

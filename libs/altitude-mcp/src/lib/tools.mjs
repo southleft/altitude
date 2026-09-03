@@ -4,7 +4,8 @@
 // `{ name, config, handler }`, registered in a loop by
 // `registerAltitudeTools()` in `../index.mjs`. This file used to be eight
 // inline `server.registerTool(...)` calls in `../server.mjs`; the names, input
-// schemas and error codes are unchanged from that version.
+// schemas and error codes are unchanged from that version. A ninth tool,
+// `altitude_resolve_token`, was added on 2026-09-03.
 //
 // EVERY `description` STRING IS WRITTEN FOR THE AGENT THAT READS IT, not for
 // whoever maintains this file. They used to open with Figma contract vocabulary
@@ -23,6 +24,7 @@ import { loadSchema } from './schemas.mjs';
 import { getStoryInfo } from './stories.mjs';
 import { validate } from './validate.mjs';
 import { queryTokensDetailed } from './token-detail.mjs';
+import { resolveTokenIntent, collapsedLadderReport } from './token-resolve.mjs';
 import { searchIcons } from './icons.mjs';
 import { generateTheme } from './theme.mjs';
 import { computeParity, STATUS } from './parity.mjs';
@@ -93,7 +95,7 @@ export function toolHandler(fn) {
   };
 }
 
-/** The eight tools this server registers — `{ name, config, handler }`, one per entry. */
+/** The nine tools this server registers — `{ name, config, handler }`, one per entry. */
 export const TOOLS = [
   // ── altitude_list_components ────────────────────────────────────────────
   {
@@ -280,7 +282,12 @@ export const TOOLS = [
         '`cssProperties`, the allow-list of concrete properties it may set. Use those, not `type`: the ' +
         'DTCG `type` is deliberately coarse and collapses sizing, spacing, radius, border width, font ' +
         'size and line height all into "dimension", so it cannot tell you what a token is FOR. ' +
-        '`description` explains the token\'s role where one is authored. ' +
+        '`description` is derived, not authored: one sentence stating the surface and role the token is ' +
+        'for, its emphasis step, what it resolves to in each mode, any neighbouring step it resolves to ' +
+        'the SAME value as, and the measured contrast pair where one exists — so it cannot go stale ' +
+        'against the build. If you know what you need but not which token it is, call ' +
+        'altitude_resolve_token instead: this tool is a substring filter and will not choose between ' +
+        'weak, default, strong and bold for you. ' +
         'With no filters you get the resolved default build (altitude brand, light mode). Add `tier` ' +
         '(1|2|3), `brand` or `mode` to query the source tree instead and see raw plus resolved values per ' +
         'brand/mode — a token\'s custom-property NAME never changes across those, only its value. `name` ' +
@@ -301,6 +308,96 @@ export const TOOLS = [
       },
     },
     handler: toolHandler((args) => queryTokensDetailed(args)),
+  },
+
+  // ── altitude_resolve_token ───────────────────────────────────────────────
+  //
+  // The intent vocabulary, the ladder walk and the collapse facts all live in
+  // ./token-resolve.mjs; this entry is registration and schema only. Two things
+  // about the SCHEMA are deliberate: `role`/`surface`/`emphasis` are `z.string()`
+  // and not enums, because the valid values are DERIVED from the emitted token
+  // set at call time (an enum baked here would be a hardcoded token list that
+  // goes stale the next time a role ships), and a wrong value comes back as a
+  // structured error carrying the real list rather than as a protocol rejection
+  // the agent cannot read.
+  {
+    name: 'altitude_resolve_token',
+    config: {
+      title: 'Resolve an intent to one Altitude token',
+      description:
+        'Describe the colour you need and get back exactly ONE token name — not a list to guess from. ' +
+        'Say what it paints (`surface`: background, content, border), what it means (`role`: neutral, ' +
+        'primary, danger, success, warning, info …), and how loud it should be (`emphasis`: a step like ' +
+        '"weak"/"strong", or a direction like "stronger"/"weaker"/"strongest"). Add `state` (hover, ' +
+        'active, selected, disabled) to move along the ladder the way the components do, `property` to ' +
+        'have the CSS property you are setting checked against the token\'s allow-list, and `mode` to ' +
+        'ask about one mode instead of both. ' +
+        'The answer carries the resolved value in each mode, the reason that token won, and the near ' +
+        'misses it beat — so the choice is checkable rather than trusted. ' +
+        'This exists because the emphasis ladder does not always step: in the light bundle ' +
+        'background-neutral-weak and background-neutral-strong are THE SAME colour, and there are 35 ' +
+        'such collapses across the four brand+mode bundles. Asking for "stronger" walks past a rung ' +
+        'that would have rendered an identical pixel and tells you it did. ' +
+        'Pass `report: true` with no other argument to list every collapsed ladder, per brand and mode.',
+      inputSchema: {
+        role: z
+          .string()
+          .optional()
+          .describe(
+            'What the colour MEANS: neutral, primary, secondary, tertiary, info, success, warning, ' +
+            'danger, inverse, disabled. Common synonyms are accepted (error -> danger, accent -> ' +
+            'primary, grey -> neutral). Required unless `report` is true.',
+          ),
+        surface: z
+          .string()
+          .optional()
+          .describe(
+            'What the colour PAINTS: "background" (a fill), "content" (text/icon ink), "border" (a ' +
+            'stroke), "shadow". Synonyms accepted (fill, text, ink, stroke, outline, divider). Required ' +
+            'unless `report` is true.',
+          ),
+        emphasis: z
+          .string()
+          .optional()
+          .describe(
+            'Either a rung — faint, weak, default, strong, bold — or a DIRECTION to walk from the ' +
+            'default: stronger, weaker, strongest, weakest (softer/louder/subtler also work). A ' +
+            'direction is the safer ask: it steps over rungs that resolve to the same value.',
+          ),
+        state: z
+          .string()
+          .optional()
+          .describe(
+            'Interaction state, applied as movement along the ladder the way the components paint it ' +
+            '(hover = one rung up, active/pressed = two, selected = one, focus/rest = none). ' +
+            '"disabled" selects the tree\'s own disabled role instead.',
+          ),
+        property: z
+          .string()
+          .optional()
+          .describe(
+            'The CSS property this token will set, e.g. "background-color". Checked against the ' +
+            'token\'s derived cssProperties allow-list, and flagged when it contradicts `surface`.',
+          ),
+        mode: z.enum(['light', 'dark']).optional().describe('Ask about one mode. Omit to require a token that works in both.'),
+        brand: z.string().optional().describe('Brand to resolve against. Omit for the default identity.'),
+        report: z
+          .boolean()
+          .optional()
+          .describe('Return the collapsed-emphasis-ladder report instead of resolving a token. Narrowable by `brand`/`mode`.'),
+      },
+    },
+    handler: toolHandler((args) => {
+      if (args?.report) return collapsedLadderReport({ brand: args.brand, mode: args.mode });
+      if (!args?.role || !args?.surface) {
+        return {
+          error: 'Both `role` and `surface` are required (or pass `report: true` for the collapsed-ladder report).',
+          code: 'ERR_INCOMPLETE_TOKEN_INTENT',
+          hint: 'e.g. { surface: "background", role: "neutral", emphasis: "stronger" }',
+        };
+      }
+      return resolveTokenIntent(args);
+    }),
   },
 
   // ── altitude_search_icons ────────────────────────────────────────────────

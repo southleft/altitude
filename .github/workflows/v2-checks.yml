@@ -208,6 +208,17 @@ jobs:
       # Documented slots/parts must actually be rendered.
       - name: Documented slots and parts exist
         run: pnpm run gate:cem-render
+      # Words an agent must read before it can act — pinned, ratcheted both ways.
+      - name: Context budget
+        run: pnpm run check:context-budget
+      # Two skill traps are recorded as `gated` on this script; that is a lie if
+      # nothing runs it.
+      - name: Figma generators parse
+        run: pnpm run check:figma-parse
+      # The tracked canvas projection must match the dumps. In CI there are none,
+      # so it degrades to the repoint check and says so.
+      - name: Canvas projection matches its dumps
+        run: pnpm run parity:projection:check
 
   baselines-vrt:
     # No component count in the name: components.vrt.spec.ts derives its list

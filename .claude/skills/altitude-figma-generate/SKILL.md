@@ -92,17 +92,12 @@ This is the whole mapping. Anything not in this table does not reach Figma at al
 | `layoutSizingHorizontal` / `layoutSizingVertical` | **hardcoded `'FIXED'`**, nested instances only | Stops instances stretching. `'FILL'` is never set on component anatomy. |
 | `counterAxisAlignContent`, `clipsContent`, `layoutAlign`, `layoutGrow`, absolute positioning | **unmapped** | No contract fact backs them. Don't hand-add them to a generated set; it will be wiped on the next run. |
 
-### The display→axis rule (trap 24, generalised — fixed 2026-08-27)
+### The display→axis rule (canonical statement; altitude-figma-sync#24 is its superseded first draft)
 
 `layout.direction` is `flex-direction`, and **`getComputedStyle` returns its initial
-value `'row'` on every non-flex element.** 432 of the 433 non-flex anatomy nodes in
-the contract set therefore carry a meaningless `direction: 'row'`. Reading it without
-gating on `display` is what laid al-tabs' tablist and its panel side by side (557x40
-against a real 291x79) — recorded as trap 24 in `altitude-figma-sync`.
-
-That trap was fixed on the variant ROOT only. The same bug was live on every
-composite's inner frames until 2026-08-27: **327 nodes across 53 of 103 components**
-were emitting HORIZONTAL for block-level containers. `layoutAxisFor()` now maps:
+value `'row'` on every non-flex element** — 432 of the 433 non-flex anatomy nodes in the
+contract set carry a meaningless `direction: 'row'`. **Never read `direction` without
+gating on `display`.** `layoutAxisFor()` maps:
 
 - `flex` / `inline-flex` → `direction === 'column' ? VERTICAL : HORIZONTAL` (the only
   case where `direction` may be read)
@@ -115,30 +110,19 @@ were emitting HORIZONTAL for block-level containers. `layoutAxisFor()` now maps:
 It has none. Nothing in `buildAnatomyChildren` assigns x/y to a walked child, and
 `resize()` is never called on a component, so a NONE node keeps `createFrame`/
 `createComponent`'s untouched 100x100 default while its content spills outside its own
-bounds. An axis is always the right answer; hug sizing is what gives it a real size.
-
-This applies to the variant ROOT as well — measured live on al-table (root
-`display: block`) before the fix:
-
-```
-COMPONENT "State=Default, …"   layoutMode NONE   100x100
-  └─ FRAME "al-c-table__scroll"   x0 y0   243x100      <- 143px outside the component
-```
-
-and that run reported `maxVariantWidth/Height: 100` — the number the presentation frame
-lays itself out against. After: `VERTICAL`, `AUTO/AUTO`, 243x100,
-no overflow on any of the 12 components, `maxVariant` 301x162.
+bounds — and the run then reports `maxVariantWidth/Height: 100`, the number the
+presentation frame lays itself out against. An axis is always the right answer; hug
+sizing is what gives it a real size. This applies to the variant ROOT as well.
 
 `primaryAxisSizingMode`/`counterAxisSizingMode` and the padding/gap binds therefore run
 for EVERY root, not just flex ones. Only `counterAxisAlignItems`/`primaryAxisAlignItems`
 stay flex-gated, because `align`/`justify` are flexbox properties that carry meaningless
 initial values (`normal`) on a non-flex box.
 
-### Hug vs fill — SOLVED as measured facts + a cascade (2026-08-28)
+### Hug vs fill — measured facts plus a cascade
 
-Hug (`'AUTO'` both axes) is still the DEFAULT, but the generator now emits
-`layoutSizing* = 'FILL'` wherever a measured fact backs it (commit 82579fe + spec
-2026-08-28-layout-fill-and-grow-facts). The rules, all in `buildAnatomyChildren`:
+Hug (`'AUTO'` both axes) is the DEFAULT; the generator emits `layoutSizing* = 'FILL'`
+wherever a measured fact backs it. The rules, all in `buildAnatomyChildren`:
 
 - **`grow`** (measured `flex-grow`, nulled at 0) → FILL along the PARENT's main axis.
 - **Cross-axis stretch cascade**: a child fills a VERTICAL parent's width when the
@@ -152,10 +136,8 @@ Hug (`'AUTO'` both axes) is still the DEFAULT, but the generator now emits
 - **Nested INSTANCES** follow the same grow/stretch rules (previously always natural
   size), and a text-bearing instance that still overflows its measured box gets the
   REWRAP treatment: fonts loaded, inner TEXT `textAutoResize='HEIGHT'` + FILL, then
-  the instance resized to its measured `box.w`. Verified on the Southleft hero —
-  the Display Lg headline renders 1160x220 wrapped, byte-matching the browser
-  measurement. (Instance inner TEXT nodes ARE writable once fonts are loaded —
-  unlike nested-instance geometry.)
+  the instance resized to its measured `box.w`. (Instance inner TEXT nodes ARE writable
+  once fonts are loaded — unlike nested-instance geometry.)
 
 **Known remaining gap: grids.** `display:grid` maps to HORIZONTAL+WRAP, which has no
 track widths, so the fill cascade CANNOT propagate through a grid container (e.g.
@@ -221,30 +203,20 @@ node scripts/contracts/generate-figma.mjs --component al-X --check-determinism
 node scripts/figma-atoms/export-png.mjs <frameId> out.png --scale 1.5
 ```
 
-**Steps 3 and 4 are now ENFORCED, not advisory (2026-08-31).** They used to be
-prose an agent could skip, and one did:
+**Steps 3 and 4 are ENFORCED, not advisory:**
 
-- **A degraded run now EXITS NON-ZERO.** Any `missingVars` entry other than the
-  documented `nested-set-not-found:al-layout` fails the run. `--allow-degraded`
-  accepts it deliberately. Previously a degraded run printed its misses and
-  exited 0 — which is exactly how a session shipped al-input-stepper with
-  `phosphor-component-not-found:minus/plus`, read green as success, and reported
-  the set as "needs two icons" when it in fact rendered with its two nested
-  buttons overlapping into illegible text.
-- **Every run exports a verification PNG** to `<sync>/generated-shots/<tag>.png`
-  and prints the path. The screenshot is now a byproduct of generating, not a
-  discipline to remember.
+- **A degraded run EXITS NON-ZERO.** Any `missingVars` entry other than the documented
+  `nested-set-not-found:al-layout` fails the run; `--allow-degraded` accepts it
+  deliberately.
+- **Every run exports a verification PNG** to `<sync>/generated-shots/<tag>.png` and
+  prints the path — a byproduct of generating, not a discipline to remember.
 
-**LOOK AT THE PNG. A structure dump is not a screenshot.** The stepper regression
-above was invisible in the node tree — the tree was fully populated and correctly
-nested; only the render showed the overlap. Reading `missingVars` and dumping the
-anatomy are both necessary and neither is sufficient.
-
-Read `missingVars` in every run's output — the generator degrades honestly and
-reports every miss; an empty array is the goal, and `nested-set-not-found:al-layout`
-is expected noise (arrangement primitive, no set of its own, by design — but see
-"How `al-layout` pairs with auto layout" below: expected means don't build a set for
-it, NOT ignore its arrangement).
+**LOOK AT THE PNG. A structure dump is not a screenshot.** A fully populated, correctly
+nested node tree can still render as overlapping, illegible text; only the image shows it.
+Reading `missingVars` and dumping the anatomy are both necessary and neither is sufficient.
+An empty `missingVars` is the goal; `nested-set-not-found:al-layout` is expected noise
+(arrangement primitive, no set of its own, by design — expected means don't build a set
+for it, NOT ignore its arrangement; see "How `al-layout` pairs with auto layout").
 
 ## Owner conventions (decided during the walkthrough — do not re-litigate)
 
@@ -271,11 +243,9 @@ axes.
 and-generation): `bindings.figma.axis: true` on a prop / `figmaAxis: true` on a
 `before`/`after` slot (in the contract; schema in `contract.schema.json`) fans that
 boolean out as its own True/False VARIANT axis, cartesian with every other axis.
-Curate it ONLY for a component whose real set demonstrably fans it out. History:
-T22/T23 curated al-button into axis mode (200→100-variant pilot) reasoning from a
-Propstar screenshot that turned out to show a DOCUMENTATION artifact, not the real
-set's variant structure — T31 corrected this and removed the curation. See
-`.altitude/contracts/README.md` § Fan-out convention for the full history.
+Curate it ONLY for a component whose real set demonstrably fans it out — and read the
+real set, not a documentation artifact of it (that mistake is what T31 had to undo on
+al-button). See `.altitude/contracts/README.md` § Fan-out convention for the history.
 
 **Omit is the inverse curation** (T27): `bindings.figma.omit: true` (props) /
 `figmaOmit: true` (slots) means the generator builds NOTHING for it — no axis, no
@@ -288,16 +258,13 @@ exposing it is flagged `present-despite-omission`.
 
 ## Icon source is the Phosphor library, not "🛠 Icons" (T28)
 
-Slot-icon instances resolve from the Phosphor Figma library —
+Slot-icon instances resolve from the Phosphor Figma library via
 `findPhosphorComponentByName` in `conventions.mjs` (which also records the T29
-wrong-library incident) — never a lookup against the `🛠 Icons` page (that page is
-the HAND-BUILT sets' convention, and stays live as the DS "Icon" wrapper host and
-the bootstrap-scan target). The plugin API has no team-library enumeration, so
-resolution is a live scan for an existing REMOTE instance with a matching name
-(trap 8: a new glyph needs a human to bootstrap one instance first); a miss degrades
-to "no icon instance," logged, never a silent fallback to the old page. See
-`.altitude/contracts/README.md` § Phosphor icon source for the full mechanism and
-its confirmed environment limits.
+wrong-library incident) — **never** a lookup against the `🛠 Icons` page, which is the
+HAND-BUILT sets' convention and stays live as the DS "Icon" wrapper host and the
+bootstrap-scan target. A miss degrades to "no icon instance," logged, never a silent
+fallback to the old page. Resolution mechanism and its environment limits: trap 8 below,
+and `.altitude/contracts/README.md` § Phosphor icon source.
 
 ## figma.gen.json — every key (all optional; cite sources in `$comment`)
 
@@ -312,60 +279,58 @@ its confirmed environment limits.
 | `fullWidthProp` | Name of the boolean layout prop rendered as "natural hug width plus `fullWidthExtraPx`" (default `"fullWidth"`). Set it when a component's full-width prop has a different name. Moot for a prop curated `figma.omit` (al-button). |
 | `iconSizeVar` / `fullWidthExtraPx` / `enumProp` | Pilot-era knobs — see component-config.mjs header for each. (A `sheet` key was retired 2026-08-29 with the prop sheet; `component-config.mjs` warns and ignores it. Delete it if you find one.) |
 
-## Hard-won traps (every one was actually hit)
+## Hard-won traps
 
-1. **The shim dies silently** when the figma-console MCP server reconnects — runs then
-   print "Cannot reach the figma-console shim" (or a batch silently no-ops if you
-   grep'd for success lines). Probe `curl -s -X POST localhost:9401/call -d
-   '{"name":"figma_get_status","arguments":{}}'` before batches; restart freely.
-2. **A re-run mints a new set node id.** Anything pointing at the old one — a pinned
-   `bindings.figma.nodeId`, a nested instance in another component's set, variants the
-   owner expanded by hand with Propstar — is orphaned. `pnpm run parity:refresh` after
-   every regeneration, and prefer `altitude-figma-repair` when only one fact is wrong.
-3. **Backticks inside `String.raw` plugin-code templates** (even in comments)
-   terminate the template — a SyntaxError pointing at an innocent identifier. Use
-   quotes in comments inside `build-*-code.mjs`.
-4. **Browser shorthand splitting**: a measured case may carry `border-top-color` and
-   no `border-color` (Checkbox's unchecked box was invisible). The generator falls
-   back to `border-top-*`; remember it when reading contracts.
-5. **sr-only pattern**: a ~1×1 measured box clipping full-size content (hidden
-   labels). The walk skips any ≤2px-box subtree — that's why Hidden rows have no label.
-6. **`figma.createNodeFromSvg` wrapper carries its own fill** — recoloring without
-   `sv.fills = []` first buries the mark under a solid square.
-7. **Property wiring must not cross instance boundaries or literals**: findOwnNode
-   skips nested-instance interiors, and text nodes named `Literal: …` are never wired
-   to the Text property (wiring one replaces its characters with the default).
-8. **Phosphor glyphs resolve ONLY from existing in-file instances** (no team-library
-   enumeration; REST needs a token; import-by-key hangs ~30s). A new glyph needs a
-   human to bootstrap ONE instance on 🛠 Icons — then the scan finds it in ms.
-   **Update 2026-08-31 — LOCALIZED SET.** The owner localized Phosphor into the
-   file: ~1500 plain local COMPONENTs under one GROUP named
-   `Phosphor Icons — Local` (`PHOSPHOR_LOCAL_GROUP_NAME` in `conventions.mjs`).
-   Those are not remote instances, so the original scan could not see them, and
-   they carry no Format × Weight axes, so `isVerifiedPhosphorIconSet()` cannot
-   vouch for them either — the GROUP NAME is the positive, allowlist-shaped guard
-   instead. `findPhosphorComponentByName` now falls back to a flat pass over that
-   group's direct children. Bootstrapping single instances is no longer needed for
-   any glyph the localized set contains.
-   Also worth knowing: an INSTANCE_SWAP's `preferredValues` names ONE glyph's
-   component set (its variants are Format × Weight), NOT a catalogue — it is not
-   a route to enumerating available glyphs.
-9. **Variant color inheritance**: case trees are measured on ONE variant; a node whose
-   color merely equals the case root's follows the ROW's variant delta (Chip's danger
-   label). A genuinely different own color is kept.
-10. **`background` vs `background-color`**: SCSS deltas use the shorthand; ops
-    normalizes to `background-color` — without it every variant renders the default
-    fill (the original "Badge is completely off").
-11. **Measured 0×0 box = invisible in this case** (resting ripple) — skipped, not a bug.
-12. **Doc header collapses below ~1220px width** (fixed 1440 master) — width is
-    clamped; don't "fix" narrow-table headers by editing the master.
-13. **Text Block ↔ "Text Passage"**: the manifest says Text Block, the live set/page
-    say Text Passage — resolve the rename before generating that one.
-14. **Icon-only forms need a measured case** — Button (Icon)/hideText has none, so it
-    has no generated counterpart yet; add a measurement case, don't hand-fake it.
-15. **Case-axis "State" dims with a leading space** (`', State=Disabled'` in Checkbox's
-    matrix) are harness quirks — they map to no prop and stay un-fanned; Error/Disabled
-    attribute cases are future case-axes, not interaction states.
+One rule each. Dated incident narrative for every trap below lives in
+`.altitude/ai-readiness/trap-index.json` (`provenance`), with its lifecycle
+(`open` / `evaluated` / `gated`) — read that, not this file, when you want the story.
+
+1. **Probe the shim before any batch; restart it freely.** It dies silently when the
+   figma-console MCP server reconnects, and a batch then no-ops with no error line:
+   `curl -s -X POST localhost:9401/call -d '{"name":"figma_get_status","arguments":{}}'`.
+2. **`pnpm run parity:refresh` after every regeneration** — a re-run mints a new set node
+   id and orphans every pinned `bindings.figma.nodeId`, every nested instance in another
+   component's set, and any variants the owner expanded by hand with Propstar. When only
+   one fact is wrong, use `altitude-figma-repair` instead.
+3. **No backticks inside `String.raw` plugin-code templates, comments included** — one
+   terminates the template and the SyntaxError points at an innocent identifier. Use
+   quotes in comments in `build-*-code.mjs`, and run
+   `node scripts/contracts/figma/check-parse.mjs` after touching any generator file.
+4. **Fall back to `border-top-*` when a measured case has no `border-color`.** The browser
+   splits the shorthand, so the longhand may be the only thing recorded.
+5. **Skip any subtree measuring ≤2px** — that is sr-only content clipping full-size text
+   (canonical: altitude-figma-sync#23). It is why Hidden rows carry no label.
+6. **Set `sv.fills = []` before recoloring a `figma.createNodeFromSvg` wrapper** — the
+   wrapper carries its own fill and buries the mark under a solid square.
+7. **Never wire a Text property across an instance boundary or onto a `Literal: …` node.**
+   `findOwnNode` skips nested-instance interiors; wiring a literal replaces its characters
+   with the property default.
+8. **Phosphor glyphs resolve by a live in-file scan, never by enumeration.** There is no
+   team-library listing; REST needs a token and import-by-key hangs ~30s. Two sources, both
+   handled by `findPhosphorComponentByName` (`conventions.mjs`): existing REMOTE instances,
+   and the owner's localized set — ~1500 plain local COMPONENTs under one GROUP named
+   `Phosphor Icons — Local` (`PHOSPHOR_LOCAL_GROUP_NAME`). The localized components carry no
+   Format × Weight axes, so `isVerifiedPhosphorIconSet()` cannot vouch for them; the GROUP
+   NAME is the positive, allowlist-shaped guard instead. A glyph in neither source still
+   needs a human to bootstrap ONE instance on 🛠 Icons. An INSTANCE_SWAP's `preferredValues`
+   names ONE glyph's component set (Format × Weight), not a catalogue — it is not a route to
+   enumerating glyphs.
+9. **A node whose colour merely equals the case root's follows the ROW's variant delta.**
+   Case trees are measured on one variant; a genuinely different own colour is kept.
+10. **Normalize `background` to `background-color` in ops** — SCSS deltas use the
+    shorthand, and without the normalization every variant renders the default fill.
+    (The probe list must ALSO read the shorthand: altitude-figma-sync#14.)
+11. **A measured 0×0 box means invisible in that case** (resting ripple) — skipped, not
+    a bug.
+12. **Never widen the doc header master.** It is a fixed 1440 whose width is clamped; it
+    collapses below ~1220px, and a narrow table is not a reason to edit it.
+13. **Resolve the Text Block ↔ "Text Passage" rename before generating that component** —
+    the manifest and the live set/page disagree.
+14. **Add a measurement case; never hand-fake anatomy.** Icon-only forms
+    (Button (Icon)/hideText) have none, which is why they have no generated counterpart.
+15. **A case-axis dim with a leading space (`', State=Disabled'`) is a harness quirk** —
+    it maps to no prop and stays un-fanned. Error/Disabled attribute cases are future
+    case-axes, not interaction states.
 
 ## Verification gates (all must stay green after contract-affecting changes)
 

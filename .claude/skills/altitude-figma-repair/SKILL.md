@@ -101,20 +101,17 @@ prop; no contract field carries that today.
 
 ## Hard-won traps
 
-Every one of these was hit and diagnosed on 2026-08-27. They are ordered by how much time
-they cost.
+One rule each. Dated incident narrative for every trap below lives in
+`.altitude/ai-readiness/trap-index.json` (`provenance`), with its lifecycle
+(`open` / `evaluated` / `gated`) — read that, not this file, when you want the story.
 
 ### 1. A pinned node id keeps resolving AFTER the node is deleted
 
 `figma.getNodeByIdAsync('3435:877')` happily returns a detached `COMPONENT_SET` whose
-parent chain reaches **no PAGE**. `node.removed` is `false`. So "it resolved" is not proof
-it is in the document.
-
-Found live: **11 of 20 pinned ids in the parity manifest were ghosts** (the owner had
-rebuilt those pages). `extract-canvas.mjs` resolved the ghost first and extracted from it,
-so the tooling reported a *deleted* set as in-sync, and reported the OLD set's axes while
-the live set had different ones. Two tools disagreed about the same component because one
-resolved by id and the other by name.
+parent chain reaches **no PAGE**, with `node.removed === false`. "It resolved" is not
+proof it is in the document, and a ghost extracts cleanly — reporting a *deleted* set as
+in-sync, with the OLD set's axes. **If two tools report different axes for one component,
+suspect this first**: one resolves by id, the other by name.
 
 Always liveness-check:
 
@@ -127,11 +124,12 @@ function isLive(n) {
 }
 ```
 
-Fixed in `extract-canvas.mjs` (2026-08-27). `refresh-figma-digests.mjs` was never affected —
-it scans `🛠` pages by name and so cannot see a ghost. **If two tools report different axes
-for one component, suspect this first.**
+Fixed in `extract-canvas.mjs`. `refresh-figma-digests.mjs` was never affected — it scans
+`🛠` pages by name and so cannot see a ghost.
 
 ### 2. Opacity is a PERCENTAGE, and a value comparison PASSES when the canvas is broken
+
+Canonical statement of the opacity unit convention; altitude-figma-sync#5 cites this one.
 
 A variable bound to a node's `opacity` is resolved in the unit the UI shows (percent) and
 divided by 100 — even though the field itself is 0–1.
@@ -141,11 +139,10 @@ divided by 100 — even though the field itself is 0–1.
 | `0.4` (matches the code token) | `0.004` — invisible |
 | `40` | `0.4` — correct |
 
-This trap has now flipped the repo's own docs **twice**, because the obvious verification
-is the wrong one: comparing the stored number to the code token (`0.4 === 0.4`) *succeeds*
-exactly when every disabled state in the library is silently broken. **The only valid check
-is to bind it and read back `node.opacity`.** See `.altitude/FIGMA-SYNC.md` § "Opacity is a
-PERCENTAGE on the Figma side".
+**The only valid check is to bind it and read back `node.opacity`.** The obvious
+verification is the wrong one: comparing the stored number to the code token
+(`0.4 === 0.4`) *succeeds* exactly when every disabled state in the library is silently
+broken. See `.altitude/FIGMA-SYNC.md` § "Opacity is a PERCENTAGE on the Figma side".
 
 Generalisation: before trusting any audit that compares Figma values to code values, ask
 whether that field has a *unit convention*. Value equality is not the same as correctness.
@@ -165,34 +162,29 @@ touching anything else.
 
 ### 4. An unbound fill that happens to be the right colour is still broken
 
-A hand-picked colour can match its token exactly and still be wrong, because it does not
-follow mode/brand switches. `al-field-note`'s three variants had *visually correct*
-hardcoded fills and **zero** bound variables. Check `fills[0].boundVariables.color`, never
-just the RGB.
+**Check `fills[0].boundVariables.color`, never just the RGB.** A hand-picked colour can
+match its token exactly and still be wrong, because it does not follow mode/brand switches.
 
-When you bind, pass the variable's **own resolved RGBA** as the literal —
-`setBoundVariableForPaint` keeps whatever literal you hand it as the fallback and Figma does
-not always refresh it (sync skill, trap 4). Resolve aliases yourself; a Tier-2 variable is
-usually an alias chain down to Tier 1.
+When you bind, pass the variable's **own resolved RGBA** as the literal — resolve the alias
+chain yourself, since a Tier-2 variable usually aliases down to Tier 1. Why the literal
+you pass matters at all: `altitude-figma-sync` § 4, plugin-API trap 4.
 
 ### 5. Recolour must not be gated behind glyph resolution
 
-In `build-set-code.mjs` the nested-icon branch did the `swapComponent` **and** the recolour
-inside one `if (glyphName && nestedGlyphByName[glyphName])`. When the Phosphor glyph failed
-to resolve, the wrapper instance was still placed — keeping its cached default glyph
-(`PaperPlaneTilt`) and a hardcoded **white** fill. Presents as "the chip's close icon is the
-wrong colour"; the actual cause is a *missing icon*, two steps upstream.
-
-Placement, glyph swap, and recolour are three independent steps. A failure in one must not
-skip the others.
+**Placement, glyph swap, and recolour are three independent steps; a failure in one must
+not skip the others.** When they shared one `if (glyphName && nestedGlyphByName[glyphName])`
+in `build-set-code.mjs`, a failed Phosphor lookup still placed the wrapper instance — with
+its cached default glyph and a hardcoded white fill. Presents as "the chip's close icon is
+the wrong colour"; the actual cause is a *missing icon*, two steps upstream.
 
 ### 6. Phosphor glyphs resolve only from a VERIFIED in-file component SET
 
 `isVerifiedPhosphorIconSet()` requires the owning node to be a `COMPONENT_SET` whose variant
-properties match a known-genuine Phosphor icon. A **lone `COMPONENT`** named `X` sitting on
-a scratch page does *not* qualify, so the lookup misses even though something called `X` is
-right there. A new glyph needs a human to bootstrap one real instance (generate skill,
-trap 8). Check `misses` / `missingVars` — the generator degrades honestly and names it.
+properties match a known-genuine Phosphor icon. A **lone `COMPONENT`** named `X` on a
+scratch page does *not* qualify, so the lookup misses even though something called `X` is
+right there. Check `misses` / `missingVars` — the generator degrades honestly and names it.
+The other resolution route, and when a human must bootstrap an instance: canonical:
+altitude-figma-generate#8.
 
 ### 7. A Phosphor glyph ships a FULL-BLEED bounding vector — never paint it
 
@@ -211,20 +203,18 @@ for (const v of glyph.findAll(n => n.type === 'VECTOR')) {
 }
 ```
 
-This is why neither of the two obvious strategies works alone, and why the generate skill's
-trap 6 (wrapper carries its own fill) and its `recolorIconChildren` note (do NOT recolor the
-instance root, because CheckCircle-style icons go solid) look contradictory: some Phosphor
-icons carry the paint on the instance, some on the vectors, and some ship a bounding vector.
-Size-filtering the vectors is the rule that holds for all three.
+Size-filtering the vectors is the one rule that holds for all three Phosphor shapes — paint
+on the instance, paint on the vectors, and a bounding vector — which is why
+altitude-figma-generate#6 (wrapper carries its own fill) and its `recolorIconChildren` note
+(do NOT recolor the instance root, or CheckCircle-style icons go solid) only look
+contradictory.
 
 ### 8. `addComponentProperty(name, 'INSTANCE_SWAP', …)` wants a NODE ID, not a key
 
 `defaultValue` for an INSTANCE_SWAP property is the default component's **node id**
-(`'3509:4324'`). Passing `component.key` — the obvious guess, and what every other
-key-taking API in the plugin surface wants — fails with the unhelpful
-`in addComponentProperty: Property value is incompatible with component property type`,
-which reads like a TYPE error, not an id-vs-key error. Confirmed against the live Button
-set, whose `Icon Before` / `Icon After` both store `defaultValue: "3509:4324"`.
+(`'3509:4324'`), not `component.key` — the obvious guess, and what every other key-taking
+API in the plugin surface wants. The key fails with `in addComponentProperty: Property
+value is incompatible with component property type`, which reads like a TYPE error.
 
 Related: `importComponentByKeyAsync` only accepts a **COMPONENT** key, never a
 COMPONENT_SET key. To reach a glyph inside a remote icon SET, take the key off a live
@@ -236,32 +226,23 @@ duplicate you created.
 
 ### 9. `--refresh` materialises half-landed changes into a gate failure
 
-`emit-contracts.mjs` emitted a new `layout.wrap` anatomy fact that
-`contract.schema.json` had never been taught to allow. Nothing failed while the contracts on
-disk predated the change; the first `--refresh` wrote `wrap` into 7 contracts and
-`--check` went red. `--check-drift` stayed **green** throughout, because disk and derivation
-agreed — they were just both invalid.
-
-So: after any `--refresh`, run `--check` (schema) too, and if it fails on a field you did
-not touch, check whether the emitter grew a fact the schema lacks. Complete the landing;
-do not revert the contracts.
+**After any `--refresh`, run `--check` (schema) too.** `--check-drift` cannot catch a
+half-landed emitter change: when `emit-contracts.mjs` grew a `layout.wrap` fact the schema
+did not allow, drift stayed **green** because disk and derivation agreed — they were just
+both invalid, and only the first `--refresh` (which wrote `wrap` into 7 contracts) turned
+`--check` red. If `--check` fails on a field you did not touch, the emitter grew a fact the
+schema lacks: complete the landing, do not revert the contracts.
 
 ### 10. Two sets on one page can share a NAME — and the tools then disagree
 
-Eight `🛠` pages carried the owner's hand-built reference set AND the generated set,
-**both named e.g. `List Item`**. `refresh-figma-digests.mjs` scans by name and takes the
-first; `extract-canvas.mjs` resolves by pinned id. So the manifest described the
-REFERENCE set while the generated artifacts described the GENERATED one, and the two never
-agreed. (The artifact that exposed this at the time was the prop sheet, retired 2026-08-29;
-the name collision it exposed is still live.)
-
-The generated sets were also the broken ones: `al-list-item`'s had **zero padding** and
-**unbound pure-black text** (invisible in dark mode), plus only 3 of 6 states.
+`refresh-figma-digests.mjs` scans by name and takes the first; `extract-canvas.mjs`
+resolves by pinned id. When a `🛠` page carries both the owner's hand-built reference set
+and the generated set under the SAME name, the manifest describes one and the generated
+artifacts describe the other, permanently.
 
 Fix both halves: rename the reference set to `"<Name> (reference)"` so by-name resolution
-is unambiguous (it then shows up in the manifest's `figmaOnly` list, which is correct —
-it is reference material with no code component), and pin the manifest at the maintained
-set. 14 more pages still have this collision as of 2026-08-27.
+is unambiguous (it then correctly shows up in the manifest's `figmaOnly` list — reference
+material with no code component), and pin the manifest at the maintained set.
 
 ### 11. The contract can UNDER- and OVER-state the variant matrix
 
@@ -274,58 +255,35 @@ Both directions are live:
   `Shape=Bar × Size=Lg|Md|Xl` are not real (`circleSize` only applies when `isCircle`),
   so 6 phantom variants had to be pruned.
 
-Consequence, while the prop sheet existed: regenerating the grid from the contract's ops
-dropped the states you had just restored and failed on the phantoms you had just pruned
-(`setProperties: Unable to find a variant with those property values`).
-
-**The prop sheet is gone** (retired 2026-08-29, owner direction): a component page is now
-ONE frame — the doc header above the real COMPONENT_SET — and the variant break-out grid
-is not generated at all. Expand variants by hand with Propstar when a page wants them.
-`generate-figma.mjs --sheet` exits 2 with a message saying so, and
-`rebuild-sheet-from-set.mjs` was deleted with it. So there is no sheet to re-sync after a
-repair; that whole step is gone.
-
-The trap that survives the sheet is the **contract** half above: after restoring a state
-or pruning a phantom, re-run `emit-contracts.mjs --check-drift` and re-read what the
-contract now claims the matrix is. A repaired canvas and a stale contract disagree exactly
-as loudly as the old sheet did.
+**After restoring a state or pruning a phantom, re-run `emit-contracts.mjs --check-drift`
+and re-read what the contract now claims the matrix is.** A repaired canvas and a stale
+contract disagree loudly. (The prop sheet that used to make this worse is gone —
+`generate-figma.mjs --sheet` exits 2 — so there is no sheet to re-sync after a repair.)
 
 ### 12. A `width: 100%` component measures ZERO WIDE
 
-`al-progress`'s bar is `width: 100%` (progress.scss:15,26) inside an unconstrained
-harness, so its track measured `{w: 0, h: 4}` and generation produced an **empty 100×100
-frame** — `createFrame`'s default, with no children at all. The circle (intrinsic size)
-generated fine.
+`width: 100%` / `flex: 1` in an unconstrained harness measures `{w: 0, …}`, and generation
+then produces an **empty 100×100 frame** — `createFrame`'s default, no children at all
+(al-progress's bar; its intrinsically-sized circle generated fine).
 
-Any `width: 100%` / `flex: 1` component hits this. The durable fix is a harness width in
-the measurement pass; the repair is to build that node by hand at a representative width
-with the contract's own token bindings (`--al-theme-color-background-neutral-strong` for
-the track, `--al-theme-color-content-primary-default` for the fill). Do not "fix" it by
-deleting the node — an invisible component reads as a generator bug forever.
+The durable fix is a harness width in the measurement pass. The repair is to build that
+node by hand at a representative width using the contract's own token bindings. **Do not
+"fix" it by deleting the node** — an invisible component reads as a generator bug forever.
 
 ### 13. "The Figma set has no padding" is usually a MEASUREMENT bug, not a Figma bug
 
-Before repairing padding on the canvas, check whether the contract carries it at all.
+**When a generated set is missing a visual property, diff the CONTRACT against the SCSS
+*before* touching Figma.** A canvas repair is wiped by the next generation; a fix in the
+probe list corrects every component at once.
 
 `measure-lib.js` recovers tokens by reading the **authored declaration** off each matching
-CSS rule — so its `PROPS` list must contain the exact property name the SCSS wrote. Until
-2026-08-27 it listed only the PHYSICAL longhands (`padding-top/right/bottom/left`), while
-**27 components author LOGICAL properties** (`padding-block-start`, `padding-inline-start`,
-…) — 64 declarations in total. Every one of those tokens was invisible to the contract, so
-those components generated into Figma with **no padding at all**.
-
-`al-list-item` was the proof: `list-item.scss:43-46` sets
-`padding-block-start: var(--al-list-item-link-padding-block-start, var(--al-theme-space-xs))`,
-and its contract's link node bound `font`, `letter-spacing`, `width` — and nothing else.
-The canvas was faithfully reproducing an empty fact.
-
-Fixed by adding the logical names to `PROPS` and folding them onto the physical sides in
-`expand()` (LTR: `inline-start` → left). **The same class of bug is still open for `<th>`
-padding and for `calc()` values** — see the spec's follow-up tasks.
-
-The general lesson: when a generated set is missing a visual property, diff the CONTRACT
-against the SCSS *before* touching Figma. A repair applied on the canvas is wiped by the
-next generation; a fix in the probe list corrects every component at once.
+CSS rule, so its `PROPS` list must contain the exact property name the SCSS wrote. It once
+listed only the PHYSICAL longhands while 27 components authored LOGICAL ones
+(`padding-block-start`, `padding-inline-start`, …) — 64 declarations invisible to the
+contract, so those components generated with no padding at all. Fixed by adding the logical
+names to `PROPS` and folding them onto the physical sides in `expand()` (LTR:
+`inline-start` → left). **The same class of bug is still open for `<th>` padding and for
+`calc()` values.**
 
 ### 14. Do not hand-edit a derived field to "record" a change
 

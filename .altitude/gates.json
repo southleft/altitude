@@ -399,6 +399,21 @@
       "group": "release"
     },
     {
+      "id": "check:context-budget",
+      "npmScript": "check:context-budget",
+      "command": "pnpm run check:context-budget",
+      "purpose": "Words an agent must read before it can act, pinned and ratcheted both ways. Today: always-loaded 2694; the Figma-generate read path 15,515, of which AGENTS.md is over half.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails"
+    },
+    {
       "id": "check:contract-docs",
       "npmScript": "check:contract-docs",
       "command": "pnpm run check:contract-docs",
@@ -526,6 +541,21 @@
       "ciVia": null,
       "tier": "live",
       "group": "figma"
+    },
+    {
+      "id": "check:figma-parse",
+      "npmScript": "check:figma-parse",
+      "command": "pnpm run check:figma-parse",
+      "purpose": "Parses every Figma generator file. Backticks inside String.raw comments broke build-set-code.mjs three times in one day, and two skill traps are now recorded as gated on this script.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails"
     },
     {
       "id": "check:jsdoc",
@@ -1330,6 +1360,21 @@
       "ciVia": null,
       "tier": "live",
       "group": "figma"
+    },
+    {
+      "id": "parity:projection:check",
+      "npmScript": "parity:projection:check",
+      "command": "pnpm run parity:projection:check",
+      "purpose": "The tracked canvas projection must match the dumps on disk. Degrades to a repoint check, announced, when there are no dumps — which is the CI case.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "none"
+      ],
+      "blocking": true,
+      "ci": "G2/G8 gate self-test",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "guardrails"
     },
     {
       "id": "parity:tokens-drift",
