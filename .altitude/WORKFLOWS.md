@@ -9,6 +9,26 @@ name looks stale, since this doc drifts the moment a script is renamed.
 This is about the code and its build/test/publish pipeline, not how work is
 planned. See `CLAUDE.md` / `.claude/CLAUDE.md` for that.
 
+## The one command
+
+```bash
+pnpm verify            # fast tier — no build needed
+pnpm verify:build      # + everything that needs a built library
+pnpm verify:live       # + Figma shim / network
+pnpm run gates:list    # what exists, and what each gate needs
+```
+
+Driven by [`gates.json`](./gates.json) — 89 gates with their prerequisites,
+tier, blocking flag and CI job. Skipped gates are **named**, never folded into
+the pass count. [`GATES.md`](./GATES.md) explains the model; `gates:check-ci`
+fails when the manifest and the workflow disagree either way.
+
+Two gates worth knowing about because they change how this document ages:
+`check:doc-anchors` fails CI when any backticked path, script or flag in a
+Markdown file stops resolving, and `gates:check-ci` fails when a CI job is
+renamed without updating the manifest. The warning at the top of this page
+about drift is now partly enforced rather than merely hoped for.
+
 ## Two first-class entry points before you touch anything
 
 - **The `altitude` MCP server** (`libs/altitude-mcp/`, 8 tools —

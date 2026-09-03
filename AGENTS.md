@@ -119,6 +119,29 @@ non-negotiables that came out of the v2 session:
 
 ## How to verify your change
 
+**Start here — one command:**
+
+```bash
+pnpm verify          # every gate whose prerequisites are already met
+pnpm verify:build    # adds the ones that need a built library
+pnpm verify:live     # adds the ones needing a Figma shim or the network
+```
+
+`pnpm verify` reads [`.altitude/gates.json`](./.altitude/gates.json), the
+declarative inventory of every gate in the repo — purpose, prerequisites, tier,
+whether it blocks, and which CI job runs it. It **names every gate it skipped
+and why**, and counts skips separately from passes: a gate that did not run must
+never read as a gate that passed. `pnpm run gates:check-ci` keeps that inventory
+and `.github/workflows/v2-checks.yml` in agreement in both directions, so
+renaming a CI job means updating the manifest.
+
+Read [`.altitude/GATES.md`](./.altitude/GATES.md) before adding a gate.
+
+The hand-written sequence below is the older, manual form. It is still correct
+and still useful when you want to run one stage in isolation — but it is a
+subset, and it has gone stale before, so prefer `pnpm verify` for the question
+"is this ready?".
+
 ```bash
 # Whole-pipeline smoke test:
 pnpm --filter @southleft/al-web-components build:tokens                # Style Dictionary v5 (the only token pipeline)
