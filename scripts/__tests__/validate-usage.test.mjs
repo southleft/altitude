@@ -263,6 +263,22 @@ pair('WARN_A11Y_NAME',
   const jsx = 'import { ALButton } from "@southleft/al-react";\nexport const X = () => <ALButton hideText label={t("close")} />;\n';
   const dyn = run(jsx, { ext: 'jsx' });
   assert('a dynamically bound label satisfies the obligation', !has(dyn, 'WARN_A11Y_NAME'), seen(dyn));
+
+  /*
+   * DEFAULT-SLOT TEXT IS A NAME. `hideText` renders `al-u-is-vishidden` on the text
+   * span - visually hidden, still in the accessibility tree - so a button whose only
+   * naming is that text IS named. The rule used to ignore content entirely and fire on
+   * attributes alone, which contradicted the guidance it cites and misfired on three
+   * real story usages (drawer's "Toggle Drawer", popover's "Menu" twice). The fixture
+   * cli/__fixtures__/bad.html had already written the expectation down - its
+   * `hideText="true" ... Fine` case sits under "valid usages below - must NOT be
+   * flagged" - and was being violated.
+   */
+  const slotNamed = run('<al-button hideText variant="bare">Toggle drawer<al-icon-menu slot="before"></al-icon-menu></al-button>');
+  assert('default-slot text names the button (it is visually hidden, not removed)', !has(slotNamed, 'WARN_A11Y_NAME'), seen(slotNamed));
+
+  const slottedOnly = run('<al-button hideText variant="bare"><al-icon-bell slot="after"></al-icon-bell></al-button>');
+  assert('...but a SLOTTED child alone does not - that names another region', has(slottedOnly, 'WARN_A11Y_NAME'), seen(slottedOnly));
 }
 
 // ── 9. exit codes — a warning must not fail a build unless --strict ─────────────────────────

@@ -642,12 +642,40 @@ function validateSource(filePath, text, ctx, sink) {
     // ── WARN_A11Y_NAME (component guidance) ──────────────────────────────────────────────────
     // Evidence: apps/docs/src/content/guidance/button.yaml — "With `hideText` set and no `label`,
     // the button ships with no accessible name at all." Deliberately a SMALL, cited rule set.
+    //
+    // DEFAULT-SLOT TEXT COUNTS AS A NAME. `hideText` puts `al-u-is-vishidden` on the text span
+    // (button.ts, the `al-c-button__text` branch) — VISUALLY hidden, clipped to 1px, still in the
+    // accessibility tree. The guidance says so in as many words ("the text node is only visually
+    // hidden — it stays in the layout and in the accessibility tree"), and this rule used to
+    // contradict it, asserting the button "has no name at all" whenever the naming ATTRIBUTES were
+    // absent. Measured 2026-09-03: that misfired on three story usages that name themselves exactly
+    // this way (drawer's "Toggle Drawer", popover's "Menu" twice) while the eight real defects in
+    // the example apps carry only a slotted icon and no default-slot text at all.
+    //
+    // So: look past the tag at what the element actually contains. Children carrying `slot=` name
+    // some other region and are dropped whole; whatever text is left is the default slot, which is
+    // what the hidden span renders.
     if (spec.tag === 'al-button' && seen.has('hidetext')) {
       const hide = seen.get('hidetext');
       const hidden = hide.kind === 'boolean' || hide.dynamic || hide.kind === 'dynamic' || String(hide.value).toLowerCase() !== 'false';
       const named = ['label', 'aria-label', 'aria-labelledby'].some((k) => seen.has(k));
+      let slotText = '';
       if (hidden && !named) {
-        push('a11y-name', `<${r.display}> sets hideText but supplies no accessible name — the visible text is hidden, so the button has no name at all`);
+        const rest = text.slice(re.lastIndex);
+        const close = rest.search(new RegExp(`</${m[1]}\s*>`, 'i'));
+        const innerRaw = close === -1 ? '' : rest.slice(0, close);
+        slotText = innerRaw
+          // a slotted child names another region — drop it and everything inside it
+          .replace(/<([A-Za-z][\w.-]*)([^>]*slot\s*=[^>]*)>[\s\S]*?<\/\s*>/gi, '')
+          .replace(/<[A-Za-z][\w.-]*[^>]*slot\s*=[^>]*\/>/gi, '')
+          .replace(/<[^>]*>/g, ' ')
+          // an interpolated expression is a name we cannot read but must not call absent
+          .replace(/\$\{[^}]*\}/g, 'x')
+          .replace(/\{[^}]*\}/g, 'x')
+          .trim();
+      }
+      if (hidden && !named && !slotText) {
+        push('a11y-name', `<${r.display}> sets hideText and has neither a label nor any default-slot text — nothing names it, so a screen reader announces only "button"`);
       }
     }
 

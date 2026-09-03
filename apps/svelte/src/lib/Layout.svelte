@@ -89,7 +89,7 @@
             <al-card variant="bare" layout="inline">
               <al-avatar slot="image">TP</al-avatar>
               <p>TJ Pitre</p>
-              <al-button slot="actions-end" variant="bare" hideText={true}><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
+              <al-button slot="actions-end" variant="bare" hideText={true} label="Account menu"><al-icon-chevron-up slot="before"></al-icon-chevron-up></al-button>
             </al-card>
           </div>
           <al-menu>
@@ -116,7 +116,7 @@
         <al-layout direction="row" align="center" gap="sm">
         <al-theme-switcher></al-theme-switcher>
         <al-drawer alignment="right" hasBackdrop={true} width="400">
-          <al-button slot="trigger" hideText={true} variant="bare"><al-badge variant="danger" slot="after" isDot={true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
+          <al-button slot="trigger" hideText={true} variant="bare" label="Notifications"><al-badge variant="danger" slot="after" isDot={true} class="al-l-dashboard__notifications-badge"></al-badge><al-icon-bell slot="after"></al-icon-bell></al-button>
           <al-heading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</al-heading>
           <al-layout direction="column" gap="sm">
             <al-card variant="bare" layout="inline">
