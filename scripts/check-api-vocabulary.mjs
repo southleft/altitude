@@ -158,15 +158,31 @@ function walk(dir, test, acc = []) {
  * reported as a named skip, never silently dropped.
  */
 export function propertiesFromSources(componentsDir) {
-  const found = new Map(); // relative-ish module path -> Set(prop names)
+  const found = new Map(); // relative-ish module path -> Set(attribute-backed prop names)
+  const propertyOnly = new Map(); // same key -> Set(names declared `attribute: false`)
   for (const file of walk(componentsDir, (n) => n.endsWith('.ts') && !n.endsWith('.d.ts'))) {
     const src = readFileSync(file, 'utf8');
     const names = new Set();
-    const re = /@property\s*\([^)]*\)\s*(?:\r?\n\s*)*accessor\s+([A-Za-z_$][\w$]*)/g;
+    const noAttr = new Set();
+    const re = /@property\s*\(([^)]*)\)\s*(?:\r?\n\s*)*accessor\s+([A-Za-z_$][\w$]*)/g;
     let m;
-    while ((m = re.exec(src)) !== null) names.add(m[1]);
-    if (names.size) found.set(file.replace(/\\/g, '/'), names);
+    while ((m = re.exec(src)) !== null) {
+      const opts = m[1] || '';
+      const name = m[2];
+      // `@property({ attribute: false })` declares a JS property with NO
+      // attribute. It is real public API, but it carries no attribute name for
+      // an ATTRIBUTE-vocabulary gate to judge, and it correctly never appears
+      // in the manifest's attribute list. Counting it as manifest staleness
+      // sent the reader off to regenerate a generated artifact that was
+      // already right — all 9 hits were false alarms.
+      if (/attribute\s*:\s*false/.test(opts)) noAttr.add(name);
+      else names.add(name);
+    }
+    const key = file.replace(/\\/g, '/');
+    if (names.size) found.set(key, names);
+    if (noAttr.size) propertyOnly.set(key, noAttr);
   }
+  found.propertyOnly = propertyOnly;
   return found;
 }
 
@@ -323,6 +339,11 @@ for (const row of rows) {
   cemPropsByModule.get(row.declaredOn).add(row.prop);
 }
 const staleness = [];
+const propertyOnly = [];
+for (const [file, names] of sourceProps.propertyOnly ?? new Map()) {
+  const rel = file.slice(file.indexOf('libs/al-web-components/') + 'libs/al-web-components/'.length);
+  for (const name of names) propertyOnly.push({ module: rel, prop: name });
+}
 for (const [file, names] of sourceProps) {
   const rel = file.slice(file.indexOf('libs/al-web-components/') + 'libs/al-web-components/'.length);
   const known = cemPropsByModule.get(rel);
@@ -468,6 +489,7 @@ const report = {
   })),
   unanalysable,
   staleness,
+  propertyOnly,
   staleExceptions,
   manifestSkips: skips,
 };
@@ -499,6 +521,12 @@ if (staleness.length && !options.json) {
   console.log(`\n  SKIPPED — ${staleness.length} @property declaration(s) present in source but absent from the manifest`);
   console.log('           (custom-elements.json is a committed generated artifact — regenerate it):');
   for (const s of staleness) console.log(`      ${s.module} .${s.prop}`);
+}
+if (propertyOnly.length && !options.json) {
+  console.log(`\n  OUT OF SCOPE — ${propertyOnly.length} @property({ attribute: false }) declaration(s):`);
+  console.log('           real public API, but property-only, so there is no attribute name for');
+  console.log('           this gate to judge. Not staleness — nothing to regenerate.');
+  for (const s of propertyOnly) console.log(`      ${s.module} .${s.prop}`);
 }
 if (skips.length && !options.json) {
   console.log(`\n  SKIPPED — ${skips.length} manifest entr(ies) that could not be attributed to an element:`);
