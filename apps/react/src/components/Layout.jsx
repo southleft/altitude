@@ -60,7 +60,7 @@ export default function Dashboard() {
                     <ALCard variant="bare" layout="inline">
                       <ALAvatar slot="image">TP</ALAvatar>
                       <p>TJ Pitre</p>
-                      <ALButton slot="actions-end" variant="bare" hideText={true}><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
+                      <ALButton slot="actions-end" variant="bare" hideText={true} label="Account menu"><ALIconChevronUp slot="before"></ALIconChevronUp></ALButton>
                     </ALCard>
                   </div>
                   <ALMenu>
@@ -87,7 +87,7 @@ export default function Dashboard() {
               <ALLayout direction="row" align="center" gap="sm">
                 <ALThemeSwitcher></ALThemeSwitcher>
                 <ALDrawer alignment="right" hasBackdrop={true} width="400">
-                  <ALButton slot="trigger" hideText={true} variant="bare"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
+                  <ALButton slot="trigger" hideText={true} variant="bare" label="Notifications"><ALBadge variant="danger" slot="after" isDot={true} className="al-l-dashboard__notifications-badge"></ALBadge><ALIconBell slot="after"></ALIconBell></ALButton>
                   <ALHeading slot="header" tagName="h3" variant="sm" isBold={true}>Notifications</ALHeading>
                   <ALLayout direction="column" gap="sm">
                     <ALCard variant="bare" layout="inline">
