@@ -516,15 +516,14 @@
       "purpose": "The library conventions an agent is told to apply BY HAND (Title Case axis names/values, the State axis vocabulary, set name vs manifest), linted OFFLINE over the extracted canvas contracts.",
       "purposeSource": "package.json-comment",
       "needs": [
-        "install",
-        "canvas"
+        "none"
       ],
       "blocking": true,
-      "ci": null,
+      "ci": "G2/G8 gate self-test",
       "ciVia": null,
-      "tier": "live",
+      "tier": "fast",
       "group": "figma",
-      "note": "STILL NOT IN CI, and the two defects it first found were not the blocker: canvas contracts are gitignored and absent on a clone, so it would fail every CI run on principle. It prints the oldest extraction timestamp on every run - read that line before believing a violation."
+      "note": "Was local-only because it read the gitignored canvas dumps and exited 1 on a runner telling you to extract them. It now falls back to the tracked canvas projection, so it runs in CI and prints which source it used."
     },
     {
       "id": "check:figma-conventions:sl",
