@@ -832,7 +832,13 @@ if (!JSON_OUT && !QUIET) {
   }
   if (staleAllowlist.length) {
     console.log(`STALE ALLOWLIST (${staleAllowlist.length}) — these matched nothing; delete them`);
-    for (const s of staleAllowlist) console.log(`  ${s}`);
+    // Print the ENTRY, not the object. This said "[object Object]" until
+    // 2026-09-03, which made a CI failure unactionable: the gate knew exactly
+    // which exception had gone stale and would not say.
+    for (const s of staleAllowlist) {
+      console.log(`  ${s.anchor ?? s.pattern}${s.files ? `  (files: ${s.files})` : ''}`);
+      if (s.reason) console.log(`      reason on file: ${s.reason.slice(0, 120)}`);
+    }
     console.log('');
   }
 }
