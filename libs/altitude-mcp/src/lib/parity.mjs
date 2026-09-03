@@ -427,16 +427,59 @@ export function figmaNodeUrl(nodeId, project) {
  *            figmaObserved:boolean, codeDrift:boolean, figmaDrift:boolean,
  *            contractMismatches:number}}
  */
-export function assessEntry(entry, current) {
-  const observed = entry?.figmaCurrentDigest ?? null;
-  const figmaObserved = observed !== null;
+export function assessEntry(entry, current, context = {}) {
   const last = entry?.lastSync ?? {};
 
+  /**
+   * WHICH FILE WAS THIS OBSERVED AGAINST? Digests and node ids are FILE-SCOPED
+   * (see .altitude/DS-PROJECTS.md, "Why instanceMap may be null"), so an
+   * observation made against one Figma file says nothing about another. On
+   * 2026-09-02 the southleft manifest was repointed to a re-duplicated file by
+   * editing ONE line — `figmaFileId` — while all 24 `lastSync` stamps, the
+   * `figmaLastRefreshed` date and 15 pinned node ids stayed behind from the
+   * retired file. The engine happily reported 16 components `in-sync` with a
+   * file it had never opened. Nothing was lying; nothing was checking.
+   *
+   * `observedFileKey` is now recorded per entry (and `figmaObservedFileId` at
+   * manifest level as the fallback for entries stamped before this existed).
+   * When it disagrees with the project's current file key the observation is
+   * STALE: the digests are discarded, `figmaObserved` goes false, and the entry
+   * degrades to the same reading as one that was never synced at all.
+   *
+   * `observationProvenance` reports which of the three cases applies, because a
+   * consumer must be able to tell "verified against this file" from "we cannot
+   * tell" — that distinction is the whole point of the honesty block below.
+   */
+  const currentFileKey = context.fileKey ?? null;
+  const recordedFileKey = last.observedFileKey ?? context.manifestObservedFileKey ?? null;
+  const staleObservation = Boolean(currentFileKey && recordedFileKey && recordedFileKey !== currentFileKey);
+  let observationProvenance;
+  if (staleObservation) observationProvenance = 'stale-file';
+  else if (recordedFileKey && currentFileKey) observationProvenance = 'verified';
+  else observationProvenance = 'unrecorded';
+
+  const observed = staleObservation ? null : (entry?.figmaCurrentDigest ?? null);
+  const figmaObserved = observed !== null;
+
   if (entry?.excluded) {
-    return { status: STATUS.EXCLUDED, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+    return { status: STATUS.EXCLUDED, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0, observationProvenance, staleObservation };
   }
   if (!entry?.figma?.name) {
-    return { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+    return { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0, observationProvenance, staleObservation };
+  }
+  if (staleObservation) {
+    // The set may well exist in the new file, but nothing here has seen it.
+    // "Code is ahead" is the honest reading, exactly as for a never-stamped entry.
+    return {
+      status: current.codeHash ? STATUS.CODE_DRIFT : STATUS.MISSING_IN_FIGMA,
+      driftBasis: 'never-synced',
+      figmaObserved: false,
+      codeDrift: Boolean(current.codeHash),
+      figmaDrift: false,
+      contractMismatches: 0,
+      observationProvenance,
+      staleObservation,
+    };
   }
 
   // Prefer the CONTRACT digest; fall back to the byte hash only for manifest
@@ -468,7 +511,7 @@ export function assessEntry(entry, current) {
   else if (codeDrift) status = STATUS.CODE_DRIFT;
   else if (figmaDrift) status = STATUS.FIGMA_DRIFT;
 
-  return { status, driftBasis, figmaObserved, codeDrift, figmaDrift, contractMismatches };
+  return { status, driftBasis, figmaObserved, codeDrift, figmaDrift, contractMismatches, observationProvenance, staleObservation };
 }
 
 /**
@@ -570,8 +613,12 @@ export function computeParity(project) {
     const configExclusion = Object.prototype.hasOwnProperty.call(excludedByConfig, c.tag) ? excludedByConfig[c.tag] : null;
 
     const assessed = manifest
-      ? assessEntry(entry, { codeHash, contractDigest: digestOf(contract), contractDiff })
-      : { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved: false, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+      ? assessEntry(
+          entry,
+          { codeHash, contractDigest: digestOf(contract), contractDiff },
+          { fileKey: p.figma.fileKey, manifestObservedFileKey: manifest.figmaObservedFileId ?? null },
+        )
+      : { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved: false, codeDrift: false, figmaDrift: false, contractMismatches: 0, observationProvenance: 'unrecorded', staleObservation: false };
     let status = assessed.status;
     if (!entry?.figma?.name && configExclusion) status = STATUS.EXCLUDED;
 
@@ -628,6 +675,11 @@ export function computeParity(project) {
       /** Which comparison decided `status`, and whether Figma was ever read. */
       driftBasis: assessed.driftBasis,
       figmaObserved: assessed.figmaObserved,
+      /** 'verified' | 'unrecorded' | 'stale-file' — see assessEntry(). A
+       * 'stale-file' entry was last observed against a DIFFERENT Figma file,
+       * so its digests and pinned node id are ghosts and were discarded. */
+      observationProvenance: assessed.observationProvenance,
+      ...(assessed.staleObservation ? { staleObservation: true } : {}),
       lastSync: entry?.lastSync ?? null,
       figmaCurrentDigest: entry?.figmaCurrentDigest ?? null,
       note: entry?.note ?? configExclusion ?? null,
@@ -707,7 +759,55 @@ export function computeParity(project) {
       return acc;
     }, {}),
     contractsCompared: entries.filter((e) => e.contractDiff).length,
+    /**
+     * FILE PROVENANCE. `observedFileId` is the file the digests in this manifest
+     * were actually read from; `fileId` is the file the project points at today.
+     * When they differ, every observation is stale — see assessEntry(). Counting
+     * the three provenance states here is what makes a repoint visible in the
+     * summary instead of only in individual entries.
+     */
+    fileId: p.figma.fileKey,
+    observedFileId: manifest?.figmaObservedFileId ?? null,
+    fileRepointed: Boolean(manifest?.figmaObservedFileId && manifest.figmaObservedFileId !== p.figma.fileKey),
+    provenance: entries.reduce((acc, e) => {
+      acc[e.observationProvenance] = (acc[e.observationProvenance] ?? 0) + 1;
+      return acc;
+    }, {}),
     refreshCommand: `node scripts/figma-parity/refresh-figma-digests.mjs${p.isDefault ? '' : ` --project ${p.id}`}`,
+  };
+
+  /**
+   * PROPERTY-LEVEL DISAGREEMENTS — the number the coarse status hides.
+   *
+   * `contract-diff.mjs` has always computed these per entry, but only the seven
+   * status buckets reached `summary`, so a component could read green while
+   * carrying twenty property-level disagreements against the live canvas. The
+   * tracked answer key (.altitude/ai-readiness/drift-cases.altitude.json) counted
+   * 448 across 35 pairs with only 2 clean, and nothing surfaced it.
+   *
+   * `pairsCompared` is the honest denominator: canvas dumps are gitignored, so in
+   * CI and on the deployed docs site this block reports zero pairs compared
+   * rather than zero disagreements. Those are different claims and must not
+   * render identically.
+   */
+  const withDisagreements = entries.filter((e) => Array.isArray(e.disagreements));
+  const disagreementSummary = {
+    pairsCompared: withDisagreements.length,
+    pairsClean: withDisagreements.filter((e) => e.disagreements.length === 0).length,
+    total: withDisagreements.reduce((n, e) => n + e.disagreements.length, 0),
+    byKind: withDisagreements.reduce((acc, e) => {
+      for (const d of e.disagreements) {
+        const kind = d.kind ?? 'unknown';
+        acc[kind] = (acc[kind] ?? 0) + 1;
+      }
+      return acc;
+    }, {}),
+    /** Worst offenders first, so a reader sees where to start. */
+    worst: withDisagreements
+      .filter((e) => e.disagreements.length > 0)
+      .map((e) => ({ tag: e.tag, count: e.disagreements.length }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10),
   };
 
   return {
@@ -736,6 +836,7 @@ export function computeParity(project) {
       brandOnly: brandOnly.length,
     },
     summary,
+    disagreements: disagreementSummary,
     components: entries,
     figmaOnly,
   };

@@ -183,6 +183,13 @@ for (const tag of tags) {
     // edit moves only the hash and no longer flips the badge.
     contractDigest: contractDigest(component),
     figmaDigest: entry.figmaCurrentDigest ?? entry.lastSync?.figmaDigest ?? opsDigest(tag),
+    // WHICH Figma file this stamp is about. Digests and node ids are
+    // file-scoped, so a stamp without this cannot survive a repoint: the
+    // parity engine has no way to tell an observation of THIS file from one of
+    // a file that no longer backs the project. `receiptAuthorises` above has
+    // already refused any receipt whose observedFileKey disagrees with the
+    // live project, so this value is verified, not assumed.
+    observedFileKey: project.figma?.fileKey ?? null,
     // OPTIONAL (T11) — omitted entirely (not written as null) when no
     // tracked contract file exists yet, so a manifest entry for a tag never
     // seeded stays exactly as small as it was before this existed.
