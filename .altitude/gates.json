@@ -472,11 +472,11 @@
         "capture"
       ],
       "blocking": true,
-      "ci": "build:all (Cloudflare parity)",
+      "ci": null,
       "ciVia": null,
       "tier": "build",
       "group": "contracts",
-      "note": "Was local-only although it needs no Figma connection: it reads the committed contracts, with the built docs as optional evidence, and degrades to a named no-evidence list rather than guessing."
+      "note": "LOCAL ONLY, and it has a structural reason: its ground truth is .altitude/figma-sync/shots/docs/index.json, a gitignored docs capture. Wiring it into CI on 2026-09-03 failed the build:all job immediately — it exits 1 telling a runner to run capture:docs, which needs the docs served. Unlike check:figma-conventions there is no tracked projection to fall back on."
     },
     {
       "id": "check:doc-anchors",

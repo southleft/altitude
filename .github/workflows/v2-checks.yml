@@ -157,11 +157,6 @@ jobs:
         run: pnpm run gate:docs-generalises
       - name: Guidance quality (citations resolve, all sections present)
         run: pnpm run gate:guidance
-      # Reads the committed contracts, and the built docs as optional evidence.
-      # It degrades to a NAMED "no docs evidence" list rather than guessing, so it
-      # is safe here where the docs have just been built and the evidence exists.
-      - name: Contract fidelity (every contract carries a measured root box)
-        run: pnpm run check:contract-fidelity
 
   gate-self-test:
     name: G2/G8 gate self-test
