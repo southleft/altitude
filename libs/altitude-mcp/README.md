@@ -11,10 +11,10 @@ own build already produced, or shells out to an existing script:
 
 | Tool | Reads |
 |---|---|
-| `altitude_list_components` | `libs/al-web-components/custom-elements.json` (CEM) + `.altitude/migration.json` |
-| `altitude_get_component` | CEM + `libs/al-web-components/schemas/*.schema.json` + migration state + `*.stories.ts` `title:` |
+| `altitude_list_components` | `libs/al-web-components/custom-elements.json` (CEM) + `.altitude/migration.json` + `dist/docs[/<project>]/guidance.json` |
+| `altitude_get_component` | CEM + `libs/al-web-components/schemas/*.schema.json` + migration state + `*.stories.ts` `title:` + `dist/docs[/<project>]/examples.json` (executed stories) + `dist/docs[/<project>]/guidance.json` + `libs/al-react/src/components/**` (wrapper + event props) + `.altitude/a11y/report.json` + the component contract |
 | `altitude_validate` | shells to `libs/al-web-components/cli/validate.mjs --json` |
-| `altitude_get_tokens` | `libs/al-web-components/dist/css/{tokens,aliases}.json` + `styles/tokens-dtcg/**` |
+| `altitude_get_tokens` | `libs/al-web-components/dist/css/{tokens,aliases}.json` + `styles/tokens-dtcg/**` (for `cssType`, the `cssProperties` allow-list and each token's description) |
 | `altitude_search_icons` | `libs/al-web-components/components/icon/catalog.ts` |
 | `altitude_generate_theme` | `libs/al-web-components/dist/theme-engine/index.js` (built barrel; falls back to `theme-engine/` TS source) |
 | `altitude_check_parity` | `.altitude/ds-projects.json` + the project's parity manifest (`.altitude/figma-sync/**/parity-manifest.json`) + live source hashing |

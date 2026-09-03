@@ -96,6 +96,17 @@ async function main() {
     const data = parseToolJson(res);
     ok(Array.isArray(data.components) && data.components.length > 0, 'returned at least one component');
     ok(data.components.every((c) => c.tag && c.migration), 'each component has tag + migration state');
+    // Shape, not content — the guidance artifact is a docs-build output that
+    // CI's mcp-smoke job does not produce. See the note in the
+    // altitude_get_component case below.
+    ok(data.components.every((c) => 'guidance' in c), 'every row carries a guidance slot, populated or null');
+    ok(!!data.guidanceCoverage, 'the report says how much guidance exists (or why it could not tell)');
+    ok(
+      data.components
+        .filter((c) => c.guidance)
+        .every((c) => Array.isArray(c.guidance.whenNotToUse) && c.guidance.whenNotToUse.length > 0),
+      'authored guidance always carries a non-empty whenNotToUse — the field that prevents a wrong choice'
+    );
   }
 
   console.log('\naltitude_get_component({ tag: "al-button" })');
@@ -105,7 +116,73 @@ async function main() {
     ok(data.tag === 'al-button', 'returned the requested component');
     ok(!!data.schema, 'schema attached');
     ok(!!data.migration, 'migration state attached');
-    ok(!!data.story?.docsUrl, 'storybook docs URL derived');
+    ok(!!data.story?.docsUrl, 'docs URL derived');
+
+    /*
+     * THE ASSERTIONS BELOW MUST HOLD ON A FRESH CLONE WITH NOTHING BUILT.
+     *
+     * `examples` and `guidance` come from the docs build's artifacts
+     * (dist/docs/{examples,guidance}.json), which CI's mcp-smoke job does not
+     * produce. So what is asserted is the CONTRACT, not the content: the field
+     * is always present, and exactly one of "has data" / "has a note saying
+     * why not" is true. That is the property that actually matters — a caller
+     * must never be unable to distinguish "no example exists" from "this
+     * checkout did not look" — and it is the one that would silently regress
+     * if a future edit started omitting the key when the artifact is missing.
+     */
+    ok(Array.isArray(data.examples), 'examples[] is always present, built or not');
+    ok(
+      data.examples.length > 0 || typeof data.examplesNote === 'string',
+      'an empty examples[] is explained by examplesNote, never silent'
+    );
+    ok(
+      data.examples.every((e) => typeof e.title === 'string' && typeof e.code === 'string' && e.code.length > 0),
+      'every example carries a title and non-empty web-component markup'
+    );
+    ok(
+      data.examples.every((e) => typeof e.react === 'string' || typeof e.reactNote === 'string'),
+      'every example either carries a React twin or names what stopped it'
+    );
+    ok(
+      'guidance' in data && (data.guidance !== null || typeof data.guidanceNote === 'string'),
+      'guidance is present, and a null one is explained by guidanceNote'
+    );
+
+    // The React block is derived from libs/al-react's own source, which is
+    // tracked — so unlike examples/guidance it IS assertable by content here.
+    ok(data.react?.component === 'ALButton', 'react wrapper name derived from the wrapper source');
+    ok(data.react?.importPath === '@southleft/al-react', 'react import specifier is the package barrel');
+    ok(Array.isArray(data.react?.eventProps), 'react eventProps mapping present (empty for al-button)');
+
+    ok(!!data.a11y, 'a11y block attached');
+    ok(typeof data.a11y.measured?.measured === 'boolean', 'a11y states whether it was MEASURED, either way');
+    ok(Array.isArray(data.a11y.obligations), 'a11y consumer obligations present as an array');
+    ok(
+      data.a11y.semantics !== null || typeof data.a11y.semanticsNote === 'string',
+      'absent contract semantics are explained, not omitted'
+    );
+  }
+
+  // The event-name -> React-prop mapping is the field nothing else in this repo
+  // records, and al-alert is where prop and event genuinely DIFFER
+  // (`onClose` -> `close`). Asserting a same-named pair would have proved
+  // nothing; this one fails if the two fields are ever collapsed into one.
+  console.log('\naltitude_get_component({ tag: "al-alert" }) — event-name to React-prop mapping');
+  {
+    const res = await client.callTool({ name: 'altitude_get_component', arguments: { tag: 'al-alert' } });
+    const data = parseToolJson(res);
+    const close = data.react?.eventProps?.find((e) => e.prop === 'onClose');
+    ok(close?.event === 'close', 'a React prop whose name differs from its event is reported as both');
+  }
+
+  console.log('\naltitude_get_component({ tag: "al-theme" }) — hand-written wrapper still resolves');
+  {
+    const res = await client.callTool({ name: 'altitude_get_component', arguments: { tag: 'al-theme' } });
+    const data = parseToolJson(res);
+    // ALTheme is a React.forwardRef over a private createComponent() result,
+    // not a direct export of it. Reading only the direct shape reported
+    // al-theme as having no wrapper — a wrong answer, not a missing one.
+    ok(data.react?.component === 'ALTheme', 'a forwardRef wrapper is found, not reported as absent');
   }
 
   console.log('\naltitude_validate({ markup: "<al-button>Click</al-button>" })');
@@ -134,6 +211,26 @@ async function main() {
     const res = await client.callTool({ name: 'altitude_get_tokens', arguments: { name: 'border-radius' } });
     const data = parseToolJson(res);
     ok(Array.isArray(data.tokens) && data.tokens.length > 0, 'returned tokens matching name filter');
+    ok(
+      data.tokens.every((t) => 'cssType' in t && Array.isArray(t.cssProperties)),
+      'every token reports its authored cssType and its CSS-property allow-list'
+    );
+    /*
+     * The whole point of carrying `cssType`: the DTCG `$type` of a radius token
+     * is `dimension`, which it shares with spacing, sizing, border width, font
+     * size and line height. A caller reading only that cannot tell what the
+     * token is FOR. Asserting the two are DIFFERENT here is what would catch a
+     * regression to re-deriving cssType from $type — which is impossible, and
+     * which silently degrades 163 of 555 tokens when attempted.
+     */
+    const radius = data.tokens.find((t) => t.cssType);
+    ok(!!radius, 'at least one border-radius token carries an authored cssType');
+    ok(radius?.cssType === 'borderRadius', `authored cssType is the fine type (got ${radius?.cssType})`);
+    ok(radius?.dtcgType === 'dimension', `DTCG type stays the coarse standard one (got ${radius?.dtcgType})`);
+    ok(
+      radius?.cssProperties?.includes('border-radius'),
+      'the allow-list names the concrete CSS property the token may set'
+    );
   }
 
   // altitude + southleft are the only brands the repo ships — see
