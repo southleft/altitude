@@ -5,6 +5,35 @@ import './alert';
 import type { ALAlert } from './alert';
 
 const tick = (ms = 20) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Wait for a condition instead of sampling once after a fixed delay.
+ *
+ * `auto-closes after autoCloseDelay seconds` was FLAKY: it slept 200ms for a
+ * 100ms timer and asserted immediately after. That is a 2x margin in a plain
+ * run and not enough under coverage instrumentation, which slows the whole
+ * page — measured on 2026-09-03 as fail / pass / fail across three identical
+ * runs of `vitest --coverage`. `test:unit:coverage` is a required check, so it
+ * could red a PR at random and teach everyone to re-run reds rather than read
+ * them.
+ *
+ * Polling keeps exactly what the test is for — the alert DOES close on its own
+ * — while removing the dependency on wall-clock speed. The timeout is generous
+ * because a slow machine is not a defect; a never-closing alert is, and that
+ * still fails, with the state it was stuck in.
+ */
+async function waitUntil(
+  predicate: () => boolean,
+  description: string,
+  { timeout = 3000, interval = 20 } = {},
+): Promise<void> {
+  const started = Date.now();
+  while (Date.now() - started < timeout) {
+    if (predicate()) return;
+    await tick(interval);
+  }
+  throw new Error(`timed out after ${timeout}ms waiting for: ${description}`);
+}
 const box = (el: ALAlert) => el.shadowRoot!.querySelector('.al-c-alert') as HTMLElement;
 
 describe('al-alert', () => {
@@ -69,13 +98,35 @@ describe('al-alert', () => {
     // Ported from alert.stories.ts WithAutoClose. The delay is expressed in
     // SECONDS (alert.ts:130 multiplies by 1000), which is why this passes 0.1
     // rather than 100.
+    /*
+     * MOVE THE POINTER OFF FIRST. This is not ceremony — it is the whole reason
+     * this test was flaky.
+     *
+     * `al-alert` pauses its auto-close timer while the pointer is over it
+     * (deliberate: an alert should not vanish out from under someone reading
+     * it). The virtual pointer is shared across tests in a file and stays where
+     * the last `userEvent.click` left it. When a fixture happens to render this
+     * alert under that resting position, `handleMouseOver` fires and the timer
+     * pauses for the whole run.
+     *
+     * Measured: in isolation this test passes in 133ms with AND without
+     * coverage; run after its neighbours it timed out at 3s. Coverage was never
+     * the variable — it only changed the layout timing enough to alter how
+     * often the pointer landed on the box.
+     *
+     * Worth knowing beyond the test: an alert that appears underneath a
+     * stationary cursor will not auto-close until the pointer moves.
+     */
+    await userEvent.hover(document.body);
+
     const el = await fixture<ALAlert>(html`<al-alert isActive autoClose .autoCloseDelay=${0.1}>Saved</al-alert>`);
     await el.updateComplete;
     expect(el.isActive).toBe(true);
 
-    await tick(200);
+    await waitUntil(() => !el.isActive, 'the alert to auto-close');
     await el.updateComplete;
     expect(el.isActive).toBe(false);
+    expect(box(el).className).not.toContain('al-is-active');
   });
 
   it('stays open indefinitely when autoClose is not set', async () => {
