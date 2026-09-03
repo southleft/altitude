@@ -1577,7 +1577,7 @@
       "ciVia": null,
       "tier": "build",
       "group": "tests",
-      "note": "Baselines are Linux-only, captured on CI. A local recapture on macOS or Windows poisons them."
+      "note": "Baselines are Linux-only, captured on CI. A local recapture on macOS or Windows poisons them. NOT meaningful on Windows: remeasured 2026-09-03, all 67 of 67 fail locally while the same commit passes every baseline on Linux. Refresh with baselines:adopt from a failing CI job, never baselines:vrt locally."
     },
     {
       "id": "validate-contracts",

@@ -30,16 +30,25 @@ import { expect, test } from '@playwright/test';
  *
  * Text rasterises differently on Linux and Windows, so a baseline captured on a
  * developer machine can differ from the same render on the CI runner by enough
- * to trip `maxDiffPixelRatio: 0.01`. Measured on this corpus: 58 of 67
- * components are identical across the two, and 9 are not — alert, banner,
- * breadcrumbs, heading, pagination, tab-panel, tabs, testimonial, text-block.
- * Every one of them is text-heavy, which is the tell.
+ * to trip `maxDiffPixelRatio: 0.01`.
  *
- * Those 9 are committed AS THE RUNNER RENDERS THEM, the same way commit 709f484
- * refreshed the five pilots "from runner-rendered actuals". The consequence is
- * worth stating plainly rather than discovering: **running this spec on Windows
- * reports those 9 as failures.** That is the platform difference, not a
- * regression, and CI is the check that counts.
+ * REMEASURED 2026-09-03: **all 67 of 67 fail on Windows**, not the 9 this header
+ * used to name. The old figure (58 identical, 9 text-heavy outliers) is wrong,
+ * and wrong in the dangerous direction — someone told to expect 9 failures, who
+ * then sees 67, concludes they have broken the library. The likeliest next move
+ * is a local `baselines:vrt`, which "fixes" all 67 against Windows rendering and
+ * silently breaks CI for everyone else.
+ *
+ * The measurement: on a branch whose only visual change was two neutral stops,
+ * a Windows run failed 67 unique components while the SAME commit passed all 72
+ * baselines on the Linux runner. So the divergence is the platform, wholesale,
+ * not a short list of text-heavy components.
+ *
+ * Baselines are committed AS THE RUNNER RENDERS THEM, the same way commit
+ * 709f484 refreshed the five pilots "from runner-rendered actuals". State the
+ * consequence plainly rather than let it be discovered: **this spec is not
+ * meaningful on Windows.** Run it for a smoke check if you like, but CI is the
+ * check that counts, and a local failure list proves nothing either way.
  *
  * To refresh a baseline after an intentional visual change, take it from the
  * runner rather than from your machine: the failing job uploads the `-actual`
