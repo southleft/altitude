@@ -1,0 +1,126 @@
+{
+  "name": "main protection",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": [
+        "~DEFAULT_BRANCH"
+      ],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": false,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": false,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "Changesets present on public-API PRs"
+          },
+          {
+            "context": "G2 - migration manifest gate"
+          },
+          {
+            "context": "G2 - migration.json schema validation"
+          },
+          {
+            "context": "G2/G8 gate self-test"
+          },
+          {
+            "context": "G8 - baselines updated on build/dep change"
+          },
+          {
+            "context": "R1/R2 JSDoc tag dialect + CEM event descriptions"
+          },
+          {
+            "context": "R6 package exports map vs built output"
+          },
+          {
+            "context": "T0.1 - VRT vs committed baselines (pilots + every component)"
+          },
+          {
+            "context": "T0.1 - bundle snapshot equal"
+          },
+          {
+            "context": "T0.1 - tokens snapshot equal"
+          },
+          {
+            "context": "T0.3 fixtures build green"
+          },
+          {
+            "context": "T2.3.c ESLint 9 flat + changed-line styles"
+          },
+          {
+            "context": "T2.4 axe sweep over every story (story fixture)"
+          },
+          {
+            "context": "T3.1/T3.2/T3.4 CEM + schemas + contract validator"
+          },
+          {
+            "context": "T4.1/T6.1 css layers strict"
+          },
+          {
+            "context": "T4.6 registry modes"
+          },
+          {
+            "context": "T4.7 React 19 wrapper contract"
+          },
+          {
+            "context": "T5.1 headless controllers"
+          },
+          {
+            "context": "T6.3 a11y CI gate (axe-core)"
+          },
+          {
+            "context": "T6.3 bundle-size budget"
+          },
+          {
+            "context": "ai-readiness harness — dry-run job-list explosion + deterministic tests"
+          },
+          {
+            "context": "altitude-mcp tool contract (all 8 tools)"
+          },
+          {
+            "context": "build:all (Cloudflare parity)"
+          },
+          {
+            "context": "bundle.ts completeness (no component drift)"
+          },
+          {
+            "context": "hand-run gates (ds-projects, sl-scope, lit-a11y, brands, audit)"
+          },
+          {
+            "context": "libraries are publishable"
+          },
+          {
+            "context": "unit tests (vitest browser) + coverage floor"
+          }
+        ]
+      }
+    }
+  ]
+}
