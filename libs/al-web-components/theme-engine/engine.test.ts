@@ -34,7 +34,7 @@ const EXPECTED_LABELS = [
   'content/danger',
   'content/warning',
   'content/success',
-  'primary/500',
+  'primary/accent',
   'focus-ring/bg-weak',
   'on-accent',
 ];
@@ -102,15 +102,16 @@ describe('theme-engine WCAG enforcement', () => {
   });
 
   it('does not let the looser focus-ring/bg-weak pairing regress the stricter primary/500 one', () => {
-    // enforceAll() solves both pairings on the SAME `--al-color-primary-500`
-    // stop and keeps whichever candidate is more extreme, specifically so a
-    // later, looser fix (focus-ring/bg-weak, 3:1) can never undo an earlier,
-    // stricter one (primary/500, 4.5:1). Assert both hold at once, not just
-    // whichever ran last.
+    // enforceAll() solves both pairings on the SAME primary stop
+    // (ROLE_STOPS[mode].accent — light 500 / dark 400) and keeps whichever
+    // candidate is more extreme, specifically so a later, looser fix
+    // (focus-ring/bg-weak, 3:1) can never undo an earlier, stricter one
+    // (primary/accent, 4.5:1). Assert both hold at once, not just whichever
+    // ran last.
     for (const prompt of PROMPTS) {
       for (const mode of ['light', 'dark'] as const) {
         const theme = buildTheme({ prompt, direction: { mode } });
-        const primary = theme.receipts.find((r) => r.label === 'primary/500')!;
+        const primary = theme.receipts.find((r) => r.label === 'primary/accent')!;
         const focusRing = theme.receipts.find((r) => r.label === 'focus-ring/bg-weak')!;
         expect(primary.ratio).toBeGreaterThanOrEqual(TARGETS.accent);
         expect(focusRing.ratio).toBeGreaterThanOrEqual(TARGETS.focusRing);

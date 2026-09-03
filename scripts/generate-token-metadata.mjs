@@ -181,7 +181,16 @@ function annotate(node, segs, ctx) {
     if (cssType) ext['org.altitude.token'] = { cssType };
 
     const usage = FAMILY_USAGE_RULES[family];
-    if (usage) ext['org.primer.llm'] = { usage };
+    // A family with no rule gets NO usage string and used to be dropped without
+    // a word. That silence is what let the 2026-08 token rename leave 19
+    // families / 184 tokens undocumented for a week. Collected here, failed on
+    // in main().
+    if (usage) {
+      ext['org.primer.llm'] = { usage };
+      ctx.matchedFamilies.add(family);
+    } else {
+      ctx.unmatchedFamilies.set(family, (ctx.unmatchedFamilies.get(family) ?? 0) + 1);
+    }
 
     const cssProperties = cssPropertiesFor(cssType, pathStr);
     if (cssProperties.length) ext['com.salesforce.styling'] = { cssProperties };
@@ -227,12 +236,16 @@ function main() {
 
   const lifecycleByKey = new Map(KNOWN_LIFECYCLE.map((e) => [`${e.file}::${e.path}`, e]));
   const stats = { tokens: 0, withUsage: 0, withCssProperties: 0, noCssProperties: [], withIntroduced: 0, deprecated: 0, files: 0 };
+  /** family dot-path -> token count, for families FAMILY_USAGE_RULES does not cover. */
+  const unmatchedFamilies = new Map();
+  /** families a rule actually matched, so a rule matching nothing can be reported. */
+  const matchedFamilies = new Set();
 
   for (const absFile of walkJsonFiles(TOKENS_DIR)) {
     const relFile = relative(TOKENS_DIR, absFile).replace(/\\/g, '/');
     const raw = JSON.parse(readFileSync(absFile, 'utf8'));
     const introducedDates = introducedDatesForFile(absFile);
-    annotate(raw, [], { relFile, introducedDates, lifecycleByKey, stats });
+    annotate(raw, [], { relFile, introducedDates, lifecycleByKey, stats, unmatchedFamilies, matchedFamilies });
     stats.files++;
     if (!DRY_RUN) writeFileSync(absFile, JSON.stringify(raw, null, 2) + '\n');
   }
@@ -245,6 +258,35 @@ function main() {
   if (stats.noCssProperties.length) {
     console.log(`  no cssProperties derivable (${stats.noCssProperties.length}):`);
     for (const p of stats.noCssProperties) console.log(`    ${p}`);
+  }
+
+  // A rule that matches nothing is dead documentation — worth saying out loud,
+  // but not worth failing over: it produces no wrong output.
+  const deadRules = Object.keys(FAMILY_USAGE_RULES).filter((f) => !matchedFamilies.has(f)).sort();
+  if (deadRules.length) {
+    console.warn(
+      `[token-metadata] WARNING: ${deadRules.length} FAMILY_USAGE_RULES key(s) matched no token ` +
+        `in the tree (stale after a rename?):`
+    );
+    for (const f of deadRules) console.warn(`    ${f}`);
+  }
+
+  // A family with NO rule is the reverse, and it IS worth failing over: those
+  // tokens ship with no org.primer.llm.usage, the field every agent reads to
+  // decide what a token is for. Before this check, the 2026-08 role rename left
+  // 19 families / 184 tokens silently undocumented and the run still exited 0.
+  // Silence is the one forbidden failure mode here — see .claude/CLAUDE.md.
+  if (unmatchedFamilies.size) {
+    const total = [...unmatchedFamilies.values()].reduce((a, b) => a + b, 0);
+    console.error(
+      `[token-metadata] FAILED: ${unmatchedFamilies.size} token famil(ies) — ${total} token(s) — ` +
+        `have no FAMILY_USAGE_RULES entry, so they were annotated with NO usage rule. ` +
+        `Add a rule for each in scripts/lib/token-metadata-rules.mjs:`
+    );
+    for (const [f, n] of [...unmatchedFamilies.entries()].sort((a, b) => b[1] - a[1])) {
+      console.error(`    ${f}  (${n} token${n === 1 ? '' : 's'})`);
+    }
+    process.exit(1);
   }
 }
 

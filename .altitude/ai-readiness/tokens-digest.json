@@ -1,61 +1,102 @@
 {
   "source": "libs/al-web-components/styles/dist/tokens.json",
-  "total": 539,
+  "total": 607,
   "conventions": {
     "cssVariablePrefix": "--al-",
-    "fontSizeNamingScheme": "numeric — --al-font-size-10..36 (NOT t-shirt sizes like -sm/-md/-lg/-2xl)",
-    "fontWeights": "--al-font-weight-regular and --al-font-weight-bold ONLY (no -light, -medium, -semibold, -heavy)",
-    "themeTokensPrefix": "--al-theme-* (single-layer of indirection over the al-color-* / al-font-size-* primitives)",
-    "primitiveTokensPrefix": "--al-color-*, --al-font-size-*, --al-space-*, --al-border-*, --al-shadow-*, --al-animation-*",
+    "fontSizeNamingScheme": "numeric — --al-font-size-{10,12,14,16,20,24,28,32,36,48,56,64,72,112} (14 stops; NOT t-shirt sizes like -sm/-md/-lg/-2xl)",
+    "fontSizeStops": [
+      "10",
+      "12",
+      "14",
+      "16",
+      "20",
+      "24",
+      "28",
+      "32",
+      "36",
+      "48",
+      "56",
+      "64",
+      "72",
+      "112"
+    ],
+    "fontWeights": "--al-font-weight-{bold,medium,regular,semibold} ONLY (no -thin, -extralight, -light, -extrabold, -heavy, -black)",
+    "fontWeightNames": [
+      "bold",
+      "medium",
+      "regular",
+      "semibold"
+    ],
+    "themeTokensPrefix": "--al-theme-* (single layer of indirection over the --al-color-* / --al-font-size-* primitives)",
+    "primitiveTokensPrefix": "--al-animation-*, --al-border-*, --al-box-*, --al-breakpoint-*, --al-color-*, --al-font-*, --al-letter-*, --al-line-*, --al-opacity-*, --al-text-*, --al-typography-*, --al-z-*",
     "contentColorSuffixesByRole": {
       "danger": [
+        "bold",
         "default",
-        "weak"
-      ],
-      "default": [
-        "(none)",
         "faint",
+        "strong",
         "weak"
       ],
       "disabled": [
         "default"
       ],
       "info": [
+        "bold",
         "default",
+        "faint",
+        "strong",
         "weak"
       ],
       "inverse": [
         "default",
         "strong"
       ],
-      "primary": [
+      "neutral": [
         "default",
+        "faint",
+        "weak"
+      ],
+      "primary": [
+        "bold",
+        "default",
+        "faint",
         "strong",
         "weak"
       ],
       "secondary": [
+        "bold",
         "default",
+        "faint",
         "strong",
         "weak"
       ],
       "success": [
+        "bold",
         "default",
+        "faint",
+        "strong",
+        "weak"
+      ],
+      "tertiary": [
+        "bold",
+        "default",
+        "faint",
+        "strong",
         "weak"
       ],
       "warning": [
+        "bold",
         "default",
+        "faint",
+        "strong",
         "weak"
       ]
     },
     "backgroundColorSuffixesByRole": {
       "danger": [
-        "default",
-        "strong",
-        "weak"
-      ],
-      "default": [
-        "(none)",
         "bold",
+        "default",
+        "faint",
         "strong",
         "weak"
       ],
@@ -63,25 +104,48 @@
         "default"
       ],
       "info": [
+        "bold",
         "default",
+        "faint",
+        "strong",
         "weak"
       ],
       "inverse": [
         "default",
         "strong"
       ],
+      "neutral": [
+        "bold",
+        "default",
+        "strong",
+        "weak"
+      ],
       "primary": [
+        "bold",
         "default",
         "faint",
         "strong",
         "weak"
       ],
       "secondary": [
+        "bold",
         "default",
-        "strong"
+        "faint",
+        "strong",
+        "weak"
       ],
       "success": [
+        "bold",
         "default",
+        "faint",
+        "strong",
+        "weak"
+      ],
+      "tertiary": [
+        "bold",
+        "default",
+        "faint",
+        "strong",
         "weak"
       ],
       "transparent": [
@@ -90,17 +154,18 @@
         "weak"
       ],
       "warning": [
+        "bold",
         "default",
+        "faint",
+        "strong",
         "weak"
       ]
     },
     "borderColorSuffixesByRole": {
       "danger": [
+        "bold",
         "default",
-        "weak"
-      ],
-      "default": [
-        "(none)",
+        "faint",
         "strong",
         "weak"
       ],
@@ -108,33 +173,61 @@
         "default"
       ],
       "info": [
+        "bold",
+        "default",
+        "faint",
+        "strong",
         "weak"
       ],
       "inverse": [
         "default"
       ],
-      "primary": [
+      "neutral": [
         "default",
+        "strong",
+        "weak"
+      ],
+      "primary": [
+        "bold",
+        "default",
+        "faint",
+        "strong",
         "weak"
       ],
       "secondary": [
-        "default"
+        "bold",
+        "default",
+        "faint",
+        "strong",
+        "weak"
       ],
       "success": [
+        "bold",
+        "default",
+        "faint",
+        "strong",
+        "weak"
+      ],
+      "tertiary": [
+        "bold",
+        "default",
+        "faint",
+        "strong",
         "weak"
       ],
       "warning": [
+        "bold",
+        "default",
+        "faint",
+        "strong",
         "weak"
       ]
     },
     "notExistDoNotInvent": [
       "--al-theme-focus-ring-*",
       "--al-theme-transition-duration-* (use --al-animation-duration-*)",
-      "--al-theme-color-content-default-stronger",
-      "--al-theme-color-content-default-weaker",
-      "--al-font-weight-semibold",
-      "--al-font-weight-medium",
-      "--al-theme-border-radius-pill (round = 50% circle, not a pill)"
+      "--al-theme-color-content-neutral-bold",
+      "--al-theme-color-content-default-weaker"
     ]
   },
   "groups": {
@@ -1550,8 +1643,16 @@
     ],
     "theme-color-background": [
       {
+        "name": "--al-theme-color-background-danger-bold",
+        "value": "var(--al-color-danger-200)"
+      },
+      {
         "name": "--al-theme-color-background-danger-default",
         "value": "var(--al-color-danger-400)"
+      },
+      {
+        "name": "--al-theme-color-background-danger-faint",
+        "value": "var(--al-color-danger-800)"
       },
       {
         "name": "--al-theme-color-background-danger-strong",
@@ -1562,28 +1663,24 @@
         "value": "var(--al-color-danger-900)"
       },
       {
-        "name": "--al-theme-color-background-default",
-        "value": "var(--al-color-neutral-800)"
-      },
-      {
-        "name": "--al-theme-color-background-default-bold",
-        "value": "var(--al-color-neutral-600)"
-      },
-      {
-        "name": "--al-theme-color-background-default-strong",
-        "value": "var(--al-color-neutral-700)"
-      },
-      {
-        "name": "--al-theme-color-background-default-weak",
-        "value": "var(--al-color-neutral-900)"
-      },
-      {
         "name": "--al-theme-color-background-disabled-default",
         "value": "var(--al-color-neutral-700)"
       },
       {
+        "name": "--al-theme-color-background-info-bold",
+        "value": "var(--al-color-primary-200)"
+      },
+      {
         "name": "--al-theme-color-background-info-default",
         "value": "var(--al-color-primary-400)"
+      },
+      {
+        "name": "--al-theme-color-background-info-faint",
+        "value": "var(--al-color-primary-800)"
+      },
+      {
+        "name": "--al-theme-color-background-info-strong",
+        "value": "var(--al-color-primary-300)"
       },
       {
         "name": "--al-theme-color-background-info-weak",
@@ -1596,6 +1693,26 @@
       {
         "name": "--al-theme-color-background-inverse-strong",
         "value": "var(--al-color-neutral-100)"
+      },
+      {
+        "name": "--al-theme-color-background-neutral-bold",
+        "value": "var(--al-color-neutral-600)"
+      },
+      {
+        "name": "--al-theme-color-background-neutral-default",
+        "value": "var(--al-color-neutral-800)"
+      },
+      {
+        "name": "--al-theme-color-background-neutral-strong",
+        "value": "var(--al-color-neutral-700)"
+      },
+      {
+        "name": "--al-theme-color-background-neutral-weak",
+        "value": "var(--al-color-neutral-900)"
+      },
+      {
+        "name": "--al-theme-color-background-primary-bold",
+        "value": "var(--al-color-primary-200)"
       },
       {
         "name": "--al-theme-color-background-primary-default",
@@ -1614,20 +1731,64 @@
         "value": "var(--al-color-primary-700)"
       },
       {
+        "name": "--al-theme-color-background-secondary-bold",
+        "value": "var(--al-color-neutral-500)"
+      },
+      {
         "name": "--al-theme-color-background-secondary-default",
         "value": "var(--al-color-neutral-200)"
+      },
+      {
+        "name": "--al-theme-color-background-secondary-faint",
+        "value": "var(--al-color-neutral-700)"
       },
       {
         "name": "--al-theme-color-background-secondary-strong",
         "value": "var(--al-color-neutral-400)"
       },
       {
+        "name": "--al-theme-color-background-secondary-weak",
+        "value": "var(--al-color-neutral-600)"
+      },
+      {
+        "name": "--al-theme-color-background-success-bold",
+        "value": "var(--al-color-success-200)"
+      },
+      {
         "name": "--al-theme-color-background-success-default",
         "value": "var(--al-color-success-400)"
       },
       {
+        "name": "--al-theme-color-background-success-faint",
+        "value": "var(--al-color-success-800)"
+      },
+      {
+        "name": "--al-theme-color-background-success-strong",
+        "value": "var(--al-color-success-300)"
+      },
+      {
         "name": "--al-theme-color-background-success-weak",
         "value": "var(--al-color-success-900)"
+      },
+      {
+        "name": "--al-theme-color-background-tertiary-bold",
+        "value": "var(--al-color-tertiary-200)"
+      },
+      {
+        "name": "--al-theme-color-background-tertiary-default",
+        "value": "var(--al-color-tertiary-400)"
+      },
+      {
+        "name": "--al-theme-color-background-tertiary-faint",
+        "value": "var(--al-color-tertiary-800)"
+      },
+      {
+        "name": "--al-theme-color-background-tertiary-strong",
+        "value": "var(--al-color-tertiary-300)"
+      },
+      {
+        "name": "--al-theme-color-background-tertiary-weak",
+        "value": "var(--al-color-tertiary-700)"
       },
       {
         "name": "--al-theme-color-background-transparent-default",
@@ -1642,8 +1803,20 @@
         "value": "var(--al-color-neutral-alpha-100-10)"
       },
       {
+        "name": "--al-theme-color-background-warning-bold",
+        "value": "var(--al-color-warning-200)"
+      },
+      {
         "name": "--al-theme-color-background-warning-default",
         "value": "var(--al-color-warning-400)"
+      },
+      {
+        "name": "--al-theme-color-background-warning-faint",
+        "value": "var(--al-color-warning-800)"
+      },
+      {
+        "name": "--al-theme-color-background-warning-strong",
+        "value": "var(--al-color-warning-300)"
       },
       {
         "name": "--al-theme-color-background-warning-weak",
@@ -1653,33 +1826,49 @@
     "theme-color-body": [
       {
         "name": "--al-theme-color-body-background",
-        "value": "var(--al-theme-color-background-default-weak)"
+        "value": "var(--al-theme-color-background-neutral-weak)"
       }
     ],
     "theme-color-border": [
       {
+        "name": "--al-theme-color-border-danger-bold",
+        "value": "var(--al-color-danger-200)"
+      },
+      {
         "name": "--al-theme-color-border-danger-default",
         "value": "var(--al-color-danger-400)"
+      },
+      {
+        "name": "--al-theme-color-border-danger-faint",
+        "value": "var(--al-color-danger-900)"
+      },
+      {
+        "name": "--al-theme-color-border-danger-strong",
+        "value": "var(--al-color-danger-300)"
       },
       {
         "name": "--al-theme-color-border-danger-weak",
         "value": "var(--al-color-danger-800)"
       },
       {
-        "name": "--al-theme-color-border-default",
-        "value": "var(--al-color-neutral-700)"
-      },
-      {
-        "name": "--al-theme-color-border-default-strong",
-        "value": "var(--al-color-neutral-500)"
-      },
-      {
-        "name": "--al-theme-color-border-default-weak",
-        "value": "var(--al-color-neutral-700)"
-      },
-      {
         "name": "--al-theme-color-border-disabled-default",
         "value": "var(--al-color-neutral-700)"
+      },
+      {
+        "name": "--al-theme-color-border-info-bold",
+        "value": "var(--al-color-primary-200)"
+      },
+      {
+        "name": "--al-theme-color-border-info-default",
+        "value": "var(--al-color-primary-400)"
+      },
+      {
+        "name": "--al-theme-color-border-info-faint",
+        "value": "var(--al-color-primary-900)"
+      },
+      {
+        "name": "--al-theme-color-border-info-strong",
+        "value": "var(--al-color-primary-300)"
       },
       {
         "name": "--al-theme-color-border-info-weak",
@@ -1690,20 +1879,112 @@
         "value": "var(--al-color-neutral-700)"
       },
       {
+        "name": "--al-theme-color-border-neutral-default",
+        "value": "var(--al-color-neutral-700)"
+      },
+      {
+        "name": "--al-theme-color-border-neutral-strong",
+        "value": "var(--al-color-neutral-500)"
+      },
+      {
+        "name": "--al-theme-color-border-neutral-weak",
+        "value": "var(--al-color-neutral-700)"
+      },
+      {
+        "name": "--al-theme-color-border-primary-bold",
+        "value": "var(--al-color-primary-200)"
+      },
+      {
         "name": "--al-theme-color-border-primary-default",
         "value": "var(--al-color-primary-400)"
+      },
+      {
+        "name": "--al-theme-color-border-primary-faint",
+        "value": "var(--al-color-primary-900)"
+      },
+      {
+        "name": "--al-theme-color-border-primary-strong",
+        "value": "var(--al-color-primary-300)"
       },
       {
         "name": "--al-theme-color-border-primary-weak",
         "value": "var(--al-color-primary-alpha-500-30)"
       },
       {
+        "name": "--al-theme-color-border-secondary-bold",
+        "value": "var(--al-color-neutral-200)"
+      },
+      {
         "name": "--al-theme-color-border-secondary-default",
         "value": "var(--al-color-neutral-400)"
       },
       {
+        "name": "--al-theme-color-border-secondary-faint",
+        "value": "var(--al-color-neutral-700)"
+      },
+      {
+        "name": "--al-theme-color-border-secondary-strong",
+        "value": "var(--al-color-neutral-300)"
+      },
+      {
+        "name": "--al-theme-color-border-secondary-weak",
+        "value": "var(--al-color-neutral-600)"
+      },
+      {
+        "name": "--al-theme-color-border-success-bold",
+        "value": "var(--al-color-success-200)"
+      },
+      {
+        "name": "--al-theme-color-border-success-default",
+        "value": "var(--al-color-success-400)"
+      },
+      {
+        "name": "--al-theme-color-border-success-faint",
+        "value": "var(--al-color-success-900)"
+      },
+      {
+        "name": "--al-theme-color-border-success-strong",
+        "value": "var(--al-color-success-300)"
+      },
+      {
         "name": "--al-theme-color-border-success-weak",
         "value": "var(--al-color-success-800)"
+      },
+      {
+        "name": "--al-theme-color-border-tertiary-bold",
+        "value": "var(--al-color-tertiary-200)"
+      },
+      {
+        "name": "--al-theme-color-border-tertiary-default",
+        "value": "var(--al-color-tertiary-400)"
+      },
+      {
+        "name": "--al-theme-color-border-tertiary-faint",
+        "value": "var(--al-color-tertiary-900)"
+      },
+      {
+        "name": "--al-theme-color-border-tertiary-strong",
+        "value": "var(--al-color-tertiary-300)"
+      },
+      {
+        "name": "--al-theme-color-border-tertiary-weak",
+        "value": "var(--al-color-tertiary-800)"
+      },
+      {
+        "name": "--al-theme-color-border-warning-bold",
+        "value": "var(--al-color-warning-200)"
+      },
+      {
+        "name": "--al-theme-color-border-warning-default",
+        "value": "var(--al-color-warning-400)"
+      },
+      {
+        "name": "--al-theme-color-border-warning-faint",
+        "value": "var(--al-color-warning-900)"
+      },
+      {
+        "name": "--al-theme-color-border-warning-strong",
+        "value": "var(--al-color-warning-300)"
       },
       {
         "name": "--al-theme-color-border-warning-weak",
@@ -1712,7 +1993,19 @@
     ],
     "theme-color-content": [
       {
+        "name": "--al-theme-color-content-danger-bold",
+        "value": "var(--al-color-danger-200)"
+      },
+      {
         "name": "--al-theme-color-content-danger-default",
+        "value": "var(--al-color-danger-400)"
+      },
+      {
+        "name": "--al-theme-color-content-danger-faint",
+        "value": "var(--al-color-danger-700)"
+      },
+      {
+        "name": "--al-theme-color-content-danger-strong",
         "value": "var(--al-color-danger-400)"
       },
       {
@@ -1720,24 +2013,24 @@
         "value": "var(--al-color-neutral-800)"
       },
       {
-        "name": "--al-theme-color-content-default",
-        "value": "var(--al-color-neutral-200)"
-      },
-      {
-        "name": "--al-theme-color-content-default-faint",
-        "value": "var(--al-color-neutral-400)"
-      },
-      {
-        "name": "--al-theme-color-content-default-weak",
-        "value": "var(--al-color-neutral-400)"
-      },
-      {
         "name": "--al-theme-color-content-disabled-default",
         "value": "var(--al-color-neutral-500)"
       },
       {
+        "name": "--al-theme-color-content-info-bold",
+        "value": "var(--al-color-primary-200)"
+      },
+      {
         "name": "--al-theme-color-content-info-default",
         "value": "var(--al-color-primary-300)"
+      },
+      {
+        "name": "--al-theme-color-content-info-faint",
+        "value": "var(--al-color-primary-700)"
+      },
+      {
+        "name": "--al-theme-color-content-info-strong",
+        "value": "var(--al-color-primary-400)"
       },
       {
         "name": "--al-theme-color-content-info-weak",
@@ -1752,8 +2045,28 @@
         "value": "var(--al-color-neutral-800)"
       },
       {
+        "name": "--al-theme-color-content-neutral-default",
+        "value": "var(--al-color-neutral-200)"
+      },
+      {
+        "name": "--al-theme-color-content-neutral-faint",
+        "value": "var(--al-color-neutral-400)"
+      },
+      {
+        "name": "--al-theme-color-content-neutral-weak",
+        "value": "var(--al-color-neutral-400)"
+      },
+      {
+        "name": "--al-theme-color-content-primary-bold",
+        "value": "var(--al-color-primary-200)"
+      },
+      {
         "name": "--al-theme-color-content-primary-default",
         "value": "var(--al-color-primary-300)"
+      },
+      {
+        "name": "--al-theme-color-content-primary-faint",
+        "value": "var(--al-color-primary-700)"
       },
       {
         "name": "--al-theme-color-content-primary-strong",
@@ -1764,8 +2077,16 @@
         "value": "var(--al-color-primary-900)"
       },
       {
+        "name": "--al-theme-color-content-secondary-bold",
+        "value": "var(--al-color-neutral-300)"
+      },
+      {
         "name": "--al-theme-color-content-secondary-default",
         "value": "var(--al-color-neutral-400)"
+      },
+      {
+        "name": "--al-theme-color-content-secondary-faint",
+        "value": "var(--al-color-neutral-700)"
       },
       {
         "name": "--al-theme-color-content-secondary-strong",
@@ -1776,7 +2097,19 @@
         "value": "var(--al-color-neutral-800)"
       },
       {
+        "name": "--al-theme-color-content-success-bold",
+        "value": "var(--al-color-success-200)"
+      },
+      {
         "name": "--al-theme-color-content-success-default",
+        "value": "var(--al-color-success-400)"
+      },
+      {
+        "name": "--al-theme-color-content-success-faint",
+        "value": "var(--al-color-success-700)"
+      },
+      {
+        "name": "--al-theme-color-content-success-strong",
         "value": "var(--al-color-success-400)"
       },
       {
@@ -1784,7 +2117,39 @@
         "value": "var(--al-color-neutral-800)"
       },
       {
+        "name": "--al-theme-color-content-tertiary-bold",
+        "value": "var(--al-color-tertiary-200)"
+      },
+      {
+        "name": "--al-theme-color-content-tertiary-default",
+        "value": "var(--al-color-tertiary-300)"
+      },
+      {
+        "name": "--al-theme-color-content-tertiary-faint",
+        "value": "var(--al-color-tertiary-700)"
+      },
+      {
+        "name": "--al-theme-color-content-tertiary-strong",
+        "value": "var(--al-color-tertiary-400)"
+      },
+      {
+        "name": "--al-theme-color-content-tertiary-weak",
+        "value": "var(--al-color-tertiary-800)"
+      },
+      {
+        "name": "--al-theme-color-content-warning-bold",
+        "value": "var(--al-color-warning-200)"
+      },
+      {
         "name": "--al-theme-color-content-warning-default",
+        "value": "var(--al-color-warning-400)"
+      },
+      {
+        "name": "--al-theme-color-content-warning-faint",
+        "value": "var(--al-color-warning-700)"
+      },
+      {
+        "name": "--al-theme-color-content-warning-strong",
         "value": "var(--al-color-warning-400)"
       },
       {
@@ -1801,7 +2166,7 @@
     "theme-color-header": [
       {
         "name": "--al-theme-color-header-background",
-        "value": "var(--al-theme-color-background-default)"
+        "value": "var(--al-theme-color-background-neutral-default)"
       }
     ],
     "theme-color-inverse": [
