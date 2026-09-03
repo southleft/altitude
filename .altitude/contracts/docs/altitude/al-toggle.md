@@ -121,7 +121,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (5)
 
-`--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-focus-ring`, `--al-toggle-height`, `--al-toggle-width`
+`--al-theme-border-width-md`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-focus-ring`, `--al-toggle-height`, `--al-toggle-width`
 
 ---
 

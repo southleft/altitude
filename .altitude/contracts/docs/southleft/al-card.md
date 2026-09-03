@@ -60,7 +60,7 @@ system built on the same library.
 
 - Component set: **Card**
 - Node id: `25:8878` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=25-8878)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=25-8878)
 
 ## Props (17)
 
@@ -224,17 +224,17 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | border | `--al-theme-border-width` | `theme/border/width/@` |
 | border-bottom-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-bottom-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
-| border-top-color | `--al-theme-color-border-default-weak` | `theme/color/border/default-weak` |
+| border-top-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
 | border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | padding | `--al-card-padding` | — |
 | padding-bottom | `--al-card-padding` | — |
 | padding-left | `--al-card-padding` | — |
@@ -247,7 +247,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| border-color | `--al-theme-color-border-default-weak` | `theme/color/border/default-weak` |
+| border-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -257,7 +257,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | border | `--al-theme-border-width` | `theme/border/width/@` |
 | border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 
@@ -265,14 +265,14 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| border-color | `--al-theme-color-border-default-weak` | `theme/color/border/default-weak` |
+| border-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
 
 #### `tool`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | --al-card-padding | `--al-theme-space-xl` | `theme/space/xl` |
-| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | border | `--al-theme-border-width` | `theme/border/width/@` |
 | border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | gap | `--al-theme-space-sm` | `theme/space/sm` |
@@ -281,7 +281,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| border-color | `--al-theme-color-border-default-weak` | `theme/color/border/default-weak` |
+| border-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
 
 ## Code
 
@@ -291,7 +291,7 @@ _No events declared._
 
 ## Tokens referenced (10)
 
-`--al-card-padding`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default-strong`, `--al-theme-color-border-default-weak`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-default`, `--al-theme-space-lg`, `--al-theme-space-sm`, `--al-theme-space-xs`
+`--al-card-padding`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-default`, `--al-theme-space-lg`, `--al-theme-space-sm`, `--al-theme-space-xs`
 
 ---
 

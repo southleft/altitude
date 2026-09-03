@@ -93,12 +93,12 @@ Variant
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | border | `--al-theme-border-width` | `theme/border/width/@` |
 | border-bottom-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-bottom-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
-| border-top-color | `--al-theme-color-border-default-weak` | `theme/color/border/default-weak` |
+| border-top-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
 | border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
@@ -116,15 +116,15 @@ Variant
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -138,7 +138,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (13)
 
-`--al-font-size-13`, `--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default-weak`, `--al-theme-color-content-default`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-13`, `--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

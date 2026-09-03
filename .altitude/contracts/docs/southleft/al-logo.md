@@ -10,7 +10,7 @@ Component: al-logo
 
 - Component set: **Logo**
 - Node id: `22:3781` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3781)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3781)
 
 ## Props (3)
 
@@ -69,7 +69,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| color | `--al-theme-color-content-neutral-weak` | `theme/color/content/neutral-weak` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -86,7 +86,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-default-weak`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

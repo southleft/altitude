@@ -46,7 +46,7 @@ open/closed state, the button that drives it, and the `aria-expanded` /
 
 - Component set: **Header**
 - Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/
+- File: https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/
 
 ## Props (2)
 
@@ -101,7 +101,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-weak` | `theme/color/background/default-weak` |
+| background-color | `--al-theme-color-background-neutral-weak` | `theme/color/background/neutral-weak` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -115,7 +115,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (12)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-color-background-default-weak`, `--al-theme-color-background-primary-default`, `--al-theme-color-content-default-weak`, `--al-theme-color-content-primary-weak`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-color-background-neutral-weak`, `--al-theme-color-background-primary-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-weak`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

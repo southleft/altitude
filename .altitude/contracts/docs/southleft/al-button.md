@@ -10,7 +10,7 @@ Component: al-button
 
 - Component set: **Button**
 - Node id: `22:3434` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3434)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3434)
 
 ## Props (16)
 
@@ -162,7 +162,7 @@ _No events declared._
 | border-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
 | border-top-left-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
 | border-top-right-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
@@ -180,7 +180,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| color | `--al-theme-color-content-neutral-weak` | `theme/color/content/neutral-weak` |
 
 **`focus`**
 
@@ -206,27 +206,27 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 **On `hover`** (compound — wins over the generic state rule below):
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| color | `--al-theme-color-content-neutral-weak` | `theme/color/content/neutral-weak` |
 
 #### `neutral`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 **On `hover`** (compound — wins over the generic state rule below):
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-bold` | `theme/color/background/default-bold` |
+| background-color | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
 
 #### `secondary`
 
@@ -246,17 +246,17 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| border-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | border-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 **On `hover`** (compound — wins over the generic state rule below):
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| border-color | `--al-theme-color-border-default-weak` | `theme/color/border/default-weak` |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| border-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
+| color | `--al-theme-color-content-neutral-weak` | `theme/color/content/neutral-weak` |
 
 ### Per-state, variant-agnostic (`state`)
 
@@ -296,7 +296,7 @@ _No events declared._
 
 ## Tokens referenced (11)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`
 
 ---
 

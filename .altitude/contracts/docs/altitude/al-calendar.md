@@ -142,7 +142,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
@@ -156,390 +156,390 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.0.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.0.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.0.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.0.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.0.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.1.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.1.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.1.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.1.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.1.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.1.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.1.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.2.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.2.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.2.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.2.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.2.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.2.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.2.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.3.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.3.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.3.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.3.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.3.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.3.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.3.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.4.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.4.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`hover`** (node #0.1.0.1.4.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`focus`** (node #0.1.0.1.0.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.0.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.0.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.0.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.0.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.0.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.1.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.1.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.1.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.1.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.1.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.1.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.1.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.2.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.2.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.2.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.2.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.2.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.2.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.2.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.3.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.3.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.3.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.3.3.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.3.4.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.3.5.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.3.6.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.4.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.4.1.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`focus`** (node #0.1.0.1.4.2.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
 
 **`disabled`** (node #0.1.0.1.0.1.0)
@@ -734,7 +734,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (23)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-default-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-icon`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-icon`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
 
 ---
 

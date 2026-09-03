@@ -10,7 +10,7 @@ Component: al-chip
 
 - Component set: **Chip**
 - Node id: `22:3296` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3296)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3296)
 
 ## Props (4)
 
@@ -92,11 +92,11 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 | border-bottom-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-bottom-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
-| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | border-top-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-top-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
@@ -134,14 +134,14 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 #### `neutral`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 #### `primary`
 
@@ -162,9 +162,9 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| border-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | border-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 ## Code
 
@@ -174,7 +174,7 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ## Tokens referenced (11)
 
-`--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

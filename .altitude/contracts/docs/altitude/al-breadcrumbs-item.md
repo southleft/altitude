@@ -88,7 +88,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| color | `--al-theme-color-content-neutral-weak` | `theme/color/content/neutral-weak` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | font | `--al-theme-typography-body-lg` | — |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -101,17 +101,17 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default` | `theme/color/background/default` |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| background | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 **`hover`** (node #0.0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default` | `theme/color/background/default` |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| background | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -125,7 +125,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (9)
 
-`--al-theme-border-radius-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-lg`, `--al-theme-typography-body-lg-letter-spacing`
+`--al-theme-border-radius-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-lg`, `--al-theme-typography-body-lg-letter-spacing`
 
 ---
 

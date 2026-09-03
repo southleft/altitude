@@ -166,7 +166,7 @@ Value associated with the field
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 | border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 
@@ -174,7 +174,7 @@ Value associated with the field
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | border-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 | border-top-color | `--al-theme-color-border-primary-default` | `theme/color/border/primary-default` |
 
@@ -190,7 +190,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (21)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-icon-xxl`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-icon-xxl`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

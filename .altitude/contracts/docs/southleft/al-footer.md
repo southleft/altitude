@@ -35,7 +35,7 @@ hand-roll `display: grid`.
 
 - Component set: **Footer**
 - Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/
+- File: https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/
 
 ## Props (3)
 
@@ -90,7 +90,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-lg` | `theme/space/lg` |
 | gap | `--al-theme-space-lg` | `theme/space/lg` |
 | row-gap | `--al-theme-space-lg` | `theme/space/lg` |
@@ -107,7 +107,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (8)
 
-`--al-font-weight-bold`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xxl`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xxl`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

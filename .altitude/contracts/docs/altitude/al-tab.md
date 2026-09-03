@@ -98,7 +98,7 @@ Disabled attribute
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
 | border-bottom | `--al-theme-border-width-md` | `theme/border/width/md` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
@@ -116,13 +116,13 @@ Disabled attribute
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 
 **`hover`** (node #0.0)
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 
 **`focus`** (node #0)
 
@@ -174,7 +174,7 @@ Disabled attribute
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 
 ## Code
 
@@ -184,7 +184,7 @@ Disabled attribute
 
 ## Tokens referenced (10)
 
-`--al-font-weight-medium`, `--al-theme-border-width-md`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-medium`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

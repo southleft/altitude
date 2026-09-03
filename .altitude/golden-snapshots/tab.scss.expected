@@ -16,7 +16,7 @@
     margin: 0;
     padding: var(--al-theme-space-xs) var(--al-theme-space);
     background-color: var(--al-theme-color-background-transparent-default);
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     display: flex;
     gap: var(--al-theme-space-xs);
     align-items: center;
@@ -35,7 +35,7 @@
      * Tab with hover that is not active or disabled
      */
     &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-default);
+      background-color: var(--al-theme-color-background-neutral-default);
     }
 
     /**
@@ -64,8 +64,8 @@
      */
     &.al-is-active {
       @include al-theme-typography-body-sm-bold;
-      color: var(--al-theme-color-content-default-weak);
-      border-bottom-color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
+      border-bottom-color: var(--al-theme-color-content-neutral-weak);
     }
   }
 

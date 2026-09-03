@@ -10,7 +10,7 @@ Component: al-list-item
 
 - Component set: **List Item**
 - Node id: `22:3733` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3733)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3733)
 
 ## Props (11)
 
@@ -123,13 +123,13 @@ _None._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
 **`focus`**
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | outline | `--al-theme-border-width-md` | `theme/border/width/md` |
 | outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
 | outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
@@ -147,7 +147,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (7)
 
-`--al-theme-border-width-md`, `--al-theme-color-background-default-strong`, `--al-theme-color-focus-ring`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-theme-border-width-md`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-focus-ring`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

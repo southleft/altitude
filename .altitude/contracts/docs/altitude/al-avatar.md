@@ -70,14 +70,14 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-stronger` | — |
-| background-color | `--al-theme-color-background-default-stronger` | — |
+| background | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
+| background-color | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
 | border-bottom-left-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | border-bottom-right-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | border-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | border-top-left-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | border-top-right-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | height | `--al-theme-icon-xxxl` | `theme/icon/xxxl` |
 | letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
@@ -96,7 +96,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (11)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-round`, `--al-theme-color-background-danger-weak`, `--al-theme-color-background-default-stronger`, `--al-theme-color-content-danger-default`, `--al-theme-color-content-default`, `--al-theme-icon-xxxl`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-round`, `--al-theme-color-background-danger-weak`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-danger-default`, `--al-theme-color-content-neutral-default`, `--al-theme-icon-xxxl`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 
