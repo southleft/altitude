@@ -73,7 +73,7 @@ const terminal = html`
  * fixtures (`.sl-token-chip` / `.sl-terminal` in
  * apps/southleft/src/styles/layout.css), because the docs playground executes
  * this story as its preview: any drift here renders as docs↔site drift. The
- * terminal deliberately uses the brand PRIMITIVES (`--al-color-southleft-*`) —
+ * terminal deliberately uses the brand's ROLE ramp (`--al-color-neutral-*`) —
  * the site's terminal is always an ink panel regardless of mode, by design.
  */
 const fixtureStyles = html`
@@ -102,10 +102,24 @@ const fixtureStyles = html`
       font-size: 0.75rem;
       color: var(--al-theme-color-content-neutral-weak);
     }
+    /*
+     * The two --sl-art-* below are PAGE ART, not roles. They were
+     * --al-color-southleft-neutral-{light-500,dark-950}: primitives that lived
+     * in the design system only because this terminal mock and the Southleft
+     * footer wanted them. The Southleft brand now overrides the real
+     * color.neutral ramp instead of carrying a parallel namespace, so these
+     * two are declared where they are used. apps/southleft/src/styles/layout.css
+     * declares the same pair for the site.
+     */
+    .term,
+    .term__title {
+      --sl-art-ink-deepest: #100f0d;
+      --sl-art-sand-deep: #857a63;
+    }
     .term {
-      background: var(--al-color-southleft-neutral-dark-950);
-      color: var(--al-color-southleft-neutral-light-100);
-      border: var(--al-theme-border-width) solid var(--al-color-southleft-neutral-dark-600);
+      background: var(--sl-art-ink-deepest);
+      color: var(--al-color-neutral-200);
+      border: var(--al-theme-border-width) solid var(--al-color-neutral-700);
       border-radius: var(--al-theme-border-radius-md);
       font-family: var(--sl-font-mono, 'IBM Plex Mono', monospace);
       line-height: 1.7;
@@ -116,8 +130,8 @@ const fixtureStyles = html`
       align-items: center;
       gap: var(--al-theme-space-xs);
       padding: var(--al-theme-space-sm) var(--al-theme-space);
-      border-block-end: var(--al-theme-border-width) solid var(--al-color-southleft-neutral-dark-700);
-      background: var(--al-color-southleft-neutral-dark-900);
+      border-block-end: var(--al-theme-border-width) solid var(--al-color-neutral-800);
+      background: var(--al-color-neutral-900);
     }
     .term__dot {
       inline-size: 0.625rem;
@@ -128,7 +142,7 @@ const fixtureStyles = html`
       background: var(--al-color-danger-500);
     }
     .term__dot--2 {
-      background: var(--al-color-southleft-neutral-light-400);
+      background: var(--al-color-neutral-500);
     }
     .term__dot--3 {
       background: var(--al-color-primary-400);
@@ -136,7 +150,7 @@ const fixtureStyles = html`
     .term__title {
       margin-inline-start: auto;
       font-size: 0.6875rem;
-      color: var(--al-color-southleft-neutral-light-500);
+      color: var(--sl-art-sand-deep);
     }
     .term__body {
       margin: 0;
@@ -149,10 +163,10 @@ const fixtureStyles = html`
       color: var(--al-color-danger-500);
     }
     .term__cmd {
-      color: var(--al-color-southleft-neutral-light-50);
+      color: var(--al-color-neutral-100);
     }
     .term__out {
-      color: var(--al-color-southleft-neutral-light-400);
+      color: var(--al-color-neutral-500);
     }
     .term__ok {
       color: var(--al-color-success-500);

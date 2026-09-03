@@ -275,9 +275,6 @@ export const FAMILY_USAGE_RULES = {
   'color.transparent': 'Tier-1 fully-transparent colour (a single member, transparent.0). Exists so a semantic token can alias "no fill" instead of hard-coding `transparent`, which would break the alias chain. Consumed through theme.color.background.transparent-default.',
 
   // ---- tier-1 brand deltas (tier-2/brand/southleft) ----
-  'color.southleft.primary': brandDelta('southleft', 'primary'),
-  'color.southleft.neutral-light': brandDelta('southleft', 'neutral-light'),
-  'color.southleft.neutral-dark': brandDelta('southleft', 'neutral-dark'),
 
   // ---- tier-1 typography presets ----
   'typography.preset.body-xs': typographyPreset(12),

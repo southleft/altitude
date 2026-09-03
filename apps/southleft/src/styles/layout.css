@@ -12,6 +12,23 @@
    LIGHT-DOM RESET (spec 2026-08-22-southleft-example-1-to-1-parity, T1)
 \* ------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------ *   PAGE ART, not design-system roles.
+
+   Two colours the generative canvas and the footer paint with. They used to
+   be `--al-color-southleft-neutral-light-500` / `-dark-950`, tier-1-shaped
+   primitives that existed in the design system only because this app needed
+   them — which is exactly why the Southleft brand carried a whole parallel
+   `color.southleft.*` namespace instead of overriding the real role ramps.
+
+   The role ramps now carry Southleft's values, so these two have no home
+   there: no component reads them, and nothing about them is a role. They live
+   here, next to the artwork that uses them.
+\* ------------------------------------------------------------------ */
+:root {
+  --sl-art-sand-deep: #857a63;
+  --sl-art-ink-deepest: #100f0d;
+}
+
 /* Altitude's `core/reset.scss` (the `box-sizing: border-box` reset) is pulled
  * into `styles/component.scss` — i.e. into every component's SHADOW root —
  * but NOT into `styles/main.scss`, the global bundle this app imports

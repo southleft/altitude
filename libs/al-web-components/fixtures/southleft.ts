@@ -322,8 +322,8 @@ export function southleftParagraph(seed = 'southleft'): string {
 // ---------------------------------------------------------------------------
 
 /** Brand hexes, from the `southleft` host partials (no leading `#`, as placehold.co wants). */
-const INK = '181714'; // --al-color-southleft-neutral-dark-900, the dark canvas
-const PAPER = 'F3F1EB'; // --al-color-southleft-neutral-light-100, the light canvas
+const INK = '181714'; // --al-color-neutral-900, the dark canvas
+const PAPER = 'F3F1EB'; // --al-color-neutral-200, the light canvas
 const RED = 'F05735'; // the accent (see the hard-shadow tokens in tokens-brand-southleft.scss)
 
 /**
