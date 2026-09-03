@@ -1023,15 +1023,38 @@ export function publicParityReport(project) {
       unreachableStatuses: full.observation.unreachableStatuses,
       driftBasis: full.observation.driftBasis,
       contractsCompared: full.observation.contractsCompared,
+      /**
+       * Provenance COUNTS and the repoint flag — deliberately not the file keys
+       * themselves. `observedFileId` and `fileId` are Figma file keys, which
+       * this projection has always withheld and which
+       * apps/docs/scripts/check-status-panels.mjs re-checks the built HTML for.
+       * A reader needs to know that every observation is stale, not which file
+       * it was stale against.
+       */
+      provenance: full.observation.provenance,
+      fileRepointed: full.observation.fileRepointed,
     },
     scope: full.scope,
     summary: full.summary,
+    /**
+     * Property-level disagreement TOTALS. Counts and component tags only — no
+     * node ids, no file keys, no script paths. `pairsCompared` is the honest
+     * denominator: canvas dumps are gitignored, so on the deployed site this
+     * reads zero pairs compared rather than zero disagreements, and those are
+     * different claims that must not render the same way.
+     */
+    disagreements: full.disagreements,
     components: full.components.map((c) => ({
       tag: c.tag,
       status: c.status,
       origin: c.origin,
       driftBasis: c.driftBasis,
       figmaObserved: c.figmaObserved,
+      /** 'verified' | 'unrecorded' | 'stale-file'. A bare "NEVER OBSERVED"
+       * cannot distinguish "nobody has looked yet" from "what we recorded was
+       * read from a file this project no longer points at" — and those call for
+       * different actions. The file key itself stays withheld. */
+      observationProvenance: c.observationProvenance ?? 'unrecorded',
       figmaSetName: c.figma?.name ?? null,
       /** Node id — published so the docs can deep-link to THIS component's set
        * rather than dropping the reader at the file root. See figmaFileUrl. */
