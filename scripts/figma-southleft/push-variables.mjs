@@ -6,14 +6,27 @@
  *
  * Direction is code -> Figma. Nothing is ever deleted.
  *
- * STATUS 2026-09-03: this script DOES NOT RUN as written. Its tier-1 name rules
- * predate the status ramps, so it throws `no tier-1 name rule for
- * --al-color-danger-100` on the first colour it meets. That is independent of the
- * file-key fix below — it fails the same way whichever file it targets. Left in
- * place rather than deleted because the plan/chunk shape is still the reference for
- * a code -> Figma variable push, but treat it as a sketch to finish, not a tool to
- * reach for: the Southleft variable push on 2026-09-03 was done through the MCP
- * bridge directly.
+ * STATUS 2026-09-03: repaired and dry-run clean. Three things were wrong, and the
+ * first two hid the third:
+ *
+ *   1. The tier-1 name rules predated the status ramps, so it threw on the first
+ *      colour it met (`--al-color-danger-100`) and never reached anything else.
+ *   2. It planned four collections - Tier 1, Tier 2, Tier 2 Theme, Tier 2 Brand -
+ *      and the file has three: Tier 1 | Colors, Tier 1 | Primitive, Tier 2 | Theme.
+ *      Collections match BY NAME, so an --apply would have created four more beside
+ *      the real ones and duplicated every variable rather than updating anything.
+ *   3. Two name shapes disagreed with the file: `theme/size/control-lg` and
+ *      `theme/border/radius/role-action` keep the modifier on the last segment with
+ *      a HYPHEN, where their neighbours nest it behind a slash.
+ *
+ * Now verified against the live file rather than assumed: every one of the 377
+ * planned variables maps onto a variable that already exists there (Tier 1 | Colors
+ * and Tier 2 | Theme are exact set matches at 126 and 145; Tier 1 | Primitive is a
+ * 106-of-119 subset), so an --apply updates in place and creates nothing.
+ *
+ * NOT verified: the VALUES it would write, and the chunks themselves have never
+ * been executed against this file. The 2026-09-03 Southleft push was done through
+ * the MCP bridge directly. Dry-run it and read plan.json before trusting --apply.
  *
  *   node scripts/figma-southleft/push-variables.mjs              # dry run (default)
  *   node scripts/figma-southleft/push-variables.mjs --apply      # also emit apply chunks
@@ -35,7 +48,7 @@
  *   - paper/ink ramps live under `color/neutral/`, not `color/brand/`
  *   - font-weight is a STRING holding the Figma font-style name
  *   - letter-spacing is a unitless FLOAT (the `%` is lost — see EXCLUSIONS)
- *   - collections: Tier 1 | Tier 2 | Tier 2 Theme (Light,Dark) | Tier 2 Brand
+ *   - collections: Tier 1 | Colors, Tier 1 | Primitive, Tier 2 | Theme (Light,Dark)
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
@@ -79,8 +92,6 @@ function parseBundle(name) {
 
 const SL_LIGHT = parseBundle('tokens-southleft-light.css');
 const SL_DARK = parseBundle('tokens-southleft-dark.css');
-const AL_LIGHT = parseBundle('tokens-altitude-light.css');
-const AL_DARK = parseBundle('tokens-altitude-dark.css');
 
 /* -------------------------------------------------------------- exclusions
  * Tier-1 exclusions cascade: any tier-2 token whose `var()` target is excluded
@@ -95,6 +106,14 @@ const TIER1_EXCLUDE = [
   [/^--al-box-shadow-/, 'composite shadow: Figma variables are COLOR/FLOAT/STRING/BOOLEAN only (belongs in an effect style)'],
   [/^--al-typography-preset-/, 'composite font shorthand: belongs in a Figma text style, not a variable'],
   [/^--al-border-radius-round$/, '50% — Figma FLOAT is unitless and cannot hold a percentage'],
+  /*
+   * Read live from "Southleft V5" on 2026-09-03: Tier 1 | Colors carries
+   * color/<family>/N and color/<family>/alpha/N-N and NOTHING ELSE, so the
+   * paper/ink split has no counterpart to be named into. It used to be mapped to
+   * color/neutral/paper|ink, which is a name that no longer exists in any file.
+   */
+  [/^--al-color-neutral-(dark|light)-/, 'no Figma counterpart: the neutral ramp there is a single 100-900 scale'],
+  [/^--al-font-family-plex$/, 'no Figma counterpart: typography/font-family has editorial|grotesk|modern|mono|primary|secondary|soft|tech'],
 ];
 
 const excluded = []; // {name, figmaName?, reason}
@@ -123,13 +142,6 @@ const TIER1_RULES = [
   ['--al-border-radius-', 'border/radius', 1],
   ['--al-opacity-', 'opacity', 1],
   ['--al-animation-distance-', 'animation/distance', 1],
-  ['--al-color-southleft-neutral-light-', 'color/neutral/paper', 1],
-  ['--al-color-southleft-neutral-dark-', 'color/neutral/ink', 1],
-  ['--al-color-brand-', 'color/brand', 2],
-  ['--al-color-neutral-', 'color/neutral', 2],
-  ['--al-color-transparent-', 'color/transparent', 2],
-  ['--al-color-shadow-', 'color/shadow', 1],
-  ['--al-color-status-', 'color/status', 1],
   ['--al-font-size-', 'typography/font-size', 1],
   ['--al-line-height-', 'typography/line-height', 1],
   ['--al-font-family-', 'typography/font-family', 1],
@@ -145,7 +157,7 @@ const TIER2_RULES = [
   [/^border-width$/, () => 'theme/border/width/@'],
   [/^border-width-(.+)$/, (m) => `theme/border/width/${m[1]}`],
   [/^border-radius$/, () => 'theme/border/radius/@'],
-  [/^border-radius-role-(.+)$/, (m) => `theme/border/radius/role/${m[1]}`],
+  [/^border-radius-role-(.+)$/, (m) => `theme/border/radius/role-${m[1]}`], // role-action, NOT role/action — see the size/control note below
   [/^border-radius-(.+)$/, (m) => `theme/border/radius/${m[1]}`],
   [/^icon$/, () => 'theme/icon/@'],
   [/^icon-(.+)$/, (m) => `theme/icon/${m[1]}`],
@@ -159,9 +171,40 @@ const TIER2_RULES = [
   [/^box-shadow-(.+)$/, (m) => `theme/box-shadow/${m[1]}`],
   [/^typography-(body|heading|display)-(.+)$/, (m) => `theme/typography/${m[1]}/${m[2]}`],
   [/^color-(background|content|border|shadow|header|body)-(.+)$/, (m) => `theme/color/${m[1]}/${m[2]}`],
+  /*
+   * Read live 2026-09-03. Three shapes the original rules predate:
+   *   - `theme/size/control-lg` keeps the size on the LAST segment with a hyphen,
+   *     unlike space/icon/radius which nest it behind a slash. Matching the file
+   *     matters more than being consistent with its neighbours.
+   *   - `theme/color/focus-ring` is a leaf, not a family/stop pair.
+   *   - `theme/color/inverse/N` is a numbered ramp, so it is not in the
+   *     background|content|border family alternation above.
+   */
+  [/^size-control$/, () => 'theme/size/control'],
+  [/^size-control-(.+)$/, (m) => `theme/size/control-${m[1]}`],
+  [/^color-focus-ring$/, () => 'theme/color/focus-ring'],
+  [/^color-inverse-(\d+)$/, (m) => `theme/color/inverse/${m[1]}`],
+];
+
+/*
+ * TIER-1 COLOURS. Regexes, not the prefix table above: a prefix rule has to be
+ * told how many segments to split off, and `color/primary/500` (one) and
+ * `color/primary/alpha/500-30` (two) disagree, so one prefix cannot serve both.
+ * Both shapes were read live from the file on 2026-09-03 — these are the only
+ * two Tier 1 | Colors has.
+ */
+const TIER1_COLOR_RULES = [
+  [/^--al-color-([a-z]+)-alpha-(\d+-\d+)$/, (m) => `color/${m[1]}/alpha/${m[2]}`],
+  [/^--al-color-([a-z]+)-(\d+)$/, (m) => `color/${m[1]}/${m[2]}`],
 ];
 
 function figmaName(cssVar) {
+  if (!cssVar.startsWith('--al-theme-')) {
+    for (const [re, fn] of TIER1_COLOR_RULES) {
+      const m = cssVar.match(re);
+      if (m) return fn(m);
+    }
+  }
   if (cssVar.startsWith('--al-theme-')) {
     const rest = cssVar.slice('--al-theme-'.length);
     for (const [re, fn] of TIER2_RULES) {
@@ -271,7 +314,6 @@ for (const k of tier2Keys) {
 
 const tier2Plain = [];   // Tier 2 (Default)
 const tier2Theme = [];   // Tier 2 Theme (Light, Dark)
-const tier2Brand = [];   // Tier 2 Brand (Southleft)
 
 for (const k of tier2Keys.sort()) {
   const name = tier2Kept.get(k);
@@ -295,38 +337,53 @@ for (const k of tier2Keys.sort()) {
   }
 }
 
-/* Tier 2 Brand — the mode-independent tier-2 deltas vs the neutral `altitude`
- * reference bundle. Mode-varying deltas are NOT duplicated here; they already
- * carry their per-mode values in Tier 2 Theme. */
-for (const k of tier2Keys.sort()) {
-  const name = tier2Kept.get(k);
-  if (!name) continue;
-  const slL = SL_LIGHT[k], slD = SL_DARK[k];
-  const alL = AL_LIGHT[k], alD = AL_DARK[k];
-  const isDelta = slL !== alL || slD !== alD;
-  if (!isDelta) continue;
-  if (slL !== slD) continue; // mode-varying -> lives in Tier 2 Theme
-  const v = tier2Value(k, slL);
-  if (v.dropped) continue;
-  tier2Brand.push({
-    token: k, name,
-    resolvedType: name.startsWith('theme/color/') ? 'COLOR' : (v.type || 'FLOAT'),
-    values: { Southleft: v },
-    source: slL, altitude: alL,
-  });
-}
+/*
+ * COLLECTIONS — the three that EXIST in the file, read live on 2026-09-03, not
+ * the four this script used to invent.
+ *
+ * It planned `Tier 1` / `Tier 2` / `Tier 2 Theme` / `Tier 2 Brand`. The file has
+ * `Tier 1 | Primitive`, `Tier 1 | Colors` and `Tier 2 | Theme`. Collections are
+ * matched BY NAME, so applying the old plan would not have updated anything — it
+ * would have created four more collections beside the three real ones and
+ * duplicated every variable in the file. That is the second spelling the sync
+ * skill warns about (`Tier 2 Theme` vs `Tier 2 | Theme`), and it is why the
+ * routing below keys off the Figma name this script already computes rather
+ * than off which code tier a token came from:
+ *
+ *   color/...        -> Tier 1 | Colors
+ *   theme/color/...  -> Tier 2 | Theme      (Light, Dark)
+ *   everything else  -> Tier 1 | Primitive
+ *
+ * The last line is the one that looks wrong and is not: the live
+ * `Tier 1 | Primitive` holds `theme/space/@`, `theme/icon/*`, `theme/border/*`,
+ * `theme/layout/*`, `theme/size/*` and `theme/opacity/disabled` alongside the raw
+ * primitives. Tier here is the FILE's grouping, not the token tree's.
+ *
+ * There is no Tier 2 Brand. This file IS Southleft — the role ramps carry the
+ * brand's values directly (spec: the 2026-09-03 role-ramp migration), so a brand
+ * mode would be a second copy of what Tier 1 | Colors already says.
+ */
+const isColorPrimitive = (v) => v.name.startsWith('color/');
+const COLLECTIONS = [
+  {
+    name: 'Tier 1 | Colors',
+    modes: ['Default'],
+    variables: tier1Vars.filter(isColorPrimitive),
+  },
+  {
+    name: 'Tier 1 | Primitive',
+    modes: ['Default'],
+    variables: [...tier1Vars.filter((v) => !isColorPrimitive(v)), ...tier2Plain],
+  },
+  { name: 'Tier 2 | Theme', modes: ['Light', 'Dark'], variables: tier2Theme },
+];
 
 const plan = {
   generated: new Date().toISOString(),
   file: { name: FILE_NAME, key: FILE_KEY },
-  source: ['tokens-southleft-light.css', 'tokens-southleft-dark.css', 'tokens-altitude-light.css', 'tokens-altitude-dark.css'],
+  source: ['tokens-southleft-light.css', 'tokens-southleft-dark.css'],
   opacityConvention: OPACITY_PERCENT ? 'percent (0-100)' : 'fraction (0-1) — matches the live Altitude library',
-  collections: [
-    { name: 'Tier 1', modes: ['Default'], variables: tier1Vars },
-    { name: 'Tier 2', modes: ['Default'], variables: tier2Plain },
-    { name: 'Tier 2 Theme', modes: ['Light', 'Dark'], variables: tier2Theme },
-    { name: 'Tier 2 Brand', modes: ['Southleft'], variables: tier2Brand },
-  ],
+  collections: COLLECTIONS,
   excluded,
 };
 

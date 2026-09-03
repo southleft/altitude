@@ -28,8 +28,8 @@ siblings), which is the shape of a component the system was missing.
 ## Figma
 
 - Component set: **Section Header**
-- Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/
+- Node id: `5301:1242` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=5301-1242)
 
 ## Props (8)
 
