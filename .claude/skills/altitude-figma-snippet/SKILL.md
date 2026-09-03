@@ -129,8 +129,7 @@ One rule each. Dated incident narrative for every trap below lives in
    and the measured facts were the ones telling the truth.
 10. **Capture pages at deviceScaleFactor 1** — 2 quadruples raster payloads for zero
     fill-quality gain.
-11. `argOf(flag)` from scripts/lib/argv.mjs takes an argv ARRAY as its second
-    parameter, not a default value.
+11. **`argOf(flag)` from scripts/lib/argv.mjs takes an argv ARRAY as its second parameter, not a default value.**
 
 ## Library-lane impact watch
 

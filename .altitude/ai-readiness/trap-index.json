@@ -8,135 +8,23 @@
     "superseded": "the trap was wrong or its cause was removed; `supersededBy` says what replaced it"
   },
   "totals": {
-    "traps": 52,
+    "traps": 68,
     "bySkill": {
       "altitude-figma-generate": 15,
       "altitude-figma-repair": 14,
-      "altitude-figma-snippet": 10,
-      "altitude-figma-sync": 13
+      "altitude-figma-snippet": 11,
+      "altitude-figma-sync": 28
     },
     "covered": 8,
     "byDisposition": {
-      "open": 41,
+      "open": 57,
       "evaluated": 8,
       "gated": 2,
       "superseded": 1
     },
-    "deduplicated": 3
+    "deduplicated": 4
   },
   "skips": [
-    {
-      "skill": "altitude-figma-snippet",
-      "line": 132,
-      "number": 11,
-      "text": "11. `argOf(flag)` from scripts/lib/argv.mjs takes an argv ARRAY as its second",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 217,
-      "number": 1,
-      "text": "1. The bridge runs `documentAccess: dynamic-page`, so the synchronous variable A",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 224,
-      "number": 2,
-      "text": "2. `combineAsVariants` requires the components to ALREADY be on the target page ",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 226,
-      "number": 3,
-      "text": "3. The plugin sandbox **has `fetch`**, and the manifest whitelists `localhost:92",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 228,
-      "number": 4,
-      "text": "4. `setBoundVariableForPaint` keeps the LITERAL colour you pass as a fallback an",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 231,
-      "number": 5,
-      "text": "5. **Opacity variables are PERCENTAGES (0–100) — `opacity/40` = `40`, which IS t",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 237,
-      "number": 6,
-      "text": "6. `shadowRoot.textContent` does NOT include slotted light-DOM text. Resolve",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 240,
-      "number": 7,
-      "text": "7. Component CSS lives in `@layer al.component`. An appended stylesheet — layere",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 244,
-      "number": 8,
-      "text": "8. `!important` is per DECLARATION, not per rule. Scoring it per rule lets one",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 247,
-      "number": 9,
-      "text": "9. Shorthands containing `var()` yield EMPTY longhands (\"pending substitution\"),",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 250,
-      "number": 10,
-      "text": "10. Tokens hide behind per-component override hooks:",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 254,
-      "number": 11,
-      "text": "11. Using the computed value to arbitrate between candidate tokens works ONLY in",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 257,
-      "number": 12,
-      "text": "12. `main.css` bakes **dark** into `:root`; light is the separate override bundl",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 259,
-      "number": 13,
-      "text": "13. Serve harness assets with `cache-control: no-store`. A cached `measure-lib.j",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 380,
-      "number": 22,
-      "text": "22. **`calc()` multiples of a token are silently dropped — Figma variables canno",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
-    {
-      "skill": "altitude-figma-sync",
-      "line": 398,
-      "number": 25,
-      "text": "25. **A text node auto-resizes and throws away a measured box that is taller tha",
-      "reason": "numbered line in a trap section with no **bold title** — not extractable, so it has no id and cannot be cited or dispositioned"
-    },
     {
       "skill": "altitude-figma-sync",
       "line": 430,
@@ -683,6 +571,188 @@
       "provenance": null
     },
     {
+      "id": "altitude-figma-snippet#11",
+      "skill": "altitude-figma-snippet",
+      "number": 11,
+      "title": "argOf(flag) from scripts/lib/argv.mjs takes an argv ARRAY as its second parameter, not a default value.",
+      "line": 132,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#1",
+      "skill": "altitude-figma-sync",
+      "number": 1,
+      "title": "The bridge runs documentAccess: dynamic-page",
+      "line": 217,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#2",
+      "skill": "altitude-figma-sync",
+      "number": 2,
+      "title": "combineAsVariants requires the components to ALREADY be on the target page",
+      "line": 224,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#3",
+      "skill": "altitude-figma-sync",
+      "number": 3,
+      "title": "The plugin sandbox has fetch",
+      "line": 226,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#4",
+      "skill": "altitude-figma-sync",
+      "number": 4,
+      "title": "setBoundVariableForPaint keeps the LITERAL colour you pass as a fallback",
+      "line": 228,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#5",
+      "skill": "altitude-figma-sync",
+      "number": 5,
+      "title": "Opacity variables are PERCENTAGES (0–100)",
+      "line": 231,
+      "disposition": "open",
+      "canonical": "altitude-figma-repair#2",
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#6",
+      "skill": "altitude-figma-sync",
+      "number": 6,
+      "title": "shadowRoot.textContent does NOT include slotted light-DOM text.",
+      "line": 237,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#7",
+      "skill": "altitude-figma-sync",
+      "number": 7,
+      "title": "Component CSS lives in @layer al.component.",
+      "line": 240,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#8",
+      "skill": "altitude-figma-sync",
+      "number": 8,
+      "title": "!important is per DECLARATION, not per rule.",
+      "line": 244,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#9",
+      "skill": "altitude-figma-sync",
+      "number": 9,
+      "title": "Shorthands containing var() yield EMPTY longhands (\"pending substitution\")",
+      "line": 247,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#10",
+      "skill": "altitude-figma-sync",
+      "number": 10,
+      "title": "Tokens hide behind per-component override hooks",
+      "line": 250,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#11",
+      "skill": "altitude-figma-sync",
+      "number": 11,
+      "title": "Using the computed value to arbitrate between candidate tokens works ONLY in the default state.",
+      "line": 254,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#12",
+      "skill": "altitude-figma-sync",
+      "number": 12,
+      "title": "main.css bakes dark into :root",
+      "line": 257,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
+      "id": "altitude-figma-sync#13",
+      "skill": "altitude-figma-sync",
+      "number": 13,
+      "title": "Serve harness assets with cache-control: no-store.",
+      "line": 259,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
       "id": "altitude-figma-sync#14",
       "skill": "altitude-figma-sync",
       "number": 14,
@@ -761,6 +831,19 @@
       "provenance": null
     },
     {
+      "id": "altitude-figma-sync#22",
+      "skill": "altitude-figma-sync",
+      "number": 22,
+      "title": "calc() multiples of a token are silently dropped — Figma variables cannot do arithmetic.",
+      "line": 380,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
+    },
+    {
       "id": "altitude-figma-sync#23",
       "skill": "altitude-figma-sync",
       "number": 23,
@@ -785,6 +868,19 @@
       "supersededBy": "the display→axis rule in .claude/skills/altitude-figma-generate/SKILL.md — layoutAxisFor() in scripts/contracts/figma/build-set-code.mjs",
       "coveredBy": [],
       "provenance": "The original trap read: \"Never force an auto-layout onto a root that is not flex in the browser. Defaulting to HORIZONTAL laid al-tabs' tablist and its panel side by side — 557x40 against a real 291x79. Non-flex roots keep their measured absolute geometry.\" The symptom was real; the diagnosis and the fix were both wrong, and the last sentence is false. Measured live on al-table: root frame 243px wide inside a 100x100 component, the run reporting maxVariantWidth/Height 100. The bug was live on 327 nodes across 53 of 103 components until 2026-08-27. After the fix al-tabs is VERTICAL — al-c-tabs__header at y0, al-c-tabs__body at y36, component 426x168, zero overflow. THIS ENTRY IS THE REASON THE LIFECYCLE EXISTS: it was marked SUPERSEDED by hand and nothing but a cross-session mailbox message noticed."
+    },
+    {
+      "id": "altitude-figma-sync#25",
+      "skill": "altitude-figma-sync",
+      "number": 25,
+      "title": "A text node auto-resizes and throws away a measured box taller than one line",
+      "line": 398,
+      "disposition": "open",
+      "canonical": null,
+      "gate": null,
+      "supersededBy": null,
+      "coveredBy": [],
+      "provenance": "Brought into the index 2026-09-03: it was a numbered trap with no bold title, so the extractor never saw it and it could not be cited or dispositioned. Prose only — no eval case, no gate."
     },
     {
       "id": "altitude-figma-sync#26",

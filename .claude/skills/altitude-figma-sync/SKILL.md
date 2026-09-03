@@ -214,49 +214,49 @@ One rule each. Dated incident narrative for every trap below lives in
 (`open` / `evaluated` / `gated`) — read that, not this file, when you want the story.
 
 **Plugin API**
-1. The bridge runs `documentAccess: dynamic-page`, so the synchronous variable APIs THROW.
+1. **The bridge runs `documentAccess: dynamic-page`**, so the synchronous variable APIs THROW.
    Use `getLocalVariablesAsync()`, `getLocalVariableCollectionsAsync()`,
    `getVariableByIdAsync()`, `setCurrentPageAsync()` — and **the variable ones live on
    `figma.variables.*`, not `figma.*`**. `figma.getVariableByIdAsync` is undefined, and the
    bridge reports it as a bare `TypeError: not a function` with no name. The same bare
    error is what `node.fills.map(...)` throws when `fills` is `figma.mixed` (a symbol,
    truthy) — guard with `Array.isArray(node.fills)`.
-2. `combineAsVariants` requires the components to ALREADY be on the target page —
+2. **`combineAsVariants` requires the components to ALREADY be on the target page** —
    `page.appendChild(comp)` first, or it throws "must be in the same page as the parent".
-3. The plugin sandbox **has `fetch`**, and the manifest whitelists `localhost:9223`–`9232`.
+3. **The plugin sandbox has `fetch`**, and the manifest whitelists `localhost:9223`–`9232`.
    Use `bridge-io.mjs` to move JSON both ways instead of inlining big payloads.
-4. `setBoundVariableForPaint` keeps the LITERAL colour you pass as a fallback and Figma
+4. **`setBoundVariableForPaint` keeps the LITERAL colour you pass as a fallback** and Figma
    does not always refresh it — pass black and a variant can render **black** despite a
    correct binding. Resolve the variable inside Figma and use its real RGBA as the literal.
-5. **Opacity variables are PERCENTAGES (0–100) — `opacity/40` = `40`, which IS the code's
-   `0.4`. Never compare opacity by value; bind it and read back `node.opacity`.**
+5. **Opacity variables are PERCENTAGES (0–100)** — `opacity/40` = `40`, which IS the code's
+   `0.4`. Never compare opacity by value; bind it and read back `node.opacity`.
    canonical: altitude-figma-repair#2. The fraction-enforcing `setValue` calls in
    `scripts/figma-var-fixes.mjs` were removed for this reason.
 
 **CSS reading**
-6. `shadowRoot.textContent` does NOT include slotted light-DOM text. Resolve
+6. **`shadowRoot.textContent` does NOT include slotted light-DOM text.** Resolve
    `slot.assignedNodes({flatten:true})`, and take typography from `slot.parentElement` —
    the flattened-tree parent slotted text actually inherits from.
-7. Component CSS lives in `@layer al.component`. An appended stylesheet — layered or not —
+7. **Component CSS lives in `@layer al.component`.** An appended stylesheet — layered or not —
    CANNOT override it, and inline styles behaved unreliably too. So **never try to apply**
    `:hover` etc. Rewrite the pseudo to a class purely to decide WHICH rules match; their
    authored values are the state delta.
-8. `!important` is per DECLARATION, not per rule. Scoring it per rule lets one
+8. **`!important` is per DECLARATION, not per rule.** Scoring it per rule lets one
    `!important` in `.al-c-button` promote every declaration in that rule above all
    variant and state rules — presents as "specificity is broken".
-9. Shorthands containing `var()` yield EMPTY longhands ("pending substitution"), so
+9. **Shorthands containing `var()` yield EMPTY longhands ("pending substitution")**, so
    `getPropertyValue('padding-top')` returns `''`. Probe the shorthand explicitly and
    expand it yourself.
-10. Tokens hide behind per-component override hooks:
+10. **Tokens hide behind per-component override hooks**:
     `padding: var(--al-button-padding, var(--al-theme-space-xs) var(--al-theme-space))`.
     The first `var()` is a HOOK, not a token. Walk the fallback chain to the first custom
     property actually defined on the element.
-11. Using the computed value to arbitrate between candidate tokens works ONLY in the
-    default state. For hover/focus/active/disabled the computed value is still the
+11. **Using the computed value to arbitrate between candidate tokens works ONLY in the default state.**
+    For hover/focus/active/disabled the computed value is still the
     default, so arbitration would pick the BASE rule over the state's own rule.
-12. `main.css` bakes **dark** into `:root`; light is the separate override bundle
+12. **`main.css` bakes dark into `:root`**; light is the separate override bundle
     `dist/css/css/theme/tokens-light.css`. Load main.css then tokens-light.css for light.
-13. Serve harness assets with `cache-control: no-store`. A cached `measure-lib.js` makes a
+13. **Serve harness assets with `cache-control: no-store`.** A cached `measure-lib.js` makes a
     correct fix look broken.
 14. **`background:` (the shorthand) authors 38 fill tokens across 19 components** —
     probing only `background-color` silently loses them (that is how toggle-button's
@@ -377,8 +377,8 @@ flattens). Everything else lands within 4px of the browser.
     A new instance otherwise inherits the default variant's BOOLEANS — Figma's Button
     default has both icon slots ON, so `<al-button>Save</al-button>` rendered with two
     icons it never had. Set `Slot Before` / `Slot After` explicitly.
-22. **`calc()` multiples of a token are silently dropped — Figma variables cannot do
-    arithmetic.** `padding: calc(var(--al-theme-space) * 3) var(--al-theme-space)` reports
+22. **`calc()` multiples of a token are silently dropped — Figma variables cannot do arithmetic.**
+    `padding: calc(var(--al-theme-space) * 3) var(--al-theme-space)` reports
     `theme-space` on all four sides, so Figma bound 16px where the browser paints 48px and
     empty-state came out 84px short. Emit the computed LITERAL (`{lit: 48}`) when a
     declaration multiplies a token; keep the binding on the sides that do not.
@@ -395,8 +395,8 @@ flattens). Everything else lands within 4px of the browser.
     out. The real cause was reading `layout.direction` on a non-flex node. **The answer is
     the RIGHT axis, not no axis** — `layoutAxisFor()` in
     `scripts/contracts/figma/build-set-code.mjs`.
-25. **A text node auto-resizes and throws away a measured box that is taller than one
-    line** (al-range's 64px label on a 24px line → component 40px short). Pin the size —
+25. **A text node auto-resizes and throws away a measured box taller than one line**
+    (al-range's 64px label on a 24px line → component 40px short). Pin the size —
     but CAP it at ~3 lines: some nodes carry text while their box is really a layout
     container (file-upload's dropzone wrapper is 180px around a 24px line, and pinning it
     made the component 156px too tall).

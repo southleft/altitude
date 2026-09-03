@@ -3,7 +3,7 @@
  * Self-test for scripts/ai-readiness/build-trap-index.mjs (T9, spec
  * 2026-08-29-parity-judgement-gates-and-evals).
  *
- * The trap index is a DENOMINATOR — "N of 52 traps have an eval case" — and a
+ * The trap index is a DENOMINATOR — "N of 68 traps have an eval case" — and a
  * denominator that silently undercounts is worse than no measurement at all,
  * because it makes the gap look smaller than it is. That is not hypothetical:
  * the first version of the extractor matched only list-style traps
@@ -97,8 +97,8 @@ console.log('\n4. The tracked index');
     assert('the index exists (pnpm run evals:traps -- --write)', false);
   } else {
     const index = JSON.parse(readFileSync(INDEX, 'utf8'));
-    assert('it counts 52 traps — the real number, not the "~70" an early estimate claimed',
-      index.totals.traps === 52);
+    assert('it counts 68 traps — the "~70" early estimate was closer than the 52 that replaced it',
+      index.totals.traps === 68);
     assert('every skill contributes', Object.values(index.totals.bySkill).every((n) => n > 0));
     assert('the per-skill counts sum to the total',
       Object.values(index.totals.bySkill).reduce((a, b) => a + b, 0) === index.totals.traps);
