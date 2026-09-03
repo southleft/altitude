@@ -29,8 +29,8 @@
     gap: var(--al-theme-space-xs);
     flex-flow: row wrap;
     border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-lg));
-    color: var(--al-theme-color-content-default);
-    background-color: var(--al-theme-color-background-default);
+    color: var(--al-theme-color-content-neutral-default);
+    background-color: var(--al-theme-color-background-neutral-default);
     box-shadow: var(--al-theme-box-shadow);
 
     /**
@@ -233,13 +233,13 @@
     box-sizing: border-box;
     gap: 0;
     border: var(--al-theme-border-width) solid #{$sl-border-faint};
-    background: var(--al-theme-color-background-default-strong);
+    background: var(--al-theme-color-background-neutral-strong);
     border-radius: var(--al-theme-border-radius);
     box-shadow: none;
     transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
     &:hover {
-      border-color: var(--al-theme-color-border-default-weak);
+      border-color: var(--al-theme-color-border-neutral-weak);
     }
 
     /* The glyph nudges toward its own corner on hover. It is the only motion
@@ -263,7 +263,7 @@
       font-weight: 600;
       line-height: 1.1;
       margin: 0;
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
     }
 
     .al-c-card__cue {
@@ -278,7 +278,7 @@
 
     .al-c-card__body {
       margin-block-start: var(--al-theme-space);
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
       line-height: 1.6;
     }
 
@@ -311,7 +311,7 @@
       font-family: #{$sl-font-mono};
       font-size: 0.75rem;
       line-height: 1rem;
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
   }
 
@@ -330,18 +330,18 @@
     box-sizing: border-box;
     gap: var(--al-theme-space-sm);
     border: var(--al-theme-border-width) solid #{$sl-border-faint};
-    background: var(--al-theme-color-background-default-strong);
+    background: var(--al-theme-color-background-neutral-strong);
     border-radius: var(--al-theme-border-radius);
     box-shadow: none;
     transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
     &:hover {
-      border-color: var(--al-theme-color-border-default-weak);
+      border-color: var(--al-theme-color-border-neutral-weak);
     }
 
     .al-c-card__body {
       gap: var(--al-theme-space-sm);
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
       font-size: 0.875rem;
       line-height: 1.625;
     }
@@ -384,7 +384,7 @@
   .al-c-card__command-prefix {
     /* Muted against the accent command it introduces. Reads as chrome, not as
      * part of what you would actually type. */
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   /**
@@ -408,13 +408,13 @@
     overflow: hidden;
     gap: 0;
     border: var(--al-theme-border-width) solid #{$sl-border-faint};
-    background: var(--al-theme-color-background-default-strong);
+    background: var(--al-theme-color-background-neutral-strong);
     border-radius: var(--al-theme-border-radius);
     box-shadow: none;
     transition: border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
     &:hover {
-      border-color: var(--al-theme-color-border-default-weak);
+      border-color: var(--al-theme-color-border-neutral-weak);
     }
 
     /**
@@ -435,7 +435,7 @@
       aspect-ratio: var(--al-card-media-aspect-ratio, 16 / 9);
       overflow: hidden;
       border-block-end: var(--al-theme-border-width) solid #{$sl-border-faint};
-      background: var(--al-theme-color-background-default-strong);
+      background: var(--al-theme-color-background-neutral-strong);
       display: grid;
       place-items: center;
       height: auto;
@@ -451,7 +451,7 @@
 
     .al-c-card__fallback {
       font-family: #{$sl-font-mono};
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
 
     /* The body carries no gap of its own here — the content column owns the
@@ -472,7 +472,7 @@
       font-size: 0.8125rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
 
     .al-c-card__footer {
@@ -496,7 +496,7 @@
       align-items: center;
       font-family: #{$sl-font-mono};
       font-size: 0.75rem;
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
       border: var(--al-theme-border-width) solid #{$sl-border-faint};
       border-radius: var(--al-theme-border-radius-xs);
       padding: 0.125rem var(--al-theme-space-xs);
@@ -509,7 +509,7 @@
    */
   .al-c-card__excerpt {
     margin: 0;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     font-size: var(--al-font-size-14);
     line-height: 1.6;
     display: -webkit-box;

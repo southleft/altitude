@@ -33,10 +33,10 @@
   .al-c-range__input {
     background: linear-gradient(
       var(--rtlGradientToRight, 90deg),
-      var(--al-theme-color-background-default-strong) 0%,
-      var(--al-theme-color-background-default-strong) 40%,
-      var(--al-theme-color-background-default-strong) 40%,
-      var(--al-theme-color-background-default-strong) 100%
+      var(--al-theme-color-background-neutral-strong) 0%,
+      var(--al-theme-color-background-neutral-strong) 40%,
+      var(--al-theme-color-background-neutral-strong) 40%,
+      var(--al-theme-color-background-neutral-strong) 100%
     );
     border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
     height: var(--al-range-track-height);
@@ -59,7 +59,7 @@
      * Disabled state for track on range
      */
     &:disabled::-webkit-slider-runnable-track {
-      background-color: var(--al-theme-color-background-default);
+      background-color: var(--al-theme-color-background-neutral-default);
     }
 
     /**
@@ -161,7 +161,7 @@
     &::-moz-range-track {
       width: 100%;
       height: var(--al-range-track-height);
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
       border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
       border: none;
     }
@@ -238,9 +238,9 @@
     min-width: 30px;
     width: max-content;
     z-index: var(--al-z-index-200);
-    background-color: var(--al-theme-color-background-default-strong);
+    background-color: var(--al-theme-color-background-neutral-strong);
     border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius));
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     box-shadow: var(--al-theme-box-shadow);
     margin-block-end: var(--al-theme-space-xs);
     font-size: var(--al-theme-space-sm);
@@ -252,7 +252,7 @@
       position: absolute;
       inset-block-end: calc(-1 * 10px / 2);
       inset-inline-start: calc(50% - 10px / 2);
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
       transform: rotate(45deg);
       width: 10px;
       height: 10px;
@@ -269,7 +269,7 @@
   .al-c-range__input-one-label,
   .al-c-range__input-two-label {
     display: block;
-    background-color: var(--al-theme-color-background-default-strong);
+    background-color: var(--al-theme-color-background-neutral-strong);
     border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius));
     padding: var(--al-theme-space-xs);
     position: relative;
@@ -325,7 +325,7 @@
       appearance: none;
       width: 100%;
       height: var(--al-range-track-height);
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
       border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
       margin: 0;
       border: 0;
@@ -492,6 +492,6 @@
     */
   .al-c-range-prefix-text,
   .al-c-range-suffix-text {
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
   }
 }

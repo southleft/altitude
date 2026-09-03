@@ -124,7 +124,7 @@
      `prefers-reduced-motion` block below already uses
      (`:host(:not([motion='full']))`).
 
-     `--al-theme-color-border-default` is DELIBERATELY left with no reset
+     `--al-theme-color-border-neutral-default` is DELIBERATELY left with no reset
      rule — same "an axis may omit a state rather than write an unsafe one"
      call the density axis above makes for `comfortable`, for a harder reason:
      this token varies by BOTH mode (`tier-2/theme/{light,dark}/colors.json`)
@@ -132,8 +132,8 @@
      overrides `border.default` directly — southleft is NOT the brand-neutral
      case `border-default` was assumed to be), and every consumer reads it
      with no `var(…, fallback)` (`border: … solid
-     var(--al-theme-color-border-default)`, and on divider/stepper-item/tabs
-     `background-color: var(--al-theme-color-border-default)` — no second
+     var(--al-theme-color-border-neutral-default)`, and on divider/stepper-item/tabs
+     `background-color: var(--al-theme-color-border-neutral-default)` — no second
      argument anywhere). That rules out both remedies this file uses
      elsewhere: `initial` computes to the guaranteed-invalid value with no
      fallback to fall back TO, so a consumer with no `var()` fallback doesn't
@@ -148,19 +148,19 @@
      out of this axis's scope. Measured, not assumed, that `more` is ALREADY
      a no-op for this property on any branded, moded host: with
      `brand="southleft" mode="dark" contrast="more"` set explicitly,
-     `--al-theme-color-border-default` resolves to southleft's own `#4a453a`,
+     `--al-theme-color-border-neutral-default` resolves to southleft's own `#4a453a`,
      not `currentColor` — the generated brand+mode partial
      (`:host([brand='southleft'][mode='dark'])`, 0,3,0) already outranks
      `[contrast='more']` (0,2,0) by specificity, regardless of source order.
      Pre-existing, unrelated to the opacity fix; left as a follow-up. */
   :host([contrast='more']) {
-    --al-theme-color-border-default: currentColor;
+    --al-theme-color-border-neutral-default: currentColor;
     --al-theme-opacity-disabled: var(--al-opacity-100);
   }
 
   :host(:not([contrast='more'])) {
     // Only opacity resets here — see the comment above for why
-    // --al-theme-color-border-default has no safe reset in this axis today.
+    // --al-theme-color-border-neutral-default has no safe reset in this axis today.
     --al-theme-opacity-disabled: var(--al-opacity-40);
   }
 

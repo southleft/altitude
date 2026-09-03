@@ -87,16 +87,16 @@
    */
   .al-c-button--tertiary {
     background-color: var(--al-theme-color-background-transparent-default);
-    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-    color: var(--al-theme-color-content-default);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
+    color: var(--al-theme-color-content-neutral-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
       background-color: var(--al-theme-color-background-transparent-default);
-      border-color: var(--al-theme-color-border-default-weak);
-      color: var(--al-theme-color-content-default-weak);
+      border-color: var(--al-theme-color-border-neutral-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
   }
 
@@ -105,14 +105,14 @@
    */
   .al-c-button--bare {
     background-color: var(--al-theme-color-background-transparent-default);
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
       background-color: var(--al-theme-color-background-transparent-default);
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
   }
 
@@ -125,14 +125,14 @@
    * destructive confirm is now a primary button with destructive copy.
    */
   .al-c-button--neutral {
-    background-color: var(--al-theme-color-background-default-strong);
-    color: var(--al-theme-color-content-default);
+    background-color: var(--al-theme-color-background-neutral-strong);
+    color: var(--al-theme-color-content-neutral-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-default-bold);
+      background-color: var(--al-theme-color-background-neutral-bold);
     }
   }
 
@@ -195,7 +195,7 @@
     width: var(--al-theme-size-control);
     border-radius: 0;
     line-height: 1;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     background: var(--al-theme-color-background-transparent-default);
 
     /**
@@ -231,8 +231,8 @@
      * Menu item button hover state
      */
     &:hover:not(:active, :disabled) {
-      color: var(--al-theme-color-content-default-weak);
-      background: var(--al-theme-color-background-default-strong);
+      color: var(--al-theme-color-content-neutral-weak);
+      background: var(--al-theme-color-background-neutral-strong);
 
       /**
        * Show focus outline with rounded borders on focus-visible

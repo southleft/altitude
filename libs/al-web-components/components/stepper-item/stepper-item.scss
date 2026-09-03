@@ -59,8 +59,8 @@
     height: 32px;
     border-radius: 50%;
     background-color: var(--al-theme-color-background-transparent-default);
-    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-    color: var(--al-theme-color-content-default);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
+    color: var(--al-theme-color-content-neutral-default);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,8 +78,8 @@
      * Completed state
      */
     .al-is-complete & {
-      background-color: var(--al-theme-color-content-default-weak);
-      border-color: var(--al-theme-color-content-default-weak);
+      background-color: var(--al-theme-color-content-neutral-weak);
+      border-color: var(--al-theme-color-content-neutral-weak);
       color: var(--al-theme-color-content-inverse-default);
     }
   }
@@ -93,7 +93,7 @@
     align-items: center;
     justify-content: center;
     border: none;
-    background-color: var(--al-theme-color-border-default);
+    background-color: var(--al-theme-color-border-neutral-default);
     margin: auto;
     height: 1px;
     width: 92px;
@@ -125,7 +125,7 @@
     gap: var(--al-theme-space-xs);
     width: max-content;
     max-width: 136px;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     --al-icon-width: #{var(--al-theme-icon-md)};
     --al-icon-height: #{var(--al-theme-icon-md)};
 
@@ -133,14 +133,14 @@
      * Active state
      */
     .al-is-active & {
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
     }
 
     /**
      * Completed state
      */
      .al-is-complete & {
-       color: var(--al-theme-color-content-default-weak);
+       color: var(--al-theme-color-content-neutral-weak);
      }
 
     /**
@@ -205,13 +205,13 @@
    */
   .al-c-stepper-item__description {
     @include al-theme-typography-body-sm;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
 
     /**
      * Completed state
      */
     .al-is-complete & {
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
   }
 }

@@ -21,7 +21,7 @@ registerIcons({ 'caret-up': caretUp, 'caret-down': caretDown });
  * story) or an `<al-layout variant="bento">`.
  *
  * @slot icon - Optional leading icon, rendered above the value.
- * @cssproperty --al-stat-value-color - Text color of the value. Defaults to `--al-theme-color-content-default`.
+ * @cssproperty --al-stat-value-color - Text color of the value. Defaults to `--al-theme-color-content-neutral-default`.
  */
 export class ALStat extends ALElement {
   static el = 'al-stat';

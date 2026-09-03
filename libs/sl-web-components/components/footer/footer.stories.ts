@@ -38,14 +38,14 @@ const fixtureStyles = html`
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
       margin: 0;
     }
     .footer-blurb {
       margin: 0;
       font-size: 0.875rem;
       line-height: 1.625;
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
     .footer-links {
       list-style: none;
@@ -57,12 +57,12 @@ const fixtureStyles = html`
       margin-block-start: 0.5rem;
     }
     .footer-link {
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
       text-decoration: none;
       transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
     }
     .footer-link:hover {
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
     }
     .footer-link:focus-visible {
       outline: 2px solid var(--al-theme-color-content-info-default);

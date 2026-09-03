@@ -13,8 +13,8 @@ import styles from './chip.scss';
  *
  * @event onChipClose - Fired when the chip's remove control is activated. Carries no detail payload; read the chip's own properties from `event.target`.
   *
- * @cssproperty --al-chip-background - Chip surface. Defaults to `--al-theme-color-background-default-strong`.
- * @cssproperty --al-chip-color - Label colour. Defaults to `--al-theme-color-content-default-weak`.
+ * @cssproperty --al-chip-background - Chip surface. Defaults to `--al-theme-color-background-neutral-strong`.
+ * @cssproperty --al-chip-color - Label colour. Defaults to `--al-theme-color-content-neutral-weak`.
  * @cssproperty --al-chip-border - Border shorthand. Defaults to `none`.
  * @cssproperty --al-chip-border-radius - Corner radius. Defaults to `4px`.
  * @cssproperty --al-chip-padding - Padding shorthand. Defaults to `space-xxs space-sm`.
