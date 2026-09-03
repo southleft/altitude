@@ -83,6 +83,20 @@
 :root {
   --bg: #f7f6f3;
   --bg2: #ffffff;
+
+  /*
+   * THE FALLBACK THE BRAND HOST USES when a semantic surface token is not
+   * there. It has to be stated PER THEME, because the `al-theme` rule below
+   * sits inside <html> and therefore overrides the `[data-theme='dark']`
+   * value above for the whole shell subtree. A literal there is a literal in
+   * BOTH themes: on 2026-09-03 a dev server serving a pre-rename main.css had
+   * no `background-neutral-weak`, the `#ffffff` fallback fired, and the entire
+   * shell hard-locked to white while the toggle, the label, `data-theme` and
+   * every component correctly said dark. The body behind it was dark; nothing
+   * you could see was.
+   */
+  --bg-boot: #f7f6f3;
+  --bg2-boot: #ffffff;
   --fg: #191813;
   --fg-weak: #6e6b60;
   --line: #d2cfc6;
@@ -132,6 +146,28 @@
   --sidebar-w: 264px;
   --pad-x: 64px;
   --ease: cubic-bezier(0.15, 0.99, 0.18, 0.99);
+
+  /*
+   * BOOT FALLBACKS for every chrome variable the brand host re-binds below.
+   * Stated per theme because the `al-theme` rule sits INSIDE <html>, so a
+   * literal fallback there wins over `[data-theme='dark']` for the whole
+   * shell. When a semantic token is missing, the shell must degrade to THIS
+   * theme's colour, not to light.
+   */
+  --blue-boot: #2e5ce6;
+  --blue-hover-boot: #2549c4;
+  --fg-boot: #191813;
+  --fg-weak-boot: #6e6b60;
+  --line-boot: #d2cfc6;
+  --line-weak-boot: #e7e5de;
+  --al-bg-default-boot: #ffffff;
+  --al-bg-strong-boot: #f7f6f3;
+  --al-bg-stronger-boot: #eceae4;
+  --al-content-boot: #191813;
+  --al-content-weak-boot: #6e6b60;
+  --al-border-boot: #d2cfc6;
+  --al-border-weak-boot: #e7e5de;
+  --status-gap-boot: #cc2b36;
 }
 
 /* The dark half of the boot palette — same rule: the default brand's resolved
@@ -139,6 +175,8 @@
 [data-theme='dark'] {
   --bg: #131311;
   --bg2: #1d1d1a;
+  --bg-boot: #131311;
+  --bg2-boot: #1d1d1a;
   --fg: #f1f0ea;
   --fg-weak: #a5a399;
   --line: #3c3c35;
@@ -157,6 +195,20 @@
   --status-ok: #4cd98a;
   --status-warn: #f5b942;
   --status-gap: #ff6d76;
+  --blue-boot: #7290ff;
+  --blue-hover-boot: #8ea6ff;
+  --fg-boot: #f1f0ea;
+  --fg-weak-boot: #a5a399;
+  --line-boot: #3c3c35;
+  --line-weak-boot: #2c2c28;
+  --al-bg-default-boot: #1d1d1a;
+  --al-bg-strong-boot: #2c2c28;
+  --al-bg-stronger-boot: #3c3c35;
+  --al-content-boot: #f1f0ea;
+  --al-content-weak-boot: #a5a399;
+  --al-border-boot: #3c3c35;
+  --al-border-weak-boot: #2c2c28;
+  --status-gap-boot: #ff6d76;
 }
 
 /* ------------------------------------------------------------------ base */
@@ -231,8 +283,8 @@ html body {
  */
 al-theme {
   display: contents;
-  --blue: var(--al-theme-color-content-primary-default, #4375ff);
-  --blue-hover: var(--al-theme-color-content-primary-strong, #6b93ff);
+  --blue: var(--al-theme-color-content-primary-default, var(--blue-boot));
+  --blue-hover: var(--al-theme-color-content-primary-strong, var(--blue-hover-boot));
 
   /*
    * PAGE SURFACES, bound to the brand by the same mechanism and for the same
@@ -247,7 +299,7 @@ al-theme {
    *
    * WHY `background-default-weak` IS THE PAGE COLOUR, rather than a judgement
    * call: the token layer says so itself —
-   * `--al-theme-color-body-background: var(--al-theme-color-background-default-weak)`
+   * `--al-theme-color-body-background: var(--al-theme-color-background-neutral-weak)`
    * (styles/dist/css/theme/tokens-{light,dark}.css:436, both modes).
    *
    * WHY THE LEAF AND NOT THAT ALIAS. `body-background` is declared only in the
@@ -270,8 +322,8 @@ al-theme {
    * purpose — this is the backgrounds-only half of the brand, so the type
    * ramp and hairlines keep the canvas's neutrals.
    */
-  --bg: var(--al-theme-color-background-default-weak, #ffffff);
-  --bg2: var(--al-theme-color-background-default, #f8f8f6);
+  --bg: var(--al-theme-color-background-neutral-weak, var(--bg-boot));
+  --bg2: var(--al-theme-color-background-neutral-default, var(--bg2-boot));
 
   /*
    * TYPE AND RULES, on the same footing as the surfaces above.
@@ -312,10 +364,10 @@ al-theme {
    * separation from `--fg` — if secondary copy now reads too close to
    * primary, that is the trade and this is the line to revisit.
    */
-  --fg: var(--al-theme-color-content-default, #101010);
-  --fg-weak: var(--al-theme-color-content-default-weak, #3a3a3a);
-  --line: var(--al-theme-color-content-default-weak, #3a3a3a);
-  --line-weak: var(--al-theme-color-border-default-weak, #d9d9d9);
+  --fg: var(--al-theme-color-content-neutral-default, var(--fg-boot));
+  --fg-weak: var(--al-theme-color-content-neutral-weak, var(--fg-weak-boot));
+  --line: var(--al-theme-color-content-neutral-weak, var(--line-boot));
+  --line-weak: var(--al-theme-color-border-neutral-weak, var(--line-weak-boot));
 
   /*
    * The `--al-*` mirrors were LITERAL COPIES of these very tokens — every one
@@ -324,13 +376,13 @@ al-theme {
    * reference brand and a real fix for every other one: the theme switch and
    * the outline buttons were painting Altitude's greys on Southleft's site.
    */
-  --al-bg-default: var(--al-theme-color-background-default, #e9e7e2);
-  --al-bg-strong: var(--al-theme-color-background-default-strong, #f2f1ee);
-  --al-bg-stronger: var(--al-theme-color-background-default-bold, #f4f3f1);
-  --al-content: var(--al-theme-color-content-default, #101010);
-  --al-content-weak: var(--al-theme-color-content-default-weak, #3a3a3a);
-  --al-border: var(--al-theme-color-border-default, #b0b0b0);
-  --al-border-weak: var(--al-theme-color-border-default-weak, #d9d9d9);
+  --al-bg-default: var(--al-theme-color-background-neutral-default, var(--al-bg-default-boot));
+  --al-bg-strong: var(--al-theme-color-background-neutral-strong, var(--al-bg-strong-boot));
+  --al-bg-stronger: var(--al-theme-color-background-neutral-bold, var(--al-bg-stronger-boot));
+  --al-content: var(--al-theme-color-content-neutral-default, var(--al-content-boot));
+  --al-content-weak: var(--al-theme-color-content-neutral-weak, var(--al-content-weak-boot));
+  --al-border: var(--al-theme-color-border-neutral-default, var(--al-border-boot));
+  --al-border-weak: var(--al-theme-color-border-neutral-weak, var(--al-border-weak-boot));
 
   /*
    * `--status-gap` migrates and its two siblings CANNOT, which is a fact about
@@ -349,7 +401,7 @@ al-theme {
    * these need as TEXT (`.status--*` sets `color`). Not introduced here and
    * not fixed here — worth its own issue.
    */
-  --status-gap: var(--al-theme-color-content-danger-default, #f05735);
+  --status-gap: var(--al-theme-color-content-danger-default, var(--status-gap-boot));
 
   /*
    * THE ACCENT'S COMPANIONS, brand-bound the same way (spec
@@ -751,7 +803,7 @@ html[data-booting] .shell {
  * that owns it, then becomes solid enough to aim at.
  */
 .sidebar__nav:hover {
-  scrollbar-color: var(--al-theme-color-content-default-weak) transparent;
+  scrollbar-color: var(--al-theme-color-content-neutral-weak) transparent;
 }
 
 /*
@@ -777,7 +829,7 @@ html[data-booting] .shell {
 }
 
 .sidebar__nav::-webkit-scrollbar-thumb:hover {
-  background-color: var(--al-theme-color-content-default-weak);
+  background-color: var(--al-theme-color-content-neutral-weak);
 }
 
 .sidebar__group {
@@ -1646,13 +1698,13 @@ html[data-booting] .shell {
  */
 .sidebar__results {
   margin-top: 10px;
-  border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+  border-top: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);
   padding-top: 10px;
 }
 
 .sidebar__results-label {
   margin: 0 0 6px;
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 .sidebar__results-list {
@@ -1679,7 +1731,7 @@ html[data-booting] .shell {
 
 /* One line of context, not a preview pane. */
 .sidebar__result-excerpt {
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1690,6 +1742,6 @@ html[data-booting] .shell {
    wrong here, so it is re-expressed as weight rather than background. */
 .sidebar__result-excerpt mark {
   background: none;
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
   font-weight: 600;
 }
