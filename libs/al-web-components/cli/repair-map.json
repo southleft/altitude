@@ -2,7 +2,8 @@
   "_meta": {
     "purpose": "Machine-readable repair guide for Altitude usage violations. Keyed by the stable error CODE emitted by the validator (cli/validate.mjs). An agent that gets a violation looks up its `code` here to learn how to fix it. Human prose lives in cli/REPAIR.md.",
     "honesty": "If no Altitude element, attribute, or value expresses what a design needs, STOP. Do not invent an attribute, hard-code a color, or reach past the design system to fake it. Report the gap — an honest 'Altitude can't express X yet' is useful signal, while a faked workaround is silent drift the next person inherits.",
-    "codesAreStable": "Error codes are append-only. A code's meaning never changes and it is never removed; only the human `detail` may change."
+    "codesAreStable": "Error codes are append-only. A code's meaning never changes and it is never removed; only the human `detail` may change.",
+    "severity": "A code beginning ERR_ fails the run (exit 1). A code beginning WARN_ is advisory and exits 0 unless --strict is passed. Every violation also carries an explicit `severity` field."
   },
   "ERR_UNKNOWN_COMPONENT": {
     "title": "Unknown element",
@@ -11,7 +12,7 @@
   },
   "ERR_UNKNOWN_ATTRIBUTE": {
     "title": "Unknown attribute",
-    "means": "An attribute was set that the element's contract does not declare.",
+    "means": "An attribute was set that the element's contract does not declare. Lookup is case-insensitive, as HTML attributes are — `isDisabled` and `isdisabled` are the same attribute — so this fires only on a name that genuinely does not exist.",
     "fix": "Remove the attribute, or replace it with a valid one from the element's contract. slot, id, class, style, part, aria-*, data-*, and event/framework bindings are always allowed."
   },
   "ERR_INVALID_ENUM": {
@@ -23,5 +24,40 @@
     "title": "Type mismatch",
     "means": "An attribute was given a value of the wrong type (e.g. a non-boolean where a boolean is expected).",
     "fix": "Pass a value of the type the attribute expects (boolean attributes take true/false or bare presence)."
+  },
+  "ERR_UNKNOWN_SLOT": {
+    "title": "Unknown slot",
+    "means": "llms.txt rule 3. A `slot=\"…\"` names a slot on the PARENT element, and that parent renders no slot by that name. Content aimed at a slot that does not exist is dropped from the rendered output entirely — it does not fall back to the default slot.",
+    "fix": "Point `slot` at a slot the parent element actually declares — the allowed names are listed above. To place content in the default slot, remove the `slot` attribute altogether. Do not invent a slot name: if the parent has no slot for this content, report the gap."
+  },
+  "ERR_PHANTOM_TOKEN": {
+    "title": "Token that does not exist",
+    "means": "llms.txt rule 2. A `--al-*` custom property is read through `var()` that is not in the shipped token set. CSS resolves an unknown custom property silently — to its fallback, or to nothing — so the page renders and is wrong, in a way no browser error will ever tell you about.",
+    "fix": "Replace it with a real token name from the shipped set (https://altitude.pages.dev/docs/llms-tokens.txt, or the `altitude_get_tokens` MCP tool). If a suggestion is offered, it is the nearest real token. If no token expresses what is needed, report the gap rather than inventing a plausible-looking name."
+  },
+  "WARN_RAW_VALUE": {
+    "title": "Raw value where a token exists",
+    "means": "llms.txt rule 1. A hard-coded hex colour or px length appears in a declaration that styles an Altitude element, on a CSS property the token set covers. It renders identically today and then stops following brand, mode, density and contrast the moment any of those change.",
+    "fix": "Replace the literal with the `var(--al-…)` token for that role. Colours come from the --al-theme-color-* families, spacing from --al-theme-space-*, radii from --al-theme-border-radius-*, type from --al-theme-typography-*. Geometry the token set deliberately does not cover — a one-off width or height, a 1px hairline — is not flagged and needs no change."
+  },
+  "WARN_HANDROLLED_LAYOUT": {
+    "title": "Hand-rolled arrangement",
+    "means": "llms.txt rule 5. An element sets `display: flex` or `display: grid` and arranges two or more sibling Altitude components inside it. Arrangement belongs to the layout primitive, not to ad-hoc CSS or to a new wrapper component.",
+    "fix": "Replace the wrapper with `<al-layout>` and express the arrangement as props: `direction`, `gap`, `align`, `justify`, `wrap`, `grow`, `stretchItems`, `responsive`, `fullHeight`, `noCollapse`, plus the `constrained` / `grid` / `bento` variants with `size` / `gutter` / `columns`. Do not create a new `*-group` wrapper — a wrapper that owns no behaviour, ARIA relationship or state is `<al-layout>` with props."
+  },
+  "ERR_MISSING_THEME_HOST": {
+    "title": "No <al-theme> host",
+    "means": "llms.txt rule 4. This source is a document root — it has an `<html>`/`<body>` element or it owns registration — and it renders Altitude components with no `<al-theme>` ancestor. Tokens are set on that host, not on `:root`, so every component falls back to unthemed values.",
+    "fix": "Wrap the rendered components in `<al-theme brand=\"…\">` (add `mode`, `density`, `contrast` or `motion` as needed). One host near the root of the document is enough — nesting more is a real SSR cost, not a safety measure. Inner fragments are never flagged: only a root is expected to carry the host."
+  },
+  "WARN_MIXED_REGISTRATION": {
+    "title": "Two registration paths in one document",
+    "means": "llms.txt rule 6. This document sets `window.alAutoRegistry = true` AND takes a second registration path (importing @southleft/al-react wrappers, or calling registerAltitude({ mode: 'versioned' })). With the flag set, a deep import self-registers the plain tag first; the wrapper's suffixed define then throws NotSupportedError, which is caught and downgraded to a console.error — so the suffixed tag is never defined and the element silently never upgrades.",
+    "fix": "Pick ONE path per document. Template frameworks and plain HTML: set window.alAutoRegistry = true inline in <head> and use deep imports. React: import the wrappers from @southleft/al-react and set NO flag. Micro-frontends: set no flag and call registerAltitude({ mode: 'versioned' }). Remove whichever of the two this document is not using. See .altitude/REGISTRATION.md."
+  },
+  "WARN_A11Y_NAME": {
+    "title": "No accessible name",
+    "means": "The component's own guidance states an accessible-name obligation this usage does not meet. Today that is the icon-only button: with `hideText` set the slotted text is visually hidden, so it cannot be the accessible name, and without `label` the button ships with no accessible name at all (apps/docs/src/content/guidance/button.yaml).",
+    "fix": "Add `label=\"…\"` describing the ACTION (it becomes aria-label on both the <button> and <a> branches), put the glyph in the `before` slot, and do not also leave visible text — a hidden text node plus a label produces a redundant accessible name. `aria-label` / `aria-labelledby` satisfy the obligation too."
   }
 }
