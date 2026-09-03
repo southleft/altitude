@@ -199,9 +199,11 @@ value that doesn't exist, **stop and report the gap** — don't fake it past the
 ### MCP server
 
 For an agent connected over MCP rather than shelling out, [`libs/altitude-mcp`](./libs/altitude-mcp)
-is a stdio server exposing the same contract surface as eight tools: `altitude_list_components`,
+is a stdio server exposing the same contract surface as nine tools: `altitude_list_components`,
 `altitude_get_component`, `altitude_validate` (wraps the CLI above, same codes), `altitude_get_tokens`
-(tier/brand/mode-filtered), `altitude_search_icons` (the 1,512-glyph Phosphor catalog),
+(tier/brand/mode-filtered), `altitude_resolve_token` (an intent — surface + role + emphasis — resolved
+to exactly ONE token, walking past the emphasis rungs that resolve to the same value),
+`altitude_search_icons` (the 1,512-glyph Phosphor catalog),
 `altitude_generate_theme` (the deterministic OKLCH solver — never calls an LLM),
 `altitude_check_parity` (per-project Figma ↔ code parity, each entry carrying a ready-to-run
 `aiPrompt`), and `altitude_list_ds_projects` (the design systems this repo drives, from
