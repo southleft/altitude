@@ -9,6 +9,31 @@ with a brand switch, and not a fork per client. Today that is two sites:
 | the registry's `default` | `/docs/` | the whole component library | its own |
 | every other project | `/docs/<id>/` | that project's `library.components` | its own |
 
+## Restart the dev server after adding a route or rebuilding
+
+`pnpm --filter al-app-docs start` (port 6120) holds its route manifest and module
+graph in memory. A server left running across a dependency rebuild or a new file
+in `src/pages/` goes stale, and it does not say so — it serves plausible, wrong
+answers:
+
+- every `*.json` endpoint 500s with
+  `NoManifestAvailableError: new FetchState(request) was called outside of an
+  Astro server`, including ones that were working before and still build fine;
+- pages keep rendering, but against whatever `main.css` was current when the
+  process started — a stale bundle here made the whole docs shell render light
+  while the theme toggle correctly said dark (2026-09-03).
+
+Both symptoms came from one process that had been up since before a token
+rebuild. If something in the docs behaves impossibly, stop and restart it first:
+
+```sh
+pnpm --filter al-app-docs exec astro dev stop
+pnpm --filter al-app-docs start
+```
+
+The build is unaffected — `pnpm --filter al-app-docs build` reads from disk every
+time, which is why CI never sees either symptom.
+
 Run `pnpm --filter al-app-docs check:coverage` for the live numbers; they are
 never quoted here, for the same reason no component count is typed in the site.
 
