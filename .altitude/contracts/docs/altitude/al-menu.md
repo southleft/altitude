@@ -94,8 +94,8 @@ _No interaction states recorded._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default` | `theme/color/background/default` |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | border-bottom-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-bottom-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
@@ -117,7 +117,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (15)
 
-`--al-base-space`, `--al-font-size-13`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-font-size-13`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

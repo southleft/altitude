@@ -12,7 +12,7 @@
     width: 100%;
     min-width: 360px;
     margin-block-start: 0;
-    background-color: var(--al-calendar-background-color, var(--al-theme-color-background-default));
+    background-color: var(--al-calendar-background-color, var(--al-theme-color-background-neutral-default));
     /*
      * These two were transposed: `border-radius` read `--al-calendar-box-shadow`
      * and `box-shadow` read `--al-calendar-border-radius`. The swap was masked
@@ -54,7 +54,7 @@
     border: 0;
     padding: var(--al-theme-space-xs);
     text-align: center;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
   }
 
   /**
@@ -103,7 +103,7 @@
   .al-c-calendar__header-cell {
     @include al-theme-typography-body-xs;
     text-transform: uppercase;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     padding-block-end: var(--al-theme-space);
   }
 
@@ -126,7 +126,7 @@
      */
     &:focus-visible,
     &:hover {
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
       cursor: pointer;
       outline: none;
     }
@@ -161,7 +161,7 @@
     &.al-is-available {
       @include al-theme-typography-body-sm;
 
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
     }
 
     /**
@@ -186,7 +186,7 @@
     &:disabled,
     &:disabled:focus,
     &:disabled:hover {
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
       cursor: not-allowed;
       background: none;
       opacity: var(--al-theme-opacity-disabled);
@@ -204,7 +204,7 @@
     height: 100%;
     overflow: auto;
     z-index: 1;
-    background: var(--al-theme-color-background-default);
+    background: var(--al-theme-color-background-neutral-default);
   }
 
   /* ------------------------------------*\
@@ -221,7 +221,7 @@
   }
 
   .al-c-month-selector__item {
-    border-block-end: 1px solid var(--al-theme-color-border-default);
+    border-block-end: 1px solid var(--al-theme-color-border-neutral-default);
     padding: var(--al-theme-space) 0;
     display: grid;
     grid-template-columns: min-content 1fr;
@@ -243,7 +243,7 @@
 
   .al-c-month-selector__year-heading {
     @include al-theme-typography-body-sm;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     margin: var(--al-theme-space-xs) 0 0;
   }
 
@@ -263,7 +263,7 @@
     abbr {
       border-block-end: 0;
       text-decoration: none;
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
     }
 
     /**
@@ -271,7 +271,7 @@
      */
     &:focus-visible,
     &:hover {
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
       cursor: pointer;
       outline: none;
     }
@@ -289,7 +289,7 @@
     &:disabled,
     &:disabled:focus,
     &:disabled:hover {
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
       cursor: not-allowed;
       background: none;
       opacity: var(--al-theme-opacity-disabled);

@@ -94,7 +94,7 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 
 **`disabled`**
 
@@ -114,7 +114,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (8)
 
-`--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-background-transparent-default`, `--al-theme-icon-lg`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-icon-lg`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
 
 ---
 

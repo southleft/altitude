@@ -1296,7 +1296,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           // text kept createText's literal black, which is invisible on a
           // dark sheet and never re-resolves with the theme mode. Content
           // text is content/default by definition (2026-08-28, sl T7).
-          const paint = await boundSolid(ownColorL || nodeColor || 'theme/color/content/default');
+          const paint = await boundSolid(ownColorL || nodeColor || 'theme/color/content/neutral-default');
           if (paint) tn.fills = [paint];
           textNodes.push(tn);
           continue;
@@ -1400,7 +1400,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           const ownColor = t['color'] && t['color'] !== caseRootColor ? t['color'] : null;
           // Token first; then the page-lane measured color literal; the
           // theme content/default fallback only when neither exists.
-          const paint = await boundSolid(ownColor || nodeColor || (child.fcCss ? null : 'theme/color/content/default'));
+          const paint = await boundSolid(ownColor || nodeColor || (child.fcCss ? null : 'theme/color/content/neutral-default'));
           if (paint) tn.fills = [paint];
           else if (child.fcCss) { const lp = cssSolid(child.fcCss); if (lp) tn.fills = [lp]; }
           // COLORED RUNS (round 7 — the terminal's green ticks / red
@@ -1994,7 +1994,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       // row with NO measured color token otherwise leaves the label at
       // createText's literal black, which never re-resolves with theme mode
       // (2026-08-28, sl T7 — text-block's lead was invisible on dark sheets).
-      const contentPaint = await boundSolid(tokens['color'] || 'theme/color/content/default');
+      const contentPaint = await boundSolid(tokens['color'] || 'theme/color/content/neutral-default');
 
       // Icon Before (leading) — appended FIRST so it sits before the label in
       // the auto-layout's row order. T23: visibility is STATIC per this

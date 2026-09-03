@@ -36,11 +36,12 @@ Two MCP servers get conflated constantly:
 - `figma-console` — 121 tools, **write-capable**, needs the Desktop Bridge.
 - `figma-dev-mode-mcp-server` — 6 tools, all `get_*`, **read-only**, no setup. Handy for
   reading structure fast, but it abbreviates variable names (it shows
-  `color/content/default` where the real variable is `theme/color/content/default`).
+  `color/content/default` where the real variable is `theme/color/content/neutral-default`).
   **Never audit names with it** — use `figma_get_variables` through the bridge.
 
 Also available: the **`altitude` MCP** (`libs/altitude-mcp`, already in `.mcp.json`) —
-eight tools: `altitude_list_components`, `altitude_get_tokens`, `altitude_get_component`,
+nine tools: `altitude_list_components`, `altitude_get_tokens`, `altitude_resolve_token`,
+`altitude_get_component`,
 `altitude_validate`, `altitude_search_icons`, `altitude_check_parity`,
 `altitude_list_ds_projects`, `altitude_generate_theme` (roster of record:
 `libs/altitude-mcp/src/lib/tools.mjs`; `check:mcp-docs` gates this list). Use it for
@@ -154,16 +155,13 @@ which one and why. If you verified a component some other way, say so explicitly
 = "human"` in the manifest. Do not reach for that to get past a failing check: a
 failing check is the finding, not an obstacle.
 
-Skipping this leaves the component reporting stale drift (`code-drift` /
-`missing-in-figma`) in `altitude_check_parity`, `GET /parity.json` and the
-docs-site ParityPanel even though the Figma side is now correct — a Figma-
-side agent that follows this skill alone, without this step, leaves the
-status red after a genuinely correct repair. `parity:synced` also reads the
-tag's tracked contract (if any — `.altitude/contracts/<project>/<tag>.contract.json`)
-and stamps `lastSync.contractHash` / `lastSync.contractVersion` alongside the
-code hash and Figma digest, so a later edit to the contract itself shows up
-as `contractDrifted` even when code and Figma both still match. See
-`.altitude/PARITY.md` for the full model.
+Skipping this leaves a correctly-repaired component reporting stale drift
+(`code-drift` / `missing-in-figma`) in `altitude_check_parity`, `GET /parity.json`
+and the docs-site ParityPanel. `parity:synced` also reads the tag's tracked contract
+(`.altitude/contracts/<project>/<tag>.contract.json`) and stamps
+`lastSync.contractHash` / `lastSync.contractVersion` alongside the code hash and Figma
+digest, so a later edit to the contract shows up as `contractDrifted` even when code
+and Figma still match. Full model: `.altitude/PARITY.md`.
 
 ---
 
@@ -211,52 +209,54 @@ Useful tools: `figma_analyze_component_set` (variant axes + per-state diffs + pr
 
 ## 4. Hard-won traps
 
+One rule each. Dated incident narrative for every trap below lives in
+`.altitude/ai-readiness/trap-index.json` (`provenance`), with its lifecycle
+(`open` / `evaluated` / `gated`) — read that, not this file, when you want the story.
+
 **Plugin API**
-1. The bridge runs `documentAccess: dynamic-page`. The synchronous variable APIs THROW.
+1. **The bridge runs `documentAccess: dynamic-page`**, so the synchronous variable APIs THROW.
    Use `getLocalVariablesAsync()`, `getLocalVariableCollectionsAsync()`,
-   `getVariableByIdAsync()`, `setCurrentPageAsync()`.
-2. `combineAsVariants` requires the components to ALREADY be on the target page —
+   `getVariableByIdAsync()`, `setCurrentPageAsync()` — and **the variable ones live on
+   `figma.variables.*`, not `figma.*`**. `figma.getVariableByIdAsync` is undefined, and the
+   bridge reports it as a bare `TypeError: not a function` with no name. The same bare
+   error is what `node.fills.map(...)` throws when `fills` is `figma.mixed` (a symbol,
+   truthy) — guard with `Array.isArray(node.fills)`.
+2. **`combineAsVariants` requires the components to ALREADY be on the target page** —
    `page.appendChild(comp)` first, or it throws "must be in the same page as the parent".
-3. The plugin sandbox **has `fetch`**, and the manifest whitelists `localhost:9223`–`9232`.
+3. **The plugin sandbox has `fetch`**, and the manifest whitelists `localhost:9223`–`9232`.
    Use `bridge-io.mjs` to move JSON both ways instead of inlining big payloads.
-4. `setBoundVariableForPaint` keeps the LITERAL colour you pass as a fallback and Figma
+4. **`setBoundVariableForPaint` keeps the LITERAL colour you pass as a fallback** and Figma
    does not always refresh it — pass black and a variant can render **black** despite a
    correct binding. Resolve the variable inside Figma and use its real RGBA as the literal.
-5. **Opacity variables are PERCENTAGES (0–100) — `opacity/40` = `40`, which IS the code's
-   `0.4`. The two sides differ by 100x on purpose.** A variable bound to a node's
-   `opacity` is resolved in the unit the UI shows (percent) and divided by 100, even
-   though the FIELD is 0–1. Measured live 2026-08-27 on al-field-note `State=Disabled`:
-   stored `0.4` → `node.opacity === 0.004` (invisible); stored `40` → `0.4` (correct).
-   **Never compare opacity by value — convert first.** This trap has now flipped twice,
-   because a stored-value check (`0.4 === 0.4`) *passes* precisely when the canvas is
-   broken; the only valid verification is to bind it and read back `node.opacity`. The
-   fraction-enforcing `setValue` calls in `scripts/figma-var-fixes.mjs` were removed
-   2026-08-27. See `.altitude/FIGMA-SYNC.md` § "Opacity is a PERCENTAGE on the Figma side".
+5. **Opacity variables are PERCENTAGES (0–100)** — `opacity/40` = `40`, which IS the code's
+   `0.4`. Never compare opacity by value; bind it and read back `node.opacity`.
+   canonical: altitude-figma-repair#2. The fraction-enforcing `setValue` calls in
+   `scripts/figma-var-fixes.mjs` were removed for this reason.
 
 **CSS reading**
-6. `shadowRoot.textContent` does NOT include slotted light-DOM text. Resolve
+6. **`shadowRoot.textContent` does NOT include slotted light-DOM text.** Resolve
    `slot.assignedNodes({flatten:true})`, and take typography from `slot.parentElement` —
    the flattened-tree parent slotted text actually inherits from.
-7. Component CSS lives in `@layer al.component`. An appended stylesheet — layered or not —
+7. **Component CSS lives in `@layer al.component`.** An appended stylesheet — layered or not —
    CANNOT override it, and inline styles behaved unreliably too. So **never try to apply**
    `:hover` etc. Rewrite the pseudo to a class purely to decide WHICH rules match; their
    authored values are the state delta.
-8. `!important` is per DECLARATION, not per rule. Scoring it per rule lets one
+8. **`!important` is per DECLARATION, not per rule.** Scoring it per rule lets one
    `!important` in `.al-c-button` promote every declaration in that rule above all
    variant and state rules — presents as "specificity is broken".
-9. Shorthands containing `var()` yield EMPTY longhands ("pending substitution"), so
+9. **Shorthands containing `var()` yield EMPTY longhands ("pending substitution")**, so
    `getPropertyValue('padding-top')` returns `''`. Probe the shorthand explicitly and
    expand it yourself.
-10. Tokens hide behind per-component override hooks:
+10. **Tokens hide behind per-component override hooks**:
     `padding: var(--al-button-padding, var(--al-theme-space-xs) var(--al-theme-space))`.
     The first `var()` is a HOOK, not a token. Walk the fallback chain to the first custom
     property actually defined on the element.
-11. Using the computed value to arbitrate between candidate tokens works ONLY in the
-    default state. For hover/focus/active/disabled the computed value is still the
+11. **Using the computed value to arbitrate between candidate tokens works ONLY in the default state.**
+    For hover/focus/active/disabled the computed value is still the
     default, so arbitration would pick the BASE rule over the state's own rule.
-12. `main.css` bakes **dark** into `:root`; light is the separate override bundle
+12. **`main.css` bakes dark into `:root`**; light is the separate override bundle
     `dist/css/css/theme/tokens-light.css`. Load main.css then tokens-light.css for light.
-13. Serve harness assets with `cache-control: no-store`. A cached `measure-lib.js` makes a
+13. **Serve harness assets with `cache-control: no-store`.** A cached `measure-lib.js` makes a
     correct fix look broken.
 14. **`background:` (the shorthand) authors 38 fill tokens across 19 components** —
     probing only `background-color` silently loses them (that is how toggle-button's
@@ -353,81 +353,66 @@ node scripts/figma-atoms/reorder-pages.mjs        # molecules live AFTER the div
 - `tiers.mjs` — which keys are molecules. Placement depends on it.
 - `export-png.mjs` / `check-parity.mjs` / `delete-page.mjs` — verification and iteration.
 
-**Result: 15 molecule sets, 83 variants, 0 missing variables, 80/83 within 4px of the
-browser.** The 3 known-off: Chip Group (-25px width, chip instances hug narrower),
-Empty State (-20px, paragraph margins auto-layout cannot reproduce), Pagination Small
-(-59px, its nested `al-select` is a molecule not yet in Figma so it flattens).
+**Known-off by construction:** Empty State (-20px — paragraph margins auto layout cannot
+reproduce) and Pagination Small (-59px — its nested `al-select` has no Figma set, so it
+flattens). Everything else lands within 4px of the browser.
 
 ### Traps (continuing the numbering)
 
-18. **Mixed line endings in this repo.** `harness.mjs` and `plan.mjs` are CRLF;
-    `build-page.mjs` is LF. A multi-line patch anchor written with `\n` silently fails to
-    match a CRLF file and reads exactly like a wrong anchor. Normalise → patch → restore.
-19. **Slotted children were never marked as instance boundaries.** `measure-lib` only set
-    `host` when descending a component's OWN template. A molecule reaches most of its
-    children through a `<slot>`, and that branch called `tree()` on the element — which
-    walks light DOM only, so it neither entered the child's shadow root nor flagged it.
-    Every slotted atom flattened into anonymous boxes. Both paths now call `boundary()`.
-20. **State deltas leak out of instanced children.** The state signature was a deep tree
-    diff, so a molecule inherited its children's interaction states: `al-menu` has no
-    `:hover` rule at all, yet its menu-items do — 10 variants where 2 were real, and the
-    8 fakes rendered identically because instances are pinned to `State=Default`. Prune
-    each instanced subtree to its RESOLVED props before taking the signature; that still
-    catches Checkbox Group's Disabled, which genuinely propagates `isdisabled` to children.
-21. **A new instance inherits the default variant's BOOLEANS.** Figma's Button default has
-    both icon slots ON, so `<al-button>Save</al-button>` rendered with two icons it never
-    had. Measure which named slots the host actually fills (`hostSlots`) and set
-    `Slot Before` / `Slot After` explicitly.
-22. **`calc()` multiples of a token are silently dropped — Figma variables cannot do
-    arithmetic.** `padding: calc(var(--al-theme-space) * 3) var(--al-theme-space)` reports
+18. **Normalise line endings before applying a multi-line patch anchor.** This repo is
+    mixed — `harness.mjs` and `plan.mjs` are CRLF, `build-page.mjs` is LF — and an anchor
+    written with `\n` silently fails to match a CRLF file, reading exactly like a wrong
+    anchor. Normalise → patch → restore.
+19. **Call `boundary()` on the slotted path too, not just a component's own template.**
+    A molecule reaches most of its children through a `<slot>`, and that branch called
+    `tree()` on the element — light DOM only — so it neither entered the child's shadow
+    root nor flagged it, and every slotted atom flattened into anonymous boxes.
+20. **Prune each instanced subtree to its RESOLVED props before taking the signature.**
+    A deep tree diff makes a molecule inherit its children's interaction states:
+    `al-menu` has no `:hover` rule at all yet its menu-items do — 10 variants where 2
+    were real, the 8 fakes rendering identically because instances are pinned to
+    `State=Default`. Pruning still catches Checkbox Group's Disabled, which genuinely
+    propagates `isdisabled` to children.
+21. **Measure which named slots the host fills (`hostSlots`); set the slot booleans.**
+    A new instance otherwise inherits the default variant's BOOLEANS — Figma's Button
+    default has both icon slots ON, so `<al-button>Save</al-button>` rendered with two
+    icons it never had. Set `Slot Before` / `Slot After` explicitly.
+22. **`calc()` multiples of a token are silently dropped — Figma variables cannot do arithmetic.**
+    `padding: calc(var(--al-theme-space) * 3) var(--al-theme-space)` reports
     `theme-space` on all four sides, so Figma bound 16px where the browser paints 48px and
     empty-state came out 84px short. Emit the computed LITERAL (`{lit: 48}`) when a
     declaration multiplies a token; keep the binding on the sides that do not.
-23. **Visually-hidden also comes as a 1px CLIP**, not just `al-u-is-vishidden`.
-    checkbox-group's hidden legend measures 1x1 and kept full-size glyphs, printing the
-    legend across the first checkbox. Treat text in a ≤2x2 box as hidden.
-24. **SUPERSEDED 2026-08-27 — read the replacement below before acting on this.** The
-    original trap read: *"Never force an auto-layout onto a root that is not flex in the
-    browser. Defaulting to HORIZONTAL laid al-tabs' tablist and its panel side by side —
-    557x40 against a real 291x79. Non-flex roots keep their measured absolute geometry."*
-
-    The **symptom** was real; the **diagnosis and the fix were both wrong**, and the last
-    sentence is false. Non-flex roots have no measured absolute geometry to keep: nothing
-    in the generator assigns x/y to a walked anatomy child, and `resize()` is never called
-    on a component. Turning auto-layout OFF just left the component at
-    `createComponent`'s untouched 100x100 default with its content spilling outside it —
-    measured live on al-table, whose root frame was 243px wide inside a 100x100 component,
-    and whose run reported `maxVariantWidth/Height: 100` to the prop sheet.
-
-    The real cause was reading `layout.direction` (i.e. `flex-direction`) on a non-flex
-    node, where `getComputedStyle` returns the initial value `'row'` — true of 432 of the
-    433 non-flex anatomy nodes in the set. **The answer is the RIGHT axis, not no axis:**
-    map CSS `display` to the axis its children actually stack on (`layoutAxisFor()` in
-    `scripts/contracts/figma/build-set-code.mjs`). A block box stacks DOWN, so al-tabs
-    becomes VERTICAL — tablist ABOVE panel, which is what this trap wanted all along.
-    Verified on canvas: `al-c-tabs__header` at y0, `al-c-tabs__body` at y36, component
-    426x168, zero overflow.
-
-    See the "CSS → Figma Auto Layout" section of the `altitude-figma-generate` skill for
-    the full mapping.
-25. **A text node auto-resizes and throws away a measured box that is taller than one
-    line** (al-range's 64px label on a 24px line → component 40px short). Pin the size —
+23. **Treat text in a ≤2x2 box as hidden.** Visually-hidden also comes as a 1px CLIP, not
+    just `al-u-is-vishidden` — checkbox-group's hidden legend measures 1x1 and kept
+    full-size glyphs, printing the legend across the first checkbox. Cited by
+    altitude-figma-generate#5.
+24. **SUPERSEDED — wrong diagnosis; see the display→axis rule in altitude-figma-generate.**
+    The original said non-flex roots keep their measured
+    absolute geometry and must get no auto-layout. The SYMPTOM was real (al-tabs' tablist
+    and panel side by side); the last sentence is false — a walked anatomy child is never
+    assigned x/y and `resize()` is never called on a component, so `layoutMode: 'NONE'`
+    leaves the component at `createComponent`'s 100x100 default with its content spilling
+    out. The real cause was reading `layout.direction` on a non-flex node. **The answer is
+    the RIGHT axis, not no axis** — `layoutAxisFor()` in
+    `scripts/contracts/figma/build-set-code.mjs`.
+25. **A text node auto-resizes and throws away a measured box taller than one line**
+    (al-range's 64px label on a 24px line → component 40px short). Pin the size —
     but CAP it at ~3 lines: some nodes carry text while their box is really a layout
     container (file-upload's dropzone wrapper is 180px around a 24px line, and pinning it
     made the component 156px too tall).
-26. **Placement is silent.** `build-page.mjs` inserts before the MOLECULES divider, which
-    is right for an atom and puts a molecule at the bottom of ATOMS. Now driven by
-    `tiers.mjs`. Moving a page from before the divider to after it is also off by one —
-    insert relative to a known page instead.
+26. **Insert a page relative to a known page, never relative to a divider.** Placement is
+    silent: `build-page.mjs` inserts before the MOLECULES divider, which is right for an
+    atom and puts a molecule at the bottom of ATOMS (now driven by `tiers.mjs`), and
+    moving a page from before a divider to after it is off by one.
 27. **`node.mainComponent` is a SYNC getter and throws under `dynamic-page`.** Use
     `await node.getMainComponentAsync()` (same family as trap 1).
 28. **`figma_get_component_image` needs a `FIGMA_ACCESS_TOKEN`** this setup does not have.
     The plugin sandbox can `exportAsync` and return base64 instead — `export-png.mjs`.
-29. **Array/object inputs are JS PROPERTIES, not attributes.** Table's `columns`+`data`,
+29. **Array/object inputs are JS PROPERTIES, not attributes** — Table's `columns`+`data`,
     command-palette's `actions`, combobox's `items`. Without them the component renders
-    its empty state and you measure nothing — Table falls back to a bare `<slot>`. The
-    harness ships them as `data-alprops` JSON and assigns them after upgrade, then awaits
-    each element's `updateComplete` (a Lit render from a property is async).
+    its empty state and you measure nothing. The harness ships them as `data-alprops` JSON
+    and assigns them after upgrade, then awaits each element's `updateComplete` (a Lit
+    render from a property is async).
 30. **A second figma-console server is fine.** It binds the next free port (9225) and the
     Desktop Bridge follows it — no need to kill an existing instance holding 9223.
 

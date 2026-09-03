@@ -26,7 +26,7 @@ import styles from './header.scss';
  *
  * @cssproperty --al-header-min-height - Minimum bar height. Defaults to `--al-theme-layout-height-header`. A MINIMUM, not a fixed height, so a wrapping header grows instead of clipping.
  * @cssproperty --al-header-padding - Inline/block padding around the content. Defaults to `--al-theme-space`.
- * @cssproperty --al-header-background - Bar background. Defaults to `--al-theme-color-background-default`.
+ * @cssproperty --al-header-background - Bar background. Defaults to `--al-theme-color-background-neutral-default`.
  * @cssproperty --al-header-border-block-end - Hairline rule under the bar. Defaults to `none`. Use instead of `elevated` when a translucent bar should read as a rule rather than a lift.
  * @cssproperty --al-header-backdrop-filter - Filter applied to what scrolls behind the bar, e.g. `blur(12px)`. Defaults to `none`. Pair with a translucent `--al-header-background`.
  */

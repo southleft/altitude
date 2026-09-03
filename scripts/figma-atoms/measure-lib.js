@@ -70,7 +70,7 @@
     // PER-SIDE and LOGICAL border shorthands. `border:` was read but none of these
     // were, so a component that draws a single edge lost BOTH its tokens — the width
     // and the colour. Found 2026-08-31 on al-tabs, whose header is
-    // `border-bottom: var(--al-theme-border-width) solid var(--al-theme-color-border-default)`
+    // `border-bottom: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default)`
     // (tabs.scss:18) and whose contract bound neither; al-table's row divider
     // (`border-block-end`, table.scss:62) was missing the same way. Same family as the
     // logical-padding gap above and the `background:` shorthand below: the probe has to

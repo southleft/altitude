@@ -10,7 +10,7 @@ Component: al-input
 
 - Component set: **Input**
 - Node id: `19:2137` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=19-2137)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=19-2137)
 
 ## Props (24)
 
@@ -226,8 +226,8 @@ Value attribute
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| border-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
-| border-top-color | `--al-theme-color-border-default-strong` | `theme/color/border/default-strong` |
+| border-color | `--al-theme-color-border-neutral-strong` | `theme/color/border/neutral-strong` |
+| border-top-color | `--al-theme-color-border-neutral-strong` | `theme/color/border/neutral-strong` |
 
 **`focus`**
 
@@ -249,8 +249,8 @@ Value attribute
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| border-color | `--al-theme-color-content-default` | `theme/color/content/default` |
-| border-top-color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| border-color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
+| border-top-color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -265,7 +265,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (18)
 
-`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-border-default-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-border-primary-weak`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-border-neutral-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-border-primary-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

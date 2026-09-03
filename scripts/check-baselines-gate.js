@@ -6,16 +6,11 @@
  * updating `.altitude/baselines/`. Token snapshot, bundle-size record, and
  * VRT screenshots must move in lockstep with the changes that affect them.
  *
- * Files watched (any change triggers the baseline requirement):
- *   - libs/al-web-components/package.json
- *   - libs/al-react/package.json
- *   - package.json (root)
- *   - libs/al-web-components/webpack.config.js
- *   - libs/al-web-components/tsconfig.json
- *   - libs/al-web-components/styles/tokens-config.v5.mjs (the token build
- *     config — its `themes`/`brands` arrays decide which files are emitted,
- *     so editing it changes token output without touching `styles/tokens-dtcg/`)
- *   - libs/al-web-components/styles/tokens-dtcg/** (token sources)
+ * The watch list is `WATCHED` below and is the single source of truth for it —
+ * `scripts/gate-self-test.sh` reads it from here rather than hardcoding a
+ * fixture, because the two drifted apart once already (see the note on the
+ * webpack entry below) and a self-test that exercises a file the gate no longer
+ * watches proves nothing.
  *
  * Usage: node scripts/check-baselines-gate.js --base=origin/main
  *
@@ -32,11 +27,24 @@ const path = require('node:path');
 
 const REPO = path.resolve(__dirname, '..');
 
+// EXPORTED so scripts/gate-self-test.sh can build its fixture from the real
+// list instead of a hardcoded copy. Keep every entry a path that can actually
+// exist in this repo today — a regex for a deleted file is a permanently dead
+// watch, and a dead watch is indistinguishable from a passing one.
 const WATCHED = [
   /^libs\/al-web-components\/package\.json$/,
   /^libs\/al-react\/package\.json$/,
   /^package\.json$/,
-  /^libs\/al-web-components\/webpack\.config\.js$/,
+  // Vite decides what the bundle contains, which is exactly what the bundle
+  // baseline measures. It replaced webpack in T2.2 — and this gate went on
+  // watching `webpack.config.js` for months afterwards, so the one file most
+  // able to move the baseline was unwatched while the gate looked healthy.
+  // gate-self-test.sh even created a webpack.config.js to make the gate fire,
+  // which is how a green self-test coexisted with a dead watch.
+  /^libs\/al-web-components\/vite\.config\.mjs$/,
+  /^libs\/al-react\/vite\.config\.(mjs|ts)$/,
+  // A resolution change moves compiled output without any source edit.
+  /^pnpm-lock\.yaml$/,
   /^libs\/al-web-components\/tsconfig\.json$/,
   // The SD v3 config (`styles/tokens-config.js`) was deleted in T6.2; watching
   // it was a permanently dead regex. `tokens-config.v5.mjs` is the sole token

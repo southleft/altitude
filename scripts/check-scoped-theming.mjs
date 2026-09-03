@@ -230,16 +230,16 @@ check(versionedFont === fonts.southleft, 'the scoped brand block applies under a
 // ---------- 5: the mode axis ----------
 
 console.log('\n  mode — altitude light vs dark, over a dark :root');
-const darkBg = await prop('altitude', '--al-theme-color-background-default');
-const lightBg = await prop('altitude-light', '--al-theme-color-background-default');
-const darkBorder = await prop('altitude', '--al-theme-color-border-default');
-const lightBorder = await prop('altitude-light', '--al-theme-color-border-default');
+const darkBg = await prop('altitude', '--al-theme-color-background-neutral-default');
+const lightBg = await prop('altitude-light', '--al-theme-color-background-neutral-default');
+const darkBorder = await prop('altitude', '--al-theme-color-border-neutral-default');
+const lightBorder = await prop('altitude-light', '--al-theme-color-border-neutral-default');
 console.log(`      background  dark ${darkBg}   light ${lightBg}`);
 console.log(`      border      dark ${darkBorder}   light ${lightBorder}`);
-check(darkBg !== lightBg, 'mode moves --al-theme-color-background-default');
+check(darkBg !== lightBg, 'mode moves --al-theme-color-background-neutral-default');
 check(
   darkBorder !== lightBorder,
-  'mode moves --al-theme-color-border-default too (it used to move exactly two properties, both hardcoded)'
+  'mode moves --al-theme-color-border-neutral-default too (it used to move exactly two properties, both hardcoded)'
 );
 const paintedLight = await page.evaluate(() =>
   getComputedStyle(document.querySelector('al-theme[data-probe="altitude-light"] .surface')).backgroundColor

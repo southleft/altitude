@@ -67,7 +67,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| color | `--al-theme-color-content-default-weak` | `theme/color/content/default-weak` |
+| color | `--al-theme-color-content-neutral-weak` | `theme/color/content/neutral-weak` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -84,7 +84,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-default-weak`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

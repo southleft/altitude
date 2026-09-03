@@ -80,13 +80,13 @@ const fixtureStyles = html`
   <style>
     .sl-token-chip {
       --al-chip-font-family: var(--sl-font-mono, 'IBM Plex Mono', monospace);
-      --al-chip-color: var(--al-theme-color-content-default-weak);
+      --al-chip-color: var(--al-theme-color-content-neutral-weak);
       --al-chip-border: var(--al-theme-border-width) solid
-        color-mix(in srgb, var(--al-theme-color-border-default-weak) 55%, transparent);
+        color-mix(in srgb, var(--al-theme-color-border-neutral-weak) 55%, transparent);
       --al-chip-border-radius: var(--al-theme-border-radius-xs);
       --al-chip-padding: var(--al-theme-space-xxs) var(--al-theme-space-xs);
       --al-chip-gap: 0.5em;
-      --al-chip-background: color-mix(in srgb, var(--al-theme-color-background-default) 65%, transparent);
+      --al-chip-background: color-mix(in srgb, var(--al-theme-color-background-neutral-default) 65%, transparent);
       --al-chip-cursor: default;
     }
     .sl-token-chip__dot {
@@ -100,7 +100,7 @@ const fixtureStyles = html`
       margin: 0;
       font-family: var(--sl-font-mono, 'IBM Plex Mono', monospace);
       font-size: 0.75rem;
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
     .term {
       background: var(--al-color-southleft-neutral-dark-950);

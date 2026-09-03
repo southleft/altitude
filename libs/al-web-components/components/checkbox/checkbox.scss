@@ -31,7 +31,7 @@
    */
   .al-c-checkbox__label {
     @include al-label;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     cursor: pointer;
   }
 
@@ -99,7 +99,7 @@
      */
     .al-c-checkbox__input:hover:not(:active, :disabled) + * + & {
       transform: scale(1);
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
     }
   }
 
@@ -117,7 +117,7 @@
     overflow: hidden;
     background-color: var(--al-theme-color-background-transparent-default);
     border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius-xs));
-    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
     transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**
@@ -194,7 +194,7 @@
        */
       .al-c-checkbox__input:checked:disabled + &,
       .al-is-indeterminate .al-c-checkbox__input:disabled + & {
-        background-color: var(--al-theme-color-content-default);
+        background-color: var(--al-theme-color-content-neutral-default);
       }
     }
   }

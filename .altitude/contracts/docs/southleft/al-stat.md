@@ -16,7 +16,7 @@ story) or an `<al-layout variant="bento">`.
 
 - Component set: **Stat**
 - Node id: `19:2580` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=19-2580)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=19-2580)
 
 ## Props (6)
 
@@ -95,12 +95,12 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | border | `--al-theme-border-width` | `theme/border/width/@` |
 | border-bottom-left-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
 | border-bottom-right-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
 | border-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
-| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | border-top-left-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
 | border-top-right-radius | `--al-theme-border-radius-role-surface` | `theme/border/radius/role/surface` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
@@ -125,7 +125,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (16)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-role-surface`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`, `--al-theme-typography-display-sm`, `--al-theme-typography-display-sm-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-role-surface`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`, `--al-theme-typography-display-sm`, `--al-theme-typography-display-sm-bold-letter-spacing`
 
 ---
 

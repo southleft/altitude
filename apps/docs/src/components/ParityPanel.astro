@@ -86,6 +86,41 @@ const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);
               </span>
               <span class="parity__project">{row.projectName}</span>
               {row.figmaSetName && <span class="chip-tag chip-tag--weak">FIGMA SET · {row.figmaSetName}</span>}
+              {/*
+                The headline the status alone hides. The seven status buckets are
+                decided by a DIGEST comparison; the property-level diff is a
+                separate axis, so a component can read in-sync and still carry
+                twenty disagreements against the live canvas. Surfacing the count
+                beside the badge is what stops "green" from being read as "1:1".
+              */}
+              {row.disagreements && row.disagreements.length > 0 && (
+                <span
+                  class="chip-tag chip-tag--warn"
+                  data-parity-disagreement-count={row.disagreements.length}
+                  title="Property-level differences between the code contract and the live Figma set. Separate from the status badge, which compares digests."
+                >
+                  {row.disagreements.length} PROPERTY DIFF{row.disagreements.length === 1 ? '' : 'S'}
+                </span>
+              )}
+              {row.disagreements && row.disagreements.length === 0 && (
+                <span class="chip-tag chip-tag--weak" data-parity-disagreement-count="0">
+                  1:1 ON EVERY PROPERTY
+                </span>
+              )}
+              {/*
+                Where those property facts came from. The canvas dumps are
+                gitignored, so on the deployed site the comparison runs against
+                the TRACKED projection — a point-in-time read of a file nobody
+                opened during this build. It reproduces the live numbers exactly
+                (verified: 36 pairs, 259 disagreements, byte-identical), but a
+                reader must still be able to tell a projected comparison from a
+                live one, so it is labelled rather than left to look the same.
+              */}
+              {row.disagreementSource === 'projection' && (
+                <span class="chip-tag chip-tag--weak" data-parity-disagreement-source="projection">
+                  FROM TRACKED PROJECTION
+                </span>
+              )}
             </div>
 
             <p class="parity__blurb">{status.blurb}</p>
@@ -97,8 +132,15 @@ const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);
               </div>
               <div>
                 <dt class="micro">FIGMA SIDE</dt>
-                <dd data-parity-observed={String(row.figmaObserved)}>
-                  {row.figmaObserved ? 'OBSERVED' : 'NEVER OBSERVED'}
+                <dd
+                  data-parity-observed={String(row.figmaObserved)}
+                  data-parity-provenance={row.observationProvenance}
+                >
+                  {row.figmaObserved
+                    ? 'OBSERVED'
+                    : row.observationProvenance === 'stale-file'
+                      ? 'STALE — READ FROM A DIFFERENT FILE'
+                      : 'NEVER OBSERVED'}
                 </dd>
               </div>
               <div>

@@ -41,13 +41,14 @@ Type variant
 
 #### `variant`
 
-Variant
-- **default** A chip with a strong contrast background
-- **secondary** A chip with a outline
-- **info** A chip with a info background
-- **success** A chip with a success background
-- **warning** A chip with a warning background
-- **danger** A chip with a danger background
+Variant — an EMPHASIS axis, matching `al-button`. Status is not on this
+axis: `al-badge` and `al-alert` carry info/success/warning/danger.
+- **default** the resting outlined pill (the `tertiary` treatment)
+- **primary** a chip filled with the primary role
+- **secondary** a chip filled with the secondary role
+- **tertiary** an outlined chip on a transparent ground
+- **neutral** a low-emphasis filled chip
+- **bare** no fill and no border
 
 **Figma-expression opt-out (T27):** `isDismissed` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
@@ -98,11 +99,11 @@ Variant
 | border-bottom-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-bottom-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
-| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | border-top-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-top-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
 | font-size | `--al-font-size-13` | — |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
@@ -141,14 +142,14 @@ Variant
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 #### `neutral`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default-strong` | `theme/color/background/default-strong` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 #### `primary`
 
@@ -169,9 +170,9 @@ Variant
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-transparent-default` | `theme/color/background/transparent-default` |
-| border-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | border-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 ## Code
 
@@ -181,7 +182,7 @@ Variant
 
 ## Tokens referenced (13)
 
-`--al-font-size-13`, `--al-font-weight-medium`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-focus-ring`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-13`, `--al-font-weight-medium`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

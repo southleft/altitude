@@ -83,14 +83,14 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-stronger` | — |
-| background-color | `--al-theme-color-background-default-stronger` | — |
+| background | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
+| background-color | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
 | border-bottom-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-bottom-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-top-left-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | border-top-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -117,9 +117,9 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background | `--al-theme-color-background-default-bold` | `theme/color/background/default-bold` |
+| background | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
 | border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 | padding | `--al-theme-space-xs` | `theme/space/xs` |
 
@@ -178,7 +178,7 @@ _No events declared._
 
 ## Tokens referenced (8)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-color-background-default-stronger`, `--al-theme-color-content-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
 
 ---
 

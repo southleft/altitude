@@ -62,7 +62,7 @@ _No events declared._
 | border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| border-top-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| border-top-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
@@ -79,7 +79,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (8)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-icon-lg`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-icon-lg`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
 
 ---
 

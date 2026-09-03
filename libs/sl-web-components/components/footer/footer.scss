@@ -38,7 +38,7 @@
     inline-size: 100%;
     box-sizing: border-box;
     padding-block: var(--al-footer-padding-block, 3.5rem);
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     background: var(--al-footer-background, transparent);
   }
 
@@ -90,7 +90,7 @@
     font-family: $sl-font-mono; /* 4 */
     font-size: 0.875rem;
     line-height: 1.7;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   .sl-c-footer__cite {
@@ -98,7 +98,7 @@
     margin-block-start: var(--al-theme-space-sm);
     font-size: 0.75rem;
     font-style: normal;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   /**
@@ -115,7 +115,7 @@
     padding-block-start: var(--al-theme-space-lg);
     border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint};
     font-size: 0.75rem;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   @media (min-width: 48rem) {
@@ -138,12 +138,12 @@
    *    properties — un-styling a component rather than using it.
    */
   ::slotted(a[slot='legal']) {
-    color: var(--al-theme-color-content-default-weak); /* 6 */
+    color: var(--al-theme-color-content-neutral-weak); /* 6 */
     text-decoration: none;
     transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
   }
 
   ::slotted(a[slot='legal']:hover) {
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
   }
 }

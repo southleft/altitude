@@ -10,7 +10,7 @@ Component: al-heading
 
 - Component set: **Heading**
 - Node id: `22:3531` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=22-3531)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3531)
 
 ## Props (3)
 
@@ -81,7 +81,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | font | `--al-theme-typography-heading-sm` | — |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | letter-spacing | `--al-theme-typography-heading-sm-bold-letter-spacing` | — |
@@ -98,7 +98,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-default`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-bold-letter-spacing`
+`--al-font-weight-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-bold-letter-spacing`
 
 ---
 

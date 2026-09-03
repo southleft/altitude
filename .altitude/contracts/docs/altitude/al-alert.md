@@ -100,7 +100,7 @@ _No interaction states recorded._
 | border-top-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
-| color | `--al-theme-color-content-default` | `theme/color/content/default` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | padding | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-bottom | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
@@ -149,7 +149,7 @@ _None._
 
 ## Tokens referenced (9)
 
-`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-border-width`, `--al-theme-color-background-danger-weak`, `--al-theme-color-border-danger-weak`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-sm`
+`--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-border-width`, `--al-theme-color-background-danger-weak`, `--al-theme-color-border-danger-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-sm`
 
 ---
 

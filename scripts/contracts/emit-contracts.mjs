@@ -236,8 +236,8 @@ function matchStateSelector(selector) {
   return null;
 }
 
-/** `border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);`
- * -> { 'border-width': 'theme-border-width', 'border-color': 'theme-color-border-default' }.
+/** `border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);`
+ * -> { 'border-width': 'theme-border-width', 'border-color': 'theme-color-border-neutral-default' }.
  * The ONE shorthand this repo's components author with two token references (SKILL.md
  * conventions) — everything else with >1 `--al-*` reference in a value is left uncaptured
  * (see conditionalTokenBinding) rather than guessed. */

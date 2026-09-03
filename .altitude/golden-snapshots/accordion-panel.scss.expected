@@ -10,7 +10,7 @@
 @layer al.component {
   .al-c-accordion-panel {
     width: 100%;
-    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
 
     &.al-is-last {
       border-color: transparent;
@@ -39,7 +39,7 @@
     transition: background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
     &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-default);
+      background-color: var(--al-theme-color-background-neutral-default);
     }
 
     &:disabled {

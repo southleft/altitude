@@ -12,15 +12,15 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SERVER_PATH = join(HERE, '..', 'src', 'server.mjs');
 
-// Must stay in lockstep with every server.registerTool() call in
-// ../src/server.mjs — the LENGTH is asserted against listTools() below, so
-// registering a ninth tool without adding a smoke case here fails CI rather
-// than shipping an untested tool.
+// Must stay in lockstep with every tool in ../src/lib/tools.mjs — the LENGTH is
+// asserted against listTools() below, so registering a tenth tool without
+// adding a smoke case here fails CI rather than shipping an untested tool.
 const EXPECTED_TOOLS = [
   'altitude_list_components',
   'altitude_get_component',
   'altitude_validate',
   'altitude_get_tokens',
+  'altitude_resolve_token',
   'altitude_search_icons',
   'altitude_generate_theme',
   'altitude_check_parity',
@@ -96,6 +96,17 @@ async function main() {
     const data = parseToolJson(res);
     ok(Array.isArray(data.components) && data.components.length > 0, 'returned at least one component');
     ok(data.components.every((c) => c.tag && c.migration), 'each component has tag + migration state');
+    // Shape, not content — the guidance artifact is a docs-build output that
+    // CI's mcp-smoke job does not produce. See the note in the
+    // altitude_get_component case below.
+    ok(data.components.every((c) => 'guidance' in c), 'every row carries a guidance slot, populated or null');
+    ok(!!data.guidanceCoverage, 'the report says how much guidance exists (or why it could not tell)');
+    ok(
+      data.components
+        .filter((c) => c.guidance)
+        .every((c) => Array.isArray(c.guidance.whenNotToUse) && c.guidance.whenNotToUse.length > 0),
+      'authored guidance always carries a non-empty whenNotToUse — the field that prevents a wrong choice'
+    );
   }
 
   console.log('\naltitude_get_component({ tag: "al-button" })');
@@ -105,7 +116,73 @@ async function main() {
     ok(data.tag === 'al-button', 'returned the requested component');
     ok(!!data.schema, 'schema attached');
     ok(!!data.migration, 'migration state attached');
-    ok(!!data.story?.docsUrl, 'storybook docs URL derived');
+    ok(!!data.story?.docsUrl, 'docs URL derived');
+
+    /*
+     * THE ASSERTIONS BELOW MUST HOLD ON A FRESH CLONE WITH NOTHING BUILT.
+     *
+     * `examples` and `guidance` come from the docs build's artifacts
+     * (dist/docs/{examples,guidance}.json), which CI's mcp-smoke job does not
+     * produce. So what is asserted is the CONTRACT, not the content: the field
+     * is always present, and exactly one of "has data" / "has a note saying
+     * why not" is true. That is the property that actually matters — a caller
+     * must never be unable to distinguish "no example exists" from "this
+     * checkout did not look" — and it is the one that would silently regress
+     * if a future edit started omitting the key when the artifact is missing.
+     */
+    ok(Array.isArray(data.examples), 'examples[] is always present, built or not');
+    ok(
+      data.examples.length > 0 || typeof data.examplesNote === 'string',
+      'an empty examples[] is explained by examplesNote, never silent'
+    );
+    ok(
+      data.examples.every((e) => typeof e.title === 'string' && typeof e.code === 'string' && e.code.length > 0),
+      'every example carries a title and non-empty web-component markup'
+    );
+    ok(
+      data.examples.every((e) => typeof e.react === 'string' || typeof e.reactNote === 'string'),
+      'every example either carries a React twin or names what stopped it'
+    );
+    ok(
+      'guidance' in data && (data.guidance !== null || typeof data.guidanceNote === 'string'),
+      'guidance is present, and a null one is explained by guidanceNote'
+    );
+
+    // The React block is derived from libs/al-react's own source, which is
+    // tracked — so unlike examples/guidance it IS assertable by content here.
+    ok(data.react?.component === 'ALButton', 'react wrapper name derived from the wrapper source');
+    ok(data.react?.importPath === '@southleft/al-react', 'react import specifier is the package barrel');
+    ok(Array.isArray(data.react?.eventProps), 'react eventProps mapping present (empty for al-button)');
+
+    ok(!!data.a11y, 'a11y block attached');
+    ok(typeof data.a11y.measured?.measured === 'boolean', 'a11y states whether it was MEASURED, either way');
+    ok(Array.isArray(data.a11y.obligations), 'a11y consumer obligations present as an array');
+    ok(
+      data.a11y.semantics !== null || typeof data.a11y.semanticsNote === 'string',
+      'absent contract semantics are explained, not omitted'
+    );
+  }
+
+  // The event-name -> React-prop mapping is the field nothing else in this repo
+  // records, and al-alert is where prop and event genuinely DIFFER
+  // (`onClose` -> `close`). Asserting a same-named pair would have proved
+  // nothing; this one fails if the two fields are ever collapsed into one.
+  console.log('\naltitude_get_component({ tag: "al-alert" }) — event-name to React-prop mapping');
+  {
+    const res = await client.callTool({ name: 'altitude_get_component', arguments: { tag: 'al-alert' } });
+    const data = parseToolJson(res);
+    const close = data.react?.eventProps?.find((e) => e.prop === 'onClose');
+    ok(close?.event === 'close', 'a React prop whose name differs from its event is reported as both');
+  }
+
+  console.log('\naltitude_get_component({ tag: "al-theme" }) — hand-written wrapper still resolves');
+  {
+    const res = await client.callTool({ name: 'altitude_get_component', arguments: { tag: 'al-theme' } });
+    const data = parseToolJson(res);
+    // ALTheme is a React.forwardRef over a private createComponent() result,
+    // not a direct export of it. Reading only the direct shape reported
+    // al-theme as having no wrapper — a wrong answer, not a missing one.
+    ok(data.react?.component === 'ALTheme', 'a forwardRef wrapper is found, not reported as absent');
   }
 
   console.log('\naltitude_validate({ markup: "<al-button>Click</al-button>" })');
@@ -134,6 +211,45 @@ async function main() {
     const res = await client.callTool({ name: 'altitude_get_tokens', arguments: { name: 'border-radius' } });
     const data = parseToolJson(res);
     ok(Array.isArray(data.tokens) && data.tokens.length > 0, 'returned tokens matching name filter');
+    ok(
+      data.tokens.every((t) => 'cssType' in t && Array.isArray(t.cssProperties)),
+      'every token reports its authored cssType and its CSS-property allow-list'
+    );
+    /*
+     * The whole point of carrying `cssType`: the DTCG `$type` of a radius token
+     * is `dimension`, which it shares with spacing, sizing, border width, font
+     * size and line height. A caller reading only that cannot tell what the
+     * token is FOR. Asserting the two are DIFFERENT here is what would catch a
+     * regression to re-deriving cssType from $type — which is impossible, and
+     * which silently degrades 163 of 555 tokens when attempted.
+     */
+    const radius = data.tokens.find((t) => t.cssType);
+    ok(!!radius, 'at least one border-radius token carries an authored cssType');
+    ok(radius?.cssType === 'borderRadius', `authored cssType is the fine type (got ${radius?.cssType})`);
+    ok(radius?.dtcgType === 'dimension', `DTCG type stays the coarse standard one (got ${radius?.dtcgType})`);
+    ok(
+      radius?.cssProperties?.includes('border-radius'),
+      'the allow-list names the concrete CSS property the token may set'
+    );
+    /*
+     * Not one token in styles/tokens-dtcg/** carries a DTCG `$description`, so
+     * a `description` here can only be the DERIVED sentence (token-describe.mjs
+     * -> the AI-readiness digest). `descriptionsNote` is the named degradation
+     * for a checkout with no digest — exactly one of the two must be present,
+     * which is what makes "no description" distinguishable from "nothing built".
+     */
+    const described = data.tokens.filter((t) => t.description);
+    ok(
+      described.length > 0 || typeof data.descriptionsNote === 'string',
+      'tokens carry a derived description, or descriptionsNote says why none could be'
+    );
+    if (described.length > 0) {
+      ok(data.descriptionsNote === null, 'descriptionsNote is null when descriptions ARE available');
+      ok(
+        described.some((t) => /resolves to/.test(t.description)),
+        'the derived description states the value the token resolves to (it cannot go stale against the build)'
+      );
+    }
   }
 
   // altitude + southleft are the only brands the repo ships — see
@@ -159,6 +275,81 @@ async function main() {
       rejected = true;
     }
     ok(rejected, 'brand enum rejects a brand the repo no longer ships');
+  }
+
+  /*
+   * altitude_resolve_token — intent -> exactly one token.
+   *
+   * The assertions below are about the ONE behaviour that makes this tool worth
+   * having over `altitude_get_tokens`'s substring filter: the emphasis ladder is
+   * not monotonic (35 collapses across the four emitted brand+mode bundles), so
+   * "one step stronger" is NOT "the next word in the list". A regression that
+   * re-implemented this as a naive index+1 would still return a token, still
+   * return a plausible name, and be silently wrong — so the tests check that a
+   * collapsed rung is SAID OUT LOUD, not merely that a name came back.
+   */
+  console.log('\naltitude_resolve_token({ surface: "background", role: "neutral", emphasis: "stronger" })');
+  {
+    const res = await client.callTool({
+      name: 'altitude_resolve_token',
+      arguments: { surface: 'background', role: 'neutral', emphasis: 'stronger' },
+    });
+    const data = parseToolJson(res);
+    ok(typeof data.token === 'string' && data.token.startsWith('al-theme-color-background-neutral-'), `one token returned (${data.token})`);
+    ok(data.cssVar === `var(--${data.token})`, 'the ready-to-paste custom property is included');
+    ok(!!data.values?.light && !!data.values?.dark, 'resolved value in BOTH modes, not just the default build');
+    ok(typeof data.reason === 'string' && data.reason.length > 0, 'the choice carries a reason');
+    ok(Array.isArray(data.nearMisses) && data.nearMisses.length > 0, 'the tokens it beat are named');
+    ok(data.nearMisses.every((n) => n.token !== data.token), 'no near miss is the recommendation itself');
+    // background.neutral in LIGHT is weak=#f1f0ea, default=#ffffff,
+    // strong=#f1f0ea — weak and strong are the same colour. The tool must say so.
+    ok(
+      data.ladder?.collapsed?.some((c) => c.mode === 'light' && c.steps.includes('weak') && c.steps.includes('strong')),
+      'the non-monotonic ladder is reported, not silently papered over',
+    );
+  }
+
+  console.log('\naltitude_resolve_token({ surface: "fill", role: "error", state: "hover" }) — aliases + state');
+  {
+    const res = await client.callTool({
+      name: 'altitude_resolve_token',
+      arguments: { surface: 'fill', role: 'error', state: 'hover', property: 'background-color' },
+    });
+    const data = parseToolJson(res);
+    // "fill" -> background and "error" -> danger are INTENT aliases; hover is
+    // one rung up, which is what button.scss actually paints.
+    ok(data.token === 'al-theme-color-background-danger-strong', `alias + state resolved to ${data.token}`);
+    ok(data.propertyCheck?.inAllowList === true, 'the CSS property was checked against the token allow-list');
+  }
+
+  console.log('\naltitude_resolve_token({ report: true }) — the collapsed-ladder report');
+  {
+    const res = await client.callTool({ name: 'altitude_resolve_token', arguments: { report: true } });
+    const data = parseToolJson(res);
+    ok(data.totals?.collapsedLadders > 0, `collapsed ladders counted (${data.totals?.collapsedLadders})`);
+    ok(Array.isArray(data.scopes) && data.scopes.length > 0, `reported per brand+mode scope (${data.scopes?.join(', ')})`);
+    ok(
+      data.scopes.every((id) => typeof data.byScope?.[id]?.collapsedLadders === 'number'),
+      'every scope carries its own count — the report is per mode, not aggregated away',
+    );
+  }
+
+  console.log('\naltitude_resolve_token({ surface: "background", role: "nope" }) — an unknown role');
+  {
+    const res = await client.callTool({
+      name: 'altitude_resolve_token',
+      arguments: { surface: 'background', role: 'nope' },
+    });
+    const data = parseToolJson(res);
+    ok(data.code === 'ERR_UNKNOWN_TOKEN_ROLE', 'unknown role returns a structured, stable code');
+    ok(Array.isArray(data.knownRoles) && data.knownRoles.includes('neutral'), 'the error names the roles that DO exist');
+  }
+
+  console.log('\naltitude_resolve_token({}) — an incomplete intent');
+  {
+    const res = await client.callTool({ name: 'altitude_resolve_token', arguments: {} });
+    const data = parseToolJson(res);
+    ok(data.code === 'ERR_INCOMPLETE_TOKEN_INTENT', 'a missing role/surface is named, not guessed at');
   }
 
   console.log('\naltitude_search_icons({ query: "trash" })');

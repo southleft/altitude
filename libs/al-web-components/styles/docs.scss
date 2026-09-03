@@ -37,10 +37,10 @@ p {
 }
 
 a {
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 
   &:hover {
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
   }
 }
 
@@ -57,7 +57,7 @@ caption {
  *
  * Two fixes here, both visible on the Foundations/Tokens pages:
  *
- * 1. COLOUR. These used `--al-theme-color-border-default`, which resolves to
+ * 1. COLOUR. These used `--al-theme-color-border-neutral-default`, which resolves to
  *    `#8a8a8a` in the dark theme. That token is a CONTENT border — sized to be
  *    clearly visible on inputs and dividers — so as table chrome it drew a
  *    light grey grid over a near-black page. `--al-docs-line` is the docs
@@ -128,7 +128,7 @@ code {
     position: absolute;
     inset-inline-start: 0;
     inset-block-start: 0;
-    background-color: var(--al-theme-color-border-default);
+    background-color: var(--al-theme-color-border-neutral-default);
     opacity: 0.2;
     pointer-events: none;
   }

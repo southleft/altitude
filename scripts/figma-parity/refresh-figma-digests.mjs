@@ -152,6 +152,13 @@ manifest.figmaOnly = sets
   .map((s) => ({ name: s.name, nodeId: null, note: `Observed on page "${s.page}" with no mapped code component.` }));
 
 manifest.figmaLastRefreshed = new Date().toISOString();
+// WHICH FILE these digests came from. The guard above already refused to run
+// unless the connected file is EXPECTED_KEY, so that is provably the file just
+// observed. Recording it is what lets the parity engine invalidate every digest
+// when the project is later repointed at a different file — without it, a
+// one-line `figmaFileId` edit silently keeps 24 stale `in-sync` stamps alive
+// (which is exactly what happened to southleft on 2026-09-02).
+manifest.figmaObservedFileId = EXPECTED_KEY;
 writeManifest(manifest, project);
 console.log(
   `[${project.id}] Refreshed: ${updated} digest change(s), ${nowMissing} mapped set(s) missing live, ${manifest.figmaOnly.length} Figma-only set(s). Manifest updated.`,

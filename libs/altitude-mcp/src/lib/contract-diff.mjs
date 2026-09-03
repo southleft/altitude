@@ -28,6 +28,30 @@
 // Absence of a canvas dump is not this module's problem to solve — a caller
 // with no `canvasContract` gets a clean "not comparable" result, never a
 // crash and never a fabricated disagreement.
+//
+// ── THE PROJECTION FALLBACK (2026-09-03) ─────────────────────────────────
+//
+// "Absence of a canvas dump" turned out to be the NORMAL case everywhere
+// that isn't a maintainer's laptop. The dumps are gitignored live
+// observations, so on a clone, in CI, and on the deployed docs site there
+// are none: 259 disagreements locally, 0 pairs compared in CI, and the
+// panel could only ever say "not compared".
+//
+// `scripts/figma-parity/build-canvas-projection.mjs` emits ONE TRACKED file
+// per project — `.altitude/figma-sync/canvas-projection.json` — carrying
+// exactly the fields this module reads (axes, properties, states, text-style
+// names, bound-variable names, degradations) with no node ids, no file key,
+// no paths, no geometry. `diffContracts()` accepts it as `canvasProjection`
+// and MATERIALIZES it back into a canvas-contract-shaped object, then runs
+// the SAME code path. One differ, two provenances — the projected answer
+// cannot drift from the live one by way of a second implementation.
+//
+// A projected answer is NOT a live one, and every result now says which it
+// is: `source` is `'live-dump' | 'projection' | 'none'`, and on the
+// projection path `sourceStamp` carries the projection's staleness stamp.
+// A consumer that renders those two identically is lying about how fresh
+// its facts are; that is the failure this field exists to make impossible.
+// A live dump always WINS — passing both is not ambiguous.
 
 /**
  * Same case/separator-insensitive comparison parity.mjs's `diffFigmaContract()`
@@ -416,6 +440,65 @@ function collectCanvasFigmaTokens(canvasContract, delegated = new Set()) {
 }
 
 /**
+ * Turn a TRACKED PROJECTION entry back into a canvas-contract-shaped object,
+ * so the one differ below runs unchanged over it.
+ *
+ * `anatomy` is deliberately absent — the projection carries no node tree, by
+ * design. Both places the differ would reach for it already prefer a field
+ * the projection DOES carry (`collectCanvasFigmaTokens` prefers `tokensOwn`,
+ * `delegatedNestedTags` prefers `tokensNested`), so the reach never happens
+ * for a dump extracted since those fields existed. For an older dump the
+ * generator records a NAMED `projectionDegradations` note rather than
+ * letting the difference pass silently; it is surfaced as a skip below.
+ *
+ * `anatomySource` is carried verbatim so the token pass's own guard
+ * (`!== 'observed'` -> skip, with a reason) behaves exactly as it does live.
+ *
+ * @param {object|null} entry one value of the projection's `components` map
+ * @returns {object|null}
+ */
+export function projectionToCanvasContract(entry) {
+  if (!entry || typeof entry !== 'object') return null;
+  return {
+    figma: entry.figma ?? null,
+    anatomySource: entry.anatomySource ?? 'unavailable',
+    variantAxes: entry.variantAxes ?? [],
+    componentProperties: entry.componentProperties ?? [],
+    states: entry.states ?? [],
+    textStyles: entry.textStyles ?? [],
+    ...(entry.tokens !== undefined ? { tokens: entry.tokens } : {}),
+    ...(entry.tokensOwn !== undefined ? { tokensOwn: entry.tokensOwn } : {}),
+    ...(entry.tokensNested !== undefined ? { tokensNested: entry.tokensNested } : {}),
+    degradations: entry.degradations ?? [],
+  };
+}
+
+/**
+ * Pick this component's entry out of whatever the caller passed as
+ * `canvasProjection` — either the WHOLE projection document
+ * (`{ project, source, components: { <tag>: entry } }`) or one entry
+ * already selected. Accepting both keeps a caller from having to know the
+ * document's shape, without this module ever touching the filesystem.
+ *
+ * @returns {{entry: object|null, stamp: object|null}}
+ */
+function resolveProjectionEntry(canvasProjection, tag) {
+  if (!canvasProjection || typeof canvasProjection !== 'object') return { entry: null, stamp: null };
+  if (canvasProjection.components && typeof canvasProjection.components === 'object') {
+    const entry = tag ? canvasProjection.components[tag] ?? null : null;
+    const stamp = {
+      project: canvasProjection.project ?? null,
+      generatedAt: canvasProjection.generatedAt ?? null,
+      newestMtime: canvasProjection.source?.newestMtime ?? null,
+      figmaFileKeyHash: canvasProjection.source?.figmaFileKeyHash ?? null,
+    };
+    return { entry, stamp };
+  }
+  // Already an entry.
+  return { entry: canvasProjection, stamp: null };
+}
+
+/**
  * Diff ONE component's CODE contract against its CANVAS contract.
  *
  * @param {object} args
@@ -426,22 +509,70 @@ function collectCanvasFigmaTokens(canvasContract, delegated = new Set()) {
  *   or `null`/`undefined` when no canvas dump exists on disk — the expected,
  *   common case (canvas dumps are OBSERVATIONS, gitignored, extracted on
  *   demand). This must degrade gracefully, never throw.
+ * @param {object|null} args.canvasProjection the TRACKED projection to fall
+ *   back to when there is no live dump — either the whole
+ *   `.altitude/figma-sync/canvas-projection.json` document or this
+ *   component's entry from its `components` map. Ignored entirely when
+ *   `canvasContract` is present: a live observation always outranks a
+ *   point-in-time projection of one.
  * @returns {{disagreements: Array<{dimension:string,key:string,code:*,canvas:*,kind:string,detail:string}>,
  *            compared: {props:number,variants:number,states:number,tokens:number,anatomy:number,slots:number},
- *            skipped: Array<{dimension:string|null,reason:string,[k:string]:*}>}}
+ *            skipped: Array<{dimension:string|null,reason:string,[k:string]:*}>,
+ *            source: 'live-dump'|'projection'|'none',
+ *            sourceStamp?: object}}
  */
-export function diffContracts({ codeContract, canvasContract } = {}) {
+export function diffContracts({ codeContract, canvasContract, canvasProjection } = {}) {
   const disagreements = [];
   const skipped = [];
   const compared = { props: 0, variants: 0, states: 0, tokens: 0, anatomy: 0, slots: 0 };
 
   if (!codeContract) {
     skipped.push({ dimension: null, reason: 'no code contract provided — nothing to diff.' });
-    return { disagreements, compared, skipped };
+    return { disagreements, compared, skipped, source: 'none' };
   }
-  if (!canvasContract) {
+
+  // Which side are we actually about to compare against? A live dump wins;
+  // the projection is the fallback; neither is the honest "not comparable".
+  let source = 'live-dump';
+  let sourceStamp = null;
+  let canvas = canvasContract ?? null;
+  let projectionNotes = [];
+  if (!canvas) {
+    const tag = codeContract.id ?? codeContract.component ?? codeContract.tag ?? null;
+    const { entry, stamp } = resolveProjectionEntry(canvasProjection, tag);
+    if (entry) {
+      canvas = projectionToCanvasContract(entry);
+      source = 'projection';
+      sourceStamp = stamp;
+      projectionNotes = entry.projectionDegradations ?? [];
+    }
+  }
+
+  if (!canvas) {
     skipped.push({ dimension: null, reason: 'no canvas contract on disk — run contracts:canvas (or extract-canvas.mjs --component <tag>) first.' });
-    return { disagreements, compared, skipped };
+    return { disagreements, compared, skipped, source: 'none' };
+  }
+
+  // Rename-free from here down: the rest of this function reads `canvasContract`.
+  canvasContract = canvas;
+
+  // Provenance, stated in the RESULT rather than left to the caller to
+  // remember. A projected comparison is a point-in-time read of a Figma file
+  // nobody looked at during this run; that is a real caveat and it travels
+  // with the answer.
+  if (source === 'projection') {
+    skipped.push({
+      dimension: null,
+      reason:
+        'compared against the TRACKED canvas PROJECTION, not a live canvas dump — a point-in-time read ' +
+        `of the Figma file${sourceStamp?.newestMtime ? ` (dumps newest ${sourceStamp.newestMtime}` : ''}` +
+        `${sourceStamp?.generatedAt ? `, projected ${sourceStamp.generatedAt})` : sourceStamp?.newestMtime ? ')' : ''}. ` +
+        'Re-run contracts:canvas for a live answer.',
+      source: 'projection',
+    });
+    for (const note of projectionNotes) {
+      skipped.push({ dimension: null, reason: `projection degradation — ${note}`, source: 'projection' });
+    }
   }
 
   const degradations = canvasContract.degradations ?? [];
@@ -456,7 +587,7 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
       dimension: null,
       reason: 'canvas set was not found live (missing, renamed, or deleted in Figma) — nothing comparable.',
     });
-    return { disagreements, compared, skipped };
+    return { disagreements, compared, skipped, source, ...(sourceStamp ? { sourceStamp } : {}) };
   }
 
   // Slot<->property pairing convention (T17) — Figma has no slot concept,
@@ -762,5 +893,14 @@ export function diffContracts({ codeContract, canvasContract } = {}) {
       'anatomy nodes by Figma layer name, with no reliable 1:1 node mapping between the two.',
   });
 
-  return { disagreements: sortDisagreements(disagreements), compared, skipped };
+  return {
+    disagreements: sortDisagreements(disagreements),
+    compared,
+    skipped,
+    /** 'live-dump' | 'projection' | 'none' — WHICH canvas view produced this.
+     * Additive (2026-09-03): every field that existed before is unchanged on
+     * the live-dump path, byte for byte. */
+    source,
+    ...(sourceStamp ? { sourceStamp } : {}),
+  };
 }

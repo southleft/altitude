@@ -93,7 +93,7 @@ _No interaction states recorded._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-background-default` | `theme/color/background/default` |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | border-bottom-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-bottom-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
@@ -146,7 +146,7 @@ _None._
 
 ## Tokens referenced (11)
 
-`--al-base-space`, `--al-font-size-13`, `--al-font-weight-medium`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-md`, `--al-theme-color-background-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-base-space`, `--al-font-size-13`, `--al-font-weight-medium`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-md`, `--al-theme-color-background-neutral-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

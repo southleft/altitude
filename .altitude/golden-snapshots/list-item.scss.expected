@@ -9,7 +9,7 @@
   }
 
   :host([aria-selected='true']) {
-    background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-default));
+    background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-neutral-default));
   }
 
   /**
@@ -57,7 +57,7 @@
     &:hover,
     &:focus,
     .al-c-list-item[aria-selected='true'] & {
-      background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-default-strong));
+      background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-neutral-strong));
     }
 
     /**
@@ -93,7 +93,7 @@
      * Active styling of the list item link
      */
     .al-is-active & {
-      background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-default-strong));
+      background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-neutral-strong));
     }
   }
 

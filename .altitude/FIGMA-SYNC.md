@@ -129,7 +129,10 @@ brand, state its recipe explicitly.
 3. Reconcile ONE small token group end-to-end (e.g. `tier-1/opacity.json`)
    to validate the loop, tests included, before attempting color.
 4. Record decisions (exclusions, naming mismatches kept deliberately) in
-   `.altitude/figma-sync/decisions.md` so the next run doesn't re-litigate.
+   `.altitude/contracts/DECISIONS.md` so the next run doesn't re-litigate.
+   (This step used to name a decisions file under `.altitude/figma-sync/` that
+   was never created, so for as long as the instruction stood nobody could
+   follow it. The contracts decision log is the one that actually exists.)
 
 ## What is deliberately missing
 

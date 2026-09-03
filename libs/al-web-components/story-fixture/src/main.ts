@@ -125,8 +125,8 @@ function storiesOf(mod: Record<string, unknown>): [string, Story][] {
 const SURFACE_TOKENS = [
   // `--al-theme-color-body-background` aliases the weak background token, so
   // repointing the alias target moves the painted surface with it.
-  '--al-theme-color-background-default-weak',
-  '--al-theme-color-content-default',
+  '--al-theme-color-background-neutral-weak',
+  '--al-theme-color-content-neutral-default',
 ];
 
 function syncSurface(): void {

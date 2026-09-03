@@ -45,7 +45,7 @@
     padding: var(--al-header-padding, 0); /* 3 */
     background-color: var(
       --al-header-background,
-      color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent)
+      color-mix(in srgb, var(--al-theme-color-background-neutral-weak) 85%, transparent)
     );
     border-block-end: var(
       --al-header-border-block-end,
@@ -54,7 +54,7 @@
     backdrop-filter: var(--al-header-backdrop-filter, blur(12px));
     --al-input-label-background: var(
       --al-header-background,
-      var(--al-theme-color-background-default-weak)
+      var(--al-theme-color-background-neutral-weak)
     ); /* 4 */
   }
 
@@ -116,7 +116,7 @@
     align-items: center;
     border-radius: var(--al-theme-border-radius-role-action);
     padding: var(--al-theme-space-xs) var(--al-theme-space);
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     text-decoration: none;
     font-size: var(--al-font-size-14);
     transition:
@@ -125,12 +125,12 @@
   }
 
   ::slotted(a[slot='nav']:hover) {
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
   }
 
   ::slotted(a[slot='nav'][aria-current='page']) {
-    color: var(--al-theme-color-content-default); /* 6 */
-    background: var(--al-theme-color-background-default-strong); /* 6 */
+    color: var(--al-theme-color-content-neutral-default); /* 6 */
+    background: var(--al-theme-color-background-neutral-strong); /* 6 */
   }
 
   /**
@@ -151,7 +151,7 @@
     border-radius: var(--al-theme-border-radius-role-action);
     border: var(--al-theme-border-width) solid #{$sl-border-faint};
     background: transparent;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     cursor: pointer;
     transition:
       color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
@@ -160,8 +160,8 @@
 
   ::slotted(button[slot='actions']:hover),
   .sl-c-header__menu-button:hover {
-    color: var(--al-theme-color-content-default);
-    border-color: var(--al-theme-color-border-default-weak);
+    color: var(--al-theme-color-content-neutral-default);
+    border-color: var(--al-theme-color-border-neutral-weak);
   }
 
   /* Non-negotiable per AGENTS.md. The slotted buttons take their ring from the
@@ -198,7 +198,7 @@
     align-items: center;
     justify-content: space-between;
     padding-block: var(--al-theme-space-sm);
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     text-decoration: none;
   }
 }

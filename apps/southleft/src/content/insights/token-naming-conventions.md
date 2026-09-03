@@ -114,13 +114,13 @@ Consider a practical example: defining color tokens for buttons. By incorporatin
          },
          "content": {
            "@": {
-             "value": "{theme.color.content.default}"
+             "value": "{theme.color.content.neutral-default}"
            },
            "hover": {
-             "value": "{theme.color.content.default}"
+             "value": "{theme.color.content.neutral-default}"
            },
            "active": {
-             "value": "{theme.color.content.default}"
+             "value": "{theme.color.content.neutral-default}"
            },
            "disabled": {
              "value": "{theme.color.content.disabled.default}"

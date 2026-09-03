@@ -179,8 +179,63 @@ function main() {
     }
   }
 
+  /**
+   * THE REGRESSION INVARIANT.
+   *
+   * The rule above can only fire when a `legacy` component exists. As of the v2
+   * refactor all 67 components are `scoped-complete`, so it fires never — the
+   * gate reports PASS on every PR and the self-test has to synthesise a fake
+   * `legacy` entry to exercise it at all. A gate that cannot fail is not a gate;
+   * it is a green light with no bulb behind it.
+   *
+   * This is the invariant that still has teeth in the end state: a component may
+   * move FORWARD along `legacy -> dual -> scoped-complete`, never backward. It is
+   * policy-neutral (it forbids no state, it forbids only losing ground) and it
+   * fires on a real mistake — a bad merge or a hand-edit that drops a component
+   * back to `dual` silently re-opens every invariant `scoped-complete` asserts.
+   *
+   * The distribution is printed on every run whether or not anything is wrong,
+   * because a gate missing from the log is indistinguishable from one that never
+   * ran, and this repo treats that silence as the failure.
+   */
+  const RANK = { legacy: 0, dual: 1, 'scoped-complete': 2 };
+  const regressions = [];
+  for (const [name, headEntry] of Object.entries(headManifest.components ?? {})) {
+    const baseEntry = baseManifest.components?.[name];
+    if (!baseEntry) continue; // new component — nothing to regress from
+    const before = RANK[baseEntry.state];
+    const after = RANK[headEntry.state];
+    if (before === undefined || after === undefined) continue;
+    if (after < before) {
+      regressions.push({ component: name, from: baseEntry.state, to: headEntry.state });
+    }
+  }
+
+  const distribution = Object.values(headManifest.components ?? {}).reduce((acc, e) => {
+    acc[e.state] = (acc[e.state] ?? 0) + 1;
+    return acc;
+  }, {});
+  const shape = Object.entries(distribution)
+    .sort()
+    .map(([k, v]) => `${v} ${k}`)
+    .join(', ');
+  console.log(`[migration-gate] migration.json: ${shape}`);
+
+  if (regressions.length > 0) {
+    console.error('\n[migration-gate] FAIL — migration state moved BACKWARD:\n');
+    for (const r of regressions) {
+      console.error(`  • ${r.component}: ${r.from} -> ${r.to}`);
+    }
+    console.error(
+      '\nA component may advance legacy -> dual -> scoped-complete, never the reverse.\n' +
+        'If a component genuinely needs re-migrating, say so in the PR and change this gate\n' +
+        'deliberately — do not let a merge quietly undo a completed migration.',
+    );
+    process.exit(1);
+  }
+
   if (violations.length === 0) {
-    console.log('[migration-gate] PASS — no `legacy` components touched without a state transition.');
+    console.log('[migration-gate] PASS — no `legacy` components touched without a state transition, no state regressions.');
     process.exit(0);
   }
 

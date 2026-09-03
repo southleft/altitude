@@ -16,7 +16,7 @@ export default {
   argTypes: {
     variant: {
       control: { type: 'radio' },
-      options: ['default', 'secondary', 'info', 'success', 'warning', 'danger'],
+      options: ['default', 'neutral', 'bare', 'primary', 'secondary', 'tertiary'],
     },
     type: {
       control: { type: 'radio' },
@@ -39,26 +39,26 @@ Secondary.args = {
   text: 'Engineering'
 };
 
-export const Info = Template.bind({});
-Info.args = {
-  variant: 'info',
+export const Primary = Template.bind({});
+Primary.args = {
+  variant: 'primary',
   text: 'Research'
 };
 
-export const Success = Template.bind({});
-Success.args = {
-  variant: 'success',
+export const Tertiary = Template.bind({});
+Tertiary.args = {
+  variant: 'tertiary',
   text: 'Stable'
 };
 
-export const Warning = Template.bind({});
-Warning.args = {
-  variant: 'warning'
+export const Neutral = Template.bind({});
+Neutral.args = {
+  variant: 'neutral'
 };
 
-export const Danger = Template.bind({});
-Danger.args = {
-  variant: 'danger'
+export const Bare = Template.bind({});
+Bare.args = {
+  variant: 'bare'
 };
 
 const TemplateIcon = (args) => html`<al-chip ${spread(args)} data-testid="chip"><al-icon-warning-triangle></al-icon-warning-triangle>Label</al-chip>`;

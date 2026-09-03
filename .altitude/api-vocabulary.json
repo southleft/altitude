@@ -1,0 +1,213 @@
+{
+  "//": "Canonical public-API vocabulary for al-* components. Enforced by scripts/check-api-vocabulary.mjs; explained in .altitude/API-VOCABULARY.md. A property is judged in one of four ways: a RESERVED name is always a violation (it hides which axis it means); an AXIS name must declare values drawn from that axis's set; a BOOLEAN must carry an allowed prefix or be a standard HTML boolean attribute; everything else is free-form and carries no opinion. `exceptions` is a debt ledger, not a permission list -- every entry is counted by the ratchet in .altitude/baselines/api-vocabulary.json, so the ledger can only shrink.",
+  "version": 1,
+
+  "axes": {
+    "emphasis": {
+      "means": "Visual weight within one component's own hierarchy. Never carries meaning about state.",
+      "values": ["primary", "secondary", "tertiary", "neutral", "bare", "ghost", "plain"]
+    },
+    "status": {
+      "means": "Semantic state the user must read. One set across every component that has one.",
+      "values": ["info", "success", "warning", "danger"]
+    },
+    "size": {
+      "means": "One t-shirt scale. A component may use a subset, never a different spelling.",
+      "values": ["xs", "sm", "md", "lg", "xl", "xxl", "xxxl"]
+    },
+    "position": {
+      "means": "Where a floating or attached element is anchored relative to its trigger.",
+      "values": [
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "top-left",
+        "top-center",
+        "top-right",
+        "bottom-left",
+        "bottom-center",
+        "bottom-right",
+        "left-top",
+        "right-top",
+        "inset"
+      ]
+    },
+    "direction": {
+      "means": "Flow of a component's own children along the main axis.",
+      "values": ["row", "column"]
+    },
+    "orientation": {
+      "means": "The axis a single element is drawn along (a rule, a stepper track). Not about children.",
+      "values": ["horizontal", "vertical"]
+    },
+    "shape": {
+      "means": "Silhouette of the element's box.",
+      "values": ["default", "sharp", "pill", "circle", "square", "rounded", "rect"]
+    },
+    "align": {
+      "means": "Cross-axis alignment of children. NOT anchored placement -- that is `position`.",
+      "values": ["start", "center", "end", "stretch", "baseline"]
+    },
+    "justify": {
+      "means": "Main-axis distribution of children.",
+      "values": ["start", "center", "end", "between", "around", "evenly", "stretch"]
+    }
+  },
+
+  "reserved": {
+    "variant": "Ambiguous: across the library it already means emphasis, status, size, orientation, shape, layout mode AND brand, so `variant=\"sm\"` is a size on one element, invalid on the next and a status on a third. Name the axis instead -- emphasis, status, size, position, direction, orientation or shape.",
+    "alignment": "Use `position` for anchored placement, or `align` for cross-axis alignment of children.",
+    "flyoutPosition": "Use `position`. A prefix does not make a second placement vocabulary legal.",
+    "labelPosition": "Use `position`. The subject is already the label; the prop need not say so again.",
+    "placement": "Use `position`.",
+    "layout": "Use `direction` for flow, or a named mode on an axis of its own.",
+    "appearance": "Use `emphasis`.",
+    "kind": "Name the axis -- `emphasis` or `status`.",
+    "color": "Use `status` for meaning, or a token on the consuming side for decoration.",
+    "severity": "Use `status`.",
+    "level": "Use `size` for scale, or a domain-specific name (`headingLevel`) when it is truly semantic."
+  },
+
+  "booleans": {
+    "prefixes": ["is", "has"],
+    "//prefixes": "`is*` for a state the component is in, `has*` for a part it owns. Nothing else -- a `hide*`/`show*` pair means the same fact reads true on one element and false on another.",
+    "bareAllowed": [
+      "disabled",
+      "checked",
+      "required",
+      "readonly",
+      "multiple",
+      "open",
+      "hidden",
+      "selected",
+      "autofocus",
+      "inert",
+      "reversed",
+      "download",
+      "novalidate",
+      "loop",
+      "muted",
+      "controls",
+      "autoplay",
+      "default"
+    ],
+    "//bareAllowed": "Standard HTML boolean attribute names only. A bare name is legal precisely because HTML already fixed its meaning."
+  },
+
+  "exceptions": {
+    "//": "tag -> prop -> reason. Every entry is a KNOWN violation, kept green so the gate could land; every entry is counted by the ratchet. Add one only with the reason it cannot be fixed today, and delete it the moment it is.",
+    "//hide-family": "`hide*` inverts the polarity of the rest of the library -- `isLabelHidden` reads true for the fact `hasLabel` reads false for. Twelve elements share `hideLabel`, so the rename is one coordinated change across the form set, not twelve independent ones.",
+
+    "al-accordion": {
+      "expandAll": "bare boolean; wants `isExpandedAll`.",
+      "expandOneOnly": "bare boolean; wants `isSingleExpand`."
+    },
+    "al-alert": {
+      "variant": "status axis spelled `variant`, and missing `info` from the set.",
+      "autoClose": "`auto*` family; wants `isAutoClosing`."
+    },
+    "al-avatar": { "variant": "size axis spelled `variant`, single value 'sm'." },
+    "al-badge": { "variant": "status axis spelled `variant`." },
+    "al-button": {
+      "variant": "emphasis axis spelled `variant`.",
+      "hideText": "`hide*` family; wants `isTextHidden`.",
+      "fullWidth": "`full*` family; wants `isFullWidth`."
+    },
+    "al-calendar": {
+      "disabled": "collides with the library-wide `isDisabled`; one of the two spellings has to go.",
+      "resetDates": "bare boolean naming an action, not a state.",
+      "startOnMonday": "bare boolean; wants `isStartingOnMonday`.",
+      "showMonthPopup": "`show*` family; wants `isMonthPopupVisible`."
+    },
+    "al-card": {
+      "variant": "emphasis axis spelled `variant` ('bare').",
+      "layout": "direction axis spelled `layout` ('inline' means row).",
+      "fill": "bare boolean; wants `isFilled`."
+    },
+    "al-checkbox": { "hideLabel": "`hide*` family; wants `isLabelHidden`." },
+    "al-checkbox-group": { "hideLegend": "`hide*` family; wants `isLegendHidden`." },
+    "al-chip": { "variant": "emphasis axis spelled `variant`." },
+    "al-combobox": {
+      "align": "`align` used for anchored placement (top/bottom); that is `position`.",
+      "hideLabel": "`hide*` family; wants `isLabelHidden`."
+    },
+    "al-command-palette": { "enableShortcut": "`enable*` family; wants `isShortcutEnabled`." },
+    "al-date-picker": {
+      "startOnMonday": "bare boolean; wants `isStartingOnMonday`.",
+      "hideLabel": "`hide*` family; wants `isLabelHidden`."
+    },
+    "al-date-time-picker": {
+      "startOnMonday": "bare boolean; wants `isStartingOnMonday`.",
+      "hideLabel": "`hide*` family; wants `isLabelHidden`."
+    },
+    "al-dialog": { "disableClickOutside": "`disable*` family; wants `isClickOutsideDisabled`." },
+    "al-divider": { "variant": "orientation axis spelled `variant` ('vertical')." },
+    "al-drawer": {
+      "alignment": "third spelling of `position`.",
+      "disableBackdropClick": "`disable*` family; wants `isBackdropClickDisabled`."
+    },
+    "al-file-upload": { "hideLabel": "`hide*` family; wants `isLabelHidden`." },
+    "al-heading": { "variant": "size axis spelled `variant`, with its own display-* scale on top." },
+    "al-header": {
+      "sticky": "bare boolean; wants `isSticky`.",
+      "elevated": "bare boolean; wants `isElevated`."
+    },
+    "al-input": {
+      "labelPosition": "second spelling of `position`.",
+      "hideLabel": "`hide*` family; wants `isLabelHidden`."
+    },
+    "al-input-stepper": {
+      "variant": "layout mode spelled `variant`.",
+      "hideLabel": "`hide*` family; wants `isLabelHidden`."
+    },
+    "al-layout": {
+      "variant": "layout mode spelled `variant` (constrained/grid/bento).",
+      "size": "adds 'full' to the t-shirt scale; that is a container width, not a size step.",
+      "wrap": "bare boolean; wants `isWrapped`.",
+      "grow": "bare boolean; wants `isGrowing`.",
+      "responsive": "bare boolean; wants `isResponsive`.",
+      "noCollapse": "`no*` family -- a negated boolean; wants `isCollapsible`.",
+      "fullHeight": "`full*` family; wants `isFullHeight`."
+    },
+    "al-link": { "variant": "size axis spelled `variant` (xs/sm/lg)." },
+    "al-list-item": {
+      "variant": "emphasis axis spelled `variant` ('static').",
+      "flyoutPosition": "second spelling of `position`."
+    },
+    "al-logo": { "variant": "brand axis spelled `variant` ('southleft')." },
+    "al-menu": {
+      "variant": "emphasis axis spelled `variant` ('simple').",
+      "indentGroupItems": "bare boolean; wants `hasIndentedGroupItems`."
+    },
+    "al-pagination": { "variant": "size axis spelled `variant`, and spelled 'small' rather than 'sm'." },
+    "al-popover": { "variant": "layout mode spelled `variant` ('menu')." },
+    "al-progress": { "showLabel": "`show*` family, the inverse polarity of `hideLabel` elsewhere. Wants `isLabelVisible`." },
+    "al-radio": { "hideLabel": "`hide*` family; wants `isLabelHidden`." },
+    "al-radio-group": { "hideLegend": "`hide*` family; wants `isLegendHidden`." },
+    "al-range": { "hideLabel": "`hide*` family; wants `isLabelHidden`." },
+    "al-search": { "hideLabel": "`hide*` family; wants `isLabelHidden`." },
+    "al-select": {
+      "align": "`align` used for anchored placement (top/bottom); that is `position`.",
+      "hideLabel": "`hide*` family; wants `isLabelHidden`."
+    },
+    "al-skeleton": { "variant": "shape axis spelled `variant` (circle/square)." },
+    "al-spinner": {
+      "small": "bare boolean encoding a SIZE. Wants `size='sm'`.",
+      "inverted": "bare boolean; wants `isInverted`."
+    },
+    "al-stat": { "invertPolarity": "bare boolean naming an action; wants `isPolarityInverted`." },
+    "al-stepper": { "variant": "orientation axis spelled `variant` ('vertical')." },
+    "al-stepper-item": { "variant": "orientation axis spelled `variant` ('vertical')." },
+    "al-table": { "hideCaption": "`hide*` family; wants `isCaptionHidden`." },
+    "al-tabs": { "variant": "layout mode spelled `variant` ('stretch')." },
+    "al-textarea": { "hideLabel": "`hide*` family; wants `isLabelHidden`." },
+    "al-time-selector-list": { "resetTime": "bare boolean naming an action, not a state." },
+    "al-toast": {
+      "variant": "status axis spelled `variant`.",
+      "autoClose": "`auto*` family; wants `isAutoClosing`.",
+      "showProgress": "`show*` family; wants `isProgressVisible`."
+    },
+    "al-toggle-button": { "variant": "emphasis axis spelled `variant` ('background')." }
+  }
+}

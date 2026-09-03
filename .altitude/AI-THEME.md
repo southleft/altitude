@@ -1,8 +1,15 @@
-# AI Theme — prompt-driven token derivation in Storybook
+# AI Theme — prompt-driven token derivation
 
-A Storybook addon panel where you type a vibe ("deep sea at midnight") and the
-whole component library re-skins. Ported from the `<theme.console>` on
-southleft.com and adapted to Altitude's token architecture.
+Type a vibe ("deep sea at midnight") and the whole component library re-skins.
+Ported from the `<theme.console>` on southleft.com and adapted to Altitude's
+token architecture.
+
+**Where it lives today.** The engine is `libs/al-web-components/theme-engine/`,
+built and exported as `@southleft/al-web-components/theme-engine`. Its two live
+front doors are the `altitude_generate_theme` MCP tool (same solver, no LLM) and
+the AI direction panel in `apps/southleft`. The Storybook addon panel this
+document was originally written about was retired with Storybook on
+**2026-08-25**; nothing replaced that panel, and no successor was built.
 
 ## The one idea that matters
 
@@ -72,12 +79,14 @@ Re-pointing primitives is mode-agnostic, but *which* primitive a semantic token
 reads is not:
 
 ```css
-/* dark sheet */   --al-theme-color-background-default: var(--al-color-neutral-dark-700);
-/* light sheet */  --al-theme-color-background-default: var(--al-color-neutral-light-600);
+/* dark sheet */   --al-theme-color-background-neutral-default: var(--al-color-neutral-dark-700);
+/* light sheet */  --al-theme-color-background-neutral-default: var(--al-color-neutral-light-600);
 ```
 
-Only one sheet is ever loaded — Storybook's `main.scss` hard-codes the dark one.
-So a theme that derives for light mode would solve its ramps against light role
+Only one sheet is ever loaded — the library's own
+`libs/al-web-components/styles/main.scss` hard-codes the dark one
+(`@use './dist/scss/theme/tokens-dark.scss'`). So a theme that derives for light
+mode would solve its ramps against light role
 stops while the page still read the dark mapping, and render inverted: dark
 canvas, light ink, and receipts vouching for pairs nobody sees.
 
@@ -85,7 +94,7 @@ canvas, light ink, and receipts vouching for pairs nobody sees.
 the two sheets, and the engine emits the whole block for the chosen mode every
 time. That makes a derived theme self-contained — it lands the same way
 whichever sheet a consumer happens to have loaded, and is what lets a prompt
-flip the entire library to paper-white inside a dark Storybook.
+flip the entire library to paper-white on a page serving the dark sheet.
 
 ## Files
 
@@ -116,6 +125,8 @@ packed — no consumer of the published package could derive a theme. The move t
 and `controllers/`) fixed all four at once, and removed both symptoms: the
 southleft app's four-levels-deep relative imports into the library's Storybook
 internals, and the MCP's need to hot-compile TypeScript off disk at runtime.
+(That move turned out to be what saved the engine: `.storybook/` was deleted
+outright on 2026-08-25, so anything still inside it went with Storybook.)
 
 ## The API key never reaches the browser
 
@@ -143,10 +154,12 @@ because `pnpm --filter @southleft/al-web-components start` runs with a different
 
 ## Gotchas worth knowing
 
-- `.storybook` is a dot-directory, so TypeScript excludes it from the `tsc`
-  program entirely — anything still in there is type-checked by the editor and
-  bundled by Vite/esbuild, but never emitted into `dist`. That is exactly why
-  the engine no longer lives there.
+- **Dot-directories are invisible to `tsc`.** TypeScript's wildcard `include`
+  skips them, so source in one is type-checked by the editor and bundled by
+  Vite/esbuild but never emitted into `dist`. That is why the engine was moved out
+  of the Storybook config directory (see above) — and the rule outlives that
+  directory, which was deleted with Storybook on 2026-08-25. Never put shipped
+  source in a dot-directory.
 - `vite-plugins/theme-api.mjs` is plain `.mjs`, not `.ts`, on purpose: as
   TypeScript it would join the declaration-emit program and fail on its
   `import ... from '../../../functions/api/theme.js'` (an untyped `.js` module

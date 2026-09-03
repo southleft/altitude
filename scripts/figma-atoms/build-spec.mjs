@@ -8,7 +8,7 @@
  * single colour back to a token is ambiguous — dozens of tokens share a hex.
  *
  * The trick: measure the SAME case in Light and Dark and match the PAIR.
- * `(#E9E7E2, #181818)` identifies `theme/color/background/default` uniquely, where
+ * `(#E9E7E2, #181818)` identifies `theme/color/background/neutral-default` uniquely, where
  * either half alone would not. Mode-invariant pairs fall through to Primitives.
  *
  * Usage:

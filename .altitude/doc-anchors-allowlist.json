@@ -1,0 +1,72 @@
+{
+  "//": "Dated exceptions for scripts/check-doc-anchors.mjs — the documentation-rot gate. Every entry needs EITHER an exact `anchor` (the string the gate printed, e.g. `scripts/foo.mjs` or `pnpm run build:x`) OR a `pattern` (a JS regex tested against that string), plus a `reason` explaining why the doc is allowed to name something that does not resolve. `expires` (YYYY-MM-DD) is optional but strongly preferred: an entry past its expiry FAILS the gate deliberately, so an exception is a decision that gets revisited rather than a permanent hole. `files` is an optional substring of the doc path, narrowing the entry to one document. An entry that matches nothing is reported as STALE — delete it. Prefer fixing the doc: this list is for anchors that are correct to write down even though they cannot resolve on disk (paths a consumer creates, files a generator emits at build time, and TOMBSTONES — a doc naming what was deliberately deleted, in a sentence that says so).",
+  "allowed": [
+    {
+      "pattern": "(^|/)dist(-v5)?(/|$)",
+      "reason": "Build outputs, gitignored and absent on a clean checkout. Docs correctly name dist/, libs/*/dist, story-fixture/dist and styles/dist-v5 when explaining what the build produces. This replaced a ^dist/ pattern that was anchored to the start of the string and so matched NOTHING — every real anchor is libs/<pkg>/dist..., which is why the gate passed locally (where the builds exist) and failed on CI.",
+      "expires": "2027-01-01"
+    },
+    {
+      "pattern": "^.altitude/figma-sync/",
+      "reason": "Gitignored Figma working artifacts (the variable payload, the last export, the canvas dumps). Only parity-manifest.json and canvas-projection.json are tracked — see .altitude/README.md. FIGMA-SYNC.md correctly names the others while describing the sync loop that produces them.",
+      "expires": "2027-01-01"
+    },
+    {
+      "anchor": ".claude/worktrees",
+      "reason": "Exists only on a machine that has created session worktrees; untracked, so absent on a clean checkout. CLAUDE.md names it in the search-scoping rule precisely so an agent EXCLUDES it — the reference has to survive even where the directory does not.",
+      "expires": "2027-01-01"
+    },
+    {
+      "pattern": "^\\.(ai/|github/copilot)",
+      "files": "AI-DIRECTORY-EVALUATION.md",
+      "reason": "This doc surveys how OTHER AI tools lay out their context directories (Cursor's .ai/memory, Copilot's .github/copilot-instructions) in order to argue for .altitude/. Those paths are correctly absent from this repo — that is the point of the comparison.",
+      "expires": "2027-01-01"
+    },
+    {
+      "pattern": "^\\.storybook/",
+      "reason": "TOMBSTONE. Storybook was retired 2026-08-25. These docs name the deleted config files to explain where a mechanism USED to live (the preset toolbar, the AI-theme console, the docs stylesheet) so a reader does not go hunting for them. Every surviving mention is dated and says it is gone; the instructional ones were removed 2026-09-02. Revisit at expiry: if the surrounding prose no longer earns its keep, delete the paragraph rather than renewing this entry.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "scripts/convert-tokens-to-dtcg.js",
+      "reason": "TOMBSTONE. The Tokens Studio converter was deleted when styles/tokens-dtcg/ became the single hand-authored source (2026-08-25). CLAUDE.md and TOKENS.md name it in sentences that state it was deleted — that is the fact a reader needs, since the file is still referenced in older branches and PRs.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "scripts/ingest-tokens-from-studio.js",
+      "reason": "TOMBSTONE. Deleted with the Tokens Studio pipeline (2026-08-25); TOKENS.md records that it wrote into a tree build:tokens deleted on the next run, i.e. it could never have worked. Worth keeping as history — sync direction is code -> Figma, never the reverse.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "scripts/check-tokens-parity.js",
+      "reason": "TOMBSTONE. Retired with the parallel v3/v5 token pipeline; TOKENS.md's changelog section names it as retired.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "libs/al-web-components/styles/tokens-config.js",
+      "reason": "TOMBSTONE. The Style Dictionary v3 config, deleted in T6.2. TOKENS.md's opening note names it to explain that tokens-config.v5.mjs is now the sole token build config.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "libs/al-web-components/styles/tokens",
+      "reason": "TOMBSTONE. The legacy Tokens Studio tree (value/type shape), deleted 2026-08-25 in favour of styles/tokens-dtcg/. Named in TOKENS.md's changelog so a reader coming from an old branch knows where it went.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "scripts/contracts/figma/sheet-style.mjs",
+      "reason": "TOMBSTONE. Deleted 2026-08-29 with the prop sheet, when generation moved to one frame per component (a doc header above the set). DECISIONS.md is the decision log and correctly records what was removed.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "apps/knapsack",
+      "reason": "TOMBSTONE. The Knapsack fixture was retired 2026-08-24; CLAUDE.md names it once, in a parenthetical that says so and points at the .mm note. Keeping the name helps anyone reading an older commit.",
+      "expires": "2027-03-01"
+    },
+    {
+      "anchor": "functions/api/mcp.js",
+      "files": "libs/altitude-mcp/README.md",
+      "reason": "TOMBSTONE. The hosted Pages Function lived here until 2026-08-27, when it broke the Cloudflare build and took the whole deploy down; it now sits PARKED at libs/altitude-mcp/hosted/api-mcp.js. The README names the old path deliberately, because the diagnosis only makes sense if you know where it was deployed from.",
+      "expires": "2027-03-01"
+    }
+  ]
+}

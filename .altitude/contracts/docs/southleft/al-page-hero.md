@@ -39,7 +39,7 @@ five layout props, abandoned mid-build by its first real consumer.
 
 - Component set: **Page Hero**
 - Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
-- File: https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/
+- File: https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/
 
 ## Props (6)
 
@@ -127,7 +127,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (15)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-default`, `--al-theme-color-content-default`, `--al-theme-color-content-default-weak`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-bold-letter-spacing`, `--al-typography-preset-16`
+`--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-bold-letter-spacing`, `--al-typography-preset-16`
 
 ---
 

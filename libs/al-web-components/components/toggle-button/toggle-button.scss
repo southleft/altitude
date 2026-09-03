@@ -35,9 +35,9 @@
    * Toggle Button - Background variant
    */
   .al-c-toggle-button--background {
-    background-color: var(--al-theme-color-background-default);
+    background-color: var(--al-theme-color-background-neutral-default);
     /* v2: structure from a hairline, not elevation. */
-    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);
   }
 
   /**
@@ -56,7 +56,7 @@
     height: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
     min-width: var(--al-toggle-button-height, var(--al-theme-size-control-sm));
     width: var(--al-toggle-button-content-width, auto);
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     background: var(--al-theme-color-background-transparent-default);
     border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius));
     padding: var(--al-theme-space-xs);
@@ -76,7 +76,7 @@
      * - If parent is hovered, then change the background color of the content
      */
     &:hover:not(:active, .al-is-selected &) {
-      background: var(--al-theme-color-background-default-strong);
+      background: var(--al-theme-color-background-neutral-strong);
     }
 
     /**
@@ -84,8 +84,8 @@
      * - If parent has selected state, then change the background & color of the content
      */
     .al-is-selected & {
-      color: var(--al-theme-color-content-default-weak);
-      background: var(--al-theme-color-background-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
+      background: var(--al-theme-color-background-neutral-weak);
     }
 
     /**

@@ -119,7 +119,7 @@ if (import.meta.url === `file://${process.argv[1]}`.replace(/\\/g, '/') || proce
        'theme-color-content-primary-weak', 'theme-space-xs', 'theme-space',
        'theme-border-radius', 'theme-border-width-md', 'theme-opacity-disabled',
        'font-weight-bold', 'theme-color-background-transparent-default',
-       'theme-color-content-default', 'theme-icon-lg'];
+       'theme-color-content-neutral-default', 'theme-icon-lg'];
   console.log(`indexed ${Object.keys(CSS_TO_TOKEN).length} css names\n`);
   let miss = 0;
   for (const p of probes) {

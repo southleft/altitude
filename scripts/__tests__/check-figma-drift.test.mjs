@@ -70,9 +70,9 @@ console.log('\n3. Structured fixture — value-drift, possible-renames, missing-
     if (opacityDrift) assert('value-drift: reports both raw values side by side', opacityDrift.code === '0.4' && opacityDrift.figma === '0.5');
 
     // brand/mode awareness: dark-only mismatch on a path shared with light
-    const darkDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.default-weak' && d.context === 'theme:-:dark');
+    const darkDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.neutral-weak' && d.context === 'theme:-:dark');
     assert('value-drift: dark-mode default-weak flagged', !!darkDrift);
-    const lightDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.default-weak' && d.context === 'theme:-:light');
+    const lightDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.neutral-weak' && d.context === 'theme:-:light');
     assert('value-drift: light-mode default-weak NOT flagged (mode isolation, same path)', !lightDrift);
 
     /**
@@ -88,12 +88,12 @@ console.log('\n3. Structured fixture — value-drift, possible-renames, missing-
      * Both mechanisms are still real and still tested, now on Color Scheme
      * tokens where a context genuinely exists.
      */
-    const csDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.default-strong' && d.context.startsWith('theme:'));
+    const csDrift = report.valueDrift.find((d) => d.path === 'theme.color.background.neutral-strong' && d.context.startsWith('theme:'));
     assert('value-drift: light-mode default-strong flagged (alias target differs)', !!csDrift);
 
     // alias normalization: figma's collection-prefixed alias form must not
     // read as drift when the target is the same token
-    const normalized = report.valueDrift.find((d) => d.path === 'theme.color.background.default' && d.context.startsWith('theme:'));
+    const normalized = report.valueDrift.find((d) => d.path === 'theme.color.background.neutral-default' && d.context.startsWith('theme:'));
     assert('value-drift: prefixed alias NOT flagged (Figma alias prefix normalized away)', !normalized);
 
     // rename identity

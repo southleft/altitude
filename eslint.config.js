@@ -40,6 +40,20 @@ export default [
       // `parity-manifest.json` from this tree is durable state; none of it is
       // hand-authored source, and linting it produced 8 errors + 293 warnings.
       '.altitude/figma-sync/**',
+      // Figma Code Connect files, GENERATED from the component contracts by
+      // scripts/contracts/build-code-connect.mjs (see .altitude/CODE-CONNECT.md).
+      // Ignored for two reasons, both structural rather than cosmetic:
+      //   1. They import `@figma/code-connect`, which this repo deliberately
+      //      does NOT install — publishing is an owner-driven step behind a
+      //      Figma token. Linting a file against an unresolvable import invites
+      //      a future rule (import resolution, or no-unused-vars promoted to
+      //      error) to red `pnpm lint` on 68 files nobody hand-wrote.
+      //   2. Their drift gate is their own generator — `build-code-connect.mjs
+      //      --check` byte-compares every file against the contracts — which is
+      //      a stronger guarantee than a linter, and the only one that can be
+      //      satisfied by re-running the generator rather than editing output.
+      // Same reasoning as `.altitude/figma-sync/**` directly above.
+      '.altitude/code-connect/**',
     ],
   },
   js.configs.recommended,

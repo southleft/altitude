@@ -166,10 +166,44 @@ const TIER1_SCALE = (label) =>
   `ramp — consumed exclusively through tier-2 semantic aliases (theme.*). Do not read one of ` +
   `these directly from component code.`;
 
-const brandRamp = (hue) =>
-  `Tier-1 "${hue}" colour ramp (numeric lightness/darkness steps, light.0 = lightest). Never ` +
-  `referenced directly by a component — always through a tier-2 theme.color.* semantic alias, ` +
-  `so a brand can repoint which hue backs "primary"/"danger"/etc. without touching component code.`;
+/**
+ * The post-rename tier-1 ramps are named for the ROLE they back, not the hue
+ * they happen to be, and run 100 (lightest) -> 900 (darkest).
+ */
+/*
+ * NO CURLY BRACES IN DESCRIPTION PROSE.
+ *
+ * These strings are written into `$description` in the DTCG tree, and Style
+ * Dictionary resolves `{...}` inside a token's own fields as a REFERENCE. A
+ * shorthand like `theme.color.{background,content,border}.danger-*` therefore
+ * reads as a reference to a token named `background,content,border`, which
+ * does not exist. Twelve of them failed the whole token build on 2026-09-03 —
+ * and because the build deletes styles/dist-v5 before it writes, the failure
+ * left no token output at all, which then failed 30 unit tests and every gate
+ * downstream of the built CSS. Spell the alternatives out in prose instead.
+ */
+const roleRamp = (role, purpose) =>
+  `Tier-1 "${role}" colour ramp — nine stops, 100 (lightest) to 900 (darkest), backing the ` +
+  `${purpose} role. Never referenced directly by a component: always through a tier-2 ` +
+  `theme.color.background / content / border ${role}-* semantic alias, so a brand can repoint the ` +
+  `hue without touching component code.`;
+
+const legacyNeutralRamp = (name, half) =>
+  `LEGACY tier-1 "${name}" ramp (the ${half} of the pre-2026-08 split neutral pair). Still ` +
+  `emitted for v1 consumers, but referenced by ZERO tier-2 tokens since the role rename — ` +
+  `overriding it changes nothing in the semantic layer. Use color.neutral.* instead.`;
+
+const alphaRamp = (role) =>
+  `Tier-1 "${role}" alpha overlay scale — a ramp stop at 10/30/60/80% opacity, named ` +
+  `<stop>-<alpha> (e.g. 900-60). Used where a semantic token needs a translucent fill (scrims, ` +
+  `shadow tints, hover washes) that must sit over arbitrary content. Consumed through tier-2 ` +
+  `theme.color.background.transparent-* and theme.color.shadow.* aliases, not read directly.`;
+
+const brandDelta = (brand, ramp) =>
+  `Tier-2 BRAND delta: the "${brand}" override of the tier-1 ${ramp} ramp. Lives in ` +
+  `tokens-dtcg/tier-2/brand/${brand}/ and is emitted only into that brand's scoped ` +
+  `\`:host([brand=${brand}])\` partial — it does not exist in the base :root bundle. Never read ` +
+  `directly; the semantic layer above it is identical to the base brand's.`;
 
 const typographyRole = (role, size) =>
   `Tier-2 semantic type-scale entry: the "${role}" role at "${size}" size, with regular/italic/` +
@@ -188,7 +222,10 @@ export const FAMILY_USAGE_RULES = {
   'animation.distance': TIER1_SCALE('motion-distance'),
   'animation.duration': TIER1_SCALE('motion-duration'),
   'animation.timing': TIER1_SCALE('easing-curve'),
-  base: 'Two legacy base-unit primitives (space, font). Not part of the tier-1/2/3 alias chain — kept for historical Sass math, not a token family a component should reach for.',
+  // PRUNED 2026-09-02 (307106f0 folded them into the theme layer, so these
+  // families no longer exist in the tree): `base`, `icon`, `layout.max-width`,
+  // `space`, `theme.layout.width`. A rule matching nothing is dead weight that
+  // reads as documentation; generate-token-metadata.mjs now warns about them.
   'border.radius': TIER1_SCALE('border-radius'),
   'border.width': TIER1_SCALE('border-width'),
   'box-shadow': TIER1_SCALE('elevation') + ' Composite (x/y/blur/spread/color); the color sub-value resolves to theme.color.shadow, which is itself a dead token (see that family) because formatBoxShadowValue string-bakes the tint at build time.',
@@ -196,36 +233,51 @@ export const FAMILY_USAGE_RULES = {
   'font-family': TIER1_SCALE('font-family') + ' `primary` is the v2 UI face (Public Sans); `mono` leads with IBM Plex Mono and carries the metadata layer (table headers, token names, timestamps). `plex` exists so the southleft brand can keep IBM Plex Sans after `primary` moved — it is not a face for new work.',
   'font-size': TIER1_SCALE('font-size'),
   'font-weight': TIER1_SCALE('font-weight'),
-  icon: TIER1_SCALE('icon-sizing'),
-  'layout.max-width': TIER1_SCALE('layout max-width') + ' layout.scss now reads the tier-2 theme.layout.max-width alias directly (fixed this session — was previously a tier bypass reading these tier-1 pixels straight).',
   'letter-spacing': TIER1_SCALE('letter-spacing') + ' Percentage-authored (Figma’s %); DTCG has no type that fits a percentage-of-font-size dimension, so this family is left deliberately untyped rather than mislabelled `dimension` — see .altitude/TOKENS.md.',
   'line-height': TIER1_SCALE('line-height'),
   opacity: TIER1_SCALE('opacity') + ' 0.40/0.80 are the two steps the contrast axis switches between (theme.opacity.disabled) — 0.80 (opacity.80) was added specifically for the contrast="more" fix.',
-  space: TIER1_SCALE('spacing'),
   'text-decoration': TIER1_SCALE('text-decoration') + ' Every emitter filters the -italic/-underline typography presets that would carry a non-none value out of the output set, so this family, while typed and derivable, has zero live var() consumers today by design — see the spec’s Out of Scope.',
   'z-index': TIER1_SCALE('stacking-order'),
 
   // ---- tier-1 color ramps ----
-  'color.brand.blue': brandRamp('blue'),
-  'color.brand.cobalt': brandRamp('cobalt') + ' The v2 accent blue (canvas "Altitude v2 Components", 2026-08-28) — one refined blue for every primary surface, tonal fill and focus ring, in both modes. Supersedes "blue" for the base theme; "blue" is kept for consumers pinned to v1.',
-  'color.brand.crimson': brandRamp('crimson') + ' The v2 danger red. Muted against the vivid "red" ramp, which southleft still owns as its primary hue.',
-  'color.brand.green': brandRamp('green'),
-  'color.brand.jade': brandRamp('jade') + ' The v2 success green.',
-  'color.brand.ink': brandRamp('ink') + ' southleft-only: the dark-mode neutral canvas (paired with "paper" for light mode) — theme-independent by construction, see tokens-config.v5.mjs’s brandSources() comment.',
-  'color.brand.orange': brandRamp('orange'),
-  'color.brand.ochre': brandRamp('ochre') + ' The v2 warning amber. orange.500 stays the vivid warning ACCENT (the foundations swatch); ochre carries the readable text/fill/border stops around it.',
-  'color.brand.paper': brandRamp('paper') + ' southleft-only: the light-mode neutral canvas, paired with "ink".',
-  'color.brand.red': brandRamp('red'),
-  'color.brand.stone': brandRamp('stone') + ' The v2 warm-neutral canvas — hairline borders on warm paper. ONE ramp serves both modes: light reads it from the top (0 = surface, 925 = ink), dark reads it from the bottom (950 = page, 100 = ink), which is why it is not split into light/dark halves.',
-  'color.brand.taupe': brandRamp('taupe'),
-  'color.brand.teal': brandRamp('teal'),
-  'color.brand.violet': brandRamp('violet'),
-  'color.brand.yellow': brandRamp('yellow'),
-  'color.neutral.dark': brandRamp('neutral-dark'),
-  'color.neutral.light': brandRamp('neutral-light'),
-  'color.shadow': 'Tier-1 shadow-tint colour (rgba black at two opacities). Structurally dead: formatBoxShadowValue string-bakes this value into every al-box-shadow-* declaration at BUILD time, so the token naming the tint can never itself have a var() reader — see the spec’s dead-semantic audit finding #1.',
-  'color.transparent.dark': brandRamp('transparent-dark (alpha-over-dark)'),
-  'color.transparent.light': brandRamp('transparent-light (alpha-over-light)'),
+  //
+  // RENAMED 2026-09-02. Three commits moved the ramps and every key in this
+  // block missed the move: 87863eb0 renamed the hue-named ramps to ROLE names,
+  // de6f51ff renumbered them to 100-900 and retired the `color.brand.*`
+  // namespace, 307106f0 folded the base/space/icon/layout primitives into the
+  // theme layer. The old keys (`color.brand.blue`, `color.neutral.dark`,
+  // `color.shadow`, `color.transparent.dark`, `base`, `icon`, `space`,
+  // `layout.max-width`, …) matched nothing afterwards, so 19 families / 184
+  // tokens got NO `org.primer.llm.usage` at all — and the generator dropped
+  // them without a word. `generate-token-metadata.mjs` now FAILS on an
+  // unmatched family, so this block can no longer rot quietly.
+  'color.danger': roleRamp('danger', 'error/destructive'),
+  'color.info': roleRamp('info', 'informational'),
+  'color.neutral': roleRamp('neutral', 'surface/ink/hairline') +
+    ' ONE ramp serves BOTH modes: light reads it from the top (100 = page, 900 = ink), dark reads it from the bottom. It replaced the split neutral-light/neutral-dark pair — nothing in tier-2 references those two any more.',
+  'color.primary': roleRamp('primary', 'brand-primary'),
+  'color.secondary': roleRamp('secondary', 'brand-secondary'),
+  'color.success': roleRamp('success', 'positive/confirmation'),
+  'color.tertiary': roleRamp('tertiary', 'brand-tertiary'),
+  'color.warning': roleRamp('warning', 'caution'),
+
+  // Legacy split neutral ramps. Still EMITTED (so a v1 consumer's var() keeps
+  // resolving) but referenced by ZERO tier-2 tokens since the role rename —
+  // overriding one is a no-op on the semantic layer. Use `color.neutral`.
+  'color.neutral-dark': legacyNeutralRamp('neutral-dark', 'ink half'),
+  'color.neutral-light': legacyNeutralRamp('neutral-light', 'paper half'),
+
+  // ---- tier-1 alpha overlays ----
+  'color.neutral.alpha': alphaRamp('neutral'),
+  'color.primary.alpha': alphaRamp('primary'),
+  'color.secondary.alpha': alphaRamp('secondary'),
+  'color.tertiary.alpha': alphaRamp('tertiary'),
+  'color.transparent': 'Tier-1 fully-transparent colour (a single member, transparent.0). Exists so a semantic token can alias "no fill" instead of hard-coding `transparent`, which would break the alias chain. Consumed through theme.color.background.transparent-default.',
+
+  // ---- tier-1 brand deltas (tier-2/brand/southleft) ----
+  'color.southleft.primary': brandDelta('southleft', 'primary'),
+  'color.southleft.neutral-light': brandDelta('southleft', 'neutral-light'),
+  'color.southleft.neutral-dark': brandDelta('southleft', 'neutral-dark'),
 
   // ---- tier-1 typography presets ----
   'typography.preset.body-xs': typographyPreset(12),
@@ -240,16 +292,16 @@ export const FAMILY_USAGE_RULES = {
   'typography.preset.display-lg': typographyPreset(48),
 
   // ---- tier-2 semantic color roles ----
-  'theme.color.background': 'Fill colour for a surface (button/card/panel/etc. background). Legal CSS surface: background-color (mostly), background (shorthand contexts). 50 members spanning default/primary/secondary/info/success/warning/danger/inverse/transparent/disabled roles across the altitude+southleft brand deltas and light+dark modes. The disabled-default member is DEPRECATED — see its own `com.atlassian.token` entry; disabled state is expressed via opacity everywhere else in this family, not a colour swap.',
-  'theme.color.body': 'Tier-3 theme-level alias: the page canvas background, aliasing theme.color.background.default-weak. One member per mode (light/dark).',
-  'theme.color.border': 'Border/divider colour. Legal CSS surface: border-color, border, outline-color. 24 members. inverse-default and secondary-default are currently dead (0 var() readers) per the audit, but NOT marked deprecated here — no evidence either is superseded, only unused; see spec Findings.',
-  'theme.color.content': 'Text/icon foreground colour. Legal CSS surface: color, fill, stroke. 48 members, the mirror of theme.color.background. The disabled-default member is DEPRECATED — see its `com.atlassian.token` entry.',
-  'theme.color.header': 'Tier-3 theme-level alias: the <al-header> background colour, aliasing theme.color.background.default-strong. DEAD today (0 var() readers) not because it is redundant but because the header component invented its own --al-header-background hook instead of reading this token — a component bug, not a reason to deprecate the token. See spec Findings.',
+  'theme.color.background': 'Fill colour for a surface (button/card/panel/etc. background). Legal CSS surface: background-color (mostly), background (shorthand contexts). 60 members spanning default/primary/secondary/tertiary/info/success/warning/danger/inverse/transparent/disabled roles across the altitude+southleft brand deltas and light+dark modes. The disabled-default member is DEPRECATED — see its own `com.atlassian.token` entry; disabled state is expressed via opacity everywhere else in this family, not a colour swap.',
+  'theme.color.body': 'Tier-3 theme-level alias: the page canvas background, aliasing theme.color.background.neutral-weak. One member per mode (light/dark).',
+  'theme.color.border': 'Border/divider colour. Legal CSS surface: border-color, border, outline-color. 80 members, every semantic family carrying faint/weak/default/strong/bold. inverse-default and secondary-default are currently dead (0 var() readers) per the audit, but NOT marked deprecated here — no evidence either is superseded, only unused; see spec Findings.',
+  'theme.color.content': 'Text/icon foreground colour. Legal CSS surface: color, fill, stroke. 82 members, the mirror of theme.color.background. The disabled-default member is DEPRECATED — see its `com.atlassian.token` entry.',
+  'theme.color.inverse': 'Tier-2 inverse neutral scale (100-900) — the neutral ramp read from the OPPOSITE end to the current mode, so a surface can be deliberately inverted (dark card on a light page, light tooltip on a dark one) without a component hard-coding which physical ramp end that is. Legal CSS surface: color, background-color, border-color. Nine members per mode.',
+  'theme.color.header': 'Tier-3 theme-level alias: the <al-header> background colour, aliasing theme.color.background.neutral-strong. DEAD today (0 var() readers) not because it is redundant but because the header component invented its own --al-header-background hook instead of reading this token — a component bug, not a reason to deprecate the token. See spec Findings.',
   'theme.color.shadow': 'Tier-3/tier-2 theme-level shadow tint alias (theme.color.shadow.default). Structurally unreadable via var() for the same reason as tier-1 color.shadow: formatBoxShadowValue resolves and string-bakes it at build time before any component CSS runs.',
   'theme.icon': 'Icon sizing role scale (xs…lg), aliasing tier-1 icon.*. Legal CSS surface: width, height (both set together on <al-icon>).',
   'theme.layout.height': 'Single member (header) — a hand-authored 80px, not aliased to any tier-1 primitive. Legal CSS surface: height, min-height.',
   'theme.layout.max-width': 'Content-measure scale (xs…xxl), aliasing tier-1 layout.max-width.*. Legal CSS surface: max-width. layout.scss reads this tier directly as of this session (previously bypassed it — see spec Findings "tier bypass").',
-  'theme.layout.width': 'Named layout widths (container, sidebar), aliasing tier-1 layout.max-width.*. Legal CSS surface: width, max-width.',
   'theme.opacity': 'Single member (disabled): 0.40 at contrast="normal", raised to 0.80 (tier-1 opacity.80) at contrast="more" via a dedicated :host([contrast="more"]) reset — the R3 contrast-axis fix this session. Legal CSS surface: opacity, on any component signalling a disabled state.',
   'theme.size': 'Control heights for interactive form controls (button, input, select, search, stepper) — control-sm 32px / control 40px / control-lg 48px, aliasing tier-1 space.32/40/48. The v2 canvas sizes every control from this scale rather than from padding plus line-height, so a type-scale change cannot silently move a control height. Legal CSS surface: height, min-height, block-size.',
   'theme.space': 'Semantic spacing roles (not a 1:1 alias of the tier-1 space scale — has its own role names). Legal CSS surface: margin, padding, gap.',

@@ -288,8 +288,8 @@ export class ALRange extends ALElement {
    */
   generateLinearGradient(value1: number, value2: number) {
     return `linear-gradient(var(--rtlGradientToRight, to right), var(--al-theme-color-background-primary-default) 0%, var(--al-theme-color-background-primary-default)
-    ${value1}%, var(--al-theme-color-background-default-strong)
-    ${value2}%, var(--al-theme-color-background-default-strong) 100%)`;
+    ${value1}%, var(--al-theme-color-background-neutral-strong)
+    ${value2}%, var(--al-theme-color-background-neutral-strong) 100%)`;
   }
 
   /**

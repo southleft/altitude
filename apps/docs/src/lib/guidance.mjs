@@ -128,3 +128,82 @@ export function guidanceMarkdown(guidance) {
 
   return lines;
 }
+
+/* ------------------------------------------------- the machine artifact */
+
+/**
+ * `/guidance.json` — every component's guidance as one machine-readable file.
+ *
+ * WHY THIS EXISTS SEPARATELY FROM THE MARKDOWN ABOVE. `guidanceMarkdown()`
+ * serves a reader: it is prose, ordered for a human, and an agent parsing it
+ * back out of a page is guessing at section boundaries. The Altitude MCP's
+ * `altitude_get_component` needs the same facts as DATA — specifically
+ * `whenNotToUse` and its resolved `instead:` pointer, which is the only field
+ * in this whole system that can stop an agent picking the wrong component
+ * before it writes a line. Scraping the `.md` twin for it would be a second,
+ * drifting parser of the same YAML.
+ *
+ * THE `instead:` SLUG IS RESOLVED TO A TAG HERE, and that is the point of
+ * emitting it from this app rather than teaching the MCP to read the YAML. A
+ * slug (`layout`) is only meaningful to something holding the registry; a tag
+ * (`al-layout`) is what an agent actually writes. `content.config.ts` has
+ * already refused the build if a pointer names a component that does not
+ * exist, so a null `insteadTag` here means the pointer resolves in a scope this
+ * project does not document — not that the pointer is broken.
+ *
+ * ABSENCE IS A VALUE, NOT A MISSING KEY — the same rule `guidanceMarkdown()`
+ * follows. Every component in the registry gets a row; one with nothing
+ * authored carries `guidance: null` plus a `guidanceNote` saying so. An agent
+ * must be able to tell "nobody has written this yet" from "this component has
+ * no caveats", and an absent key cannot.
+ */
+export function guidanceJson(context, entries) {
+  const { site, project, registry } = context;
+  const tagFor = new Map(registry.components.map((component) => [component.slug, component.tag]));
+
+  const components = registry.components.map((component) => {
+    const data = guidanceFor(entries, component, project);
+    return {
+      tag: component.tag,
+      slug: component.slug,
+      docs: `${site.url}/components/${component.slug}`,
+      guidance: data
+        ? {
+            purpose: data.purpose,
+            whenToUse: data.whenToUse,
+            whenNotToUse: data.whenNotToUse.map((row) => ({
+              text: row.text,
+              instead: row.instead ?? null,
+              insteadTag: row.instead ? (tagFor.get(row.instead) ?? null) : null,
+            })),
+            dos: data.dos,
+            donts: data.donts,
+            accessibility: data.accessibility,
+            content: data.content,
+            sources: data.sources,
+          }
+        : null,
+      guidanceNote: data
+        ? null
+        : 'No usage guidance has been authored for this component yet. Its generated API is complete; ' +
+          'what is missing is when to reach for it and when not to. Do not infer either from the API.',
+    };
+  });
+
+  return {
+    $comment:
+      'Generated at build time by apps/docs/src/lib/guidance.mjs from the `guidance` content collection ' +
+      '(apps/docs/src/content/guidance/**.yaml, schema-enforced by apps/docs/src/content.config.ts). Read by ' +
+      'the design-system MCP (libs/altitude-mcp/src/lib/docs-artifacts.mjs) so `altitude_get_component` can hand an ' +
+      'agent the same judgement the docs page shows. Never hand-edit: edit the YAML.',
+    site: site.url,
+    project: { id: project.id, name: project.name, brand: project.brand, scoped: registry.scope.scoped },
+    generated: new Date().toISOString(),
+    source: 'apps/docs/src/content/guidance',
+    coverage: {
+      components: components.length,
+      withGuidance: components.filter((row) => row.guidance).length,
+    },
+    components,
+  };
+}

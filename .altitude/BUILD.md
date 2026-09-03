@@ -1,18 +1,25 @@
-# Build pipeline — Vite 5 (post-Phase 2)
+# Build pipeline — Vite
 
 ## Overview
 
-After T2.1 / T2.2 / T2.4, both libraries and both Storybooks build through
-**Vite 5**. The legacy webpack 5 + babel + sass-loader pipeline that shipped
-1.0 is retired; its configs are removed from the repo.
+Everything builds through **Vite** (`^7.1.12` in both libraries as of
+2026-09-02; this doc read "Vite 5" until then). The legacy webpack 5 + babel +
+sass-loader pipeline that shipped 1.0 is retired; its configs are removed from
+the repo.
 
 | Surface | Builder | Config | Output |
 |---|---|---|---|
-| `@southleft/al-web-components` library | Vite 5 (esbuild + Rollup) | `libs/al-web-components/vite.config.mjs` | `libs/al-web-components/dist/` |
-| `@southleft/sl-web-components` library — the Southleft **brand layer** | Vite 5 (esbuild + Rollup) + `tsc` | `libs/sl-web-components/vite.config.mjs` | `libs/sl-web-components/dist/` (JS under `dist/components/**`, declarations under `dist/sl-web-components/components/**` — see the `exports["."]["//"]` note in its `package.json`, not a typo) |
-| `@southleft/al-react` library | Vite 5 | `libs/al-react/` (default config) | `libs/al-react/dist/` |
-| `@southleft/al-web-components` Storybook | Storybook 10 + `@storybook/web-components-vite` | `libs/al-web-components/.storybook/main.ts` | `dist/storybook/web-components/` |
-| `@southleft/al-react` Storybook | Storybook 10 + `@storybook/react-vite` | `libs/al-react/.storybook/main.ts` | `dist/storybook/react/` |
+| `@southleft/al-web-components` library | Vite (esbuild + Rollup) | `libs/al-web-components/vite.config.mjs` | `libs/al-web-components/dist/` |
+| `@southleft/sl-web-components` library — the Southleft **brand layer** | Vite (esbuild + Rollup) + `tsc` | `libs/sl-web-components/vite.config.mjs` | `libs/sl-web-components/dist/` (JS under `dist/components/**`, declarations under `dist/sl-web-components/components/**` — see the `exports["."]["//"]` note in its `package.json`, not a typo) |
+| `@southleft/al-react` library | `tsc` (+ an asset copy step) — **not** Vite, despite the devDependency | `libs/al-react/tsconfig.json`, `libs/al-react/scripts/copy-dist-assets.mjs` | `libs/al-react/dist/` |
+| Story fixture — the isolated render surface | Vite | `libs/al-web-components/story-fixture/vite.config.mjs` | `libs/al-web-components/story-fixture/dist/` |
+| Docs site | Astro + Pagefind | `apps/docs/astro.config.mjs` | `dist/docs/` |
+
+**Both Storybooks were retired on 2026-08-25** and their `.storybook/`
+directories deleted. Nothing replaced them as a component explorer; the story
+fixture took over the one job that had to survive — rendering every story so axe
+can measure it — and serves the same `index.json` + `iframe.html?id=` contract
+the old static Storybook build did.
 
 The root `build` script chains all three libraries **in order** —
 `@southleft/al-web-components` → `@southleft/sl-web-components` →
@@ -30,21 +37,25 @@ The Vite config preserves **G7** (decorator semantics): `experimentalDecorators:
 
 ```bash
 # Library builds:
-pnpm --filter @southleft/al-web-components build                            # @southleft/al-web-components → dist/
-pnpm --filter @southleft/al-react build                                     # @southleft/al-react → dist/
-pnpm run build                                                   # both libraries
+pnpm --filter @southleft/al-web-components build                 # → libs/al-web-components/dist/
+pnpm --filter @southleft/al-react build                          # → libs/al-react/dist/
+pnpm run build                                                   # all three libraries, in order
 
-# Storybook builds:
-pnpm --filter @southleft/al-web-components start                            # dev server :6006
-pnpm --filter @southleft/al-web-components build:storybook \
-    --output-dir ../../dist/storybook/web-components             # static export
-pnpm --filter @southleft/al-react start                                     # dev server :9009
-pnpm --filter @southleft/al-react build:storybook \
-    --output-dir ../../dist/storybook/react
+# Story fixture (replaced the Storybook static build, retired 2026-08-25):
+pnpm --filter @southleft/al-web-components start:fixture         # dev server
+pnpm run build:story-fixture                                     # static build
+pnpm run a11y:report:fixture                                     # build it, then axe it
 
-# Everything:
-pnpm run build:all                                               # libs + both SBs + apps
+# Docs site:
+pnpm --filter al-app-docs start                                  # :6120/docs
+pnpm --filter al-app-docs build                                  # → dist/docs
+
+# Everything (this is the Cloudflare Pages build command — output dir dist/):
+pnpm run build:all                                               # libs + docs + pages-root + the fixture apps
 ```
+
+`build:all`'s step order is load-bearing rather than alphabetical; the
+`//build:all` comment in the root `package.json` is the authority on why.
 
 ## SCSS handling
 
@@ -69,8 +80,11 @@ string. Keeping the source spelling identical to webpack's avoids touching
 ## SCSS structure
 
 - `libs/al-web-components/styles/main.scss` — entry: emits the full theme
-  CSS (Storybook preview consumes it). Forwards Sass variables + mixins to
-  downstream consumers like `.storybook/docs.scss`.
+  CSS (it hard-codes the **dark** sheet, `@use './dist/scss/theme/tokens-dark.scss'`),
+  and forwards Sass variables + mixins to downstream consumers. Built to
+  `dist/css/main.css`, which is what `apps/docs`, `apps/southleft` and the story
+  fixture load. (The `.storybook/docs.scss` consumer named here previously went
+  with Storybook, retired 2026-08-25.)
 - `libs/al-web-components/styles/component.scss` — consumed by every leaf
   component. `@forward`s variables + mixins; `@use`s reset so its CSS gets
   emitted in each component's scoped sheet.
@@ -93,9 +107,12 @@ All Phase 2 acceptance criteria are green and merged on `feature/v2`:
 | T2.2 | AST diff = zero public export removals vs P0 dist | ✅ |
 | T2.2 | publint 0 errors | ✅ |
 | T2.3 | yarn → pnpm 9, Node 22 LTS, Lit 3.3, TS 5.9, ESLint 9, date-fns 4 | ✅ |
-| T2.4 | Storybook 10 with Vite framework, Storybook Test runner, axe-playwright a11y | ✅ |
+| T2.4 | Storybook 10 with Vite framework, Storybook Test runner, axe-playwright a11y | ✅ then **REVERSED** — Storybook retired 2026-08-25; the a11y sweep moved to the story fixture (`a11y:report:fixture`) |
 
-See the PR body and `CHANGELOG.md` `[Unreleased]` for the full rollup.
+Historical record: these are Phase-2 acceptance criteria from the v2 refactor,
+whose plan is archived at
+[`history/NEXT-GEN-UPGRADE-PLAN.md`](./history/NEXT-GEN-UPGRADE-PLAN.md). See the
+PR body and `CHANGELOG.md` for the full rollup.
 
 ## Notes for future agents
 

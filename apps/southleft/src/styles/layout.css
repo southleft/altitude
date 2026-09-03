@@ -95,7 +95,7 @@ body {
  * short page. */
 .sl-page {
   min-height: 100vh;
-  /* `--al-theme-color-background-default-weak` directly (not the
+  /* `--al-theme-color-background-neutral-weak` directly (not the
    * `--al-theme-color-body-background` alias `styles/core/base.scss` uses
    * for `body`): the alias is declared once in the unscoped `:root` bundle
    * and never restated in `<al-theme>`'s `:host([mode])` partial, so on a
@@ -103,9 +103,9 @@ body {
    * it does not reliably re-resolve when `mode` changes at runtime. The
    * `-weak` leaf IS restated per mode (dist-v5/scss/host/tokens-mode-*.scss)
    * and is what the alias points at in the first place. */
-  background: var(--al-theme-color-background-default-weak);
+  background: var(--al-theme-color-background-neutral-weak);
   /* Same fix, for TEXT color. `styles/core/base.scss` sets `body { color:
-   * var(--al-theme-color-content-default); }` — a regular (non-custom) CSS
+   * var(--al-theme-color-content-neutral-default); }` — a regular (non-custom) CSS
    * property, so what INHERITS down from `body` is the value already
    * resolved there (against the unscoped `:root` bundle), not a live
    * formula. Un-slotted content inside `<al-text-block>` etc. (this app's
@@ -114,15 +114,15 @@ body {
    * `display: contents`, so a runtime mode toggle silently left body copy
    * unreadable (near-white on the paper background) until this
    * re-declaration gives it a fresh, correctly-scoped resolution. */
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
   /* v5's "faint" border and grid-line motifs (global.css) are
    * `color-mix(... var(--sl-border) N%, transparent)` over the SAME
    * ink-600/paper-300 step the theme already exposes as
-   * `--al-theme-color-border-default-weak` — re-deriving them here (once,
+   * `--al-theme-color-border-neutral-weak` — re-deriving them here (once,
    * inherited by header/hero/chips/terminal/rules below) keeps every faint
    * hairline in this app expressed as a token formula, never a raw hex. */
-  --sl-border-faint: color-mix(in srgb, var(--al-theme-color-border-default-weak) 55%, transparent);
-  --sl-grid-line: color-mix(in srgb, var(--al-theme-color-border-default-weak) 45%, transparent);
+  --sl-border-faint: color-mix(in srgb, var(--al-theme-color-border-neutral-weak) 55%, transparent);
+  --sl-grid-line: color-mix(in srgb, var(--al-theme-color-border-neutral-weak) 45%, transparent);
   /* T12 audit-2 (A4) — self-hosted IBM Plex Mono (public/fonts/, @font-face
    * in fonts.css), NOT the generic Altitude `--al-font-family-mono` token
    * (`ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` — the
@@ -155,7 +155,7 @@ body {
   padding-block: 0.625rem;
   text-align: center;
   font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
   text-decoration: none;
   transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 }
@@ -165,7 +165,7 @@ al-theme[mode='light'] .sl-announcement {
 }
 
 .sl-announcement:hover {
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
 }
 
 .sl-announcement__new {
@@ -192,7 +192,7 @@ al-theme[mode='light'] .sl-announcement {
 .sl-header {
   --al-header-padding: 0;
   --al-header-min-height: 4rem; /* 64px — mobile, v5's `h-16` */
-  --al-header-background: color-mix(in srgb, var(--al-theme-color-background-default-weak) 85%, transparent);
+  --al-header-background: color-mix(in srgb, var(--al-theme-color-background-neutral-weak) 85%, transparent);
   --al-header-border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
   --al-header-backdrop-filter: blur(12px);
 }
@@ -237,7 +237,7 @@ al-theme[mode='light'] .sl-announcement {
 .sl-header__logo {
   display: inline-flex;
   align-items: center;
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
   text-decoration: none;
   /* ~18px tall wordmark, matches v5's `h-4 md:h-[18px]` — pierces al-logo's
    * shadow boundary via its own documented `--al-logo-max-height` hook. No
@@ -265,7 +265,7 @@ al-theme[mode='light'] .sl-announcement {
   align-items: center;
   border-radius: var(--al-theme-border-radius-role-action);
   padding: var(--al-theme-space-xs) var(--al-theme-space);
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
   text-decoration: none;
   transition:
     background-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
@@ -273,14 +273,14 @@ al-theme[mode='light'] .sl-announcement {
 }
 
 .sl-header__nav-link:hover {
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
 }
 
 /* Active page = filled pill (well background, full foreground) — matches
  * v5's `isActive ? 'text-fg bg-bg-well' : 'text-fg-muted hover:text-fg'`. */
 .sl-header__nav-link--active {
-  color: var(--al-theme-color-content-default);
-  background: var(--al-theme-color-background-default-strong);
+  color: var(--al-theme-color-content-neutral-default);
+  background: var(--al-theme-color-background-neutral-strong);
 }
 
 /* The actions cluster is an `<al-layout direction="row" align="center"
@@ -320,7 +320,7 @@ al-theme[mode='light'] .sl-announcement {
   border-radius: var(--al-theme-border-radius-role-action);
   border: var(--al-theme-border-width) solid var(--sl-border-faint);
   background: transparent;
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
   cursor: pointer;
   transition:
     border-color var(--al-theme-animation-duration) var(--al-theme-animation-timing),
@@ -328,8 +328,8 @@ al-theme[mode='light'] .sl-announcement {
 }
 
 .sl-header__icon-btn:hover {
-  border-color: var(--al-theme-color-border-default-weak);
-  color: var(--al-theme-color-content-default);
+  border-color: var(--al-theme-color-border-neutral-weak);
+  color: var(--al-theme-color-content-neutral-default);
 }
 
 /* Palette (AI direction) trigger hovers to the accent, not just full
@@ -388,17 +388,17 @@ al-theme[mode='light'] .sl-announcement {
   justify-content: space-between;
   border-radius: var(--al-theme-border-radius);
   padding: var(--al-theme-space-sm);
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
   text-decoration: none;
 }
 
 .sl-header__mobile-nav-link:hover {
-  background: var(--al-theme-color-background-default-strong);
+  background: var(--al-theme-color-background-neutral-strong);
 }
 
 .sl-header__mobile-nav-index {
   font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 .sl-header__mobile-cta {
@@ -429,8 +429,8 @@ al-theme[mode='light'] .sl-announcement {
  * `--al-theme-color-background-primary-default` (a different token) with
  * their own separately-chosen ink color, not this one. */
 al-theme[mode='light'] {
-  --al-theme-color-content-primary-default: var(--al-theme-color-content-default);
-  --al-theme-color-content-primary-strong: var(--al-theme-color-content-default-weak);
+  --al-theme-color-content-primary-default: var(--al-theme-color-content-neutral-default);
+  --al-theme-color-content-primary-strong: var(--al-theme-color-content-neutral-weak);
 }
 
 /* `al-text-block`'s `::slotted(a)` / `::slotted(code)` styling (its
@@ -453,7 +453,7 @@ al-theme[mode='light'] {
 }
 
 .sl-prose code {
-  background: var(--al-theme-color-background-default-weak);
+  background: var(--al-theme-color-background-neutral-weak);
   padding-inline: var(--al-theme-space-xs);
   border-radius: var(--al-theme-border-radius-xs);
 }
@@ -528,7 +528,7 @@ al-text-block {
   margin: 0;
   font-size: var(--sl-text-lead);
   line-height: 1.55;
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 /* Mono "view all" / inline prose links (v5's `.section-rule`-adjacent "all
@@ -679,7 +679,7 @@ al-card[variant='service'] ul[slot='list'] li::before {
    * styles and so reported it as a hallucinated token. The inline value still
    * wins, so nothing about the rendered swatches changes.
    */
-  --sw: var(--al-theme-color-background-default-strong);
+  --sw: var(--al-theme-color-background-neutral-strong);
 
   inline-size: 2rem;
   block-size: 2rem;
@@ -1024,7 +1024,7 @@ al-theme[mode='light'] .sl-pg-readout {
 .sl-pg-act2-copy {
   margin: var(--al-theme-space-xs) 0 0;
   line-height: 1.6;
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 .sl-pg-act2-form-row {
@@ -1037,15 +1037,15 @@ al-theme[mode='light'] .sl-pg-readout {
   flex: 1 1 14rem;
   min-inline-size: 0;
   border-radius: var(--al-theme-border-radius-sm);
-  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-  background: var(--al-theme-color-background-default);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
+  background: var(--al-theme-color-background-neutral-default);
   padding: var(--al-theme-space-sm) var(--al-theme-space);
   font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
 }
 
 .sl-pg-act2-input::placeholder {
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 .sl-pg-act2-input:focus-visible {
@@ -1069,7 +1069,7 @@ al-theme[mode='light'] .sl-pg-readout {
 }
 
 .sl-pg-act2-chip:hover {
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
   border-color: var(--al-theme-color-content-primary-default);
 }
 
@@ -1077,7 +1077,7 @@ al-theme[mode='light'] .sl-pg-readout {
   max-width: 42rem;
   margin: var(--al-theme-space-xxl) 0 0;
   line-height: 1.6;
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1113,7 +1113,7 @@ al-theme[mode='light'] .sl-pg-readout {
   box-sizing: border-box;
   padding: var(--al-theme-space-xxl);
   border: var(--al-theme-border-width) solid var(--sl-border-faint);
-  background: var(--al-theme-color-background-default-strong);
+  background: var(--al-theme-color-background-neutral-strong);
   border-radius: var(--al-theme-border-radius);
 }
 
@@ -1130,7 +1130,7 @@ al-theme[mode='light'] .sl-pg-readout {
   font-size: 1.25rem;
   line-height: 1.35;
   font-variation-settings: 'wght' 450, 'wdth' 105;
-  color: var(--al-theme-color-content-default);
+  color: var(--al-theme-color-content-neutral-default);
 }
 
 .sl-quote-card__attribution {
@@ -1145,7 +1145,7 @@ al-theme[mode='light'] .sl-quote-card__attribution {
 }
 
 .sl-quote-card__name {
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 /* ------------------------------------------------------------------------
@@ -1168,7 +1168,7 @@ al-theme[mode='light'] .sl-quote-card__attribution {
    * to 0.96px at 12px, matching the live measurement; the previous 1.28px
    * reading was 0.08em of the WRONG 16px base, not a tracking bug). Color
    * is v5's "subtle" step (`--sl-fg-subtle`, paper-450 dark / paper-600
-   * light) — one step past `--al-theme-color-content-default-weak`
+   * light) — one step past `--al-theme-color-content-neutral-weak`
    * (paper-400/600), which has no distinct "subtle" rung of its own in
    * dark mode, so this reaches for the brand primitive directly per mode,
    * the same escape hatch already used for `.sl-terminal`/
@@ -1188,7 +1188,7 @@ al-theme[mode='light'] .sl-section-rule {
 .sl-section-rule::after {
   content: '';
   block-size: var(--al-theme-border-width);
-  background: var(--al-theme-color-border-default-weak);
+  background: var(--al-theme-color-border-neutral-weak);
   flex: 1 1 auto;
 }
 
@@ -1205,7 +1205,7 @@ al-theme[mode='light'] .sl-section-rule {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
   margin: 0;
 }
 
@@ -1375,7 +1375,7 @@ al-theme[mode='light'] .sl-section-rule {
   display: block;
   max-width: 42rem; /* max-w-2xl */
   --al-text-block-font: var(--sl-text-lead) / 1.55 var(--al-font-family-primary, 'IBM Plex Sans', sans-serif);
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 /* These two are `<al-layout>`s now, so their rhythm is `--al-layout-padding`
@@ -1395,7 +1395,7 @@ al-theme[mode='light'] .sl-section-rule {
   margin-block-start: var(--al-theme-space-sm);
   margin-block-end: 0;
   font-family: var(--sl-font-mono);
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 /* Terminal panel — hidden below `lg`, matching v5's `hidden lg:block`. */
@@ -1424,12 +1424,12 @@ al-theme[mode='light'] .sl-section-rule {
  * mechanism `--sl-*` and `--al-logo-wall-filter` already use. */
 .sl-token-chip {
   --al-chip-font-family: var(--sl-font-mono);
-  --al-chip-color: var(--al-theme-color-content-default-weak);
+  --al-chip-color: var(--al-theme-color-content-neutral-weak);
   --al-chip-border: var(--al-theme-border-width) solid var(--sl-border-faint);
   --al-chip-border-radius: var(--al-theme-border-radius-xs);
   --al-chip-padding: var(--al-theme-space-xxs) var(--al-theme-space-xs);
   --al-chip-gap: 0.5em;
-  --al-chip-background: color-mix(in srgb, var(--al-theme-color-background-default) 65%, transparent);
+  --al-chip-background: color-mix(in srgb, var(--al-theme-color-background-neutral-default) 65%, transparent);
   /* Decorative, not interactive — the row is aria-hidden. */
   --al-chip-cursor: default;
 }
@@ -1614,7 +1614,7 @@ al-theme[mode='dark'] .sl-logo-wall {
 }
 
 .sl-ai-status {
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
 }
 
 /* Live token tree (T7 tools page) */
@@ -1637,7 +1637,7 @@ al-theme[mode='dark'] .sl-logo-wall {
   margin-block-start: var(--al-theme-space-sm);
   max-block-size: 28rem;
   overflow-y: auto;
-  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
   border-radius: var(--al-theme-border-radius);
 }
 
@@ -1646,7 +1646,7 @@ al-theme[mode='dark'] .sl-logo-wall {
   align-items: center;
   gap: var(--al-theme-space-sm);
   padding: var(--al-theme-space-xs) var(--al-theme-space-sm);
-  border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+  border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);
 }
 
 .sl-token-row:last-child {
@@ -1658,7 +1658,7 @@ al-theme[mode='dark'] .sl-logo-wall {
   block-size: 1rem;
   flex: 0 0 auto;
   border-radius: var(--al-theme-border-radius-sm);
-  border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+  border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
 }
 
 .sl-token-name {
@@ -1668,7 +1668,7 @@ al-theme[mode='dark'] .sl-logo-wall {
 }
 
 .sl-token-value {
-  color: var(--al-theme-color-content-default-weak);
+  color: var(--al-theme-color-content-neutral-weak);
   white-space: nowrap;
 }
 
@@ -1685,7 +1685,7 @@ al-theme[mode='dark'] .sl-logo-wall {
   max-block-size: 24rem;
   overflow: auto;
   padding: var(--al-theme-space-sm);
-  background: var(--al-theme-color-background-default-weak);
+  background: var(--al-theme-color-background-neutral-weak);
   border-radius: var(--al-theme-border-radius);
   white-space: pre-wrap;
   overflow-wrap: anywhere;

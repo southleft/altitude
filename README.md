@@ -5,11 +5,10 @@ Design system created by Southleft.com. Documentation is generated from the code
 ## Stack
 
 - **pnpm 9** workspaces, **Node 22 LTS**
-- **Vite 5** library and Storybook builds
+- **Vite 7** (`^7.1.12` in both libraries) for the library builds
 - **Lit 3.3** web components, **React 19** wrappers via `@lit/react`
 - **Style Dictionary v5** token pipeline (DTCG source)
 - **Astro 7** documentation site (`apps/docs`)
-- **Storybook 10** with the Vite framework, for component development
 - **Sass 1.101** using the modern `@use` / `@forward` module system
 
 ## Local setup
@@ -96,27 +95,36 @@ Southleft is also a **design-system project** in its own right (`.altitude/ds-pr
 its docs are at `/docs/southleft`, and the parity CLIs take `--project southleft` or the
 `:sl` script variants. See `.altitude/DS-PROJECTS.md` and `.altitude/BRAND-LAYER.md`.
 
-## Storybook
+## Component development surface
 
-The two component Storybooks are still the **component development** surface — they are
-not the documentation site, and the published docs no longer come from them.
+**Storybook was retired on 2026-08-25** (the brand-layer Storybook on 2026-08-23).
+There is no successor component explorer: `apps/docs` is the documentation surface,
+and the isolated render surface is the **story fixture** — a plain Vite app that
+renders every `*.stories.ts` with real Lit, serving the same `index.json` +
+`iframe.html?id=` contract the accessibility sweep consumes.
 
 ```bash
-pnpm --filter @southleft/al-web-components start   # Storybook on :6006 + Altitude MCP on :6017
-pnpm --filter @southleft/al-react start            # Storybook on :9009
+pnpm --filter @southleft/al-web-components start:fixture   # story fixture dev server
+pnpm run build:story-fixture                               # static build
+pnpm run a11y:report:fixture                               # build it, then axe it
 ```
 
-(The Southleft brand-layer Storybook was retired on 2026-08-23; `/docs/southleft`
-documents that package now.)
+The web-components package's own `start` runs the Altitude MCP server, not a UI:
+
+```bash
+pnpm --filter @southleft/al-web-components start   # Altitude MCP on :6017
+```
 
 ## Tooling worth knowing on day one
 
 - **Altitude MCP** (`libs/altitude-mcp/`) — 8 tools for agents and editors (component
   discovery, markup validation, tokens, icons, theme generation, Figma parity). Runs in
-  stdio mode via `.mcp.json`, and in HTTP mode on :6017 alongside the WC Storybook.
-- **Figma ↔ code parity** — per-component status panels on the docs site and badges in
-  the WC Storybook sidebar. CLIs: `pnpm run parity:projects` / `parity:seed` /
-  `parity:synced <tag>` / `parity:refresh` (+ `:sl` variants). See `.altitude/PARITY.md`.
+  stdio mode via `.mcp.json`, and in streamable-HTTP mode on :6017 via
+  `pnpm --filter @southleft/al-web-components start`.
+- **Figma ↔ code parity** — per-component read-only status panels on the docs site, the
+  `altitude_check_parity` MCP tool, and `GET /parity.json`. CLIs:
+  `pnpm run parity:projects` / `parity:seed` / `parity:synced <tag>` / `parity:refresh`
+  (+ `:sl` variants). See `.altitude/PARITY.md`.
 - **Claude skills** — `.claude/skills/` is tracked and ships repo-specific skills
   (e.g. `altitude-figma-sync` for Figma work, with the library's conventions and traps;
   `altitude-component-authoring` for the full add-a-component checklist).

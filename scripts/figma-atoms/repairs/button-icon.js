@@ -13,8 +13,8 @@
 const V = {};
 for (const v of await figma.variables.getLocalVariablesAsync()) V[v.name] = v;
 const need = [
-  'theme/color/background/transparent-default', 'theme/color/content/default',
-  'theme/color/content/default-weak', 'theme/color/border/primary-default',
+  'theme/color/background/transparent-default', 'theme/color/content/neutral-default',
+  'theme/color/content/neutral-weak', 'theme/color/border/primary-default',
   'theme/space/xs', 'theme/border/radius/@', 'theme/opacity/disabled',
 ];
 const missing = need.filter((n) => !V[n]);
@@ -70,7 +70,7 @@ for (const comp of set.children) {
   } else if (comp.opacity !== 1) { comp.opacity = 1; e.ops.push('opacity=1'); }
 
   // icon vectors + focus ring
-  const iconVar = state === 'Hover' ? 'theme/color/content/default-weak' : 'theme/color/content/default';
+  const iconVar = state === 'Hover' ? 'theme/color/content/neutral-weak' : 'theme/color/content/neutral-default';
   const walk = async (n) => {
     if (n.type === 'VECTOR' && n.name !== 'Focus Outline') {
       try { n.fills = [await boundSolid(iconVar)]; e.ops.push('icon'); } catch (err) { e.ops.push('icon-FAIL'); }

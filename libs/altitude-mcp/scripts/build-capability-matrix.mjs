@@ -56,14 +56,26 @@ const CHECK = process.argv.includes('--check');
 const METADATA = {
   // ── tools ────────────────────────────────────────────────────────────
   altitude_list_components: {
-    intent: 'Discover components, or filter by a tag/class/description substring',
-    expectedFields: 'count, components[].{tag, className, summary, migration}',
-    commonFailureMode: 'none observed — an unmatched `filter` returns an empty components[], not an error',
+    intent: 'Discover components, or decide between two, from each one\'s purpose / whenToUse / whenNotToUse',
+    expectedFields:
+      'count, guidanceCoverage, components[].{tag, className, summary, migration, guidance}; `guidance` is ' +
+      'null for a component nobody has written guidance for, and guidanceCoverage says how many have it',
+    commonFailureMode:
+      'none observed — an unmatched `filter` returns an empty components[], not an error. With no docs ' +
+      'build in the checkout every `guidance` is null and guidanceCoverage.reason names ' +
+      '`pnpm --filter al-app-docs build` (docs-artifacts.mjs)',
   },
   altitude_get_component: {
-    intent: 'Get one component\'s full contract (attributes, slots, events, CSS parts/properties, schema, docs URL)',
-    expectedFields: 'tag, className, attributes, slots, events, cssParts, cssProperties, migration, schema, story',
-    commonFailureMode: 'unknown `tag` -> {error, code: ERR_UNKNOWN_COMPONENT} (server.mjs)',
+    intent: 'Get everything needed to write correct code for one component — a working example first, then the API',
+    expectedFields:
+      'tag, className, examples[].{title, code, react, source}, examplesNote, guidance, guidanceNote, ' +
+      'react.{component, importPath, eventProps}, a11y.{semantics, measured, obligations}, attributes, ' +
+      'slots, events, cssParts, cssProperties, migration, schema, story, contract?, referenceDoc?',
+    commonFailureMode:
+      'unknown `tag` -> {error, code: ERR_UNKNOWN_COMPONENT} (tools.mjs). Every optional block degrades ' +
+      'to an explicit note rather than an absent key: no docs build -> examplesNote/guidanceNote name ' +
+      '`pnpm --filter al-app-docs build`; no axe sweep -> a11y.measured.measured === false with a reason ' +
+      '(never a pass); no wrapper -> react null + reactNote',
   },
   altitude_validate: {
     intent: 'Check <al-*> / @southleft/al-react usage against the shipped component contracts before it ships',
@@ -73,12 +85,32 @@ const METADATA = {
       '(cli/validate.mjs, wrapped verbatim); the CLI itself missing -> ERR_MISSING_ARTIFACT (paths.mjs)',
   },
   altitude_get_tokens: {
-    intent: 'Query the resolved token set, or a tier/brand/mode-scoped source token',
-    expectedFields: 'count, totalMatched, tokens[].{name, tier?, brand?, mode?, rawValue?, resolvedValue?, type}',
+    intent: 'Find the right token, and the CSS properties it is legal in',
+    expectedFields:
+      'count, totalMatched, tokens[].{name, tier?, brand?, mode?, rawValue?, resolvedValue?, type, ' +
+      'cssType, cssProperties, dtcgType, description}; `cssType` is the AUTHORED surface (spacing, ' +
+      'borderRadius, …) and is not derivable from the coarse `dtcgType`',
     commonFailureMode:
       '`brand` outside the shipped enum (altitude|southleft — a pruned brand) is rejected at the protocol ' +
       'level by the zod input schema, before the handler runs; a missing dist/css/tokens.json (and its ' +
       'styles/dist/ fallback) -> ERR_MISSING_ARTIFACT (paths.mjs, HINTS.tokens)',
+  },
+  altitude_resolve_token: {
+    intent:
+      'Turn a described intent ("a slightly stronger neutral surface", "the danger fill on hover") into ' +
+      'ONE token, instead of guessing between weak / default / strong / bold',
+    expectedFields:
+      'token, cssVar, values{light,dark}, reason, description, ladder.{key,rungs,chosen,index,of,collapsed}, ' +
+      'nearMisses[].{token,values,why}, warnings[], propertyCheck, intent, source. With `report: true`: ' +
+      'totals.{collapsedLadders,collidingStepGroups} and byScope per brand+mode. The emphasis ladder is ' +
+      'NOT monotonic (weak === strong for background.neutral in light), so a collapsed rung is reported ' +
+      'in `reason`/`warnings` rather than silently chosen',
+    commonFailureMode:
+      'role/surface omitted -> ERR_INCOMPLETE_TOKEN_INTENT; a role or surface the token set does not ship ' +
+      '-> ERR_UNKNOWN_TOKEN_ROLE / ERR_UNKNOWN_TOKEN_SURFACE, each naming the values that DO exist ' +
+      '(token-resolve.mjs). No AI-readiness token digest -> ERR_MISSING_ARTIFACT naming ' +
+      '`node scripts/ai-readiness/build-tokens-digest.mjs`; a digest built with no styles/dist-v5 output ' +
+      '-> the same code naming `build:tokens`, since that is the artifact actually missing',
   },
   altitude_search_icons: {
     intent: 'Find a Phosphor icon by name/tag/category and get its exact import + registerIcons() snippet',

@@ -70,7 +70,7 @@ function column({ title, id, contrast, mode, nested }) {
   const mount = (parent) => {
     const surface = document.createElement('div');
     surface.setAttribute('data-surface', id);
-    surface.style.background = 'var(--al-theme-color-background-default-weak)';
+    surface.style.background = 'var(--al-theme-color-background-neutral-weak)';
     surface.style.padding = '0.75rem';
     const note = document.createElement('al-field-note');
     note.isDisabled = true;

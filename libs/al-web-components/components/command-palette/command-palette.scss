@@ -55,7 +55,7 @@
     transform: translateX(-50%);
     border-radius: var(--al-theme-border-radius-role-surface, var(--al-theme-border-radius-lg));
     box-shadow: var(--al-theme-box-shadow-lg);
-    background-color: var(--al-theme-color-background-default);
+    background-color: var(--al-theme-color-background-neutral-default);
     z-index: var(--al-z-index-top);
     overflow: hidden;
 
@@ -86,12 +86,12 @@
     align-items: center;
     gap: var(--al-theme-space-sm);
     padding: var(--al-theme-space-md);
-    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-block-end: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
   }
 
   .al-c-command-palette__search-icon {
     flex: none;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   .al-c-command-palette__input {
@@ -99,10 +99,10 @@
     box-sizing: border-box;
     flex: 1;
     @include al-theme-typography-body-md;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
 
     &::placeholder {
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
   }
 
@@ -120,7 +120,7 @@
   .al-c-command-palette__group {
     @include al-theme-typography-body-xs-semibold;
     padding: var(--al-theme-space-xs) var(--al-theme-space-md);
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     text-transform: uppercase;
   }
 
@@ -130,23 +130,23 @@
     gap: var(--al-theme-space-sm);
     padding: var(--al-theme-space-sm) var(--al-theme-space-md);
     @include al-theme-typography-body-sm;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     cursor: pointer;
 
     &.al-is-active {
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
     }
   }
 
   .al-c-command-palette__option-icon {
     flex: none;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   .al-c-command-palette__empty {
     @include al-theme-typography-body-sm;
     padding: var(--al-theme-space-md);
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     text-align: center;
   }
 
@@ -158,14 +158,14 @@
     align-items: center;
     gap: var(--al-theme-space-md);
     padding: var(--al-theme-space-xs) var(--al-theme-space-md);
-    border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border-block-start: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
     @include al-theme-typography-body-xs;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
 
     kbd {
       font: inherit;
       padding: 0 var(--al-theme-space-xxs);
-      border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+      border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
       border-radius: var(--al-theme-border-radius-xs);
       margin-inline-end: var(--al-theme-space-xxxs);
     }

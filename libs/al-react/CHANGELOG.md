@@ -32,6 +32,38 @@ measured against a real `pnpm pack` tarball installed into a scratch consumer, n
 
 ### Major Changes
 
+Two changesets (`v2-canvas-parity`, `neutral-colour-ramp`) were written against this
+work after `changeset version` had already produced the 2.0.0 line. Both describe v2
+itself rather than a release after it, so their notes are folded in here and the
+changeset files are removed — v2 ships as one major. Neither package has ever been
+published; 2.0.0 is the first release. These two packages are a `fixed` group, so the
+underlying web-component changes below reach every wrapper.
+
+- **The v2 design canvas lands in the underlying web components**, and the wrappers
+  forward the new surface. `ALButton` gains `size` (`sm` | `lg`) and `isPill`;
+  `ALCard` gains a `footer` slot; `ALTable` and `ALCommandPalette` accept their array
+  inputs as JSON attributes as well as properties. Control heights now come from a
+  control scale (32 / 40 / 48px) rather than padding plus line-height, so every form
+  wrapper changes height by a pixel or two.
+
+  *Breaking, and visible through the wrappers.* `ALButton` and `ALChip` moved onto an
+  emphasis axis (`bare | neutral | primary | secondary | tertiary`): `ALButton`'s
+  `danger` variant and `ALChip`'s `info` / `success` / `warning` / `danger` variants
+  are **gone**, and status is carried by `ALBadge` and `ALAlert` instead. `ALButton`'s
+  `secondary` changes appearance. `ALButton`'s `isDisabled` now sets the native
+  `disabled` attribute (it previously set only `aria-disabled`, so disabled buttons
+  stayed clickable); `isAriaDisabled` drives the aria-only case.
+
+- **Colour and typography token renames reach any app that reads Altitude custom
+  properties directly.** `theme.color.{background,content,border}.default*` are now
+  `neutral-*`; colour primitives are renumbered to a 100-900 role ramp and the
+  `color/brand/*` namespace is removed; `--al-font-weight-bold` changed 600 -> 700 with
+  a new `semibold` (600) and `medium` (500); and `--al-typography-preset-<number>` is
+  renamed to role names (`body-*`, `heading-*`, `display-*`). The wrapper components
+  need no change, but application CSS does. The full token list, including the removed
+  and renamed names, is in `@southleft/al-web-components`'s 2.0.0 notes and
+  MIGRATION.md §11.
+
 - af9fad9: Replace the 37 hand-authored icons with the full Phosphor set (1,512 icons, regular weight, MIT) via a new `@phosphor-icons/core` devDependency.
 
   **New canonical API.** `<al-icon name="caret-down">` resolves against a registry. Register the icons you use for a tree-shakeable, synchronous, SSR-safe render:
@@ -163,7 +195,7 @@ al.override` is declared up front; every component stylesheet ships in
 
   - `mode` used to be worth exactly two properties, and both were hardcoded hexes
     that contradicted the generated tokens and beat them:
-    `--al-theme-color-background-default: #161616` where the dark bundle says
+    `--al-theme-color-background-neutral-default: #161616` where the dark bundle says
     `#181818`, and `#f4f4f4` where it says `#f8f8f6`. Those literals are gone.
     `mode` now carries all 23 properties the two base themes differ on, so
     `<al-theme mode="light">` over a dark `:root` genuinely renders light instead

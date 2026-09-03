@@ -210,7 +210,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (10)
 
-`--al-font-size-13`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-13`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

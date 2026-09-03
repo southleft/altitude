@@ -8,7 +8,7 @@ Altitude is a design system created by Southleft.com. Documentation is generated
 
 This is a monorepo using **pnpm workspaces** (pnpm 9, Node 22 LTS) with two main library packages (`@southleft/al-web-components` and `@southleft/al-react`) and the example apps in `apps/`: `angular`, `astro` (replaced the retired Enhance fixture), `home` (the public homepage), `mfe` (micro-frontend/versioned-registry fixture), `react`, `ssr`, `svelte`, and `web-components` (vanilla). Workspace filter names are `al-app-*` (e.g. `pnpm --filter al-app-astro`). (`apps/knapsack` was retired 2026-08-24 — see `.mm/notes/`.)
 
-The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with the modern compiler API and the modern `@use`/`@forward` module system, **Lit 3.3** for the web components, **React 19** for the React wrappers, and **ESLint 9** flat config + typescript-eslint 8 for linting.
+The toolchain is **Vite 7** (`^7.1.12` in both libraries) for the library and story-fixture builds, **Sass 1.101** with the modern compiler API and the modern `@use`/`@forward` module system, **Lit 3.3** for the web components, **React 19** for the React wrappers, and **ESLint 9** flat config + typescript-eslint 8 for linting.
 
 ## Key Development Commands
 
@@ -27,7 +27,7 @@ The toolchain is **Vite 5** for library + Storybook builds, **Sass 1.101** with 
 - Build libraries: `pnpm run build` (builds @southleft/al-web-components, then
   @southleft/sl-web-components — the Southleft brand layer — then @southleft/al-react)
 - Build specific workspace: `pnpm --filter WORKSPACE_NAME build`
-- Build a specific Storybook: `pnpm --filter @southleft/al-web-components build:storybook --output-dir ../../dist/storybook/web-components`
+- Build the story fixture (the isolated render surface that replaced Storybook): `pnpm run build:story-fixture`
 
 ### Component Generation
 - Generate new web component: `pnpm --filter @southleft/al-web-components plop`
@@ -98,7 +98,7 @@ from inside the sandbox (`figma.root.name` + `figma.fileKey` against
 - Built with Lit 3.3 for web components
 - All components extend `ALElement` base class
 - Components live in `components/[component-name]/`
-- Each component has: `.ts` (logic), `.scss` (styles), `.stories.ts` (Storybook)
+- Each component has: `.ts` (logic), `.scss` (styles), `.stories.ts` (rendered by the story fixture — CSF3 objects outlived Storybook's retirement)
 - Global styles and design tokens in `styles/`
 - Cascade layers: `@layer al.reset, al.base, al.theme, al.component, al.override` — declared once in `styles/core/layers.scss`
 
@@ -106,7 +106,7 @@ from inside the sandbox (`figma.root.name` + `figma.fileKey` against
 - React 19 wrapper components using `@lit/react`
 - Components wrap the web components from @southleft/al-web-components via `workspace:*` dep
 - Located in `src/components/[ComponentName]/`
-- Each has: `.tsx` (component), `.stories.tsx` (Storybook)
+- Each has: `.tsx` (component). This package ships **no story files** — the `.stories.tsx` files went with Storybook's retirement (2026-08-25); only the plop templates still emit one.
 
 ### Design Tokens
 - **Edit `libs/al-web-components/styles/tokens-dtcg/**.json`** — the tracked,
@@ -214,7 +214,7 @@ live sessions.
 
 ## Plan + status
 
-- `NEXT-GEN-UPGRADE-PLAN.md` — the 7-phase plan (P0–P6) drove the v2 refactor; phases are complete on `feature/v2` and being merged via the PR referenced in `pull_request_template.md`.
+- `.altitude/history/NEXT-GEN-UPGRADE-PLAN.md` — the 7-phase plan (P0–P6) that drove the v2 refactor. **COMPLETE 2026-06-16 and archived**; read it for the *why* behind the architecture, never as a live instruction. There is no active phase and no plan task to map work to — the standing rules that outlived it are G1–G8 in `AGENTS.md`.
 - `.altitude/migration.json` — per-component migration state (`legacy` / `dual` / `scoped-complete`).
 - `.altitude/targets.json` — pinned target versions.
 - `AGENTS.md` — agent contract (guardrails G1–G8, where to look for things).

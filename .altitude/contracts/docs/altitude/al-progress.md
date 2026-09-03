@@ -134,7 +134,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (5)
 
-`--al-theme-border-radius-pill`, `--al-theme-color-border-default-weak`, `--al-theme-color-content-default`, `--al-theme-color-content-primary-default`, `--al-theme-space-xs`
+`--al-theme-border-radius-pill`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-default`, `--al-theme-space-xs`
 
 ---
 

@@ -7,8 +7,7 @@ agents should read it before authoring or modifying component code.
 
 A monorepo on **pnpm 9 workspaces** (Node 22 LTS) shipping two libraries:
 
-- `@southleft/al-web-components` — Lit 3.3 web components (~65 today, evolving via the
-  v2 refactor at `NEXT-GEN-UPGRADE-PLAN.md`).
+- `@southleft/al-web-components` — Lit 3.3 web components (~65 today).
 - `@southleft/al-react` — `@lit/react` wrappers, one per web component (React 19).
 
 Plus a brand layer: `@southleft/sl-web-components` (`libs/sl-web-components`) — Southleft's
@@ -17,29 +16,35 @@ Plus a brand layer: `@southleft/sl-web-components` (`libs/sl-web-components`) �
 For the full dev-workflow map — which commands, gates, skills, and docs apply
 to each kind of change — start at [`.altitude/WORKFLOWS.md`](./.altitude/WORKFLOWS.md).
 
-## The refactor governs everything
+## The standing rules (G1–G8)
 
-There's an active multi-phase refactor described in
-[`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-PLAN.md). **All changes must
-map to a plan task** (T0.x, T1.x, …) or be explicitly flagged as out-of-plan
-in the PR description. Eight non-negotiable guardrails (G1–G8), defined in
-[`NEXT-GEN-UPGRADE-PLAN.md` §1](./NEXT-GEN-UPGRADE-PLAN.md). **Four have a CI
-job that can fail** (G2, G5, G6, G8); the other four are review obligations —
-no script can check them, so they are on you and the PR reviewer:
+Eight non-negotiable guardrails govern every change to this repo. They were
+written for the v2 refactor — **that refactor is finished** (its plan is
+preserved, unedited, at
+[`.altitude/history/NEXT-GEN-UPGRADE-PLAN.md`](./.altitude/history/NEXT-GEN-UPGRADE-PLAN.md)) —
+but the rules themselves are steady-state and still apply. There is no phase to
+map your work to any more: a change stands on its own, or on a spec in `.mm/specs/`.
+
+**Four have a CI job that can fail** (G2, G5, G6, G8); the other four are review
+obligations — no script can check them, so they are on you and the PR reviewer:
 
 - **G1 — Evolve, don't rebuild.** *(review obligation)*
 - **G2 — `legacy` components are read-only** outside migration PRs. State is
   tracked in [`.altitude/migration.json`](./.altitude/migration.json); see
   [`.altitude/migration.schema.json`](./.altitude/migration.schema.json).
   *(CI: `migration-gate`, `schema-validate-migration`, `gate-self-test`)*
-- **G3 — Prove every new pattern on the 5 pilot components first**:
-  `button`, `input`, `select`, `dialog`, `theme-switcher`. *(review obligation)*
+- **G3 — Prove a new pattern on a small set of components before scaling it**
+  to all ~65. The five that carried the v2 patterns — `button`, `input`,
+  `select`, `dialog`, `theme-switcher` — are still the natural first five, and
+  a handful of tools and docs still call them "the pilots". *(review obligation)*
 - **G4 — Codemod-or-rebuild.** If an automated codemod cannot bridge a
   component, that slice earns a clean rewrite — surfaced in the PR, never
   silent. *(review obligation)*
-- **G5 — Green gate between phases.** install + typecheck + lint +
-  unit/interaction tests + VRT + Storybook build all green before the next
-  phase starts. *(CI: the whole `v2-checks` workflow is this gate)*
+- **G5 — Green gate before merge.** install + typecheck + lint + unit tests +
+  VRT green. (Storybook was part of this list until it was retired
+  **2026-08-25**; the story fixture and its a11y sweep took over that slot —
+  CI jobs `story-fixture-a11y` and `baselines-vrt`.) *(CI: the whole
+  `v2-checks` workflow is this gate)*
 - **G6 — Contracts are generated** (CEM → schemas → AGENTS.md → validator).
   Hand-edit JSDoc and types; everything else is downstream.
   *(CI: `cem-and-contracts`, `jsdoc-dialect` — the `cem-and-contracts` job
@@ -68,8 +73,7 @@ no script can check them, so they are on you and the PR reviewer:
 
 ## Figma work is skill-gated (2026-08-31)
 
-Not a G-numbered guardrail — those belong to the v2 refactor — but the same
-weight, and it applies to every session.
+Not a G-numbered guardrail, but the same weight, and it applies to every session.
 
 **Load the matching skill BEFORE touching Figma**: `altitude-figma-generate` to
 build a set from code, `altitude-figma-repair` to fix one fact in an existing set
@@ -97,10 +101,11 @@ non-negotiables that came out of the v2 session:
 
 | Need | Location |
 |---|---|
-| Plan + phase gates | [`NEXT-GEN-UPGRADE-PLAN.md`](./NEXT-GEN-UPGRADE-PLAN.md) |
+| Historical v2 plan (COMPLETE 2026-06-16 — read for *why*, never as a live instruction) | [`.altitude/history/NEXT-GEN-UPGRADE-PLAN.md`](./.altitude/history/NEXT-GEN-UPGRADE-PLAN.md) |
+| Process map — which commands, gates and docs apply to each kind of change | [`.altitude/WORKFLOWS.md`](./.altitude/WORKFLOWS.md) |
 | Token engine docs | [`.altitude/TOKENS.md`](./.altitude/TOKENS.md) |
 | Design-system projects (which Figma file each DS is checked against) | [`.altitude/ds-projects.json`](./.altitude/ds-projects.json) + [`.altitude/DS-PROJECTS.md`](./.altitude/DS-PROJECTS.md) — **parity is multi-project.** `altitude` is the default; `southleft` targets the "Southleft V5" file. Select with `--project <id>` or `DS_PROJECT`. Never hardcode a Figma file key, manifest path or "Altitude" string in parity tooling again — read it from the registry. Validate with `pnpm run check:ds-projects`. |
-| Brand contract + token reachability map | [`.altitude/BRANDS.md`](./.altitude/BRANDS.md) — **read before editing any `tier-2/brand/` file.** A brand carries the whole look (typography, radius, shadow, border width, spacing), and several obvious overrides are inert: `--al-theme-typography-*` has zero consumers, `theme.space.{sm,md,lg}` belongs to the `density` axis, `theme.border.radius.sm` is unused, and `letterSpacing` is dropped by the formatter. **Adding a *new* brand** (not editing an existing one) is § 9 of that doc — an ordered ~8-site checklist; there is no scaffold, and `altitude_generate_theme` is not one. |
+| Brand contract + token reachability map | [`.altitude/BRANDS.md`](./.altitude/BRANDS.md) — **read before editing any `tier-2/brand/` file.** A brand carries the whole look (typography, radius, shadow, border width, spacing), and several obvious overrides are inert: `--al-theme-typography-*` has zero consumers, `theme.space.{sm,md,lg}` belongs to the `density` axis, `theme.border.radius.sm` is unused, and `letterSpacing` is dropped by the formatter. **Adding a *new* brand** (not editing an existing one) is § 9 of that doc — an ordered 7-site checklist; there is no scaffold, and `altitude_generate_theme` is not one. |
 | Build pipeline docs | [`.altitude/BUILD.md`](./.altitude/BUILD.md) |
 | Pinned target versions | [`.altitude/targets.json`](./.altitude/targets.json) |
 | Migration manifest | [`.altitude/migration.json`](./.altitude/migration.json) |
@@ -114,6 +119,29 @@ non-negotiables that came out of the v2 session:
 
 ## How to verify your change
 
+**Start here — one command:**
+
+```bash
+pnpm verify          # every gate whose prerequisites are already met
+pnpm verify:build    # adds the ones that need a built library
+pnpm verify:live     # adds the ones needing a Figma shim or the network
+```
+
+`pnpm verify` reads [`.altitude/gates.json`](./.altitude/gates.json), the
+declarative inventory of every gate in the repo — purpose, prerequisites, tier,
+whether it blocks, and which CI job runs it. It **names every gate it skipped
+and why**, and counts skips separately from passes: a gate that did not run must
+never read as a gate that passed. `pnpm run gates:check-ci` keeps that inventory
+and `.github/workflows/v2-checks.yml` in agreement in both directions, so
+renaming a CI job means updating the manifest.
+
+Read [`.altitude/GATES.md`](./.altitude/GATES.md) before adding a gate.
+
+The hand-written sequence below is the older, manual form. It is still correct
+and still useful when you want to run one stage in isolation — but it is a
+subset, and it has gone stale before, so prefer `pnpm verify` for the question
+"is this ready?".
+
 ```bash
 # Whole-pipeline smoke test:
 pnpm --filter @southleft/al-web-components build:tokens                # Style Dictionary v5 (the only token pipeline)
@@ -121,10 +149,10 @@ pnpm --filter @southleft/al-web-components test:tokens                 # token c
 pnpm test:brands                                            # brands must differ beyond colour; no inert overrides
 pnpm brands:compare                                         # rendered side-by-side check → .altitude/visual-compare/brands.dark.png
 pnpm --filter @southleft/al-web-components build                       # library build (Vite)
-pnpm --filter @southleft/al-web-components build:storybook \
-    --output-dir ../../dist/storybook/web-components        # Storybook static
+pnpm run build:story-fixture                                # story fixture (replaced the Storybook static build, retired 2026-08-25)
+pnpm run a11y:report:fixture                                # builds the fixture, then axes it → .altitude/a11y/report.json
 pnpm --filter @southleft/al-web-components build:custom-elements.json  # CEM regenerate
-node scripts/check-cem-coverage.js                          # T3.1 acceptance
+node scripts/check-cem-coverage.js                          # every component reaches the CEM
 pnpm test:vrt                                               # Playwright VRT
 pnpm gate:self-test                                         # G2/G8 gate scripts
 pnpm lint:styles                                            # Stylelint: literal colours + hallucinated token names
@@ -168,12 +196,14 @@ violation apply its `fix` (full recipe in [`libs/al-web-components/cli/REPAIR.md
 keyed by `code`) → re-run until exit 0. If a fix would require inventing an element, attribute, or
 value that doesn't exist, **stop and report the gap** — don't fake it past the design system.
 
-### MCP server (T7.2)
+### MCP server
 
 For an agent connected over MCP rather than shelling out, [`libs/altitude-mcp`](./libs/altitude-mcp)
-is a stdio server exposing the same contract surface as eight tools: `altitude_list_components`,
+is a stdio server exposing the same contract surface as nine tools: `altitude_list_components`,
 `altitude_get_component`, `altitude_validate` (wraps the CLI above, same codes), `altitude_get_tokens`
-(tier/brand/mode-filtered), `altitude_search_icons` (the 1,512-glyph Phosphor catalog),
+(tier/brand/mode-filtered), `altitude_resolve_token` (an intent — surface + role + emphasis — resolved
+to exactly ONE token, walking past the emphasis rungs that resolve to the same value),
+`altitude_search_icons` (the 1,512-glyph Phosphor catalog),
 `altitude_generate_theme` (the deterministic OKLCH solver — never calls an LLM),
 `altitude_check_parity` (per-project Figma ↔ code parity, each entry carrying a ready-to-run
 `aiPrompt`), and `altitude_list_ds_projects` (the design systems this repo drives, from
@@ -213,7 +243,7 @@ For a web component (`libs/al-web-components/components/<name>/`):
    **NOT** enumerate the global `--al-theme-*` tokens the component
    merely consumes. Example: `<al-button>` exposes
    `--al-button-background` as its own override hook (a `@cssproperty`);
-   the `--al-theme-color-background-default` token it falls back to is
+   the `--al-theme-color-background-neutral-default` token it falls back to is
    NOT a `@cssproperty` of al-button. Over-documenting consumed theme
    tokens pollutes the manifest with cssproperties the component
    doesn't actually own, degrading the digest's value for downstream
@@ -224,7 +254,7 @@ For a web component (`libs/al-web-components/components/<name>/`):
    `--al-theme-*` names" — it does NOT forbid you from declaring a
    brand-new `--al-<component>-<role>` override hook for your own
    component. The two are different surfaces:
-   - Consumed theme tokens (`--al-theme-color-background-default`) →
+   - Consumed theme tokens (`--al-theme-color-background-neutral-default`) →
      must exist in the tokens digest (digest is the contract).
    - Owned component override hooks (`--al-stat-value-color`) →
      declared by the component itself, documented via `@cssproperty`,
@@ -287,7 +317,7 @@ weight an omission in a code review:
 | **blocker** | **Sibling `.scss`** that `@use '../../styles/component' as *;` and wraps rules in `@layer al.component { … }`. Use the `:host { display: contents }` pattern + style the inner element when you need a transparent host. |
 | **blocker** | **Compose arrangement with `<al-layout>` — never re-implement it.** A new component or page section MUST NOT introduce its own `direction` / `orientation` / `gap` / `align` / `alignment` / `justify` / `behavior` / `wrap` property, and MUST NOT hand-roll `display: flex` / `display: grid` in its `.scss` to arrange SLOTTED children. Nest slotted content in `<al-layout>` instead. Internal shadow-DOM structure of an atom (positioning an icon against a label, say) is exempt — the rule is about arranging content the consumer provides. **Do not create a new `*-group` wrapper.** If you think you need one, you need `<al-layout>` plus, at most, a semantic component that owns ONLY the semantics (see "Arrangement vs. semantics" below). |
 | **blocker** | **Focus ring on every interactive control** — `&:focus-visible { @include al-focus; }` on the inner clickable / focusable element. Never re-author an outline. This is non-negotiable for buttons, links, dismissible chips, menu items, anything that takes focus. |
-| **blocker** | **Storybook stories** at `<name>.stories.ts` — CSF3 object stories with `tags: ['autodocs']`, one story per visually-meaningful state. |
+| **blocker** | **Story file** at `<name>.stories.ts` — CSF3 object stories, one per visually-meaningful state. Storybook is gone (retired 2026-08-25) but the format outlived it and has three live consumers: the story fixture (`libs/al-web-components/story-fixture`, which axe measures), the docs site's examples + taxonomy (`apps/docs/src/lib/examples.mjs`, `registry.mjs`), and the MCP (`libs/altitude-mcp/src/lib/stories.mjs`). A component with no stories file gets no preview and no measured a11y number. |
 | **blocker** | **`bundle.ts` export** — add one alphabetical `export … from './<name>/<name>'` line **in place** in the existing file.
 
 | **high** | **React wrapper** generated by `pnpm --filter @southleft/al-react plop`. May be FLAGGED as follow-up if the scaffolder can't run plop. |
@@ -375,13 +405,13 @@ every shipped component. Mirror them when scaffolding a new component:
 | **blocker** | **Boolean property names** | Prefix with `is*` (state) or `has*` (capability) | `isDisabled`, `isPressed`, `isExpanded`, `hasBadge` |
 | **blocker** | **Event names** | Camel-case `on<Component><Action>` | `onChipClose`, `onMenuItemSelect`, `onAccordionPanelOpen` / `onAccordionPanelClose` |
 | **blocker** | **Event dispatch** | Use `this.dispatch({ eventName, e, detailObj })` — the ALElement helper, not raw `dispatchEvent` | see "ALElement public API" below |
-| **enhancement** | **Component-tier CSS variables** | **OPTIONAL** for display atoms (badge, chip, stat-card) — the canonical chip precedent references `--al-theme-*` tokens directly without an intermediate `--al-<component>-*` hook. Use `--al-<component>-<role>` with a `var(--al-theme-*, …)` fallback ONLY when the component needs a *named, documented override surface* (e.g. `al-button` exposes `--al-button-background` so consumers can override per-button without forking the theme). Absence is NOT a violation. | `var(--al-button-background, var(--al-theme-color-background-default))` for an interactive control; bare `var(--al-theme-color-content-default-weak)` for a display atom |
+| **enhancement** | **Component-tier CSS variables** | **OPTIONAL** for display atoms (badge, chip, stat-card) — the canonical chip precedent references `--al-theme-*` tokens directly without an intermediate `--al-<component>-*` hook. Use `--al-<component>-<role>` with a `var(--al-theme-*, …)` fallback ONLY when the component needs a *named, documented override surface* (e.g. `al-button` exposes `--al-button-background` so consumers can override per-button without forking the theme). Absence is NOT a violation. | `var(--al-button-background, var(--al-theme-color-background-neutral-default))` for an interactive control; bare `var(--al-theme-color-content-neutral-weak)` for a display atom |
 | **blocker** | **Typography** | Set type via the `al-theme-typography-*` mixins (`@include al-theme-typography-display-sm-bold;`, `@include al-theme-typography-body-sm;`, etc.). Do NOT hand-assemble from raw `--al-font-size-*` / `--al-font-weight-*` / `--al-line-height-*` primitives. The mixins live in `libs/al-web-components/styles/core/mixins/typography.scss`. | `@include al-theme-typography-heading-md-bold;` |
 | **blocker** | **BEM class prefix** | `al-c-<component>` for the root element, `al-c-<component>__<part>` for parts, `al-c-<component>--<modifier>` for variants | `.al-c-button`, `.al-c-button__icon`, `.al-c-button--danger` |
 | **blocker** | **SCSS cascade layer** | Wrap every rule in `@layer al.component { … }` so consumers can override via the `al.override` layer | (see `components/divider/divider.scss`) |
 | **blocker** | **SCSS module imports** | `@use '../../styles/component' as *;` (modern Sass module system — no `@import`) | top of every leaf component .scss |
 | **blocker** | **`bundle.ts`** | **Hand-maintained, alphabetical.** Add one `export …` line for every new component. The bundler picks it up. | `libs/al-web-components/components/bundle.ts` |
-| **medium** | **Storybook taxonomy** | Title prefix decides folder. `Atoms/X` = standalone primitive (single tag, no composition). `Molecules/X` = composes 2+ atoms. `Organisms/X` = page-level region (header/layout). `Templates/X` = full page templates. | `title: 'Atoms/Stat Card'` |
+| **medium** | **Story taxonomy** (read by `apps/docs/src/lib/registry.mjs` and the MCP's `stories.mjs` — still load-bearing after Storybook's retirement) | Title prefix decides the tier. `Atoms/X` = standalone primitive (single tag, no composition). `Molecules/X` = composes 2+ atoms. `Organisms/X` = page-level region (header/layout). `Templates/X` = full page templates. | `title: 'Atoms/Stat Card'` |
 | **medium** | **Story format** | **CSF3 object stories** is the target for new components — `const meta = { title, component, tags: ['autodocs'], parameters, argTypes }; export default meta; export const Default = { args: {…} };`. Existing chip/badge precedents still use CSF2 `Template.bind({})` and will be migrated; do not copy that pattern into new stories. Always provide an explicit `render: (args) => html\`…\``  — don't rely on a default Lit renderer. | new component: CSF3; legacy precedent: CSF2 (pending migration) |
 | **blocker** | **Display numerics** | Type the value prop as `string` (not `number`). Consumers own locale formatting / digit grouping / unit suffixes; an internal `Intl.NumberFormat` in a display-only atom imposes a locale on every consumer. | `@property() accessor value: string;` on `<al-stat value="1,234">` |
 
@@ -455,7 +485,7 @@ violation — do not flag it in reviews).
 | **blocker** | **Boolean props (when owning state)** | `isDismissible: boolean` (capability) + `isDismissed: boolean` (state) — the `is*` prefix applies. |
 | **blocker** | **Close event** | `this.dispatch({ eventName: 'onChipClose' })` (use ALElement's dispatch — bubbles + composed). Mirror the tag name in the event: an `al-<name>` atom dispatches `on<Name>Close`. |
 | **blocker** | **Focus ring** | `&:focus-visible { @include al-focus; }` on the inner clickable element. Never re-author an outline rule. (Already in the blocker checklist; restated here for visibility.) |
-| **blocker** | **Padding / radius / color tokens** | `padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);`, `border-radius: size(4);` (NOT `--al-theme-border-radius-round` — that's `50%` = circle, not pill), `color: var(--al-theme-color-content-default-weak);`. Token names must verify against the digest. |
+| **blocker** | **Padding / radius / color tokens** | `padding: var(--al-theme-space-xxs) var(--al-theme-space-sm);`, `border-radius: size(4);` (NOT `--al-theme-border-radius-round` — that's `50%` = circle, not pill), `color: var(--al-theme-color-content-neutral-weak);`. Token names must verify against the digest. |
 | **blocker** | **Internal gap** | `gap: var(--al-theme-space-xs);` |
 | **blocker** | **Hide-when-dismissed** | `.al-is-dismissed { display: none; }` inside `@layer al.component { … }`. (Only required when owning `isDismissed`; controlled-close hosts skip this.) |
 | **enhancement** | **Close keyboard** | `handleOnKeydown(e)` on the host: if `e.code === 'Escape' && this.isDismissible` call `close()`. Nice-to-have for keyboard parity; not a review-blocker if absent on a small atom. |
@@ -594,8 +624,10 @@ the design system growing a variant for it. Pair it with `noCollapse`.
 
 Altitude ships the full **Phosphor** set — 1,512 icons, `regular` weight, MIT
 licensed, from the `@phosphor-icons/core` devDependency. Source of truth for the
-roster is `libs/al-web-components/icons/icons-config.mjs`; browse them under
-`Foundations/Icons` in Storybook.
+roster is `libs/al-web-components/icons/icons-config.mjs`; browse them on the docs
+site's icons page (`apps/docs/src/pages/icons.astro`) or via the MCP's
+`altitude_search_icons` tool. (The `Foundations/Icons` Storybook page went with
+Storybook, retired 2026-08-25.)
 
 **The canonical form is `<al-icon name="…">` with an explicit registration.**
 Registration is what makes it tree-shakeable and synchronous (so it renders
@@ -723,7 +755,7 @@ confirm a specific combination exists.
 **Do not invent:**
 - `--al-theme-focus-ring-*` (doesn't exist; use `outline` rules from the `al-focus` mixin).
 - `--al-theme-transition-duration-*` (use `--al-animation-duration-*`).
-- `--al-theme-color-content-default-stronger` / `-weaker` (`default` role has only `(none)` and `-weak`).
+- `--al-theme-color-content-neutral-bold` / `-weaker` (`default` role has only `(none)` and `-weak`).
 - `--al-font-weight-semibold` / `-medium` (only `-regular` and `-bold` exist).
 - T-shirt font sizes — only the numeric tier above.
 
@@ -784,4 +816,4 @@ For a React wrapper (`libs/al-react/src/components/<Name>/`):
   `cssProperties` allow-list (see `scripts/lib/dtcg-token.mjs`).
 - Don't introduce new dependencies without a plan-task mapping.
 - Don't bypass G2 by force-pushing past the migration-gate workflow.
-- Don't add `:root { --al-* }` outside Phase 4's `<al-theme>` host (T4.2).
+- Don't add `:root { --al-* }` outside the scoped `<al-theme>` host.

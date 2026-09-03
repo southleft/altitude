@@ -56,7 +56,7 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| background-color | `--al-theme-color-border-default` | `theme/color/border/default` |
+| background-color | `--al-theme-color-border-neutral-default` | `theme/color/border/neutral-default` |
 | height | `--al-theme-border-width` | `theme/border/width/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -71,7 +71,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (2)
 
-`--al-theme-border-width`, `--al-theme-color-border-default`
+`--al-theme-border-width`, `--al-theme-color-border-neutral-default`
 
 ---
 

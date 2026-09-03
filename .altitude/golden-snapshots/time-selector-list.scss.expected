@@ -48,8 +48,8 @@
    */
   .al-c-time-selector-list__heading {
     @include al-theme-typography-body-md-bold;
-    color: var(--al-theme-color-content-default);
-    background: var(--al-theme-color-background-default-stronger);
+    color: var(--al-theme-color-content-neutral-default);
+    background: var(--al-theme-color-background-neutral-bold);
     box-shadow: var(--al-theme-box-shadow-sm);
     text-align: center;
     padding: var(--al-theme-space-xs);
@@ -90,7 +90,7 @@
   .al-c-time-selector-list__button {
     @include al-theme-typography-body-sm;
     text-transform: uppercase;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     background: var(--al-theme-color-background-transparent-default);
     border-radius: 40px;
     border: none;
@@ -106,7 +106,7 @@
      * Hover state
      */
     &:hover:not(:active, :disabled, &.al-is-active) {
-      background-color: var(--al-theme-color-background-default-strong);
+      background-color: var(--al-theme-color-background-neutral-strong);
     }
 
     /**

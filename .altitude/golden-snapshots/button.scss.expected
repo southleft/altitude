@@ -72,16 +72,16 @@
    */
   .al-c-button--tertiary {
     background-color: var(--al-theme-color-background-transparent-default);
-    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
-    color: var(--al-theme-color-content-default);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
+    color: var(--al-theme-color-content-neutral-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
       background-color: var(--al-theme-color-background-transparent-default);
-      border-color: var(--al-theme-color-border-default-weak);
-      color: var(--al-theme-color-content-default-weak);
+      border-color: var(--al-theme-color-border-neutral-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
   }
 
@@ -90,14 +90,14 @@
    */
   .al-c-button--bare {
     background-color: var(--al-theme-color-background-transparent-default);
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
 
     /**
      * Hover state
      */
     &:hover:not(:active, :disabled) {
       background-color: var(--al-theme-color-background-transparent-default);
-      color: var(--al-theme-color-content-default-weak);
+      color: var(--al-theme-color-content-neutral-weak);
     }
   }
 
@@ -152,7 +152,7 @@
     width: size(5);
     border-radius: 0;
     line-height: 1;
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     background: var(--al-theme-color-background-transparent);
 
     /**
@@ -188,8 +188,8 @@
      * Menu item button hover state
      */
     &:hover:not(:active, :disabled) {
-      color: var(--al-theme-color-content-default-weak);
-      background: var(--al-theme-color-background-default-strong);
+      color: var(--al-theme-color-content-neutral-weak);
+      background: var(--al-theme-color-background-neutral-strong);
 
       /**
        * Show focus outline with rounded borders on focus-visible

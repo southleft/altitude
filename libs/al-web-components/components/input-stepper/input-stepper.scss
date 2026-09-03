@@ -47,9 +47,9 @@
   .al-c-input-stepper__body {
     display: flex;
     align-items: stretch;
-    border: var(--al-theme-border-width) solid var(--al-theme-color-border-default);
+    border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
     border-radius: var(--al-theme-border-radius);
-    background-color: var(--al-theme-color-background-default);
+    background-color: var(--al-theme-color-background-neutral-default);
     block-size: var(--al-input-stepper-block-size, 40px);
     overflow: hidden;
 
@@ -105,7 +105,7 @@
     border: 0;
     outline: none;
     background-color: transparent;
-    color: var(--al-theme-color-content-default);
+    color: var(--al-theme-color-content-neutral-default);
     text-align: center;
     min-inline-size: var(--al-input-stepper-value-width, #{56px});
     inline-size: var(--al-input-stepper-value-width, #{56px});
@@ -151,12 +151,12 @@
    */
   .al-c-input-stepper__button--left {
     order: 1;
-    border-inline-end: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+    border-inline-end: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);
   }
 
   .al-c-input-stepper__button--right {
     order: 3;
-    border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+    border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);
   }
 
   /**
@@ -210,7 +210,7 @@
      */
     .al-c-input-stepper__button--right {
       grid-area: 1 / 2 / 2 / 3;
-      border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+      border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);
       position: relative;
 
       &::after {
@@ -219,14 +219,14 @@
         inset-inline: 0;
         inset-block-end: 0;
         block-size: var(--al-theme-border-width);
-        background-color: var(--al-theme-color-border-default-weak);
+        background-color: var(--al-theme-color-border-neutral-weak);
         pointer-events: none;
       }
     }
 
     .al-c-input-stepper__button--left {
       grid-area: 2 / 2 / 3 / 3;
-      border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-default-weak);
+      border-inline-start: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-weak);
       border-inline-end: 0;
     }
 

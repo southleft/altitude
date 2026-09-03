@@ -128,6 +128,78 @@ on the output, not just trusted at the source. Two different consumers, two
 different projections, by design — `GET /parity.json` for a trusted local
 agent, `publicParityReport()` for anything that reaches the public site.
 
+## The tracked canvas projection (why CI can compare at all)
+
+`contract-diff.mjs` computes the property-level disagreements behind every
+`disagreements` array — which prop, which variant value, which state, which
+token binding. It needs two inputs: the tracked CODE contract, and a CANVAS
+contract extracted live from Figma into
+`<figmaSyncDir>/canvas-contracts/<tag>.canvas.json`.
+
+**Those dumps are gitignored live observations, so they do not exist anywhere
+but a maintainer's laptop.** Measured 2026-09-03: 36 code/canvas pairs
+compared locally, 3 clean, **259 disagreements**. In CI and on the deployed
+docs site the same code compares **0 pairs**, and both the `ParityPanel` and
+the parity summary can only ever say "not compared". The offline conventions
+lint is out of CI for exactly the same reason (see T3 below).
+
+`.altitude/figma-sync/canvas-projection.json` is the fix: **one tracked file
+per project**, carved out of the ignore rules alongside the parity manifest,
+carrying precisely the fields the differ reads —
+
+| projected | why it is there |
+|---|---|
+| `variantAxes` | the offline conventions lint (Title Case, State vocabulary) |
+| `componentProperties` | the prop / variant-axis / variant-value passes |
+| `states` | the state pass |
+| `textStyles` | the only honest comparison for text weight (unbindable as a variable) |
+| `tokensOwn`, `tokensNested`, `tokens` | bound-variable NAMES — the token-binding pass |
+| `degradations` | the `degraded()` gates; dropping them turns a degraded fact into four false disagreements |
+| `anatomySource` | the token pass runs only when it is `observed` |
+| `figma.name` | set-name-vs-manifest, name only |
+
+and **nothing else**. No node id, no Figma file key, no absolute path, no
+pixel geometry. That is asserted, not assumed: the generator walks its own
+output and throws on a forbidden key, a node-id-shaped or file-key-shaped or
+path-shaped string, a `figma.com` URL, or **any number at all** — every
+projected fact is a name or a list of names, so a number in that subtree
+could only be geometry or an index. `apps/docs/scripts/check-status-panels.mjs`
+is the leak gate for the built docs HTML; this must not become the hole in it.
+
+**Staleness is stamped, because a projection is a point-in-time read.**
+`source.newestMtime` (the newest source-dump mtime), `source.digest` (over
+every dump's bytes), `source.figmaFileKeyHash`, `generatedAt`, and
+`generator.commit`. The file key is **hashed, never published** — that is
+enough to detect a repoint without the tracked file carrying the key.
+
+```bash
+node scripts/figma-parity/build-canvas-projection.mjs            # regenerate for the default project
+node scripts/figma-parity/build-canvas-projection.mjs --check    # regenerate-and-diff gate
+```
+
+`--check` is the same discipline `scripts/check-mcp-docs.mjs` states for every
+generated artifact in this repo: gate it by re-running its generator, not by a
+second parser that drifts on its own. It compares the substance (the
+`components` map, the source digest, the file-key hash) and ignores
+`generatedAt` / `generator.commit`, which move with the clock and the branch
+rather than with the facts. **With no dumps on disk it still checks the half
+it can** — that the projection was built against the Figma file the registry
+names today — and reports `SKIPPED` for the rest rather than passing
+vacuously. A repoint (Southleft's, 2026-09-02) fails it outright.
+
+**A projected answer is never rendered as a live one.** `diffContracts()`
+returns `source: 'live-dump' | 'projection' | 'none'`, plus `sourceStamp` and
+a `skipped` line naming the projection when it used one. A live dump always
+outranks the projection when both are available. Verified 2026-09-03: across
+all 36 pairs the projection reproduces the live disagreement lists
+**byte-identically** — 259 either way — so the fallback loses nothing.
+
+**Southleft has no projection, on purpose.** That project was repointed to a
+re-duplicated Figma file on 2026-09-02; its canvas dumps are observations of
+the retired file. Projecting them would encode facts about a file that no
+longer backs the project. Re-extract first (`contracts:canvas --project
+southleft`), then project.
+
 ## Commands
 
 **This table is the canonical home of the parity CLIs** — other docs link here
@@ -142,6 +214,10 @@ pnpm run parity:refresh           # observe live Figma digests + figma-only sets
                                   #   --port <n> if the shim is not on :9401
 pnpm run parity:freshness         # figmaLastRefreshed age + everObserved per project; --max-age-days N turns it into a gate
 pnpm run parity:tokens-drift -- .altitude/figma-sync/last-export.json   # token VALUE drift vs a saved figma_export_tokens dump
+
+# The TRACKED canvas projection (see the section above). No package.json key yet:
+node scripts/figma-parity/build-canvas-projection.mjs           # rebuild it from the dumps on disk
+node scripts/figma-parity/build-canvas-projection.mjs --check   # gate: does the tracked file still agree?
 
 # Same against another design system (or pass `--project <id>` / `--project=<id>` to any of them):
 pnpm run parity:seed:sl
@@ -286,6 +362,15 @@ everything all good?", `al-divider`'s `State=Verical` — a typo *and* an
 orientation value on the State axis; both tracked as issues). Wiring it as a
 gate today would land CI red on a pre-existing problem rather than on a
 regression. Fix those two in Figma, re-extract, then gate it.
+
+The *other* half of that blocker is now gone. The script reads
+`<figmaSyncDir>/canvas-contracts/*.canvas.json` directly and correctly exits 1
+when it finds none, which on a clone is every run — the structural reason it
+could never be a CI gate. `variantAxes`, `componentProperties` and
+`figma.name` (every field its rules read) are all carried by the tracked
+canvas projection above, so pointing it at that file when no dumps are present
+is a mechanical change, not a new source of truth. It has not been made yet;
+`scripts/check-figma-conventions.mjs` still reads the dumps only.
 
 ## The judgement ledger (T12)
 

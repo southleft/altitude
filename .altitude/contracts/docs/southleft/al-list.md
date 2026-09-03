@@ -10,7 +10,7 @@ Component: al-list
 
 - Component set: **List**
 - Node id: `19:2561` (pinned)
-- [Open in Figma](https://www.figma.com/design/2a0kqTG8i8l1q1VI2yq9or/?node-id=19-2561)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=19-2561)
 
 ## Props (2)
 

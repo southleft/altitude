@@ -110,17 +110,17 @@ const VISIBLE = 1.2; // a hairline must merely not vanish; WCAG exempts decorati
 /** [foreground, background, minimum, what renders it] */
 const PAIRS = [
   // --- body copy -----------------------------------------------------------
-  ['content-default', 'background-default', TEXT, 'body text on a card/surface; stepper value (input-stepper__input)'],
-  ['content-default', 'background-default-weak', TEXT, 'body text on the page'],
-  ['content-default', 'background-default-strong', TEXT, 'body text on a recessed fill'],
-  ['content-default-weak', 'background-default', TEXT, 'muted text on a surface; inset label (input.scss .al-has-inset-label)'],
-  ['content-default-weak', 'background-default-weak', TEXT, 'muted text on the page'],
-  ['content-default-faint', 'background-default', TEXT, 'mono metadata (table__cell--header); field placeholder (input/textarea ::placeholder)'],
-  ['content-primary-default', 'background-default', TEXT, 'link text (link.scss)'],
+  ['content-neutral-default', 'background-neutral-default', TEXT, 'body text on a card/surface; stepper value (input-stepper__input)'],
+  ['content-neutral-default', 'background-neutral-weak', TEXT, 'body text on the page'],
+  ['content-neutral-default', 'background-neutral-strong', TEXT, 'body text on a recessed fill'],
+  ['content-neutral-weak', 'background-neutral-default', TEXT, 'muted text on a surface; inset label (input.scss .al-has-inset-label)'],
+  ['content-neutral-weak', 'background-neutral-weak', TEXT, 'muted text on the page'],
+  ['content-neutral-faint', 'background-neutral-default', TEXT, 'mono metadata (table__cell--header); field placeholder (input/textarea ::placeholder)'],
+  ['content-primary-default', 'background-neutral-default', TEXT, 'link text (link.scss)'],
   // WCAG 1.4.3 explicitly exempts "inactive user interface components", so the
   // disabled label is held only to "still visible", not to a text ratio — the
   // same reading `verify-contrast-axis.mjs` applies to the contrast axis.
-  ['content-disabled-default', 'background-default', VISIBLE, 'disabled label (WCAG-exempt)'],
+  ['content-disabled-default', 'background-neutral-default', VISIBLE, 'disabled label (WCAG-exempt)'],
 
   // --- on-colour inks: content.<hue>-weak ON background.<hue>-default -------
   // See the header note: `-weak` is the ink, not a muted tint.
@@ -141,22 +141,24 @@ const PAIRS = [
   ['content-danger-default', 'background-danger-weak', TEXT, 'danger alert text'],
   ['content-info-default', 'background-info-weak', TEXT, 'info alert text'],
   ['content-primary-default', 'background-primary-weak', TEXT, 'tonal button label'],
-  ['content-danger-default', 'background-default', TEXT, 'error note on a surface (field-note)'],
+  ['content-danger-default', 'background-neutral-default', TEXT, 'error note on a surface (field-note)'],
 
   // --- meaningful non-text -------------------------------------------------
-  ['border-primary-default', 'background-default', LARGE, 'focus ring (al-focus mixin)'],
-  ['border-danger-default', 'background-default', LARGE, 'error field border'],
+  ['border-primary-default', 'background-neutral-default', LARGE, 'focus ring (al-focus mixin)'],
+  ['border-danger-default', 'background-neutral-default', LARGE, 'error field border'],
 
   // --- structure -----------------------------------------------------------
-  ['border-default', 'background-default', VISIBLE, 'control border'],
-  ['border-default-weak', 'background-default', VISIBLE, 'hairline divider'],
-  ['border-default', 'background-default-weak', VISIBLE, 'control border on the page'],
+  ['border-neutral-default', 'background-neutral-default', VISIBLE, 'control border'],
+  ['border-neutral-weak', 'background-neutral-default', VISIBLE, 'hairline divider'],
+  ['border-neutral-default', 'background-neutral-weak', VISIBLE, 'control border on the page'],
 ];
 
 /* -------------------------------------------------------------------- run */
 
 let failures = 0;
 let checked = 0;
+/** Every row across every mode, so the aggregate below can see unresolved ones. */
+const allRows = [];
 const modes = ONLY ? [ONLY] : ['light', 'dark'];
 
 for (const mode of modes) {
@@ -181,6 +183,7 @@ for (const mode of modes) {
       detail: `${fg} on ${bg}   ${fgT} / ${bgT}`,
     });
   }
+  allRows.push(...rows);
   if (!QUIET || rows.some((x) => x.ok === false)) console.log(`\n=== ${mode} ===`);
   for (const row of rows) {
     if (QUIET && row.ok !== false) continue;
@@ -195,8 +198,36 @@ for (const mode of modes) {
   }
 }
 
+/**
+ * AN UNRESOLVED PAIRING IS A FAILURE, not a skip.
+ *
+ * Until 2026-09-03 it was a skip, and the consequence was the worst kind of
+ * green: the 2026-09-01 colour rename (`*.default*` -> `*.neutral-*`) left 28 of
+ * 58 pairings naming tokens that no longer existed, so they resolved to
+ * `undefined` and were skipped. The gate printed "30 pairings — PASS" while
+ * every body-text-on-surface pairing, the link colour, the focus ring and every
+ * border went unchecked. Restoring the names immediately surfaced two real
+ * WCAG failures that had been hidden for two days.
+ *
+ * A contrast gate that cannot resolve a pairing has not checked it, and must
+ * not report as though it had. This is the repo's own rule: silence is the only
+ * forbidden failure.
+ */
+const unresolved = allRows.filter((row) => row.ok === null);
+if (unresolved.length > 0) {
+  console.log(
+    `\n[palette-contrast] ${unresolved.length} pairing(s) could not be resolved. ` +
+      'A pairing that names a token which does not exist has NOT been checked — ' +
+      'usually a token rename that this table did not follow. Fix the names ' +
+      'rather than letting them skip.'
+  );
+}
+
+const total = failures + unresolved.length;
 console.log(
   `\n[palette-contrast] ${checked} pairings across ${modes.length} mode(s) — ` +
-    (failures === 0 ? 'PASS' : `${failures} FAILURE(S)`)
+    (total === 0
+      ? 'PASS'
+      : `${failures} FAILURE(S)${unresolved.length ? `, ${unresolved.length} UNRESOLVED` : ''}`)
 );
-process.exit(failures === 0 ? 0 : 1);
+process.exit(total === 0 ? 0 : 1);

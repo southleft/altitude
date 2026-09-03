@@ -9,6 +9,26 @@ name looks stale, since this doc drifts the moment a script is renamed.
 This is about the code and its build/test/publish pipeline, not how work is
 planned. See `CLAUDE.md` / `.claude/CLAUDE.md` for that.
 
+## The one command
+
+```bash
+pnpm verify            # fast tier — no build needed
+pnpm verify:build      # + everything that needs a built library
+pnpm verify:live       # + Figma shim / network
+pnpm run gates:list    # what exists, and what each gate needs
+```
+
+Driven by [`gates.json`](./gates.json) — 89 gates with their prerequisites,
+tier, blocking flag and CI job. Skipped gates are **named**, never folded into
+the pass count. [`GATES.md`](./GATES.md) explains the model; `gates:check-ci`
+fails when the manifest and the workflow disagree either way.
+
+Two gates worth knowing about because they change how this document ages:
+`check:doc-anchors` fails CI when any backticked path, script or flag in a
+Markdown file stops resolving, and `gates:check-ci` fails when a CI job is
+renamed without updating the manifest. The warning at the top of this page
+about drift is now partly enforced rather than merely hoped for.
+
 ## Two first-class entry points before you touch anything
 
 - **The `altitude` MCP server** (`libs/altitude-mcp/`, 8 tools —
@@ -101,7 +121,7 @@ brand — the quick start".** Shape of it:
 | Author the token set | `styles/tokens-dtcg/tier-2/brand/<brand>/*.json` — DTCG, references only, every token carrying a `cssType` (§9.1); `mode/<theme>/colors.json` for values that must flip with `mode` (§9.2). No registration step — the directory is globbed. |
 | The one config edit | `styles/tokens-config.v5.mjs:589-602` — the hardcoded `brands` array, one entry per brand × mode (§9.3) |
 | Build + sanity check | `build:tokens`, then confirm `dist-v5/scss/host/tokens-brand-<brand>*.scss` exists — **a missing partial means an empty delta, i.e. the brand does nothing** (§9.4). `theme.scss` needs no edit. |
-| Widen the surface | `theme.ts` union → regenerate CEM/schema; `theme-switcher.ts`; `.storybook/presets.ts`; MCP `z.enum`; React stories; a harness HTML (§9.5) |
+| Widen the surface | `theme.ts` union → regenerate CEM/schema; `theme-switcher.ts`; `theme-presets.ts` (`PresetBundle` + a new PRESETS array); MCP `z.enum`; a harness HTML (§9.5) — 7 sites, no longer 8: the React story site went with Storybook, retired 2026-08-25 |
 | Widen the harness brand lists | `harness/scoped.js`, `build-brand-compare.mjs`, `check-scoped-theming.mjs` (§9.6) |
 | Verify | `test:brands`, `brands:compare`, `test:scoped-theming`, `gate:token-usage`, **`node scripts/capture-token-baseline.js`** (G8, same PR) (§9.7) |
 | Optional | A `.altitude/ds-projects.json` entry — only for Figma parity + a scoped docs site. A brand does **not** require one (§9.8) |
@@ -211,8 +231,8 @@ package actually ships what its `exports` map promises.
 
 | Report | Command | Reads / feeds |
 |---|---|---|
-| Storybook axe (base + main lib) | `pnpm run a11y:report` → `.altitude/a11y/report.json` | axe-core against a **static** Storybook build on a dedicated port — never a dev server (measurement hazard, see script header) |
-| Docs-site axe (brand layer, anything with no Storybook) | `pnpm --filter al-app-docs build && pnpm run a11y:report:docs` → `.altitude/a11y/report-docs.json` | axe against the built docs site; default story only |
+| Story-fixture axe (base + main lib) | `pnpm run a11y:report:fixture` → `.altitude/a11y/report.json` | Builds `libs/al-web-components/story-fixture` then runs axe-core against that **static** build — never a dev server (measurement hazard, see script header). `a11y:report` alone runs axe without building; its `--storybook` flag keeps its name for compatibility and takes any directory serving the `index.json` + `iframe.html?id=` contract. Storybook was retired 2026-08-25. |
+| Docs-site axe (brand layer, anything with no stories) | `pnpm --filter al-app-docs build && pnpm run a11y:report:docs` → `.altitude/a11y/report-docs.json` | axe against the built docs site; default story only |
 | Manual/screen-reader passes | Hand-edit `.altitude/a11y/manual-tests.json` | Read by `apps/docs/src/lib/a11y.mjs`; empty entries render "not recorded," never fabricate a pass |
 
 ---
@@ -273,7 +293,7 @@ same way any other doc does.
 - `check-guidance.mjs` — `gate:guidance`.
 - `check-sl-scope.mjs` — `check:sl-scope`.
 - `check-ds-projects.mjs` — `check:ds-projects`, `.altitude/ds-projects.json` schema/consistency.
-- `build-a11y-report.mjs` — `a11y:report` (Storybook axe).
+- `build-a11y-report.mjs` — `a11y:report` / `a11y:report:fixture` (axe against the story fixture; it was a Storybook build until 2026-08-25, which is why the flag is still `--storybook`).
 - `build-a11y-docs-report.mjs` — `a11y:report:docs` (docs-site axe).
 - `build-axe-baseline.mjs` — turns a `test-storybook` log into a one-off axe baseline table (predates `build-a11y-report.mjs`; see ORPHANS).
 - `build-root-llms.mjs` — generates root `llms.txt` from CEM + ai-readiness digests + axe report + ds-project registry + MCP tool roster. `llms:build` / `check:llms`.

@@ -171,7 +171,7 @@ _No events declared._
 
 ## Tokens referenced (7)
 
-`--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-default`, `--al-theme-color-border-default-weak`, `--al-theme-color-content-default`, `--al-theme-space`, `--al-theme-space-xs`
+`--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-xs`
 
 ---
 

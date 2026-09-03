@@ -73,74 +73,52 @@ The product-planner will:
 - Confirm the tech stack
 - Create mission.md, roadmap.md, and tech-stack.md
 
-### PHASE 2: Create Features from Roadmap
+### PHASE 2: Roadmap → briefs
 
-After product planning completes, automatically create features:
+Product planning writes `mission.md` and `tech-stack.md`. The **roadmap is not written by hand
+or by this command** — it is written by the one roadmap writer (`create_roadmap_cmd`), which
+mints each milestone's slug, writes `.mm/product/roadmap.md`, and files one brief per new
+milestone. That is what "the roadmap is the spec factory" means: milestones do not need a
+separate features step, and briefs are born parented.
 
-1. **Read roadmap.md** and parse each numbered item
-2. **For each roadmap item**, create:
-   ```
-   .mm/features/{feature-slug}/feature.json
-   ```
-
-**Roadmap format expected:**
+Its grammar (full detail in `docs/roadmap-factory.md`):
 
 ```markdown
-# Product Roadmap
+---
+type: roadmap
+version: 1
+updated: 2026-08-29
+---
+
+# Roadmap
 
 ## Phase 1: Foundations
 
-> Status: in_progress
+- core-pages-built — Core pages built
+  > claim: Every top-level page renders from real content with no placeholder copy
+  > check: npm test -- pages
 
-1. [ ] Feature Name — Description `effort`
-2. [ ] Another Feature — Description `effort`
-
-## Phase 2: Expansion
-
-> Status: planning
-
-3. [ ] Third Feature — Description `effort`
+- content-architecture — Content architecture
+  > claim: One content model drives every page type
 ```
 
-**CRITICAL — every roadmap item MUST live under a `## Phase <number>: <title>` heading.**
-The app's roadmap parser (`parse-roadmap.ts`) only collects checkbox items inside a phase
-section; any other `## ` heading closes the current phase, and items outside one are silently
-dropped. A roadmap with a bare `## Roadmap` heading — or with no `## Phase` heading at all —
-renders as an EMPTY roadmap in the app, with no error shown.
+Rules that matter when proposing milestones:
 
-- Phase numbers may be integers or fractional (`## Phase 1.5: Hardening`).
-- `: ` after the number is the preferred separator; `—`, `–`, and `-` also parse.
-- The `> Status: ...` line is optional (`planning` | `in_progress` | `complete` | `on-hold`;
-  defaults to `planning` when omitted).
-- Both `1. [ ]` and `- [ ]` bullets parse identically. Keep numbering continuous ACROSS phases
-  so item numbers still map 1:1 to `roadmap_order` in each `feature.json`.
-- Use 2-4 phases that reflect genuine delivery stages. If the work has no natural phasing, emit
-  a single `## Phase 1: <title>` containing every item — never a bare `## Roadmap`.
-- Do NOT end an item line with a dash followed by a backtick (e.g. ``— `L` ``): the parser reads
-  a trailing `` — `ref` `` as a feature/spec link and would create a phantom feature. Keeping the
-  effort after a period is safe.
+- The **slug** is identity, minted once from the title and never rewritten. `P1` is display order.
+- Every milestone needs a **`> claim:`** — one sentence that is true when it is done, checkable by
+  a reviewer. Not a description of the work: "Every top-level page renders from real content",
+  not "Build the pages". `mm_verify evaluate` reads it as the objective of every spec beneath it.
+- **`> check:`** is optional and valuable: a command that exits 0 when the claim holds is the only
+  way the milestone can be machine-contradicted.
+- No checkboxes and no `spec:` links. Shipped is derived: a milestone is shipped when it has at
+  least one brief and every one of them is done.
 
-**Feature.json created:**
+**How to create it.** In the desktop app, the Roadmap column's flow (onboarding, Redefine, or
+adopt) collects the proposal and calls the writer. From the CLI, hand the user the proposal and
+have them apply it there — never hand-author `roadmap.md`, and never add a `spec:` ref to a line.
 
-```json
-{
-  "id": "{slug}",
-  "name": "{Feature Name}",
-  "description": "{Description}",
-  "status": "planning",
-  "priority": "medium",
-  "effort": "{effort}",
-  "roadmap_order": 1,
-  "progress": {
-    "total_specs": 0,
-    "completed_specs": 0,
-    "percentage": 0
-  },
-  "linked_specs": [],
-  "created": "{timestamp}",
-  "updated": "{timestamp}"
-}
-```
+Features (`.mm/features/`) remain an OPTIONAL grouping label; they no longer come from the
+roadmap and are not created here.
 
 ### PHASE 2.5: Offer Coding Standards
 
@@ -166,32 +144,25 @@ Product Planning Complete!
 
 PRODUCT DOCS
   .mm/product/mission.md     - Product vision
-  .mm/product/roadmap.md     - Feature roadmap
   .mm/product/tech-stack.md  - Tech choices
+  .mm/product/roadmap.md     - Milestones + claims (written by the roadmap writer)
 
-FEATURES CREATED
-  1. {Feature Name} → .mm/features/{slug}/
-  2. {Feature Name} → .mm/features/{slug}/
-  ... (list all created features)
+BRIEFS FILED
+  1. {Milestone} → .mm/specs/{slug}/   (parent: {milestone-slug})
+  2. {Milestone} → .mm/specs/{slug}/
+  ... (one per new milestone)
 
 YOUR PROJECT IS SET UP!
 
 The flow from here:
 
-  FEATURE → SPEC → TASKS → IMPLEMENT
+  MILESTONE (claim) → BRIEF → SHAPE → TASKS → IMPLEMENT → VERIFY
 
-For each feature, run:
+Each milestone already has its brief. To shape one into requirements and tasks:
 
-  /mm:spec {feature-slug}
+  /mm:spec --stage brief {spec-folder}
 
-This creates a spec linked to that feature with:
-  - Requirements gathering
-  - Detailed specification
-  - Task breakdown
-
-Example: /mm:spec user-authentication
-
-Start with your first roadmap item!
+Start with the first milestone of phase 1.
 ```
 
 ---

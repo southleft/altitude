@@ -13,8 +13,8 @@ import styles from './chip.scss';
  *
  * @event onChipClose - Fired when the chip's remove control is activated. Carries no detail payload; read the chip's own properties from `event.target`.
   *
- * @cssproperty --al-chip-background - Chip surface. Defaults to `--al-theme-color-background-default-strong`.
- * @cssproperty --al-chip-color - Label colour. Defaults to `--al-theme-color-content-default-weak`.
+ * @cssproperty --al-chip-background - Chip surface. Defaults to `--al-theme-color-background-neutral-strong`.
+ * @cssproperty --al-chip-color - Label colour. Defaults to `--al-theme-color-content-neutral-weak`.
  * @cssproperty --al-chip-border - Border shorthand. Defaults to `none`.
  * @cssproperty --al-chip-border-radius - Corner radius. Defaults to `4px`.
  * @cssproperty --al-chip-padding - Padding shorthand. Defaults to `space-xxs space-sm`.
@@ -37,13 +37,14 @@ export class ALChip extends ALElement {
   }
 
   /**
-   * Variant
-   * - **default** A chip with a strong contrast background
-   * - **secondary** A chip with a outline
-   * - **info** A chip with a info background
-   * - **success** A chip with a success background
-   * - **warning** A chip with a warning background
-   * - **danger** A chip with a danger background
+   * Variant — an EMPHASIS axis, matching `al-button`. Status is not on this
+   * axis: `al-badge` and `al-alert` carry info/success/warning/danger.
+   * - **default** the resting outlined pill (the `tertiary` treatment)
+   * - **primary** a chip filled with the primary role
+   * - **secondary** a chip filled with the secondary role
+   * - **tertiary** an outlined chip on a transparent ground
+   * - **neutral** a low-emphasis filled chip
+   * - **bare** no fill and no border
    */
   @property()
   accessor variant: 'neutral' | 'bare' | 'primary' | 'secondary' | 'tertiary';

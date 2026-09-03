@@ -18,7 +18,7 @@
     align-items: center;
     justify-content: flex-start;
     gap: var(--al-theme-space-xxs);
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
   }
 
   /**
@@ -34,7 +34,7 @@
     border: none;
     background-color: var(--al-theme-color-background-transparent);
     border-radius: var(--al-theme-border-radius-md);
-    color: var(--al-theme-color-content-default-weak);
+    color: var(--al-theme-color-content-neutral-weak);
     text-decoration: none;
     transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
     cursor: pointer;
@@ -43,7 +43,7 @@
      * Label - Current state
      */
     .al-is-current & {
-      color: var(--al-theme-color-content-default);
+      color: var(--al-theme-color-content-neutral-default);
       pointer-events: none;
     }
 
@@ -51,8 +51,8 @@
      * Label - Hover state
      */
     &:hover:not(:active) {
-      color: var(--al-theme-color-content-default);
-      background: var(--al-theme-color-background-default);
+      color: var(--al-theme-color-content-neutral-default);
+      background: var(--al-theme-color-background-neutral-default);
     }
   }
 }

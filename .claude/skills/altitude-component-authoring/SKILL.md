@@ -89,8 +89,10 @@ permanently).
 pnpm --filter @southleft/al-web-components plop
 ```
 
-Answers: dash-case name, target package, Storybook tier (Atoms = standalone
-primitive, Molecules = composes 2+ atoms, Organisms = page-level region).
+Answers: dash-case name, target package, story tier (Atoms = standalone
+primitive, Molecules = composes 2+ atoms, Organisms = page-level region — the
+tier still drives the docs sidebar taxonomy via `apps/docs/src/lib/registry.mjs`,
+which reads the story title; Storybook itself was retired 2026-08-25).
 Emits `<name>.ts` / `.scss` / `.stories.ts` and prints the rest of this
 checklist to the console — that printout is a summary, not a substitute for
 reading AGENTS.md once.
@@ -439,9 +441,10 @@ Run locally before pushing, or let CI tell you (slower feedback loop):
 
 CI additionally enforces guardrails G2 (migration manifest — non-migration
 changes to a `legacy` component fail), G6 (hand-edits to `custom-elements.json`
-outside the generator pipeline fail), G7 (decorator semantics), G8 (baseline
-updates on build/dep bumps). Full set: `NEXT-GEN-UPGRADE-PLAN.md` §1,
-summarized in CONTRIBUTING.md "Guardrails".
+outside the generator pipeline fail), G5 (the whole `v2-checks` workflow), G8
+(baseline updates on build/dep bumps). **G7 (decorator semantics) is a review
+obligation with no CI job** — nothing asserts it. Full set: `AGENTS.md`
+§ "The standing rules (G1–G8)", summarized in CONTRIBUTING.md "Guardrails".
 
 ---
 

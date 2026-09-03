@@ -11,11 +11,16 @@
 
 `<al-theme>` now carries six axes: `brand`, `mode`, `density`, `contrast`,
 `shape`, `motion`. Each is independent — setting one never implies or
-constrains another — and every combination is legal. A **preset** (the
-Storybook toolbar dropdown, `.storybook/presets.ts`) is nothing more than a
-named tuple of these six values. There is no seventh "preset" concept
-anywhere in the token layer, the emitter, the DTCG source, or the component
-API; the tuple lives in `presets.ts` and nowhere else.
+constrains another — and every combination is legal. A **preset**
+(`libs/al-web-components/theme-presets.ts`) is nothing more than a named tuple
+of these six values. There is no seventh "preset" concept anywhere in the token
+layer, the emitter, the DTCG source, or the component API; the tuple lives in
+`theme-presets.ts` and nowhere else.
+
+(Presets were surfaced as a Storybook toolbar dropdown until **2026-08-25**,
+when Storybook was retired. The module moved from `.storybook/presets.ts` to
+`libs/al-web-components/theme-presets.ts` and survived because the story fixture
+and `apps/home`'s stats generator read it; the toolbar itself has no successor.)
 
 The corollary, and the rule this file exists to state plainly:
 
@@ -24,7 +29,7 @@ The corollary, and the rule this file exists to state plainly:
 > attribute.**
 
 A brand is not "the brand with 2px corners"; it is the brand PLUS whichever
-density/shape/motion values its Storybook preset carries, because an
+density/shape/motion values its preset carries, because an
 archetype (`.altitude/BRANDS.md` §7) is expressed by the COMBINATION of a
 type ramp, a radius scale, AND a spacing choice together. Naming only the
 radius would describe a different, thinner idea. See §3 for three worked
@@ -146,23 +151,31 @@ never through inheritance-of-a-formula — so it is either genuinely absent
 (fallback wins) or freshly, directly asserted (role token wins). No third
 state, no brand-blindness.
 
-## 3. Recipe presets (Storybook toolbar)
+## 3. Recipe presets — RETIRED 2026-08-25
 
-Three named presets in `.storybook/presets.ts` demonstrate the six axes
-composing, chosen to either amplify or intentionally play against each
-brand's own archetype (`BRANDS.md` §7):
+This section used to document three named "recipe" presets
+(`altitude-dark-playful`, `altitude-dark-brutalist`, `southleft-dark-calm`) that
+demonstrated the six axes composing. **They no longer exist**, and nothing
+replaced them.
 
-| id | brand + mode | + | demonstrates |
-|---|---|---|---|
-| `altitude-dark-playful` | altitude · dark | `shape: pill`, `motion: expressive` | the neutral reference brand, reshaped entirely by the two new axes — no brand help |
-| `altitude-dark-brutalist` | altitude · dark | `density: compact`, `shape: sharp` | the compact+sharp recipe re-homed from the cut northright brand (spec 2026-08-20-brand-pruning-and-storybook-de-bloat), so `shape: sharp` still has a preset |
-| `southleft-dark-calm` | southleft · dark | `contrast: more`, `motion: reduced` | the accessibility axis composing with a brand that is already sharp + high-contrast at the brand level |
+They were entries in `.storybook/presets.ts`, whose only consumer was the
+Storybook toolbar dropdown. When Storybook was retired on 2026-08-25 the module
+moved to `libs/al-web-components/theme-presets.ts` and was reduced to the brand ×
+mode pairs its two surviving readers actually need — the story fixture's render
+axes and `apps/home`'s "recipes shipped" count. What ships today is four pairs
+with no extra axes:
 
-None of these needed a new brand file, a new component variant, or a new
-CSS bundle — each is a one-line entry in `PRESETS` (`with-preset.ts` /
-`with-preset.tsx` already mirror every axis onto `<al-theme>`'s attributes;
-`Theme.tsx`'s `AXES` list is what makes the React wrapper mirror `shape` too,
-per-property, not per-preset).
+| array | ids |
+|---|---|
+| `PRESETS` | `altitude-light`, `altitude-dark` (`DEFAULT_PRESET_ID` is **dark**, not `PRESETS[0]`) |
+| `SOUTHLEFT_PRESETS` | `southleft-light`, `southleft-dark` |
+| `ALL_PRESETS` | all four |
+
+The claim §1 makes is unaffected: a preset is still nothing but a named tuple of
+axis values, and composing `shape` / `motion` / `density` / `contrast` still costs
+no brand file, component variant, or CSS bundle — you write the attributes on
+`<al-theme>` directly. There is simply no curated list of example combinations
+any more.
 
 ## 4. AI theme engine (`theme-engine/`)
 
@@ -177,8 +190,11 @@ palette as literal (already-resolved) inline values directly onto every live
 `<al-theme>` element, none of the inheritance/self-reference trap in §2.3
 applies here: an inline literal value inherits correctly as-is, and an inline
 declaration on `<al-theme>` itself always outranks its own `:host` rules —
-consistent with the documented "AI theme stacks on top of the preset"
-behavior (`.storybook/with-preset.ts` and `.storybook/manager.js`).
+consistent with the documented "AI theme stacks on top of the preset" behavior.
+(That behavior was demonstrated by `.storybook/with-preset.ts` and
+`.storybook/manager.js`; both went with Storybook on 2026-08-25. The cascade
+reasoning above is a property of the CSS, not of those files, so it still holds
+— there is just no longer a decorator you can read it off.)
 
 (The engine moved out of `.storybook/ai-theme/` to `libs/al-web-components/
 theme-engine/` on 2026-08-23 so it is actually built, declared and exported;
@@ -193,8 +209,16 @@ easing curve today.
 
 ## 5. Tests
 
-`scripts/check-preset-parity.mjs` — `AXES` now includes `shape` and
-`motion`; the per-preset computed-style comparison adds `radiusRoleAction`
+> **The preset-parity checker was deleted with Storybook on 2026-08-25** (it
+> drove two running Storybooks through every preset and compared their toolbars,
+> host attributes and computed brand tokens). Nothing replaced it, so the
+> shape/motion assertions described below are **no longer executed anywhere**.
+> Kept as the record of what was proved and how. `pnpm test:brands`,
+> `pnpm test:scoped-theming` and `pnpm test:contrast-axis` are the axis-related
+> checks that still run.
+
+The retired checker — `AXES` included `shape` and
+`motion`; the per-preset computed-style comparison added `radiusRoleAction`
 (host) and `buttonRadius` (the real, rendered `al-button` border-radius,
 proof the fallback chain reaches an actual component, not just the host's
 own custom property) plus `durationRoleSlow`. `scripts/test-tokens-contract.js`

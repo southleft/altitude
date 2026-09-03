@@ -32,6 +32,7 @@
  *   - animation.duration.* / animation.timing.*  (no Figma variable type exists)
  *   - z-index, breakpoints, icons                (FIGMA-SYNC.md rule 3, code-only)
  */
+import { EOL } from 'node:os';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -146,16 +147,38 @@ function toFigmaValue(raw, figmaType, path, warnings) {
 }
 
 /** Build one single-mode collection from a list of token files. */
+/**
+ * A source file this builder enumerates but cannot find is a HARD FAILURE, not
+ * a warning.
+ *
+ * It used to `report.warnings.push(...)` and `continue`, which is how this
+ * script spent the window after 307106f0 (base/space/icon/layout primitives
+ * folded into the theme layer) enumerating FOUR deleted files — tier-1/base,
+ * tier-1/icons, tier-1/layout, tier-1/spacing — and pushing a payload that was
+ * quietly missing everything they used to carry. The run exited 0 the whole
+ * time. An enumerated path that does not exist means the list is wrong; the
+ * only safe outcome is to stop and name it.
+ */
 function buildFlatCollection(name, files, hideFromPublishing, report) {
   const tokens = {};
+  const missing = [];
   for (const file of files) {
     const full = join(TOKENS, file);
     if (!existsSync(full)) {
-      report.warnings.push(`missing token file: ${file}`);
+      missing.push(`${file}  (looked in ${full})`);
       continue;
     }
     Object.assign(tokens, flatten(readJson(full)));
   }
+  if (missing.length) {
+    const bullets = missing.map((m) => `  - ${m}`).join(EOL);
+    throw new Error(
+      `[build-figma-payload] collection "${name}" enumerates ${missing.length} token ` +
+        `source file(s) that do not exist. Fix the source list in main(); do NOT ` +
+        `push a payload built from a partial tree.${EOL}${bullets}`
+    );
+  }
+  void report;
   return { name, modes: ['Default'], hideFromPublishing, variables: { Default: tokens } };
 }
 
@@ -248,9 +271,18 @@ function main() {
     },
   };
 
+  /**
+   * SOURCE LISTS — kept in step with `styles/tokens-dtcg/` by hand, and
+   * enforced by `buildFlatCollection`, which now THROWS on a path it cannot
+   * find rather than warning and continuing.
+   *
+   * 307106f0 folded the base/space/icon/layout primitives into the theme layer
+   * and deleted `tier-1/{base,icons,layout,spacing}.json`. This list still
+   * named all four for a week; the script skipped them silently and exited 0.
+   */
   const tier1 = [
-    'animations', 'base', 'borders', 'breakpoints', 'colors', 'icons',
-    'layout', 'opacity', 'shadows', 'spacing', 'typography', 'z-index',
+    'animations', 'borders', 'breakpoints', 'colors',
+    'opacity', 'shadows', 'typography', 'z-index',
   ].map((f) => `tier-1/${f}.json`);
 
   const tier2 = [

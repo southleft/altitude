@@ -14,14 +14,17 @@ import {
   ACCENT_L,
   ACCENT_PEAK_C,
   MODE_SEMANTICS,
-  NEUTRAL_DARK_L,
-  NEUTRAL_LIGHT_L,
+  NEUTRAL_C_SHAPE,
+  NEUTRAL_L,
   ROLE_STOPS,
   SECONDARY_C,
   SECONDARY_L,
   SECONDARY_PEAK_C,
   STOPS,
   TARGETS,
+  TERTIARY_C,
+  TERTIARY_L,
+  TERTIARY_PEAK_C,
   stopIndex,
 } from './ramps';
 import {
@@ -270,10 +273,15 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   const layout: ResolvedLayout = { heroComposition, sectionOrder, gridDensity, contentWidth, sectionEmphasis };
 
   /* ---- colour ramps ---- */
-  // Neutrals carry the tint; the light ramp gets a touch less so paper stays
-  // paper even at `vivid`.
-  const neutralLightC = NEUTRAL_LIGHT_L.map((_, i) => tint * (0.5 + i / 16));
-  const neutralDarkC = NEUTRAL_DARK_L.map((_, i) => tint * (1.2 - i / 20));
+  // ONE neutral ramp now (100 lightest -> 900 darkest) serving both modes; the
+  // old split neutral-light / neutral-dark pair was retired by the token rename
+  // and no tier-2 token reads those names any more. The measured chroma SHAPE
+  // (mid-ramp peak) is scaled by the direction's tint, so `neutral` stays
+  // near-achromatic and `vivid` carries the theme hue through the greys.
+  const neutralC = NEUTRAL_C_SHAPE.map((shape) => tint * shape);
+  // A third accent point for the tertiary ramp, which tier-2 reads 32 times.
+  // Offset from the secondary's +145 so the three sit on distinct hues.
+  const tertiaryHue = (accentHue + 215) % 360;
 
   // 500-stop chroma for the three status hues — named so the WCAG enforcement
   // below can re-solve at the exact C/H `ramp()` painted them with, instead
@@ -282,15 +290,22 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   const successC500 = Math.max(chroma, 0.11);
   const warningC500 = Math.max(chroma, 0.13);
 
+  const accentC = scaleChroma(ACCENT_C, ACCENT_PEAK_C, chroma);
+
   const palette: Record<string, string> = {
-    ...ramp('--al-color-neutral-light', NEUTRAL_LIGHT_L, neutralLightC, neutralHue),
-    ...ramp('--al-color-neutral-dark', NEUTRAL_DARK_L, neutralDarkC, neutralHue),
-    ...ramp('--al-color-primary', ACCENT_L, scaleChroma(ACCENT_C, ACCENT_PEAK_C, chroma), accentHue),
+    ...ramp('--al-color-neutral', NEUTRAL_L, neutralC, neutralHue),
+    ...ramp('--al-color-primary', ACCENT_L, accentC, accentHue),
     ...ramp(
       '--al-color-secondary',
       SECONDARY_L,
       scaleChroma(SECONDARY_C, SECONDARY_PEAK_C, Math.min(chroma * 0.55, 0.12)),
       secondaryHue
+    ),
+    ...ramp(
+      '--al-color-tertiary',
+      TERTIARY_L,
+      scaleChroma(TERTIARY_C, TERTIARY_PEAK_C, Math.min(chroma * 0.7, 0.14)),
+      tertiaryHue
     ),
     // Status hues stay semantically legible (red/green/orange) but take the
     // theme's saturation so they sit in the same world as the accent. The
@@ -309,8 +324,7 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   /* ---- enforce WCAG on the pairings this mode actually renders ---- */
   const receipts: Receipt[] = [];
   const roles = ROLE_STOPS[mode];
-  const rampKey = (r: string) =>
-    r === 'neutralLight' ? '--al-color-neutral-light' : '--al-color-neutral-dark';
+  const rampKey = (r: string) => `--al-color-${r}`;
 
   const bgVar = `${rampKey(roles.bg.ramp)}-${roles.bg.stop}`;
   const bg = palette[bgVar];
@@ -380,24 +394,11 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   const contentVar = `${rampKey(roles.content.ramp)}-${roles.content.stop}`;
   const contentWeakVar = `${rampKey(roles.contentWeak.ramp)}-${roles.contentWeak.stop}`;
   const borderVar = `${rampKey(roles.border.ramp)}-${roles.border.stop}`;
-  const contentIdx = stopIndex(roles.content.stop);
-  const contentWeakIdx = stopIndex(roles.contentWeak.stop);
-  const borderIdx = stopIndex(roles.border.stop);
-  const contentC =
-    roles.content.ramp === 'neutralLight' ? neutralLightC[contentIdx] : neutralDarkC[contentIdx];
-  const contentWeakC =
-    roles.contentWeak.ramp === 'neutralLight'
-      ? neutralLightC[contentWeakIdx]
-      : neutralDarkC[contentWeakIdx];
-  // `ROLE_STOPS.border` is 'neutralDark' in BOTH modes (see ramps.ts) — unlike
-  // content/contentWeak, whose ramp genuinely differs by mode — so TS narrows
-  // `roles.border.ramp` to the single literal 'neutralDark' and flags a
-  // `=== 'neutralLight'` comparison as unreachable. Widen to `string` to keep
-  // this generic (matching `rampKey`'s own signature just above) rather than
-  // special-casing border to skip a comparison that is correct today only
-  // because of a coincidence in the data, not a structural guarantee.
-  const borderC =
-    (roles.border.ramp as string) === 'neutralLight' ? neutralLightC[borderIdx] : neutralDarkC[borderIdx];
+  // bg / content / border all live on the ONE neutral ramp now, so the chroma
+  // the solver must re-solve at is always `neutralC` at that stop's index.
+  const contentC = neutralC[stopIndex(roles.content.stop)];
+  const contentWeakC = neutralC[stopIndex(roles.contentWeak.stop)];
+  const borderC = neutralC[stopIndex(roles.border.stop)];
 
   enforce(contentVar, TARGETS.content, 'content/default', contentC, neutralHue);
   enforce(contentWeakVar, TARGETS.contentWeak, 'content/weak', contentWeakC, neutralHue);
@@ -405,41 +406,49 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   // here for the first time; ROLE_STOPS.border existed and was measured
   // against nothing (T of 2026-08-22-token-debt-and-machine-readable-metadata).
   enforce(borderVar, TARGETS.border, 'border/default', borderC, neutralHue);
-  // content/{danger,warning,success}-default (tier-2) read these same
-  // red/orange/green-500 peaks as TEXT — see TARGETS.statusText in ramps.ts.
-  enforce('--al-color-danger-500', TARGETS.statusText, 'content/danger', dangerC500, 25);
-  enforce('--al-color-warning-500', TARGETS.statusText, 'content/warning', warningC500, 62);
-  enforce('--al-color-success-500', TARGETS.statusText, 'content/success', successC500, 148);
-  // primary/500 (page bg, 4.5 — text-level, stricter) and focus-ring/bg-weak
-  // (a card/input surface, 3 — non-text) both live on brand-blue-500, so they
-  // go through enforceAll rather than two independent enforce() calls.
+  // content/{danger,warning,success}-default (tier-2) read a status ramp stop as
+  // TEXT — see TARGETS.statusText in ramps.ts. WHICH stop is mode-dependent
+  // (light 600 / dark 400); before the token rename this was hard-coded to 500,
+  // so the solver was enforcing a target on a stop nothing renders.
+  const statusIdx = stopIndex(roles.status);
+  const statusC = (peak500: number) => scaleChroma(ACCENT_C, ACCENT_PEAK_C, peak500)[statusIdx];
+  enforce(`--al-color-danger-${roles.status}`, TARGETS.statusText, 'content/danger', statusC(dangerC500), 25);
+  enforce(`--al-color-warning-${roles.status}`, TARGETS.statusText, 'content/warning', statusC(warningC500), 62);
+  enforce(`--al-color-success-${roles.status}`, TARGETS.statusText, 'content/success', statusC(successC500), 148);
+  // `border.primary-default` -> `theme.color.focus-ring` reads ONE primary stop
+  // (light 500 / dark 400). Its page-background pairing (4.5 — text-level,
+  // stricter) and its card/input-surface pairing (3 — non-text) live on that
+  // same stop, so they go through enforceAll rather than two independent
+  // enforce() calls, which would let the looser fix undo the stricter one.
+  const accentVar = `${rampKey(roles.accent.ramp)}-${roles.accent.stop}`;
+  const accentIdx = stopIndex(roles.accent.stop);
   enforceAll(
-    '--al-color-primary-500',
+    accentVar,
     [
-      { against: bg, target: TARGETS.accent, label: 'primary/500' },
+      { against: bg, target: TARGETS.accent, label: 'primary/accent' },
       { against: bgWeak, target: TARGETS.focusRing, label: 'focus-ring/bg-weak' },
     ],
-    chroma,
+    accentC[accentIdx],
     accentHue
   );
 
-  // The ink that rides on top of a filled accent surface.
-  const accent = palette['--al-color-primary-500'];
-  const inkDark = palette['--al-color-neutral-dark-900'];
-  const inkLight = palette['--al-color-neutral-light-100'];
+  // The ink that rides on top of a filled accent surface. Both ends of the ONE
+  // neutral ramp now (the old neutral-dark-900 / neutral-light-100 pair is gone).
+  const accent = palette[accentVar];
+  const inkDark = palette['--al-color-neutral-900'];
+  const inkLight = palette['--al-color-neutral-100'];
   let onAccent = bestInk(accent, inkDark, inkLight);
   if (contrast(onAccent, accent) < TARGETS.onAccent) {
     // Push the accent itself until its best ink clears AA.
-    const idx = stopIndex(500);
-    let L = ACCENT_L[idx];
+    let L = ACCENT_L[accentIdx];
     const step = onAccent === inkDark ? 0.015 : -0.015;
-    for (let i = 0; i < 24 && contrast(onAccent, palette['--al-color-primary-500']) < TARGETS.onAccent; i++) {
+    for (let i = 0; i < 24 && contrast(onAccent, palette[accentVar]) < TARGETS.onAccent; i++) {
       L = Math.min(0.98, Math.max(0.08, L + step));
-      palette['--al-color-primary-500'] = toHex(L, chroma, accentHue);
-      onAccent = bestInk(palette['--al-color-primary-500'], inkDark, inkLight);
+      palette[accentVar] = toHex(L, accentC[accentIdx], accentHue);
+      onAccent = bestInk(palette[accentVar], inkDark, inkLight);
     }
   }
-  record('on-accent', onAccent, palette['--al-color-primary-500'], TARGETS.onAccent);
+  record('on-accent', onAccent, palette[accentVar], TARGETS.onAccent);
 
   /* ---- shape ---- */
   const [r2, r4, r6, r8, rRound] = RADIUS_SCALES[radius];
@@ -455,13 +464,21 @@ export function buildTheme({ prompt, variant = 0, direction }: BuildOptions): Th
   palette['--al-border-width-4'] = w4;
 
   /* ---- elevation (shadows sit in the theme's hue, not generic black) ---- */
+  // NOTE: `--al-color-shadow-{dark,light}` never existed after the token rename
+  // (nothing under tier-1 emits them). The shadow colours live on the THEME
+  // layer as `--al-theme-color-shadow-{dark,light,neutral}` — see tier-2
+  // theme/{light,dark}/colors.json.
   const shadowBase = toHex(mode === 'light' ? 0.45 : 0.02, tint * 2, neutralHue);
   const shadowDark = rgba(shadowBase, preset.shadowAlpha);
   const shadowLight = rgba(shadowBase, preset.shadowAlpha * 0.35);
-  palette['--al-color-shadow-dark'] = shadowDark;
-  palette['--al-color-shadow-light'] = shadowLight;
+  palette['--al-theme-color-shadow-dark'] = shadowDark;
+  palette['--al-theme-color-shadow-light'] = shadowLight;
 
   const shadowColour = mode === 'light' ? shadowLight : shadowDark;
+  // Tier-2 light routes `shadow.default` through `shadow.neutral`, dark through
+  // `shadow.dark`. Pin `neutral` to the colour this mode actually paints so the
+  // tier-2 chain lands on the derived value whichever alias a component follows.
+  palette['--al-theme-color-shadow-neutral'] = shadowColour;
   const shadows = ELEVATION_SCALES[elevation];
   ['2', '4', '8', '16', '32', '48'].forEach((step, i) => {
     palette[`--al-box-shadow-${step}`] = shadows[i].split('SHADOW').join(shadowColour);

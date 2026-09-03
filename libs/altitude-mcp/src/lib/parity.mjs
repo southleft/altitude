@@ -37,7 +37,7 @@
 // the scripts/figma-parity CLIs. Keep it dependency-free (node: builtins only).
 
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync, renameSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, mkdirSync, renameSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 import { WC_ROOT, REPO_ROOT } from './paths.mjs';
@@ -394,12 +394,42 @@ function readCanvasContract(p, tag) {
  *
  * @returns {null|{disagreements: Array, compared: object, skipped: Array}}
  */
+/**
+ * `<figma-sync dir>/canvas-projection.json` — the TRACKED projection of those
+ * dumps (scripts/figma-parity/build-canvas-projection.mjs). Read ONCE per
+ * project and cached by path+mtime: computeParity() walks ~105 components and
+ * this file is ~100KB, so a per-component read would be 105 of them; keying on
+ * mtime means a regeneration under a long-running MCP server invalidates the
+ * cache instead of serving yesterday's facts forever.
+ */
+const projectionCache = new Map();
+function readCanvasProjection(p) {
+  const path = join(p.resolved.figmaSyncDir, 'canvas-projection.json');
+  if (!existsSync(path)) return null;
+  const key = `${path}::${statSync(path).mtimeMs}`;
+  if (projectionCache.has(key)) return projectionCache.get(key);
+  let doc = null;
+  try {
+    doc = JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    doc = null;
+  }
+  projectionCache.set(key, doc);
+  return doc;
+}
+
 function canvasContractDiffFor(p, tag) {
-  const canvasContract = readCanvasContract(p, tag);
-  if (!canvasContract) return null; // the fast path this whole layer must not slow down
   const codeContract = readCodeContract(p, tag);
   if (!codeContract) return null; // contract not emitted yet — nothing to diff against
-  return diffContracts({ codeContract, canvasContract });
+  const canvasContract = readCanvasContract(p, tag);
+  // FALLBACK, not a substitute: the canvas dumps are gitignored, so in CI and on
+  // the deployed docs site there are none and this layer compared zero pairs —
+  // which rendered identically to "zero disagreements". The projection carries
+  // the same facts (verified: 36 pairs, 259 disagreements, byte-identical), and
+  // every consumer is told which source it got.
+  const canvasProjection = canvasContract ? null : readCanvasProjection(p);
+  if (!canvasContract && !canvasProjection?.components?.[tag]) return null;
+  return diffContracts({ codeContract, canvasContract, canvasProjection });
 }
 
 // ── status computation ──────────────────────────────────────────────────
@@ -427,16 +457,59 @@ export function figmaNodeUrl(nodeId, project) {
  *            figmaObserved:boolean, codeDrift:boolean, figmaDrift:boolean,
  *            contractMismatches:number}}
  */
-export function assessEntry(entry, current) {
-  const observed = entry?.figmaCurrentDigest ?? null;
-  const figmaObserved = observed !== null;
+export function assessEntry(entry, current, context = {}) {
   const last = entry?.lastSync ?? {};
 
+  /**
+   * WHICH FILE WAS THIS OBSERVED AGAINST? Digests and node ids are FILE-SCOPED
+   * (see .altitude/DS-PROJECTS.md, "Why instanceMap may be null"), so an
+   * observation made against one Figma file says nothing about another. On
+   * 2026-09-02 the southleft manifest was repointed to a re-duplicated file by
+   * editing ONE line — `figmaFileId` — while all 24 `lastSync` stamps, the
+   * `figmaLastRefreshed` date and 15 pinned node ids stayed behind from the
+   * retired file. The engine happily reported 16 components `in-sync` with a
+   * file it had never opened. Nothing was lying; nothing was checking.
+   *
+   * `observedFileKey` is now recorded per entry (and `figmaObservedFileId` at
+   * manifest level as the fallback for entries stamped before this existed).
+   * When it disagrees with the project's current file key the observation is
+   * STALE: the digests are discarded, `figmaObserved` goes false, and the entry
+   * degrades to the same reading as one that was never synced at all.
+   *
+   * `observationProvenance` reports which of the three cases applies, because a
+   * consumer must be able to tell "verified against this file" from "we cannot
+   * tell" — that distinction is the whole point of the honesty block below.
+   */
+  const currentFileKey = context.fileKey ?? null;
+  const recordedFileKey = last.observedFileKey ?? context.manifestObservedFileKey ?? null;
+  const staleObservation = Boolean(currentFileKey && recordedFileKey && recordedFileKey !== currentFileKey);
+  let observationProvenance;
+  if (staleObservation) observationProvenance = 'stale-file';
+  else if (recordedFileKey && currentFileKey) observationProvenance = 'verified';
+  else observationProvenance = 'unrecorded';
+
+  const observed = staleObservation ? null : (entry?.figmaCurrentDigest ?? null);
+  const figmaObserved = observed !== null;
+
   if (entry?.excluded) {
-    return { status: STATUS.EXCLUDED, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+    return { status: STATUS.EXCLUDED, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0, observationProvenance, staleObservation };
   }
   if (!entry?.figma?.name) {
-    return { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+    return { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved, codeDrift: false, figmaDrift: false, contractMismatches: 0, observationProvenance, staleObservation };
+  }
+  if (staleObservation) {
+    // The set may well exist in the new file, but nothing here has seen it.
+    // "Code is ahead" is the honest reading, exactly as for a never-stamped entry.
+    return {
+      status: current.codeHash ? STATUS.CODE_DRIFT : STATUS.MISSING_IN_FIGMA,
+      driftBasis: 'never-synced',
+      figmaObserved: false,
+      codeDrift: Boolean(current.codeHash),
+      figmaDrift: false,
+      contractMismatches: 0,
+      observationProvenance,
+      staleObservation,
+    };
   }
 
   // Prefer the CONTRACT digest; fall back to the byte hash only for manifest
@@ -468,7 +541,7 @@ export function assessEntry(entry, current) {
   else if (codeDrift) status = STATUS.CODE_DRIFT;
   else if (figmaDrift) status = STATUS.FIGMA_DRIFT;
 
-  return { status, driftBasis, figmaObserved, codeDrift, figmaDrift, contractMismatches };
+  return { status, driftBasis, figmaObserved, codeDrift, figmaDrift, contractMismatches, observationProvenance, staleObservation };
 }
 
 /**
@@ -570,8 +643,12 @@ export function computeParity(project) {
     const configExclusion = Object.prototype.hasOwnProperty.call(excludedByConfig, c.tag) ? excludedByConfig[c.tag] : null;
 
     const assessed = manifest
-      ? assessEntry(entry, { codeHash, contractDigest: digestOf(contract), contractDiff })
-      : { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved: false, codeDrift: false, figmaDrift: false, contractMismatches: 0 };
+      ? assessEntry(
+          entry,
+          { codeHash, contractDigest: digestOf(contract), contractDiff },
+          { fileKey: p.figma.fileKey, manifestObservedFileKey: manifest.figmaObservedFileId ?? null },
+        )
+      : { status: STATUS.MISSING_IN_FIGMA, driftBasis: 'never-synced', figmaObserved: false, codeDrift: false, figmaDrift: false, contractMismatches: 0, observationProvenance: 'unrecorded', staleObservation: false };
     let status = assessed.status;
     if (!entry?.figma?.name && configExclusion) status = STATUS.EXCLUDED;
 
@@ -628,6 +705,11 @@ export function computeParity(project) {
       /** Which comparison decided `status`, and whether Figma was ever read. */
       driftBasis: assessed.driftBasis,
       figmaObserved: assessed.figmaObserved,
+      /** 'verified' | 'unrecorded' | 'stale-file' — see assessEntry(). A
+       * 'stale-file' entry was last observed against a DIFFERENT Figma file,
+       * so its digests and pinned node id are ghosts and were discarded. */
+      observationProvenance: assessed.observationProvenance,
+      ...(assessed.staleObservation ? { staleObservation: true } : {}),
       lastSync: entry?.lastSync ?? null,
       figmaCurrentDigest: entry?.figmaCurrentDigest ?? null,
       note: entry?.note ?? configExclusion ?? null,
@@ -638,7 +720,17 @@ export function computeParity(project) {
       ...(canvasDiff
         ? {
             disagreements: canvasDiff.disagreements,
-            canvasContractDiff: { compared: canvasDiff.compared, skipped: canvasDiff.skipped },
+            canvasContractDiff: {
+              compared: canvasDiff.compared,
+              skipped: canvasDiff.skipped,
+              /** 'live-dump' | 'projection'. A projected comparison is a
+               * point-in-time read of a file nobody opened during this run — a
+               * consumer that renders the two identically is lying about how
+               * fresh its facts are. */
+              source: canvasDiff.source,
+              ...(canvasDiff.sourceStamp ? { sourceStamp: canvasDiff.sourceStamp } : {}),
+            },
+            disagreementSource: canvasDiff.source,
           }
         : {}),
       /** OPTIONAL — present only when `mark-synced.mjs` stamped a contract
@@ -707,7 +799,63 @@ export function computeParity(project) {
       return acc;
     }, {}),
     contractsCompared: entries.filter((e) => e.contractDiff).length,
+    /**
+     * FILE PROVENANCE. `observedFileId` is the file the digests in this manifest
+     * were actually read from; `fileId` is the file the project points at today.
+     * When they differ, every observation is stale — see assessEntry(). Counting
+     * the three provenance states here is what makes a repoint visible in the
+     * summary instead of only in individual entries.
+     */
+    fileId: p.figma.fileKey,
+    observedFileId: manifest?.figmaObservedFileId ?? null,
+    fileRepointed: Boolean(manifest?.figmaObservedFileId && manifest.figmaObservedFileId !== p.figma.fileKey),
+    provenance: entries.reduce((acc, e) => {
+      acc[e.observationProvenance] = (acc[e.observationProvenance] ?? 0) + 1;
+      return acc;
+    }, {}),
     refreshCommand: `node scripts/figma-parity/refresh-figma-digests.mjs${p.isDefault ? '' : ` --project ${p.id}`}`,
+  };
+
+  /**
+   * PROPERTY-LEVEL DISAGREEMENTS — the number the coarse status hides.
+   *
+   * `contract-diff.mjs` has always computed these per entry, but only the seven
+   * status buckets reached `summary`, so a component could read green while
+   * carrying twenty property-level disagreements against the live canvas. The
+   * tracked answer key (.altitude/ai-readiness/drift-cases.altitude.json) counted
+   * 448 across 35 pairs with only 2 clean, and nothing surfaced it.
+   *
+   * `pairsCompared` is the honest denominator: canvas dumps are gitignored, so in
+   * CI and on the deployed docs site this block reports zero pairs compared
+   * rather than zero disagreements. Those are different claims and must not
+   * render identically.
+   */
+  const withDisagreements = entries.filter((e) => Array.isArray(e.disagreements));
+  const disagreementSummary = {
+    pairsCompared: withDisagreements.length,
+    pairsClean: withDisagreements.filter((e) => e.disagreements.length === 0).length,
+    /** Where each compared pair's facts came from. A run that compared 36
+     * pairs from the tracked projection is a different claim from one that
+     * read 36 live canvas dumps, and must not report as the same thing. */
+    bySource: withDisagreements.reduce((acc, e) => {
+      const src = e.disagreementSource ?? 'live-dump';
+      acc[src] = (acc[src] ?? 0) + 1;
+      return acc;
+    }, {}),
+    total: withDisagreements.reduce((n, e) => n + e.disagreements.length, 0),
+    byKind: withDisagreements.reduce((acc, e) => {
+      for (const d of e.disagreements) {
+        const kind = d.kind ?? 'unknown';
+        acc[kind] = (acc[kind] ?? 0) + 1;
+      }
+      return acc;
+    }, {}),
+    /** Worst offenders first, so a reader sees where to start. */
+    worst: withDisagreements
+      .filter((e) => e.disagreements.length > 0)
+      .map((e) => ({ tag: e.tag, count: e.disagreements.length }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10),
   };
 
   return {
@@ -736,6 +884,7 @@ export function computeParity(project) {
       brandOnly: brandOnly.length,
     },
     summary,
+    disagreements: disagreementSummary,
     components: entries,
     figmaOnly,
   };
@@ -922,15 +1071,38 @@ export function publicParityReport(project) {
       unreachableStatuses: full.observation.unreachableStatuses,
       driftBasis: full.observation.driftBasis,
       contractsCompared: full.observation.contractsCompared,
+      /**
+       * Provenance COUNTS and the repoint flag — deliberately not the file keys
+       * themselves. `observedFileId` and `fileId` are Figma file keys, which
+       * this projection has always withheld and which
+       * apps/docs/scripts/check-status-panels.mjs re-checks the built HTML for.
+       * A reader needs to know that every observation is stale, not which file
+       * it was stale against.
+       */
+      provenance: full.observation.provenance,
+      fileRepointed: full.observation.fileRepointed,
     },
     scope: full.scope,
     summary: full.summary,
+    /**
+     * Property-level disagreement TOTALS. Counts and component tags only — no
+     * node ids, no file keys, no script paths. `pairsCompared` is the honest
+     * denominator: canvas dumps are gitignored, so on the deployed site this
+     * reads zero pairs compared rather than zero disagreements, and those are
+     * different claims that must not render the same way.
+     */
+    disagreements: full.disagreements,
     components: full.components.map((c) => ({
       tag: c.tag,
       status: c.status,
       origin: c.origin,
       driftBasis: c.driftBasis,
       figmaObserved: c.figmaObserved,
+      /** 'verified' | 'unrecorded' | 'stale-file'. A bare "NEVER OBSERVED"
+       * cannot distinguish "nobody has looked yet" from "what we recorded was
+       * read from a file this project no longer points at" — and those call for
+       * different actions. The file key itself stays withheld. */
+      observationProvenance: c.observationProvenance ?? 'unrecorded',
       figmaSetName: c.figma?.name ?? null,
       /** Node id — published so the docs can deep-link to THIS component's set
        * rather than dropping the reader at the file root. See figmaFileUrl. */
@@ -955,6 +1127,9 @@ export function publicParityReport(project) {
        * Figma file key, node id or script path — safe for the public site;
        * apps/docs/scripts/check-status-panels.mjs still re-checks the built
        * output for those leaks regardless. */
+      /** 'live-dump' | 'projection' | null — see canvasContractDiffFor(). A
+       * hash-free provenance label; no file key, node id or path. */
+      disagreementSource: c.disagreementSource ?? null,
       disagreements: c.disagreements
         ? c.disagreements.map((d) => ({
             dimension: d.dimension,

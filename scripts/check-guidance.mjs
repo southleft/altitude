@@ -36,11 +36,13 @@
  *      anti-drift mechanism: guidance that has stopped being true breaks a
  *      check instead of misleading a reader.
  *
- * Coverage is reported, and floored. `--min N` fails when fewer than N
- * components carry guidance, so authored coverage can ratchet up but never
- * silently regress. The default floor is the number authored today.
+ * Coverage is reported and RATCHETED, in both directions. The floor lives in
+ * `.altitude/baselines/guidance-coverage.json`. Fewer pages than the floor is a
+ * regression; MORE pages than the floor also fails, asking for `--update` --
+ * because a floor that only notices losses falls behind, and this one already
+ * had: it sat at 25 while 30 pages carried guidance.
  *
- *   node scripts/check-guidance.mjs [--dist <dir>] [--min <n>]
+ *   node scripts/check-guidance.mjs [--dist <dir>] [--min <n>] [--update]
  *
  * Run AFTER `pnpm --filter al-app-docs build`.
  */
@@ -63,14 +65,40 @@ const DIST = path.resolve(argOf('--dist') ?? path.join(REPO_ROOT, 'dist', 'docs'
  *
  * One base guidance file serves every project site that documents that
  * component, and a brand layer's file serves exactly one, so pages is the unit
- * that reflects what a reader can actually reach. 25 is where it stands after
- * the nine Southleft brand components were authored.
- *
- * Raise it when guidance is written for more components; never lower it to make
- * a red gate green.
+ * that reflects what a reader can actually reach.
  */
-const DEFAULT_MIN = 25;
-const MIN = Number(argOf('--min') ?? DEFAULT_MIN);
+const BASELINE_PATH = path.join(REPO_ROOT, '.altitude', 'baselines', 'guidance-coverage.json');
+
+/**
+ * The floor lives in a baseline FILE, not a constant, for the same reason every
+ * other ratchet in this repo does: a number buried in a script is a number
+ * nobody re-reads. This one had already drifted — it sat at 25 while 30 pages
+ * carried guidance, so five components' worth of authored prose could have been
+ * deleted without the gate noticing.
+ *
+ * Two-way, matching scripts/check-api-vocabulary.mjs: BELOW the floor is a
+ * regression, and ABOVE it fails too, naming `--update`. A ratchet that only
+ * notices losses is a ratchet that never moves, which is exactly how this one
+ * fell five behind and how `.altitude/baselines/coverage.json` has sat at its
+ * seeded value since 2026-08-23.
+ */
+function readFloor() {
+  if (fs.existsSync(BASELINE_PATH)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(BASELINE_PATH, 'utf8'));
+      if (Number.isFinite(parsed.pagesWithGuidance)) return parsed.pagesWithGuidance;
+    } catch {
+      /* fall through to the legacy constant */
+    }
+  }
+  return 25; // pre-baseline value, kept so a checkout without the file still gates
+}
+
+// argOf() returns the NEXT argv entry, so it is a value-getter and reads
+// undefined for a bare flag. Presence is the question here.
+const UPDATE = process.argv.includes('--update');
+const EXPLICIT_MIN = argOf('--min');
+const MIN = Number(EXPLICIT_MIN ?? readFloor());
 
 /** Every section the panel must render when it claims to have guidance. */
 const REQUIRED_SECTIONS = [
@@ -288,6 +316,34 @@ if (Number.isNaN(MIN)) {
     `Guidance coverage regressed: ${authored.length} components carry guidance, floor is ${MIN}. ` +
       `Restore the missing files rather than lowering the floor.`,
   );
+} else if (authored.length > MIN && !EXPLICIT_MIN) {
+  // The upward half. Without it the floor only ever falls behind: it sat at 25
+  // while 30 pages carried guidance, so five components' worth of authored
+  // prose could have been deleted and this gate would still have said OK.
+  if (UPDATE) {
+    fs.mkdirSync(path.dirname(BASELINE_PATH), { recursive: true });
+    fs.writeFileSync(
+      BASELINE_PATH,
+      `${JSON.stringify(
+        {
+          $comment:
+            'Guidance coverage floor, counted in rendered PAGES (a base file serves every project site that documents that component; a brand file serves one). Two-way ratchet: below fails as a regression, above fails asking for --update. Raise it by authoring guidance, never to make a red gate green.',
+          pagesWithGuidance: authored.length,
+          components: COMPONENTS.length,
+          updated: new Date().toISOString().slice(0, 10),
+        },
+        null,
+        2,
+      )}\n`,
+    );
+    notes.push(`Coverage floor re-pinned to ${authored.length} pages.`);
+  } else {
+    failures.push(
+      `Guidance coverage ROSE to ${authored.length} pages but the floor is still ${MIN}. ` +
+        `Someone authored guidance and left the ceiling behind, which is how this floor ` +
+        `fell five pages out of date. Re-pin it: node scripts/check-guidance.mjs --update`,
+    );
+  }
 }
 
 /*

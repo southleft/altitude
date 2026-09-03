@@ -34,7 +34,7 @@
     width: var(--al-toggle-width);
     height: var(--al-toggle-height);
     border-radius: var(--al-toggle-height);
-    background-color: var(--al-theme-color-background-default-strong);
+    background-color: var(--al-theme-color-background-neutral-strong);
     cursor: pointer;
     transition: all var(--al-theme-animation-duration) var(--al-theme-animation-timing);
 
@@ -70,7 +70,7 @@
     width: calc(var(--al-toggle-height) - var(--al-theme-space-xxs));
     height: calc(var(--al-toggle-height) - var(--al-theme-space-xxs));
     border-radius: var(--al-toggle-height);
-    background-color: var(--al-theme-color-content-default);
+    background-color: var(--al-theme-color-content-neutral-default);
     inset-block-start: var(--al-theme-space-xxxs);
     inset-inline-start: var(--al-theme-space-xxxs);
     box-shadow: var(--al-theme-box-shadow-xs);
@@ -80,7 +80,7 @@
      * If the toggle state is checked, moves the pill to the right
      */
     .al-is-checked & {
-      background: var(--al-theme-color-content-default);
+      background: var(--al-theme-color-content-neutral-default);
       inset-inline-start: calc(100% - var(--al-toggle-height) + var(--al-theme-space-xxxs));
     }
   }

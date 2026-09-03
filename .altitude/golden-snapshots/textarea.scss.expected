@@ -78,7 +78,7 @@
     .al-is-active & {
       @include al-theme-typography-body-xs;
       padding: 0 var(--al-theme-space-xxs);
-      background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
+      background-color: var(--al-input-label-background, var(--al-theme-color-background-neutral-weak));
       inset-block-start: calc(#{var(--al-theme-space-sm)} * -1);
       inset-block-end: auto;
       inset-inline-start: var(--al-theme-space-sm);
@@ -101,7 +101,7 @@
        * Prevents the textarea border from showing through the label
        */
       &::before {
-        background-color: var(--al-input-label-background, var(--al-theme-color-background-default-weak));
+        background-color: var(--al-input-label-background, var(--al-theme-color-background-neutral-weak));
         content: "";
         display: block;
         position: absolute;

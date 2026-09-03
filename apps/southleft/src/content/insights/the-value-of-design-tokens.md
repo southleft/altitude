@@ -38,8 +38,8 @@ By defining your design tokens as CSS custom properties at the top level of your
 /* Example of tokens as CSS custom properties */
 :root {
   --color-brand-blue-800: #006699; /* Tier 1 */
-  --theme-color-content-default: var(--color-brand-blue-800); /* Tier 2 */
-  --theme-color-button-content: var(--theme-color-content-default); /* Tier 3 */
+  --theme-color-content-neutral-default: var(--color-brand-blue-800); /* Tier 2 */
+  --theme-color-button-content: var(--theme-color-content-neutral-default); /* Tier 3 */
 }
 ```
 
@@ -55,7 +55,7 @@ class MyButton extends HTMLElement {
          button {
            background-color: var(--theme-color-button-content); /* Access tier 3 token */
            padding: var(--spacing-base);
-           color: var(--theme-color-content-default);          
+           color: var(--theme-color-content-neutral-default);          
          }
        </style>
        <button><slot>Default Button</slot></button>
@@ -71,7 +71,7 @@ customElements.define('my-button', MyButton);
 
 1.  **Tiered Structure:** We define tokens at different levels of abstraction:
     -   Tier 1: Base value (`--color-brand-blue-800`)
-    -   Tier 2: Semantic meaning (`--theme-color-content-default`)
+    -   Tier 2: Semantic meaning (`--theme-color-content-neutral-default`)
     -   Tier 3: Component-specific use (`--theme-color-button-content`)
 2.  **Within the Component:** The web component’s internal styles reference the appropriate tier of tokens, inheriting values while maintaining flexibility (depending on your setup, these can be applied via your integrated stylesheets).
 3.  **Change Management:** Need to update your main brand color? Modify only the top-tier token, and changes cascade down. Want to tweak buttons specifically? Adjust `--theme-color-button-content` without impacting other components.
