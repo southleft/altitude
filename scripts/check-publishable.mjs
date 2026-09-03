@@ -32,6 +32,11 @@
  *       empty" (regeneration wiped it and crashed before writing) or "missing
  *       entirely" (nobody ran `build:tokens`) were both real, silent states
  *       this gate could reach and neither would have failed it.
+ *   R9  the local version agrees with the registry — it is ahead of what is
+ *       published, does not already exist there, and does not skip a major.
+ *       For a package that has never been published it must equal the intended
+ *       first release. When the registry cannot be reached the gate prints a
+ *       named NOT VERIFIED line rather than passing quietly.
  *   R6  `npm pack --dry-run --json` succeeds and reports a non-empty tarball
  *   R7  the packed file list actually contains the R5 entry points — for a
  *       wildcard target, at least one packed file under its literal prefix
@@ -292,6 +297,131 @@ for (const lib of HELD) {
     continue;
   }
   console.log(`${lib}: ${pkg.name}@${pkg.version} — held back (private)`);
+}
+
+/**
+ * R9 — the local version and the registry agree about what the next release is.
+ *
+ * The failure this exists for actually happened: on 2026-08-31 `changeset version`
+ * moved both libraries 1.0.0 -> 2.0.0 and consumed the changesets, but NEITHER
+ * package had ever been published. Two further `major` changesets then accumulated,
+ * so the next `changeset version` would have produced 3.0.0 — making the first
+ * release anybody could install `3.0.0`, with 1.x and 2.x absent from the registry
+ * forever. Nothing in the pipeline could see it: R1-R8 read only the working tree,
+ * and `changeset status` reports the bump it intends without knowing what is live.
+ *
+ * Three outcomes, and the middle one is the whole point:
+ *   - registry has versions   -> local must be greater than the newest published one,
+ *                                must not already exist, and must not skip a major.
+ *   - registry has none (404) -> local must equal FIRST_RELEASE below. Bumping past
+ *                                it before publishing is the 3.0.0 accident.
+ *   - registry unreachable    -> NAMED skip, printed, exit unaffected. A check that
+ *                                cannot run says so; it never passes silently.
+ */
+const FIRST_RELEASE = '2.0.0';
+
+/** Numeric semver compare, release portion only. Returns <0, 0, >0. */
+function compareVersions(a, b) {
+  const parse = (v) => String(v).split('-')[0].split('.').map((n) => Number.parseInt(n, 10) || 0);
+  const [x, y] = [parse(a), parse(b)];
+  for (let i = 0; i < 3; i += 1) {
+    if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) - (y[i] || 0);
+  }
+  return 0;
+}
+
+const majorOf = (v) => Number.parseInt(String(v).split('.')[0], 10) || 0;
+
+if (process.env.ALTITUDE_SKIP_REGISTRY_CHECK === '1') {
+  console.log('\nR9: SKIPPED by ALTITUDE_SKIP_REGISTRY_CHECK=1 — registry not consulted.');
+} else {
+  for (const lib of RELEASED) {
+    const manifestPath = join(REPO_ROOT, lib, 'package.json');
+    if (!existsSync(manifestPath)) continue;
+    let pkg;
+    try {
+      pkg = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    } catch {
+      continue; // R1 already recorded this.
+    }
+
+    let published = null;
+    let lookupError = null;
+    try {
+      const raw = execFileSync('npm', ['view', pkg.name, 'versions', '--json'], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+        timeout: 20000,
+        // Same reason R6 sets it: on Windows `npm` is npm.cmd, which
+        // execFileSync cannot spawn directly (ENOENT).
+        shell: process.platform === 'win32',
+      });
+      const parsed = JSON.parse(raw);
+      published = Array.isArray(parsed) ? parsed : [parsed];
+    } catch (err) {
+      const text = `${err.stderr || ''}${err.message || ''}`;
+      if (/E404|404 Not Found|is not in this registry/i.test(text)) {
+        published = [];
+      } else {
+        lookupError = text.split('\n')[0].slice(0, 200) || 'unknown error';
+      }
+    }
+
+    if (lookupError) {
+      console.log(
+        `R9: ${pkg.name} — NOT VERIFIED, registry unreachable (${lookupError}). ` +
+          'This gate did not run; it did not pass.',
+      );
+      continue;
+    }
+
+    if (published.length === 0) {
+      if (pkg.version !== FIRST_RELEASE) {
+        fail(
+          lib,
+          'R9',
+          `"${pkg.name}" has never been published, but the local version is ` +
+            `${pkg.version} rather than the intended first release ${FIRST_RELEASE}. ` +
+            'Publishing now would make ' +
+            `${pkg.version} the earliest version consumers can install, with every ` +
+            'lower version absent from the registry forever. Either fold the pending ' +
+            'changesets into the ' +
+            `${FIRST_RELEASE} notes (v2 ships as one major — see .altitude/SEMVER.md), ` +
+            `or change FIRST_RELEASE in this gate on purpose.`,
+        );
+      } else {
+        console.log(`R9: ${pkg.name}@${pkg.version} — unpublished, matches first release`);
+      }
+      continue;
+    }
+
+    const newest = published.reduce((a, b) => (compareVersions(a, b) >= 0 ? a : b));
+    if (published.includes(pkg.version)) {
+      fail(
+        lib,
+        'R9',
+        `"${pkg.name}@${pkg.version}" is already on the registry. ` +
+          'A publish would be rejected; bump before releasing.',
+      );
+    } else if (compareVersions(pkg.version, newest) <= 0) {
+      fail(
+        lib,
+        'R9',
+        `"${pkg.name}" is at ${pkg.version} locally but ${newest} is already published. ` +
+          'The local version must be ahead of the registry.',
+      );
+    } else if (majorOf(pkg.version) > majorOf(newest) + 1) {
+      fail(
+        lib,
+        'R9',
+        `"${pkg.name}" jumps from published ${newest} to local ${pkg.version}, skipping ` +
+          `major ${majorOf(newest) + 1} entirely. Releases should not leave a major ` +
+          'unpublished; collapse the pending changesets or publish the intermediate major.',
+      );
+    } else {
+      console.log(`R9: ${pkg.name}@${pkg.version} — ahead of published ${newest}`);
+    }
+  }
 }
 
 if (failures.length > 0) {
