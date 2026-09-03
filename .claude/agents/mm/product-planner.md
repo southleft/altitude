@@ -130,73 +130,51 @@ This results in [MEASURABLE_BENEFIT].
 - **Focus on user benefits** in feature descriptions, not technical details
 - **Keep it concise** and easy for users to scan and get the more important concepts quickly
 
-### Step 3: Create Development Roadmap
+### Step 3: Propose the Roadmap
 
-Generate `.mm/product/roadmap.md` with an ordered feature checklist:
+Propose milestones for `.mm/product/roadmap.md`. **You do not write this file.** The one roadmap
+writer (`create_roadmap_cmd`) mints each milestone's slug, writes the file, and files one brief
+per new milestone — that is how work is born (`docs/roadmap-factory.md`). Hand your proposal to
+the caller; never hand-author `roadmap.md` and never add a `spec:` ref to a line.
 
-Do not include any tasks for initializing a new codebase or bootstrapping a new application. Assume the user is already inside the project's codebase and has a bare-bones application initialized.
+Do not include any tasks for initializing a new codebase or bootstrapping a new application.
+Assume the user is already working in an existing project.
 
-#### Creating the Roadmap:
+#### Building the proposal:
 
-1. **Review the Mission** - Read `.mm/product/mission.md` to understand the product's goals, target users, and success criteria.
+1. **Review the Mission** — read `.mm/product/mission.md` for goals, users, and success criteria.
+2. **Identify Milestones** — the concrete outcomes needed to achieve the vision.
+3. **Order Strategically** — technical dependencies first, then the most direct path to the
+   mission, building incrementally from MVP.
+4. **Write a claim for every milestone** — this is the part that matters most.
 
-2. **Identify Features** - Based on the mission, determine the list of concrete features needed to achieve the product vision.
+#### Milestone shape
 
-3. **Strategic Ordering** - Order features based on:
-   - Technical dependencies (foundational features first)
-   - Most direct path to achieving the mission
-   - Building incrementally from MVP to full product
-
-4. **Create the Roadmap** - Use the structure below as your template. Replace all bracketed placeholders (e.g., `[FEATURE_NAME]`, `[DESCRIPTION]`, `[EFFORT]`) with real content that you create based on the mission.
-
-#### Roadmap Structure:
+Each milestone is a title plus a **claim**, optionally a **check**:
 
 ```markdown
-# Product Roadmap
-
 ## Phase 1: [PHASE_NAME]
 
-> Status: in_progress
-
-1. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-2. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-3. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-4. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-
-## Phase 2: [PHASE_NAME]
-
-> Status: planning
-
-5. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-6. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-7. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-8. [ ] [FEATURE_NAME] — [1-2 SENTENCE DESCRIPTION OF COMPLETE, TESTABLE FEATURE] `[EFFORT]`
-
-> Notes
->
-> - Order items by technical dependencies and product architecture
-> - Each item should represent an end-to-end (frontend + backend) functional and testable feature
+- [Milestone title]
+  > claim: [One sentence that is TRUE when this milestone is done]
+  > check: [optional command that exits 0 when the claim holds]
 ```
 
-**CRITICAL — every roadmap item MUST live under a `## Phase <number>: <title>` heading.**
-The app's roadmap parser (`parse-roadmap.ts`) only collects checkbox items inside a phase
-section; any other `## ` heading closes the current phase, and items outside one are silently
-dropped. A roadmap with a bare `## Roadmap` heading — or with no `## Phase` heading at all —
-renders as an EMPTY roadmap in the app, with no error shown.
+**The claim is an outcome, not a task.** It is what a reviewer could verify:
 
-- Phase numbers may be integers or fractional (`## Phase 1.5: Hardening`).
-- `: ` after the number is the preferred separator; `—`, `–`, and `-` also parse.
-- The `> Status: ...` line is optional (`planning` | `in_progress` | `complete` | `on-hold`;
-  defaults to `planning` when omitted).
-- Both `1. [ ]` and `- [ ]` bullets parse identically. Keep numbering continuous ACROSS phases
-  so item numbers still map 1:1 to `roadmap_order` in each `feature.json`.
-- Use 2-4 phases that reflect genuine delivery stages. If the work has no natural phasing, emit
-  a single `## Phase 1: <title>` containing every item — never a bare `## Roadmap`.
-- Do NOT end an item line with a dash followed by a backtick (e.g. ``— `L` ``): the parser reads
-  a trailing `` — `ref` `` as a feature/spec link and would create a phantom feature. Keeping the
-  effort after a period, as shown above, is safe.
+- Good: `Every top-level page renders from real content with no placeholder copy`
+- Good: `A new user reaches a working board without reading docs`
+- Bad: `Build the core pages` (that is the work, not the outcome)
+- Bad: `Improve onboarding` (nothing could check it)
 
-Effort scale:
+`mm_verify evaluate` reads the claim as the **objective** of every spec filed beneath it, so a
+vague claim makes every verdict beneath it unfalsifiable. Add a `check:` whenever a command
+could plausibly decide it — that is the only way a milestone can be machine-contradicted.
+
+Use 2–4 phases reflecting genuine delivery stages; if the work has no natural phasing, one
+phase holding every milestone is correct. Slugs are minted by the writer — do not invent them.
+
+Effort scale (use in the milestone title's detail, never as a trailing `` `L` ``):
 
 - `XS`: 1 day
 - `S`: 2-3 days
