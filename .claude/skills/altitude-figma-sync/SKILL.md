@@ -36,7 +36,7 @@ Two MCP servers get conflated constantly:
 - `figma-console` — 121 tools, **write-capable**, needs the Desktop Bridge.
 - `figma-dev-mode-mcp-server` — 6 tools, all `get_*`, **read-only**, no setup. Handy for
   reading structure fast, but it abbreviates variable names (it shows
-  `color/content/default` where the real variable is `theme/color/content/default`).
+  `color/content/default` where the real variable is `theme/color/content/neutral-default`).
   **Never audit names with it** — use `figma_get_variables` through the bridge.
 
 Also available: the **`altitude` MCP** (`libs/altitude-mcp`, already in `.mcp.json`) —
@@ -214,7 +214,11 @@ Useful tools: `figma_analyze_component_set` (variant axes + per-state diffs + pr
 **Plugin API**
 1. The bridge runs `documentAccess: dynamic-page`. The synchronous variable APIs THROW.
    Use `getLocalVariablesAsync()`, `getLocalVariableCollectionsAsync()`,
-   `getVariableByIdAsync()`, `setCurrentPageAsync()`.
+   `getVariableByIdAsync()`, `setCurrentPageAsync()`. **The variable ones live on
+   `figma.variables.*`, not `figma.*`** — `figma.getVariableByIdAsync` is undefined and
+   the bridge reports it as a bare `TypeError: not a function` with no name (cost two
+   rounds on 2026-09-02). The same bare error is what `node.fills.map(...)` throws when
+   `fills` is `figma.mixed` (a symbol, truthy) — guard with `Array.isArray(node.fills)`.
 2. `combineAsVariants` requires the components to ALREADY be on the target page —
    `page.appendChild(comp)` first, or it throws "must be in the same page as the parent".
 3. The plugin sandbox **has `fetch`**, and the manifest whitelists `localhost:9223`–`9232`.

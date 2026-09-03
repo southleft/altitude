@@ -10,7 +10,7 @@ description: >-
   'fix X in Figma without regenerating', 'targeted fix instead of regenerating'. Use this
   INSTEAD of `altitude-figma-generate` whenever the set is broadly right and one fact is
   wrong — regenerating replaces the whole set, mints new node ids, and orphans every
-  instance and prop-sheet reference pointing at it. Read this BEFORE writing to Figma.
+  instance and pinned node id pointing at it. Read this BEFORE writing to Figma.
 ---
 
 # altitude-figma-repair
@@ -29,9 +29,7 @@ because it:
 
 - mints a **new component-set node id**, so every pinned id (parity manifest, contract
   `bindings.figma.nodeId`, other components' nested instances) goes stale;
-- discards any hand edit the owner made on the canvas since the last run;
-- requires a `--sheet` re-run afterwards or the prop sheet renders ghosts of the deleted
-  set (generate skill, trap 2).
+- discards any hand edit the owner made on the canvas since the last run.
 
 A repair changes the one node that is wrong and leaves every id intact.
 
@@ -45,11 +43,9 @@ A repair changes the one node that is wrong and leaves every id intact.
 3. RE-OBSERVE pnpm run parity:refresh        # ← Figma -> manifest. NOT optional.
 4. CURATE    hand-edit the contract ONLY for facts derivation cannot reach (pairWith)
 5. DERIVE    node scripts/contracts/emit-contracts.mjs --refresh
-6. SHEET     node scripts/contracts/rebuild-sheet-from-set.mjs --component al-X --donor <id>
-             (NOT `generate-figma.mjs --sheet` after a repair — see trap 11)
-7. GATE      node scripts/contracts/emit-contracts.mjs --check --check-drift --check-determinism
+6. GATE      node scripts/contracts/emit-contracts.mjs --check --check-drift --check-determinism
              node scripts/contracts/build-component-docs.mjs && pnpm run gate:contracts
-8. STAMP     pnpm run parity:synced al-X
+7. STAMP     pnpm run parity:synced al-X
 ```
 
 **Step 3 is the one everybody skips.** `props[].bindings.figma` is DERIVED from the parity
@@ -255,7 +251,9 @@ do not revert the contracts.
 Eight `🛠` pages carried the owner's hand-built reference set AND the generated set,
 **both named e.g. `List Item`**. `refresh-figma-digests.mjs` scans by name and takes the
 first; `extract-canvas.mjs` resolves by pinned id. So the manifest described the
-REFERENCE set while the prop sheet rendered the GENERATED one, and the two never agreed.
+REFERENCE set while the generated artifacts described the GENERATED one, and the two never
+agreed. (The artifact that exposed this at the time was the prop sheet, retired 2026-08-29;
+the name collision it exposed is still live.)
 
 The generated sets were also the broken ones: `al-list-item`'s had **zero padding** and
 **unbound pure-black text** (invisible in dark mode), plus only 3 of 6 states.
@@ -276,16 +274,21 @@ Both directions are live:
   `Shape=Bar × Size=Lg|Md|Xl` are not real (`circleSize` only applies when `isCircle`),
   so 6 phantom variants had to be pruned.
 
-Consequence: **`generate-figma.mjs --sheet` cannot document a repaired set**, in either
-direction — it regenerates the grid from the contract's ops, so it drops the states you
-just restored and fails on the phantoms you just pruned
-(`setProperties: Unable to find a variant with those property values`). Use
-`scripts/contracts/rebuild-sheet-from-set.mjs` instead, which drives the grid off the
-LIVE set:
+Consequence, while the prop sheet existed: regenerating the grid from the contract's ops
+dropped the states you had just restored and failed on the phantoms you had just pruned
+(`setProperties: Unable to find a variant with those property values`).
 
-```bash
-node scripts/contracts/rebuild-sheet-from-set.mjs --component al-list-item --donor <intactSheetId>
-```
+**The prop sheet is gone** (retired 2026-08-29, owner direction): a component page is now
+ONE frame — the doc header above the real COMPONENT_SET — and the variant break-out grid
+is not generated at all. Expand variants by hand with Propstar when a page wants them.
+`generate-figma.mjs --sheet` exits 2 with a message saying so, and
+`rebuild-sheet-from-set.mjs` was deleted with it. So there is no sheet to re-sync after a
+repair; that whole step is gone.
+
+The trap that survives the sheet is the **contract** half above: after restoring a state
+or pruning a phantom, re-run `emit-contracts.mjs --check-drift` and re-read what the
+contract now claims the matrix is. A repaired canvas and a stale contract disagree exactly
+as loudly as the old sheet did.
 
 ### 12. A `width: 100%` component measures ZERO WIDE
 
@@ -296,7 +299,7 @@ generated fine.
 
 Any `width: 100%` / `flex: 1` component hits this. The durable fix is a harness width in
 the measurement pass; the repair is to build that node by hand at a representative width
-with the contract's own token bindings (`--al-theme-color-background-default-strong` for
+with the contract's own token bindings (`--al-theme-color-background-neutral-strong` for
 the track, `--al-theme-color-content-primary-default` for the fill). Do not "fix" it by
 deleting the node — an invisible component reads as a generator bug forever.
 

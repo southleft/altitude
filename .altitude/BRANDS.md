@@ -202,9 +202,8 @@ colour token.
 
 A `:host([density=…])` declaration on `<al-theme>` outranks the brand bundle's
 `:root` block, so brand overrides of `sm`/`md`/`lg` are dead the moment the
-`density` attribute is written — which the Storybook preset switcher does for
-every preset. Luckily the density axis owns the three least-used spacing
-tokens; the four highest-traffic ones are free.
+`density` attribute is written. Luckily the density axis owns the three
+least-used spacing tokens; the four highest-traffic ones are free.
 
 **Rule: a brand set must not contain `theme.space.{sm,md,lg}`.**
 
@@ -214,9 +213,9 @@ tokens; the four highest-traffic ones are free.
 
 | Axis | Owns | Where |
 |---|---|---|
-| `mode` | `theme.color.background.default`, `theme.color.content.default` | `components/theme/theme.scss:11-17` |
+| `mode` | `theme.color.background.neutral-default`, `theme.color.content.neutral-default` | `components/theme/theme.scss:11-17` |
 | `density` | `theme.space.{sm,md,lg}` | `components/theme/theme.scss:20-34` |
-| `contrast` | `theme.color.border.default` | `components/theme/theme.scss:37-39` |
+| `contrast` | `theme.color.border.neutral-default` | `components/theme/theme.scss:37-39` |
 | `motion` | legacy `theme.animation.duration.{2,4,6,8}` + the `-role-{fast,base,slow}` / `-timing-role-{standard,emphasized}` tokens (spec 2026-08-20-token-axes-expansion) | `components/theme/theme.scss` "motion axis" |
 | `shape` | `theme.border.radius.role.{action,control,surface,indicator}` (spec 2026-08-20-token-axes-expansion) | `components/theme/theme.scss` "shape axis" |
 | `brand` | everything else in §1.1 | `styles/tokens-dtcg/tier-2/brand/<brand>/*.json` |
@@ -330,7 +329,7 @@ consuming app (`apps/southleft/public/fonts/`, `@font-face` + `font-display:
 swap`), not by the library — `styles/main.scss` still fetches nothing beyond
 what it always has, so `altitude`-only consumers see zero bundle-cost change.
 Also added: southleft's light "paper" mode (`tokens-config.v5.mjs` `brands`
-array, `.storybook/presets.ts` `southleft-light`) — §7's table below predates
+array, `theme-presets.ts` `southleft-light`) — §7's table below predates
 this and should be read as the **dark ("ink")** identity only.
 
 ---
@@ -571,8 +570,8 @@ const brands = [
 
 A brand with no entry for a mode has **no `:host` block for that mode** — under
 that mode it renders its mode-invariant identity over the base theme's colours.
-That is what the compile-time `PresetBundle` union in `.storybook/presets.ts`
-(`presets.ts:33-35`) exists to guard.
+That is what the compile-time `PresetBundle` union in
+`libs/al-web-components/theme-presets.ts` exists to guard.
 
 ### 9.4 Build, then check the emitter actually emitted
 
@@ -592,18 +591,26 @@ skips an empty delta (`tokens-config.v5.mjs:706, 715-717`) — which is exactly
 why there is no `tokens-brand-altitude.scss`. A missing file means your values
 resolved identically to the base theme: the attribute will parse and do nothing.
 
-### 9.5 Widen the surface (8 sites)
+### 9.5 Widen the surface (7 sites)
 
-| # | File:line | Edit |
+Anchors, not line numbers — line numbers in this table went stale twice.
+
+| # | File → anchor | Edit |
 |---|---|---|
-| 1 | `components/theme/theme.ts:39-40` | The brand literal union **and** its JSDoc. This is the source of truth. |
-| 2 | `custom-elements.json`, `schemas/al-theme.schema.json:35-42` | **Generated** — do not hand-edit. Run `pnpm --filter @southleft/al-web-components build:custom-elements.json`. |
-| 3 | `components/theme-switcher/theme-switcher.ts:16-18, 28-31, 46-50` | SCSS import (from legacy `styles/dist/scss/brand/`, **not** `dist-v5`), the `ThemeKey` union, the `BRANDS` array. |
-| 4 | `.storybook/presets.ts:33-35` | `PresetBundle` union — required. |
-| 5 | `.storybook/presets.ts:53-56` | `PRESETS` — **read the SCOPE note at `presets.ts:68-88` first.** Appending here also grows `@southleft/al-react`'s toolbar dropdown and puts two brands in a Storybook that documents one. For a brand with its own Storybook, copy the `SOUTHLEFT_PRESETS` pattern (`presets.ts:91-94`) instead. |
-| 6 | `libs/altitude-mcp/src/server.mjs:189-196` | The `z.enum([...])` on `altitude_get_tokens`, plus the prose naming the shipped brands. |
-| 7 | `libs/al-react/src/components/Theme/Theme.stories.tsx:18, 59` | Storybook control only. `ALThemeProps` derives from the generated wrapper, so the type flows from site 1 — no React source edit. |
-| 8 | `.altitude/visual-compare/harness/<brand>.html` | Copy `southleft.html`, swap the single `<link>` to `tokens-<brand>-<mode>.css`. Then add the column to `harness/index.html`. |
+| 1 | `components/theme/theme.ts` → the `brand` property's literal union | The brand literal union **and** its JSDoc. This is the source of truth. |
+| 2 | `custom-elements.json`, `schemas/al-theme.schema.json` → the `brand` enum | **Generated** — do not hand-edit. Run `pnpm --filter @southleft/al-web-components build:custom-elements.json`. |
+| 3 | `components/theme-switcher/theme-switcher.ts` → the SCSS `@use` block, the `ThemeKey` union, the `BRANDS` array | SCSS import comes from legacy `styles/dist/scss/brand/`, **not** `dist-v5`. |
+| 4 | `libs/al-web-components/theme-presets.ts` → `export type PresetBundle` | Add the brand × mode pairs the token pipeline actually emits. **Required** — this union is a compile-time guard: a brand with no build for a mode has no `:host` block for it, and the pair would render that brand's mode-independent identity over the wrong mode's colours. |
+| 5 | `libs/al-web-components/theme-presets.ts` → `export const PRESETS` | **Read the `WHY A SEPARATE ARRAY` comment above `SOUTHLEFT_PRESETS` first.** `PRESETS` is the REFERENCE brand only and is what `apps/home/scripts/generate-stats.js` counts as "recipes shipped" — appending a second brand there changes a published number. Give a new brand its own array on the `SOUTHLEFT_PRESETS` pattern and let `ALL_PRESETS` pick it up. |
+| 6 | `libs/altitude-mcp/src/server.mjs` → the `z.enum([...])` on `altitude_get_tokens` | The enum, plus the prose naming the shipped brands. |
+| 7 | `.altitude/visual-compare/harness/<brand>.html` | Copy `southleft.html`, swap the single `<link>` to `tokens-<brand>-<mode>.css`. Then add the column to `harness/index.html`. |
+
+**One site was removed, not renumbered.** The old site 7 was the `ALTheme` story
+in `@southleft/al-react` — a Storybook control. Storybook was retired
+**2026-08-25** and that package ships no story files at all now, so there is
+nothing to edit there. `ALThemeProps` derives from
+the generated wrapper, so the type still flows from site 1 with no React source
+edit.
 
 ### 9.6 Widen the three brand lists in the harnesses
 

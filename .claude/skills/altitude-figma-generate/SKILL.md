@@ -1,6 +1,6 @@
 ---
 name: altitude-figma-generate
-description: "Generate a component's Figma page (lean variant set + documented prop sheet) FROM THE CODE via the contract pipeline — proven at scale in the 2026-08-26 sweep (35 components generated in one session, zero failures; 17 components ship a figma.gen.json — see .altitude/contracts/COVERAGE.md). Triggers: 'generate <component> in Figma', 'create the Figma set from code', 'regenerate a component page', 'add the prop sheet', 'walk through the next component', 'fix the generated set for X'. Encodes the per-component recipe, every figma.gen.json curation key, the three-layer fact model (contract vs curation vs generator), and ~15 traps that each cost real debugging. Read this BEFORE running generate-figma.mjs on a new component."
+description: "Generate a component's Figma page (one frame: a doc header above the lean variant set) FROM THE CODE via the contract pipeline — proven at scale in the 2026-08-26 sweep (35 components generated in one session, zero failures; 17 components ship a figma.gen.json — see .altitude/contracts/COVERAGE.md). Triggers: 'generate <component> in Figma', 'create the Figma set from code', 'regenerate a component page', 'walk through the next component', 'fix the generated set for X'. Encodes the per-component recipe, every figma.gen.json curation key, the three-layer fact model (contract vs curation vs generator), and ~15 traps that each cost real debugging. Read this BEFORE running generate-figma.mjs on a new component."
 ---
 
 # altitude-figma-generate
@@ -9,9 +9,9 @@ description: "Generate a component's Figma page (lean variant set + documented p
 (component reuse, hug preservation, organism widths/breakpoints, naming, the
 mandatory screenshot loop). Every generation and edit answers to it.
 
-Generating a component's Figma page from `libs/al-web-components` code — the lean,
-property-mode variant set plus the documented prop sheet (doc header + purple
-border-collapse table) — via `scripts/contracts/generate-figma.mjs`.
+Generating a component's Figma page from `libs/al-web-components` code — ONE frame: the
+doc header above the lean, property-mode variant set — via
+`scripts/contracts/generate-figma.mjs`.
 
 Sibling skills: `altitude-figma-sync` (hand-repairing the library, token audits — its
 traps 1/3/27/32 apply here too); `altitude-component-authoring` (creating the CODE
@@ -20,8 +20,8 @@ existing set in place).
 
 **Do not generate to fix one wrong binding.** Generation deletes and rebuilds the set,
 minting a new component-set node id — every pinned id (parity manifest, contract
-`bindings.figma.nodeId`, nested instances in other components' sets) goes stale, and the
-prop sheet must be re-run or it renders ghosts (trap 2). If the set's STRUCTURE is right
+`bindings.figma.nodeId`, nested instances in other components' sets) goes stale, and any
+variants the owner expanded by hand with Propstar are lost. If the set's STRUCTURE is right
 and a colour / axis name / token binding / variant label is wrong, use
 `altitude-figma-repair` instead.
 
@@ -62,10 +62,14 @@ al-dialog, al-popover, al-stepper, …). Do not hand-fake anatomy to work around
 ## Generator layout (modularized 2026-08-26)
 
 `scripts/contracts/generate-figma.mjs` is a thin CLI; the generator's parts live in
-`scripts/contracts/figma/` — `derive-ops.mjs` (parity core), `derive-sheet-plan.mjs`
-(+ `sheet-style.mjs`, pure presentation), `conventions.mjs` (library-wide rules incl.
-Phosphor resolution and the T29 wrong-library incident), `plugin-snippets.mjs`,
-`build-set-code.mjs`, `build-sheet-code.mjs`. Per-component judgment calls come from
+`scripts/contracts/figma/` — `derive-ops.mjs` (parity core), `conventions.mjs`
+(library-wide rules incl. Phosphor resolution and the T29 wrong-library incident),
+`doc-header-style.mjs` (pure presentation for the header above the set),
+`measured-boxes.mjs`, `plugin-snippets.mjs`, `build-set-code.mjs`, and
+`check-parse.mjs` (run it after touching any generator file — the `String.raw`
+backtick trap has bitten three times). The `derive-sheet-plan.mjs` /
+`sheet-style.mjs` / `build-sheet-code.mjs` trio went with the prop sheet
+(retired 2026-08-29). Per-component judgment calls come from
 the OPTIONAL `figma.gen.json` (layer 2 above), merged over defaults in
 `scripts/contracts/figma/component-config.mjs`. The enum axis is contract-driven
 (`bindings.figma.kind: "VARIANT"` + `property`), not a hard-coded prop named
@@ -122,7 +126,7 @@ COMPONENT "State=Default, …"   layoutMode NONE   100x100
 ```
 
 and that run reported `maxVariantWidth/Height: 100` — the number the presentation frame
-and the prop sheet lay themselves out against. After: `VERTICAL`, `AUTO/AUTO`, 243x100,
+lays itself out against. After: `VERTICAL`, `AUTO/AUTO`, 243x100,
 no overflow on any of the 12 components, `maxVariant` 301x162.
 
 `primaryAxisSizingMode`/`counterAxisSizingMode` and the padding/gap binds therefore run
@@ -208,15 +212,13 @@ node scripts/contracts/generate-figma.mjs --component al-X --ops-only
 node scripts/contracts/emit-contracts.mjs --refresh      # if anatomyCase changed
 node scripts/contracts/emit-contracts.mjs --check-drift  # must stay green
 
-# 3. GENERATE onto the component's own page — lean set FIRST, sheet SECOND (order
-#    is load-bearing: the sheet instantiates the set; a lean re-run REQUIRES a
-#    sheet re-run after it or the sheet shows ghosts of the deleted set):
+# 3. GENERATE onto the component's own page — ONE run, ONE frame (doc header
+#    above the real COMPONENT_SET). There is no second pass:
 node scripts/contracts/generate-figma.mjs --component al-X --page "🛠 X"
-node scripts/contracts/generate-figma.mjs --component al-X --page "🛠 X" --sheet
 
 # 4. VERIFY: determinism + export a PNG for eyeballing:
 node scripts/contracts/generate-figma.mjs --component al-X --check-determinism
-node scripts/figma-atoms/export-png.mjs <sheetFrameId> out.png --scale 1.5
+node scripts/figma-atoms/export-png.mjs <frameId> out.png --scale 1.5
 ```
 
 **Steps 3 and 4 are now ENFORCED, not advisory (2026-08-31).** They used to be
@@ -246,13 +248,11 @@ it, NOT ignore its arrangement).
 
 ## Owner conventions (decided during the walkthrough — do not re-litigate)
 
-- **Never touch hand-built sets.** Generated artifacts are `"<Name> — Generated"` and
-  `"<Name> — Prop Sheet"`; clearing is name-scoped to exactly those. The owner deletes
-  hand-built sets herself.
-- **One visible artifact per page**: the prop sheet, positioned where the masters
-  frame is; the masters frame is HIDDEN (`visible=false`) by the sheet pass. Masters
-  stay functional (instances render from hidden masters); toggle in layers to edit.
-- **Sheet Grid has NO padding** of its own; breathing room = the container's padding.
+- **Never touch hand-built sets.** The generated artifact is `"<Name> — Generated"`;
+  clearing is name-scoped to exactly that. The owner deletes hand-built sets herself.
+- **One frame per component page**: the doc header above the real COMPONENT_SET, which
+  stays visible. (Until 2026-08-29 the visible artifact was a prop sheet and the set was
+  hidden behind it; the sheet was retired by owner direction and the set is the page now.)
 - **Text weight is the node's fact**: `font-weight` token binding wins, walk text
   defaults to Regular; `label.fontStyle` config is for the non-walk pilot recipe only.
 - States fan out ONLY when a fact backs them (SCSS delta or measured stateOverride) —
@@ -274,9 +274,8 @@ boolean out as its own True/False VARIANT axis, cartesian with every other axis.
 Curate it ONLY for a component whose real set demonstrably fans it out. History:
 T22/T23 curated al-button into axis mode (200→100-variant pilot) reasoning from a
 Propstar screenshot that turned out to show a DOCUMENTATION artifact, not the real
-set's variant structure — T31 corrected this and removed the curation. The machinery
-stays (`--sheet` reuses it internally) — see `.altitude/contracts/README.md` § Fan-out
-convention for the full history.
+set's variant structure — T31 corrected this and removed the curation. See
+`.altitude/contracts/README.md` § Fan-out convention for the full history.
 
 **Omit is the inverse curation** (T27): `bindings.figma.omit: true` (props) /
 `figmaOmit: true` (slots) means the generator builds NOTHING for it — no axis, no
@@ -286,34 +285,6 @@ contracts:diff` → `scripts/contracts/diff-contracts.mjs`; the pure library is
 `libs/altitude-mcp/src/lib/contract-diff.mjs`) treats an omitted-and-absent prop/slot
 as a named `intentional-omission` skip, never a disagreement — but canvas still
 exposing it is flagged `present-despite-omission`.
-
-## The prop sheet (`--sheet`) — what it builds
-
-A Propstar-style fan-out grid, plugin-free (an agent cannot launch a Figma plugin;
-Propstar remains an optional interactive alternative). `--sheet` creates/replaces a
-`"<Name> — Prop Sheet"` frame: an instance of the file's own "Documentation Header"
-master on top (title/description/link contract-derived; the link is a dummy
-placeholder until per-component docs publish), then a genuine nested-auto-layout
-TABLE of real INSTANCES of the lean set, one per State × Variant × boolean-property
-combination (100 for al-button), each switched via `setProperties`. Internally it
-reuses the T23 cartesian derivation (`buildOps(contract, { forceAllBooleanAxes:
-true })`) re-grouped for rendering — repurposed, not duplicated. Layout rules
-(T31/T32, owner-reviewed):
-
-- Borders are `border-collapse`-simple: the outer grid frame draws one full four-side
-  border; every ROW draws only its own bottom edge (none on the absolute last row);
-  every CELL draws only its own right edge (none on a row's last cell);
-  `itemSpacing: 0` so adjacent single-edge strokes read as one line. A Variant-group
-  boundary is that group's own last row's bottom edge at double weight — never a
-  second frame.
-- Row labels are humanized ("Icon before", "Icons before + after", "Default"), never
-  a raw `Prop=Value` dump.
-- Batched: one setup call + one call per Variant row group (6 for al-button) to stay
-  under the Desktop Bridge's ~30s per-call ceiling. Idempotent — replaces the prior
-  sheet frame by name.
-
-Full grouping/layout/batching rationale: `.altitude/contracts/README.md`
-§ Documentation sheet (`--sheet`, T31).
 
 ## Icon source is the Phosphor library, not "🛠 Icons" (T28)
 
@@ -339,7 +310,7 @@ its confirmed environment limits.
 | `nestedIconGlyphs` | `{"al-icon":"x"}` — which Phosphor glyph a nested al-icon instance swaps to (chip's ALIconClose import → 'x'). Resolution needs a bootstrap instance in-file (trap 8). |
 | `label` | `{fontStyle, fontSize}` for the non-walk (icon–label–icon) recipe. Button: Bold. |
 | `fullWidthProp` | Name of the boolean layout prop rendered as "natural hug width plus `fullWidthExtraPx`" (default `"fullWidth"`). Set it when a component's full-width prop has a different name. Moot for a prop curated `figma.omit` (al-button). |
-| `iconSizeVar` / `fullWidthExtraPx` / `enumProp` / `sheet` | Pilot-era knobs — see component-config.mjs header for each. |
+| `iconSizeVar` / `fullWidthExtraPx` / `enumProp` | Pilot-era knobs — see component-config.mjs header for each. (A `sheet` key was retired 2026-08-29 with the prop sheet; `component-config.mjs` warns and ignores it. Delete it if you find one.) |
 
 ## Hard-won traps (every one was actually hit)
 
@@ -347,9 +318,10 @@ its confirmed environment limits.
    print "Cannot reach the figma-console shim" (or a batch silently no-ops if you
    grep'd for success lines). Probe `curl -s -X POST localhost:9401/call -d
    '{"name":"figma_get_status","arguments":{}}'` before batches; restart freely.
-2. **Lean re-run after the sheet exists**: it no longer deletes the sheet, but the
-   sheet's instances now point at the DELETED set's ghosts — always re-run `--sheet`
-   after a lean regen.
+2. **A re-run mints a new set node id.** Anything pointing at the old one — a pinned
+   `bindings.figma.nodeId`, a nested instance in another component's set, variants the
+   owner expanded by hand with Propstar — is orphaned. `pnpm run parity:refresh` after
+   every regeneration, and prefer `altitude-figma-repair` when only one fact is wrong.
 3. **Backticks inside `String.raw` plugin-code templates** (even in comments)
    terminate the template — a SyntaxError pointing at an innocent identifier. Use
    quotes in comments inside `build-*-code.mjs`.
@@ -401,5 +373,5 @@ its confirmed environment limits.
 node scripts/contracts/emit-contracts.mjs --check            # schema, both projects w/ --project southleft
 node scripts/contracts/emit-contracts.mjs --check-determinism
 node scripts/contracts/emit-contracts.mjs --check-drift
-node scripts/contracts/generate-figma.mjs --component al-X --check-determinism [--sheet]
+node scripts/contracts/generate-figma.mjs --component al-X --check-determinism
 ```

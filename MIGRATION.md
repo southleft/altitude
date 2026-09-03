@@ -101,10 +101,11 @@ Two related consequences:
 never touches the document.
 
 **Status: deprecated as of this release; scheduled for removal in 3.0.0.**
-It is kept rather than deleted because two consumers still need it today:
+It is kept rather than deleted because a consumer still needs it today:
 `apps/web-components/index.html` uses the switcher with no `<al-theme>`
-wrapper, and the Storybook `<al-theme-switcher>` stories opt out of the preset
-decorator precisely so this path stays exercised. Wrap your content in
+wrapper. (A second consumer — the Storybook `<al-theme-switcher>` stories, which
+opted out of the preset decorator precisely so this path stayed exercised — went
+with Storybook when it was retired on 2026-08-25.) Wrap your content in
 `<al-theme>` and the fallback becomes unreachable at no cost — since scoped
 emission landed, the scoped path now moves **both** axes, where before it moved
 only `mode`.
@@ -181,22 +182,18 @@ rule the tokens live in is an attribute selector. Without it the props are
 accepted, the properties are correct, and nothing re-themes. See
 `libs/al-react/src/components/Theme/Theme.tsx`.
 
-### Theme presets in the React Storybook
+### Theme presets — RETIRED 2026-08-25
 
-Both Storybooks carry the same **Preset** toolbar dropdown — brand + mode +
-density + contrast, snapped together — over one shared module,
-`libs/al-web-components/.storybook/presets.ts`. Adding a preset there makes it
-appear in both with no other edit. `parameters.alPreset = { disable: true }`
-opts a story out of the wrapper.
+Both Storybooks carried a **Preset** toolbar dropdown over one shared module.
+Storybook was retired on 2026-08-25 and nothing replaced the dropdown, the
+`parameters.alPreset` opt-out, or the `test:preset-parity` script — the checker
+and its root alias were both deleted. Set the axes on `<ALTheme>` /
+`<al-theme>` directly.
 
-`pnpm test:preset-parity` (`scripts/check-preset-parity.mjs`) drives both
-running Storybooks through every preset and fails if the toolbars, the host
-attributes, or the computed brand tokens diverge. Point it at non-default ports
-with `--wc <url> --react <url>`.
-
-The @southleft/al-react Storybook requires a built @southleft/al-web-components
-(`pnpm --filter @southleft/al-web-components build`); it now says so instead of failing on
-an unresolved import.
+The preset *data* survived the move, at `libs/al-web-components/theme-presets.ts`
+— four brand × mode pairs plus the vocabulary of the other axes. It is not a
+consumer-facing API; its two readers are the story fixture and `apps/home`'s
+stats generator.
 
 ## 4. New props on existing components
 
@@ -281,19 +278,25 @@ Token names are **frozen at the 1.0 alias map**
 set; the alias map gates deprecation through the 3.0 compat budget.
 
 If you're authoring against `--al-*` directly, no change. If you used
-`var(--al-theme-color-background-default)` etc., those still resolve to
+`var(--al-theme-color-background-neutral-default)` etc., those still resolve to
 the same values in v2's default theme.
 
-## 6. Storybook / dev tooling
+## 6. Build / dev tooling
 
-- v2 ships **Vite 5** as the library + Storybook builder (webpack removed),
-  **Storybook 10** with the `@storybook/web-components-vite` /
-  `@storybook/react-vite` framework, **pnpm 9** workspaces, **Node 22 LTS**.
+- v2 ships **Vite** as the library builder (webpack removed) — `^7.1.12` today,
+  and Vite 5 when this guide was written. Plus **pnpm 9** workspaces and
+  **Node 22 LTS**.
 - Sass is on `@use` / `@forward` with the modern compiler API — zero
   deprecation warnings in the build pipeline.
-- Existing `.storybook/preview.ts` keeps working; components render via
-  the Vite library build only (the parallel webpack pipeline was retired
-  end-of-Phase-2).
+- **Storybook is gone.** v2 originally shipped Storybook 10 on the
+  `@storybook/web-components-vite` / `@storybook/react-vite` frameworks; both
+  Storybooks and their `.storybook/` directories were deleted on **2026-08-25**
+  and nothing replaced them as a component explorer. If you were consuming
+  Altitude's Storybook: the documentation site is `apps/docs`
+  (<https://altitude.pages.dev/docs>), and the isolated render surface is
+  `libs/al-web-components/story-fixture` (`pnpm run build:story-fixture`).
+  `*.stories.ts` files themselves survived and are still authored — the fixture,
+  the docs previews, and the MCP all read them.
 
 ## 7. SSR
 
@@ -488,6 +491,56 @@ means keyboard navigation direction, not layout.
 is not a component — it is `<al-layout>` with props.** Do not add a
 `direction`/`gap`/`align`/`justify` prop to a new component, and do not
 hand-roll flex or grid to arrange slotted children.
+
+## 11. Colour tokens — `default` became `neutral`, and every semantic family carries a five-step ramp
+
+Two changes to the tier-2 colour tokens, both breaking.
+
+### `theme.color.{background,content,border}.default-*` → `neutral-*`
+
+The family that used to be called `default` is the neutral (grey) ramp, and it
+now says so. The step names are unchanged; the bare `default` token becomes
+`neutral-default`. The Figma variables carry the same rename.
+
+```diff
+- var(--al-theme-color-background-default)
++ var(--al-theme-color-background-neutral-default)
+- var(--al-theme-color-background-default-weak)
++ var(--al-theme-color-background-neutral-weak)
+- var(--al-theme-color-background-default-strong)
++ var(--al-theme-color-background-neutral-strong)
+- var(--al-theme-color-background-default-bold)
++ var(--al-theme-color-background-neutral-bold)
+
+- var(--al-theme-color-content-default)
++ var(--al-theme-color-content-neutral-default)
+- var(--al-theme-color-content-default-weak)
++ var(--al-theme-color-content-neutral-weak)
+- var(--al-theme-color-content-default-faint)
++ var(--al-theme-color-content-neutral-faint)
+
+- var(--al-theme-color-border-default)
++ var(--al-theme-color-border-neutral-default)
+- var(--al-theme-color-border-default-weak)
++ var(--al-theme-color-border-neutral-weak)
+- var(--al-theme-color-border-default-strong)
++ var(--al-theme-color-border-neutral-strong)
+```
+
+A find-and-replace of `color-background-default`, `color-content-default` and
+`color-border-default` with the `-neutral-` form covers every case; the old
+names are no longer emitted. (`disabled-default`, `inverse-default`,
+`transparent-default` and the `<family>-default` steps are not part of this —
+there `default` is the step, not the family.) The Southleft brand's
+`background.default-stronger` override folded into `neutral-bold`.
+
+### Every semantic family now has `faint` / `weak` / `default` / `strong` / `bold`
+
+`primary`, `secondary`, `tertiary`, `info`, `success`, `warning` and `danger`
+each expose all five steps for `background`, `content` and `border`. Existing
+steps kept their values; the new ones (63 tokens) follow each family's tier-1
+ramp. `tertiary` is new to tier 2 entirely. Nothing you already use changes
+value — this is additive apart from the rename above.
 
 ## Questions
 

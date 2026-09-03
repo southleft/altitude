@@ -311,7 +311,7 @@ Everything below is for people changing the library, not for people using it.
 
 ${link('Agent contract', 'AGENTS.md', 'authoring rules, guardrails G1–G8, where things live, how to verify a change')}
 ${link('Contributor guide', 'CONTRIBUTING.md', 'setup, workspaces, the gate list')}
-${link('Refactor plan', 'NEXT-GEN-UPGRADE-PLAN.md', 'the v2 phases P0–P6 and their tasks')}
+${link('Refactor plan', '.altitude/history/NEXT-GEN-UPGRADE-PLAN.md', 'the v2 phases P0–P6 and their tasks')}
 ${link('v1 → v2 migration', 'MIGRATION.md', 'what moved, and the scoped-theming migration')}
 ${link('Migration manifest', '.altitude/migration.json', 'per-component state; `legacy` components are read-only outside migration PRs (G2, CI-enforced)')}
 ${link('Pinned targets', '.altitude/targets.json', 'committed end-state versions')}

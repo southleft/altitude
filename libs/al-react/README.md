@@ -9,16 +9,19 @@ PackageJson.version` — so the tags in the DOM are `al-button-1-0-0`,
 
 ## Prerequisite
 
-`@southleft/al-web-components` must be built first. Every wrapper imports from its
-`dist/`, and the Storybook preview injects `dist/css/main.css`.
+`@southleft/al-web-components` must be built first — every wrapper imports from
+its `dist/`, and the tests resolve the library through the exports map.
 
 ```sh
 pnpm --filter @southleft/al-web-components build
-pnpm --filter @southleft/al-react start          # Storybook on 9009
+pnpm --filter @southleft/al-react start          # vitest, the `react` project
 ```
 
-`.storybook/main.ts` checks for that build and fails with the command above if
-it is missing.
+Note `start` here runs **tests**, not a dev server. This package's Storybook was
+retired on 2026-08-25 along with the web-components one, and the `.storybook/`
+directory and every `*.stories.tsx` went with it — there are no story files in
+`src/` today. Consume the wrappers from `apps/react` (`pnpm --filter al-app-react
+start`) or read the documented components at `apps/docs`.
 
 ## Theming
 
@@ -54,21 +57,20 @@ nothing re-themes. The reasoning is in `src/components/Theme/Theme.tsx`.
 `<al-theme-switcher>` finds its host with `closest('al-theme')`, which cannot
 match the versioned `al-theme-1-0-0` tag — set axes on `<ALTheme>` instead.
 
-## Storybook preset switcher
+## Theme presets
 
-The **Preset** toolbar dropdown snaps brand + mode + density + contrast
-together, and a global decorator wraps every story in `<ALTheme>`. The preset
-list is imported from `@southleft/al-web-components/.storybook/presets.ts` — the same
-module the web-components Storybook reads, so the two cannot drift. Adding a
-preset there makes it appear in both.
+The **Preset** toolbar dropdown, the `parameters.alPreset` story opt-out, and
+the `test:preset-parity` script were all Storybook surfaces and are **gone**
+(retired 2026-08-25 — both the checker script and the root `pnpm run` alias that
+wrapped it were deleted). No successor toolbar was built — set the axes on
+`<ALTheme>` directly, per the table above.
 
-`parameters.alPreset = { disable: true }` opts a story out of the wrapper (the
-`Theme` and `ThemeSwitcher` stories do, since they control the axes
-themselves).
-
-From the repo root, `pnpm test:preset-parity` drives both running Storybooks
-through every preset and fails if the toolbars, the host attributes or the
-computed brand tokens diverge.
+The preset *data* survived, at `libs/al-web-components/theme-presets.ts`
+(`PRESETS`, `SOUTHLEFT_PRESETS`, `ALL_PRESETS`, `DEFAULT_PRESET_ID`), because two
+things outside Storybook read it: the story fixture takes the brand and mode the
+accessibility sweep renders under, and `apps/home/scripts/generate-stats.js`
+counts `PRESETS` for the "recipes shipped" figure. Its own header explains why it
+was not deleted with the rest.
 
 ## Generating a wrapper
 
@@ -77,11 +79,11 @@ pnpm --filter @southleft/al-react plop        # `component` generator, PascalCas
 ```
 
 It writes `src/components/<Name>/{<Name>.tsx,index.tsx,<Name>.stories.tsx}` and
-appends the barrel export. The generated story imports `StoryObj` from
-`@storybook/react-vite`, matching the framework in `.storybook/main.ts` — no
-post-generation edit is needed.
+appends the barrel export.
 
-`@storybook/react-webpack5` appears nowhere in this package. It was never a
-declared dependency and was never installed; the 66 files that imported types
-from it type-checked only because story files are excluded from `tsconfig.json`
-and the specifier was erased before resolution.
+**The generated `.stories.tsx` has nothing to run it.** The plop template
+(`plop/templates/component/Component.stories.tsx.hbs`) still imports `StoryObj`
+from `@storybook/react-vite`, which is no longer a dependency of this package —
+it predates the 2026-08-25 retirement and no `*.stories.tsx` remains in `src/`.
+Delete the generated story file, or leave it knowing nothing renders or
+type-checks it (story files are excluded from `tsconfig.json`).

@@ -1,7 +1,7 @@
 # @southleft/altitude-mcp
 
 A stdio [MCP](https://modelcontextprotocol.io) server exposing Altitude's already-generated
-token/component graph to AI agents. Implements `T7.2` from `NEXT-GEN-UPGRADE-PLAN.md`.
+token/component graph to AI agents. Implements `T7.2` from the v2 plan, archived at `.altitude/history/NEXT-GEN-UPGRADE-PLAN.md`.
 
 ## What this is (and isn't)
 
