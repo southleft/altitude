@@ -9,8 +9,8 @@ Component: al-button
 ## Figma
 
 - Component set: **Button**
-- Node id: `22:3434` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=22-3434)
+- Node id: `3538:36730` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=3538-36730)
 
 ## Props (16)
 
@@ -27,11 +27,11 @@ Component: al-button
 | `isPressed` | string | `boolean \| 'mixed'` | — | — |
 | `label` | string | — | — | — |
 | `name` | string | — | — | — |
-| `size` | enum | `lg`, `sm` | — | — |
+| `size` | enum | `lg`, `sm` | — | **Size** (VARIANT): `Default`, `Lg`, `Sm` |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
 | `type` | enum | `button`, `reset`, `submit` | — | — |
 | `value` | string | — | — | — |
-| `variant` | enum | `bare`, `neutral`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary` |
+| `variant` | enum | `bare`, `neutral`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `ariaControls`
 
@@ -122,10 +122,15 @@ this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ## Variant axes
 
+### `size` (Figma property "Size")
+
+- Code values: `lg`, `sm`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Lg`, `Sm`
+
 ### `variant` (Figma property "Variant")
 
 - Code values: `bare`, `neutral`, `secondary`, `tertiary`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary`
 
 ## States
 
@@ -227,6 +232,18 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
+
+#### `primary`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| --al-icon-height | `--al-theme-icon-lg` | `theme/icon/lg` |
+| --al-icon-width | `--al-theme-icon-lg` | `theme/icon/lg` |
+| background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
+| border-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
+| color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
+| gap | `--al-theme-space-xs` | `theme/space/xs` |
+| min-height | `--al-theme-size-control` | `theme/size/control` |
 
 #### `secondary`
 

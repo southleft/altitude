@@ -9,8 +9,8 @@ Component: al-input
 ## Figma
 
 - Component set: **Input**
-- Node id: `19:2137` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=19-2137)
+- Node id: `3544:48650` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=3544-48650)
 
 ## Props (24)
 
@@ -29,7 +29,7 @@ Component: al-input
 | `isOptional` | boolean | — | — | — |
 | `isReadonly` | boolean | — | — | — |
 | `isRequired` | boolean | — | — | — |
-| `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
+| `label` | string | — | `'Label'` | — |
 | `labelPosition` | enum | `inset`, `top` | `'top'` | — |
 | `max` | number | — | — | — |
 | `maxLength` | number | — | — | — |
@@ -179,10 +179,7 @@ Value attribute
 
 ## Variant axes
 
-### `label` (Figma property "Label")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+This component has no Figma `VARIANT`-bound prop — no variant axis to document.
 
 ## States
 

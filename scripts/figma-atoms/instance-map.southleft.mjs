@@ -1,14 +1,19 @@
 /**
  * instance-map.southleft.mjs — nested al-* element -> Figma component INSTANCE,
- * for the `Southleft V5` file (rdhBS9t89V42E7EfiPjmSa).
+ * for the `Southleft V5` file (jwNINBLB0oBnxx3MQK9gr3).
  *
  * Same contract as instance-map.mjs (which is Altitude's). The two CANNOT be shared:
  * node ids are file-scoped, and ds-project.mjs refuses to fall back to another
  * project's map for exactly that reason.
  *
- * Node ids read live from `Southleft V5` on 2026-08-24, immediately after the 25 sets
- * were built. Rebuilding a set mints a NEW id, so re-scan after any rebuild — repair
- * in place where you can.
+ * Node ids read live from `Southleft V5` on 2026-09-03, against the file the owner
+ * re-duplicated from Altitude (jwNINBLB0oBnxx3MQK9gr3). Rebuilding a set mints a NEW
+ * id, so re-scan after any rebuild — repair in place where you can.
+ *
+ * `id: null` means the set does not exist in this file YET. Text Block, List, Stat,
+ * Testimonial and Logo are mapped in code but were never moved into the new file, so a
+ * hardcoded id would deep-link at nothing; null lets them resolve by name if and when
+ * they land, and keeps the docs site from rendering a dead "OPEN IN FIGMA" link.
  *
  * WHY this matters, concretely: without a map every nested al-* child resolves to
  * `null`, and build-page falls through to a "flattened" build using the child's own
@@ -39,11 +44,11 @@ const stateOf = (a) => {
 };
 
 export const INSTANCE_MAP = {
-  'al-button': set('Button', '22:3434',
+  'al-button': set('Button', '3538:36730',
     (a) => ({ Variant: cap(a.variant) || 'Primary', State: stateOf(a), Width: on(a.fullwidth) ? 'Fill' : 'Hug' }),
     { text: (a, t) => t || 'Button' }),
 
-  'al-chip': set('Chip', '22:3296',
+  'al-chip': set('Chip', '3540:43526',
     (a) => ({
       Variant: cap(a.variant) || 'Default',
       State: on(a.isdisabled) ? 'Default' : 'Default',
@@ -52,19 +57,19 @@ export const INSTANCE_MAP = {
     }),
     { text: (a, t) => t || 'Chip' }),
 
-  'al-heading': set('Heading', '22:3531',
+  'al-heading': set('Heading', '3543:47001',
     (a) => ({ Variant: title(a.variant) || 'Default', Weight: cap(a.weight) === 'Bold' ? 'Bold' : 'Regular', State: 'Default' }),
     { text: (a, t) => t || 'Heading' }),
 
-  'al-link': set('Link', '22:3569',
+  'al-link': set('Link', '3543:47075',
     (a) => ({ Size: cap(a.size) || 'Default', State: stateOf(a) }),
     { text: (a, t) => t || 'Link' }),
 
-  'al-text-block': set('Text Block', '22:3577',
+  'al-text-block': set('Text Block', null,
     (a) => ({ Width: cap(a.width) || 'Default', State: 'Default' }),
     { text: (a, t) => t || undefined }),
 
-  'al-list-item': set('List Item', '22:3733',
+  'al-list-item': set('List Item', '3543:47175',
     (a) => ({
       Variant: on(a.isstatic) ? 'Static' : 'Default',
       Current: a['aria-current'] ? 'Yes' : 'No',
@@ -72,7 +77,7 @@ export const INSTANCE_MAP = {
     }),
     { text: (a, t) => t || 'List item' }),
 
-  'al-breadcrumbs-item': set('Breadcrumbs Item', '22:3772',
+  'al-breadcrumbs-item': set('Breadcrumbs Item', '3538:36342',
     (a) => ({
       Current: a['aria-current'] ? 'Yes' : 'No',
       Separator: on(a.hasseparator) ? 'Yes' : 'No',
@@ -80,31 +85,31 @@ export const INSTANCE_MAP = {
     }),
     { text: (a, t) => t || 'Item' }),
 
-  'al-logo': set('Logo', '22:3781',
+  'al-logo': set('Logo', null,
     (a) => ({ Brand: cap(a.brand) === 'Southleft' ? 'Southleft' : 'Default', State: 'Default' })),
 
-  'al-input': set('Input', '19:2137',
+  'al-input': set('Input', '3544:48650',
     (a) => ({ Label: on(a.hidelabel) ? 'Hidden' : 'Shown', State: stateOf(a) })),
 
-  'al-list': set('List', '19:2561',
+  'al-list': set('List', null,
     (a) => ({ Direction: a.direction === 'row' ? 'Row' : 'Default', State: 'Default' })),
 
-  'al-stat': set('Stat', '19:2580',
+  'al-stat': set('Stat', null,
     (a) => ({ Trend: cap(a.trend) === 'Up' ? 'Up' : cap(a.trend) === 'Down' ? 'Down' : 'Default', State: 'Default' })),
 
-  'al-testimonial': set('Testimonial', '19:2589', () => ({ State: 'Default' })),
+  'al-testimonial': set('Testimonial', null, () => ({ State: 'Default' })),
 
-  'al-card': set('Card', '25:8878',
+  'al-card': set('Card', '5301:276',
     (a) => ({ Variant: cap(a.variant) || 'Default', State: 'Default' })),
 
-  'al-table': set('Table', '19:2527',
+  'al-table': set('Table', '3558:62965',
     (a) => ({
       Selectable: on(a.isselectable) ? 'Yes' : 'No',
       Sort: a.sort === 'ascending' ? 'Ascending' : 'None',
       State: 'Default',
     })),
 
-  'al-breadcrumbs': set('Breadcrumbs', '19:2021', () => ({ State: 'Default' })),
+  'al-breadcrumbs': set('Breadcrumbs', '3558:60804', () => ({ State: 'Default' })),
 };
 
 /**

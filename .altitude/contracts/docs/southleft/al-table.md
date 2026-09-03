@@ -17,8 +17,8 @@ inside a `<al-theme density="...">` scope.
 ## Figma
 
 - Component set: **Table**
-- Node id: `19:2527` (pinned)
-- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=19-2527)
+- Node id: `3558:62965` (pinned)
+- [Open in Figma](https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/?node-id=3558-62965)
 
 ## Props (8)
 

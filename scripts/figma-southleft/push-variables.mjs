@@ -6,6 +6,15 @@
  *
  * Direction is code -> Figma. Nothing is ever deleted.
  *
+ * STATUS 2026-09-03: this script DOES NOT RUN as written. Its tier-1 name rules
+ * predate the status ramps, so it throws `no tier-1 name rule for
+ * --al-color-danger-100` on the first colour it meets. That is independent of the
+ * file-key fix below — it fails the same way whichever file it targets. Left in
+ * place rather than deleted because the plan/chunk shape is still the reference for
+ * a code -> Figma variable push, but treat it as a sketch to finish, not a tool to
+ * reach for: the Southleft variable push on 2026-09-03 was done through the MCP
+ * bridge directly.
+ *
  *   node scripts/figma-southleft/push-variables.mjs              # dry run (default)
  *   node scripts/figma-southleft/push-variables.mjs --apply      # also emit apply chunks
  *   node scripts/figma-southleft/push-variables.mjs --opacity-percent
@@ -15,8 +24,9 @@
  * for `figma_execute`. Run them in numeric order. They are idempotent — a
  * re-run updates existing collections/variables in place by name.
  *
- * TARGET FILE: Southleft V5 — rdhBS9t89V42E7EfiPjmSa. The apply chunks assert
- * figma.fileKey before writing and throw if it is anything else.
+ * TARGET FILE: resolved from `.altitude/ds-projects.json` -> projects.southleft
+ * (currently "Southleft V5"). The apply chunks assert figma.fileKey before writing
+ * and throw if it is anything else.
  *
  * Conventions mirrored from the live ALTITUDE library
  * (.altitude/figma-sync/figma-live-vars.json), NOT invented here:
@@ -35,8 +45,21 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const OUT = join(ROOT, 'scripts/figma-southleft/out');
 const BUNDLES = join(ROOT, 'libs/al-web-components/styles/dist-v5/css/brand');
 
-const FILE_KEY = 'rdhBS9t89V42E7EfiPjmSa';
-const FILE_NAME = 'Southleft V5';
+/*
+ * The target file comes from the PROJECT REGISTRY, never from a literal here.
+ * This used to hard-code `rdhBS9t89V42E7EfiPjmSa` — the original Southleft V5,
+ * retired 2026-08-28 and retired again 2026-09-02 when the owner re-duplicated
+ * Altitude into a fresh file of record. A literal key does not just go stale: the
+ * emitted chunks assert `figma.fileKey === EXPECT_KEY`, so a stale literal makes
+ * this script refuse to write to the CURRENT file while happily targeting a dead
+ * one. Reading .altitude/ds-projects.json means the decoy list and the key move
+ * together, once, in the place that already owns them.
+ */
+const SL_PROJECT = JSON.parse(
+  readFileSync(join(ROOT, '.altitude/ds-projects.json'), 'utf8'),
+).projects.southleft;
+const FILE_KEY = SL_PROJECT.figma.fileKey;
+const FILE_NAME = SL_PROJECT.figma.fileName;
 
 const argv = process.argv.slice(2);
 const APPLY = argv.includes('--apply');
