@@ -107,9 +107,13 @@ set -e
 step "4. Build-config change without baselines update — baselines gate fails"
 ( cd "$WORKTREE"
   git reset --hard "$BASE_REF" >/dev/null
-  echo "// touch" >> libs/al-web-components/webpack.config.js
+  # vite.config.mjs is a file that EXISTS and is genuinely watched by G8.
+  # This used to append to webpack.config.js, which the Vite migration deleted
+  # in T2.2 — so the redirect CREATED the file and the gate fired on a path the
+  # repo does not have. The self-test passed while the real watch was dead.
+  echo "// touch" >> libs/al-web-components/vite.config.mjs
   git add -A
-  git -c user.email=test@test -c user.name=test commit -m "edit webpack" >/dev/null
+  git -c user.email=test@test -c user.name=test commit -m "edit vite config" >/dev/null
 )
 set +e
 run_in_worktree node scripts/check-baselines-gate.js --base="$BASE_REF" >/dev/null 2>&1
@@ -119,11 +123,15 @@ set -e
 step "5. Build-config change WITH baselines update — baselines gate passes"
 ( cd "$WORKTREE"
   git reset --hard "$BASE_REF" >/dev/null
-  echo "// touch" >> libs/al-web-components/webpack.config.js
+  # vite.config.mjs is a file that EXISTS and is genuinely watched by G8.
+  # This used to append to webpack.config.js, which the Vite migration deleted
+  # in T2.2 — so the redirect CREATED the file and the gate fired on a path the
+  # repo does not have. The self-test passed while the real watch was dead.
+  echo "// touch" >> libs/al-web-components/vite.config.mjs
   mkdir -p .altitude/baselines
   echo "{}" > .altitude/baselines/bundle-size.json
   git add -A
-  git -c user.email=test@test -c user.name=test commit -m "edit webpack + baseline" >/dev/null
+  git -c user.email=test@test -c user.name=test commit -m "edit vite config + baseline" >/dev/null
 )
 set +e
 run_in_worktree node scripts/check-baselines-gate.js --base="$BASE_REF" >/dev/null 2>&1

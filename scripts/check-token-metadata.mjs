@@ -123,6 +123,10 @@ function main() {
   }
 
   // ---- 3. UUID STABILITY vs HEAD ----
+  // Renames are tracked apart from failures: a token whose uuid moved to a new
+  // key kept its identity, which is a pass. They are still PRINTED, because a
+  // silent rename is exactly how a real removal would hide.
+  const renames = [];
   let comparedAgainstHead = 0;
   for (const { abs, rel } of allFiles) {
     const repoRel = relative(REPO, abs).replace(/\\/g, '/');
@@ -145,7 +149,28 @@ function main() {
       comparedAgainstHead++;
       const curUuid = curByPath.get(path);
       if (curUuid === undefined) {
-        failures.push(`uuid removed: ${rel}#${path} had ${headUuid} at HEAD, token (or its uuid) is gone now`);
+        /**
+         * A KEY that vanished is not the same as an IDENTITY that vanished, and
+         * conflating them is what a stable uuid exists to prevent. `uuidOwners`
+         * is the whole current tree keyed by uuid, so if this uuid is still
+         * somewhere the token was RENAMED — the identity survived, which is a
+         * pass, and the gate should say which name it moved to.
+         *
+         * Measured on the 2026-09-02 colour rename (`theme.color.*.default*` ->
+         * `*.neutral-*`): 38 tokens tripped "uuid removed", and all 38 still
+         * held their original uuid at the new key. Zero identities were lost.
+         * The gate was reporting a successful rename as data loss and would have
+         * failed `repo-hygiene` on a branch where nothing was wrong.
+         *
+         * A uuid absent from the ENTIRE tree is still a real removal and still
+         * fails below.
+         */
+        const movedTo = uuidOwners.get(headUuid);
+        if (movedTo && movedTo.length > 0) {
+          renames.push(`uuid moved: ${rel}#${path} -> ${movedTo[0].relFile}#${movedTo[0].path} (uuid ${headUuid} preserved)`);
+        } else {
+          failures.push(`uuid removed: ${rel}#${path} had ${headUuid} at HEAD, and that uuid is nowhere in the tree now`);
+        }
       } else if (curUuid !== headUuid) {
         failures.push(`uuid CHANGED: ${rel}#${path} was ${headUuid} at HEAD, now ${curUuid}`);
       }
@@ -189,6 +214,10 @@ function main() {
     console.log(`  unique uuids: ${summary.uniqueUuids}`);
     console.log(`  compared against HEAD: ${comparedAgainstHead} tokens`);
     console.log(`  replacement links: ${replacementCount}`);
+    if (renames.length) {
+      console.log(`\nRENAMES (${renames.length}) — identity preserved, not a violation:`);
+      for (const r of renames) console.log(`  ${r}`);
+    }
     if (warnings.length) {
       console.log(`\nWARNINGS (${warnings.length}):`);
       for (const w of warnings) console.log(`  ${w}`);
