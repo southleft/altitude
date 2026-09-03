@@ -87,8 +87,13 @@ set -e
 
 step "3. Migration-only PR — flip button to dual and touch it"
 ( cd "$WORKTREE"
-  # Reset back to base, then make the migration-only commit
-  git reset --hard "$BASE_REF" >/dev/null
+  # Reset to the SYNTHETIC base (button = legacy there), not the real one.
+  # Diffing a legacy->dual flip against the real base, where every component is
+  # scoped-complete, is a scoped-complete->dual move — a state REGRESSION, which
+  # the gate now refuses. The scenario under test is "a migration PR advances a
+  # legacy component", so the base for it has to be the ref where the component
+  # is actually legacy.
+  git reset --hard "$SYNTHETIC_BASE" >/dev/null
   echo "// touch" >> libs/al-web-components/components/button/button.ts
   node -e "
     const fs = require('fs');
@@ -100,7 +105,7 @@ step "3. Migration-only PR — flip button to dual and touch it"
   git -c user.email=test@test -c user.name=test commit -m "migrate button to dual" >/dev/null
 )
 set +e
-run_in_worktree node scripts/check-migration-gate.js --base="$BASE_REF" >/dev/null 2>&1
+run_in_worktree node scripts/check-migration-gate.js --base="$SYNTHETIC_BASE" >/dev/null 2>&1
 assert_exit "migration-gate (migration-only PR — flips legacy→dual)" 0 $?
 set -e
 
@@ -165,6 +170,28 @@ step "7. Token build-config change WITH baselines update — baselines gate pass
 set +e
 run_in_worktree node scripts/check-baselines-gate.js --base="$BASE_REF" >/dev/null 2>&1
 assert_exit "baselines-gate (token config change + baseline update)" 0 $?
+set -e
+
+step "8. Migration state moved BACKWARD — migration gate fails"
+# The end-state invariant. With every component scoped-complete, the legacy rule
+# in steps 2-3 can only fire against a synthesized base, so this is the case that
+# guards the repo as it actually stands: a merge or a hand-edit that drops a
+# component back down the state machine.
+( cd "$WORKTREE"
+  git reset --hard "$BASE_REF" >/dev/null
+  node -e "
+    const fs = require('fs');
+    const m = JSON.parse(fs.readFileSync('.altitude/migration.json','utf8'));
+    const tag = Object.keys(m.components)[0];
+    m.components[tag] = { ...m.components[tag], state: 'dual', expiry: '2.1.0' };
+    fs.writeFileSync('.altitude/migration.json', JSON.stringify(m, null, 2) + '\n');
+  "
+  git add -A
+  git -c user.email=test@test -c user.name=test commit -m "regress a component to dual" >/dev/null
+)
+set +e
+run_in_worktree node scripts/check-migration-gate.js --base="$BASE_REF" >/dev/null 2>&1
+assert_exit "migration-gate (state regression scoped-complete→dual)" 1 $?
 set -e
 
 echo
