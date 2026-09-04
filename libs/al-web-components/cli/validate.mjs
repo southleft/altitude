@@ -41,7 +41,7 @@
  */
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { resolve, join } from 'node:path';
+import { resolve, join, dirname } from 'node:path';
 
 const HERE = fileURLToPath(new URL('.', import.meta.url));
 
@@ -129,20 +129,51 @@ function parseType(text) {
  * is unavailable, or the component builds a slot name dynamically, slot checking is SKIPPED for
  * that element rather than guessed at.
  */
-function readSlotEvidence(modulePath) {
+function readSlotEvidence(modulePath, pkgRoot) {
   if (!modulePath) return null;
-  const js = fileURLToPath(new URL(`../dist/${String(modulePath).replace(/\.ts$/, '.js')}`, import.meta.url));
-  if (!existsSync(js)) return null;
+  const rel = String(modulePath).replace(/\.ts$/, '.js');
+  const js = [
+    pkgRoot ? join(pkgRoot, 'dist', rel) : null,
+    pkgRoot ? join(pkgRoot, rel) : null,
+    fileURLToPath(new URL(`../dist/${rel}`, import.meta.url)),
+  ].filter(Boolean).find((p) => existsSync(p));
+  if (!js) return null;
   let src;
   try { src = readFileSync(js, 'utf8'); } catch { return null; }
   if (/<slot\b[^>]*\bname\s*=\s*[^"'\s>]/.test(src)) return null; // dynamic slot name — unknowable
   return new Set([...src.matchAll(/<slot\b[^>]*\bname\s*=\s*["']([^"']+)["']/g)].map((x) => x[1]));
 }
 
-function loadContracts(cemPath) {
-  const cem = JSON.parse(readFileSync(cemPath, 'utf8'));
+/**
+ * MERGES SEVERAL MANIFESTS, later ones winning.
+ *
+ * A design system can ship a brand layer that supersedes base components under the
+ * SAME tag: @southleft/sl-web-components redefines al-card, al-header and al-footer
+ * for Southleft, and adds al-hero, al-cta-band, al-marquee, al-page-hero,
+ * al-logo-wall and al-section-header. Reading only the base manifest reported all of
+ * that correct, shipped markup as wrong — measured on apps/southleft, 15 unknown
+ * components and 19 unknown al-card attributes, every one of which the brand layer
+ * declares (`featured`, `href`, `image`, `heading`, `excerpt`, `fallback`, `target`,
+ * `command`, `dashed`, ...).
+ *
+ * Order is the contract: pass base first, brand second, and the brand's definition
+ * replaces the base's for any tag they share. That is the same precedence
+ * `.altitude/ds-projects.json` states with `brandLibrary.supersedes`.
+ */
+function loadContracts(cemPaths) {
+  const paths = Array.isArray(cemPaths) ? cemPaths : [cemPaths];
   const components = new Map();  // tagName   -> spec  (for `<al-*>` custom-element usage)
   const byClassName = new Map(); // className -> spec  (for @southleft/al-react wrappers: `<ALButton/>` -> ALButton)
+  for (const cemPath of paths) loadOneCem(cemPath, components, byClassName);
+  return { components, byClassName };
+}
+
+function loadOneCem(cemPath, components, byClassName) {
+  const cem = JSON.parse(readFileSync(cemPath, 'utf8'));
+  // Slot evidence is the compiled component NEXT TO ITS OWN manifest, not next to the
+  // CLI — otherwise a brand module resolves against the base package and silently
+  // reports `slotsKnown: false` for every brand component.
+  const pkgRoot = dirname(cemPath);
   for (const mod of cem.modules ?? []) {
     for (const d of mod.declarations ?? []) {
       if (!d.customElement || !d.tagName) continue;
@@ -154,7 +185,7 @@ function loadContracts(cemPath) {
       }
       // Declared slots. `""` is the default slot; only NAMED slots can appear in `slot="…"`.
       const documented = (d.slots ?? []).map((s) => s.name).filter((n) => typeof n === 'string' && n);
-      const rendered = readSlotEvidence(mod.path);
+      const rendered = readSlotEvidence(mod.path, pkgRoot);
       const namedSlots = new Set([...documented, ...(rendered ?? [])]);
       const spec = {
         tag: d.tagName,
@@ -169,7 +200,6 @@ function loadContracts(cemPath) {
       if (d.name) byClassName.set(d.name, spec);
     }
   }
-  return { components, byClassName };
 }
 
 // ── contract (tokens) ──────────────────────────────────────────────────────────────────────────
@@ -887,7 +917,19 @@ function gatherFiles(target) {
 export function validateApp(target, opts = {}) {
   const cemPath = resolveCemPath(opts.cemPath);
   if (!cemPath) throw new Error('could not locate custom-elements.json (the Altitude CEM). Pass --cem <path> or set ALTITUDE_CEM.');
-  const contracts = loadContracts(cemPath);
+  /*
+   * Extra manifests layer ON TOP, in order, and the last definition of a tag wins.
+   * That is how a brand layer that supersedes base components under the same tag
+   * gets checked against its own API instead of the base one.
+   */
+  const extraCems = (opts.extraCems ?? [])
+    .concat((process.env.ALTITUDE_CEM_EXTRA ?? '').split(',').map((x) => x.trim()).filter(Boolean))
+    .map((p) => resolve(p));
+  for (const e of extraCems) {
+    if (!existsSync(e)) throw new Error(`--cem-extra manifest not found: ${e}`);
+  }
+  const cemPaths = [cemPath, ...extraCems];
+  const contracts = loadContracts(cemPaths);
   const tokens = opts.tokens === false ? null : loadTokenContract(opts);
   const ctx = { contracts, tokens };
   const sink = { violations: [], byComponent: {}, totalUsages: 0, failingUsages: 0 };
@@ -901,7 +943,7 @@ export function validateApp(target, opts = {}) {
     errorCount,
     warningCount: sink.violations.length - errorCount,
     byComponent: sink.byComponent,
-    contractSource: cemPath,
+    contractSource: cemPaths.length > 1 ? cemPaths : cemPath,
     tokenSource: tokens?.source ?? null,
   };
 }
@@ -915,15 +957,17 @@ if (isCli) {
   const strict = argv.includes('--strict');
   const ci = argv.indexOf('--cem');
   const cemPath = ci >= 0 ? argv[ci + 1] : undefined;
+  // repeatable: --cem-extra <path> --cem-extra <path>
+  const extraCems = argv.reduce((acc, a, i) => (a === '--cem-extra' && argv[i + 1] ? acc.concat(argv[i + 1]) : acc), []);
   const ti = argv.indexOf('--tokens');
   const tokensPath = ti >= 0 ? argv[ti + 1] : undefined;
-  const flagValues = new Set(['--cem', '--tokens']);
+  const flagValues = new Set(['--cem', '--cem-extra', '--tokens']);
   const target = argv.find((a, i) => !a.startsWith('--') && !flagValues.has(argv[i - 1]));
 
-  if (!target) { console.error('usage: altitude-validate [--json] [--strict] [--cem <path>] [--tokens <path>] <file-or-dir>'); process.exit(2); }
+  if (!target) { console.error('usage: altitude-validate [--json] [--strict] [--cem <path>] [--cem-extra <path>]... [--tokens <path>] <file-or-dir>'); process.exit(2); }
 
   try {
-    const r = validateApp(resolve(target), { cemPath, tokensPath });
+    const r = validateApp(resolve(target), { cemPath, extraCems, tokensPath });
     if (asJson) {
       process.stdout.write(JSON.stringify({ apiVersion: 1, type: 'validation.result', data: r }) + '\n');
     } else {

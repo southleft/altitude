@@ -13,7 +13,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -279,6 +279,40 @@ pair('WARN_A11Y_NAME',
 
   const slottedOnly = run('<al-button hideText variant="bare"><al-icon-bell slot="after"></al-icon-bell></al-button>');
   assert('...but a SLOTTED child alone does not - that names another region', has(slottedOnly, 'WARN_A11Y_NAME'), seen(slottedOnly));
+}
+
+// ── 8b. --cem-extra: a brand layer that supersedes base components ──────────────────────────
+console.log('\n==> --cem-extra (brand layer manifest)');
+{
+  const BRAND_CEM = join(REPO, 'libs/sl-web-components/custom-elements.json');
+  if (!existsSync(BRAND_CEM)) {
+    console.log('  SKIP - libs/sl-web-components/custom-elements.json not built');
+  } else {
+    /*
+     * `al-card` exists in BOTH manifests and the brand one supersedes it, adding
+     * `heading` / `excerpt` / `href` among others. Read the base manifest alone and
+     * every one of those is an unknown attribute — 62 of apps/southleft's 85
+     * reported violations were exactly this, and none of them were real.
+     */
+    const markup = '<al-card heading="Title" excerpt="Words" href="/x"></al-card>';
+
+    const baseOnly = run(markup);
+    assert('without the brand manifest the brand API reads as unknown',
+      has(baseOnly, 'ERR_UNKNOWN_ATTRIBUTE'), seen(baseOnly));
+
+    const withBrand = run(markup, { args: ['--cem-extra', BRAND_CEM] });
+    assert('with it, the same markup is clean',
+      !has(withBrand, 'ERR_UNKNOWN_ATTRIBUTE'), seen(withBrand));
+
+    // The brand layer must not blind the checker to the BASE catalog it does not redefine.
+    const baseStill = run('<al-button variant="nope">Go</al-button>', { args: ['--cem-extra', BRAND_CEM] });
+    assert('...and base components are still checked',
+      has(baseStill, 'ERR_INVALID_ENUM'), seen(baseStill));
+
+    const missing = run(markup, { args: ['--cem-extra', join(REPO, 'no/such/manifest.json')] });
+    assert('a missing --cem-extra path fails loudly rather than being ignored',
+      missing.status !== 0, 'status ' + missing.status);
+  }
 }
 
 // ── 9. exit codes — a warning must not fail a build unless --strict ─────────────────────────
