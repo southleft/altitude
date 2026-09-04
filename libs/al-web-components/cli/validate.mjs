@@ -60,7 +60,7 @@ const CODES = Object.freeze({
   'handrolled-layout': 'WARN_HANDROLLED_LAYOUT',
   'missing-theme-host': 'ERR_MISSING_THEME_HOST',
   'mixed-registration': 'WARN_MIXED_REGISTRATION',
-  'a11y-name': 'WARN_A11Y_NAME',
+  'a11y-name': 'ERR_A11Y_NAME',
 });
 
 /** A code beginning `WARN_` is advisory: it never fails the build unless `--strict` is passed. */
@@ -903,13 +903,28 @@ function validateSource(filePath, text, ctx, sink) {
   }
 }
 
+/*
+ * This CLI's own documentation and fixtures EXIST to contain violations:
+ * REPAIR.md prints a "Before:" for every code it explains, and __fixtures__
+ * holds deliberate bad markup for the test suite. A directory walk that
+ * includes them reports the checker's own teaching material as defects — and
+ * once ERR_A11Y_NAME became an error, that turned a green scan of the library
+ * into a failing one over a documented example.
+ *
+ * Skipped only when WALKING a directory. An explicit path still scans, which is
+ * how the test suite points at the fixtures on purpose.
+ */
+const SELF_EXCLUDED = /(^|[\\/])cli[\\/](REPAIR\.md|__fixtures__)([\\/]|$)/;
+
 function gatherFiles(target) {
   if (!existsSync(target)) return [];
   if (statSync(target).isFile()) return SCAN_EXT.test(target) ? [target] : [];
   const out = [];
   for (const e of readdirSync(target)) {
     if (e === 'node_modules' || e === 'dist' || e.startsWith('.')) continue;
-    out.push(...gatherFiles(join(target, e)));
+    const child = join(target, e);
+    if (SELF_EXCLUDED.test(child)) continue;
+    out.push(...gatherFiles(child));
   }
   return out;
 }

@@ -171,7 +171,7 @@ the element silently never upgrades.
 - Prose *about* the paths does not count — quoted code (fenced blocks, `<pre>`/`<code>`, and
   single-backtick spans) is masked before this check runs.
 
-### `WARN_A11Y_NAME`
+### `ERR_A11Y_NAME`
 The component's own guidance states an accessible-name obligation this usage does not meet. The
 rule set is deliberately small and evidence-backed; today it is one case.
 - **al-button with `hideText` and no name.** `hideText` only *visually* hides the slotted text, so
@@ -218,7 +218,7 @@ never finishes. These are the lines that were drawn, all of them measured agains
   `box-shadow` are not token-covered concepts, so a px there is not a violation.
 - **Slot names on a component whose rendered template can't be read**, or that builds a slot name
   dynamically. Skipped, not guessed.
-- **Accessible-name obligations that aren't written down.** `WARN_A11Y_NAME` covers only cases the
+- **Accessible-name obligations that aren't written down.** `ERR_A11Y_NAME` covers only cases the
   component's own guidance states. Contrast, focus order, and heading structure are for axe and a
   human, not for a static markup scan.
 - **`<al-theme>` on anything that isn't plausibly a document root.** An inner fragment's theme host

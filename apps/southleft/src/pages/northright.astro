@@ -66,7 +66,7 @@ const contactMailto = `mailto:${SITE.email}?subject=${encodeURIComponent('Northr
           <al-card style="height:100%; box-sizing:border-box;">
             <div slot="header">
               <al-chip variant="secondary">{tier.name}</al-chip>
-              <al-heading tagName="p" variant="md" isBold={true} style="margin-top: var(--al-theme-space-xs);">{tier.price}</al-heading>
+              <p class="al-u-theme-typography-heading-md-bold" style="margin-top: var(--al-theme-space-xs);">{tier.price}</p>
               <p class="al-u-theme-typography-body-xs">{tier.priceNote}</p>
             </div>
             <al-text-block><strong>{tier.pages}</strong></al-text-block>
@@ -85,7 +85,7 @@ const contactMailto = `mailto:${SITE.email}?subject=${encodeURIComponent('Northr
 
   <div class="sl-container sl-section">
     <al-heading tagName="h2" variant="sm" isBold={true}>Need a system, not a site?</al-heading>
-    <al-text-block maxWidth="md">
+    <al-text-block maxWidth="sm">
       Northright sits alongside our main practice — AI-powered design systems for product
       organizations. If your project is a component library, token architecture, or an AI-ready
       system rather than a website, start there instead.
