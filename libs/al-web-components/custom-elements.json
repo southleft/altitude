@@ -23668,22 +23668,12 @@
             },
             {
               "kind": "field",
-              "name": "brand",
-              "type": {
-                "text": "'altitude' | 'southleft'"
-              },
-              "default": "'altitude'",
-              "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'.",
-              "attribute": "brand"
-            },
-            {
-              "kind": "field",
               "name": "mode",
               "type": {
                 "text": "'light' | 'dark'"
               },
               "default": "'light'",
-              "description": "Color mode.",
+              "description": "Color mode.\n\nThe VALUES no longer live in this component. They live in the design\nsystem's own stylesheet (`@southleft/al-web-components/project/<id>.css`),\nwhich carries `:root` for the default mode and `[data-al-mode='…']` for the\nothers — the same shape Figma uses, where one collection holds Light and\nDark as two modes of one system.\n\nThis property is mirrored onto the host as `data-al-mode` so that stylesheet\nmatches. A data attribute rather than reusing `[mode]` directly, for two\nreasons: the versioned registry renames the TAG (`al-theme-1-2-3`), so a\ntag-qualified selector would stop matching; and a bare `[mode='light']` in a\nglobal stylesheet would match unrelated elements. `data-al-mode` also means\na page can set a mode on `<html>` or any subtree with no component at all.",
               "attribute": "mode"
             },
             {
@@ -23727,21 +23717,12 @@
           ],
           "attributes": [
             {
-              "name": "brand",
-              "type": {
-                "text": "'altitude' | 'southleft'"
-              },
-              "default": "'altitude'",
-              "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'.",
-              "fieldName": "brand"
-            },
-            {
               "name": "mode",
               "type": {
                 "text": "'light' | 'dark'"
               },
               "default": "'light'",
-              "description": "Color mode.",
+              "description": "Color mode.\n\nThe VALUES no longer live in this component. They live in the design\nsystem's own stylesheet (`@southleft/al-web-components/project/<id>.css`),\nwhich carries `:root` for the default mode and `[data-al-mode='…']` for the\nothers — the same shape Figma uses, where one collection holds Light and\nDark as two modes of one system.\n\nThis property is mirrored onto the host as `data-al-mode` so that stylesheet\nmatches. A data attribute rather than reusing `[mode]` directly, for two\nreasons: the versioned registry renames the TAG (`al-theme-1-2-3`), so a\ntag-qualified selector would stop matching; and a bare `[mode='light']` in a\nglobal stylesheet would match unrelated elements. `data-al-mode` also means\na page can set a mode on `<html>` or any subtree with no component at all.",
               "fieldName": "mode"
             },
             {

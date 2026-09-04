@@ -27,9 +27,15 @@
 //   shape=default|sharp|pill — corner-radius axis: repoints the
 //     `theme.border.radius.role.*` tokens (spec 2026-08-20-token-axes-expansion).
 //
-// Orthogonal axes: `brand` sets a LOOK, `shape`/`motion` set a FEEL. A
-// "recipe" is the combination — see `.altitude/AXES.md` — never a single
-// attribute flip, and never a per-brand shape/motion file.
+// Orthogonal axes: `shape`/`motion` set a FEEL, `density`/`contrast` set a FIT.
+// A "recipe" is the combination — see `.altitude/AXES.md` — never a single
+// attribute flip.
+//
+// There is no `brand` axis. A design system's LOOK is the token bundle the page
+// loads, one file per system, exactly as a Figma file is one system. This
+// component no longer carries a palette at all: it mirrors `mode` onto the host
+// for the bundle's `[data-al-mode]` blocks to match, and owns only the axes that
+// are genuinely axes rather than a second set of values.
 
 import { html, css, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -43,9 +49,22 @@ import styles from './theme.scss';
 export class ALTheme extends ALElement {
   static el = 'al-theme';
 
-  /** Brand identifier. Currently shipped: 'altitude' | 'southleft'. */
-  @property() accessor brand: 'altitude' | 'southleft' = 'altitude';
-  /** Color mode. */
+  /**
+   * Color mode.
+   *
+   * The VALUES no longer live in this component. They live in the design
+   * system's own stylesheet (`@southleft/al-web-components/project/<id>.css`),
+   * which carries `:root` for the default mode and `[data-al-mode='…']` for the
+   * others — the same shape Figma uses, where one collection holds Light and
+   * Dark as two modes of one system.
+   *
+   * This property is mirrored onto the host as `data-al-mode` so that stylesheet
+   * matches. A data attribute rather than reusing `[mode]` directly, for two
+   * reasons: the versioned registry renames the TAG (`al-theme-1-2-3`), so a
+   * tag-qualified selector would stop matching; and a bare `[mode='light']` in a
+   * global stylesheet would match unrelated elements. `data-al-mode` also means
+   * a page can set a mode on `<html>` or any subtree with no component at all.
+   */
   @property() accessor mode: 'light' | 'dark' = 'light';
   /** Density axis. */
   @property() accessor density: 'compact' | 'cozy' | 'comfortable' = 'comfortable';
@@ -69,6 +88,19 @@ export class ALTheme extends ALElement {
    * identity still shows through until `sharp`/`pill` overrides it.
    */
   @property() accessor shape: 'default' | 'sharp' | 'pill' | undefined;
+
+  /**
+   * Mirror `mode` onto the host so the project stylesheet's
+   * `[data-al-mode='…']` block matches this element. Custom properties set
+   * there inherit through the shadow boundary into every component below,
+   * which is what makes a SUBTREE themeable without the palette living here.
+   */
+  updated(changed: Map<string, unknown>) {
+    super.updated(changed as never);
+    if (changed.has('mode') || !this.hasAttribute('data-al-mode')) {
+      this.setAttribute('data-al-mode', this.mode);
+    }
+  }
 
   static get styles() {
     return [

@@ -870,9 +870,21 @@ async function build() {
   //     it is made of — the same rule the host partials follow.
   //
   //     Shape, and why:
-  //       :root                    the DEFAULT mode in full. Dark, because that
-  //                                is what main.css has always baked into :root
-  //                                and this must not move the default rendering.
+  //       :root, [data-al-project='<id>']
+  //                                the DEFAULT mode in full. Dark at :root,
+  //                                because that is what main.css has always
+  //                                baked into :root and this must not move the
+  //                                default rendering.
+  //
+  //                                The second selector is what keeps TWO design
+  //                                systems able to share a document, which the
+  //                                brand axis used to provide and which dropping
+  //                                it would otherwise have cost. Load both
+  //                                bundles and each subtree marked
+  //                                `data-al-project` resolves its own system;
+  //                                `:root` belongs to whichever loaded last, so
+  //                                a two-system page marks both subtrees
+  //                                explicitly rather than relying on order.
   //       [data-al-mode='light']   only the properties that differ by mode.
   //       [data-al-mode='dark']    the same delta, re-asserted, so a dark scope
   //                                nested INSIDE a light one resolves back —
@@ -902,7 +914,7 @@ async function build() {
 ` +
         `   One design system, both modes. Set data-al-mode on any element to scope a mode. */
 `,
-      renderRule([...base], { selector: ':root' }),
+      renderRule([...base], { selector: `:root, [data-al-project='${project}']` }),
     ];
     for (const t of themes) {
       const delta = modeDelta(t);
