@@ -25,6 +25,7 @@
    here, next to the artwork that uses them.
 \* ------------------------------------------------------------------ */
 :root {
+  --sl-art-sand-mid: #948a70;
   --sl-art-sand-deep: #857a63;
   --sl-art-ink-deepest: #100f0d;
 }
@@ -168,7 +169,7 @@ body {
 .sl-announcement {
   display: block;
   border-block-end: var(--al-theme-border-width) solid var(--sl-border-faint);
-  background: var(--al-color-brand-ink-950);
+  background: var(--sl-art-ink-deepest);
   padding-block: 0.625rem;
   text-align: center;
   font-family: var(--sl-font-mono);
@@ -178,7 +179,7 @@ body {
 }
 
 al-theme[mode='light'] .sl-announcement {
-  background: var(--al-color-brand-paper-200);
+  background: var(--al-color-neutral-300);
 }
 
 .sl-announcement:hover {
@@ -326,6 +327,14 @@ al-theme[mode='light'] .sl-announcement {
  * trigger and the ink/paper toggle both use this shape in v5; neither is an
  * al-* component there either (Header.astro/ThemeToggle.astro hand-roll
  * both), so this is app markup + tokens, matching v5's own approach. */
+/* The HOST keeps drawing the box — border, radius, size, resting colour and
+ * the hover transitions below — and `al-button variant="bare"` sits inside it
+ * painting nothing of its own. That split is deliberate: it buys the
+ * component's accessible-name behaviour (the mode script assigns `.label`,
+ * which only means something on al-button) without moving a single pixel, and
+ * it avoids retuning `content-neutral-default` on the element, which the hover
+ * rule would then have no un-overridden value to reach back for. The SVGs are
+ * slotted light DOM, so they inherit `color` from this host directly. */
 .sl-header__icon-btn {
   display: inline-flex;
   flex: 0 0 auto;
@@ -334,6 +343,9 @@ al-theme[mode='light'] .sl-announcement {
   inline-size: 2.25rem;
   block-size: 2.25rem;
   padding: 0;
+  --al-button-height: 100%;
+  --al-button-width: 100%;
+  --al-button-padding: 0;
   border-radius: var(--al-theme-border-radius-role-action);
   border: var(--al-theme-border-width) solid var(--sl-border-faint);
   background: transparent;
@@ -347,6 +359,25 @@ al-theme[mode='light'] .sl-announcement {
 .sl-header__icon-btn:hover {
   border-color: var(--al-theme-color-border-neutral-weak);
   color: var(--al-theme-color-content-neutral-default);
+}
+
+/* The glyphs are SLOTTED light DOM, so they inherit from their flattened-tree
+ * parent INSIDE al-button's shadow root — the variant's own `color`, which for
+ * `bare` is content-neutral-default (near-white here) — and not from this host.
+ * Measured on the swap: the icons jumped from #a49981 to #fdfcfa. Painting them
+ * from the light DOM, where the site owns them, is both the fix and the more
+ * honest expression of "this button's icon is this colour". */
+.sl-header__icon-btn svg {
+  color: var(--al-theme-color-content-neutral-weak);
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-header__icon-btn:hover svg {
+  color: var(--al-theme-color-content-neutral-default);
+}
+
+.sl-header__icon-btn--accent-hover:hover svg {
+  color: var(--al-theme-color-content-primary-default);
 }
 
 /* Palette (AI direction) trigger hovers to the accent, not just full
@@ -661,7 +692,7 @@ al-card[variant='service'] ul[slot='list'] li::before {
   display: block;
   font-family: var(--sl-font-mono);
   font-size: 0.75rem;
-  color: var(--al-color-brand-paper-400);
+  color: var(--al-color-neutral-500);
   margin-block-end: var(--al-theme-space-xs);
 }
 
@@ -688,7 +719,7 @@ al-card[variant='service'] ul[slot='list'] li::before {
 .sl-pg-swatch {
   /*
    * Declared here with a fallback, though every call site sets it inline
-   * (TrySystem.astro:43-55, each to a real `var(--al-color-brand-*)`). Two
+   * (TrySystem.astro:43-55, each to a real `var(--al-color-*)` ramp stop). Two
    * reasons: a swatch rendered without the inline style previously had NO
    * background at all rather than a visible neutral, and a custom property
    * that only ever exists in a `style` attribute is invisible to
@@ -711,8 +742,8 @@ al-card[variant='service'] ul[slot='list'] li::before {
 }
 
 .sl-pg-swatch:has(input:checked) {
-  border-color: var(--al-color-brand-paper-50);
-  outline: 2px solid var(--al-color-brand-ink-950);
+  border-color: var(--al-color-neutral-100);
+  outline: 2px solid var(--sl-art-ink-deepest);
   outline-offset: 2px;
 }
 
@@ -725,8 +756,8 @@ al-card[variant='service'] ul[slot='list'] li::before {
   display: inline-block;
   font-family: var(--sl-font-mono);
   font-size: 0.75rem;
-  color: var(--al-color-brand-paper-400);
-  border: 1px solid var(--al-color-brand-ink-600);
+  color: var(--al-color-neutral-500);
+  border: 1px solid var(--al-color-neutral-700);
   border-radius: var(--al-theme-border-radius-role-action);
   padding: 0.35rem 0.8rem;
   transition:
@@ -736,13 +767,13 @@ al-card[variant='service'] ul[slot='list'] li::before {
 }
 
 .sl-pg-pill:hover span {
-  color: var(--al-color-brand-paper-50);
+  color: var(--al-color-neutral-100);
 }
 
 .sl-pg-pill:has(input:checked) span {
-  color: var(--al-color-brand-ink-950);
-  background: var(--al-color-brand-paper-50);
-  border-color: var(--al-color-brand-paper-50);
+  color: var(--sl-art-ink-deepest);
+  background: var(--al-color-neutral-100);
+  border-color: var(--al-color-neutral-100);
 }
 
 .sl-pg-pill:has(input:focus-visible) span {
@@ -752,19 +783,19 @@ al-card[variant='service'] ul[slot='list'] li::before {
 
 .sl-pg-slider input[type='range'] {
   width: 100%;
-  accent-color: var(--al-color-brand-red-500);
+  accent-color: var(--al-color-primary-500);
 }
 
 .sl-pg-note {
   margin: 0;
   font-family: var(--sl-font-mono);
-  color: var(--al-color-brand-paper-500);
+  color: var(--sl-art-sand-deep);
 }
 
 .sl-pg-reset {
   align-self: flex-start;
   font-family: var(--sl-font-mono);
-  color: var(--al-color-brand-paper-500);
+  color: var(--sl-art-sand-deep);
   background: none;
   border: 0;
   padding: 0;
@@ -773,11 +804,11 @@ al-card[variant='service'] ul[slot='list'] li::before {
 }
 
 .sl-pg-reset:hover {
-  color: var(--al-color-brand-paper-50);
+  color: var(--al-color-neutral-100);
 }
 
 .sl-pg-apply {
-  border-block-start: 1px solid var(--al-color-brand-ink-700);
+  border-block-start: 1px solid var(--al-color-neutral-800);
   padding-block-start: var(--al-theme-space);
   display: flex;
   flex-direction: column;
@@ -787,15 +818,15 @@ al-card[variant='service'] ul[slot='list'] li::before {
 .sl-pg-apply p {
   margin: 0;
   font-family: var(--sl-font-mono);
-  color: var(--al-color-brand-paper-500);
+  color: var(--sl-art-sand-deep);
 }
 
 .sl-pg-apply-btn {
   align-self: flex-start;
   font-family: var(--sl-font-mono);
   font-weight: 500;
-  color: var(--al-color-brand-ink-950);
-  background: var(--al-color-brand-paper-50);
+  color: var(--sl-art-ink-deepest);
+  background: var(--al-color-neutral-100);
   border: 0;
   border-radius: var(--al-theme-border-radius-role-action);
   padding: 0.55rem 1.2rem;
@@ -804,20 +835,20 @@ al-card[variant='service'] ul[slot='list'] li::before {
 }
 
 .sl-pg-apply-btn:hover {
-  background: var(--al-color-brand-paper-200);
+  background: var(--al-color-neutral-300);
 }
 
 /* ---- Stage (local preview) ---- */
 .sl-pg-stage {
-  --pg-accent: var(--al-color-brand-red-500);
+  --pg-accent: var(--al-color-primary-500);
   --pg-radius: 4px;
   --pg-space: 1;
   --pg-wdth: 125;
-  --pg-bg: var(--al-color-brand-ink-950);
-  --pg-surface: var(--al-color-brand-ink-800);
-  --pg-fg: var(--al-color-brand-paper-50);
-  --pg-fg-muted: var(--al-color-brand-paper-400);
-  --pg-border: var(--al-color-brand-ink-600);
+  --pg-bg: var(--sl-art-ink-deepest);
+  --pg-surface: var(--al-color-neutral-850);
+  --pg-fg: var(--al-color-neutral-100);
+  --pg-fg-muted: var(--al-color-neutral-500);
+  --pg-border: var(--al-color-neutral-700);
 
   display: flex;
   flex-direction: column;
@@ -834,11 +865,11 @@ al-card[variant='service'] ul[slot='list'] li::before {
 }
 
 .sl-pg-stage[data-pg-mode='light'] {
-  --pg-bg: var(--al-color-brand-paper-100);
-  --pg-surface: var(--al-color-brand-paper-0);
-  --pg-fg: var(--al-color-brand-ink-900);
-  --pg-fg-muted: var(--al-color-brand-paper-600);
-  --pg-border: var(--al-color-brand-paper-300);
+  --pg-bg: var(--al-color-neutral-200);
+  --pg-surface: var(--al-color-neutral-100);
+  --pg-fg: var(--al-color-neutral-900);
+  --pg-fg-muted: var(--al-color-neutral-600);
+  --pg-border: var(--al-color-neutral-400);
 }
 
 .sl-pg-app {
@@ -984,7 +1015,7 @@ al-card[variant='service'] ul[slot='list'] li::before {
 
 .sl-pg-btn-primary {
   background: var(--pg-accent);
-  color: var(--al-color-brand-ink-950);
+  color: var(--sl-art-ink-deepest);
 }
 
 .sl-pg-btn-ghost {
@@ -1012,13 +1043,13 @@ al-card[variant='service'] ul[slot='list'] li::before {
 .sl-pg-readout {
   margin: 0;
   font-family: var(--sl-font-mono);
-  color: var(--al-color-brand-paper-450);
+  color: var(--sl-art-sand-mid);
   overflow-x: auto;
   white-space: nowrap;
 }
 
 al-theme[mode='light'] .sl-pg-readout {
-  color: var(--al-color-brand-paper-600);
+  color: var(--al-color-neutral-600);
 }
 
 .sl-pg-act2 {
@@ -1154,11 +1185,11 @@ al-theme[mode='light'] .sl-pg-readout {
   margin: var(--al-theme-space-lg) 0 0;
   font-family: var(--sl-font-mono);
   font-size: 0.75rem;
-  color: var(--al-color-brand-paper-450);
+  color: var(--sl-art-sand-mid);
 }
 
 al-theme[mode='light'] .sl-quote-card__attribution {
-  color: var(--al-color-brand-paper-600);
+  color: var(--al-color-neutral-600);
 }
 
 .sl-quote-card__name {
@@ -1193,12 +1224,12 @@ al-theme[mode='light'] .sl-quote-card__attribution {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--al-color-brand-paper-450);
+  color: var(--sl-art-sand-mid);
   margin-block-end: var(--al-theme-space-xl);
 }
 
 al-theme[mode='light'] .sl-section-rule {
-  color: var(--al-color-brand-paper-600);
+  color: var(--al-color-neutral-600);
 }
 
 .sl-section-rule::before,
@@ -1318,7 +1349,7 @@ al-theme[mode='light'] .sl-section-rule {
    * shadow content's own explicit font declaration still wins for what's
    * actually drawn).
    *
-   * Reaches for `--al-typography-preset-48-bold` (the tier-1 primitive
+   * Reaches for `--al-typography-preset-display-lg-bold` (the tier-1 primitive
    * `al-heading`'s `display-lg`+bold variant actually applies inside its
    * shadow root — heading.scss's `al-theme-typography-display-lg-bold`
    * mixin) rather than the `--al-theme-typography-display-lg-bold` tier-2
@@ -1329,7 +1360,7 @@ al-theme[mode='light'] .sl-section-rule {
    * library, not touched here (out of this app's scope), but worth
    * reaching around so the `ch` unit isn't computed against the wrong
    * font. */
-  font: var(--al-typography-preset-48-bold);
+  font: var(--al-typography-preset-display-lg-bold);
   max-width: 18ch;
   /* v5 applies `text-wrap: balance` to every h1/h2/h3 sitewide (global.css
    * `@layer base`). It's the real mechanism behind v5's tight 4-line hero
@@ -1466,14 +1497,15 @@ al-theme[mode='light'] .sl-section-rule {
  * tokens) — the terminal always renders as a dark panel regardless of
  * ink/paper site mode, by design (global.css: `.terminal { background:
  * var(--sl-color-ink-950); ... }`) — so this reaches for the same brand
- * PRIMITIVE custom properties (`--al-color-brand-*`), which resolve to the
- * identical value in both modes, rather than the semantic `--al-theme-
- * color-*` tokens used everywhere else in this file.
+ * PRIMITIVE custom properties (`--al-color-*` ramp stops, plus the app-local
+ * `--sl-art-*` tones for the three shades the ramp does not carry), which
+ * resolve to the identical value in both modes, rather than the semantic
+ * `--al-theme-color-*` tokens used everywhere else in this file.
  * -------------------------------------------------------------------- */
 .sl-terminal {
-  background: var(--al-color-brand-ink-950);
-  color: var(--al-color-brand-paper-100);
-  border: var(--al-theme-border-width) solid var(--al-color-brand-ink-600);
+  background: var(--sl-art-ink-deepest);
+  color: var(--al-color-neutral-200);
+  border: var(--al-theme-border-width) solid var(--al-color-neutral-700);
   border-radius: var(--al-theme-border-radius-md);
   font-family: var(--sl-font-mono);
   line-height: 1.7;
@@ -1485,8 +1517,8 @@ al-theme[mode='light'] .sl-section-rule {
   align-items: center;
   gap: var(--al-theme-space-xs);
   padding: var(--al-theme-space-sm) var(--al-theme-space);
-  border-block-end: var(--al-theme-border-width) solid var(--al-color-brand-ink-700);
-  background: var(--al-color-brand-ink-900);
+  border-block-end: var(--al-theme-border-width) solid var(--al-color-neutral-800);
+  background: var(--al-color-neutral-900);
 }
 
 .sl-terminal__dot {
@@ -1496,20 +1528,20 @@ al-theme[mode='light'] .sl-section-rule {
 }
 
 .sl-terminal__dot--1 {
-  background: var(--al-color-brand-red-500);
+  background: var(--al-color-primary-500);
 }
 
 .sl-terminal__dot--2 {
-  background: var(--al-color-brand-paper-400);
+  background: var(--al-color-neutral-500);
 }
 
 .sl-terminal__dot--3 {
-  background: var(--al-color-brand-blue-400);
+  background: var(--al-color-tertiary-500);
 }
 
 .sl-terminal__title {
   margin-inline-start: auto;
-  color: var(--al-color-brand-paper-500);
+  color: var(--sl-art-sand-deep);
 }
 
 .sl-terminal__body {
@@ -1520,23 +1552,23 @@ al-theme[mode='light'] .sl-section-rule {
 }
 
 .sl-terminal__prompt {
-  color: var(--al-color-brand-red-500);
+  color: var(--al-color-primary-500);
 }
 
 .sl-terminal__cmd {
-  color: var(--al-color-brand-paper-50);
+  color: var(--al-color-neutral-100);
 }
 
 .sl-terminal__out {
-  color: var(--al-color-brand-paper-400);
+  color: var(--al-color-neutral-500);
 }
 
 .sl-terminal__ok {
-  color: var(--al-color-brand-green-500);
+  color: var(--al-color-success-500);
 }
 
 .sl-terminal__key {
-  color: var(--al-color-brand-blue-400);
+  color: var(--al-color-tertiary-500);
 }
 
 /* Logo wall — matches v5's `.logo-wall-img` treatment exactly (global.css

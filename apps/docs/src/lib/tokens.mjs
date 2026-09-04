@@ -54,29 +54,58 @@ export function group(prefix) {
 
 /**
  * Color ramps: `al-color-<family>-<step>` collapsed into one row per family.
- * Family and step names are read, never listed.
+ * Family and step names are READ, never listed — see the ORDER note below for
+ * the one place a name appears, and what it does and does not control.
+ *
+ * This used to match `al-color-(brand|neutral)-([a-z]+)-([a-z0-9]+)`, which was
+ * the naming before the ramps were renumbered to `color.<family>.100-900` and
+ * the `color.brand.*` namespace retired. After that rename exactly two keys in
+ * the whole token set still matched — the legacy `neutral-dark` and
+ * `neutral-light` scales — so this page rendered 2 ramps and silently dropped
+ * primary, secondary, tertiary, neutral, danger, info, success, warning and
+ * transparent. Nine families, invisible, on the page whose entire job is to show
+ * them. Measured 2026-09-04.
+ *
+ * The alpha ramps (`al-color-<family>-alpha-<stop>-<pct>`) are deliberately NOT
+ * folded in here: they are overlay values, not a lightness scale, and a chip
+ * strip is the wrong specimen for them — a 10% tint over the page ground reads
+ * as "nearly the background" in every family.
  */
 export function colorRamps() {
-  /** @type {Map<string, {family: string, prefix: string, steps: {name: string, value: string, key: string}[]}>} */
+  /** @type {Map<string, {family: string, label: string, prefix: string, steps: {name: string, value: string, key: string}[]}>} */
   const ramps = new Map();
   for (const [key, raw] of entries) {
-    const m = /^al-color-(brand|neutral)-([a-z]+)-([a-z0-9]+)$/.exec(key);
+    // `neutral-dark-100` keeps its two-word family; `primary-500` has one. A
+    // digit can never be part of a family name, which is what excludes the
+    // alpha keys (`primary-alpha-500-30`) without naming them.
+    const m = /^al-color-([a-z]+(?:-(?:dark|light))?)-(\d+)$/.exec(key);
     if (!m) continue;
-    const family = `${m[1]}-${m[2]}`;
+    const family = m[1];
     if (!ramps.has(family)) {
       ramps.set(family, {
         family,
-        label: `${m[1]} ${m[2]}`.replace(/\b\w/g, (c) => c.toUpperCase()),
+        label: family.replace(/-/g, ' ').replace(/\w/g, (c) => c.toUpperCase()),
         prefix: `--al-color-${family}-*`,
         steps: [],
       });
     }
-    ramps.get(family).steps.push({ name: m[3], value: resolve(raw), key });
+    ramps.get(family).steps.push({ name: m[2], value: resolve(raw), key });
   }
   for (const ramp of ramps.values()) {
     ramp.steps.sort((a, b) => Number(a.name) - Number(b.name) || a.name.localeCompare(b.name));
   }
-  return [...ramps.values()];
+
+  /*
+   * ORDER ONLY — never membership. A family absent from this list still renders;
+   * it sorts after the ones named here, alphabetically. So adding a ramp to the
+   * token set needs no edit in this file, which is the property the old
+   * hardcoded pattern quietly lost.
+   */
+  const ORDER = ['primary', 'secondary', 'tertiary', 'neutral', 'danger', 'warning', 'success', 'info', 'transparent'];
+  const rank = (f) => { const i = ORDER.indexOf(f); return i === -1 ? ORDER.length : i; };
+  return [...ramps.values()].sort(
+    (a, b) => rank(a.family) - rank(b.family) || a.family.localeCompare(b.family)
+  );
 }
 
 /** The spacing scale, ordered by resolved pixel value. */

@@ -200,6 +200,12 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
    * footer.scss for this (spec 2026-08-22-southleft-example-1-to-1-parity),
    * mirroring the hooks al-header grew in the same pass. */
   .sl-footer {
+    /* The untouched value of the token the masthead grid retunes below, captured
+     * HERE where it is still the real one. `var()` resolves at computed-value
+     * time on this element, so descendants inherit 32px as a literal and the
+     * restore on `.sl-footer__cols > *` tracks the token instead of repeating a
+     * number that would drift the day the scale moves. */
+    --sl-space-xxl-default: var(--al-theme-space-xxl);
     --al-footer-background: var(--sl-art-ink-deepest);
     --al-footer-border-block-start: var(--al-theme-border-width) solid var(--sl-border-faint);
     /* v5 `py-14 md:py-20` */
@@ -227,14 +233,21 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
    * through the shadow boundary, so retuning that token ON THIS ELEMENT
    * retunes this one grid's gap — and restoring it on the direct children
    * keeps the override from leaking into anything inside the columns.
+   *
+   * These read `var(--al-space-48)` / `var(--al-space-32)` until 2026-09-04.
+   * There is no `--al-space-*` tier in the shipped set and there never was —
+   * the scale is `--al-theme-space-*` — so BOTH resolved to nothing: the grid
+   * lost its gap override entirely and the children's restore silently undid
+   * itself. Literals here, like the `5rem` at `lg` below, which already said in
+   * its own comment that 80px is past the end of the scale.
    * -------------------------------------------------------------------- */
   .sl-footer__cols {
     --al-layout-template: 1fr;
-    --al-theme-space-xxl: var(--al-space-48);
+    --al-theme-space-xxl: 3rem; /* 48px — no stop between xxl (32px) and super (64px) */
   }
 
   .sl-footer__cols > * {
-    --al-theme-space-xxl: var(--al-space-32);
+    --al-theme-space-xxl: var(--sl-space-xxl-default);
     min-width: 0;
   }
 
@@ -246,7 +259,7 @@ const STATE_CHIPS: { label: string; value: string; key?: string }[] = [
 
   @media (min-width: 64rem) {
     .sl-footer__cols {
-      /* v5 `lg:gap-20` — 80px, one step past the `--al-space-*` primitives. */
+      /* v5 `lg:gap-20` — 80px, past the end of the `--al-theme-space-*` scale. */
       --al-theme-space-xxl: 5rem;
     }
   }
