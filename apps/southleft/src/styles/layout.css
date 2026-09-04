@@ -327,6 +327,14 @@ al-theme[mode='light'] .sl-announcement {
  * trigger and the ink/paper toggle both use this shape in v5; neither is an
  * al-* component there either (Header.astro/ThemeToggle.astro hand-roll
  * both), so this is app markup + tokens, matching v5's own approach. */
+/* The HOST keeps drawing the box — border, radius, size, resting colour and
+ * the hover transitions below — and `al-button variant="bare"` sits inside it
+ * painting nothing of its own. That split is deliberate: it buys the
+ * component's accessible-name behaviour (the mode script assigns `.label`,
+ * which only means something on al-button) without moving a single pixel, and
+ * it avoids retuning `content-neutral-default` on the element, which the hover
+ * rule would then have no un-overridden value to reach back for. The SVGs are
+ * slotted light DOM, so they inherit `color` from this host directly. */
 .sl-header__icon-btn {
   display: inline-flex;
   flex: 0 0 auto;
@@ -335,6 +343,9 @@ al-theme[mode='light'] .sl-announcement {
   inline-size: 2.25rem;
   block-size: 2.25rem;
   padding: 0;
+  --al-button-height: 100%;
+  --al-button-width: 100%;
+  --al-button-padding: 0;
   border-radius: var(--al-theme-border-radius-role-action);
   border: var(--al-theme-border-width) solid var(--sl-border-faint);
   background: transparent;
@@ -348,6 +359,25 @@ al-theme[mode='light'] .sl-announcement {
 .sl-header__icon-btn:hover {
   border-color: var(--al-theme-color-border-neutral-weak);
   color: var(--al-theme-color-content-neutral-default);
+}
+
+/* The glyphs are SLOTTED light DOM, so they inherit from their flattened-tree
+ * parent INSIDE al-button's shadow root — the variant's own `color`, which for
+ * `bare` is content-neutral-default (near-white here) — and not from this host.
+ * Measured on the swap: the icons jumped from #a49981 to #fdfcfa. Painting them
+ * from the light DOM, where the site owns them, is both the fix and the more
+ * honest expression of "this button's icon is this colour". */
+.sl-header__icon-btn svg {
+  color: var(--al-theme-color-content-neutral-weak);
+  transition: color var(--al-theme-animation-duration) var(--al-theme-animation-timing);
+}
+
+.sl-header__icon-btn:hover svg {
+  color: var(--al-theme-color-content-neutral-default);
+}
+
+.sl-header__icon-btn--accent-hover:hover svg {
+  color: var(--al-theme-color-content-primary-default);
 }
 
 /* Palette (AI direction) trigger hovers to the accent, not just full
