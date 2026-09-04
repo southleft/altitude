@@ -55,7 +55,7 @@
     "means": "llms.txt rule 6. This document sets `window.alAutoRegistry = true` AND takes a second registration path (importing @southleft/al-react wrappers, or calling registerAltitude({ mode: 'versioned' })). With the flag set, a deep import self-registers the plain tag first; the wrapper's suffixed define then throws NotSupportedError, which is caught and downgraded to a console.error — so the suffixed tag is never defined and the element silently never upgrades.",
     "fix": "Pick ONE path per document. Template frameworks and plain HTML: set window.alAutoRegistry = true inline in <head> and use deep imports. React: import the wrappers from @southleft/al-react and set NO flag. Micro-frontends: set no flag and call registerAltitude({ mode: 'versioned' }). Remove whichever of the two this document is not using. See .altitude/REGISTRATION.md."
   },
-  "WARN_A11Y_NAME": {
+  "ERR_A11Y_NAME": {
     "title": "No accessible name",
     "means": "The component's own guidance states an accessible-name obligation this usage does not meet. Today that is the icon-only button: with `hideText` set the slotted text is visually hidden, so it cannot be the accessible name, and without `label` the button ships with no accessible name at all (apps/docs/src/content/guidance/button.yaml).",
     "fix": "Add `label=\"…\"` describing the ACTION (it becomes aria-label on both the <button> and <a> branches), put the glyph in the `before` slot, and do not also leave visible text — a hidden text node plus a label produces a redundant accessible name. `aria-label` / `aria-labelledby` satisfy the obligation too."

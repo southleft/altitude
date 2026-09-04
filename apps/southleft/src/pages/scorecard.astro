@@ -110,7 +110,7 @@ const BANDS = [
       {SCALE.map((s) => (
         <div class="al-u-grid__item col:12 col:6@md col:3@lg">
           <al-card style="height:100%; box-sizing:border-box;">
-            <al-heading tagName="p" variant="sm" isBold={true}>{s.score}</al-heading>
+            <p class="al-u-theme-typography-heading-sm-bold">{s.score}</p>
             <al-text-block>{s.meaning}</al-text-block>
           </al-card>
         </div>
@@ -154,7 +154,7 @@ const BANDS = [
     <al-heading tagName="h2" variant="sm" isBold={true}>Your score</al-heading>
 
     <div id="sc-waiting" style="margin-top: var(--al-theme-space-lg);">
-      <al-text-block maxWidth="md">
+      <al-text-block maxWidth="sm">
         Score all six dimensions above and your results appear here. No email gate, no iframe — the
         math runs on this page.
       </al-text-block>
@@ -165,7 +165,7 @@ const BANDS = [
         <div class="al-u-grid__item col:12 col:5@md">
           <al-card style="height:100%; box-sizing:border-box;">
             <al-chip variant="secondary">total</al-chip>
-            <al-heading tagName="p" variant="display-sm" isBold={true} style="margin-top: var(--al-theme-space-sm);"><span id="sc-total">0</span> / 30</al-heading>
+            <p class="al-u-theme-typography-display-sm-bold" style="margin-top: var(--al-theme-space-sm);"><span id="sc-total">0</span> / 30</p>
             <p class="al-u-theme-typography-body-xs" id="sc-band-label"></p>
           </al-card>
         </div>
@@ -177,7 +177,7 @@ const BANDS = [
 
       <div id="sc-gaps-wrap" style="margin-top: var(--al-theme-space-xl);">
         <al-heading tagName="h3" variant="sm" isBold={true}>Your highest-leverage gaps</al-heading>
-        <al-text-block maxWidth="md">The two or three dimensions where you scored lowest are where the leverage is.</al-text-block>
+        <al-text-block maxWidth="sm">The two or three dimensions where you scored lowest are where the leverage is.</al-text-block>
         <div style="margin-top: var(--al-theme-space);"><al-layout variant="grid" noCollapse id="sc-gaps"></al-layout></div>
       </div>
 

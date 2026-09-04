@@ -71,6 +71,21 @@ export class ALHeading extends ALElement {
         return html`<h5 class="${componentClassNames}"><slot></slot></h5>`;
       case 'h6':
         return html`<h6 class="${componentClassNames}"><slot></slot></h6>`;
+      default:
+        /*
+         * FAIL SAFE, not fail silent. The switch had no default, so an unsupported
+         * `tagName` made render() return undefined — Lit then clears the shadow root,
+         * there is no <slot> for the light DOM to project into, and the content
+         * DISAPPEARS. Measured 2026-09-04 on southleft.com's scorecard: five elements
+         * written as `tagName="p"` (the per-band score labels and the running total)
+         * rendered a bare comment node at height 0. Nothing errored and nothing warned;
+         * the numbers were simply not on the page.
+         *
+         * Falling back to the accessor's own declared default keeps the content
+         * visible. `tagName` is typed to h1..h6, so this branch is unreachable from
+         * TypeScript and exists for the values HTML can still hand a custom element.
+         */
+        return html`<h2 class="${componentClassNames}"><slot></slot></h2>`;
     }
   }
 }

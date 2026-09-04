@@ -245,24 +245,24 @@ pair('WARN_MIXED_REGISTRATION',
   assert('a README describing both paths does not fire', !has(doc, 'WARN_MIXED_REGISTRATION'), seen(doc));
 }
 
-// ── 8. WARN_A11Y_NAME (component guidance) ───────────────────────────────────────────────────
-console.log('\n==> WARN_A11Y_NAME (al-button guidance)');
-pair('WARN_A11Y_NAME',
+// ── 8. ERR_A11Y_NAME (component guidance) ───────────────────────────────────────────────────
+console.log('\n==> ERR_A11Y_NAME (al-button guidance)');
+pair('ERR_A11Y_NAME',
   '<al-button hideText><al-icon-check slot="before"></al-icon-check></al-button>',
   '<al-button hideText label="Mark complete"><al-icon-check slot="before"></al-icon-check></al-button>');
 {
   const ariaLabel = run('<al-button hideText aria-label="Mark complete"><al-icon-check slot="before"></al-icon-check></al-button>');
-  assert('aria-label satisfies the obligation', !has(ariaLabel, 'WARN_A11Y_NAME'), seen(ariaLabel));
+  assert('aria-label satisfies the obligation', !has(ariaLabel, 'ERR_A11Y_NAME'), seen(ariaLabel));
 
   const plain = run('<al-button>Mark complete</al-button>');
-  assert('a button with visible text does not fire', !has(plain, 'WARN_A11Y_NAME'), seen(plain));
+  assert('a button with visible text does not fire', !has(plain, 'ERR_A11Y_NAME'), seen(plain));
 
   const off = run('<al-button hideText="false">Mark complete</al-button>');
-  assert('hideText="false" does not fire', !has(off, 'WARN_A11Y_NAME'), seen(off));
+  assert('hideText="false" does not fire', !has(off, 'ERR_A11Y_NAME'), seen(off));
 
   const jsx = 'import { ALButton } from "@southleft/al-react";\nexport const X = () => <ALButton hideText label={t("close")} />;\n';
   const dyn = run(jsx, { ext: 'jsx' });
-  assert('a dynamically bound label satisfies the obligation', !has(dyn, 'WARN_A11Y_NAME'), seen(dyn));
+  assert('a dynamically bound label satisfies the obligation', !has(dyn, 'ERR_A11Y_NAME'), seen(dyn));
 
   /*
    * DEFAULT-SLOT TEXT IS A NAME. `hideText` renders `al-u-is-vishidden` on the text
@@ -275,10 +275,10 @@ pair('WARN_A11Y_NAME',
    * flagged" - and was being violated.
    */
   const slotNamed = run('<al-button hideText variant="bare">Toggle drawer<al-icon-menu slot="before"></al-icon-menu></al-button>');
-  assert('default-slot text names the button (it is visually hidden, not removed)', !has(slotNamed, 'WARN_A11Y_NAME'), seen(slotNamed));
+  assert('default-slot text names the button (it is visually hidden, not removed)', !has(slotNamed, 'ERR_A11Y_NAME'), seen(slotNamed));
 
   const slottedOnly = run('<al-button hideText variant="bare"><al-icon-bell slot="after"></al-icon-bell></al-button>');
-  assert('...but a SLOTTED child alone does not - that names another region', has(slottedOnly, 'WARN_A11Y_NAME'), seen(slottedOnly));
+  assert('...but a SLOTTED child alone does not - that names another region', has(slottedOnly, 'ERR_A11Y_NAME'), seen(slottedOnly));
 }
 
 // ── 8b. --cem-extra: a brand layer that supersedes base components ──────────────────────────
