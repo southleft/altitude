@@ -74,7 +74,7 @@ const sections = (rendered?.headings ?? []).filter((heading: any) => heading.dep
             Rendered at build time from <code class="mono">{MIGRATION.path}</code> in the repository
             — the same file the repo's own guardrails cite, so this page cannot say something the
             source does not. Examples on it resolve under{' '}
-            <code class="mono">&lt;al-theme brand="{context.project.brand}"&gt;</code>, and the
+            <code class="mono">project/{context.project.id}.css</code>, and the
             component names they use are the ones in{' '}
             <a href={href('/components')}>this system's index</a>.
           </p>

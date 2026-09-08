@@ -219,19 +219,28 @@ for (const { project, registry: scoped } of CONTEXTS) {
       }
     }
 
-    // The brand host must actually be on the page, carrying THIS project's
-    // brand. Without it every preview renders under the base token bundle and
-    // the site is branded in name only.
-    if (!html.includes(`<al-theme brand="${project.brand}"`)) {
+    // BOTH halves of the theming contract must be on the page, and they fail
+    // differently. The stylesheet is what makes the page this design system;
+    // the `data-al-project` host is what makes it win — main.css is bundled
+    // last by Astro, so on `:root` it would beat the link, and only a nearer
+    // ancestor declaring the same properties resolves ahead of it. Miss either
+    // and every preview renders the base bundle while the page still looks
+    // fine, which is the failure this check exists to make loud.
+    if (!html.includes(`/project/${project.id}.css`)) {
       failures.push(
-        `${project.id}/${component.tag}: no <al-theme brand="${project.brand}"> host — its previews would render under the base bundle, not this brand.`,
+        `${project.id}/${component.tag}: no link to project/${project.id}.css — its previews would render under the base bundle, not this design system.`,
+      );
+    }
+    if (!html.includes(`<al-theme data-al-project="${project.id}"`)) {
+      failures.push(
+        `${project.id}/${component.tag}: no <al-theme data-al-project="${project.id}"> host — the linked bundle would lose to main.css on :root.`,
       );
     }
   }
 
   notes.push(
     `  ${project.id.padEnd(12)}: ${panelsPresent}/${scoped.count} parity, ${checksPresent}/${scoped.count} a11y, ` +
-      `${statusesChecked} status(es) verified, ${foreignRows} foreign row(s), brand=${project.brand}`,
+      `${statusesChecked} status(es) verified, ${foreignRows} foreign row(s), bundle=project/${project.id}.css`,
   );
 }
 
@@ -272,5 +281,5 @@ if (failures.length) {
 }
 
 console.log(
-  '\nOK — no internal tooling geometry in the built output, every panel states either data or a reason, and every design system renders under its own brand.',
+  '\nOK — no internal tooling geometry in the built output, every panel states either data or a reason, and every design system renders under its own token bundle.',
 );

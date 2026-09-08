@@ -67,9 +67,11 @@ code, and each is machine-checkable.
    Every one this system has is listed in ${url}/llms-components.txt, generated
    from \`libs/al-web-components/custom-elements.json\`. If it is not there, it
    does not exist.
-4. You must render components inside \`<al-theme brand="${project.brand}">\`.
-   Tokens are set on that host, not on \`:root\` — a component outside it falls
-   back to the base bundle and loses this brand.
+4. You must load this system's stylesheet, \`project/${project.id}.css\`, and
+   render components inside \`<al-theme>\`. There is NO \`brand\` attribute — a
+   design system is the bundle the page loads, one file carrying both modes.
+   Without that stylesheet the page falls back to the base bundle, and no
+   attribute can correct it afterwards.
 5. You must set the arrangement of sibling components with \`<al-layout>\` and
    its props, not with hand-rolled flex or grid on a wrapper of your own, and
    not by inventing a \`*-group\` wrapper. The groups that exist
@@ -185,7 +187,7 @@ ${rulesBlock(context, { self: `${url}/llms.txt` })}
 ## Facts
 
 - Components documented: ${registry.count}
-- Brand: \`<al-theme brand="${project.brand}">\`
+- Design system stylesheet: \`project/${project.id}.css\`
 - Icon glyphs (payloads of \`<al-icon>\`, not components): ${registry.stats.icons}
 - Custom elements declared in the manifest: ${registry.stats.cemTags}
 - Documented properties: ${registry.stats.documentedProps} of ${registry.stats.totalProps}

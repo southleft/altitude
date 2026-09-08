@@ -16,7 +16,7 @@
  *   identity   — `name`, `shortName`, the copy the shell renders
  *   route      — where the site lives (`''` for the default, `/<id>` otherwise)
  *   scope      — which components it documents (`library.components`, or all)
- *   brand      — the `<al-theme brand>` value its previews render under
+ *   brand      — the token bundle (`project/<id>.css`) its previews render under
  *
  * THE RULE THIS FILE EXISTS TO ENFORCE: adding a third design system is a
  * registry entry and nothing else. No project id is typed anywhere in

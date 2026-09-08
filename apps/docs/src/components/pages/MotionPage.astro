@@ -364,7 +364,7 @@ const TIERS = [
                   ? brandMotion.reason
                   : brandMotion.properties.length === 0
                     ? `No brand block redeclares any of these, so the matrix above is what ${project.brand} actually resolves — in light and in dark alike. Motion is one of the few layers a brand does not move: brands change the look, the motion axis changes the feel.`
-                    : `Inside <al-theme brand="${project.brand}">, ${brandMotion.properties.length} of these resolve to a different value, so the matrix above is the base bundle rather than what this brand resolves.`
+                    : `This system's own stylesheet gives ${brandMotion.properties.length} of these a different value, so the matrix above is the base bundle rather than what project/${project.id}.css resolves.`
               }
             </p>
             {

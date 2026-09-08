@@ -33,11 +33,10 @@ const { context } = Astro.props;
 const { project, site } = context;
 
 /**
- * What THIS brand changes about the token layer. The ramps, the scale and the
- * presets below are the base bundle every brand composes on top of; this table
- * is the delta `<al-theme brand="…">` applies on `:host`. A brand that
- * overrides nothing is the neutral reference, and says so rather than showing
- * an empty table.
+ * What THIS design system changes about the token layer. The ramps, the scale
+ * and the presets below are the base bundle; this table is the delta its own
+ * stylesheet (`project/<id>.css`) declares. A system that overrides nothing is
+ * the neutral reference, and says so rather than showing an empty table.
  */
 const overrides = brandOverrides(project.brand);
 
@@ -98,7 +97,7 @@ const maxSpace = Math.max(...spacing.map((s) => s.px || 0), 1);
     <p class="t-body-md foundations-lede">
       {
         overrides.reason ??
-          `Everything below is the base token bundle. Inside <al-theme brand="${project.brand}">, these ${overrides.properties.length} properties resolve to a different value on :host; every other token is shared.`
+          `Everything below is the base token bundle. This system's own stylesheet, project/${project.id}.css, gives these ${overrides.properties.length} properties a different value; every other token is shared.`
       }
     </p>
     {
