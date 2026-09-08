@@ -20,6 +20,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, '..', '..');
@@ -76,7 +77,8 @@ console.log('check-brand-conformance.test.mjs');
   const [project] = report.projects;
   assert.equal(project.id, 'southleft');
   assert.ok(Array.isArray(project.pairs));
-  assert.equal(project.pairs.length, 2, 'southleft.brandLibrary.supersedes has 2 pairs (al-header, al-footer)');
+  const registry=JSON.parse(readFileSync(join(REPO_ROOT,'.altitude/ds-projects.json'),'utf8'));
+  assert.equal(project.pairs.length, Object.keys(registry.projects.southleft.brandLibrary.supersedes).length, 'every registered override is checked');
 
   for (const pair of project.pairs) {
     assert.ok(typeof pair.brandTag === 'string' && typeof pair.baseTag === 'string');

@@ -17,7 +17,7 @@
    *    the rule belongs to the footer's outer edge.
    */
   :host {
-    border-block-start: var(--al-theme-border-width) solid #{$sl-border-faint}; /* 1 */
+    border-block-start: var(--al-footer-border-block-start, var(--al-theme-border-width) solid #{$sl-border-faint}); /* 1 */
   }
 
   /**
