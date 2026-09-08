@@ -22,16 +22,23 @@ const PILOTS = [
   { tag: 'al-dialog', innerHTML: '<p slot="header">Title</p><p>Body</p>' },
   { tag: 'al-theme-switcher', innerHTML: '' },
   // The scoped-theming pilot, and the only one that opts into real DSD (see
-  // `ssr:` below). `brand` + `mode` are set so the generated
-  // `:host([brand='southleft'])` block is what gets serialized, and the probe
-  // paragraph reads two brand-owned custom properties so "renders branded with
-  // JavaScript disabled" is something a screenshot can actually show.
+  // `ssr:` below).
   //
-  // The probe is a plain `<p>`, not an `<al-button>`, for the reason in `ssr:`.
+  // There is no `brand` any more. The page renders Southleft because it LINKS
+  // Southleft's token bundle (see `pageHtml`), not because an attribute selects
+  // one — al-theme carries no palette. `data-al-mode` is written out beside
+  // `mode` on purpose: the component mirrors it in `updated()`, which is a
+  // JavaScript lifecycle, and the whole point of the third test is a page with
+  // JavaScript DISABLED. Serializing it makes the bundle's `[data-al-mode]`
+  // block match before a byte of JS runs.
+  //
+  // The probe paragraph reads bundle-owned custom properties so "renders
+  // branded with JavaScript disabled" is something a screenshot can show. It is
+  // a plain `<p>`, not an `<al-button>`, for the reason in `ssr:`.
   {
     tag: 'al-theme',
     ssr: true,
-    attrs: `brand="southleft" mode="dark"`,
+    attrs: `mode="dark" data-al-mode="dark"`,
     innerHTML:
       '<p style="color: var(--al-theme-color-background-primary-default); font: var(--al-typography-preset-body-md)">' +
       'Branded with JavaScript disabled.</p>',
@@ -130,12 +137,16 @@ const pageHtml = (pilot, dsd) => `<!doctype html>
     <meta charset="utf-8" />
     <title>Altitude SSR — ${pilot.tag}</title>
     <!-- Three levels up: the pages land in apps/ssr/dist/, so ../../ resolved
-         to apps/ and this link had always 404'd. It matters more than it used
-         to: al-theme's scoped blocks are DELTAS over the base :root bundle, so
-         with this sheet missing, a brand's literal values (type ramp, radii)
-         still apply while every var(--al-color-*) reference in it dangles --
-         southleft rendered Georgia 18/32 in black. -->
+         to apps/ and this link had always 404'd. main.css carries the reset,
+         the cascade layers, the base element styles and the utilities. -->
     <link rel="stylesheet" href="../../../libs/al-web-components/dist/css/main.css" />
+    <!-- THE PALETTE. It used to live inside al-theme, serialized into the DSD
+         template as a :host([brand=southleft]) block; it is a stylesheet now,
+         one file per design system, :root plus [data-al-mode='...']. This link
+         is what makes the page Southleft, and it is why the no-JS test still
+         passes: a linked stylesheet needs no hydration. (No backticks in this
+         comment - it sits inside a template literal.) -->
+    <link rel="stylesheet" href="../../../libs/al-web-components/dist/css/css/project/southleft.css" />
     <script>window.alAutoRegistry = true;</script>
   </head>
   <body>

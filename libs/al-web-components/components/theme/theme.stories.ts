@@ -9,9 +9,16 @@ import '../layout/layout';
 import '../text-block/text-block';
 
 /**
- * `al-theme` is the scoped theming host. It resolves tokens onto `:host`
- * rather than `:root`, which is what lets more than one brand or mode coexist
- * in a single document — see `pnpm test:scoped-theming`.
+ * `al-theme` is the scoped axis host. It resolves `mode`, `density`,
+ * `contrast`, `motion` and `shape` onto `:host` rather than `:root`, which is
+ * what lets two subtrees of one document sit at different settings — see
+ * `pnpm test:scoped-theming`.
+ *
+ * It carries no palette. A design system's LOOK is the token bundle the page
+ * loads (`@southleft/al-web-components/project/<id>.css`), one file per system,
+ * and this element mirrors `mode` onto the host as `data-al-mode` so that
+ * bundle's blocks can match. There is no `brand` attribute: this fixture
+ * renders Altitude because it loaded Altitude's tokens.
  *
  * It paints nothing itself (`display: contents`); it only decides which token
  * values the components inside it resolve against.
@@ -22,7 +29,6 @@ export default {
   tags: ['autodocs'],
   parameters: { status: { type: 'stable' } },
   argTypes: {
-    brand: { control: 'radio', options: ['altitude', 'southleft'] },
     mode: { control: 'radio', options: ['light', 'dark'] },
     density: { control: 'radio', options: ['compact', 'cozy', 'comfortable'] },
     contrast: { control: 'radio', options: ['normal', 'more'] },
@@ -52,25 +58,27 @@ const Panel = () => html`
 export const Default = (args) => html`
   <al-theme ${spread(args)}>${Panel()}</al-theme>
 `;
-Default.args = { brand: 'altitude', mode: 'light' };
+Default.args = { mode: 'light' };
 
 /**
- * Two themes, one document, one `:root`. Neither host leaks into the other —
+ * Two modes, one document, one `:root`. Neither host leaks into the other —
  * this is the property the scoped-theming test pins.
  */
 export const TwoThemesOneDocument = () => html`
   <al-layout variant="grid" .columns=${2} gutter="md">
-    <al-theme brand="altitude" mode="light">${Panel()}</al-theme>
-    <al-theme brand="altitude" mode="dark">${Panel()}</al-theme>
+    <al-theme mode="light">${Panel()}</al-theme>
+    <al-theme mode="dark">${Panel()}</al-theme>
   </al-layout>
 `;
 
 /**
- * A second brand resolves the same components against its own ramps.
+ * A second design system is a second STYLESHEET, not a second attribute value.
+ * Its bundle is `:root, [data-al-project='<id>']`, so loading two of them in
+ * one document means scoping each subtree with `data-al-project` — the page
+ * below loads Altitude's only, which is why this story shows one system rather
+ * than pretending to show two. `pnpm test:brands` and `pnpm run brands:compare`
+ * load both, properly scoped, and are where cross-system identity is proven.
  */
 export const Brands = () => html`
-  <al-layout variant="grid" .columns=${2} gutter="md">
-    <al-theme brand="altitude" mode="light">${Panel()}</al-theme>
-    <al-theme brand="southleft" mode="light">${Panel()}</al-theme>
-  </al-layout>
+  <al-theme mode="light" data-al-project="altitude">${Panel()}</al-theme>
 `;
