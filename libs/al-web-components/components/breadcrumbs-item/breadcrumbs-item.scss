@@ -37,7 +37,9 @@
     color: var(--al-theme-color-content-neutral-weak);
     text-decoration: none;
     transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
+    transition-property: color, background-color;
     cursor: pointer;
+    &:focus-visible { @include al-focus; }
 
     /**
      * Label - Current state

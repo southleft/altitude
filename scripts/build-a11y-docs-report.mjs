@@ -97,7 +97,7 @@ function resolvePkg(pkg, subpath) {
 /* -------------------------------------------- the same rule taxonomy */
 
 /** Identical to the Storybook run and to `.storybook/test-runner.ts`. */
-const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const CONTRAST_RULE = 'color-contrast';
 
 /* --------------------------------------------------------- static server */
