@@ -1526,6 +1526,22 @@
       "note": "check-brand-conformance.test.mjs is deliberately excluded from the chain - it fails today against known-open al-header/al-footer gaps."
     },
     {
+      "id": "test:cem-plugins",
+      "npmScript": "test:cem-plugins",
+      "command": "pnpm run test:cem-plugins",
+      "purpose": "The al-literal-types CEM plugin, against the real TypeScript parser.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install"
+      ],
+      "blocking": true,
+      "ci": "T3.1/T3.2/T3.4 CEM + schemas + contract validator",
+      "ciVia": null,
+      "tier": "fast",
+      "group": "contracts",
+      "note": "Deliberately NOT in test:scripts: that chain is zero-dependency by contract and typescript is a workspace dependency. Runs before build:custom-elements.json so a plugin break is reported as a plugin break, not as a stale generated artifact."
+    },
+    {
       "id": "test:unit",
       "npmScript": "test:unit",
       "command": "pnpm run test:unit",

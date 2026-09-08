@@ -392,6 +392,13 @@ jobs:
           cache: 'pnpm'
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
+      # Before the build that consumes it: al-literal-types decides whether a
+      # property typed against a named alias reaches the manifest as its values
+      # or as an opaque identifier. The regeneration diff below would catch a
+      # break, but it would report it as "custom-elements.json is stale", which
+      # names the symptom and not the cause.
+      - name: CEM plugin unit test (real TypeScript parser)
+        run: pnpm run test:cem-plugins
       # Tokens first: build:tokens writes styles/dist/tokens.json, which is the
       # only input to the AI-readiness tokens digest checked for drift below.
       - name: Build tokens (+ tokens digest)
