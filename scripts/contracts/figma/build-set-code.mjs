@@ -145,7 +145,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     function pickPreferredPhosphorVariant(iconOwner) {
       const regular = iconOwner.children.filter((c) => /weight\s*=\s*regular/i.test(c.name));
       if (!regular.length) return iconOwner.children[0] || iconOwner;
-      return regular.find((c) => /format\s*=\s*stroke/i.test(c.name)) || regular[0];
+      return regular.find((c) => /format\s*=\s*outline/i.test(c.name)) || regular[0];
     }
     // T28: the Desktop Bridge enforces a hard execution-time ceiling per
     // figma_execute call (CONFIRMED LIVE: an unbounded scan across all ~58
@@ -220,7 +220,19 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       // reported as a genuine miss, not a wider (unaffordable) search.
       // Widen PHOSPHOR_PRIORITY_PAGE_NAMES (conventions.mjs) once a future
       // bootstrap lands elsewhere.
-      const priorityPages = figma.root.children.filter((p) => PHOSPHOR_PRIORITY_PAGE_NAMES.includes(p.name));
+      const priorityPages = PHOSPHOR_PRIORITY_PAGE_NAMES.map(name=>figma.root.children.find(p=>p.name===name)).filter(Boolean);
+      // The imported catalog contains named instances. Native name filtering
+      // avoids spending the recursive budget on earlier, unrelated glyphs.
+      // A name is only a candidate: retain the same remote-library proof.
+      for (const page of priorityPages) {
+        await page.loadAsync();
+        const candidates=page.findAll(n=>n.type==='INSTANCE'&&targetNorms.includes(normalizeIconName(n.name)));
+        for(const candidate of candidates){
+          const main=await candidate.getMainComponentAsync();
+          const owner=main?.parent;
+          if(main?.remote && owner?.type==='COMPONENT_SET' && targetNorms.includes(normalizeIconName(owner.name)) && isVerifiedPhosphorIconSet(owner)) return pickPreferredPhosphorVariant(owner);
+        }
+      }
       const budget = { visited: 0 };
       for (const page of priorityPages) {
         await page.loadAsync();
@@ -352,8 +364,9 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     }
     function recolorIconTree(node, paint) {
       if (!paint) return;
-      if (Array.isArray(node.fills) && node.fills.length) { try { node.fills = [paint]; } catch (e) { /* mixed/locked node */ } }
-      if (Array.isArray(node.strokes) && node.strokes.length) { try { node.strokes = [paint]; } catch (e) { /* mixed/locked node */ } }
+      const tint = (paints) => paints.map(p => p.visible === false || p.opacity === 0 ? p : ({...paint, opacity:p.opacity, visible:p.visible}));
+      if (Array.isArray(node.fills) && node.fills.length) { try { node.fills = tint(node.fills); } catch (e) { /* mixed/locked node */ } }
+      if (Array.isArray(node.strokes) && node.strokes.length) { try { node.strokes = tint(node.strokes); } catch (e) { /* mixed/locked node */ } }
       if ('children' in node) for (const child of node.children) recolorIconTree(child, paint);
     }
 
@@ -436,6 +449,8 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     const NESTED_PROPS = ${JSON.stringify(config.nestedProps || {})};
     // Full-bleed root width — see the ROOT_WIDTH block in buildVariant.
     const ROOT_WIDTH = ${JSON.stringify(config.rootWidth === undefined ? null : config.rootWidth)};
+    const ROOT_HEIGHT = ${JSON.stringify(config.rootHeight ?? null)};
+    const ROOT_ARROW = ${JSON.stringify(config.rootArrow ?? null)};
     let rootFixedWidth = 0;
     /** Resolve a FRIENDLY property name ("Text", "Slot Before", "Variant") to
      * the instance's real key. Figma suffixes non-variant properties with the
@@ -587,6 +602,31 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       } catch (e) { FAILED_FONTS.add(k2); return font(style); }
     }
 
+    // Load an ARBITRARY font pair (one read off an existing text node) with
+    // the same cache + bounded race + negative cache that fontFam already
+    // has. The rewrap path below used to call loadFontAsync directly, once
+    // per font per text node per instance, with none of the three — so a
+    // composite whose nested sets actually resolved (al-combobox: Input +
+    // Field Note across 2 variants) spent the whole 30s bridge ceiling on
+    // repeat font waits and the build died after writing its variants.
+    // Same hazard class the comment above records for chips; the fix simply
+    // never reached this second call site.
+    async function loadFontPair(fnt) {
+      const k3 = fnt.family + '/' + fnt.style;
+      if (loadedFonts.has(k3)) return true;
+      if (typeof FAILED_FONTS === 'undefined') { globalThis.FAILED_FONTS = new Set(); }
+      if (FAILED_FONTS.has(k3)) return false;
+      try {
+        const ok = await Promise.race([
+          figma.loadFontAsync(fnt).then(function () { return true; }),
+          new Promise(function (res) { setTimeout(function () { res(false); }, 3000); }),
+        ]);
+        if (!ok) { misses.add('font-load-timeout:' + k3); FAILED_FONTS.add(k3); return false; }
+        loadedFonts.add(k3);
+        return true;
+      } catch (e) { FAILED_FONTS.add(k3); return false; }
+    }
+
     // PAGE — scoped strictly to PAGE_NAME. Reuse if present; otherwise
     // create it. Never delete/recreate the page object, never touch any
     // other page. Spec 2026-08-26-contract-coverage…: clearing is now
@@ -717,14 +757,31 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
     // once per unresolved tag, and setup alone blew the bridge's 30s
     // ceiling (the build-budget guard never even fired: the walk hadn't
     // started).
+    //
+    // DEPTH 3, measured 2026-09-06: the real pages nest one level deeper than
+    // the comment above assumed - page > "Field Note" > "AA Field Note" >
+    // COMPONENT_SET. At depth 2 this missed every nested set on a real page
+    // and al-combobox generated with no Input and no Field Note, reported
+    // honestly as "nested-set-not-found" and easy to misread as "that set
+    // does not exist" when it was there the whole time.
+    //
+    // Cost stays bounded the way the 2026-08-29 fix intended: this enumerates
+    // children level by level and never descends into an INSTANCE (internals)
+    // or a COMPONENT_SET (variants) - neither can contain another set - so it
+    // is nothing like the full-page findOne that blew the 30s bridge ceiling.
     function shallowFindSet(root2, name2) {
-      for (const c1 of root2.children) {
-        if (c1.type === 'COMPONENT_SET' && c1.name === name2) return c1;
-        if ('children' in c1) {
-          for (const c2 of c1.children) {
-            if (c2.type === 'COMPONENT_SET' && c2.name === name2) return c2;
+      var level = root2.children;
+      for (var d = 0; d < 3 && level.length; d += 1) {
+        var next = [];
+        for (const node of level) {
+          if (node.type === 'COMPONENT_SET') {
+            if (node.name === name2) return node;
+            continue;
           }
+          if (node.type === 'INSTANCE') continue;
+          if ('children' in node) next = next.concat(node.children);
         }
+        level = next;
       }
       return null;
     }
@@ -1032,7 +1089,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
               (function collectWrappers(n) {
                 if (!('children' in n)) return;
                 for (const c of n.children) {
-                  if (c.type === 'INSTANCE' && c.visible && c.children && c.children.some((g) => g.type === 'INSTANCE')) wrappers.push(c);
+                  if (c.type === 'INSTANCE' && c.visible && (c.name === 'Icon Before' || c.name === 'Icon After')) wrappers.push(c);
                   collectWrappers(c);
                 }
               })(inst);
@@ -1041,9 +1098,19 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
                 const wrapper = wrappers[gi];
                 if (!wrapper) { misses.add('nested-prop-glyph-slot-missing:' + child.component + ':' + gname); continue; }
                 if (!nestedGlyphByName[gname]) continue; // already reported by the resolve pass
-                const inner = wrapper.children.find((g) => g.type === 'INSTANCE');
+                // The current Icon master nests its glyph in a native SLOT.
+                const inner = wrapper.findOne((g) => g.type === 'INSTANCE');
                 if (!inner) { misses.add('nested-prop-glyph-slot-missing:' + child.component + ':' + gname); continue; }
-                try { inner.swapComponent(nestedGlyphByName[gname]); }
+                try {
+                  inner.resetOverrides();
+                  inner.swapComponent(nestedGlyphByName[gname]);
+                  // Localized glyph components can retain Figma's default
+                  // component fill. A CSS icon is a transparent currentColor
+                  // mask; keep the instance container transparent and tint paths.
+                  inner.fills = [];
+                  const glyphPaint = await boundSolid(nodeColor);
+                  if (glyphPaint) recolorIconChildren(inner, glyphPaint);
+                }
                 catch (e) { misses.add('nested-prop-glyph-swap-failed:' + child.component + ':' + gname); }
               }
             }
@@ -1066,8 +1133,8 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
             const childBlockLevelI = !child.layout.display || /^(block|flex|grid|table|list-item|flow-root)$/.test(child.layout.display);
             if (child.layout.grow) {
               try {
-                if (parent.layoutMode === 'HORIZONTAL') inst.layoutSizingHorizontal = 'FILL';
-                else if (parent.layoutMode === 'VERTICAL') inst.layoutSizingVertical = 'FILL';
+                if (parent.layoutMode === 'HORIZONTAL' && ['FIXED','FILL'].includes(parent.layoutSizingHorizontal)) inst.layoutSizingHorizontal = 'FILL';
+                else if (parent.layoutMode === 'VERTICAL' && ['FIXED','FILL'].includes(parent.layoutSizingVertical)) inst.layoutSizingVertical = 'FILL';
               } catch (e) { /* parent is not an auto-layout frame */ }
             }
             // SPANS-PARENT gate (owner nit, 2026-08-29: "buttons have hug
@@ -1132,8 +1199,9 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
                   return null;
                 })(child);
                 for (const tnode of instTexts) {
+                  if (!tnode.visible || !tnode.characters.length) continue;
                   const fnts = tnode.getRangeAllFontNames(0, tnode.characters.length);
-                  for (const fnt of fnts) await figma.loadFontAsync(fnt);
+                  for (const fnt of fnts) await loadFontPair(fnt);
                   // Page-lane measured type metrics beat the variant's own
                   // (see fsPx note in the text-leaf branch). Family/weight
                   // too (round 6): a chip's mono label, a heading's page
@@ -1154,8 +1222,10 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
                   textNodes.push(tnode);
                   const oneLine = innerMeas && innerMeas.box.h <= (child.fsPx ? child.fsPx * 1.9 : 40);
                   if (oneLine) {
-                    // Single line in the browser -> never wrap here.
-                    tnode.textAutoResize = 'WIDTH_AND_HEIGHT';
+                    // Preserve the master's fill policy for field values.
+                    // WIDTH_AND_HEIGHT on a FILL node leaves its text centered
+                    // in the allocated space despite textAlignHorizontal=LEFT.
+                    tnode.textAutoResize = tnode.layoutSizingHorizontal === 'FILL' ? 'HEIGHT' : 'WIDTH_AND_HEIGHT';
                   } else {
                     // Multi-line: HEIGHT + FILL; the WRAP WIDTH is imposed
                     // by resizing the INSTANCE below — an instance's inner
@@ -1641,6 +1711,20 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         }
         f.primaryAxisSizingMode = 'AUTO';
         f.counterAxisSizingMode = 'AUTO';
+        if (child.layout?.fillInline) {
+          try {
+            const ps = parent.layoutSizingHorizontal;
+            if (ps === 'FIXED' || ps === 'FILL') {
+              if (parent.layoutMode === 'HORIZONTAL' && parent.layoutWrap === 'WRAP' && child.box?.w) {
+                // FILL shares a Figma wrap row between siblings. CSS width:100%
+                // instead claims a complete row; preserve its measured width.
+                f.resize(child.box.w, Math.max(f.height, 1));
+                f.layoutSizingHorizontal = 'FIXED';
+                f.layoutSizingVertical = 'HUG';
+              } else f.layoutSizingHorizontal = 'FILL';
+            }
+          } catch (e) { /* only meaningful inside a sized auto-layout parent */ }
+        }
         // WRAP CONTAINER WIDTH (round 7 — owner: "the multiple chip
         // container should have a max width bc it wraps the 3rd one"): a
         // wrapping row that HUGS its width can never actually wrap — its
@@ -1661,8 +1745,8 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         // max-content width and overflow its own container.
         if (child.layout && child.layout.grow) {
           try {
-            if (parent.layoutMode === 'HORIZONTAL') f.layoutSizingHorizontal = 'FILL';
-            else if (parent.layoutMode === 'VERTICAL') f.layoutSizingVertical = 'FILL';
+            if (parent.layoutMode === 'HORIZONTAL' && ['FIXED','FILL'].includes(parent.layoutSizingHorizontal) && !(child.layout.fillInline && parent.layoutWrap === 'WRAP')) f.layoutSizingHorizontal = 'FILL';
+            else if (parent.layoutMode === 'VERTICAL' && ['FIXED','FILL'].includes(parent.layoutSizingVertical)) f.layoutSizingVertical = 'FILL';
           } catch (e) { /* parent is not an auto-layout frame */ }
         }
         // CROSS-AXIS STRETCH. In CSS a block-level child fills its
@@ -1787,12 +1871,16 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           f.topLeftRadius = child.radPx[0]; f.topRightRadius = child.radPx[1];
           f.bottomRightRadius = child.radPx[2]; f.bottomLeftRadius = child.radPx[3];
         }
-        if (t['border-color']) {
-          const strokePaint = await boundSolid(t['border-color']);
+        if (t['border-color'] || (child.bw4 && t['border-top-color'])) {
+          const strokePaint = await boundSolid(t['border-color'] || t['border-top-color']);
           if (strokePaint) {
             f.strokes = [strokePaint];
             f.strokeAlign = 'INSIDE';
             bindNum(f, 'strokeWeight', t['border-width']);
+            if(child.bw4) {
+              [f.strokeTopWeight,f.strokeRightWeight,f.strokeBottomWeight,f.strokeLeftWeight]=child.bw4;
+              f.strokesIncludedInLayout=true;
+            }
           }
         } else if (child.bcCss && child.bwPx > 0) {
           // Page-lane literal border (the terminal card's chrome). PER-SIDE
@@ -1862,6 +1950,7 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
 
     async function buildVariant(state, variant, axisValues, tokens, variantName, vroot) {
       const comp = figma.createComponent();
+      comp.clipsContent = ${JSON.stringify(Boolean(config.rootClip))};
       comp.name = variantName;
       page.appendChild(comp); // combineAsVariants requires siblings already on the target page
       comp.fills = [];
@@ -1937,6 +2026,14 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           } catch (e) { misses.add('root-width-failed:' + variantName); }
         }
       }
+      if (ROOT_HEIGHT) {
+        const wantH = ROOT_HEIGHT === true ? vroot?.box?.h : Number(ROOT_HEIGHT);
+        if (wantH >= 1) {
+          comp.resize(Math.max(comp.width, 1), wantH);
+          if (comp.layoutMode === 'VERTICAL') comp.primaryAxisSizingMode = 'FIXED';
+          else comp.counterAxisSizingMode = 'FIXED';
+        } else misses.add('root-height-missing:' + variantName);
+      }
       // Padding and gap are box-model facts, not flex facts — a block
       // container has padding too, and bindNum is a no-op when the token is
       // absent, so binding unconditionally cannot invent one.
@@ -1967,12 +2064,16 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
       if (radiusVar) {
         for (const f of ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius']) bindNum(comp, f, radiusVar);
       }
-      if (tokens['border-color']) {
-        const strokePaint = await boundSolid(tokens['border-color']);
+      if (tokens['border-color'] || (vroot?.bw4 && tokens['border-top-color'])) {
+        const strokePaint = await boundSolid(tokens['border-color'] || tokens['border-top-color']);
         if (strokePaint) {
           comp.strokes = [strokePaint];
           comp.strokeAlign = 'INSIDE';
           bindNum(comp, 'strokeWeight', tokens['border-width']);
+          if(vroot?.bw4) {
+            [comp.strokeTopWeight,comp.strokeRightWeight,comp.strokeBottomWeight,comp.strokeLeftWeight]=vroot.bw4;
+            comp.strokesIncludedInLayout=true;
+          }
         }
       }
 
@@ -2126,6 +2227,25 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
         comp.counterAxisSizingMode = 'AUTO';
       }
 
+      if (ROOT_ARROW && Object.entries(ROOT_ARROW.when || {}).every(([key,value]) => axisValues[key] === value)) {
+        const edge = ROOT_ARROW.edgeByValue[axisValues[ROOT_ARROW.axis]];
+        const paint = await boundSolid(ROOT_ARROW.color);
+        if (!edge || !paint || !(ROOT_ARROW.size > 0)) misses.add('root-arrow-unresolved:' + variantName);
+        else {
+          // A 45-degree CSS square projects sqrt(2) * size along each axis.
+          // Keep the diamond native and token-bound; its inner half overlaps
+          // the same-colored surface, exactly like the CSS pseudo-element.
+          const d = Math.SQRT2 * ROOT_ARROW.size;
+          const arrow = figma.createVector();
+          arrow.name = ROOT_ARROW.name || '::after';
+          arrow.vectorPaths = [{windingRule:'NONZERO',data:'M '+d/2+' 0 L '+d+' '+d/2+' L '+d/2+' '+d+' L 0 '+d/2+' Z'}];
+          arrow.fills = [paint]; arrow.strokes = [];
+          comp.appendChild(arrow); arrow.layoutPositioning = 'ABSOLUTE';
+          arrow.x = edge === 'left' ? -d/2 : edge === 'right' ? comp.width-d/2 : (comp.width-d)/2;
+          arrow.y = edge === 'top' ? -d/2 : edge === 'bottom' ? comp.height-d/2 : (comp.height-d)/2;
+          arrow.constraints = {horizontal:edge==='left'?'MIN':edge==='right'?'MAX':'CENTER',vertical:edge==='top'?'MIN':edge==='bottom'?'MAX':'CENTER'};
+        }
+      }
       if (state === 'Disabled') {
         // conditionalBindings.state.disabled (SCSS &:disabled { opacity: ... }) first;
         // the measured-anatomy override is a fallback for a contract with no such fact.
@@ -2375,7 +2495,10 @@ export function buildPluginCode(ops, SC, config = DEFAULT_COMPONENT_CONFIG) {
           for (const variant of set.children) {
             // Never wire the Text property onto a curated literal glyph (the
             // breadcrumbs '/'): the property's default would overwrite it.
-            const tn = findOwnNode(variant, (n) => n.type === 'TEXT' && !String(n.name).startsWith('Literal: '));
+            // Match the measured default, not the shallowest text. A card's
+            // body is shallower than its nested heading; wiring that body
+            // replaced its copy with a second heading.
+            const tn = findOwnNode(variant, (n) => n.type === 'TEXT' && !String(n.name).startsWith('Literal: ') && n.characters === prop.default);
             if (tn) tn.componentPropertyReferences = { characters: propRef };
           }
           addedProps.push(prop.name);

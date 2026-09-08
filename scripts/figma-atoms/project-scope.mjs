@@ -93,7 +93,8 @@ export function scopePlan(PLAN, sc) {
   // A brand-layer entry is only buildable by the project that ships that brand.
   // Altitude has no roster filter (it documents everything), so without this check
   // it would happily pick up Southleft's nine page sections.
-  const brandOk = (e) => !e.brandOnly || (sc.brandLibrary && sc.roster && sc.roster.has(e.tag));
+  const brandOk = (e) => (!e.brandOnly || (sc.brandLibrary && sc.roster && sc.roster.has(e.tag))) &&
+    (!e.baseOnly || !sc.brandLibrary?.supersedes?.[e.tag]);
   if (!sc.roster) return PLAN.filter((e) => !e.skip && brandOk(e));
   return PLAN.filter((e) => !e.skip && brandOk(e) && sc.roster.has(e.tag) && !sc.excluded.has(e.tag));
 }

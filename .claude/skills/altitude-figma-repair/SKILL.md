@@ -293,6 +293,31 @@ is overwritten the next time anyone refreshes, and `--check-drift` will flag it 
 meantime. "Record it in the contract" almost always means *fix the observation source and
 re-derive*, not *type the answer into the JSON*.
 
+### 15. `defaultVariant` is POSITIONAL and read-only — reordering children does nothing
+
+The variant a designer gets when they drag the component in is the **top-left-most**
+cell (min y, then min x). `ComponentSetNode.defaultVariant` has a getter and **no
+setter**, and `insertChild(0, …)` moves the layer without moving the default — measured
+2026-09-06 on al-button: Primary became `children[0]` and the default stayed Bare.
+
+So the only way to change it is to MOVE CELLS, and the axis blocks must move as blocks:
+
+```js
+// group by axis value, take each group's [base, end] along the axis coordinate,
+// keep the original inter-group gaps, then relay out with the target group first
+```
+
+Three things this must respect: the axis runs along whichever coordinate the groups are
+**disjoint** on (an axis disjoint on neither — al-checkbox's `Label`, nested inside each
+State column — is interleaved and must be swapped pair by pair, width-aware, or the grid
+scrambles); the sets are `layoutMode: NONE`, so this is pure repositioning; and the code
+default is not always `Default` — for an enum axis it is the option no code value
+produces (al-button's `Primary`), which is the same "unmatched option = the unset
+default" rule `build-metadata-ops.mjs` uses.
+
+Worth checking after any generation: a fresh set defaults to its first axis value, which
+gave al-badge `Variant=Danger` and al-checkbox `Checked=Indeterminate`.
+
 ## Verification
 
 A repair is done when all of these are true — not before:

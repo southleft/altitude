@@ -1,0 +1,14 @@
+{
+  "$comment": "Select owns its field note outside the nested Input. hideLabel drives the nested label visibility.",
+  "rootWidth": true,
+  "nestedProps": {
+    "al-input": {
+      "Show Label": true,
+      "Show Helper": false,
+      "Value": "Placeholder",
+      "Slot After": true,
+      "$glyphs": ["CaretDown"],
+      "$overrides": [{ "$when": { "Label": "Hidden" }, "Show Label": false }]
+    }
+  }
+}
