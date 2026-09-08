@@ -5,6 +5,7 @@
 
 import altitudeConventions from './cem-plugins/al-conventions.mjs';
 import altitudeDeterministic from './cem-plugins/al-deterministic.mjs';
+import literalTypes from './cem-plugins/al-literal-types.mjs';
 
 export default {
   globs: ['components/**/*.ts'],
@@ -41,5 +42,5 @@ export default {
   // stable-sorts modules by path) so the emitted JSON is byte-identical on
   // Windows and Linux. Removing it reintroduces the ~97-file CRLF churn and
   // the random module permutation.
-  plugins: [altitudeConventions(), altitudeDeterministic()],
+  plugins: [altitudeConventions(), literalTypes(), altitudeDeterministic()],
 };
