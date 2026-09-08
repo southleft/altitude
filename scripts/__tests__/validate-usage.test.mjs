@@ -49,6 +49,13 @@ const has = (res, code) => codes(res).includes(code);
 const detailFor = (res, code) => (res.data?.violations ?? []).find((v) => v.code === code)?.detail ?? '';
 const seen = (res) => JSON.stringify(codes(res));
 
+{
+  const valid = run('<al-toggle-button ${spread(args)} label="Choose emoji"></al-toggle-button>', { ext: 'ts' });
+  assert('Lit element directives are not mistaken for attributes', valid.status === 0, seen(valid));
+  const invalid = run('<al-toggle-button ${spread(args)} hallucinated="yes"></al-toggle-button>', { ext: 'ts' });
+  assert('a Lit directive does not hide a following invalid attribute', has(invalid, 'ERR_UNKNOWN_ATTRIBUTE'), seen(invalid));
+}
+
 /** A positive fixture (must fire `code`) and a negative near-miss (must not). */
 function pair(code, positive, negative, opts = {}) {
   const p = run(positive, opts);

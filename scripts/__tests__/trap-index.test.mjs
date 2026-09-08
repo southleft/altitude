@@ -97,8 +97,8 @@ console.log('\n4. The tracked index');
     assert('the index exists (pnpm run evals:traps -- --write)', false);
   } else {
     const index = JSON.parse(readFileSync(INDEX, 'utf8'));
-    assert('it counts 68 traps — the "~70" early estimate was closer than the 52 that replaced it',
-      index.totals.traps === 68);
+    assert('it counts all 72 currently authored traps, including the four September repair findings',
+      index.totals.traps === 72);
     assert('every skill contributes', Object.values(index.totals.bySkill).every((n) => n > 0));
     assert('the per-skill counts sum to the total',
       Object.values(index.totals.bySkill).reduce((a, b) => a + b, 0) === index.totals.traps);
