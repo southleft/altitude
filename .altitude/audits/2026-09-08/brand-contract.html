@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Brand compatibility verification</title>
+<script>window.alAutoRegistry=true;</script>
+<link rel="stylesheet" href="/libs/al-web-components/dist/css/main.css">
+<link rel="stylesheet" href="/libs/al-web-components/dist/css/css/project/southleft.css">
+</head><body>
+<al-header elevated style="--al-header-min-height:128px;--al-header-padding:12px;--al-header-backdrop-filter:none">
+ <span slot="brand">Southleft</span><a id="header-content" href="#content">Base navigation</a><a slot="nav" href="#content">Brand navigation</a>
+</al-header>
+<main id="content">Compatibility check: base content and brand slots together.</main>
+<al-footer style="--al-footer-border-block-start:none;--al-footer-background:var(--al-theme-color-background-primary-default)">
+ <span slot="brand">Southleft</span><p id="footer-content">Base footer content</p><span slot="columns">Brand column</span>
+</al-footer>
+<script type="module">
+import '/libs/sl-web-components/dist/components/header/header.js';
+import '/libs/sl-web-components/dist/components/footer/footer.js';
+await Promise.all([...document.querySelectorAll('al-header,al-footer')].map(el=>el.updateComplete));
+window.ready=true;
+</script></body></html>
