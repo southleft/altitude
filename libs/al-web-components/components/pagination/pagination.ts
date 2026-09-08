@@ -29,6 +29,7 @@ const endDot = '... '; /* 3 */
 
 /**
  * Component: al-pagination
+ * @slot inpage-label - Label for the in-page pagination controls.
  * @slot label - If content is slotted, it will override the default pagination label
  * @slot prev - If content is slotted, it will override the default "previous" icon
  * @slot next - If content is slotted, it will override the default "next" icon

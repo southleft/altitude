@@ -43,6 +43,8 @@ export const defaultTextConfig: FileUploadTextConfig = {
 
 /**
  * Component: al-file-upload
+ * @slot field-note - Helper text replacing the fieldNote property.
+ * @slot error - Error text replacing the errorNote property.
  * @slot - The component's content
  *
  * @event onFileUploadFileUpload - Fired when files are added. Detail: `{ uploadedFiles }` — the files accepted by this interaction.

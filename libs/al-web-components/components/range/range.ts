@@ -14,6 +14,8 @@ const UPPER_RANGE = 'UPPERRANGE';
 
 /**
  * Component: al-range
+ * @slot field-note - Helper text replacing the fieldNote property.
+ * @slot error - Error text replacing the errorNote property.
  * @slot label - If content is slotted, it will override the default range label
  * @slot before - If content is slotted, it will override the default range "min" label text
  * @slot after - If content is slotted, it will override the default range "max" label text

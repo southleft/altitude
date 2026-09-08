@@ -23,6 +23,7 @@ import styles from './alert.scss';
 
 /**
  * Component: al-alert
+ * @slot action - Optional action control displayed with the alert content.
  * @slot - The alert's main content or title
  * @slot icon - Slot in an icon to override the default one
  *

@@ -5,6 +5,8 @@ import styles from './dropdown-panel.scss';
 
 /**
  * Component: al-dropdown-panel
+ * @slot header - Content above the dropdown body.
+ * @slot footer - Content below the dropdown body.
  * @slot - The dropdown panel content
  */
 export class ALDropdownPanel extends ALElement {

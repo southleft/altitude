@@ -13,6 +13,7 @@
     @include al-theme-typography-body-md-semibold;
 
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -47,6 +48,13 @@
   .al-c-avatar__badge {
     --al-badge-transform: none;
     --al-badge-border-width: var(--al-theme-border-width-md);
+  }
+
+  .al-c-avatar__status {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    line-height: 0;
   }
 
   /**

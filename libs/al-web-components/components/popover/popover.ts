@@ -14,7 +14,8 @@ import { ALFocusTrap } from '../focus-trap/focus-trap';
 import styles from './popover.scss';
 
 /**
- * Component: al-popover
+ * A floating panel anchored to a trigger for contextual information or actions.
+ * Supply its content through the body, header and footer slots; use position to select its placement.
  * @slot - The main body of the popover
  * @slot header - The header of the popover that appears above the main slot
  * @slot footer - The footer of the popover that appears below the main slot

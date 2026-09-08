@@ -15,7 +15,8 @@ import { DialogController } from '../../controllers/dialog';
 import styles from './dialog.scss';
 
 /**
- * Component: al-dialog
+ * A modal panel for a focused task or decision, with optional header and footer content.
+ * Use the trigger slot to open it and provide a clear heading and dismissal action.
  * @slot - The main body of the dialog
  * @slot trigger - The trigger that opens/closes the dialog
  * @slot header - The header of the dialog that appears above the main slot
