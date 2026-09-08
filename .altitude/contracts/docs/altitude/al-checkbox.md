@@ -22,8 +22,8 @@ Component: al-checkbox
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isChecked` | boolean | — | — | **Checked** (VARIANT): `Indeterminate`, `Off`, `On` |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
-| `isError` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isIndeterminate` | boolean | — | — | **Checked** (VARIANT): `Indeterminate`, `Off`, `On` |
 | `isRequired` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `name` | string | — | — | _not expressed in Figma (by design)_ |
@@ -112,7 +112,12 @@ Value attribute
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ### `isIndeterminate` (Figma property "Checked")
 
@@ -189,7 +194,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (16)
 
-`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
+`--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`
 
 ---
 

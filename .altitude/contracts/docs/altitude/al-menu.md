@@ -4,7 +4,7 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-menu
+A vertical list of navigation destinations or item-level actions, with roving keyboard focus across its items. It is the list itself, not the popover around it: pair it with a trigger and a floating container when you need it to open and close.
 
 ## Figma
 
@@ -83,7 +83,7 @@ _No interaction states recorded._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -101,7 +101,6 @@ _No interaction states recorded._
 | border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
-| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
 | padding-bottom | `--al-theme-space-xxs` | `theme/space/xxs` |
 | padding-top | `--al-theme-space-xxs` | `theme/space/xxs` |
 
@@ -115,9 +114,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-menu`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (15)
+## Tokens referenced (14)
 
-`--al-base-space`, `--al-font-size-13`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-12`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

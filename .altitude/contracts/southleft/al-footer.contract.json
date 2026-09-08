@@ -50,6 +50,10 @@
   "events": [],
   "slots": [
     {
+      "name": "",
+      "description": "Additional footer content, preserving the base footer's unnamed slot."
+    },
+    {
       "name": "brand",
       "description": "The first, wider column: wordmark, blurb, CTA, whatever annotation the page carries."
     },
@@ -244,7 +248,8 @@
                                 "display": "block",
                                 "direction": "row",
                                 "align": "normal",
-                                "justify": "normal"
+                                "justify": "normal",
+                                "fillInline": true
                               },
                               "tokens": {},
                               "children": []
@@ -268,11 +273,11 @@
                                   "figma": "theme/color/content/neutral-weak"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -303,6 +308,10 @@
                       "tag": "a",
                       "cls": "",
                       "text": "Work",
+                      "fsPx": 16,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 322.4,
                         "h": 20
@@ -320,6 +329,10 @@
                       "tag": "a",
                       "cls": "",
                       "text": "Insights",
+                      "fsPx": 16,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 322.4,
                         "h": 20
@@ -337,6 +350,10 @@
                       "tag": "a",
                       "cls": "",
                       "text": "About",
+                      "fsPx": 16,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 322.4,
                         "h": 20
@@ -373,6 +390,10 @@
                   "tag": "cite",
                   "cls": "sl-c-footer__cite",
                   "text": "Southleft",
+                  "fsPx": 12,
+                  "lhPx": 20.4,
+                  "ffCss": "IBM Plex Mono",
+                  "fwCss": "400",
                   "box": {
                     "w": 1160,
                     "h": 20.4
@@ -407,6 +428,10 @@
                   "tag": "p",
                   "cls": "sl-c-footer__copyright",
                   "text": "(c) 2026 Southleft, LLC",
+                  "fsPx": 12,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 123.4,
                     "h": 20
@@ -469,6 +494,10 @@
                           "tag": "a",
                           "cls": "",
                           "text": "Privacy",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 39.3,
                             "h": 14
@@ -494,14 +523,14 @@
     }
   },
   "tokens": [
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-theme-color-content-neutral-default",
     "--al-theme-color-content-neutral-weak",
     "--al-theme-space",
     "--al-theme-space-lg",
     "--al-theme-space-xxl",
     "--al-theme-space-xxs",
-    "--al-theme-typography-body-xs-bold-letter-spacing"
+    "--al-theme-typography-body-xs-semibold-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [],

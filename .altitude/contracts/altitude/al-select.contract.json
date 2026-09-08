@@ -4,7 +4,7 @@
   "name": "Select",
   "version": "1.0.0",
   "status": "source",
-  "description": "Component: al-select",
+  "description": "A choice from a known list, rendered as a field the user opens rather than types into. It composes `al-input` for the field itself and `al-dropdown-panel` for the options, so it inherits the whole form-field treatment — label, required marker, field note, error note — and adds the open/closed state and keyboard traversal on top.",
   "semantics": {
     "element": "div",
     "role": null
@@ -97,7 +97,15 @@
         "code": {
           "attribute": "hideLabel"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ],
+          "pairWith": "Label"
+        }
       }
     },
     {
@@ -196,7 +204,14 @@
         "code": {
           "attribute": "label"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Label",
+          "options": [
+            "Hidden",
+            "Shown"
+          ]
+        }
       }
     },
     {
@@ -262,6 +277,10 @@
     {
       "name": "",
       "description": "The select content"
+    },
+    {
+      "name": "before",
+      "description": "Optional leading content within the select control."
     },
     {
       "name": "error",
@@ -342,7 +361,8 @@
         "display": "flex",
         "direction": "column",
         "align": "normal",
-        "justify": "normal"
+        "justify": "normal",
+        "fillInline": true
       },
       "tokens": {
         "column-gap": {
@@ -386,7 +406,8 @@
                 "display": "flex",
                 "direction": "column",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "column-gap": {
@@ -447,6 +468,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 41.3,
                         "h": 24
@@ -480,6 +505,12 @@
                     {
                       "tag": "input",
                       "cls": "al-c-input__input",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 233,
                         "h": 40
@@ -488,7 +519,8 @@
                         "display": "inline-block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -542,10 +574,6 @@
                         "min-height": {
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
-                        },
-                        "padding": {
-                          "code": "--al-theme-space-sm",
-                          "figma": "theme/space/sm"
                         },
                         "padding-left": {
                           "code": "--al-theme-space-sm",
@@ -687,6 +715,10 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "text": "This is a field note.",
+              "fsPx": 14,
+              "lhPx": 20,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 119.9,
                 "h": 16
@@ -743,7 +775,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -787,7 +820,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -848,6 +882,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -881,6 +919,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -889,7 +933,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -943,10 +988,6 @@
                             "min-height": {
                               "code": "--al-theme-size-control",
                               "figma": "theme/size/control"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -1088,6 +1129,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -1144,7 +1189,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1188,7 +1234,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -1253,6 +1300,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -1286,6 +1337,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -1294,7 +1351,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -1352,10 +1410,6 @@
                             "opacity": {
                               "code": "--al-theme-opacity-disabled",
                               "figma": "theme/opacity/disabled"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -1505,6 +1559,10 @@
                   "cls": "al-c-field-note al-is-disabled",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -1565,7 +1623,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1609,7 +1668,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -1670,6 +1730,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -1703,6 +1767,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -1711,7 +1781,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -1769,10 +1840,6 @@
                             "min-height": {
                               "code": "--al-theme-size-control",
                               "figma": "theme/size/control"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -1914,6 +1981,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -2000,6 +2071,10 @@
                   "cls": "al-c-field-note al-is-error",
                   "component": "al-field-note",
                   "text": "This is an error note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 130.8,
                     "h": 16
@@ -2056,7 +2131,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2100,7 +2176,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -2161,6 +2238,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -2194,6 +2275,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -2202,7 +2289,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -2256,10 +2344,6 @@
                             "min-height": {
                               "code": "--al-theme-size-control",
                               "figma": "theme/size/control"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -2401,6 +2485,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -2457,7 +2545,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2501,7 +2590,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -2562,6 +2652,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -2595,6 +2689,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -2603,7 +2703,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -2657,10 +2758,6 @@
                             "min-height": {
                               "code": "--al-theme-size-control",
                               "figma": "theme/size/control"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -2802,6 +2899,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -2858,7 +2959,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2902,7 +3004,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -2967,6 +3070,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -3000,6 +3107,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -3008,7 +3121,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -3066,10 +3180,6 @@
                             "opacity": {
                               "code": "--al-theme-opacity-disabled",
                               "figma": "theme/opacity/disabled"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -3219,6 +3329,10 @@
                   "cls": "al-c-field-note al-is-disabled",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -3279,7 +3393,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -3323,7 +3438,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -3384,6 +3500,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -3417,6 +3537,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -3425,7 +3551,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -3483,10 +3610,6 @@
                             "min-height": {
                               "code": "--al-theme-size-control",
                               "figma": "theme/size/control"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -3628,6 +3751,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -3714,6 +3841,10 @@
                   "cls": "al-c-field-note al-is-error",
                   "component": "al-field-note",
                   "text": "This is an error note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 130.8,
                     "h": 16
@@ -3770,7 +3901,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -3814,7 +3946,8 @@
                     "display": "flex",
                     "direction": "column",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "column-gap": {
@@ -3875,6 +4008,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Label",
+                          "fsPx": 16,
+                          "lhPx": 24,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 41.3,
                             "h": 24
@@ -3908,6 +4045,12 @@
                         {
                           "tag": "input",
                           "cls": "al-c-input__input",
+                          "bw4": [
+                            1,
+                            1,
+                            1,
+                            1
+                          ],
                           "box": {
                             "w": 233,
                             "h": 40
@@ -3916,7 +4059,8 @@
                             "display": "inline-block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {
                             "background-color": {
@@ -3970,10 +4114,6 @@
                             "min-height": {
                               "code": "--al-theme-size-control",
                               "figma": "theme/size/control"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-sm",
-                              "figma": "theme/space/sm"
                             },
                             "padding-left": {
                               "code": "--al-theme-space-sm",
@@ -4115,6 +4255,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -4182,6 +4326,25 @@
     "ariaAttributes": [
       "ariaDescribedBy"
     ],
+    "keyboard": [
+      {
+        "keys": "Enter",
+        "action": "Opens or closes the dropdown."
+      },
+      {
+        "keys": "Space",
+        "action": "Opens or closes the dropdown."
+      },
+      {
+        "keys": "Escape",
+        "action": "Closes the dropdown. Only while it is open."
+      },
+      {
+        "keys": "Tab",
+        "action": "Closes the dropdown when focus leaves the last option."
+      }
+    ],
+    "focus": null,
     "cssParts": []
   },
   "bindings": {
@@ -4192,9 +4355,9 @@
     },
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
-      "componentSetName": null,
-      "nodeId": null,
-      "url": null
+      "componentSetName": "Select",
+      "nodeId": "3704:13389",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3704-13389"
     }
   }
 }

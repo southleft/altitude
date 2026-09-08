@@ -3,19 +3,19 @@
  * .altitude/contracts/altitude/al-text-block.contract.json — DO NOT HAND-EDIT.
  * Re-run the generator; `--check` is the drift gate.
  *
- * Figma Code Connect — web component surface for the "Text Passage"
- * component set (node 3435:888).
+ * Figma Code Connect — web component surface for the "Text Block"
+ * component set (node 3694:10744).
  *
  * Mapped variant axes: none.
  * Props the contract marks `omit` (no Figma axis): maxWidth.
  */
 import figma, { html } from '@figma/code-connect/html';
 
-figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-888', {
+figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3694-10744', {
   props: {},
   example: (props) => html`
     <al-text-block>
-      Text Passage
+      Text Block
     </al-text-block>
   `,
 });

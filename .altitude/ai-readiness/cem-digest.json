@@ -47,6 +47,10 @@
     ],
     "slots": [
       {
+        "name": "header",
+        "description": "The panel heading content inside the disclosure button."
+      },
+      {
         "name": "(default)",
         "description": "The accordion panel content"
       }
@@ -127,6 +131,10 @@
       }
     ],
     "slots": [
+      {
+        "name": "action",
+        "description": "Optional action control displayed with the alert content."
+      },
       {
         "name": "(default)",
         "description": "The alert's main content or title"
@@ -1549,6 +1557,18 @@
     ],
     "slots": [
       {
+        "name": "header",
+        "description": "Drawer heading content."
+      },
+      {
+        "name": "footer",
+        "description": "Drawer footer content."
+      },
+      {
+        "name": "trigger",
+        "description": "The control that opens the drawer."
+      },
+      {
         "name": "(default)",
         "description": "The drawer content"
       }
@@ -1578,6 +1598,14 @@
     ],
     "events": [],
     "slots": [
+      {
+        "name": "header",
+        "description": "Content above the dropdown body."
+      },
+      {
+        "name": "footer",
+        "description": "Content below the dropdown body."
+      },
       {
         "name": "(default)",
         "description": "The dropdown panel content"
@@ -1745,6 +1773,14 @@
       }
     ],
     "slots": [
+      {
+        "name": "field-note",
+        "description": "Helper text replacing the fieldNote property."
+      },
+      {
+        "name": "error",
+        "description": "Error text replacing the errorNote property."
+      },
       {
         "name": "(default)",
         "description": "The component's content"
@@ -3206,6 +3242,18 @@
     "events": [],
     "slots": [
       {
+        "name": "before",
+        "description": "Optional leading content."
+      },
+      {
+        "name": "after",
+        "description": "Optional trailing content."
+      },
+      {
+        "name": "items",
+        "description": "Nested list items displayed when this item expands."
+      },
+      {
         "name": "(default)",
         "description": "The content of the list item"
       }
@@ -3300,7 +3348,7 @@
       {
         "name": "isExpandableHeader",
         "type": "boolean",
-        "description": "isExpandableHeader property\n- **true** Applies expandable functionality to the menu item"
+        "description": "Legacy compatibility property; it does not control the disclosure button."
       },
       {
         "name": "isExpanded",
@@ -3527,6 +3575,10 @@
       }
     ],
     "slots": [
+      {
+        "name": "inpage-label",
+        "description": "Label for the in-page pagination controls."
+      },
       {
         "name": "label",
         "description": "If content is slotted, it will override the default pagination label"
@@ -3964,6 +4016,14 @@
     ],
     "slots": [
       {
+        "name": "field-note",
+        "description": "Helper text replacing the fieldNote property."
+      },
+      {
+        "name": "error",
+        "description": "Error text replacing the errorNote property."
+      },
+      {
         "name": "label",
         "description": "If content is slotted, it will override the default range label"
       },
@@ -4098,6 +4158,10 @@
     ],
     "slots": [
       {
+        "name": "emptyMessage",
+        "description": "Content displayed when there are no matching results."
+      },
+      {
         "name": "(default)",
         "description": "The search's dropdown content"
       },
@@ -4226,6 +4290,10 @@
       }
     ],
     "slots": [
+      {
+        "name": "before",
+        "description": "Optional leading content within the select control."
+      },
       {
         "name": "(default)",
         "description": "The select content"
@@ -4528,7 +4596,7 @@
       },
       {
         "name": "sortDirection",
-        "type": "ALTableSortDirection",
+        "type": "'ascending' | 'descending' | 'none'",
         "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary."
       }
     ],
@@ -4801,12 +4869,7 @@
         "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used."
       }
     ],
-    "slots": [
-      {
-        "name": "(default)",
-        "description": "The component content"
-      }
-    ],
+    "slots": [],
     "cssParts": [],
     "cssProperties": [],
     "doNotFlag": []
@@ -5005,6 +5068,11 @@
         "description": "Variant\n- **default** renders the toggle button without background styles\n- **background** renders the toggle button with background styles"
       },
       {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name for an icon-only toggle button. Visible slotted text supplies\nthe name when this property is omitted."
+      },
+      {
         "name": "isSelected",
         "type": "boolean",
         "description": "Indicates the selected state of the toggle button."
@@ -5017,7 +5085,7 @@
       {
         "name": "hasToggle",
         "type": "boolean",
-        "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state"
+        "description": "Has toggle?\n- Dynamically enabled when the first slotted element is an ALPopover or ALMenu.\n- **true** toggles the isSelected state on activation.\n- **false** selects on activation; Escape or an outside click can deselect."
       }
     ],
     "events": [

@@ -4,11 +4,14 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-popover
+A floating panel anchored to a trigger for contextual information or actions.
+Supply its content through the body, header and footer slots; use position to select its placement.
 
 ## Figma
 
-No Figma component set is mapped for `al-popover` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Popover**
+- Node id: `3702:12374` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3702-12374)
 
 ## Props (7)
 
@@ -18,7 +21,7 @@ No Figma component set is mapped for `al-popover` in the **Altitude Design Syste
 | `heading` | string | — | — | — |
 | `isActive` | boolean | — | — | — |
 | `isDismissible` | boolean | — | — | — |
-| `position` | string | `\| 'bottom-center' \| 'bottom-right' \| 'bottom-left' \| 'top-center' \| 'top-right' \| 'top-left' \| 'left' \| 'left-top' \| 'right' \| 'right-top'` | `'bottom-left'` | — |
+| `position` | string | `\| 'bottom-center' \| 'bottom-right' \| 'bottom-left' \| 'top-center' \| 'top-right' \| 'top-left' \| 'left' \| 'left-top' \| 'right' \| 'right-top'` | `'bottom-left'` | **Position** (VARIANT): `Bottom-center`, `Default`, `Left`, `Right` |
 | `transitionDelay` | number | — | `400` | — |
 | `variant` | string | `'menu'` | — | — |
 
@@ -71,7 +74,10 @@ Variants
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `position` (Figma property "Position")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bottom-center`, `Default`, `Left`, `Right`
 
 ## States
 
@@ -96,16 +102,32 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaLabelledBy`, `variant`
+- ARIA-bearing attributes: `ariaLabelledBy`
 - CSS parts: —
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Position=bottom` (source: `measured`)
+**Anatomy case measured:** `Position=bottom-center` (source: `measured`)
 
-### Root — `<div class="al-c-popover al-is-active">`
+### Root — `<div class="al-c-popover__container">`
 
-_None._
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| box-shadow | `--al-theme-box-shadow-lg` | `theme/box-shadow/lg` |
+| column-gap | `--al-theme-space` | `theme/space/@` |
+| gap | `--al-theme-space` | `theme/space/@` |
+| padding | `--al-theme-space` | `theme/space/@` |
+| padding-bottom | `--al-theme-space` | `theme/space/@` |
+| padding-left | `--al-theme-space` | `theme/space/@` |
+| padding-right | `--al-theme-space` | `theme/space/@` |
+| padding-top | `--al-theme-space` | `theme/space/@` |
+| row-gap | `--al-theme-space` | `theme/space/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -117,9 +139,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-popover`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (7)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-weak`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
+`--al-theme-border-radius-lg`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
 
 ---
 

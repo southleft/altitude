@@ -1,115 +1,36 @@
-# Contract ↔ Figma coverage (real components, per page)
+# Contract ↔ Figma coverage
 
-Spec: `.mm/specs/2026-08-26-contract-coverage-for-all-real-altitude-figma-components-with-nested-component-composition`
-Snapshot: 2026-08-26, live against "Altitude Design System" (y83n4o9LOGs74oAoguFcGS), pages inventoried via the Desktop Bridge.
-Regenerate the generated-set column by re-running the sweep (see § How to regenerate).
+The current audit is [2026-09-08](../audits/2026-09-08/REPORT.md); implementation status is tracked in [REMEDIATION.md](../audits/2026-09-08/REMEDIATION.md). These are dated observations, not a live certification. The previous coverage table and September 6 repair notes are preserved in [coverage-before-remediation.md](../audits/2026-09-08/coverage-before-remediation.md).
 
-## Headline numbers
+## Evidence and scope
 
-- **37 real component sets** live in the file (one per "🛠 " page), **36 mapped** to code components in the parity manifest.
-- **68 non-icon code components** tracked; **35 generated live this session** onto the "Contract Pilot" scratch page (33 sweep + al-button + al-checkbox-group pilots), **zero failures**.
-- **15 generated sets are composites** that NEST real-set INSTANCES (Checkbox, Field Note, Button, Link, Menu Item, Tab, Badge, Radio, Toggle Button, Pagination Item, Input, the DS Icon wrapper…) — the "molecules nest existing components" constraint, working end to end.
-- **17 components blocked on measured anatomy** (spec-light.json has no entry — run the measurement pass, then `contracts --refresh`): the notable ones are al-search, al-select, al-dialog, al-popover, al-drawer, al-card, al-header, al-footer, al-stepper, al-date-picker, al-date-time-picker.
+The September 8 audit found 34 canonical mapped component sets. All 34 had descriptions and documentation links, but important code components lacked canonical Figma coverage, including Card, Dialog, Drawer, Select, Popover and Tooltip. Scratch sets are not canonical coverage. The old August 26 claim of 35 generated sets described a scratch-page experiment, not 35 shipped, visually verified components.
 
-## How nesting works (the caveat this spec exists for)
+Read current counts from the project's parity manifest and live canvas. Resolve the file through `.altitude/ds-projects.json`; never reuse a different project's node IDs. `pnpm run parity:pins` checks attached identities; a passing pin check proves neither visual nor API parity.
 
-1. `composition` in every contract — derived from the component's OWN source (template tags + sibling imports) by `emit-contracts.mjs`; `--refresh` keeps it current.
-2. Anatomy nodes carry `component: "al-<name>"` when their class list bears another component's `al-c-<name>` block class (measured anatomy flattens shadow DOM, so nested components are recoverable from BEM blocks).
-3. `derive-ops.mjs` maps each annotated tag to its Figma set NAME (sibling contract's `bindings.figma.componentSetName`, else Title Case) — never a node id.
-4. `build-set-code.mjs` resolves each set by name (the component's own "🛠 " page first, then the scratch page for generated fallbacks; the DS "Icon" lone COMPONENT resolves via the wrapper path) and places a real INSTANCE — outermost annotation wins, the subtree is never rebuilt. Unresolved tags degrade to coarse auto-layout frames that recurse (al-layout does this BY DESIGN — arrangement primitive, no set of its own), reported per miss.
+## Before generation or repair
 
-## Coverage table
+1. Load the matching Figma skill. Metadata and in-place repairs must preserve the existing set and variant IDs. Generate only genuinely missing sets or explicitly authorized replacements.
+2. Positively pin and assert the registry's file name and key inside the sandbox before writing.
+3. Refresh measurements from the built library, then regenerate contracts. A measured trigger is not an open dialog; use the declared measurement root for overlays. Missing anatomy is a named blocker.
+4. Inspect browser and Figma PNGs. A populated node tree or successful generator exit is insufficient. Record unresolved variables, nested components and unsupported layout as degradations.
+5. Refresh canvas observations, contracts, docs and Code Connect after accepted changes. Generated output alone does not prove that Code Connect is published.
 
-Column key — **Real set**: parity-manifest mapping; **Anatomy**: measured = generation-ready; **Nests (code)**: the contract's `composition.renders`; **Generated (this session)**: live result on the scratch page, ✓/✗ = nested set resolved/missed.
+## Composition requirements
 
-| Component | Real set | Anatomy | Nests (code) | Generated (this session) |
-|---|---|---|---|---|
-| al-accordion-panel | — | measured | al-icon | ready (no real set) |
-| al-accordion | — | — | al-accordion-panel | BLOCKED: no measured anatomy |
-| al-alert | — | measured | al-button, al-icon | ready (no real set) |
-| al-avatar | — | measured | al-badge, al-icon-* | ready (no real set) |
-| al-badge | Badge | measured | — | 25 variants |
-| al-banner | Banner | measured | al-alert, al-button, al-icon, al-link, al-toast | composite, 20 variants [al-icon✓] |
-| al-breadcrumbs-item | Breadcrumbs Item | measured | — | 5 variants |
-| al-breadcrumbs | Breadcrumbs | measured | al-breadcrumbs-item, al-button, al-icon, al-menu, al-menu-item, al-popover | composite, 5 variants [al-breadcrumbs-item✓] |
-| al-button | Button | measured | al-icon-dots-vertical | 25 variants |
-| al-calendar | — | measured | al-button, al-date-picker, al-date-time-picker, al-icon | ready (no real set) |
-| al-card | — | — | al-avatar | BLOCKED: no measured anatomy |
-| al-checkbox-group | Checkbox Group | measured | al-checkbox, al-field-note, al-layout | composite, 5 variants [al-checkbox✓ al-field-note✓ al-layout✗] |
-| al-checkbox | Checkbox | measured | al-field-note | 5 variants |
-| al-chip | Chip | measured | al-icon | 30 variants |
-| al-combobox | Combobox | measured | al-button, al-dropdown-panel, al-field-note, al-icon, al-input, al-list, al-list-item | composite, 10 variants [al-field-note✓ al-icon✓ al-input✓] |
-| al-command-palette | Command Palette | — | al-focus-trap, al-icon | BLOCKED: no measured anatomy |
-| al-date-picker | — | — | al-calendar, al-field-note, al-icon, al-input | BLOCKED: no measured anatomy |
-| al-date-time-picker | — | — | al-button, al-calendar, al-field-note, al-icon, al-input, al-layout, al-time-selector-list | BLOCKED: no measured anatomy |
-| al-dialog | — | — | al-button, al-focus-trap, al-heading, al-icon | BLOCKED: no measured anatomy |
-| al-divider | Divider | measured | — | 5 variants |
-| al-drawer | — | — | al-button, al-focus-trap, al-icon | BLOCKED: no measured anatomy |
-| al-dropdown-panel | — | measured | — | ready (no real set) |
-| al-empty-state | Empty State | measured | — | composite, 5 variants [al-button✓ al-icon✓] |
-| al-field-note | Field Note | measured | — | 5 variants |
-| al-file-upload | File Upload | measured | al-button, al-field-note, al-icon, al-progress | composite, 10 variants [al-button✓ al-field-note✓ al-icon✓] |
-| al-focus-trap | — | — | — | BLOCKED: no measured anatomy |
-| al-footer | — | — | al-divider, al-layout, al-logo | BLOCKED: no measured anatomy |
-| al-header | — | — | al-layout, al-logo, al-menu | BLOCKED: no measured anatomy |
-| al-heading | Heading | measured | — | 35 variants |
-| al-icon | — | — | — | BLOCKED: no measured anatomy |
-| al-input-stepper | Input Stepper | measured | al-button, al-field-note, al-icon | composite, 10 variants [al-button✓ al-field-note✓ al-icon✓] |
-| al-input | Input | measured | al-field-note | composite, 10 variants [al-field-note✓] |
-| al-layout | — | measured | — | ready (no real set) |
-| al-link | Link | measured | — | 5 variants |
-| al-list-item | List Item | measured | al-dropdown-panel, al-icon, al-link, al-list | 10 variants |
-| al-list | — | measured | al-list-item | ready (no real set) |
-| al-logo | — | measured | — | ready (no real set) |
-| al-menu-item | Menu Item | measured | al-button, al-icon, al-link, al-menu | composite, 5 variants [al-link✓] |
-| al-menu | Menu | measured | al-link, al-list, al-menu-item | composite, 10 variants [al-link✓ al-menu-item✓] |
-| al-pagination-item | Pagination Item | measured | — | 5 variants |
-| al-pagination | Pagination | measured | al-button, al-icon, al-list, al-list-item, al-pagination-item, al-popover, al-select | composite, 10 variants [al-button✓ al-focus-trap✗ al-icon✓ al-input✓ al-pagination-item✓ al-popover✗ al-select✗] |
-| al-popover | — | — | al-button, al-focus-trap, al-heading, al-icon | BLOCKED: no measured anatomy |
-| al-progress | — | measured | — | ready (no real set) |
-| al-radio-group | Radio Group | measured | al-field-note, al-layout, al-radio | composite, 5 variants [al-field-note✓ al-layout✗ al-radio✓] |
-| al-radio | Radio | measured | al-field-note | 5 variants |
-| al-range | Range | measured | al-field-note | composite, 10 variants [al-field-note✓] |
-| al-search | — | — | al-button, al-dropdown-panel, al-field-note, al-icon, al-input, al-list, al-list-item | BLOCKED: no measured anatomy |
-| al-select | — | — | al-checkbox, al-combobox, al-dropdown-panel, al-field-note, al-icon, al-input, al-list-item, al-search | BLOCKED: no measured anatomy |
-| al-skeleton | Skeleton | measured | — | 5 variants |
-| al-spinner | — | measured | — | ready (no real set) |
-| al-stat | — | measured | al-icon, al-layout | ready (no real set) |
-| al-stepper-item | — | measured | al-icon | ready (no real set) |
-| al-stepper | — | — | al-stepper-item | BLOCKED: no measured anatomy |
-| al-tab-panel | Tab Panel | measured | — | 5 variants |
-| al-tab | Tab | measured | al-tab-panel, al-tabs | 5 variants |
-| al-table | Table | measured | al-checkbox, al-icon, al-theme | 5 variants |
-| al-tabs | Tabs | measured | al-button, al-icon, al-tab, al-tab-panel | composite, 10 variants [al-badge✓ al-tab✓ al-tab-panel✓] |
-| al-testimonial | — | measured | al-avatar | ready (no real set) |
-| al-text-block | Text Block | measured | — | 5 variants |
-| al-textarea | Textarea | measured | al-field-note | composite, 10 variants [al-field-note✓] |
-| al-theme-switcher | — | — | — | BLOCKED: no measured anatomy |
-| al-theme | — | — | — | BLOCKED: no measured anatomy |
-| al-time-selector-list | — | measured | — | ready (no real set) |
-| al-toast | — | measured | al-button, al-icon, al-progress | ready (no real set) |
-| al-toggle-button | Toggle Button | measured | al-menu, al-popover | 10 variants |
-| al-toggle | Toggle | measured | — | 5 variants |
-| al-tooltip | — | measured | al-button | ready (no real set) |
-## Mismatches & design-side orphans
+`emit-contracts.mjs` derives composition from source and carries measured anatomy. `derive-ops.mjs` translates nested component tags to Figma set names; `build-set-code.mjs` resolves canonical sets first. Nested components must remain instances, not rebuilt frames. The layout primitive may intentionally resolve to an arrangement frame because it has no visual set.
 
-- **`al-text-block` → manifest says "Text Block", the live set is named "Text Passage"** — a rename on one side; the manifest (and this contract's `bindings.figma.componentSetName`) needs re-pointing, or the set renaming back. Until then the generated set and the real set carry different names (which also means nested resolution for a hypothetical al-text-block nesting would miss).
-- **`al-command-palette`** — manifest maps "Command Palette" but no such set was found live on any "🛠 " page.
-- **"Button (Icon)"** (🛠 Button) — design-side only; code expresses this as `al-button` with `hideText` + a `before` icon. No code component will ever pair with it by name.
-- **"Button Group" and "Chip Group"** (own pages) — their code components were deliberately REMOVED (arrangement belongs to `<al-layout>`, see AGENTS.md); these sets are design-side legacy. Decision needed: retire them in Figma or keep as design conveniences, but they will never pair to code.
-- **"Input" mapping carries `nodeId: null`** in the manifest while a real set exists (3442:25595) — a digest refresh (`scripts/figma-parity/refresh-figma-digests.mjs`) would repopulate ids/digests.
+Nested variant choice, hidden branches, text content and slot controls require explicit verification against measured cases. Do not accept default-variant substitution merely because the referenced component exists. Preserve the owner's existing sets and instances while repairing these facts.
 
-## Known coarseness in generated composites (v1, by design)
+Retired layout wrappers must not be presented as current code components. Keep historical material clearly separated from canonical library pages. The removed Chip Group is a known audit finding, with `al-layout` as its supported arrangement replacement.
 
-- Nested instances render their set's **default variant** — per-State/per-Variant switching of nested instances (the real sets do this by hand) is not yet in the ops schema.
-- Anatomy carries **no text content**, so text-bearing anatomy leaves (e.g. a checkbox-group legend) render as frames, not TEXT (the real set has a legend TEXT node).
-- Components that render **all conditional branches at once** in measured anatomy (al-tabs' every tab-panel, al-banner's alert+toast pair) generate overlapping/stacked content — anatomy cannot see `display:none`. These need either measured-case curation or per-component figma.gen.json refinement.
-- `al-layout` inside composites falls back to a flex frame (correct — it has no set), reported as `nested-set-not-found` each run; treat that specific miss as expected noise.
-
-## How to regenerate
+## Commands
 
 ```bash
-node scripts/figma-atoms/mcp-shim.mjs                                  # keep running
-node scripts/contracts/generate-figma.mjs --component <tag>            # one component -> scratch page
-# scratch-page clearing is NAME-SCOPED per component (spec 2026-08-26): sibling generated sets survive.
+node scripts/figma-atoms/measure-components.mjs --project altitude
+node scripts/contracts/emit-contracts.mjs --project altitude --refresh
+node scripts/contracts/extract-canvas.mjs --project altitude
+node scripts/contracts/generate-figma.mjs --project altitude --component <missing-tag>
 ```
+
+Run generation only after reading its skill, confirming that the set is missing and checking its dependencies. Use the repair workflow for an existing set. A failed visual comparison remains unresolved even when metadata, pins and build checks pass.

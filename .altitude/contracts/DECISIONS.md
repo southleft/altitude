@@ -542,3 +542,154 @@ idempotent, and have long since run to completion on every contract in the
 repo. They are being REMOVED from `emit-contracts.mjs` as part of the
 parity-system audit remediation spec — the modes' historical record is this
 file, not the README.
+
+## 2026-09-05 — motion tokens are synced to Figma, as ms FLOATs and easing STRINGs
+
+`animation.duration.*` and `animation.timing.*` were excluded from the Figma
+payload as "no Figma variable type" (`build-figma-payload.mjs`'s
+`NO_FIGMA_TYPE`, and `FIGMA-SYNC.md`'s corrected rule-3 paragraph). The premise
+was true and the conclusion did not follow: Figma variables are indeed only
+COLOR | FLOAT | STRING | BOOLEAN and none of them IS a duration or a curve, but
+a duration survives as a FLOAT of milliseconds and a curve as its STRING.
+
+They are now emitted — 7 durations and 9 easing curves in `Tier 1 | Primitive`,
+plus the 3 `theme.animation.*` aliases in `Tier 2 | Semantic`, which pass
+through as brace references and resolve against the tier-1 names.
+
+Two things this deliberately is NOT:
+
+- **Not bindable.** Figma has no variable slot on a prototype transition, so
+  nothing on canvas can consume these yet. They are carried so the values are
+  visible, reviewable and diffable on the design side ahead of the motion work
+  that will use them. A designer reads them; a generator copies them.
+- **Not the `motion` axis.** `FIGMA-SYNC.md`'s axis table still stands: the
+  `motion` axis (`full` / `reduced` / `expressive`) is hand-written
+  `:host([attr])` rules in `components/theme/theme.scss`, not a token-file axis,
+  and the `--al-theme-animation-*-role-*` tokens it repoints have no tier-2
+  default BY DESIGN (`AXES.md`; the nine-property allowlist in
+  `theme-engine/tokens-exist.test.ts`). Giving those roles a `:root` default to
+  make them syncable would re-break the brand-awareness that allowlist exists to
+  protect. Model the axis in Figma as MODES only if the roles ever become real
+  token entries — until then the variables above are the ramp, not the axis.
+
+Unit trap, recorded because it is silent: Figma states durations in
+MILLISECONDS. `0.1s` has to arrive as `100`. Emitting `0.1` would read as a
+tenth of a millisecond — the same shape of invisible 100x error as the opacity
+percentage documented in `partition()`, which broke every disabled state before
+it was caught.
+
+## 2026-09-05 — `a11y` gains a hand-authored half: keyboard, focus, screenReader
+
+`a11y` held only what the CEM can see — `ariaAttributes` and `cssParts`. The
+keyboard contract is not in any manifest: which keys a component handles, and
+what each does, lives in a `keydown` handler's control flow. Same for the focus
+contract and for what a screen reader announces. All three are now schema
+fields, transcribed from the component sources.
+
+Populated for the 22 components that handle keys at all (73 bindings), plus 14
+focus contracts. The other 80 are left ABSENT rather than defaulted: an empty
+`keyboard` would be a true claim for most of them, but `focus: null` reads as
+"takes no focus of its own", which is false for anything focusable. Absent means
+not yet transcribed; null is a positive claim.
+
+Two things this exposed, both fixed here:
+
+- **`buildA11y()` classified ARIA props with `/aria/i`, which matches
+  `v-aria-nt`.** `variant` was in `a11y.ariaAttributes` on 22 contracts and
+  `badgeVariant` on one — 23 of 57 entries, so 40% of the recorded ARIA surface
+  was a style-emphasis prop. The predicate now requires a whole camelCase
+  segment to be `aria`.
+- **The new fields have no derivation source**, so `--check-drift` flagged all
+  22 until `carryForwardA11yAuthored()` was added alongside the existing
+  `carryForward*` helpers. Note the ORDER trap recorded in that function:
+  `driftedFields()` compares with `JSON.stringify`, which is order-sensitive, so
+  the helper has to rebuild `a11y` in the schema's key order rather than assign
+  the carried fields on — otherwise every carried contract drifts on key order
+  alone, same values, different string.
+
+`ariaAttributes` and `cssParts` are deliberately NOT carried forward: they are
+derivable and must keep drifting when the CEM changes.
+
+One near-miss worth recording. A first pass extracted `al-calendar`'s eight
+arrow/Home/End/PageUp/PageDown cases as `preventDefault`-only no-ops, which would
+have been filed as a keyboard-trap accessibility bug. The cases assign to a LOCAL
+and the shared `e.preventDefault(); this.moveFocusTo(to)` runs after the switch —
+calendar's grid navigation is complete and correct. Mechanical extraction of a
+`switch` body is not sufficient evidence for an a11y claim; read the handler.
+
+## 2026-09-05 — `description` sourcing, and why guidance prose is conditional
+
+Contract `description` is CEM-derived: the prose above `export class`. Two
+things were wrong in the surrounding record, both corrected here.
+
+**It was never boilerplate everywhere.** The schema said "Currently boilerplate
+for every Altitude component"; in fact 48 of 102 contracts already carried real
+prose from class JSDoc. The AI-readiness audit's "46 of 48 empty" figure is a
+FIGMA measurement and does not describe the contracts. The schema comment now
+states the real number and is dated.
+
+**Guidance prose is now a second source, but a conditional one.** Nine contracts
+(button, card, checkbox-group, dialog, input, menu, radio-group, select, tooltip)
+take their description from `apps/docs/src/content/guidance/<name>.yaml`'s
+`purpose` — authored prose that is better than anything derivable. Unlike the
+a11y fields, this is carried forward ONLY while the CEM's own description is
+still boilerplate (`carryForwardAuthoredDescription()`). The moment somebody
+writes a real class JSDoc, the CEM wins and drift reports it. An unconditional
+carry-forward would let a contract description silently outrank a better one at
+the source forever.
+
+Corollary, learned by doing it wrong first: do NOT rewrite a description that
+the CEM already provides. An initial pass normalised the JSDoc prose of 11
+components (banner, combobox, command-palette, empty-state, footer, header,
+layout, spinner, stat, table, testimonial) into the contract. Every one drifted
+immediately — same meaning, different whitespace — because the CEM is the source
+and normalisation is not an improvement. They were restored to the CEM value.
+
+Remaining gap: 45 contracts still boilerplate, and NO source exists for them.
+Their class JSDoc is `Component: al-x` followed straight by `@slot`/`@event`
+tags (checked: link, avatar, menu-item, alert), and they have no guidance file.
+These are deliberately left alone rather than filled with generated prose — a
+plausible-sounding purpose statement nobody verified is worse than a blank,
+because it reads as documented. The fix is to write the class JSDoc, at which
+point it flows through the CEM on its own.
+
+## 2026-09-05 — component-set metadata is its own payload, separate from generation
+
+`npm run contracts:metadata` (`scripts/contracts/figma/build-metadata-ops.mjs`)
+emits the two fields a Figma component set carries ABOUT ITSELF — its
+`description` and its `documentationLinks` — for all 34 contracts bound to a
+real set by `bindings.figma.nodeId`.
+
+This is deliberately NOT part of `generate-figma.mjs`. Generation replaces a
+whole set: new node ids, every instance orphaned, every pinned node id stale.
+That is the correct tool for "this set is wrong" and a catastrophic one for
+"this set needs a description". These ops address an existing set by nodeId and
+set two string-ish fields. No geometry, no variants, no node structure, and
+re-running is idempotent.
+
+The distinction the audit's 4% documentation-link score actually measures: the
+doc-header frame `generate-figma.mjs` draws on each page HAS carried a docs link
+all along (`doc-header-style.mjs`), but that is a TEXT NODE — legible to a
+person looking at the page, invisible to a tool. `documentationLinks` on the set
+is the retrievable one. A page can look fully documented and score zero.
+
+The description is ASSEMBLED at build time, never stored: purpose from the
+contract description, props (with the authored union from `rawType`, not the
+alphabetised `values`, so the emphasis ladder keeps its order), slots, the
+`semantics` element/role, the keyboard contract, and focus. Sections with
+nothing to say are omitted rather than emitted empty — an empty heading reads as
+"documented" to someone skimming, which is the exact failure this work exists to
+remove. Every URL was checked against the docs registry's own slugs
+(`apps/docs/src/lib/registry.mjs` -> `COMPONENTS`): 34 of 34 resolve to a real
+page, none guessed.
+
+Output lands in `.altitude/figma-sync/`, which is gitignored — the SCRIPT is the
+tracked deliverable, same arrangement as the token payload.
+
+Found while assembling this, not yet fixed: **al-button's guidance and its code
+disagree about the variant ladder.** `apps/docs/src/content/guidance/button.yaml`
+says "`default`, `secondary`, `tertiary`, `bare` and `danger` are the whole
+ladder, and there is no sixth treatment"; the prop's authored union is
+`'neutral' | 'bare' | 'secondary' | 'tertiary'`. Guidance names a `default` and a
+`danger` the code does not have, and omits `neutral`. One of the two is wrong and
+both are shipped to designers.

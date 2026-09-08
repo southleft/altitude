@@ -82,7 +82,7 @@ _No interaction states recorded._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -100,7 +100,7 @@ _No interaction states recorded._
 | border-top-left-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | border-top-right-radius | `--al-theme-border-radius-md` | `theme/border/radius/md` |
 | box-shadow | `--al-theme-box-shadow-md` | `theme/box-shadow/md` |
-| font-size | `--al-font-size-13` | — |
+| font-size | `--al-font-size-12` | `typography/font-size/12` |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 
@@ -146,7 +146,7 @@ _None._
 
 ## Tokens referenced (11)
 
-`--al-base-space`, `--al-font-size-13`, `--al-font-weight-medium`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-md`, `--al-theme-color-background-neutral-default`, `--al-theme-space`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-12`, `--al-font-weight-medium`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius-md`, `--al-theme-box-shadow-md`, `--al-theme-color-background-neutral-default`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

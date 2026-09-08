@@ -4,7 +4,7 @@
  * Re-run the generator; `--check` is the drift gate.
  *
  * Figma Code Connect — React wrapper surface for the "Combobox"
- * component set (node 3558:63019).
+ * component set (node 3694:11119).
  *
  * Mapped variant axes: Label.
  * Props the contract marks `omit` (no Figma axis): align, ariaDescribedBy, errorNote, fieldId, fieldNote, filterMode, isRequired, label, noResultsText, placeholder, selectedValue, value.
@@ -14,7 +14,7 @@
 import figma from '@figma/code-connect';
 import { ALCombobox } from '@southleft/al-react';
 
-figma.connect(ALCombobox, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-63019', {
+figma.connect(ALCombobox, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3694-11119', {
   props: {
     hideLabel: figma.enum('Label', {
       Hidden: true,

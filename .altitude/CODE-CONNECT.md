@@ -31,7 +31,7 @@ Under `.altitude/code-connect/altitude/`, two files per covered component —
 `@southleft/al-react` wrapper, parsed out of `libs/al-react/src/components/`).
 Altitude ships both surfaces, so Dev Mode should show both.
 
-**34 of 102 components are covered. 68 are not**, because their contract carries
+**40 of 102 components are covered. 62 are not**, because their contract carries
 no pinned Figma `nodeId` — 37 of those are icons and layout/behaviour components
 with no component set to bind to. Every one is named in `skipped.json`, along
 with every `omit`ted prop, every variant option that matches no code value,

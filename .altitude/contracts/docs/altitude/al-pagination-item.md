@@ -18,7 +18,7 @@ Component: al-pagination-item
 | --- | --- | --- | --- | --- |
 | `ariaLabel` | string | — | — | _not expressed in Figma (by design)_ |
 | `href` | string | — | — | _not expressed in Figma (by design)_ |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Hover` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
 | `isExpandable` | boolean | — | — | **Kind** (VARIANT): `Expandable`, `Number` |
 | `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
 
@@ -51,7 +51,7 @@ Selected state
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`, `Hover`
 
 ### `isExpandable` (Figma property "Kind")
 

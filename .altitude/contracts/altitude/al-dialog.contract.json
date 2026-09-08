@@ -4,7 +4,7 @@
   "name": "Dialog",
   "version": "1.0.0",
   "status": "source",
-  "description": "Component: al-dialog",
+  "description": "A modal panel for a focused task or decision, with optional header and footer content.\nUse the trigger slot to open it and provide a clear heading and dismissal action.",
   "semantics": {
     "element": "div",
     "role": null
@@ -165,68 +165,783 @@
   "anatomy": {
     "root": {
       "tag": "div",
-      "cls": "al-c-dialog al-is-active",
+      "cls": "al-c-dialog__container",
       "box": {
-        "w": 113.9,
-        "h": 40
+        "w": 600,
+        "h": 153
       },
       "layout": {
         "display": "flex",
-        "direction": "row",
+        "direction": "column",
         "align": "normal",
         "justify": "normal"
       },
-      "tokens": {},
+      "tokens": {
+        "background-color": {
+          "code": "--al-theme-color-background-neutral-default",
+          "figma": "theme/color/background/neutral-default"
+        },
+        "border-bottom-left-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-bottom-right-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-top-left-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "border-top-right-radius": {
+          "code": "--al-theme-border-radius-lg",
+          "figma": "theme/border/radius/lg"
+        },
+        "box-shadow": {
+          "code": "--al-theme-box-shadow-xl",
+          "figma": "theme/box-shadow/xl"
+        },
+        "column-gap": {
+          "code": "--al-theme-space-lg",
+          "figma": "theme/space/lg"
+        },
+        "gap": {
+          "code": "--al-theme-space-lg",
+          "figma": "theme/space/lg"
+        },
+        "min-width": {
+          "code": "--al-theme-layout-max-width-sm",
+          "figma": "theme/layout/max-width/sm"
+        },
+        "row-gap": {
+          "code": "--al-theme-space-lg",
+          "figma": "theme/space/lg"
+        }
+      },
       "children": [
         {
           "tag": "div",
-          "cls": "al-c-dialog__trigger",
+          "cls": "al-c-dialog__header",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
-            "w": 113.9,
-            "h": 40
+            "w": 600,
+            "h": 73
           },
           "layout": {
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "flex-start"
           },
           "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-neutral-default",
+              "figma": "theme/color/background/neutral-default"
+            },
+            "border-bottom": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-neutral-default",
+              "figma": "theme/color/border/neutral-default"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
             "column-gap": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
             },
             "gap": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
             },
             "row-gap": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
             }
           },
           "children": [
             {
-              "tag": "span",
-              "cls": "",
+              "tag": "div",
+              "cls": "al-c-dialog__title",
               "box": {
-                "w": 113.9,
+                "w": 512,
+                "h": 28
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "flex-start",
+                "grow": 1
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "h1",
+                  "cls": "al-c-heading",
+                  "component": "al-heading",
+                  "box": {
+                    "w": 138.9,
+                    "h": 28
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {
+                    "color": {
+                      "code": "--al-theme-color-content-neutral-default",
+                      "figma": "theme/color/content/neutral-default"
+                    },
+                    "font": {
+                      "code": "--al-theme-typography-heading-sm",
+                      "figma": null
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-heading-sm-letter-spacing",
+                      "figma": null
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "h1",
+                      "cls": "al-c-heading",
+                      "component": "al-heading",
+                      "text": "Dialog heading",
+                      "fsPx": 20,
+                      "lhPx": 28,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
+                      "box": {
+                        "w": 138.9,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-neutral-default",
+                          "figma": "theme/color/content/neutral-default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-heading-sm",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-heading-sm-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "button",
+              "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
+              "component": "al-button",
+              "box": {
+                "w": 40,
                 "h": 40
               },
               "layout": {
-                "display": "block",
+                "display": "inline-flex",
                 "direction": "row",
-                "align": "normal",
-                "justify": "normal"
+                "align": "center",
+                "justify": "center"
               },
-              "tokens": {},
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
+                },
+                "border-bottom-left-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-bottom-right-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-top-left-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "border-top-right-radius": {
+                  "code": "--al-theme-border-radius",
+                  "figma": "theme/border/radius/@"
+                },
+                "color": {
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "font-weight": {
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
+                },
+                "gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "letter-spacing": {
+                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
+                  "figma": null
+                },
+                "min-height": {
+                  "code": "--al-theme-size-control",
+                  "figma": "theme/size/control"
+                },
+                "padding": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
+                }
+              },
               "children": [
                 {
+                  "tag": "span",
+                  "cls": "al-u-is-vishidden al-c-button__text",
+                  "box": {
+                    "w": 1,
+                    "h": 1
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-u-is-vishidden al-c-button__text",
+                      "text": "Close",
+                      "fsPx": 14,
+                      "lhPx": 14,
+                      "ffCss": "Public Sans",
+                      "fwCss": "600",
+                      "box": {
+                        "w": 10,
+                        "h": 72
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "span",
+                  "cls": "al-c-button__icon",
+                  "box": {
+                    "w": 24,
+                    "h": 24
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-c-icon",
+                      "component": "al-icon",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "svg",
+                          "cls": "",
+                          "box": {
+                            "w": 24,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "flex",
+                            "direction": "row",
+                            "align": "center",
+                            "justify": "center"
+                          },
+                          "tokens": {
+                            "height": {
+                              "code": "--al-icon-height",
+                              "figma": null
+                            },
+                            "width": {
+                              "code": "--al-icon-width",
+                              "figma": null
+                            }
+                          },
+                          "children": [
+                            {
+                              "tag": "path",
+                              "cls": "",
+                              "box": {
+                                "w": 15,
+                                "h": 15
+                              },
+                              "layout": {
+                                "display": "block",
+                                "direction": "row",
+                                "align": "normal",
+                                "justify": "normal"
+                              },
+                              "tokens": {},
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "cls": "al-c-dialog__body",
+          "box": {
+            "w": 600,
+            "h": 56
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal",
+            "grow": 1
+          },
+          "tokens": {
+            "column-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-bottom": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-left": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-right": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "padding-top": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            },
+            "row-gap": {
+              "code": "--al-theme-space",
+              "figma": "theme/space/@"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-dialog__body",
+              "text": "Dialog content",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
+              "box": {
+                "w": 107.8,
+                "h": 19
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "normal",
+                "grow": 1
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case": "Footer=no",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-dialog__container",
+          "box": {
+            "w": 600,
+            "h": 153
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-neutral-default",
+              "figma": "theme/color/background/neutral-default"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "box-shadow": {
+              "code": "--al-theme-box-shadow-xl",
+              "figma": "theme/box-shadow/xl"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "min-width": {
+              "code": "--al-theme-layout-max-width-sm",
+              "figma": "theme/layout/max-width/sm"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-dialog__header",
+              "bw4": [
+                0,
+                0,
+                1,
+                0
+              ],
+              "box": {
+                "w": 600,
+                "h": 73
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "flex-start"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-neutral-default",
+                  "figma": "theme/color/background/neutral-default"
+                },
+                "border-bottom": {
+                  "code": "--al-theme-border-width",
+                  "figma": "theme/border/width/@"
+                },
+                "border-top-color": {
+                  "code": "--al-theme-color-border-neutral-default",
+                  "figma": "theme/color/border/neutral-default"
+                },
+                "border-top-width": {
+                  "code": "--al-theme-border-width",
+                  "figma": "theme/border/width/@"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-dialog__title",
+                  "box": {
+                    "w": 512,
+                    "h": 28
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "flex-start",
+                    "grow": 1
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "h1",
+                      "cls": "al-c-heading",
+                      "component": "al-heading",
+                      "box": {
+                        "w": 138.9,
+                        "h": 28
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-neutral-default",
+                          "figma": "theme/color/content/neutral-default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-heading-sm",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-heading-sm-letter-spacing",
+                          "figma": null
+                        }
+                      },
+                      "children": [
+                        {
+                          "tag": "h1",
+                          "cls": "al-c-heading",
+                          "component": "al-heading",
+                          "text": "Dialog heading",
+                          "fsPx": 20,
+                          "lhPx": 28,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
+                          "box": {
+                            "w": 138.9,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {
+                            "color": {
+                              "code": "--al-theme-color-content-neutral-default",
+                              "figma": "theme/color/content/neutral-default"
+                            },
+                            "font": {
+                              "code": "--al-theme-typography-heading-sm",
+                              "figma": null
+                            },
+                            "letter-spacing": {
+                              "code": "--al-theme-typography-heading-sm-letter-spacing",
+                              "figma": null
+                            }
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "tag": "button",
-                  "cls": "al-c-button",
+                  "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
                   "component": "al-button",
                   "box": {
-                    "w": 113.9,
+                    "w": 40,
                     "h": 40
                   },
                   "layout": {
@@ -237,8 +952,8 @@
                   },
                   "tokens": {
                     "background-color": {
-                      "code": "--al-theme-color-background-primary-default",
-                      "figma": "theme/color/background/primary-default"
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
                     },
                     "border-bottom-left-radius": {
                       "code": "--al-theme-border-radius",
@@ -261,23 +976,23 @@
                       "figma": "theme/border/radius/@"
                     },
                     "color": {
-                      "code": "--al-theme-color-content-primary-weak",
-                      "figma": "theme/color/content/primary-weak"
+                      "code": "--al-theme-color-content-neutral-default",
+                      "figma": "theme/color/content/neutral-default"
                     },
                     "column-gap": {
                       "code": "--al-theme-space-xs",
                       "figma": "theme/space/xs"
                     },
                     "font-weight": {
-                      "code": "--al-font-weight-bold",
-                      "figma": "typography/font-weight/bold"
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
                     },
                     "gap": {
                       "code": "--al-theme-space-xs",
                       "figma": "theme/space/xs"
                     },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
@@ -285,16 +1000,24 @@
                       "figma": "theme/size/control"
                     },
                     "padding": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -304,10 +1027,10 @@
                   "children": [
                     {
                       "tag": "span",
-                      "cls": "al-c-button__text",
+                      "cls": "al-u-is-vishidden al-c-button__text",
                       "box": {
-                        "w": 81.9,
-                        "h": 14
+                        "w": 1,
+                        "h": 1
                       },
                       "layout": {
                         "display": "block",
@@ -319,11 +1042,15 @@
                       "children": [
                         {
                           "tag": "span",
-                          "cls": "al-c-button__text",
-                          "text": "Open Dialog",
+                          "cls": "al-u-is-vishidden al-c-button__text",
+                          "text": "Close",
+                          "fsPx": 14,
+                          "lhPx": 14,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
-                            "w": 81.9,
-                            "h": 16
+                            "w": 10,
+                            "h": 72
                           },
                           "layout": {
                             "display": "block",
@@ -335,82 +1062,399 @@
                           "children": []
                         }
                       ]
+                    },
+                    {
+                      "tag": "span",
+                      "cls": "al-c-button__icon",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-icon",
+                          "component": "al-icon",
+                          "box": {
+                            "w": 24,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "svg",
+                              "cls": "",
+                              "box": {
+                                "w": 24,
+                                "h": 24
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center"
+                              },
+                              "tokens": {
+                                "height": {
+                                  "code": "--al-icon-height",
+                                  "figma": null
+                                },
+                                "width": {
+                                  "code": "--al-icon-width",
+                                  "figma": null
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "path",
+                                  "cls": "",
+                                  "box": {
+                                    "w": 15,
+                                    "h": 15
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {},
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
               ]
-            }
-          ]
-        },
-        {
-          "tag": "div",
-          "cls": "al-c-focus-trap",
-          "component": "al-focus-trap",
-          "box": {
-            "w": 0,
-            "h": 0
-          },
-          "layout": {
-            "display": "block",
-            "direction": "row",
-            "align": "normal",
-            "justify": "normal"
-          },
-          "tokens": {},
-          "children": [
+            },
             {
               "tag": "div",
-              "cls": "al-c-dialog__container",
+              "cls": "al-c-dialog__body",
               "box": {
                 "w": 600,
-                "h": 153
+                "h": 56
               },
               "layout": {
                 "display": "flex",
                 "direction": "column",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "grow": 1
               },
-              "tokens": {},
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
               "children": [
                 {
                   "tag": "div",
-                  "cls": "al-c-dialog__header",
+                  "cls": "al-c-dialog__body",
+                  "text": "Dialog content",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
-                    "w": 600,
-                    "h": 73
+                    "w": 107.8,
+                    "h": 19
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal",
+                    "grow": 1
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "case": "Footer=yes",
+        "root": {
+          "tag": "div",
+          "cls": "al-c-dialog__container",
+          "box": {
+            "w": 600,
+            "h": 250
+          },
+          "layout": {
+            "display": "flex",
+            "direction": "column",
+            "align": "normal",
+            "justify": "normal"
+          },
+          "tokens": {
+            "background-color": {
+              "code": "--al-theme-color-background-neutral-default",
+              "figma": "theme/color/background/neutral-default"
+            },
+            "border-bottom-left-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-bottom-right-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-top-left-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "border-top-right-radius": {
+              "code": "--al-theme-border-radius-lg",
+              "figma": "theme/border/radius/lg"
+            },
+            "box-shadow": {
+              "code": "--al-theme-box-shadow-xl",
+              "figma": "theme/box-shadow/xl"
+            },
+            "column-gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            },
+            "min-width": {
+              "code": "--al-theme-layout-max-width-sm",
+              "figma": "theme/layout/max-width/sm"
+            },
+            "row-gap": {
+              "code": "--al-theme-space-lg",
+              "figma": "theme/space/lg"
+            }
+          },
+          "children": [
+            {
+              "tag": "div",
+              "cls": "al-c-dialog__header",
+              "bw4": [
+                0,
+                0,
+                1,
+                0
+              ],
+              "box": {
+                "w": 600,
+                "h": 73
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "flex-start"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-neutral-default",
+                  "figma": "theme/color/background/neutral-default"
+                },
+                "border-bottom": {
+                  "code": "--al-theme-border-width",
+                  "figma": "theme/border/width/@"
+                },
+                "border-top-color": {
+                  "code": "--al-theme-color-border-neutral-default",
+                  "figma": "theme/color/border/neutral-default"
+                },
+                "border-top-width": {
+                  "code": "--al-theme-border-width",
+                  "figma": "theme/border/width/@"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-dialog__title",
+                  "box": {
+                    "w": 512,
+                    "h": 28
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "grow": 1
                   },
-                  "tokens": {},
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    }
+                  },
                   "children": [
                     {
-                      "tag": "div",
-                      "cls": "al-c-dialog__title",
+                      "tag": "h1",
+                      "cls": "al-c-heading",
+                      "component": "al-heading",
                       "box": {
-                        "w": 512,
+                        "w": 138.9,
                         "h": 28
                       },
                       "layout": {
-                        "display": "flex",
+                        "display": "block",
                         "direction": "row",
-                        "align": "center",
-                        "justify": "flex-start",
-                        "grow": 1
+                        "align": "normal",
+                        "justify": "normal"
                       },
-                      "tokens": {},
+                      "tokens": {
+                        "color": {
+                          "code": "--al-theme-color-content-neutral-default",
+                          "figma": "theme/color/content/neutral-default"
+                        },
+                        "font": {
+                          "code": "--al-theme-typography-heading-sm",
+                          "figma": null
+                        },
+                        "letter-spacing": {
+                          "code": "--al-theme-typography-heading-sm-letter-spacing",
+                          "figma": null
+                        }
+                      },
                       "children": [
                         {
                           "tag": "h1",
                           "cls": "al-c-heading",
                           "component": "al-heading",
+                          "text": "Dialog heading",
+                          "fsPx": 20,
+                          "lhPx": 28,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 138.9,
-                            "h": 28
+                            "h": 24
                           },
                           "layout": {
                             "display": "block",
@@ -432,48 +1476,433 @@
                               "figma": null
                             }
                           },
-                          "children": [
-                            {
-                              "tag": "h1",
-                              "cls": "al-c-heading",
-                              "component": "al-heading",
-                              "text": "Dialog heading",
-                              "box": {
-                                "w": 138.9,
-                                "h": 24
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {
-                                "color": {
-                                  "code": "--al-theme-color-content-neutral-default",
-                                  "figma": "theme/color/content/neutral-default"
-                                },
-                                "font": {
-                                  "code": "--al-theme-typography-heading-sm",
-                                  "figma": null
-                                },
-                                "letter-spacing": {
-                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
-                                  "figma": null
-                                }
-                              },
-                              "children": []
-                            }
-                          ]
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "button",
+                  "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
+                  "component": "al-button",
+                  "box": {
+                    "w": 40,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "inline-flex",
+                    "direction": "row",
+                    "align": "center",
+                    "justify": "center"
+                  },
+                  "tokens": {
+                    "background-color": {
+                      "code": "--al-theme-color-background-transparent-default",
+                      "figma": "theme/color/background/transparent-default"
+                    },
+                    "border-bottom-left-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-bottom-right-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-top-left-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "border-top-right-radius": {
+                      "code": "--al-theme-border-radius",
+                      "figma": "theme/border/radius/@"
+                    },
+                    "color": {
+                      "code": "--al-theme-color-content-neutral-default",
+                      "figma": "theme/color/content/neutral-default"
+                    },
+                    "column-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "font-weight": {
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "letter-spacing": {
+                      "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
+                      "figma": null
+                    },
+                    "min-height": {
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
+                    },
+                    "outline": {
+                      "code": "--al-theme-border-width-md",
+                      "figma": "theme/border/width/md"
+                    },
+                    "outline-color": {
+                      "code": "--al-theme-color-focus-ring",
+                      "figma": "theme/color/focus-ring"
+                    },
+                    "outline-offset": {
+                      "code": "--al-theme-border-width-md",
+                      "figma": "theme/border/width/md"
+                    },
+                    "outline-width": {
+                      "code": "--al-theme-border-width-md",
+                      "figma": "theme/border/width/md"
+                    },
+                    "padding": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
+                    }
+                  },
+                  "children": [
+                    {
+                      "tag": "span",
+                      "cls": "al-u-is-vishidden al-c-button__text",
+                      "box": {
+                        "w": 1,
+                        "h": 1
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-u-is-vishidden al-c-button__text",
+                          "text": "Close",
+                          "fsPx": 14,
+                          "lhPx": 14,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
+                          "box": {
+                            "w": 10,
+                            "h": 72
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": []
                         }
                       ]
                     },
                     {
+                      "tag": "span",
+                      "cls": "al-c-button__icon",
+                      "box": {
+                        "w": 24,
+                        "h": 24
+                      },
+                      "layout": {
+                        "display": "block",
+                        "direction": "row",
+                        "align": "normal",
+                        "justify": "normal"
+                      },
+                      "tokens": {},
+                      "children": [
+                        {
+                          "tag": "span",
+                          "cls": "al-c-icon",
+                          "component": "al-icon",
+                          "box": {
+                            "w": 24,
+                            "h": 24
+                          },
+                          "layout": {
+                            "display": "block",
+                            "direction": "row",
+                            "align": "normal",
+                            "justify": "normal"
+                          },
+                          "tokens": {},
+                          "children": [
+                            {
+                              "tag": "svg",
+                              "cls": "",
+                              "box": {
+                                "w": 24,
+                                "h": 24
+                              },
+                              "layout": {
+                                "display": "flex",
+                                "direction": "row",
+                                "align": "center",
+                                "justify": "center"
+                              },
+                              "tokens": {
+                                "height": {
+                                  "code": "--al-icon-height",
+                                  "figma": null
+                                },
+                                "width": {
+                                  "code": "--al-icon-width",
+                                  "figma": null
+                                }
+                              },
+                              "children": [
+                                {
+                                  "tag": "path",
+                                  "cls": "",
+                                  "box": {
+                                    "w": 15,
+                                    "h": 15
+                                  },
+                                  "layout": {
+                                    "display": "block",
+                                    "direction": "row",
+                                    "align": "normal",
+                                    "justify": "normal"
+                                  },
+                                  "tokens": {},
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-dialog__body",
+              "box": {
+                "w": 600,
+                "h": 56
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "column",
+                "align": "normal",
+                "justify": "normal",
+                "grow": 1
+              },
+              "tokens": {
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "cls": "al-c-dialog__body",
+                  "text": "Dialog content",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
+                  "box": {
+                    "w": 107.8,
+                    "h": 19
+                  },
+                  "layout": {
+                    "display": "flex",
+                    "direction": "column",
+                    "align": "normal",
+                    "justify": "normal",
+                    "grow": 1
+                  },
+                  "tokens": {
+                    "column-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-bottom": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-left": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-right": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "padding-top": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    },
+                    "row-gap": {
+                      "code": "--al-theme-space",
+                      "figma": "theme/space/@"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "cls": "al-c-dialog__footer",
+              "bw4": [
+                1,
+                0,
+                0,
+                0
+              ],
+              "box": {
+                "w": 600,
+                "h": 73
+              },
+              "layout": {
+                "display": "flex",
+                "direction": "row",
+                "align": "center",
+                "justify": "space-between"
+              },
+              "tokens": {
+                "background-color": {
+                  "code": "--al-theme-color-background-neutral-default",
+                  "figma": "theme/color/background/neutral-default"
+                },
+                "border-top": {
+                  "code": "--al-theme-border-width",
+                  "figma": "theme/border/width/@"
+                },
+                "border-top-color": {
+                  "code": "--al-theme-color-border-neutral-default",
+                  "figma": "theme/color/border/neutral-default"
+                },
+                "border-top-width": {
+                  "code": "--al-theme-border-width",
+                  "figma": "theme/border/width/@"
+                },
+                "column-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-bottom": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-left": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-right": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "padding-top": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                },
+                "row-gap": {
+                  "code": "--al-theme-space",
+                  "figma": "theme/space/@"
+                }
+              },
+              "children": [
+                {
+                  "tag": "span",
+                  "cls": "",
+                  "box": {
+                    "w": 69.8,
+                    "h": 40
+                  },
+                  "layout": {
+                    "display": "block",
+                    "direction": "row",
+                    "align": "normal",
+                    "justify": "normal"
+                  },
+                  "tokens": {},
+                  "children": [
+                    {
                       "tag": "button",
-                      "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
+                      "cls": "al-c-button al-c-button--bare",
                       "component": "al-button",
                       "box": {
-                        "w": 40,
+                        "w": 69.8,
                         "h": 40
                       },
                       "layout": {
@@ -516,40 +1945,28 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "min-height": {
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
                         },
-                        "padding": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "padding-bottom": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
                         "padding-left": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
                         },
                         "padding-right": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "padding-top": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
+                          "code": "--al-theme-space",
+                          "figma": "theme/space/@"
                         },
                         "row-gap": {
                           "code": "--al-theme-space-xs",
@@ -559,10 +1976,10 @@
                       "children": [
                         {
                           "tag": "span",
-                          "cls": "al-u-is-vishidden al-c-button__text",
+                          "cls": "al-c-button__text",
                           "box": {
-                            "w": 1,
-                            "h": 1
+                            "w": 37.8,
+                            "h": 14
                           },
                           "layout": {
                             "display": "block",
@@ -574,266 +1991,14 @@
                           "children": [
                             {
                               "tag": "span",
-                              "cls": "al-u-is-vishidden al-c-button__text",
+                              "cls": "al-c-button__text",
                               "text": "Close",
+                              "fsPx": 14,
+                              "lhPx": 14,
+                              "ffCss": "Public Sans",
+                              "fwCss": "600",
                               "box": {
-                                "w": 10,
-                                "h": 72
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {},
-                              "children": []
-                            }
-                          ]
-                        },
-                        {
-                          "tag": "span",
-                          "cls": "al-c-button__icon",
-                          "box": {
-                            "w": 24,
-                            "h": 24
-                          },
-                          "layout": {
-                            "display": "block",
-                            "direction": "row",
-                            "align": "normal",
-                            "justify": "normal"
-                          },
-                          "tokens": {},
-                          "children": [
-                            {
-                              "tag": "span",
-                              "cls": "al-c-icon",
-                              "component": "al-icon",
-                              "box": {
-                                "w": 24,
-                                "h": 24
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {},
-                              "children": []
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "tag": "div",
-                  "cls": "al-c-dialog__body",
-                  "box": {
-                    "w": 600,
-                    "h": 56
-                  },
-                  "layout": {
-                    "display": "flex",
-                    "direction": "column",
-                    "align": "normal",
-                    "justify": "normal",
-                    "grow": 1
-                  },
-                  "tokens": {},
-                  "children": [
-                    {
-                      "tag": "div",
-                      "cls": "al-c-dialog__body",
-                      "text": "Dialog content",
-                      "box": {
-                        "w": 107.8,
-                        "h": 19
-                      },
-                      "layout": {
-                        "display": "flex",
-                        "direction": "column",
-                        "align": "normal",
-                        "justify": "normal",
-                        "grow": 1
-                      },
-                      "tokens": {},
-                      "children": []
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "cases": [
-      {
-        "case": "Footer=no",
-        "root": {
-          "tag": "div",
-          "cls": "al-c-dialog al-is-active",
-          "box": {
-            "w": 113.9,
-            "h": 40
-          },
-          "layout": {
-            "display": "flex",
-            "direction": "row",
-            "align": "normal",
-            "justify": "normal"
-          },
-          "tokens": {},
-          "children": [
-            {
-              "tag": "div",
-              "cls": "al-c-dialog__trigger",
-              "box": {
-                "w": 113.9,
-                "h": 40
-              },
-              "layout": {
-                "display": "flex",
-                "direction": "row",
-                "align": "center",
-                "justify": "normal"
-              },
-              "tokens": {
-                "column-gap": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
-                },
-                "gap": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
-                },
-                "row-gap": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
-                }
-              },
-              "children": [
-                {
-                  "tag": "span",
-                  "cls": "",
-                  "box": {
-                    "w": 113.9,
-                    "h": 40
-                  },
-                  "layout": {
-                    "display": "block",
-                    "direction": "row",
-                    "align": "normal",
-                    "justify": "normal"
-                  },
-                  "tokens": {},
-                  "children": [
-                    {
-                      "tag": "button",
-                      "cls": "al-c-button",
-                      "component": "al-button",
-                      "box": {
-                        "w": 113.9,
-                        "h": 40
-                      },
-                      "layout": {
-                        "display": "inline-flex",
-                        "direction": "row",
-                        "align": "center",
-                        "justify": "center"
-                      },
-                      "tokens": {
-                        "background-color": {
-                          "code": "--al-theme-color-background-primary-default",
-                          "figma": "theme/color/background/primary-default"
-                        },
-                        "border-bottom-left-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-bottom-right-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-top-left-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-top-right-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "color": {
-                          "code": "--al-theme-color-content-primary-weak",
-                          "figma": "theme/color/content/primary-weak"
-                        },
-                        "column-gap": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
-                        },
-                        "gap": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
-                          "figma": null
-                        },
-                        "min-height": {
-                          "code": "--al-theme-size-control",
-                          "figma": "theme/size/control"
-                        },
-                        "padding": {
-                          "code": "--al-theme-space",
-                          "figma": "theme/space/@"
-                        },
-                        "padding-left": {
-                          "code": "--al-theme-space",
-                          "figma": "theme/space/@"
-                        },
-                        "padding-right": {
-                          "code": "--al-theme-space",
-                          "figma": "theme/space/@"
-                        },
-                        "row-gap": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        }
-                      },
-                      "children": [
-                        {
-                          "tag": "span",
-                          "cls": "al-c-button__text",
-                          "box": {
-                            "w": 81.9,
-                            "h": 14
-                          },
-                          "layout": {
-                            "display": "block",
-                            "direction": "row",
-                            "align": "normal",
-                            "justify": "normal"
-                          },
-                          "tokens": {},
-                          "children": [
-                            {
-                              "tag": "span",
-                              "cls": "al-c-button__text",
-                              "text": "Open Dialog",
-                              "box": {
-                                "w": 81.9,
+                                "w": 37.8,
                                 "h": 16
                               },
                               "layout": {
@@ -844,1011 +2009,6 @@
                               },
                               "tokens": {},
                               "children": []
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "tag": "div",
-              "cls": "al-c-focus-trap",
-              "component": "al-focus-trap",
-              "box": {
-                "w": 0,
-                "h": 0
-              },
-              "layout": {
-                "display": "block",
-                "direction": "row",
-                "align": "normal",
-                "justify": "normal"
-              },
-              "tokens": {},
-              "children": [
-                {
-                  "tag": "div",
-                  "cls": "al-c-dialog__container",
-                  "box": {
-                    "w": 600,
-                    "h": 153
-                  },
-                  "layout": {
-                    "display": "flex",
-                    "direction": "column",
-                    "align": "normal",
-                    "justify": "normal"
-                  },
-                  "tokens": {},
-                  "children": [
-                    {
-                      "tag": "div",
-                      "cls": "al-c-dialog__header",
-                      "box": {
-                        "w": 600,
-                        "h": 73
-                      },
-                      "layout": {
-                        "display": "flex",
-                        "direction": "row",
-                        "align": "center",
-                        "justify": "flex-start"
-                      },
-                      "tokens": {},
-                      "children": [
-                        {
-                          "tag": "div",
-                          "cls": "al-c-dialog__title",
-                          "box": {
-                            "w": 512,
-                            "h": 28
-                          },
-                          "layout": {
-                            "display": "flex",
-                            "direction": "row",
-                            "align": "center",
-                            "justify": "flex-start",
-                            "grow": 1
-                          },
-                          "tokens": {},
-                          "children": [
-                            {
-                              "tag": "h1",
-                              "cls": "al-c-heading",
-                              "component": "al-heading",
-                              "box": {
-                                "w": 138.9,
-                                "h": 28
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {
-                                "color": {
-                                  "code": "--al-theme-color-content-neutral-default",
-                                  "figma": "theme/color/content/neutral-default"
-                                },
-                                "font": {
-                                  "code": "--al-theme-typography-heading-sm",
-                                  "figma": null
-                                },
-                                "letter-spacing": {
-                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
-                                  "figma": null
-                                }
-                              },
-                              "children": [
-                                {
-                                  "tag": "h1",
-                                  "cls": "al-c-heading",
-                                  "component": "al-heading",
-                                  "text": "Dialog heading",
-                                  "box": {
-                                    "w": 138.9,
-                                    "h": 24
-                                  },
-                                  "layout": {
-                                    "display": "block",
-                                    "direction": "row",
-                                    "align": "normal",
-                                    "justify": "normal"
-                                  },
-                                  "tokens": {
-                                    "color": {
-                                      "code": "--al-theme-color-content-neutral-default",
-                                      "figma": "theme/color/content/neutral-default"
-                                    },
-                                    "font": {
-                                      "code": "--al-theme-typography-heading-sm",
-                                      "figma": null
-                                    },
-                                    "letter-spacing": {
-                                      "code": "--al-theme-typography-heading-sm-letter-spacing",
-                                      "figma": null
-                                    }
-                                  },
-                                  "children": []
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "tag": "button",
-                          "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
-                          "component": "al-button",
-                          "box": {
-                            "w": 40,
-                            "h": 40
-                          },
-                          "layout": {
-                            "display": "inline-flex",
-                            "direction": "row",
-                            "align": "center",
-                            "justify": "center"
-                          },
-                          "tokens": {
-                            "background-color": {
-                              "code": "--al-theme-color-background-transparent-default",
-                              "figma": "theme/color/background/transparent-default"
-                            },
-                            "border-bottom-left-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-bottom-right-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-top-left-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-top-right-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "color": {
-                              "code": "--al-theme-color-content-neutral-default",
-                              "figma": "theme/color/content/neutral-default"
-                            },
-                            "column-gap": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
-                            },
-                            "gap": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "letter-spacing": {
-                              "code": "--al-theme-typography-body-sm-bold-letter-spacing",
-                              "figma": null
-                            },
-                            "min-height": {
-                              "code": "--al-theme-size-control",
-                              "figma": "theme/size/control"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-bottom": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-left": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-right": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-top": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "row-gap": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            }
-                          },
-                          "children": [
-                            {
-                              "tag": "span",
-                              "cls": "al-u-is-vishidden al-c-button__text",
-                              "box": {
-                                "w": 1,
-                                "h": 1
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {},
-                              "children": [
-                                {
-                                  "tag": "span",
-                                  "cls": "al-u-is-vishidden al-c-button__text",
-                                  "text": "Close",
-                                  "box": {
-                                    "w": 10,
-                                    "h": 72
-                                  },
-                                  "layout": {
-                                    "display": "block",
-                                    "direction": "row",
-                                    "align": "normal",
-                                    "justify": "normal"
-                                  },
-                                  "tokens": {},
-                                  "children": []
-                                }
-                              ]
-                            },
-                            {
-                              "tag": "span",
-                              "cls": "al-c-button__icon",
-                              "box": {
-                                "w": 24,
-                                "h": 24
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {},
-                              "children": [
-                                {
-                                  "tag": "span",
-                                  "cls": "al-c-icon",
-                                  "component": "al-icon",
-                                  "box": {
-                                    "w": 24,
-                                    "h": 24
-                                  },
-                                  "layout": {
-                                    "display": "block",
-                                    "direction": "row",
-                                    "align": "normal",
-                                    "justify": "normal"
-                                  },
-                                  "tokens": {},
-                                  "children": []
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "tag": "div",
-                      "cls": "al-c-dialog__body",
-                      "box": {
-                        "w": 600,
-                        "h": 56
-                      },
-                      "layout": {
-                        "display": "flex",
-                        "direction": "column",
-                        "align": "normal",
-                        "justify": "normal",
-                        "grow": 1
-                      },
-                      "tokens": {},
-                      "children": [
-                        {
-                          "tag": "div",
-                          "cls": "al-c-dialog__body",
-                          "text": "Dialog content",
-                          "box": {
-                            "w": 107.8,
-                            "h": 19
-                          },
-                          "layout": {
-                            "display": "flex",
-                            "direction": "column",
-                            "align": "normal",
-                            "justify": "normal",
-                            "grow": 1
-                          },
-                          "tokens": {},
-                          "children": []
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      },
-      {
-        "case": "Footer=yes",
-        "root": {
-          "tag": "div",
-          "cls": "al-c-dialog al-is-active",
-          "box": {
-            "w": 113.9,
-            "h": 40
-          },
-          "layout": {
-            "display": "flex",
-            "direction": "row",
-            "align": "normal",
-            "justify": "normal"
-          },
-          "tokens": {},
-          "children": [
-            {
-              "tag": "div",
-              "cls": "al-c-dialog__trigger",
-              "box": {
-                "w": 113.9,
-                "h": 40
-              },
-              "layout": {
-                "display": "flex",
-                "direction": "row",
-                "align": "center",
-                "justify": "normal"
-              },
-              "tokens": {
-                "column-gap": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
-                },
-                "gap": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
-                },
-                "row-gap": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
-                }
-              },
-              "children": [
-                {
-                  "tag": "span",
-                  "cls": "",
-                  "box": {
-                    "w": 113.9,
-                    "h": 40
-                  },
-                  "layout": {
-                    "display": "block",
-                    "direction": "row",
-                    "align": "normal",
-                    "justify": "normal"
-                  },
-                  "tokens": {},
-                  "children": [
-                    {
-                      "tag": "button",
-                      "cls": "al-c-button",
-                      "component": "al-button",
-                      "box": {
-                        "w": 113.9,
-                        "h": 40
-                      },
-                      "layout": {
-                        "display": "inline-flex",
-                        "direction": "row",
-                        "align": "center",
-                        "justify": "center"
-                      },
-                      "tokens": {
-                        "background-color": {
-                          "code": "--al-theme-color-background-primary-default",
-                          "figma": "theme/color/background/primary-default"
-                        },
-                        "border-bottom-left-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-bottom-right-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-top-left-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "border-top-right-radius": {
-                          "code": "--al-theme-border-radius",
-                          "figma": "theme/border/radius/@"
-                        },
-                        "color": {
-                          "code": "--al-theme-color-content-primary-weak",
-                          "figma": "theme/color/content/primary-weak"
-                        },
-                        "column-gap": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
-                        },
-                        "gap": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
-                          "figma": null
-                        },
-                        "min-height": {
-                          "code": "--al-theme-size-control",
-                          "figma": "theme/size/control"
-                        },
-                        "padding": {
-                          "code": "--al-theme-space",
-                          "figma": "theme/space/@"
-                        },
-                        "padding-left": {
-                          "code": "--al-theme-space",
-                          "figma": "theme/space/@"
-                        },
-                        "padding-right": {
-                          "code": "--al-theme-space",
-                          "figma": "theme/space/@"
-                        },
-                        "row-gap": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        }
-                      },
-                      "children": [
-                        {
-                          "tag": "span",
-                          "cls": "al-c-button__text",
-                          "box": {
-                            "w": 81.9,
-                            "h": 14
-                          },
-                          "layout": {
-                            "display": "block",
-                            "direction": "row",
-                            "align": "normal",
-                            "justify": "normal"
-                          },
-                          "tokens": {},
-                          "children": [
-                            {
-                              "tag": "span",
-                              "cls": "al-c-button__text",
-                              "text": "Open Dialog",
-                              "box": {
-                                "w": 81.9,
-                                "h": 16
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {},
-                              "children": []
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "tag": "div",
-              "cls": "al-c-focus-trap",
-              "component": "al-focus-trap",
-              "box": {
-                "w": 0,
-                "h": 0
-              },
-              "layout": {
-                "display": "block",
-                "direction": "row",
-                "align": "normal",
-                "justify": "normal"
-              },
-              "tokens": {},
-              "children": [
-                {
-                  "tag": "div",
-                  "cls": "al-c-dialog__container",
-                  "box": {
-                    "w": 600,
-                    "h": 250
-                  },
-                  "layout": {
-                    "display": "flex",
-                    "direction": "column",
-                    "align": "normal",
-                    "justify": "normal"
-                  },
-                  "tokens": {},
-                  "children": [
-                    {
-                      "tag": "div",
-                      "cls": "al-c-dialog__header",
-                      "box": {
-                        "w": 600,
-                        "h": 73
-                      },
-                      "layout": {
-                        "display": "flex",
-                        "direction": "row",
-                        "align": "center",
-                        "justify": "flex-start"
-                      },
-                      "tokens": {},
-                      "children": [
-                        {
-                          "tag": "div",
-                          "cls": "al-c-dialog__title",
-                          "box": {
-                            "w": 512,
-                            "h": 28
-                          },
-                          "layout": {
-                            "display": "flex",
-                            "direction": "row",
-                            "align": "center",
-                            "justify": "flex-start",
-                            "grow": 1
-                          },
-                          "tokens": {},
-                          "children": [
-                            {
-                              "tag": "h1",
-                              "cls": "al-c-heading",
-                              "component": "al-heading",
-                              "box": {
-                                "w": 138.9,
-                                "h": 28
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {
-                                "color": {
-                                  "code": "--al-theme-color-content-neutral-default",
-                                  "figma": "theme/color/content/neutral-default"
-                                },
-                                "font": {
-                                  "code": "--al-theme-typography-heading-sm",
-                                  "figma": null
-                                },
-                                "letter-spacing": {
-                                  "code": "--al-theme-typography-heading-sm-letter-spacing",
-                                  "figma": null
-                                }
-                              },
-                              "children": [
-                                {
-                                  "tag": "h1",
-                                  "cls": "al-c-heading",
-                                  "component": "al-heading",
-                                  "text": "Dialog heading",
-                                  "box": {
-                                    "w": 138.9,
-                                    "h": 24
-                                  },
-                                  "layout": {
-                                    "display": "block",
-                                    "direction": "row",
-                                    "align": "normal",
-                                    "justify": "normal"
-                                  },
-                                  "tokens": {
-                                    "color": {
-                                      "code": "--al-theme-color-content-neutral-default",
-                                      "figma": "theme/color/content/neutral-default"
-                                    },
-                                    "font": {
-                                      "code": "--al-theme-typography-heading-sm",
-                                      "figma": null
-                                    },
-                                    "letter-spacing": {
-                                      "code": "--al-theme-typography-heading-sm-letter-spacing",
-                                      "figma": null
-                                    }
-                                  },
-                                  "children": []
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "tag": "button",
-                          "cls": "al-c-button al-c-button--bare al-c-button--icon-only",
-                          "component": "al-button",
-                          "box": {
-                            "w": 40,
-                            "h": 40
-                          },
-                          "layout": {
-                            "display": "inline-flex",
-                            "direction": "row",
-                            "align": "center",
-                            "justify": "center"
-                          },
-                          "tokens": {
-                            "background-color": {
-                              "code": "--al-theme-color-background-transparent-default",
-                              "figma": "theme/color/background/transparent-default"
-                            },
-                            "border-bottom-left-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-bottom-right-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-top-left-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "border-top-right-radius": {
-                              "code": "--al-theme-border-radius",
-                              "figma": "theme/border/radius/@"
-                            },
-                            "color": {
-                              "code": "--al-theme-color-content-neutral-default",
-                              "figma": "theme/color/content/neutral-default"
-                            },
-                            "column-gap": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
-                            },
-                            "gap": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "letter-spacing": {
-                              "code": "--al-theme-typography-body-sm-bold-letter-spacing",
-                              "figma": null
-                            },
-                            "min-height": {
-                              "code": "--al-theme-size-control",
-                              "figma": "theme/size/control"
-                            },
-                            "outline": {
-                              "code": "--al-theme-border-width-md",
-                              "figma": "theme/border/width/md"
-                            },
-                            "outline-color": {
-                              "code": "--al-theme-color-focus-ring",
-                              "figma": "theme/color/focus-ring"
-                            },
-                            "outline-offset": {
-                              "code": "--al-theme-border-width-md",
-                              "figma": "theme/border/width/md"
-                            },
-                            "outline-width": {
-                              "code": "--al-theme-border-width-md",
-                              "figma": "theme/border/width/md"
-                            },
-                            "padding": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-bottom": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-left": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-right": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-top": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "row-gap": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            }
-                          },
-                          "children": [
-                            {
-                              "tag": "span",
-                              "cls": "al-u-is-vishidden al-c-button__text",
-                              "box": {
-                                "w": 1,
-                                "h": 1
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {},
-                              "children": [
-                                {
-                                  "tag": "span",
-                                  "cls": "al-u-is-vishidden al-c-button__text",
-                                  "text": "Close",
-                                  "box": {
-                                    "w": 10,
-                                    "h": 72
-                                  },
-                                  "layout": {
-                                    "display": "block",
-                                    "direction": "row",
-                                    "align": "normal",
-                                    "justify": "normal"
-                                  },
-                                  "tokens": {},
-                                  "children": []
-                                }
-                              ]
-                            },
-                            {
-                              "tag": "span",
-                              "cls": "al-c-button__icon",
-                              "box": {
-                                "w": 24,
-                                "h": 24
-                              },
-                              "layout": {
-                                "display": "block",
-                                "direction": "row",
-                                "align": "normal",
-                                "justify": "normal"
-                              },
-                              "tokens": {},
-                              "children": [
-                                {
-                                  "tag": "span",
-                                  "cls": "al-c-icon",
-                                  "component": "al-icon",
-                                  "box": {
-                                    "w": 24,
-                                    "h": 24
-                                  },
-                                  "layout": {
-                                    "display": "block",
-                                    "direction": "row",
-                                    "align": "normal",
-                                    "justify": "normal"
-                                  },
-                                  "tokens": {},
-                                  "children": []
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "tag": "div",
-                      "cls": "al-c-dialog__body",
-                      "box": {
-                        "w": 600,
-                        "h": 56
-                      },
-                      "layout": {
-                        "display": "flex",
-                        "direction": "column",
-                        "align": "normal",
-                        "justify": "normal",
-                        "grow": 1
-                      },
-                      "tokens": {},
-                      "children": [
-                        {
-                          "tag": "div",
-                          "cls": "al-c-dialog__body",
-                          "text": "Dialog content",
-                          "box": {
-                            "w": 107.8,
-                            "h": 19
-                          },
-                          "layout": {
-                            "display": "flex",
-                            "direction": "column",
-                            "align": "normal",
-                            "justify": "normal",
-                            "grow": 1
-                          },
-                          "tokens": {},
-                          "children": []
-                        }
-                      ]
-                    },
-                    {
-                      "tag": "div",
-                      "cls": "al-c-dialog__footer",
-                      "box": {
-                        "w": 600,
-                        "h": 73
-                      },
-                      "layout": {
-                        "display": "flex",
-                        "direction": "row",
-                        "align": "center",
-                        "justify": "space-between"
-                      },
-                      "tokens": {},
-                      "children": [
-                        {
-                          "tag": "span",
-                          "cls": "",
-                          "box": {
-                            "w": 69.8,
-                            "h": 40
-                          },
-                          "layout": {
-                            "display": "block",
-                            "direction": "row",
-                            "align": "normal",
-                            "justify": "normal"
-                          },
-                          "tokens": {},
-                          "children": [
-                            {
-                              "tag": "button",
-                              "cls": "al-c-button al-c-button--bare",
-                              "component": "al-button",
-                              "box": {
-                                "w": 69.8,
-                                "h": 40
-                              },
-                              "layout": {
-                                "display": "inline-flex",
-                                "direction": "row",
-                                "align": "center",
-                                "justify": "center"
-                              },
-                              "tokens": {
-                                "background-color": {
-                                  "code": "--al-theme-color-background-transparent-default",
-                                  "figma": "theme/color/background/transparent-default"
-                                },
-                                "border-bottom-left-radius": {
-                                  "code": "--al-theme-border-radius",
-                                  "figma": "theme/border/radius/@"
-                                },
-                                "border-bottom-right-radius": {
-                                  "code": "--al-theme-border-radius",
-                                  "figma": "theme/border/radius/@"
-                                },
-                                "border-radius": {
-                                  "code": "--al-theme-border-radius",
-                                  "figma": "theme/border/radius/@"
-                                },
-                                "border-top-left-radius": {
-                                  "code": "--al-theme-border-radius",
-                                  "figma": "theme/border/radius/@"
-                                },
-                                "border-top-right-radius": {
-                                  "code": "--al-theme-border-radius",
-                                  "figma": "theme/border/radius/@"
-                                },
-                                "color": {
-                                  "code": "--al-theme-color-content-neutral-default",
-                                  "figma": "theme/color/content/neutral-default"
-                                },
-                                "column-gap": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
-                                },
-                                "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
-                                },
-                                "gap": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
-                                },
-                                "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
-                                  "figma": null
-                                },
-                                "min-height": {
-                                  "code": "--al-theme-size-control",
-                                  "figma": "theme/size/control"
-                                },
-                                "padding": {
-                                  "code": "--al-theme-space",
-                                  "figma": "theme/space/@"
-                                },
-                                "padding-left": {
-                                  "code": "--al-theme-space",
-                                  "figma": "theme/space/@"
-                                },
-                                "padding-right": {
-                                  "code": "--al-theme-space",
-                                  "figma": "theme/space/@"
-                                },
-                                "row-gap": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
-                                }
-                              },
-                              "children": [
-                                {
-                                  "tag": "span",
-                                  "cls": "al-c-button__text",
-                                  "box": {
-                                    "w": 37.8,
-                                    "h": 14
-                                  },
-                                  "layout": {
-                                    "display": "block",
-                                    "direction": "row",
-                                    "align": "normal",
-                                    "justify": "normal"
-                                  },
-                                  "tokens": {},
-                                  "children": [
-                                    {
-                                      "tag": "span",
-                                      "cls": "al-c-button__text",
-                                      "text": "Close",
-                                      "box": {
-                                        "w": 37.8,
-                                        "h": 16
-                                      },
-                                      "layout": {
-                                        "display": "block",
-                                        "direction": "row",
-                                        "align": "normal",
-                                        "justify": "normal"
-                                      },
-                                      "tokens": {},
-                                      "children": []
-                                    }
-                                  ]
-                                }
-                              ]
                             }
                           ]
                         }
@@ -1864,16 +2024,23 @@
     ]
   },
   "tokens": [
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
+    "--al-icon-height",
+    "--al-icon-width",
     "--al-theme-border-radius",
-    "--al-theme-color-background-primary-default",
+    "--al-theme-border-radius-lg",
+    "--al-theme-border-width",
+    "--al-theme-box-shadow-xl",
+    "--al-theme-color-background-neutral-default",
     "--al-theme-color-background-transparent-default",
+    "--al-theme-color-border-neutral-default",
     "--al-theme-color-content-neutral-default",
-    "--al-theme-color-content-primary-weak",
+    "--al-theme-layout-max-width-sm",
     "--al-theme-size-control",
     "--al-theme-space",
+    "--al-theme-space-lg",
     "--al-theme-space-xs",
-    "--al-theme-typography-body-sm-bold-letter-spacing",
+    "--al-theme-typography-body-sm-semibold-letter-spacing",
     "--al-theme-typography-heading-sm",
     "--al-theme-typography-heading-sm-letter-spacing"
   ],
@@ -1881,6 +2048,21 @@
     "ariaAttributes": [
       "ariaLabelledBy"
     ],
+    "keyboard": [
+      {
+        "keys": "Enter",
+        "action": "Opens the dialog from the trigger. Skipped when the trigger contains its own focusable element, which would otherwise double-fire."
+      },
+      {
+        "keys": "Space",
+        "action": "Opens the dialog from the trigger. Same trigger-focusable exception as Enter."
+      },
+      {
+        "keys": "Escape",
+        "action": "Closes the dialog. Only while it is open."
+      }
+    ],
+    "focus": null,
     "cssParts": []
   },
   "bindings": {
@@ -1891,9 +2073,9 @@
     },
     "figma": {
       "fileKey": "y83n4o9LOGs74oAoguFcGS",
-      "componentSetName": null,
-      "nodeId": null,
-      "url": null
+      "componentSetName": "Dialog",
+      "nodeId": "3704:13290",
+      "url": "https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3704-13290"
     }
   }
 }

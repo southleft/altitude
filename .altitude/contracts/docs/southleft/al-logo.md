@@ -58,7 +58,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -86,7 +86,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-semibold-letter-spacing`
 
 ---
 

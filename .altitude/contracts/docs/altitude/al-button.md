@@ -4,7 +4,7 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<button>`
 
-Component: al-button
+The system's action control. It renders a real `<button>` — or an `<a role="button">` when `href` is set — so the element the user actually gets, and the keyboard behaviour that comes with it, follows the props rather than the styling. Everything else about a button is ranking: `variant` says how much weight this action carries against the others on screen.
 
 ## Figma
 
@@ -31,7 +31,7 @@ Component: al-button
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
 | `type` | enum | `button`, `reset`, `submit` | — | _not expressed in Figma (by design)_ |
 | `value` | string | — | — | _not expressed in Figma (by design)_ |
-| `variant` | enum | `bare`, `neutral`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary` |
+| `variant` | enum | `bare`, `neutral`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `ariaControls`
 
@@ -140,7 +140,7 @@ this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 ### `variant` (Figma property "Variant")
 
 - Code values: `bare`, `neutral`, `secondary`, `tertiary`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary`
 
 ## States
 
@@ -162,7 +162,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaControls`, `isAriaDisabled`, `variant`
+- ARIA-bearing attributes: `ariaControls`, `isAriaDisabled`
 - CSS parts: `button`
 
 ## Anatomy & token bindings
@@ -181,11 +181,10 @@ _No events declared._
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
-| letter-spacing | `--al-theme-typography-body-sm-bold-letter-spacing` | — |
+| letter-spacing | `--al-theme-typography-body-sm-semibold-letter-spacing` | — |
 | min-height | `--al-theme-size-control` | `theme/size/control` |
-| padding | `--al-theme-space` | `theme/space/@` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
 | padding-right | `--al-theme-space` | `theme/space/@` |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
@@ -243,6 +242,18 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
+
+#### `primary`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| --al-icon-height | `--al-theme-icon-lg` | `theme/icon/lg` |
+| --al-icon-width | `--al-theme-icon-lg` | `theme/icon/lg` |
+| background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
+| border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
+| gap | `--al-theme-space-xs` | `theme/space/xs` |
+| min-height | `--al-theme-size-control` | `theme/size/control` |
 
 #### `secondary`
 
@@ -312,7 +323,7 @@ _No events declared._
 
 ## Tokens referenced (12)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

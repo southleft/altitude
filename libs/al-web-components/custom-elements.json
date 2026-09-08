@@ -12,6 +12,10 @@
           "name": "ALAccordionPanel",
           "slots": [
             {
+              "description": "The panel heading content inside the disclosure button.",
+              "name": "header"
+            },
+            {
               "description": "The accordion panel content",
               "name": ""
             }
@@ -330,6 +334,10 @@
           "description": "Component: al-alert",
           "name": "ALAlert",
           "slots": [
+            {
+              "description": "Optional action control displayed with the alert content.",
+              "name": "action"
+            },
             {
               "description": "The alert's main content or title",
               "name": ""
@@ -2412,6 +2420,16 @@
               },
               "static": true,
               "default": "'al-card'"
+            },
+            {
+              "kind": "field",
+              "name": "elementMap",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "layoutEl",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -5919,7 +5937,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-dialog",
+          "description": "A modal panel for a focused task or decision, with optional header and footer content.\nUse the trigger slot to open it and provide a clear heading and dismissal action.",
           "name": "ALDialog",
           "slots": [
             {
@@ -6411,9 +6429,21 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-drawer",
+          "description": "A viewport-edge panel for supporting content, with optional header and footer slots.\nOpens from the left by default; alignment=\"right\" selects the right edge.",
           "name": "ALDrawer",
           "slots": [
+            {
+              "description": "Drawer heading content.",
+              "name": "header"
+            },
+            {
+              "description": "Drawer footer content.",
+              "name": "footer"
+            },
+            {
+              "description": "The control that opens the drawer.",
+              "name": "trigger"
+            },
             {
               "description": "The drawer content",
               "name": ""
@@ -6729,6 +6759,14 @@
           "description": "Component: al-dropdown-panel",
           "name": "ALDropdownPanel",
           "slots": [
+            {
+              "description": "Content above the dropdown body.",
+              "name": "header"
+            },
+            {
+              "description": "Content below the dropdown body.",
+              "name": "footer"
+            },
             {
               "description": "The dropdown panel content",
               "name": ""
@@ -7053,6 +7091,14 @@
           "description": "Component: al-file-upload",
           "name": "ALFileUpload",
           "slots": [
+            {
+              "description": "Helper text replacing the fieldNote property.",
+              "name": "field-note"
+            },
+            {
+              "description": "Error text replacing the errorNote property.",
+              "name": "error"
+            },
             {
               "description": "The component's content",
               "name": ""
@@ -15823,6 +15869,18 @@
           "name": "ALListItem",
           "slots": [
             {
+              "description": "Optional leading content.",
+              "name": "before"
+            },
+            {
+              "description": "Optional trailing content.",
+              "name": "after"
+            },
+            {
+              "description": "Nested list items displayed when this item expands.",
+              "name": "items"
+            },
+            {
               "description": "The content of the list item",
               "name": ""
             }
@@ -16577,7 +16635,8 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "isExpandableHeader property\n- **true** Applies expandable functionality to the menu item",
+              "description": "Legacy compatibility property; it does not control the disclosure button.",
+              "deprecated": "Use isHeader with a groupId to render an expandable group header.",
               "attribute": "isExpandableHeader"
             },
             {
@@ -16823,7 +16882,8 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "isExpandableHeader property\n- **true** Applies expandable functionality to the menu item",
+              "description": "Legacy compatibility property; it does not control the disclosure button.",
+              "deprecated": "Use isHeader with a groupId to render an expandable group header.",
               "fieldName": "isExpandableHeader"
             },
             {
@@ -17476,6 +17536,10 @@
           "name": "ALPagination",
           "slots": [
             {
+              "description": "Label for the in-page pagination controls.",
+              "name": "inpage-label"
+            },
+            {
               "description": "If content is slotted, it will override the default pagination label",
               "name": "label"
             },
@@ -17929,7 +17993,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Component: al-popover",
+          "description": "A floating panel anchored to a trigger for contextual information or actions.\nSupply its content through the body, header and footer slots; use position to select its placement.",
           "name": "ALPopover",
           "slots": [
             {
@@ -19204,6 +19268,14 @@
           "name": "ALRange",
           "slots": [
             {
+              "description": "Helper text replacing the fieldNote property.",
+              "name": "field-note"
+            },
+            {
+              "description": "Error text replacing the errorNote property.",
+              "name": "error"
+            },
+            {
               "description": "If content is slotted, it will override the default range label",
               "name": "label"
             },
@@ -20018,6 +20090,10 @@
           "name": "ALSearch",
           "slots": [
             {
+              "description": "Content displayed when there are no matching results.",
+              "name": "emptyMessage"
+            },
+            {
               "description": "The search's dropdown content",
               "name": ""
             },
@@ -20665,6 +20741,10 @@
           "description": "Component: al-select",
           "name": "ALSelect",
           "slots": [
+            {
+              "description": "Optional leading content within the select control.",
+              "name": "before"
+            },
             {
               "description": "The select content",
               "name": ""
@@ -22324,7 +22404,7 @@
               "kind": "field",
               "name": "sortDirection",
               "type": {
-                "text": "ALTableSortDirection"
+                "text": "'ascending' | 'descending' | 'none'"
               },
               "default": "'none'",
               "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.",
@@ -22497,7 +22577,7 @@
             {
               "name": "sortDirection",
               "type": {
-                "text": "ALTableSortDirection"
+                "text": "'ascending' | 'descending' | 'none'"
               },
               "default": "'none'",
               "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.",
@@ -23519,12 +23599,6 @@
           "kind": "class",
           "description": "Component: al-theme-switcher",
           "name": "ALThemeSwitcher",
-          "slots": [
-            {
-              "description": "The component content",
-              "name": ""
-            }
-          ],
           "members": [
             {
               "kind": "field",
@@ -24466,6 +24540,15 @@
             },
             {
               "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name for an icon-only toggle button. Visible slotted text supplies\nthe name when this property is omitted.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
               "name": "isSelected",
               "type": {
                 "text": "boolean"
@@ -24489,7 +24572,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
+              "description": "Has toggle?\n- Dynamically enabled when the first slotted element is an ALPopover or ALMenu.\n- **true** toggles the isSelected state on activation.\n- **false** selects on activation; Escape or an outside click can deselect.",
               "attribute": "hasToggle"
             },
             {
@@ -24571,7 +24654,7 @@
                   }
                 }
               ],
-              "description": "Handle on keydown\n1. If enter key is pressed, set selected state"
+              "description": "Handle on keydown\nEnter and Space use the same selection behavior as a click; Escape deselects."
             },
             {
               "kind": "method",
@@ -24607,6 +24690,14 @@
               "fieldName": "variant"
             },
             {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Accessible name for an icon-only toggle button. Visible slotted text supplies\nthe name when this property is omitted.",
+              "fieldName": "label"
+            },
+            {
               "name": "isSelected",
               "type": {
                 "text": "boolean"
@@ -24628,7 +24719,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
+              "description": "Has toggle?\n- Dynamically enabled when the first slotted element is an ALPopover or ALMenu.\n- **true** toggles the isSelected state on activation.\n- **false** selects on activation; Escape or an outside click can deselect.",
               "fieldName": "hasToggle"
             }
           ],

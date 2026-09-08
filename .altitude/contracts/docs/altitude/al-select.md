@@ -4,11 +4,13 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-select
+A choice from a known list, rendered as a field the user opens rather than types into. It composes `al-input` for the field itself and `al-dropdown-panel` for the options, so it inherits the whole form-field treatment — label, required marker, field note, error note — and adds the open/closed state and keyboard traversal on top.
 
 ## Figma
 
-No Figma component set is mapped for `al-select` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Select**
+- Node id: `3704:13389` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3704-13389)
 
 ## Props (19)
 
@@ -20,7 +22,7 @@ No Figma component set is mapped for `al-select` in the **Altitude Design System
 | `fieldId` | string | — | — | — |
 | `fieldNote` | string | — | — | — |
 | `hasSearch` | boolean | — | `false` | — |
-| `hideLabel` | boolean | — | — | — |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActive` | boolean | — | — | — |
 | `isActiveDropdown` | boolean | — | — | — |
 | `isDisabled` | boolean | — | — | — |
@@ -28,7 +30,7 @@ No Figma component set is mapped for `al-select` in the **Altitude Design System
 | `isOptional` | boolean | — | — | — |
 | `isReadonly` | boolean | — | `true` | — |
 | `isRequired` | boolean | — | `false` | — |
-| `label` | string | — | `'Label'` | — |
+| `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
 | `name` | string | — | — | — |
 | `placeholder` | string | — | — | — |
 | `title` | string | — | — | — |
@@ -119,17 +121,26 @@ The select's value attribute
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `hideLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `label` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
 
 ## States
 
 `disabled`
 
-## Slots (3)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The select content | — | — |
+| `before` | Optional leading content within the select control. | — | — |
 | `error` | If content is slotted, it will display in place of the errorNote property | — | — |
 | `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 

@@ -366,14 +366,15 @@
       "tag": "div",
       "cls": "al-c-input",
       "box": {
-        "w": 229,
-        "h": 96
+        "w": 196,
+        "h": 88
       },
       "layout": {
         "display": "flex",
         "direction": "column",
         "align": "normal",
-        "justify": "normal"
+        "justify": "normal",
+        "fillInline": true
       },
       "tokens": {
         "column-gap": {
@@ -394,7 +395,7 @@
           "tag": "label",
           "cls": "al-c-input__label",
           "box": {
-            "w": 229,
+            "w": 196,
             "h": 20
           },
           "layout": {
@@ -434,6 +435,10 @@
               "tag": "span",
               "cls": "",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 20,
+              "ffCss": "IBM Plex Sans",
+              "fwCss": "400",
               "box": {
                 "w": 39.2,
                 "h": 20
@@ -453,8 +458,8 @@
           "tag": "div",
           "cls": "al-c-input__container",
           "box": {
-            "w": 229,
-            "h": 48
+            "w": 196,
+            "h": 40
           },
           "layout": {
             "display": "block",
@@ -467,15 +472,22 @@
             {
               "tag": "input",
               "cls": "al-c-input__input",
+              "bw4": [
+                1,
+                1,
+                1,
+                1
+              ],
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "inline-block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "background-color": {
@@ -522,37 +534,21 @@
                   "code": "--al-theme-color-content-neutral-default",
                   "figma": "theme/color/content/neutral-default"
                 },
-                "font": {
-                  "code": "--al-theme-typography-body-md",
-                  "figma": null
-                },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-md-letter-spacing",
+                  "code": "--al-theme-typography-body-sm-letter-spacing",
                   "figma": null
                 },
                 "min-height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "padding": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "padding-bottom": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-size-control",
+                  "figma": "theme/size/control"
                 },
                 "padding-left": {
-                  "code": "--al-theme-space",
-                  "figma": "theme/space/@"
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
                 },
                 "padding-right": {
-                  "code": "--al-theme-space",
-                  "figma": "theme/space/@"
-                },
-                "padding-top": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-sm",
+                  "figma": "theme/space/sm"
                 }
               },
               "children": []
@@ -563,7 +559,7 @@
           "tag": "div",
           "cls": "al-c-input__footer",
           "box": {
-            "w": 229,
+            "w": 196,
             "h": 20
           },
           "layout": {
@@ -591,7 +587,7 @@
               "tag": "div",
               "cls": "al-c-input__field-notes",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -621,7 +617,7 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -662,6 +658,10 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "text": "This is a field note.",
+                      "fsPx": 14,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 116.7,
                         "h": 16
@@ -715,14 +715,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label al-has-inset-label",
           "box": {
-            "w": 229,
-            "h": 80
+            "w": 196,
+            "h": 76
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -743,8 +744,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -798,6 +799,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -816,15 +821,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -871,33 +883,29 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -912,7 +920,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -940,7 +948,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -970,7 +978,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -1011,6 +1019,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -1064,14 +1076,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label al-has-inset-label al-is-disabled",
           "box": {
-            "w": 229,
-            "h": 80
+            "w": 196,
+            "h": 76
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1092,8 +1105,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -1151,6 +1164,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -1169,15 +1186,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -1224,37 +1248,33 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -1269,7 +1289,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -1297,7 +1317,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -1327,7 +1347,7 @@
                       "cls": "al-c-field-note al-is-disabled",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -1372,6 +1392,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -1429,14 +1453,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label al-has-inset-label al-is-error",
           "box": {
-            "w": 229,
-            "h": 104
+            "w": 196,
+            "h": 100
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1457,8 +1482,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -1512,6 +1537,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -1530,15 +1559,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -1589,33 +1625,29 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -1630,7 +1662,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 44
               },
               "layout": {
@@ -1658,7 +1690,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 44
                   },
                   "layout": {
@@ -1688,7 +1720,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -1729,6 +1761,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -1774,7 +1810,7 @@
                       "cls": "al-c-field-note al-is-error",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -1815,6 +1851,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 128.4,
                             "h": 16
@@ -1868,14 +1908,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label al-has-inset-label",
           "box": {
-            "w": 229,
-            "h": 80
+            "w": 196,
+            "h": 76
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1896,8 +1937,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -1951,6 +1992,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -1969,15 +2014,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -2024,33 +2076,29 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -2065,7 +2113,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -2093,7 +2141,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -2123,7 +2171,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -2164,6 +2212,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -2217,14 +2269,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label",
           "box": {
-            "w": 229,
-            "h": 72
+            "w": 196,
+            "h": 64
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2285,6 +2338,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -2304,8 +2361,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -2318,15 +2375,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -2373,37 +2437,21 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -2414,7 +2462,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -2442,7 +2490,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -2472,7 +2520,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -2513,6 +2561,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -2566,14 +2618,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label al-is-disabled",
           "box": {
-            "w": 229,
-            "h": 72
+            "w": 196,
+            "h": 64
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2638,6 +2691,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -2657,8 +2714,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -2671,15 +2728,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -2726,41 +2790,25 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
                     },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -2771,7 +2819,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -2799,7 +2847,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -2829,7 +2877,7 @@
                       "cls": "al-c-field-note al-is-disabled",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -2874,6 +2922,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -2931,14 +2983,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label al-is-error",
           "box": {
-            "w": 229,
-            "h": 96
+            "w": 196,
+            "h": 88
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2999,6 +3052,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -3018,8 +3075,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -3032,15 +3089,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -3091,37 +3155,21 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -3132,7 +3180,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 44
               },
               "layout": {
@@ -3160,7 +3208,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 44
                   },
                   "layout": {
@@ -3190,7 +3238,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -3231,6 +3279,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -3276,7 +3328,7 @@
                       "cls": "al-c-field-note al-is-error",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -3317,6 +3369,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 128.4,
                             "h": 16
@@ -3370,14 +3426,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-hidden-label",
           "box": {
-            "w": 229,
-            "h": 72
+            "w": 196,
+            "h": 64
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -3438,6 +3495,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -3457,8 +3518,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -3471,15 +3532,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -3526,37 +3594,21 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -3567,7 +3619,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -3595,7 +3647,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -3625,7 +3677,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -3666,6 +3718,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -3719,14 +3775,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-inset-label",
           "box": {
-            "w": 229,
-            "h": 80
+            "w": 196,
+            "h": 76
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -3747,8 +3804,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -3802,6 +3859,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -3820,15 +3881,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -3875,33 +3943,29 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -3916,7 +3980,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -3944,7 +4008,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -3974,7 +4038,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -4015,6 +4079,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -4068,14 +4136,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-inset-label al-is-disabled",
           "box": {
-            "w": 229,
-            "h": 80
+            "w": 196,
+            "h": 76
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -4096,8 +4165,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -4155,6 +4224,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -4173,15 +4246,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -4228,37 +4308,33 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -4273,7 +4349,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -4301,7 +4377,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -4331,7 +4407,7 @@
                       "cls": "al-c-field-note al-is-disabled",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -4376,6 +4452,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -4433,14 +4513,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-inset-label al-is-error",
           "box": {
-            "w": 229,
-            "h": 104
+            "w": 196,
+            "h": 100
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -4461,8 +4542,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -4516,6 +4597,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -4534,15 +4619,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -4593,33 +4685,29 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -4634,7 +4722,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 44
               },
               "layout": {
@@ -4662,7 +4750,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 44
                   },
                   "layout": {
@@ -4692,7 +4780,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -4733,6 +4821,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -4778,7 +4870,7 @@
                       "cls": "al-c-field-note al-is-error",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -4819,6 +4911,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 128.4,
                             "h": 16
@@ -4872,14 +4968,15 @@
           "tag": "div",
           "cls": "al-c-input al-has-inset-label",
           "box": {
-            "w": 229,
-            "h": 80
+            "w": 196,
+            "h": 76
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -4900,8 +4997,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 56
+                "w": 196,
+                "h": 52
               },
               "layout": {
                 "display": "block",
@@ -4955,6 +5052,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 16,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 29.4,
                         "h": 16
@@ -4973,15 +5074,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 56
+                    "w": 196,
+                    "h": 52
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -5028,33 +5136,29 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-bottom": {
                       "code": "--al-theme-space-xxs",
                       "figma": "theme/space/xxs"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-top": {
                       "code": "--al-theme-space-md",
@@ -5069,7 +5173,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -5097,7 +5201,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -5127,7 +5231,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -5168,6 +5272,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -5221,14 +5329,15 @@
           "tag": "div",
           "cls": "al-c-input",
           "box": {
-            "w": 229,
-            "h": 96
+            "w": 196,
+            "h": 88
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -5249,7 +5358,7 @@
               "tag": "label",
               "cls": "al-c-input__label",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -5289,6 +5398,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -5308,8 +5421,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -5322,15 +5435,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -5377,37 +5497,21 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -5418,7 +5522,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -5446,7 +5550,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -5476,7 +5580,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -5517,6 +5621,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -5570,14 +5678,15 @@
           "tag": "div",
           "cls": "al-c-input al-is-disabled",
           "box": {
-            "w": 229,
-            "h": 96
+            "w": 196,
+            "h": 88
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -5598,7 +5707,7 @@
               "tag": "label",
               "cls": "al-c-input__label",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -5642,6 +5751,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -5661,8 +5774,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -5675,15 +5788,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -5730,41 +5850,25 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
                     },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -5775,7 +5879,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -5803,7 +5907,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -5833,7 +5937,7 @@
                       "cls": "al-c-field-note al-is-disabled",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -5878,6 +5982,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -5935,14 +6043,15 @@
           "tag": "div",
           "cls": "al-c-input al-is-error",
           "box": {
-            "w": 229,
-            "h": 120
+            "w": 196,
+            "h": 112
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -5963,7 +6072,7 @@
               "tag": "label",
               "cls": "al-c-input__label",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -6003,6 +6112,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -6022,8 +6135,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -6036,15 +6149,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -6095,37 +6215,21 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -6136,7 +6240,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 44
               },
               "layout": {
@@ -6164,7 +6268,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 44
                   },
                   "layout": {
@@ -6194,7 +6298,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -6235,6 +6339,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -6280,7 +6388,7 @@
                       "cls": "al-c-field-note al-is-error",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -6321,6 +6429,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 128.4,
                             "h": 16
@@ -6374,14 +6486,15 @@
           "tag": "div",
           "cls": "al-c-input",
           "box": {
-            "w": 229,
-            "h": 96
+            "w": 196,
+            "h": 88
           },
           "layout": {
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -6402,7 +6515,7 @@
               "tag": "label",
               "cls": "al-c-input__label",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -6442,6 +6555,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 39.2,
                     "h": 20
@@ -6461,8 +6578,8 @@
               "tag": "div",
               "cls": "al-c-input__container",
               "box": {
-                "w": 229,
-                "h": 48
+                "w": 196,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -6475,15 +6592,22 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
-                    "w": 229,
-                    "h": 48
+                    "w": 196,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -6530,37 +6654,21 @@
                       "code": "--al-theme-color-content-neutral-default",
                       "figma": "theme/color/content/neutral-default"
                     },
-                    "font": {
-                      "code": "--al-theme-typography-body-md",
-                      "figma": null
-                    },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-letter-spacing",
                       "figma": null
                     },
                     "min-height": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding-bottom": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     },
                     "padding-right": {
-                      "code": "--al-theme-space",
-                      "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-sm",
+                      "figma": "theme/space/sm"
                     }
                   },
                   "children": []
@@ -6571,7 +6679,7 @@
               "tag": "div",
               "cls": "al-c-input__footer",
               "box": {
-                "w": 229,
+                "w": 196,
                 "h": 20
               },
               "layout": {
@@ -6599,7 +6707,7 @@
                   "tag": "div",
                   "cls": "al-c-input__field-notes",
                   "box": {
-                    "w": 229,
+                    "w": 196,
                     "h": 20
                   },
                   "layout": {
@@ -6629,7 +6737,7 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "box": {
-                        "w": 229,
+                        "w": 196,
                         "h": 20
                       },
                       "layout": {
@@ -6670,6 +6778,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 116.7,
                             "h": 16
@@ -6782,7 +6894,6 @@
     }
   },
   "tokens": [
-    "--al-base-space",
     "--al-theme-border-radius",
     "--al-theme-border-width",
     "--al-theme-color-background-neutral-default",
@@ -6793,7 +6904,9 @@
     "--al-theme-color-content-neutral-default",
     "--al-theme-color-content-neutral-weak",
     "--al-theme-opacity-disabled",
+    "--al-theme-size-control",
     "--al-theme-space",
+    "--al-theme-space-sm",
     "--al-theme-space-xs",
     "--al-theme-space-xxs",
     "--al-theme-typography-body-md",

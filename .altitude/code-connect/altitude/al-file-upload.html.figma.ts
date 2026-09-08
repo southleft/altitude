@@ -8,6 +8,8 @@
  *
  * Mapped variant axes: Label, State, State.
  * Props the contract marks `omit` (no Figma axis): accept, ariaDescribedBy, errorNote, fieldId, fieldNote, fileSizeLimit, isRequired, label, multiple, name, textConfig, uploadFiles, uploadTime, value.
+ * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
+ * the contract records no default for error, field-note.
  */
 import figma, { html } from '@figma/code-connect/html';
 
@@ -30,6 +32,8 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544
       isError="${props.isError}"
     >
       File Upload
+      <span slot="error">Error</span>
+      <span slot="field-note">Field note</span>
     </al-file-upload>
   `,
 });

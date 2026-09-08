@@ -30,7 +30,7 @@ inside a `<al-theme density="...">` scope.
 | `hideCaption` | boolean | — | — | — |
 | `isSelectable` | boolean | — | — | — |
 | `rowKey` | string | — | `'id'` | — |
-| `sortDirection` | string | `ALTableSortDirection` | `'none'` | — |
+| `sortDirection` | enum | `ascending`, `descending`, `none` | `'none'` | — |
 | `sortKey` | string | — | — | — |
 
 #### `caption`
@@ -235,7 +235,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (19)
 
-`--al-font-family-mono`, `--al-font-size-12`, `--al-font-weight-bold`, `--al-theme-border-radius-role-surface`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-neutral-weak`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-faint`, `--al-theme-color-focus-ring`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-family-mono`, `--al-font-size-12`, `--al-font-weight-semibold`, `--al-theme-border-radius-role-surface`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-neutral-weak`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-faint`, `--al-theme-color-focus-ring`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

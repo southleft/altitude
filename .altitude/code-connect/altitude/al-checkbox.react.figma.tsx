@@ -6,7 +6,7 @@
  * Figma Code Connect — React wrapper surface for the "Checkbox"
  * component set (node 3539:42167).
  *
- * Mapped variant axes: Label, Checked, State, Checked.
+ * Mapped variant axes: Label, Checked, State, State, Checked.
  * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, errorNote, fieldId, fieldNote, isRequired, name, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for error, field-note.
@@ -25,6 +25,9 @@ figma.connect(ALCheckbox, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?
     isDisabled: figma.enum('State', {
       Disabled: true,
     }),
+    isError: figma.enum('State', {
+      Error: true,
+    }),
     isIndeterminate: figma.enum('Checked', {
       Indeterminate: true,
     }),
@@ -34,6 +37,7 @@ figma.connect(ALCheckbox, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?
       hideLabel={props.hideLabel}
       isChecked={props.isChecked}
       isDisabled={props.isDisabled}
+      isError={props.isError}
       isIndeterminate={props.isIndeterminate}
     >
       Checkbox

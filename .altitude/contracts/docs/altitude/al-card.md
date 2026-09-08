@@ -2,13 +2,15 @@
 
 # al-card — Card
 
-**Status:** `source` · **Version:** `1.0.0` · **Element:** `<—>`
+**Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-card
+A bounded surface that groups one subject — its media, its heading, its body and its actions — so a page can present many of them side by side and the user reads each as one thing. It is a container with named regions, not a layout: a card decides what goes where inside itself and nothing about how cards sit next to each other.
 
 ## Figma
 
-No Figma component set is mapped for `al-card` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Card**
+- Node id: `3702:12161` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3702-12161)
 
 ## Props (3)
 
@@ -16,7 +18,7 @@ No Figma component set is mapped for `al-card` in the **Altitude Design System**
 | --- | --- | --- | --- | --- |
 | `fill` | boolean | — | — | — |
 | `layout` | string | `'inline'` | — | — |
-| `variant` | string | `'bare'` | — | — |
+| `variant` | string | `'bare'` | — | **Variant** (VARIANT): `Bare`, `Default` |
 
 #### `fill`
 
@@ -47,7 +49,10 @@ Variant
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `variant` (Figma property "Variant")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Default`
 
 ## States
 
@@ -71,12 +76,19 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
 
-Anatomy was not measured when this contract was authored (`anatomySource: "unavailable"`) — see `.altitude/contracts/README.md` § Anatomy availability is best-effort. No root-level token table to show.
+**Anatomy case measured:** `Variant=bare` (source: `measured`)
+
+### Root — `<div class="al-c-card al-c-card--bare">`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| border | `--al-theme-border-width` | `theme/border/width/@` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -88,9 +100,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-card`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (0)
+## Tokens referenced (4)
 
-_None._
+`--al-theme-border-width`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-xs`
 
 ---
 

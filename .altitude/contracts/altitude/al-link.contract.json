@@ -47,7 +47,17 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -210,6 +220,10 @@
           "tag": "a",
           "cls": "al-c-link",
           "text": "Link text",
+          "fsPx": 16,
+          "lhPx": 24,
+          "ffCss": "Public Sans",
+          "fwCss": "400",
           "box": {
             "w": 64.8,
             "h": 19
@@ -337,6 +351,10 @@
               "tag": "a",
               "cls": "al-c-link",
               "text": "Link text",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 64.8,
                 "h": 19
@@ -468,6 +486,10 @@
               "tag": "a",
               "cls": "al-c-link al-is-disabled",
               "text": "Link text",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 64.8,
                 "h": 19
@@ -539,7 +561,7 @@
           "tag": "a",
           "cls": "al-c-link al-c-link--lg",
           "box": {
-            "w": 72.9,
+            "w": 81,
             "h": 28
           },
           "layout": {
@@ -599,9 +621,13 @@
               "tag": "a",
               "cls": "al-c-link al-c-link--lg",
               "text": "Link text",
+              "fsPx": 20,
+              "lhPx": 28,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
-                "w": 72.9,
-                "h": 21
+                "w": 81,
+                "h": 24
               },
               "layout": {
                 "display": "inline-flex",
@@ -666,7 +692,7 @@
           "tag": "a",
           "cls": "al-c-link al-c-link--lg al-is-disabled",
           "box": {
-            "w": 72.9,
+            "w": 81,
             "h": 28
           },
           "layout": {
@@ -730,9 +756,13 @@
               "tag": "a",
               "cls": "al-c-link al-c-link--lg al-is-disabled",
               "text": "Link text",
+              "fsPx": 20,
+              "lhPx": 28,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
-                "w": 72.9,
-                "h": 21
+                "w": 81,
+                "h": 24
               },
               "layout": {
                 "display": "inline-flex",
@@ -861,6 +891,10 @@
               "tag": "a",
               "cls": "al-c-link al-c-link--sm",
               "text": "Link text",
+              "fsPx": 14,
+              "lhPx": 20,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 56.7,
                 "h": 16
@@ -992,6 +1026,10 @@
               "tag": "a",
               "cls": "al-c-link al-c-link--sm al-is-disabled",
               "text": "Link text",
+              "fsPx": 14,
+              "lhPx": 20,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 56.7,
                 "h": 16
@@ -1123,6 +1161,10 @@
               "tag": "a",
               "cls": "al-c-link al-c-link--xs",
               "text": "Link text",
+              "fsPx": 12,
+              "lhPx": 20,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 48.6,
                 "h": 14
@@ -1254,6 +1296,10 @@
               "tag": "a",
               "cls": "al-c-link al-c-link--xs al-is-disabled",
               "text": "Link text",
+              "fsPx": 12,
+              "lhPx": 20,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 48.6,
                 "h": 14
@@ -1421,8 +1467,7 @@
   },
   "a11y": {
     "ariaAttributes": [
-      "ariaLabelledBy",
-      "variant"
+      "ariaLabelledBy"
     ],
     "cssParts": []
   },

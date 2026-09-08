@@ -6,7 +6,7 @@
  * Figma Code Connect — React wrapper surface for the "Link"
  * component set (node 3543:47075).
  *
- * Mapped variant axes: none.
+ * Mapped variant axes: State.
  * Props the contract marks `omit` (no Figma axis): ariaLabelledBy, href, label, linkTitle, target.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for after.
@@ -15,9 +15,15 @@ import figma from '@figma/code-connect';
 import { ALLink } from '@southleft/al-react';
 
 figma.connect(ALLink, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47075', {
-  props: {},
+  props: {
+    isDisabled: figma.enum('State', {
+      Disabled: true,
+    }),
+  },
   example: (props) => (
-    <ALLink>
+    <ALLink
+      isDisabled={props.isDisabled}
+    >
       Link
       <span slot="after">After</span>
     </ALLink>

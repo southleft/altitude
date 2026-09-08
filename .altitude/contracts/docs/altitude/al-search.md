@@ -130,11 +130,12 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 _No interaction states recorded._
 
-## Slots (3)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The search's dropdown content | — | — |
+| `emptyMessage` | Content displayed when there are no matching results. | — | — |
 | `error` | If content is slotted, it will display in place of the errorNote property | — | — |
 | `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 

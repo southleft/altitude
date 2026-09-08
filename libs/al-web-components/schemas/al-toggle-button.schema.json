@@ -45,6 +45,10 @@
           "description": "typescript: 'background'",
           "type": "string"
         },
+        "label": {
+          "description": "Accessible name for an icon-only toggle button. Visible slotted text supplies\nthe name when this property is omitted.",
+          "type": "string"
+        },
         "isSelected": {
           "description": "Indicates the selected state of the toggle button.",
           "type": "boolean"
@@ -54,7 +58,7 @@
           "type": "boolean"
         },
         "hasToggle": {
-          "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
+          "description": "Has toggle?\n- Dynamically enabled when the first slotted element is an ALPopover or ALMenu.\n- **true** toggles the isSelected state on activation.\n- **false** selects on activation; Escape or an outside click can deselect.",
           "type": "boolean"
         }
       }

@@ -72,7 +72,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -92,12 +92,9 @@ _No events declared._
 | border-top-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-| letter-spacing | `--al-theme-typography-body-xs-bold-letter-spacing` | — |
-| min-height | `--al-base-space` | — |
-| min-width | `--al-base-space` | — |
-| padding | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-xs-semibold-letter-spacing` | — |
 | padding-left | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-right | `--al-theme-space-xs` | `theme/space/xs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -176,9 +173,9 @@ _No events declared._
 - Tag: `al-badge`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (8)
+## Tokens referenced (7)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius-pill`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-semibold-letter-spacing`
 
 ---
 

@@ -106,6 +106,10 @@
       "description": "The alert's main content or title"
     },
     {
+      "name": "action",
+      "description": "Optional action control displayed with the alert content."
+    },
+    {
       "name": "icon",
       "description": "Slot in an icon to override the default one"
     }
@@ -133,6 +137,12 @@
     "root": {
       "tag": "div",
       "cls": "al-c-alert al-c-alert--danger al-is-active",
+      "bw4": [
+        1,
+        1,
+        1,
+        1
+      ],
       "box": {
         "w": 181.7,
         "h": 50
@@ -298,7 +308,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "space-between"
+            "justify": "space-between",
+            "fillInline": true
           },
           "tokens": {},
           "children": [
@@ -321,6 +332,10 @@
                   "tag": "div",
                   "cls": "al-c-alert__content",
                   "text": "Alert message",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 107.7,
                     "h": 19
@@ -375,6 +390,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-c-alert--danger al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 181.7,
             "h": 50
@@ -540,7 +561,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -563,6 +585,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -617,6 +643,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-c-alert--danger al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 213.7,
             "h": 66
@@ -782,7 +814,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -805,6 +838,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -896,15 +933,15 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "min-height": {
@@ -1027,6 +1064,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 181.7,
             "h": 50
@@ -1188,7 +1231,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -1211,6 +1255,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -1265,6 +1313,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 213.7,
             "h": 66
@@ -1426,7 +1480,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -1449,6 +1504,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -1540,15 +1599,15 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "min-height": {
@@ -1671,6 +1730,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-c-alert--success al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 181.7,
             "h": 50
@@ -1836,7 +1901,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -1859,6 +1925,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -1913,6 +1983,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-c-alert--success al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 213.7,
             "h": 66
@@ -2078,7 +2154,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -2101,6 +2178,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -2192,15 +2273,15 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "min-height": {
@@ -2323,6 +2404,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-c-alert--warning al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 181.7,
             "h": 50
@@ -2488,7 +2575,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -2511,6 +2599,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -2565,6 +2657,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-alert al-c-alert--warning al-is-active",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 213.7,
             "h": 66
@@ -2730,7 +2828,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -2753,6 +2852,10 @@
                       "tag": "div",
                       "cls": "al-c-alert__content",
                       "text": "Alert message",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 107.7,
                         "h": 19
@@ -2844,15 +2947,15 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "min-height": {
@@ -3018,9 +3121,7 @@
     }
   },
   "a11y": {
-    "ariaAttributes": [
-      "variant"
-    ],
+    "ariaAttributes": [],
     "cssParts": []
   },
   "bindings": {

@@ -122,6 +122,7 @@
           "options": [
             "Default",
             "Disabled",
+            "Error",
             "Focus",
             "Hover"
           ],
@@ -138,7 +139,18 @@
         "code": {
           "attribute": "isError"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -318,12 +330,12 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "height": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-size-control",
+                  "figma": "theme/size/control"
                 },
                 "width": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-size-control",
+                  "figma": "theme/size/control"
                 }
               },
               "children": [
@@ -338,7 +350,8 @@
                     "display": "block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "border-bottom-left-radius": {
@@ -367,6 +380,12 @@
                 {
                   "tag": "span",
                   "cls": "al-c-checkbox__custom-check",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 18,
                     "h": 18
@@ -413,14 +432,6 @@
                     "border-top-width": {
                       "code": "--al-theme-border-width",
                       "figma": "theme/border/width/@"
-                    },
-                    "height": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "width": {
-                      "code": "--al-base-space",
-                      "figma": null
                     }
                   },
                   "children": []
@@ -436,7 +447,8 @@
                     "display": "block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -500,6 +512,10 @@
                   "tag": "label",
                   "cls": "al-c-checkbox__label",
                   "text": "Checkbox label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 114.9,
                     "h": 19
@@ -610,12 +626,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -630,7 +646,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -659,6 +676,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -709,14 +732,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -732,7 +747,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -796,6 +812,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -906,12 +926,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -926,7 +946,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -994,17 +1015,9 @@
                           "code": "--al-theme-border-radius-xs",
                           "figma": "theme/border/radius/xs"
                         },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -1020,7 +1033,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -1088,6 +1102,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -1202,12 +1220,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -1222,7 +1240,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -1251,6 +1270,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -1301,14 +1326,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -1324,7 +1341,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -1388,6 +1406,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -1498,12 +1520,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -1518,7 +1540,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -1547,6 +1570,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -1597,14 +1626,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -1620,7 +1641,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -1684,6 +1706,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -1794,12 +1820,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -1814,7 +1840,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -1882,17 +1909,9 @@
                           "code": "--al-theme-border-radius-xs",
                           "figma": "theme/border/radius/xs"
                         },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -1908,7 +1927,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -1976,6 +1996,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -2090,12 +2114,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -2110,7 +2134,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -2139,6 +2164,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -2189,14 +2220,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -2212,7 +2235,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -2276,6 +2300,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -2386,12 +2414,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -2406,7 +2434,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -2435,6 +2464,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -2481,14 +2516,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -2504,7 +2531,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -2568,6 +2596,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -2678,12 +2710,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -2698,7 +2730,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -2727,6 +2760,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -2774,17 +2813,9 @@
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
                         },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -2800,7 +2831,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -2868,6 +2900,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -2982,12 +3018,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -3002,7 +3038,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -3031,6 +3068,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -3081,14 +3124,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -3104,7 +3139,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3168,6 +3204,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -3278,12 +3318,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -3298,7 +3338,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -3327,6 +3368,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -3373,14 +3420,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -3396,7 +3435,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3460,6 +3500,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -3570,12 +3614,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -3590,7 +3634,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -3619,6 +3664,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -3666,17 +3717,9 @@
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
                         },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -3692,7 +3735,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3760,6 +3804,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -3874,12 +3922,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -3894,7 +3942,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -3923,6 +3972,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -3973,14 +4028,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -3996,7 +4043,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -4060,6 +4108,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -4170,12 +4222,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -4190,7 +4242,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -4219,6 +4272,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -4269,14 +4328,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -4292,7 +4343,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -4356,6 +4408,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -4466,12 +4522,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -4486,7 +4542,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -4554,17 +4611,9 @@
                           "code": "--al-theme-border-radius-xs",
                           "figma": "theme/border/radius/xs"
                         },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -4580,7 +4629,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -4648,6 +4698,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -4762,12 +4816,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -4782,7 +4836,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -4811,6 +4866,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -4861,14 +4922,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -4884,7 +4937,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -4948,6 +5002,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 74,
                         "h": 43
@@ -5058,12 +5116,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -5078,7 +5136,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -5107,6 +5166,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -5157,14 +5222,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -5180,7 +5237,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -5244,6 +5302,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -5354,12 +5416,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -5374,7 +5436,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -5442,17 +5505,9 @@
                           "code": "--al-theme-border-radius-xs",
                           "figma": "theme/border/radius/xs"
                         },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -5468,7 +5523,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -5536,6 +5592,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -5650,12 +5710,12 @@
                       "figma": "theme/color/background/transparent-default"
                     },
                     "height": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "width": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     }
                   },
                   "children": [
@@ -5670,7 +5730,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "border-bottom-left-radius": {
@@ -5699,6 +5760,12 @@
                     {
                       "tag": "span",
                       "cls": "al-c-checkbox__custom-check",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 18,
                         "h": 18
@@ -5749,14 +5816,6 @@
                         "border-top-width": {
                           "code": "--al-theme-border-width",
                           "figma": "theme/border/width/@"
-                        },
-                        "height": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "width": {
-                          "code": "--al-base-space",
-                          "figma": null
                         }
                       },
                       "children": []
@@ -5772,7 +5831,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -5836,6 +5896,10 @@
                       "tag": "label",
                       "cls": "al-c-checkbox__label",
                       "text": "Checkbox label",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 114.9,
                         "h": 19
@@ -5910,7 +5974,6 @@
     }
   },
   "tokens": [
-    "--al-base-space",
     "--al-theme-border-radius-lg",
     "--al-theme-border-radius-round",
     "--al-theme-border-radius-xs",
@@ -5922,6 +5985,7 @@
     "--al-theme-color-content-neutral-default",
     "--al-theme-color-focus-ring",
     "--al-theme-opacity-disabled",
+    "--al-theme-size-control",
     "--al-theme-space-xs",
     "--al-theme-space-xxs",
     "--al-theme-typography-body-md",
@@ -5931,6 +5995,13 @@
     "ariaAttributes": [
       "ariaDescribedBy"
     ],
+    "keyboard": [
+      {
+        "keys": "Enter",
+        "action": "Toggles the checked state. Space is the native <input type=\"checkbox\"> activation and needs no handler here."
+      }
+    ],
+    "focus": "The native input takes focus; the visible indicator is a 1px primary border edge plus a 3px soft halo of the same hue (--al-theme-color-border-primary-default / -weak), with outline: none. The solid edge carries the 3:1 WCAG non-text contrast - the halo is decoration.",
     "cssParts": []
   },
   "bindings": {

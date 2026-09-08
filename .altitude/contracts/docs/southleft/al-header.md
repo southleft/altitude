@@ -48,12 +48,17 @@ open/closed state, the button that drives it, and the `aria-expanded` /
 - Node id: not pinned (`nodeId: null`) — resolve this set by **NAME** via the parity manifest (`.altitude/figma-sync/southleft/parity-manifest.json`) or the `altitude_check_parity` MCP tool at need. Node ids for by-name-mapped components are re-minted when their Figma page is rebuilt, so a value hard-coded here would go stale — see `.altitude/PARITY.md`.
 - File: https://www.figma.com/design/jwNINBLB0oBnxx3MQK9gr3/
 
-## Props (2)
+## Props (3)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
+| `elevated` | boolean | — | `false` | — |
 | `menu-open` | boolean | — | — | — |
 | `sticky` | boolean | — | `true` | — |
+
+#### `elevated`
+
+Add the base header's elevated shadow treatment.
 
 #### `menu-open`
 
@@ -73,10 +78,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 `hover`, `focus`
 
-## Slots (4)
+## Slots (5)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
+| `(default)` | Additional navigation content, preserving the base header's unnamed slot. | — | — |
 | `actions` | The right-hand cluster. Native `<button>`s get the circular icon treatment; anything else (an `<al-button>` CTA) is left alone. | — | — |
 | `brand` | The wordmark. Usually `<al-logo variant="southleft">`. | — | — |
 | `mobile` | The panel's links. Supplied separately from `nav` because a slot can project its nodes only once — see the note in the SCSS. | — | — |
@@ -102,6 +108,9 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-neutral-weak` | `theme/color/background/neutral-weak` |
+| border-block-end | `--al-theme-border-width` | `theme/border/width/@` |
+| border-top-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -113,9 +122,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-header`
 - Workspace: `@southleft/sl-web-components`
 
-## Tokens referenced (12)
+## Tokens referenced (15)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-color-background-neutral-weak`, `--al-theme-color-background-primary-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-weak`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius-role-action`, `--al-theme-border-width`, `--al-theme-color-background-neutral-weak`, `--al-theme-color-background-primary-default`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-weak`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-semibold-letter-spacing`, `--al-theme-typography-body-xs-semibold-letter-spacing`
 
 ---
 

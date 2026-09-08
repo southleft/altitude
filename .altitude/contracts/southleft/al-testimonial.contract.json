@@ -76,9 +76,15 @@
     "root": {
       "tag": "figure",
       "cls": "al-c-testimonial",
+      "bw4": [
+        0,
+        0,
+        0,
+        4
+      ],
       "box": {
-        "w": 1074.1,
-        "h": 96
+        "w": 763.1,
+        "h": 88
       },
       "layout": {
         "display": "flex",
@@ -87,6 +93,18 @@
         "justify": "normal"
       },
       "tokens": {
+        "border-inline-start": {
+          "code": "--al-theme-border-width-md",
+          "figma": "theme/border/width/md"
+        },
+        "border-top-color": {
+          "code": "--al-theme-color-border-neutral-default",
+          "figma": "theme/color/border/neutral-default"
+        },
+        "border-top-width": {
+          "code": "--al-theme-border-width-md",
+          "figma": "theme/border/width/md"
+        },
         "column-gap": {
           "code": "--al-theme-space-md",
           "figma": "theme/space/md"
@@ -109,8 +127,8 @@
           "tag": "blockquote",
           "cls": "al-c-testimonial__quote",
           "box": {
-            "w": 1050.1,
-            "h": 36
+            "w": 739.1,
+            "h": 28
           },
           "layout": {
             "display": "block",
@@ -137,9 +155,13 @@
               "tag": "blockquote",
               "cls": "al-c-testimonial__quote",
               "text": "Altitude let us ship a coherent product surface in a quarter, not a year.",
+              "fsPx": 24,
+              "lhPx": 28,
+              "ffCss": "IBM Plex Sans",
+              "fwCss": "400",
               "box": {
-                "w": 1050.1,
-                "h": 32
+                "w": 739.1,
+                "h": 27
               },
               "layout": {
                 "display": "block",
@@ -169,7 +191,7 @@
           "tag": "figcaption",
           "cls": "al-c-testimonial__attribution",
           "box": {
-            "w": 1050.1,
+            "w": 739.1,
             "h": 40
           },
           "layout": {
@@ -212,6 +234,10 @@
                   "tag": "span",
                   "cls": "al-c-testimonial__name",
                   "text": "Jane Cooper",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "600",
                   "box": {
                     "w": 149.4,
                     "h": 20
@@ -228,11 +254,11 @@
                       "figma": "theme/color/content/neutral-default"
                     },
                     "font-weight": {
-                      "code": "--al-font-weight-bold",
-                      "figma": "typography/font-weight/bold"
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
                     },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                      "code": "--al-theme-typography-body-md-semibold-letter-spacing",
                       "figma": null
                     }
                   },
@@ -242,6 +268,10 @@
                   "tag": "span",
                   "cls": "al-c-testimonial__role",
                   "text": "Design Lead, Northwind",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 149.4,
                     "h": 20
@@ -276,12 +306,14 @@
     }
   },
   "tokens": [
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
+    "--al-theme-border-width-md",
+    "--al-theme-color-border-neutral-default",
     "--al-theme-color-content-neutral-default",
     "--al-theme-color-content-neutral-weak",
     "--al-theme-space-md",
     "--al-theme-space-sm",
-    "--al-theme-typography-body-md-bold-letter-spacing",
+    "--al-theme-typography-body-md-semibold-letter-spacing",
     "--al-theme-typography-body-sm",
     "--al-theme-typography-body-sm-letter-spacing",
     "--al-theme-typography-heading-sm",

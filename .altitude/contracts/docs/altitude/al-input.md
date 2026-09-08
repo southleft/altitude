@@ -4,7 +4,7 @@
 
 **Status:** `source` · **Version:** `1.1.0` · **Element:** `<div>`
 
-Component: al-input
+The single-line text field, and the system's reference implementation of a form control. It owns the whole field — label, asterisk, optional marker, field note, error note and character counter — so the surrounding page never has to assemble those parts itself, and it is form-associated, so its value reaches the owning `<form>`'s FormData across the shadow boundary.
 
 ## Figma
 
@@ -21,7 +21,7 @@ Component: al-input
 | `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
-| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
+| `hideLabel` | boolean | — | — | — |
 | `isActive` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
@@ -180,11 +180,6 @@ Value attribute
 **Figma-expression opt-out (T27):** `ariaDescribedBy`, `autoComplete`, `errorNote`, `fieldId`, `fieldNote`, `isActive`, `isReadonly`, `label`, `max`, `maxLength`, `maxLengthValue`, `min`, `minLength`, `name`, `placeholder`, `type`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
-
-### `hideLabel` (Figma property "Label")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
 
 ### `isDisabled` (Figma property "State")
 

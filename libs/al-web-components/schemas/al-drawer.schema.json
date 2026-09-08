@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://southleft.com/altitude/al-drawer.schema.json",
   "title": "ALDrawer (al-drawer)",
-  "description": "Component: al-drawer",
+  "description": "A viewport-edge panel for supporting content, with optional header and footer slots.\nOpens from the left by default; alignment=\"right\" selects the right edge.",
   "type": "object",
   "altitude": {
     "tagName": "al-drawer",
@@ -15,6 +15,18 @@
       "ssr": false
     },
     "slots": [
+      {
+        "description": "Drawer heading content.",
+        "name": "header"
+      },
+      {
+        "description": "Drawer footer content.",
+        "name": "footer"
+      },
+      {
+        "description": "The control that opens the drawer.",
+        "name": "trigger"
+      },
       {
         "description": "The drawer content",
         "name": ""

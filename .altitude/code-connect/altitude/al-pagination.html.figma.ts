@@ -9,7 +9,7 @@
  * Mapped variant axes: Variant.
  * Props the contract marks `omit` (no Figma axis): ariaLabel, currentItem, nextButtonText, pageSize, pageSizeLabel, pageSizeOptions, prevButtonText, totalRecords.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
- * the contract records no default for label, next, prev.
+ * the contract records no default for inpage-label, label, next, prev.
  */
 import figma, { html } from '@figma/code-connect/html';
 
@@ -23,6 +23,7 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558
     <al-pagination
       variant="${props.variant}"
     >
+      <span slot="inpage-label">Inpage label</span>
       <span slot="label">Label</span>
       <span slot="next">Next</span>
       <span slot="prev">Prev</span>

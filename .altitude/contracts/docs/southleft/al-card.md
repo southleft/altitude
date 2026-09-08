@@ -213,7 +213,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `heading-variant`, `variant`
+- ARIA-bearing attributes: —
 - CSS parts: `body`, `card`, `excerpt`, `footer`, `heading`, `image`, `meta`
 
 ## Anatomy & token bindings
@@ -235,7 +235,6 @@ _No events declared._
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
-| padding | `--al-card-padding` | — |
 | padding-bottom | `--al-card-padding` | — |
 | padding-left | `--al-card-padding` | — |
 | padding-right | `--al-card-padding` | — |

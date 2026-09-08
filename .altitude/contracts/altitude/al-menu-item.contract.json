@@ -96,7 +96,8 @@
           "property": "State",
           "options": [
             "Default",
-            "Disabled"
+            "Disabled",
+            "Focus"
           ],
           "pairWith": "State"
         }
@@ -104,7 +105,7 @@
     },
     {
       "name": "isExpandableHeader",
-      "description": "isExpandableHeader property\n- **true** Applies expandable functionality to the menu item",
+      "description": "Legacy compatibility property; it does not control the disclosure button.",
       "type": "boolean",
       "rawType": "boolean",
       "bindings": {
@@ -151,7 +152,8 @@
           "property": "State",
           "options": [
             "Default",
-            "Disabled"
+            "Disabled",
+            "Focus"
           ],
           "pairWith": "State"
         }
@@ -331,7 +333,7 @@
       "tag": "li",
       "cls": "al-c-menu-item",
       "box": {
-        "w": 96.2,
+        "w": 91.2,
         "h": 32
       },
       "layout": {
@@ -352,14 +354,15 @@
           "cls": "al-c-link al-c-menu-item-link",
           "component": "al-link",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "flex-start"
+            "justify": "flex-start",
+            "fillInline": true
           },
           "tokens": {
             "background": {
@@ -403,8 +406,8 @@
               "figma": null
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -449,15 +452,20 @@
               "cls": "al-c-link al-c-menu-item-link",
               "component": "al-link",
               "text": "Menu item",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 64.2,
-                "h": 15
+                "w": 59.2,
+                "h": 14
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -501,8 +509,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -554,7 +562,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -575,14 +583,15 @@
               "cls": "al-c-link al-c-menu-item-link",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -626,8 +635,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -672,15 +681,20 @@
                   "cls": "al-c-link al-c-menu-item-link",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -724,8 +738,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -777,7 +791,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -798,14 +812,15 @@
               "cls": "al-c-link al-is-disabled al-c-menu-item-link",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -849,8 +864,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -899,15 +914,20 @@
                   "cls": "al-c-link al-is-disabled al-c-menu-item-link",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -951,8 +971,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -1008,7 +1028,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -1029,14 +1049,15 @@
               "cls": "al-c-link al-c-menu-item-link",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -1080,8 +1101,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -1126,15 +1147,20 @@
                   "cls": "al-c-link al-c-menu-item-link",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -1178,8 +1204,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -1231,7 +1257,7 @@
           "tag": "li",
           "cls": "al-c-menu-item al-c-menu-item--header",
           "box": {
-            "w": 88.2,
+            "w": 83.2,
             "h": 32
           },
           "layout": {
@@ -1251,7 +1277,7 @@
               "tag": "div",
               "cls": "al-c-menu-item__link al-c-menu-item--no-href",
               "box": {
-                "w": 88.2,
+                "w": 83.2,
                 "h": 32
               },
               "layout": {
@@ -1283,20 +1309,20 @@
                   "figma": "theme/border/radius/@"
                 },
                 "column-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
                   "figma": "typography/font-weight/medium"
                 },
                 "gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "height": {
                   "code": "--al-menu-item-height",
@@ -1323,8 +1349,8 @@
                   "figma": "theme/space/xs"
                 },
                 "row-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 }
               },
               "children": [
@@ -1332,9 +1358,13 @@
                   "tag": "div",
                   "cls": "al-c-menu-item__link al-c-menu-item--no-href",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -1365,20 +1395,20 @@
                       "figma": "theme/border/radius/@"
                     },
                     "column-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
                       "figma": "typography/font-weight/medium"
                     },
                     "gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "height": {
                       "code": "--al-menu-item-height",
@@ -1405,8 +1435,8 @@
                       "figma": "theme/space/xs"
                     },
                     "row-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     }
                   },
                   "children": []
@@ -1422,7 +1452,7 @@
           "tag": "li",
           "cls": "al-c-menu-item al-c-menu-item--header",
           "box": {
-            "w": 88.2,
+            "w": 83.2,
             "h": 32
           },
           "layout": {
@@ -1442,7 +1472,7 @@
               "tag": "div",
               "cls": "al-c-menu-item__link al-c-menu-item--no-href",
               "box": {
-                "w": 88.2,
+                "w": 83.2,
                 "h": 32
               },
               "layout": {
@@ -1474,20 +1504,20 @@
                   "figma": "theme/border/radius/@"
                 },
                 "column-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
                   "figma": "typography/font-weight/medium"
                 },
                 "gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "height": {
                   "code": "--al-menu-item-height",
@@ -1514,8 +1544,8 @@
                   "figma": "theme/space/xs"
                 },
                 "row-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 }
               },
               "children": [
@@ -1523,9 +1553,13 @@
                   "tag": "div",
                   "cls": "al-c-menu-item__link al-c-menu-item--no-href",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -1556,20 +1590,20 @@
                       "figma": "theme/border/radius/@"
                     },
                     "column-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
                       "figma": "typography/font-weight/medium"
                     },
                     "gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "height": {
                       "code": "--al-menu-item-height",
@@ -1596,8 +1630,8 @@
                       "figma": "theme/space/xs"
                     },
                     "row-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     }
                   },
                   "children": []
@@ -1613,7 +1647,7 @@
           "tag": "li",
           "cls": "al-c-menu-item al-c-menu-item--header",
           "box": {
-            "w": 88.2,
+            "w": 83.2,
             "h": 32
           },
           "layout": {
@@ -1633,7 +1667,7 @@
               "tag": "div",
               "cls": "al-c-menu-item__link al-c-menu-item--no-href",
               "box": {
-                "w": 88.2,
+                "w": 83.2,
                 "h": 32
               },
               "layout": {
@@ -1665,20 +1699,20 @@
                   "figma": "theme/border/radius/@"
                 },
                 "column-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
                   "figma": "typography/font-weight/medium"
                 },
                 "gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "height": {
                   "code": "--al-menu-item-height",
@@ -1705,8 +1739,8 @@
                   "figma": "theme/space/xs"
                 },
                 "row-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 }
               },
               "children": [
@@ -1714,9 +1748,13 @@
                   "tag": "div",
                   "cls": "al-c-menu-item__link al-c-menu-item--no-href",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -1747,20 +1785,20 @@
                       "figma": "theme/border/radius/@"
                     },
                     "column-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
                       "figma": "typography/font-weight/medium"
                     },
                     "gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "height": {
                       "code": "--al-menu-item-height",
@@ -1787,8 +1825,8 @@
                       "figma": "theme/space/xs"
                     },
                     "row-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     }
                   },
                   "children": []
@@ -1804,7 +1842,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -1825,14 +1863,15 @@
               "cls": "al-c-link al-c-menu-item-link",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -1876,8 +1915,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -1922,15 +1961,20 @@
                   "cls": "al-c-link al-c-menu-item-link",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -1974,8 +2018,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -2027,7 +2071,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -2048,14 +2092,15 @@
               "cls": "al-c-link al-is-disabled al-c-menu-item-link",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -2099,8 +2144,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2149,15 +2194,20 @@
                   "cls": "al-c-link al-is-disabled al-c-menu-item-link",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -2201,8 +2251,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -2258,7 +2308,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -2279,14 +2329,15 @@
               "cls": "al-c-link al-c-menu-item-link",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -2330,8 +2381,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2376,15 +2427,20 @@
                   "cls": "al-c-link al-c-menu-item-link",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -2428,8 +2484,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -2481,7 +2537,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -2502,14 +2558,15 @@
               "cls": "al-c-link al-c-menu-item-link al-is-selected",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -2553,8 +2610,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2599,15 +2656,20 @@
                   "cls": "al-c-link al-c-menu-item-link al-is-selected",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -2651,8 +2713,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -2704,7 +2766,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -2725,14 +2787,15 @@
               "cls": "al-c-link al-is-disabled al-c-menu-item-link al-is-selected",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -2776,8 +2839,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2826,15 +2889,20 @@
                   "cls": "al-c-link al-is-disabled al-c-menu-item-link al-is-selected",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -2878,8 +2946,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -2935,7 +3003,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -2956,14 +3024,15 @@
               "cls": "al-c-link al-c-menu-item-link al-is-selected",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -3007,8 +3076,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -3053,15 +3122,20 @@
                   "cls": "al-c-link al-c-menu-item-link al-is-selected",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -3105,8 +3179,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -3158,7 +3232,7 @@
           "tag": "li",
           "cls": "al-c-menu-item al-c-menu-item--header",
           "box": {
-            "w": 88.2,
+            "w": 83.2,
             "h": 32
           },
           "layout": {
@@ -3178,7 +3252,7 @@
               "tag": "div",
               "cls": "al-c-menu-item__link al-c-menu-item--no-href",
               "box": {
-                "w": 88.2,
+                "w": 83.2,
                 "h": 32
               },
               "layout": {
@@ -3210,20 +3284,20 @@
                   "figma": "theme/border/radius/@"
                 },
                 "column-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
                   "figma": "typography/font-weight/medium"
                 },
                 "gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "height": {
                   "code": "--al-menu-item-height",
@@ -3250,8 +3324,8 @@
                   "figma": "theme/space/xs"
                 },
                 "row-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 }
               },
               "children": [
@@ -3259,9 +3333,13 @@
                   "tag": "div",
                   "cls": "al-c-menu-item__link al-c-menu-item--no-href",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -3292,20 +3370,20 @@
                       "figma": "theme/border/radius/@"
                     },
                     "column-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
                       "figma": "typography/font-weight/medium"
                     },
                     "gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "height": {
                       "code": "--al-menu-item-height",
@@ -3332,8 +3410,8 @@
                       "figma": "theme/space/xs"
                     },
                     "row-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     }
                   },
                   "children": []
@@ -3349,7 +3427,7 @@
           "tag": "li",
           "cls": "al-c-menu-item al-c-menu-item--header",
           "box": {
-            "w": 88.2,
+            "w": 83.2,
             "h": 32
           },
           "layout": {
@@ -3369,7 +3447,7 @@
               "tag": "div",
               "cls": "al-c-menu-item__link al-c-menu-item--no-href",
               "box": {
-                "w": 88.2,
+                "w": 83.2,
                 "h": 32
               },
               "layout": {
@@ -3401,20 +3479,20 @@
                   "figma": "theme/border/radius/@"
                 },
                 "column-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
                   "figma": "typography/font-weight/medium"
                 },
                 "gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "height": {
                   "code": "--al-menu-item-height",
@@ -3441,8 +3519,8 @@
                   "figma": "theme/space/xs"
                 },
                 "row-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 }
               },
               "children": [
@@ -3450,9 +3528,13 @@
                   "tag": "div",
                   "cls": "al-c-menu-item__link al-c-menu-item--no-href",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -3483,20 +3565,20 @@
                       "figma": "theme/border/radius/@"
                     },
                     "column-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
                       "figma": "typography/font-weight/medium"
                     },
                     "gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "height": {
                       "code": "--al-menu-item-height",
@@ -3523,8 +3605,8 @@
                       "figma": "theme/space/xs"
                     },
                     "row-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     }
                   },
                   "children": []
@@ -3540,7 +3622,7 @@
           "tag": "li",
           "cls": "al-c-menu-item al-c-menu-item--header",
           "box": {
-            "w": 88.2,
+            "w": 83.2,
             "h": 32
           },
           "layout": {
@@ -3560,7 +3642,7 @@
               "tag": "div",
               "cls": "al-c-menu-item__link al-c-menu-item--no-href",
               "box": {
-                "w": 88.2,
+                "w": 83.2,
                 "h": 32
               },
               "layout": {
@@ -3592,20 +3674,20 @@
                   "figma": "theme/border/radius/@"
                 },
                 "column-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
                   "figma": "typography/font-weight/medium"
                 },
                 "gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 },
                 "height": {
                   "code": "--al-menu-item-height",
@@ -3632,8 +3714,8 @@
                   "figma": "theme/space/xs"
                 },
                 "row-gap": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-space-xs",
+                  "figma": "theme/space/xs"
                 }
               },
               "children": [
@@ -3641,9 +3723,13 @@
                   "tag": "div",
                   "cls": "al-c-menu-item__link al-c-menu-item--no-href",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -3674,20 +3760,20 @@
                       "figma": "theme/border/radius/@"
                     },
                     "column-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
                       "figma": "typography/font-weight/medium"
                     },
                     "gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     },
                     "height": {
                       "code": "--al-menu-item-height",
@@ -3714,8 +3800,8 @@
                       "figma": "theme/space/xs"
                     },
                     "row-gap": {
-                      "code": "--al-base-space",
-                      "figma": null
+                      "code": "--al-theme-space-xs",
+                      "figma": "theme/space/xs"
                     }
                   },
                   "children": []
@@ -3731,7 +3817,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -3752,14 +3838,15 @@
               "cls": "al-c-link al-c-menu-item-link al-is-selected",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -3803,8 +3890,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -3849,15 +3936,20 @@
                   "cls": "al-c-link al-c-menu-item-link al-is-selected",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -3901,8 +3993,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -3954,7 +4046,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -3975,14 +4067,15 @@
               "cls": "al-c-link al-is-disabled al-c-menu-item-link al-is-selected",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -4026,8 +4119,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -4076,15 +4169,20 @@
                   "cls": "al-c-link al-is-disabled al-c-menu-item-link al-is-selected",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -4128,8 +4226,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -4185,7 +4283,7 @@
           "tag": "li",
           "cls": "al-c-menu-item",
           "box": {
-            "w": 96.2,
+            "w": 91.2,
             "h": 32
           },
           "layout": {
@@ -4206,14 +4304,15 @@
               "cls": "al-c-link al-c-menu-item-link al-is-selected",
               "component": "al-link",
               "box": {
-                "w": 96.2,
+                "w": 91.2,
                 "h": 32
               },
               "layout": {
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "flex-start"
+                "justify": "flex-start",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -4257,8 +4356,8 @@
                   "figma": null
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -4303,15 +4402,20 @@
                   "cls": "al-c-link al-c-menu-item-link al-is-selected",
                   "component": "al-link",
                   "text": "Menu item",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "500",
                   "box": {
-                    "w": 64.2,
-                    "h": 15
+                    "w": 59.2,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "flex-start"
+                    "justify": "flex-start",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -4355,8 +4459,8 @@
                       "figma": null
                     },
                     "font-size": {
-                      "code": "--al-font-size-13",
-                      "figma": null
+                      "code": "--al-font-size-12",
+                      "figma": "typography/font-size/12"
                     },
                     "font-weight": {
                       "code": "--al-font-weight-medium",
@@ -4405,7 +4509,7 @@
     ]
   },
   "tokens": [
-    "--al-font-size-13",
+    "--al-font-size-12",
     "--al-font-weight-medium",
     "--al-menu-item-height",
     "--al-theme-border-radius",

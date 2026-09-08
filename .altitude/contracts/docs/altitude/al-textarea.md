@@ -21,7 +21,7 @@ Component: al-textarea
 | `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
-| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
+| `hideLabel` | boolean | — | — | — |
 | `isActive` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
@@ -29,7 +29,7 @@ Component: al-textarea
 | `isOptional` | boolean | — | — | — |
 | `isReadonly` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isRequired` | boolean | — | — | — |
-| `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
+| `label` | string | — | `'Label'` | — |
 | `maxLength` | number | — | — | _not expressed in Figma (by design)_ |
 | `maxLengthValue` | number | — | — | _not expressed in Figma (by design)_ |
 | `minLength` | number | — | — | _not expressed in Figma (by design)_ |
@@ -151,11 +151,6 @@ Value attribute
 
 ## Variant axes
 
-### `hideLabel` (Figma property "Label")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
-
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
@@ -170,11 +165,6 @@ Value attribute
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
-
-### `label` (Figma property "Label")
-
-- Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
 
 ## States
 
@@ -255,9 +245,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-textarea`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (19)
+## Tokens referenced (18)
 
-`--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-border-neutral-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-border-primary-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-border-neutral-strong`, `--al-theme-color-border-primary-default`, `--al-theme-color-border-primary-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

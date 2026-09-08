@@ -12,7 +12,7 @@
   "props": [
     {
       "name": "hasToggle",
-      "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state",
+      "description": "Has toggle?\n- Dynamically enabled when the first slotted element is an ALPopover or ALMenu.\n- **true** toggles the isSelected state on activation.\n- **false** selects on activation; Escape or an outside click can deselect.",
       "type": "boolean",
       "rawType": "boolean",
       "bindings": {
@@ -63,6 +63,18 @@
           ],
           "pairWith": "Size"
         }
+      }
+    },
+    {
+      "name": "label",
+      "description": "Accessible name for an icon-only toggle button. Visible slotted text supplies\nthe name when this property is omitted.",
+      "type": "string",
+      "rawType": "string",
+      "bindings": {
+        "code": {
+          "attribute": "label"
+        },
+        "figma": null
       }
     },
     {
@@ -118,7 +130,8 @@
     ]
   },
   "states": [
-    "hover"
+    "hover",
+    "focus"
   ],
   "anatomySource": "measured",
   "anatomyCase": "Variant=background,Selected=no,Size=default",
@@ -126,8 +139,14 @@
     "root": {
       "tag": "div",
       "cls": "al-c-toggle-button al-c-toggle-button--background",
+      "bw4": [
+        1,
+        1,
+        1,
+        1
+      ],
       "box": {
-        "w": 83.6,
+        "w": 80.8,
         "h": 34
       },
       "layout": {
@@ -178,8 +197,8 @@
           "figma": "theme/border/width/@"
         },
         "font-size": {
-          "code": "--al-font-size-13",
-          "figma": null
+          "code": "--al-font-size-12",
+          "figma": "typography/font-size/12"
         },
         "font-weight": {
           "code": "--al-font-weight-bold",
@@ -192,10 +211,6 @@
         "min-height": {
           "code": "--al-theme-size-control-sm",
           "figma": "theme/size/control-sm"
-        },
-        "padding": {
-          "code": "--al-theme-space-sm",
-          "figma": "theme/space/sm"
         },
         "padding-left": {
           "code": "--al-theme-space-sm",
@@ -211,7 +226,7 @@
           "tag": "div",
           "cls": "al-c-toggle-button__content",
           "box": {
-            "w": 57.6,
+            "w": 54.8,
             "h": 32
           },
           "layout": {
@@ -299,9 +314,13 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "text": "Toggle",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "700",
               "box": {
-                "w": 41.6,
-                "h": 15
+                "w": 38.8,
+                "h": 14
               },
               "layout": {
                 "display": "flex",
@@ -395,8 +414,14 @@
         "root": {
           "tag": "div",
           "cls": "al-c-toggle-button al-c-toggle-button--background",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 83.6,
+            "w": 80.8,
             "h": 34
           },
           "layout": {
@@ -447,8 +472,8 @@
               "figma": "theme/border/width/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -461,10 +486,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -480,7 +501,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 57.6,
+                "w": 54.8,
                 "h": 32
               },
               "layout": {
@@ -568,9 +589,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -664,8 +689,14 @@
         "root": {
           "tag": "div",
           "cls": "al-c-toggle-button al-c-toggle-button--background al-c-toggle-button--small",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 67.6,
+            "w": 64.8,
             "h": 34
           },
           "layout": {
@@ -716,8 +747,8 @@
               "figma": "theme/border/width/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -730,10 +761,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -749,7 +776,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 41.6,
+                "w": 38.8,
                 "h": 32
               },
               "layout": {
@@ -817,9 +844,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -893,8 +924,14 @@
         "root": {
           "tag": "div",
           "cls": "al-c-toggle-button al-c-toggle-button--background al-is-selected",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 83.6,
+            "w": 80.8,
             "h": 34
           },
           "layout": {
@@ -945,8 +982,8 @@
               "figma": "theme/border/width/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -959,10 +996,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -978,7 +1011,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 57.6,
+                "w": 54.8,
                 "h": 32
               },
               "layout": {
@@ -1066,9 +1099,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -1162,8 +1199,14 @@
         "root": {
           "tag": "div",
           "cls": "al-c-toggle-button al-c-toggle-button--background al-c-toggle-button--small al-is-selected",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 67.6,
+            "w": 64.8,
             "h": 34
           },
           "layout": {
@@ -1214,8 +1257,8 @@
               "figma": "theme/border/width/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -1228,10 +1271,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -1247,7 +1286,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 41.6,
+                "w": 38.8,
                 "h": 32
               },
               "layout": {
@@ -1315,9 +1354,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -1392,7 +1435,7 @@
           "tag": "div",
           "cls": "al-c-toggle-button",
           "box": {
-            "w": 81.6,
+            "w": 78.8,
             "h": 32
           },
           "layout": {
@@ -1431,8 +1474,8 @@
               "figma": "theme/border/radius/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -1445,10 +1488,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -1464,7 +1503,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 57.6,
+                "w": 54.8,
                 "h": 32
               },
               "layout": {
@@ -1552,9 +1591,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -1649,7 +1692,7 @@
           "tag": "div",
           "cls": "al-c-toggle-button al-c-toggle-button--small",
           "box": {
-            "w": 65.6,
+            "w": 62.8,
             "h": 32
           },
           "layout": {
@@ -1688,8 +1731,8 @@
               "figma": "theme/border/radius/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -1702,10 +1745,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -1721,7 +1760,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 41.6,
+                "w": 38.8,
                 "h": 32
               },
               "layout": {
@@ -1789,9 +1828,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -1866,7 +1909,7 @@
           "tag": "div",
           "cls": "al-c-toggle-button al-is-selected",
           "box": {
-            "w": 81.6,
+            "w": 78.8,
             "h": 32
           },
           "layout": {
@@ -1905,8 +1948,8 @@
               "figma": "theme/border/radius/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -1919,10 +1962,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -1938,7 +1977,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 57.6,
+                "w": 54.8,
                 "h": 32
               },
               "layout": {
@@ -2026,9 +2065,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -2123,7 +2166,7 @@
           "tag": "div",
           "cls": "al-c-toggle-button al-c-toggle-button--small al-is-selected",
           "box": {
-            "w": 65.6,
+            "w": 62.8,
             "h": 32
           },
           "layout": {
@@ -2162,8 +2205,8 @@
               "figma": "theme/border/radius/@"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-bold",
@@ -2176,10 +2219,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -2195,7 +2234,7 @@
               "tag": "div",
               "cls": "al-c-toggle-button__content",
               "box": {
-                "w": 41.6,
+                "w": 38.8,
                 "h": 32
               },
               "layout": {
@@ -2263,9 +2302,13 @@
                   "tag": "div",
                   "cls": "al-c-toggle-button__content",
                   "text": "Toggle",
+                  "fsPx": 12,
+                  "lhPx": 12,
+                  "ffCss": "Public Sans",
+                  "fwCss": "700",
                   "box": {
-                    "w": 41.6,
-                    "h": 15
+                    "w": 38.8,
+                    "h": 14
                   },
                   "layout": {
                     "display": "flex",
@@ -2357,28 +2400,59 @@
             "figma": "theme/color/background/neutral-strong"
           }
         }
+      },
+      "focus": {
+        "0": {
+          "outline": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-color": {
+            "code": "--al-theme-color-focus-ring",
+            "figma": "theme/color/focus-ring"
+          },
+          "outline-offset": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          },
+          "outline-width": {
+            "code": "--al-theme-border-width-md",
+            "figma": "theme/border/width/md"
+          }
+        }
       }
     }
   },
   "tokens": [
-    "--al-font-size-13",
+    "--al-font-size-12",
     "--al-font-weight-bold",
     "--al-theme-border-radius",
     "--al-theme-border-width",
+    "--al-theme-border-width-md",
     "--al-theme-color-background-neutral-default",
     "--al-theme-color-background-neutral-strong",
     "--al-theme-color-background-transparent-default",
     "--al-theme-color-border-neutral-weak",
     "--al-theme-color-content-neutral-default",
+    "--al-theme-color-focus-ring",
     "--al-theme-size-control-sm",
     "--al-theme-space-sm",
     "--al-theme-space-xs",
     "--al-theme-typography-body-sm-letter-spacing"
   ],
   "a11y": {
-    "ariaAttributes": [
-      "variant"
+    "ariaAttributes": [],
+    "keyboard": [
+      {
+        "keys": "Enter",
+        "action": "Selects the button when it is not already selected."
+      },
+      {
+        "keys": "Escape",
+        "action": "Deselects the button when it is selected."
+      }
     ],
+    "focus": null,
     "cssParts": []
   },
   "bindings": {

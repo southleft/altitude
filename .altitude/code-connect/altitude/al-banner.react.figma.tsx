@@ -6,7 +6,7 @@
  * Figma Code Connect — React wrapper surface for the "Banner"
  * component set (node 3570:1351).
  *
- * Mapped variant axes: none.
+ * Mapped variant axes: Dismissible.
  * Props the contract marks `omit` (no Figma axis): isDismissed.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for icon, link.
@@ -15,9 +15,15 @@ import figma from '@figma/code-connect';
 import { ALBanner } from '@southleft/al-react';
 
 figma.connect(ALBanner, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3570-1351', {
-  props: {},
+  props: {
+    isDismissible: figma.enum('Dismissible', {
+      Yes: true,
+    }),
+  },
   example: (props) => (
-    <ALBanner>
+    <ALBanner
+      isDismissible={props.isDismissible}
+    >
       Banner
       <span slot="icon">Icon</span>
       <span slot="link">Link</span>

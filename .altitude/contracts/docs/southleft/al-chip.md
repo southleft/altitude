@@ -75,7 +75,7 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -98,13 +98,13 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
+| font-size | `--al-font-size-12` | `typography/font-size/12` |
+| font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
-| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding-bottom | `--al-theme-space-xxs` | `theme/space/xxs` |
+| min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
 | padding-left | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-right | `--al-theme-space-sm` | `theme/space/sm` |
-| padding-top | `--al-theme-space-xxs` | `theme/space/xxs` |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 ### State overrides (measured, root node)
@@ -184,9 +184,9 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 - Tag: `al-chip`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (13)
 
-`--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-12`, `--al-font-weight-medium`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

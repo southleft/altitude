@@ -28,6 +28,7 @@ figma.connect(ALButton, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?no
     }),
     variant: figma.enum('Variant', {
       Bare: 'bare',
+      Neutral: 'neutral',
       Secondary: 'secondary',
       Tertiary: 'tertiary',
     }),

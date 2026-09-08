@@ -59,11 +59,12 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 `hover`, `disabled`
 
-## Slots (1)
+## Slots (2)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The accordion panel content | — | — |
+| `header` | The panel heading content inside the disclosure button. | — | — |
 
 ## Events (2)
 
@@ -114,7 +115,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (8)
 
-`--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-icon-lg`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-typography-body-sm-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-icon-lg`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

@@ -8,6 +8,8 @@
  *
  * Mapped variant axes: State, Current, State, State, Variant.
  * Props the contract marks `omit` (no Figma axis): behavior, flyoutPosition, href, onClick, target, value.
+ * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
+ * the contract records no default for before, after, items.
  */
 import figma from '@figma/code-connect';
 import { ALListItem } from '@southleft/al-react';
@@ -38,7 +40,10 @@ figma.connect(ALListItem, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?
       isError={props.isError}
       variant={props.variant}
     >
+      <span slot="before">Before</span>
       List Item
+      <span slot="after">After</span>
+      <span slot="items">Items</span>
     </ALListItem>
   ),
 });

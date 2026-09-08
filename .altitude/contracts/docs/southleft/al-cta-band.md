@@ -84,7 +84,11 @@ _No events declared._
 
 ### Root — `<div class="sl-c-cta-band">`
 
-_None._
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| border-block-start | `--al-theme-border-width` | `theme/border/width/@` |
+| border-top-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -96,9 +100,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-cta-band`
 - Workspace: `@southleft/sl-web-components`
 
-## Tokens referenced (12)
+## Tokens referenced (15)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-color-background-primary-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-default`, `--al-theme-color-content-primary-weak`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius-role-action`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-default`, `--al-theme-color-content-primary-weak`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-semibold-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-semibold-letter-spacing`
 
 ---
 

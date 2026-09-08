@@ -70,7 +70,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -82,9 +82,9 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | column-gap | `--al-theme-space-sm` | `theme/space/sm` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
 | gap | `--al-theme-space-sm` | `theme/space/sm` |
-| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
+| letter-spacing | `--al-theme-typography-body-md-semibold-letter-spacing` | — |
 | row-gap | `--al-theme-space-sm` | `theme/space/sm` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
@@ -97,9 +97,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-stepper-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (10)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-weak`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-weak`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-semibold-letter-spacing`
 
 ---
 

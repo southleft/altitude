@@ -3,10 +3,10 @@
   "project": "altitude",
   "counts": {
     "contracts": 102,
-    "componentsCovered": 34,
-    "componentsSkipped": 68,
-    "htmlFiles": 34,
-    "reactFiles": 34
+    "componentsCovered": 40,
+    "componentsSkipped": 62,
+    "htmlFiles": 40,
+    "reactFiles": 40
   },
   "componentsWithoutFigmaNodeId": [
     "al-accordion",
@@ -14,12 +14,9 @@
     "al-alert",
     "al-avatar",
     "al-calendar",
-    "al-card",
     "al-command-palette",
     "al-date-picker",
     "al-date-time-picker",
-    "al-dialog",
-    "al-drawer",
     "al-dropdown-panel",
     "al-focus-trap",
     "al-footer",
@@ -64,9 +61,7 @@
     "al-layout",
     "al-list",
     "al-logo",
-    "al-popover",
     "al-search",
-    "al-select",
     "al-skeleton",
     "al-spinner",
     "al-stat",
@@ -75,8 +70,7 @@
     "al-testimonial",
     "al-theme",
     "al-time-selector-list",
-    "al-toast",
-    "al-tooltip"
+    "al-toast"
   ],
   "componentsWithoutReactWrapper": [],
   "unparsedReactWrappers": [],
@@ -1067,32 +1061,13 @@
       "detail": "boolean prop against axis \"Role\" [Expandable, Header, Item]: no option matches the prop name and the axis is not a Yes/No, On/Off or Hidden/Shown pair"
     },
     {
-      "tag": "al-menu-item",
-      "prop": "isFocused",
-      "axis": "State",
-      "detail": "boolean prop against axis \"State\" [Default, Disabled]: no option matches the prop name and the axis is not a Yes/No, On/Off or Hidden/Shown pair"
-    },
-    {
-      "tag": "al-table",
-      "prop": "sortDirection",
-      "axis": "Sort",
-      "detail": "prop is typed `ALTableSortDirection`, which enumerates no code values, but the contract binds it to variant axis \"Sort\" [Ascending, None]"
-    },
-    {
-      "tag": "al-textarea",
+      "tag": "al-select",
       "prop": "label",
       "axis": "Label",
       "detail": "prop is typed `string`, which enumerates no code values, but the contract binds it to variant axis \"Label\" [Hidden, Shown]"
     }
   ],
   "optionsUnmapped": [
-    {
-      "tag": "al-button",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "\"Danger\" on axis \"Variant\" matches no code value of `'neutral' | 'bare' | 'secondary' | 'tertiary'`",
-      "option": "Danger"
-    },
     {
       "tag": "al-button",
       "prop": "variant",
@@ -1106,34 +1081,6 @@
       "axis": "Orientation",
       "detail": "\"Horizontal\" on axis \"Orientation\" matches no code value of `'row' | 'column'`",
       "option": "Horizontal"
-    },
-    {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "\"Danger\" on axis \"Variant\" matches no code value of `'neutral' | 'bare' | 'primary' | 'secondary' | 'tertiary'`",
-      "option": "Danger"
-    },
-    {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "\"Info\" on axis \"Variant\" matches no code value of `'neutral' | 'bare' | 'primary' | 'secondary' | 'tertiary'`",
-      "option": "Info"
-    },
-    {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "\"Success\" on axis \"Variant\" matches no code value of `'neutral' | 'bare' | 'primary' | 'secondary' | 'tertiary'`",
-      "option": "Success"
-    },
-    {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "\"Warning\" on axis \"Variant\" matches no code value of `'neutral' | 'bare' | 'primary' | 'secondary' | 'tertiary'`",
-      "option": "Warning"
     },
     {
       "tag": "al-radio-group",
@@ -1159,6 +1106,13 @@
       "option": "Default"
     },
     {
+      "tag": "al-card",
+      "prop": "variant",
+      "axis": "Variant",
+      "detail": "\"Default\" on axis \"Variant\" -> attribute omitted",
+      "option": "Default"
+    },
+    {
       "tag": "al-checkbox-group",
       "prop": "direction",
       "axis": "Orientation",
@@ -1173,18 +1127,18 @@
       "option": "Default"
     },
     {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "\"Default\" on axis \"Variant\" -> attribute omitted",
-      "option": "Default"
-    },
-    {
       "tag": "al-divider",
       "prop": "variant",
       "axis": "Orientation",
       "detail": "\"Horizontal\" is the unset half of the two-option axis \"Orientation\" -> attribute omitted",
       "option": "Horizontal"
+    },
+    {
+      "tag": "al-drawer",
+      "prop": "alignment",
+      "axis": "Alignment",
+      "detail": "\"Default\" on axis \"Alignment\" -> attribute omitted",
+      "option": "Default"
     },
     {
       "tag": "al-heading",
@@ -1212,6 +1166,13 @@
       "prop": "variant",
       "axis": "Variant",
       "detail": "\"Default\" on axis \"Variant\" -> attribute omitted",
+      "option": "Default"
+    },
+    {
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "\"Default\" on axis \"Position\" -> attribute omitted",
       "option": "Default"
     },
     {
@@ -1248,17 +1209,17 @@
       "axis": "Variant",
       "detail": "\"Default\" on axis \"Variant\" -> attribute omitted",
       "option": "Default"
+    },
+    {
+      "tag": "al-tooltip",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "\"Default\" on axis \"Position\" -> attribute omitted",
+      "option": "Default"
     }
   ],
   "codeValuesWithNoFigmaOption": [
     {
-      "tag": "al-button",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "code value \"neutral\" has no option on Figma axis \"Variant\"",
-      "option": "neutral"
-    },
-    {
       "tag": "al-checkbox-group",
       "prop": "direction",
       "axis": "Orientation",
@@ -1273,32 +1234,53 @@
       "option": "row"
     },
     {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "code value \"bare\" has no option on Figma axis \"Variant\"",
-      "option": "bare"
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "code value \"bottom-left\" has no option on Figma axis \"Position\"",
+      "option": "bottom-left"
     },
     {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "code value \"neutral\" has no option on Figma axis \"Variant\"",
-      "option": "neutral"
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "code value \"bottom-right\" has no option on Figma axis \"Position\"",
+      "option": "bottom-right"
     },
     {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "code value \"primary\" has no option on Figma axis \"Variant\"",
-      "option": "primary"
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "code value \"left-top\" has no option on Figma axis \"Position\"",
+      "option": "left-top"
     },
     {
-      "tag": "al-chip",
-      "prop": "variant",
-      "axis": "Variant",
-      "detail": "code value \"tertiary\" has no option on Figma axis \"Variant\"",
-      "option": "tertiary"
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "code value \"right-top\" has no option on Figma axis \"Position\"",
+      "option": "right-top"
+    },
+    {
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "code value \"top-center\" has no option on Figma axis \"Position\"",
+      "option": "top-center"
+    },
+    {
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "code value \"top-left\" has no option on Figma axis \"Position\"",
+      "option": "top-left"
+    },
+    {
+      "tag": "al-popover",
+      "prop": "position",
+      "axis": "Position",
+      "detail": "code value \"top-right\" has no option on Figma axis \"Position\"",
+      "option": "top-right"
     },
     {
       "tag": "al-radio-group",
@@ -1313,6 +1295,13 @@
       "axis": "Orientation",
       "detail": "code value \"row\" has no option on Figma axis \"Orientation\"",
       "option": "row"
+    },
+    {
+      "tag": "al-table",
+      "prop": "sortDirection",
+      "axis": "Sort",
+      "detail": "code value \"descending\" has no option on Figma axis \"Sort\"",
+      "option": "descending"
     }
   ],
   "slotsRenderedAsPlaceholders": [
@@ -1341,6 +1330,42 @@
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     },
     {
+      "tag": "al-card",
+      "slot": "action-right",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-card",
+      "slot": "actions-end",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-card",
+      "slot": "actions-start",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-card",
+      "slot": "footer",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-card",
+      "slot": "header",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-card",
+      "slot": "image",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
       "tag": "al-checkbox",
       "slot": "error",
       "figmaPlaceholder": null,
@@ -1373,6 +1398,42 @@
     {
       "tag": "al-combobox",
       "slot": "field-note",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-dialog",
+      "slot": "footer",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-dialog",
+      "slot": "header",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-dialog",
+      "slot": "trigger",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-drawer",
+      "slot": "footer",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-drawer",
+      "slot": "header",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-drawer",
+      "slot": "trigger",
       "figmaPlaceholder": null,
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     },
@@ -1385,6 +1446,18 @@
     {
       "tag": "al-empty-state",
       "slot": "icon",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-file-upload",
+      "slot": "error",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-file-upload",
+      "slot": "field-note",
       "figmaPlaceholder": null,
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     },
@@ -1431,8 +1504,32 @@
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     },
     {
+      "tag": "al-list-item",
+      "slot": "after",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-list-item",
+      "slot": "before",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-list-item",
+      "slot": "items",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
       "tag": "al-menu-item",
       "slot": "before",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-pagination",
+      "slot": "inpage-label",
       "figmaPlaceholder": null,
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     },
@@ -1451,6 +1548,24 @@
     {
       "tag": "al-pagination",
       "slot": "prev",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-popover",
+      "slot": "footer",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-popover",
+      "slot": "header",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-popover",
+      "slot": "trigger",
       "figmaPlaceholder": null,
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     },
@@ -1492,7 +1607,37 @@
     },
     {
       "tag": "al-range",
+      "slot": "error",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-range",
+      "slot": "field-note",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-range",
       "slot": "label",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-select",
+      "slot": "before",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-select",
+      "slot": "error",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-select",
+      "slot": "field-note",
       "figmaPlaceholder": null,
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     },
@@ -1523,6 +1668,18 @@
     {
       "tag": "al-textarea",
       "slot": "field-note",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-tooltip",
+      "slot": "prefix",
+      "figmaPlaceholder": null,
+      "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
+    },
+    {
+      "tag": "al-tooltip",
+      "slot": "trigger",
       "figmaPlaceholder": null,
       "reason": "slot content is consumer-supplied; the contract records no default. `figmaPlaceholder`, where present, names a FIGMA-side placeholder and is not a code tag."
     }

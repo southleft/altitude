@@ -22,8 +22,8 @@ Component: al-input-stepper
 | `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Focus`, `Hover` |
-| `isError` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isReadonly` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isRequired` | boolean | — | `false` | _not expressed in Figma (by design)_ |
 | `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
@@ -127,7 +127,12 @@ Variant
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ### `label` (Figma property "Label")
 
@@ -158,7 +163,7 @@ Variant
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaDescribedBy`, `variant`
+- ARIA-bearing attributes: `ariaDescribedBy`
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -185,7 +190,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (21)
 
-`--al-button-height`, `--al-button-padding`, `--al-button-width`, `--al-font-family-mono`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-button-height`, `--al-button-padding`, `--al-button-width`, `--al-font-family-mono`, `--al-font-weight-semibold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

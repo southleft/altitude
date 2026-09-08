@@ -94,11 +94,14 @@ Variants
 
 `hover`, `focus`, `disabled`
 
-## Slots (1)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The content of the list item | — | — |
+| `after` | Optional trailing content. | — | — |
+| `before` | Optional leading content. | — | — |
+| `items` | Nested list items displayed when this item expands. | — | — |
 
 ## Events (0)
 
@@ -106,7 +109,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings

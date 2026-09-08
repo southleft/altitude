@@ -42,7 +42,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -67,9 +67,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-stepper`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (18)
+## Tokens referenced (17)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-inverse-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-weak`, `--al-theme-icon`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-width`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-border-primary-default`, `--al-theme-color-content-inverse-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-weak`, `--al-theme-icon`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-semibold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

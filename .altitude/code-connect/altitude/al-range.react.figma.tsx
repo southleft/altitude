@@ -6,10 +6,10 @@
  * Figma Code Connect — React wrapper surface for the "Range"
  * component set (node 3558:61875).
  *
- * Mapped variant axes: Behavior, Output.
+ * Mapped variant axes: Behavior, Output, State.
  * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, errorNote, fieldId, fieldNote, handleLabelUnit, label, lowerRangeValue, max, maxSelected, min, minSelected, name, step, upperRangeValue, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
- * the contract records no default for before, after, label.
+ * the contract records no default for before, after, error, field-note, label.
  */
 import figma from '@figma/code-connect';
 import { ALRange } from '@southleft/al-react';
@@ -22,14 +22,20 @@ figma.connect(ALRange, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?nod
     hasOutput: figma.enum('Output', {
       Yes: true,
     }),
+    isDisabled: figma.enum('State', {
+      Disabled: true,
+    }),
   },
   example: (props) => (
     <ALRange
       behavior={props.behavior}
       hasOutput={props.hasOutput}
+      isDisabled={props.isDisabled}
     >
       <span slot="before">Before</span>
       <span slot="after">After</span>
+      <span slot="error">Error</span>
+      <span slot="field-note">Field note</span>
       <span slot="label">Label</span>
     </ALRange>
   ),

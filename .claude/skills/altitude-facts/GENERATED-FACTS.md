@@ -20,12 +20,12 @@ code that depends on it.
   - parts: none
 - `al-accordion-panel`
   - attrs: isActive, isDisabled, isLast, idx, ariaControls, ariaLabelledBy
-  - slots: (default)
+  - slots: header, (default)
   - events: onAccordionPanelOpen, onAccordionPanelClose
   - parts: none
 - `al-alert`
   - attrs: variant, title, isActive, autoClose, autoCloseDelay, isDismissible
-  - slots: (default), icon
+  - slots: action, (default), icon
   - events: open, close
   - parts: none
 - `al-avatar`
@@ -115,12 +115,12 @@ code that depends on it.
   - parts: none
 - `al-drawer`
   - attrs: alignment, width, hasBackdrop, isActive, ariaLabelledBy, disableBackdropClick
-  - slots: (default)
+  - slots: header, footer, trigger, (default)
   - events: onDrawerOpen, onDrawerClose, onDrawerCloseButton
   - parts: none
 - `al-dropdown-panel`
   - attrs: hasScroll, hasHeader, hasFooter
-  - slots: (default)
+  - slots: header, footer, (default)
   - events: none
   - parts: none
 - `al-empty-state`
@@ -135,7 +135,7 @@ code that depends on it.
   - parts: none
 - `al-file-upload`
   - attrs: fieldId, label, name, value, fieldNote, errorNote, ariaDescribedBy, isRequired, isDisabled, isError, hideLabel, textConfig, uploadFiles, uploadTime, fileSizeLimit, accept, multiple
-  - slots: (default)
+  - slots: field-note, error, (default)
   - events: onFileUploadFileUpload, onFileUploadFileRemove
   - parts: none
 - `al-focus-trap`
@@ -375,7 +375,7 @@ code that depends on it.
   - parts: none
 - `al-list-item`
   - attrs: variant, isError, isDisabled, behavior, flyoutPosition, href, value, isActive, isCurrent, onClick, target
-  - slots: (default)
+  - slots: before, after, items, (default)
   - events: none
   - parts: none
 - `al-logo`
@@ -395,7 +395,7 @@ code that depends on it.
   - parts: none
 - `al-pagination`
   - attrs: prevButtonText, nextButtonText, ariaLabel, totalRecords, currentItem, pageSize, pageSizeOptions, variant, pageSizeLabel
-  - slots: label, prev, next
+  - slots: inpage-label, label, prev, next
   - events: onPaginationChange
   - parts: none
 - `al-pagination-item`
@@ -425,17 +425,17 @@ code that depends on it.
   - parts: none
 - `al-range`
   - attrs: hideLabel, isError, isDisabled, handleLabelUnit, min, minSelected, max, maxSelected, step, hasOutput, value, lowerRangeValue, upperRangeValue, label, fieldNote, errorNote, ariaDescribedBy, fieldId, name, hasTooltip, behavior
-  - slots: label, before, after
+  - slots: field-note, error, label, before, after
   - events: onRangeDrag, onRangeOutputValueChange
   - parts: none
 - `al-search`
   - attrs: ariaControlsId, fieldId, label, fieldNote, errorNote, hideLabel, buttonText, clearButtonText, isDisabled, isActive, isActiveDropdown, isError, placeholder, value, ariaDescribedBy, isDynamic, position, maxlength, isFocusedIn, isEmpty, ariaActiveDescendantId
-  - slots: (default), field-note, error
+  - slots: emptyMessage, (default), field-note, error
   - events: onSearchChange
   - parts: none
 - `al-select`
   - attrs: isActive, isActiveDropdown, fieldId, title, label, name, value, placeholder, fieldNote, errorNote, ariaDescribedBy, isRequired, isOptional, isDisabled, isError, isReadonly, hideLabel, hasSearch, align
-  - slots: (default), field-note, error
+  - slots: before, (default), field-note, error
   - events: onSelectOpen, onSelectClose
   - parts: none
 - `al-skeleton`
@@ -509,13 +509,13 @@ code that depends on it.
   - events: onTextareaChange
   - parts: none
 - `al-theme`
-  - attrs: brand, mode, density, contrast, motion, shape
+  - attrs: mode, density, contrast, motion, shape
   - slots: (default)
   - events: none
   - parts: none
 - `al-theme-switcher`
   - attrs: none
-  - slots: (default)
+  - slots: none
   - events: onThemeSwitcherChange
   - parts: none
 - `al-time-selector-list`
@@ -534,7 +534,7 @@ code that depends on it.
   - events: onToggleChange
   - parts: none
 - `al-toggle-button`
-  - attrs: variant, isSelected, isSmall, hasToggle
+  - attrs: variant, label, isSelected, isSmall, hasToggle
   - slots: (default)
   - events: onToggleButtonSelect, onToggleButtonDeselect
   - parts: none

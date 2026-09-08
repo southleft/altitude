@@ -86,8 +86,13 @@
     {
       "name": "sortDirection",
       "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.",
-      "type": "string",
-      "rawType": "ALTableSortDirection",
+      "type": "enum",
+      "rawType": "'ascending' | 'descending' | 'none'",
+      "values": [
+        "ascending",
+        "descending",
+        "none"
+      ],
       "default": "'none'",
       "bindings": {
         "code": {
@@ -169,13 +174,20 @@
         "display": "block",
         "direction": "row",
         "align": "normal",
-        "justify": "normal"
+        "justify": "normal",
+        "fillInline": true
       },
       "tokens": {},
       "children": [
         {
           "tag": "div",
           "cls": "al-c-table__scroll",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
             "w": 430.5,
             "h": 225
@@ -184,7 +196,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border": {
@@ -232,7 +245,8 @@
                 "display": "table",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "background-color": {
@@ -245,6 +259,10 @@
                   "tag": "caption",
                   "cls": "al-c-table__caption",
                   "text": "Team roster",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "600",
                   "box": {
                     "w": 428.5,
                     "h": 44
@@ -261,11 +279,11 @@
                       "figma": "theme/color/content/neutral-default"
                     },
                     "font-weight": {
-                      "code": "--al-font-weight-bold",
-                      "figma": "typography/font-weight/bold"
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
                     },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                       "figma": null
                     },
                     "padding": {
@@ -324,6 +342,12 @@
                         {
                           "tag": "th",
                           "cls": "al-c-table__cell al-c-table__cell--header",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 155.2,
                             "h": 44.5
@@ -338,6 +362,18 @@
                             "background-color": {
                               "code": "--al-theme-color-background-neutral-weak",
                               "figma": "theme/color/background/neutral-weak"
+                            },
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
                             },
                             "color": {
                               "code": "--al-theme-color-content-neutral-faint",
@@ -356,11 +392,11 @@
                               "figma": "typography/font-size/12"
                             },
                             "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
+                              "code": "--al-font-weight-semibold",
+                              "figma": "typography/font-weight/semibold"
                             },
                             "letter-spacing": {
-                              "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                              "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                               "figma": null
                             }
                           },
@@ -369,6 +405,10 @@
                               "tag": "button",
                               "cls": "al-c-table__sort-button",
                               "text": "Name",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
                               "box": {
                                 "w": 155.2,
                                 "h": 44
@@ -377,7 +417,8 @@
                                 "display": "inline-flex",
                                 "direction": "row",
                                 "align": "center",
-                                "justify": "normal"
+                                "justify": "normal",
+                                "fillInline": true
                               },
                               "tokens": {
                                 "column-gap": {
@@ -404,6 +445,12 @@
                         {
                           "tag": "th",
                           "cls": "al-c-table__cell al-c-table__cell--header",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 96.1,
                             "h": 44.5
@@ -418,6 +465,18 @@
                             "background-color": {
                               "code": "--al-theme-color-background-neutral-weak",
                               "figma": "theme/color/background/neutral-weak"
+                            },
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
                             },
                             "color": {
                               "code": "--al-theme-color-content-neutral-faint",
@@ -436,11 +495,11 @@
                               "figma": "typography/font-size/12"
                             },
                             "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
+                              "code": "--al-font-weight-semibold",
+                              "figma": "typography/font-weight/semibold"
                             },
                             "letter-spacing": {
-                              "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                              "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                               "figma": null
                             }
                           },
@@ -449,6 +508,10 @@
                               "tag": "button",
                               "cls": "al-c-table__sort-button",
                               "text": "Role",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
                               "box": {
                                 "w": 96.1,
                                 "h": 44
@@ -457,7 +520,8 @@
                                 "display": "inline-flex",
                                 "direction": "row",
                                 "align": "center",
-                                "justify": "normal"
+                                "justify": "normal",
+                                "fillInline": true
                               },
                               "tokens": {
                                 "column-gap": {
@@ -485,6 +549,16 @@
                           "tag": "th",
                           "cls": "al-c-table__cell al-c-table__cell--header",
                           "text": "Team",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Mono",
+                          "fwCss": "600",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 96,
                             "h": 44.5
@@ -500,6 +574,18 @@
                               "code": "--al-theme-color-background-neutral-weak",
                               "figma": "theme/color/background/neutral-weak"
                             },
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-faint",
                               "figma": "theme/color/content/neutral-faint"
@@ -517,11 +603,11 @@
                               "figma": "typography/font-size/12"
                             },
                             "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
+                              "code": "--al-font-weight-semibold",
+                              "figma": "typography/font-weight/semibold"
                             },
                             "letter-spacing": {
-                              "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                              "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                               "figma": null
                             }
                           },
@@ -531,6 +617,16 @@
                           "tag": "th",
                           "cls": "al-c-table__cell al-c-table__cell--header",
                           "text": "Status",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Mono",
+                          "fwCss": "600",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 81.3,
                             "h": 44.5
@@ -546,6 +642,18 @@
                               "code": "--al-theme-color-background-neutral-weak",
                               "figma": "theme/color/background/neutral-weak"
                             },
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-faint",
                               "figma": "theme/color/content/neutral-faint"
@@ -563,11 +671,11 @@
                               "figma": "typography/font-size/12"
                             },
                             "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
+                              "code": "--al-font-weight-semibold",
+                              "figma": "typography/font-weight/semibold"
                             },
                             "letter-spacing": {
-                              "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                              "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                               "figma": null
                             }
                           },
@@ -611,6 +719,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Ada Lovelace",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 155.2,
                             "h": 45
@@ -622,6 +740,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -661,6 +791,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Engineer",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 96.1,
                             "h": 45
@@ -672,6 +812,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -711,6 +863,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Platform",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 96,
                             "h": 45
@@ -722,6 +884,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -761,6 +935,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Active",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 81.3,
                             "h": 45
@@ -772,6 +956,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -828,6 +1024,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Grace Hopper",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 155.2,
                             "h": 45
@@ -839,6 +1045,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -878,6 +1096,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Architect",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 96.1,
                             "h": 45
@@ -889,6 +1117,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -928,6 +1168,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Compiler",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 96,
                             "h": 45
@@ -939,6 +1189,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -978,6 +1240,16 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Active",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
+                          "bw4": [
+                            0,
+                            0,
+                            1,
+                            0
+                          ],
                           "box": {
                             "w": 81.3,
                             "h": 45
@@ -989,6 +1261,18 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-block-end": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -1045,6 +1329,10 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Margaret Hamilton",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 155.2,
                             "h": 44.5
@@ -1056,6 +1344,14 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -1095,6 +1391,10 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Lead",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 96.1,
                             "h": 44.5
@@ -1106,6 +1406,14 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -1145,6 +1453,10 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Flight",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 96,
                             "h": 44.5
@@ -1156,6 +1468,14 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -1195,6 +1515,10 @@
                           "tag": "td",
                           "cls": "al-c-table__cell",
                           "text": "Invited",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 81.3,
                             "h": 44.5
@@ -1206,6 +1530,14 @@
                             "justify": "normal"
                           },
                           "tokens": {
+                            "border-top-color": {
+                              "code": "--al-theme-color-border-neutral-default",
+                              "figma": "theme/color/border/neutral-default"
+                            },
+                            "border-top-width": {
+                              "code": "--al-theme-border-width",
+                              "figma": "theme/border/width/@"
+                            },
                             "color": {
                               "code": "--al-theme-color-content-neutral-default",
                               "figma": "theme/color/content/neutral-default"
@@ -1265,13 +1597,20 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {},
           "children": [
             {
               "tag": "div",
               "cls": "al-c-table__scroll",
+              "bw4": [
+                1,
+                1,
+                1,
+                1
+              ],
               "box": {
                 "w": 430.5,
                 "h": 225
@@ -1280,7 +1619,8 @@
                 "display": "block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "border": {
@@ -1328,7 +1668,8 @@
                     "display": "table",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -1341,6 +1682,10 @@
                       "tag": "caption",
                       "cls": "al-c-table__caption",
                       "text": "Team roster",
+                      "fsPx": 14,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "600",
                       "box": {
                         "w": 428.5,
                         "h": 44
@@ -1357,11 +1702,11 @@
                           "figma": "theme/color/content/neutral-default"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "padding": {
@@ -1420,6 +1765,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 44.5
@@ -1434,6 +1785,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -1452,11 +1815,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -1465,6 +1828,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Name",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 155.2,
                                     "h": 44
@@ -1473,7 +1840,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -1500,6 +1868,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 44.5
@@ -1514,6 +1888,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -1532,11 +1918,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -1545,6 +1931,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Role",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 96.1,
                                     "h": 44
@@ -1553,7 +1943,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -1581,6 +1972,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Team",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 44.5
@@ -1596,6 +1997,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -1613,11 +2026,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -1627,6 +2040,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Status",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 44.5
@@ -1642,6 +2065,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -1659,11 +2094,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -1707,6 +2142,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Ada Lovelace",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 45
@@ -1718,6 +2163,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -1757,6 +2214,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Engineer",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 45
@@ -1768,6 +2235,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -1807,6 +2286,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Platform",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 45
@@ -1818,6 +2307,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -1857,6 +2358,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 45
@@ -1868,6 +2379,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -1924,6 +2447,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Grace Hopper",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 45
@@ -1935,6 +2468,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -1974,6 +2519,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Architect",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 45
@@ -1985,6 +2540,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2024,6 +2591,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Compiler",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 45
@@ -2035,6 +2612,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2074,6 +2663,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 45
@@ -2085,6 +2684,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2141,6 +2752,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Margaret Hamilton",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 155.2,
                                 "h": 44.5
@@ -2152,6 +2767,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2191,6 +2814,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Lead",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96.1,
                                 "h": 44.5
@@ -2202,6 +2829,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2241,6 +2876,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Flight",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96,
                                 "h": 44.5
@@ -2252,6 +2891,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2291,6 +2938,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Invited",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 81.3,
                                 "h": 44.5
@@ -2302,6 +2953,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2361,13 +3020,20 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {},
           "children": [
             {
               "tag": "div",
               "cls": "al-c-table__scroll",
+              "bw4": [
+                1,
+                1,
+                1,
+                1
+              ],
               "box": {
                 "w": 430.5,
                 "h": 225
@@ -2376,7 +3042,8 @@
                 "display": "block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "border": {
@@ -2424,7 +3091,8 @@
                     "display": "table",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -2437,6 +3105,10 @@
                       "tag": "caption",
                       "cls": "al-c-table__caption",
                       "text": "Team roster",
+                      "fsPx": 14,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "600",
                       "box": {
                         "w": 428.5,
                         "h": 44
@@ -2453,11 +3125,11 @@
                           "figma": "theme/color/content/neutral-default"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "padding": {
@@ -2516,6 +3188,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 44.5
@@ -2530,6 +3208,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -2548,11 +3238,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -2561,6 +3251,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Name",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 155.2,
                                     "h": 44
@@ -2569,7 +3263,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -2596,6 +3291,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 44.5
@@ -2610,6 +3311,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -2628,11 +3341,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -2641,6 +3354,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Role",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 96.1,
                                     "h": 44
@@ -2649,7 +3366,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -2677,6 +3395,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Team",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 44.5
@@ -2692,6 +3420,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -2709,11 +3449,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -2723,6 +3463,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Status",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 44.5
@@ -2738,6 +3488,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -2755,11 +3517,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -2803,6 +3565,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Ada Lovelace",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 45
@@ -2814,6 +3586,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2853,6 +3637,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Engineer",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 45
@@ -2864,6 +3658,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2903,6 +3709,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Platform",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 45
@@ -2914,6 +3730,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -2953,6 +3781,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 45
@@ -2964,6 +3802,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3020,6 +3870,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Grace Hopper",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 45
@@ -3031,6 +3891,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3070,6 +3942,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Architect",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 45
@@ -3081,6 +3963,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3120,6 +4014,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Compiler",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 45
@@ -3131,6 +4035,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3170,6 +4086,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 45
@@ -3181,6 +4107,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3237,6 +4175,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Margaret Hamilton",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 155.2,
                                 "h": 44.5
@@ -3248,6 +4190,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3287,6 +4237,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Lead",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96.1,
                                 "h": 44.5
@@ -3298,6 +4252,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3337,6 +4299,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Flight",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96,
                                 "h": 44.5
@@ -3348,6 +4314,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3387,6 +4361,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Invited",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 81.3,
                                 "h": 44.5
@@ -3398,6 +4376,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -3457,13 +4443,20 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {},
           "children": [
             {
               "tag": "div",
               "cls": "al-c-table__scroll",
+              "bw4": [
+                1,
+                1,
+                1,
+                1
+              ],
               "box": {
                 "w": 510.5,
                 "h": 285
@@ -3472,7 +4465,8 @@
                 "display": "block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "border": {
@@ -3520,7 +4514,8 @@
                     "display": "table",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -3533,6 +4528,10 @@
                       "tag": "caption",
                       "cls": "al-c-table__caption",
                       "text": "Team roster",
+                      "fsPx": 14,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "600",
                       "box": {
                         "w": 508.5,
                         "h": 44
@@ -3549,11 +4548,11 @@
                           "figma": "theme/color/content/neutral-default"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "padding": {
@@ -3612,6 +4611,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header al-c-table__select-cell",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 80,
                                 "h": 44.5
@@ -3626,6 +4631,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -3644,23 +4661,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
-                                  "figma": null
-                                },
-                                "padding-left": {
-                                  "code": "--al-theme-space-md",
-                                  "figma": "theme/space/md"
-                                },
-                                "padding-right": {
-                                  "code": "--al-theme-space-md",
-                                  "figma": "theme/space/md"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -3670,7 +4675,7 @@
                                   "cls": "al-c-checkbox al-has-hidden-label",
                                   "component": "al-checkbox",
                                   "box": {
-                                    "w": 40,
+                                    "w": 80,
                                     "h": 40
                                   },
                                   "layout": {
@@ -3700,6 +4705,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 44.5
@@ -3714,6 +4725,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -3732,11 +4755,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -3745,6 +4768,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Name",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 155.2,
                                     "h": 44
@@ -3753,7 +4780,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -3780,6 +4808,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 44.5
@@ -3794,6 +4828,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -3812,11 +4858,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -3825,6 +4871,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Role",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 96.1,
                                     "h": 44
@@ -3833,7 +4883,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -3861,6 +4912,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Team",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 44.5
@@ -3876,6 +4937,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -3893,11 +4966,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -3907,6 +4980,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Status",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 44.5
@@ -3922,6 +5005,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -3939,11 +5034,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -3986,6 +5081,12 @@
                             {
                               "tag": "td",
                               "cls": "al-c-table__cell al-c-table__select-cell",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 80,
                                 "h": 65
@@ -3997,6 +5098,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4028,10 +5141,6 @@
                                 "padding-top": {
                                   "code": "--al-theme-space-sm",
                                   "figma": "theme/space/sm"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
-                                  "figma": null
                                 }
                               },
                               "children": [
@@ -4071,6 +5180,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Ada Lovelace",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 65
@@ -4082,6 +5201,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4121,6 +5252,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Engineer",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 65
@@ -4132,6 +5273,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4171,6 +5324,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Platform",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 65
@@ -4182,6 +5345,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4221,6 +5396,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 65
@@ -4232,6 +5417,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4287,6 +5484,12 @@
                             {
                               "tag": "td",
                               "cls": "al-c-table__cell al-c-table__select-cell",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 80,
                                 "h": 65
@@ -4298,6 +5501,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4329,10 +5544,6 @@
                                 "padding-top": {
                                   "code": "--al-theme-space-sm",
                                   "figma": "theme/space/sm"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
-                                  "figma": null
                                 }
                               },
                               "children": [
@@ -4372,6 +5583,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Grace Hopper",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 65
@@ -4383,6 +5604,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4422,6 +5655,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Architect",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 65
@@ -4433,6 +5676,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4472,6 +5727,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Compiler",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 65
@@ -4483,6 +5748,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4522,6 +5799,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 65
@@ -4533,6 +5820,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4599,6 +5898,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4630,10 +5937,6 @@
                                 "padding-top": {
                                   "code": "--al-theme-space-sm",
                                   "figma": "theme/space/sm"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
-                                  "figma": null
                                 }
                               },
                               "children": [
@@ -4673,6 +5976,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Margaret Hamilton",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 155.2,
                                 "h": 64.5
@@ -4684,6 +5991,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4723,6 +6038,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Lead",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96.1,
                                 "h": 64.5
@@ -4734,6 +6053,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4773,6 +6100,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Flight",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96,
                                 "h": 64.5
@@ -4784,6 +6115,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4823,6 +6162,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Invited",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 81.3,
                                 "h": 64.5
@@ -4834,6 +6177,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -4893,13 +6244,20 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {},
           "children": [
             {
               "tag": "div",
               "cls": "al-c-table__scroll",
+              "bw4": [
+                1,
+                1,
+                1,
+                1
+              ],
               "box": {
                 "w": 510.5,
                 "h": 285
@@ -4908,7 +6266,8 @@
                 "display": "block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "border": {
@@ -4956,7 +6315,8 @@
                     "display": "table",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -4969,6 +6329,10 @@
                       "tag": "caption",
                       "cls": "al-c-table__caption",
                       "text": "Team roster",
+                      "fsPx": 14,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "600",
                       "box": {
                         "w": 508.5,
                         "h": 44
@@ -4985,11 +6349,11 @@
                           "figma": "theme/color/content/neutral-default"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "padding": {
@@ -5048,6 +6412,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header al-c-table__select-cell",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 80,
                                 "h": 44.5
@@ -5062,6 +6432,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -5080,23 +6462,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
-                                  "figma": null
-                                },
-                                "padding-left": {
-                                  "code": "--al-theme-space-md",
-                                  "figma": "theme/space/md"
-                                },
-                                "padding-right": {
-                                  "code": "--al-theme-space-md",
-                                  "figma": "theme/space/md"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -5106,7 +6476,7 @@
                                   "cls": "al-c-checkbox al-has-hidden-label",
                                   "component": "al-checkbox",
                                   "box": {
-                                    "w": 40,
+                                    "w": 80,
                                     "h": 40
                                   },
                                   "layout": {
@@ -5136,6 +6506,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 44.5
@@ -5150,6 +6526,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -5168,11 +6556,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -5181,6 +6569,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Name",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 155.2,
                                     "h": 44
@@ -5189,7 +6581,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -5216,6 +6609,12 @@
                             {
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 44.5
@@ -5230,6 +6629,18 @@
                                 "background-color": {
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
+                                },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
                                 },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
@@ -5248,11 +6659,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -5261,6 +6672,10 @@
                                   "tag": "button",
                                   "cls": "al-c-table__sort-button",
                                   "text": "Role",
+                                  "fsPx": 12,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Mono",
+                                  "fwCss": "600",
                                   "box": {
                                     "w": 96.1,
                                     "h": 44
@@ -5269,7 +6684,8 @@
                                     "display": "inline-flex",
                                     "direction": "row",
                                     "align": "center",
-                                    "justify": "normal"
+                                    "justify": "normal",
+                                    "fillInline": true
                                   },
                                   "tokens": {
                                     "column-gap": {
@@ -5297,6 +6713,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Team",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 44.5
@@ -5312,6 +6738,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -5329,11 +6767,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -5343,6 +6781,16 @@
                               "tag": "th",
                               "cls": "al-c-table__cell al-c-table__cell--header",
                               "text": "Status",
+                              "fsPx": 12,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Mono",
+                              "fwCss": "600",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 44.5
@@ -5358,6 +6806,18 @@
                                   "code": "--al-theme-color-background-neutral-weak",
                                   "figma": "theme/color/background/neutral-weak"
                                 },
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-faint",
                                   "figma": "theme/color/content/neutral-faint"
@@ -5375,11 +6835,11 @@
                                   "figma": "typography/font-size/12"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -5422,6 +6882,12 @@
                             {
                               "tag": "td",
                               "cls": "al-c-table__cell al-c-table__select-cell",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 80,
                                 "h": 65
@@ -5433,6 +6899,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5464,10 +6942,6 @@
                                 "padding-top": {
                                   "code": "--al-theme-space-sm",
                                   "figma": "theme/space/sm"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
-                                  "figma": null
                                 }
                               },
                               "children": [
@@ -5507,6 +6981,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Ada Lovelace",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 65
@@ -5518,6 +7002,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5557,6 +7053,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Engineer",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 65
@@ -5568,6 +7074,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5607,6 +7125,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Platform",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 65
@@ -5618,6 +7146,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5657,6 +7197,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 65
@@ -5668,6 +7218,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5723,6 +7285,12 @@
                             {
                               "tag": "td",
                               "cls": "al-c-table__cell al-c-table__select-cell",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 80,
                                 "h": 65
@@ -5734,6 +7302,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5765,10 +7345,6 @@
                                 "padding-top": {
                                   "code": "--al-theme-space-sm",
                                   "figma": "theme/space/sm"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
-                                  "figma": null
                                 }
                               },
                               "children": [
@@ -5808,6 +7384,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Grace Hopper",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 155.2,
                                 "h": 65
@@ -5819,6 +7405,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5858,6 +7456,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Architect",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96.1,
                                 "h": 65
@@ -5869,6 +7477,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5908,6 +7528,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Compiler",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 96,
                                 "h": 65
@@ -5919,6 +7549,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -5958,6 +7600,16 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Active",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                0,
+                                0,
+                                1,
+                                0
+                              ],
                               "box": {
                                 "w": 81.3,
                                 "h": 65
@@ -5969,6 +7621,18 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-block-end": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -6035,6 +7699,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -6066,10 +7738,6 @@
                                 "padding-top": {
                                   "code": "--al-theme-space-sm",
                                   "figma": "theme/space/sm"
-                                },
-                                "width": {
-                                  "code": "--al-base-space",
-                                  "figma": null
                                 }
                               },
                               "children": [
@@ -6109,6 +7777,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Margaret Hamilton",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 155.2,
                                 "h": 64.5
@@ -6120,6 +7792,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -6159,6 +7839,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Lead",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96.1,
                                 "h": 64.5
@@ -6170,6 +7854,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -6209,6 +7901,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Flight",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 96,
                                 "h": 64.5
@@ -6220,6 +7916,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -6259,6 +7963,10 @@
                               "tag": "td",
                               "cls": "al-c-table__cell",
                               "text": "Invited",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 81.3,
                                 "h": 64.5
@@ -6270,6 +7978,14 @@
                                 "justify": "normal"
                               },
                               "tokens": {
+                                "border-top-color": {
+                                  "code": "--al-theme-color-border-neutral-default",
+                                  "figma": "theme/color/border/neutral-default"
+                                },
+                                "border-top-width": {
+                                  "code": "--al-theme-border-width",
+                                  "figma": "theme/border/width/@"
+                                },
                                 "color": {
                                   "code": "--al-theme-color-content-neutral-default",
                                   "figma": "theme/color/content/neutral-default"
@@ -6465,7 +8181,7 @@
   "tokens": [
     "--al-font-family-mono",
     "--al-font-size-12",
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-theme-border-radius-role-surface",
     "--al-theme-border-width",
     "--al-theme-border-width-md",
@@ -6480,8 +8196,8 @@
     "--al-theme-space-sm",
     "--al-theme-space-xxs",
     "--al-theme-typography-body-sm",
-    "--al-theme-typography-body-sm-bold-letter-spacing",
-    "--al-theme-typography-body-sm-letter-spacing"
+    "--al-theme-typography-body-sm-letter-spacing",
+    "--al-theme-typography-body-sm-semibold-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [],

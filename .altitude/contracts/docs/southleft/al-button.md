@@ -150,12 +150,12 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaControls`, `isAriaDisabled`, `variant`
+- ARIA-bearing attributes: `ariaControls`, `isAriaDisabled`
 - CSS parts: `button`
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Variant=bare,Width=fill` (source: `measured`)
+**Anatomy case measured:** `Variant=bare,Size=default,Shape=default,Width=fill` (source: `measured`)
 
 ### Root — `<button class="al-c-button al-c-button--bare al-c-button--full-width">`
 
@@ -169,14 +169,12 @@ _No events declared._
 | border-top-right-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
-| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
-| padding | `--al-theme-space-xs` | `theme/space/xs` |
-| padding-bottom | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-sm-semibold-letter-spacing` | — |
+| min-height | `--al-theme-size-control` | `theme/size/control` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
 | padding-right | `--al-theme-space` | `theme/space/@` |
-| padding-top | `--al-theme-space-xs` | `theme/space/xs` |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
 
 ### State overrides (measured, root node)
@@ -311,9 +309,9 @@ _No events declared._
 - Tag: `al-button`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (12)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius-role-action`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

@@ -6,9 +6,7 @@
  * Figma Code Connect — React wrapper surface for the "Textarea"
  * component set (node 3544:49378).
  *
- * Mapped variant axes: Label, State, State, State.
- * Props the contract binds to an axis this generator could not map: label
- * (reasons in skipped.json — they are drift, not omissions).
+ * Mapped variant axes: State, State, State.
  * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, cols, errorNote, fieldId, fieldNote, isActive, isReadonly, maxLength, maxLengthValue, minLength, name, placeholder, rows, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for before, after, error, field-note.
@@ -18,9 +16,6 @@ import { ALTextarea } from '@southleft/al-react';
 
 figma.connect(ALTextarea, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-49378', {
   props: {
-    hideLabel: figma.enum('Label', {
-      Hidden: true,
-    }),
     isDisabled: figma.enum('State', {
       Disabled: true,
     }),
@@ -33,7 +28,6 @@ figma.connect(ALTextarea, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?
   },
   example: (props) => (
     <ALTextarea
-      hideLabel={props.hideLabel}
       isDisabled={props.isDisabled}
       isError={props.isError}
       isFocused={props.isFocused}
