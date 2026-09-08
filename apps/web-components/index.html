@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Altitude — Web Components Fixture</title>
     <link rel="stylesheet" href="@southleft/al-web-components/css/main.css" />
+    <!-- The design system's own token bundle: main.css is the reset, the layers,
+         the base element styles and the utilities; this is the PALETTE. One file
+         per system, :root plus [data-al-mode='...']. No brand attribute anywhere --
+         the page is Altitude because it loaded Altitude's tokens. -->
+    <link rel="stylesheet" href="@southleft/al-web-components/project/altitude.css" />
     <script>
       // Must run before any ES module import: legacy auto-register flag.
       window.alAutoRegistry = true;
     </script>
   </head>
   <body>
-    <al-theme brand="altitude" mode="dark">
+    <al-theme mode="dark">
       <al-layout variant="constrained" size="lg" gutter="md">
         <header>
           <al-heading tagName="h1" variant="lg">Altitude pilot fixture (web components)</al-heading>

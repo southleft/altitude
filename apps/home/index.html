@@ -23,7 +23,7 @@
 </head>
 <body>
   <a class="al-l-home__skip-link" href="#main-content">Skip to content</a>
-  <al-theme brand="altitude" mode="dark">
+  <al-theme mode="dark">
     <al-layout class="al-l-home" fullHeight>
       <al-header class="al-l-home__header" sticky elevated>
         <al-layout direction="row" align="center" justify="between" gap="md">
@@ -136,11 +136,12 @@
                 </al-text-block>
               </al-card>
               <al-card class="al-l-home__bento-card al-u-grid__item col:12 col:4@md">
-                <div slot="header"><al-heading tagName="h3" variant="sm" isBold="true">Scoped multi-brand theming</al-heading></div>
+                <div slot="header"><al-heading tagName="h3" variant="sm" isBold="true">Scoped multi-system theming</al-heading></div>
                 <al-text-block>
-                  <p><code>&lt;al-theme&gt;</code> scopes brand, mode, density, and contrast per
-                  subtree — multiple brands can coexist on a single page, each rendering its own
-                  tokens.</p>
+                  <p>A design system is one stylesheet — <code>project/&lt;id&gt;.css</code>, both
+                  modes in one file. <code>&lt;al-theme&gt;</code> scopes mode, density, contrast,
+                  motion, and shape per subtree, so two systems can coexist on a single page, each
+                  rendering its own tokens.</p>
                 </al-text-block>
               </al-card>
               <al-card class="al-l-home__bento-card al-u-grid__item col:12 col:4@md">

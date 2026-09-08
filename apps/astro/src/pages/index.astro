@@ -1,5 +1,10 @@
 ---
 import '@southleft/al-web-components/css/main.css';
+// The design system's own token bundle. `css/main.css` carries the reset, the
+// cascade layers, the base element styles and the utilities; the PALETTE lives
+// here, one file per system, `:root` plus `[data-al-mode='...']`. Nothing sets
+// `brand` any more -- this page is Altitude because it loaded Altitude's tokens.
+import '@southleft/al-web-components/project/altitude.css';
 // App-specific dashboard/job-board layout (ported from the Svelte demo) — the
 // .al-l-* classes are not part of main.css, so without this the dashboard
 // grid/sidebar is unstyled and the page doesn't match the other demos.
@@ -42,7 +47,7 @@ const jobs = [
   <script is:inline>window.alAutoRegistry = true;</script>
 </head>
 <body>
-<al-theme brand="altitude" mode="dark">
+<al-theme mode="dark">
 <main class="al-l-dashboard">
   <div class="al-l-dashboard__help-popover">
     <al-popover position="top-left" isDismissible="true">
