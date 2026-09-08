@@ -190,10 +190,31 @@ function buildSlots(component) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/**
+ * True when `name` actually NAMES an ARIA concept, rather than merely
+ * containing the letters.
+ *
+ * The predicate used to be `/aria/i.test(name)`, which matches `v-aria-nt`.
+ * That single substring test put `variant` into `a11y.ariaAttributes` on 22
+ * contracts (plus `badgeVariant` on one) — 23 of 57 entries, so 40% of the
+ * library's recorded ARIA surface was a style-emphasis prop. Anything reading
+ * these as a11y facts, the parity pass included, was reading mostly noise.
+ *
+ * Split on camelCase boundaries and require a WHOLE segment to be `aria`:
+ *   ariaControls   -> ['aria','Controls']      match
+ *   isAriaDisabled -> ['is','Aria','Disabled'] match
+ *   labelAria      -> ['label','Aria']         match
+ *   variant        -> ['variant']              no match
+ *   badgeVariant   -> ['badge','Variant']      no match
+ */
+function namesAria(name) {
+  return name.split(/(?=[A-Z])/).some((seg) => seg.toLowerCase() === 'aria');
+}
+
 function buildA11y(component) {
   const ariaAttributes = (component.attributes ?? [])
     .map((a) => a.name)
-    .filter((n) => /aria/i.test(n))
+    .filter(namesAria)
     .sort();
   const cssParts = (component.cssParts ?? []).map((p) => p.name).filter(Boolean).sort();
   return { ariaAttributes, cssParts };
@@ -657,6 +678,7 @@ export function buildAnatomyNode(raw, ctx, isRoot = false) {
     // Present only when the child overrides its parent's cross-axis
     // alignment (measure-lib nulls 'auto'/'normal').
     alignSelf: computed.alignSelf,
+    fillInline: raw.authored?.width === '100%' || raw.authored?.['inline-size'] === '100%' || undefined,
   }).filter(([, v]) => v);
   const layout = layoutEntries.length ? Object.fromEntries(layoutEntries) : null;
 
@@ -687,12 +709,18 @@ export function buildAnatomyNode(raw, ctx, isRoot = false) {
   // 0.1px for byte-stable serialization — see the schema's own notes on the
   // deliberate revision of the T12-era no-pixel-geometry rule.
   const round1 = (n) => Math.round(Number(n) * 10) / 10;
+  // A mixed shorthand such as `padding: 0 var(--space-xs)` has only one
+  // token, but that token does not apply to all four sides. Expanded
+  // longhands retain the real bindings; zero sides must stay zero.
+  if (computed.pad?.some(value => value === 0)) delete tokens.padding;
 
   return {
     tag: raw.tag,
     cls: raw.cls ?? null,
     ...(component ? { component } : {}),
     ...(raw.text ? { text: String(raw.text).slice(0, 300) } : {}),
+    ...(raw.text && computed.fs ? { fsPx: computed.fs, lhPx: computed.lh, ffCss: computed.ff, fwCss: String(computed.fw) } : {}),
+    ...(!raw.slotted && computed.bw4?.some(w => w > 0) ? { bw4: computed.bw4 } : {}),
     ...(raw.w !== undefined && raw.h !== undefined ? { box: { w: round1(raw.w), h: round1(raw.h) } } : {}),
     layout,
     tokens,
@@ -1009,6 +1037,63 @@ function runSeed() {
  * `conditionalBindings` documents at the top level, one level down. Mutates
  * and returns `derived` in place; `derived` is a transient in-memory object
  * for this comparison only, never written back to disk here. */
+/** The hand-authored half of `a11y`.
+ *
+ * `buildA11y()` derives what the CEM can see: which attributes name ARIA, and
+ * the `::part()` surface. It cannot see a KEYBOARD CONTRACT — which keys the
+ * component handles and what each one does lives in a `keydown` handler's
+ * control flow, not in any manifest — nor the FOCUS contract, nor what a screen
+ * reader announces. Those three are transcribed from the component source by
+ * hand (2026-09-05), so they have no derivation source and would otherwise read
+ * as drift on every run, exactly like `slots[].figmaPlaceholder` above.
+ *
+ * Carried forward field-by-field rather than wholesale: `ariaAttributes` and
+ * `cssParts` ARE derivable and must keep drifting when the CEM changes, which
+ * is the whole point of the check. Same transient, comparison-only mutation as
+ * the helpers above. */
+/** The authored `description`, carried forward ONLY while the CEM's is boilerplate.
+ *
+ * Unlike the a11y fields below, `description` HAS a derivation source: the CEM's
+ * class-level description. That source is just thin — it is the bare
+ * "Component: al-x" line for every component in the library, which is why
+ * `contract.schema.json` says so out loud.
+ *
+ * So this carry-forward is CONDITIONAL, not unconditional. If the on-disk
+ * contract has real prose and the CEM still yields boilerplate, keep the prose.
+ * The moment someone writes a genuine class JSDoc, the CEM wins and drift
+ * reports it — which is the behaviour you want, because otherwise a hand-written
+ * contract description would silently outrank a better one at the source
+ * forever. Authored descriptions came from the guidance YAML
+ * (`apps/docs/src/content/guidance/<name>.yaml` -> `purpose`) and from class
+ * JSDoc prose, 2026-09-05. */
+const BOILERPLATE_DESCRIPTION = /^Component:\s*[a-z]{2}-[a-z0-9-]+$/;
+
+function carryForwardAuthoredDescription(disk, derived) {
+  if (typeof disk?.description !== 'string' || typeof derived?.description !== 'string') return derived;
+  // The CEM has real prose now — it outranks whatever is on disk.
+  if (!BOILERPLATE_DESCRIPTION.test(derived.description.trim())) return derived;
+  const authored = disk.description.trim();
+  if (!authored || BOILERPLATE_DESCRIPTION.test(authored)) return derived;
+  derived.description = disk.description;
+  return derived;
+}
+
+function carryForwardA11yAuthored(disk, derived) {
+  if (!disk?.a11y || !derived?.a11y) return derived;
+  const merged = { ...derived.a11y };
+  for (const field of ['keyboard', 'focus', 'screenReader']) {
+    if (field in disk.a11y) merged[field] = disk.a11y[field];
+  }
+  /* Rebuild in the schema's declared key order. `driftedFields()` compares with
+   * `JSON.stringify`, which is ORDER-SENSITIVE, so copying the authored fields
+   * on with plain assignment appends them after `cssParts` and every carried
+   * contract reads as drift purely because its keys are in a different order —
+   * same values, different string. */
+  const ORDER = ['ariaAttributes', 'keyboard', 'focus', 'screenReader', 'cssParts'];
+  derived.a11y = Object.fromEntries(ORDER.filter((k) => k in merged).map((k) => [k, merged[k]]));
+  return derived;
+}
+
 function carryForwardSlotExtensions(disk, derived) {
   if (!Array.isArray(disk?.slots) || !Array.isArray(derived?.slots)) return derived;
   const diskSlotByName = new Map(disk.slots.map((s) => [s.name, s]));
@@ -1126,7 +1211,7 @@ function runCheckDrift() {
 
     const curated = carryForwardPropAxisCuration(
       disk,
-      carryForwardSlotExtensions(disk, derived),
+      carryForwardSlotExtensions(disk, carryForwardA11yAuthored(disk, carryForwardAuthoredDescription(disk, derived))),
       manifest?.components?.[tag]?.figmaContract ?? null,
     );
     const fields = driftedFields(disk, curated, ignoredThisRun);
@@ -1251,7 +1336,7 @@ function runRefresh() {
     const disk = JSON.parse(readFileSync(outPath, 'utf8'));
     const merged = carryForwardPropAxisCuration(
       disk,
-      carryForwardSlotExtensions(disk, derived),
+      carryForwardSlotExtensions(disk, carryForwardA11yAuthored(disk, carryForwardAuthoredDescription(disk, derived))),
       manifest?.components?.[tag]?.figmaContract ?? null,
     );
     merged.status = disk.status;

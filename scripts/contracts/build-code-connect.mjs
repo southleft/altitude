@@ -194,7 +194,7 @@ const norm = (value) => String(value).trim().toLowerCase().replace(/[\s_]+/g, '-
  * or leave it off". A bare `string` or a named type alias yields `[]` — the
  * honest answer, and the prop is then reported as unmapped rather than guessed.
  */
-function codeValuesOf(prop) {
+export function codeValuesOf(prop) {
   if (Array.isArray(prop.values) && prop.values.length) return [...prop.values];
   return [...String(prop.rawType ?? '').matchAll(/'([^']*)'/g)].map((m) => m[1]).filter(Boolean);
 }
@@ -216,7 +216,7 @@ function codeValuesOf(prop) {
  * that has no Bold option, or `isExpandableHeader` against `Role[...]`. Those
  * are real drift, and they are reported rather than approximated.
  */
-function booleanTrueOption(propName, options) {
+export function booleanTrueOption(propName, options) {
   const byNorm = new Map(options.map((option) => [norm(option), option]));
   const bare = String(propName).replace(/^(?:is|has|should|can|will)(?=[A-Z])/, '');
   const stem = norm(bare);
@@ -226,6 +226,7 @@ function booleanTrueOption(propName, options) {
   }
   if (byNorm.has('yes') && byNorm.has('no')) return byNorm.get('yes');
   if (byNorm.has('on') && byNorm.has('off')) return byNorm.get('on');
+  if (byNorm.has('true') && byNorm.has('false')) return byNorm.get('true');
   if (byNorm.has('hidden') && byNorm.has('shown')) {
     if (/^hide/i.test(propName)) return byNorm.get('hidden');
     if (/^show/i.test(propName)) return byNorm.get('shown');
