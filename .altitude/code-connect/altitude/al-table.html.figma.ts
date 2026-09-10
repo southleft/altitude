@@ -6,8 +6,8 @@
  * Figma Code Connect — web component surface for the "Table"
  * component set (node 3558:62965).
  *
- * Mapped variant axes: Selectable, Sort.
- * Props the contract marks `omit` (no Figma axis): caption, columns, data, hideCaption, rowKey, sortKey.
+ * Mapped variant axes: Selectable.
+ * Props the contract marks `omit` (no Figma axis): caption, columns, data, hideCaption, rowKey, sortDirection, sortKey.
  */
 import figma, { html } from '@figma/code-connect/html';
 
@@ -16,15 +16,10 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558
     isSelectable: figma.enum('Selectable', {
       Yes: true,
     }),
-    sortDirection: figma.enum('Sort', {
-      Ascending: 'ascending',
-      None: 'none',
-    }),
   },
   example: (props) => html`
     <al-table
       isSelectable="${props.isSelectable}"
-      sortDirection="${props.sortDirection}"
     >
       Table
     </al-table>

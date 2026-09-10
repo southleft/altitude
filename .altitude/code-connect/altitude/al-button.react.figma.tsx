@@ -24,11 +24,13 @@ figma.connect(ALButton, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?no
     }),
     size: figma.enum('Size', {
       Lg: 'lg',
+      Md: 'md',
       Sm: 'sm',
     }),
     variant: figma.enum('Variant', {
       Bare: 'bare',
       Neutral: 'neutral',
+      Primary: 'primary',
       Secondary: 'secondary',
       Tertiary: 'tertiary',
     }),

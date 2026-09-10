@@ -7,6 +7,7 @@
  * component set (node 3703:12726).
  *
  * Mapped variant axes: Arrow, Position.
+ * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, isDynamic, isInteractive.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for prefix, trigger.
  */

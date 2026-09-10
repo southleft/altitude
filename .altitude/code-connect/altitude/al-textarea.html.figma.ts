@@ -7,7 +7,7 @@
  * component set (node 3544:49378).
  *
  * Mapped variant axes: State, State, State.
- * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, cols, errorNote, fieldId, fieldNote, isActive, isReadonly, maxLength, maxLengthValue, minLength, name, placeholder, rows, value.
+ * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, cols, errorNote, fieldId, fieldNote, isActive, isOptional, isReadonly, isRequired, maxLength, maxLengthValue, minLength, name, placeholder, rows, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for before, after, error, field-note.
  */

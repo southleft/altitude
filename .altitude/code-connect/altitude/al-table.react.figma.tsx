@@ -6,8 +6,8 @@
  * Figma Code Connect — React wrapper surface for the "Table"
  * component set (node 3558:62965).
  *
- * Mapped variant axes: Selectable, Sort.
- * Props the contract marks `omit` (no Figma axis): caption, columns, data, hideCaption, rowKey, sortKey.
+ * Mapped variant axes: Selectable.
+ * Props the contract marks `omit` (no Figma axis): caption, columns, data, hideCaption, rowKey, sortDirection, sortKey.
  */
 import figma from '@figma/code-connect';
 import { ALTable } from '@southleft/al-react';
@@ -17,15 +17,10 @@ figma.connect(ALTable, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?nod
     isSelectable: figma.enum('Selectable', {
       Yes: true,
     }),
-    sortDirection: figma.enum('Sort', {
-      Ascending: 'ascending',
-      None: 'none',
-    }),
   },
   example: (props) => (
     <ALTable
       isSelectable={props.isSelectable}
-      sortDirection={props.sortDirection}
     >
       Table
     </ALTable>

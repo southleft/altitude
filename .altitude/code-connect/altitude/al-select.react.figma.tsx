@@ -9,6 +9,7 @@
  * Mapped variant axes: Label.
  * Props the contract binds to an axis this generator could not map: label
  * (reasons in skipped.json — they are drift, not omissions).
+ * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, errorNote, fieldId, fieldNote, isActiveDropdown, isOptional, isReadonly, isRequired, name, placeholder, title, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for before, error, field-note.
  */

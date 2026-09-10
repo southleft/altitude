@@ -7,6 +7,7 @@
  * component set (node 3703:12781).
  *
  * Mapped variant axes: Alignment.
+ * Props the contract marks `omit` (no Figma axis): ariaLabelledBy, disableBackdropClick, width.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for footer, header, trigger.
  */

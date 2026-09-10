@@ -7,7 +7,7 @@
  * component set (node 3694:11119).
  *
  * Mapped variant axes: Label.
- * Props the contract marks `omit` (no Figma axis): align, ariaDescribedBy, errorNote, fieldId, fieldNote, filterMode, isRequired, label, noResultsText, placeholder, selectedValue, value.
+ * Props the contract marks `omit` (no Figma axis): align, ariaDescribedBy, errorNote, fieldId, fieldNote, filterMode, isActiveDropdown, isOptional, isRequired, label, noResultsText, placeholder, selectedValue, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for error, field-note.
  */

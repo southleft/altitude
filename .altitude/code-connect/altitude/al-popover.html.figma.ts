@@ -7,6 +7,7 @@
  * component set (node 3702:12374).
  *
  * Mapped variant axes: Position.
+ * Props the contract marks `omit` (no Figma axis): ariaLabelledBy, heading, transitionDelay.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for footer, header, trigger.
  */

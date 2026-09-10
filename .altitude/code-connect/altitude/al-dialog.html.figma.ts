@@ -7,6 +7,7 @@
  * component set (node 3704:13290).
  *
  * Mapped variant axes: none.
+ * Props the contract marks `omit` (no Figma axis): ariaLabelledBy, dialogTrigger, disableClickOutside, heading, transitionDelay, width.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for footer, header, trigger.
  */
