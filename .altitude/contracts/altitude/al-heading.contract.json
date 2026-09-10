@@ -73,7 +73,6 @@
           "kind": "VARIANT",
           "property": "Variant",
           "options": [
-            "Default",
             "Display Lg",
             "Display Md",
             "Display Sm",
@@ -1176,6 +1175,16 @@
     "--al-theme-typography-heading-sm",
     "--al-theme-typography-heading-sm-semibold-letter-spacing"
   ],
+  "conditionalBindings": {
+    "variant": {
+      "sm": {
+        "color": {
+          "code": "--al-theme-color-content-neutral-default",
+          "figma": "theme/color/content/neutral-default"
+        }
+      }
+    }
+  },
   "a11y": {
     "ariaAttributes": [],
     "cssParts": []

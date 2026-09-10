@@ -16,12 +16,12 @@ A small floating label attached to a trigger, shown on hover and on focus. It ow
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
 | `hasArrow` | boolean | — | `true` | **Arrow** (VARIANT): `No`, `Yes` |
 | `isActive` | boolean | — | — | — |
-| `isDynamic` | boolean | — | — | — |
-| `isInteractive` | boolean | — | — | — |
-| `position` | enum | `bottom`, `left`, `right`, `top` | `'top'` | **Position** (VARIANT): `Bottom`, `Default`, `Left`, `Right`, `Top` |
+| `isDynamic` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isInteractive` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `position` | enum | `bottom`, `left`, `right`, `top` | `'top'` | **Position** (VARIANT): `Bottom`, `Left`, `Right`, `Top` |
 
 #### `ariaDescribedBy`
 
@@ -59,6 +59,8 @@ Positions the dropdown tooltip absolutely to the trigger.
 - **left** places the tooltip to the left
 - **right** places the tooltip to the right
 
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `isDynamic`, `isInteractive` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
 ### `hasArrow` (Figma property "Arrow")
@@ -69,7 +71,7 @@ Positions the dropdown tooltip absolutely to the trigger.
 ### `position` (Figma property "Position")
 
 - Code values: `bottom`, `left`, `right`, `top`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bottom`, `Default`, `Left`, `Right`, `Top`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bottom`, `Left`, `Right`, `Top`
 
 ## States
 

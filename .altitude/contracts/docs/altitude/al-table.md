@@ -30,7 +30,7 @@ inside a `<al-theme density="...">` scope.
 | `hideCaption` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isSelectable` | boolean | — | — | **Selectable** (VARIANT): `No`, `Yes` |
 | `rowKey` | string | — | `'id'` | _not expressed in Figma (by design)_ |
-| `sortDirection` | enum | `ascending`, `descending`, `none` | `'none'` | **Sort** (VARIANT): `Ascending`, `None` |
+| `sortDirection` | enum | `ascending`, `descending`, `none` | `'none'` | _not expressed in Figma (by design)_ |
 | `sortKey` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `caption`
@@ -75,7 +75,7 @@ The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.
 
 The `key` of the column currently sorted, if any.
 
-**Figma-expression opt-out (T27):** `caption`, `columns`, `data`, `hideCaption`, `rowKey`, `sortKey` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `caption`, `columns`, `data`, `hideCaption`, `rowKey`, `sortDirection`, `sortKey` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 
@@ -83,11 +83,6 @@ The `key` of the column currently sorted, if any.
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
-
-### `sortDirection` (Figma property "Sort")
-
-- Code values: `ascending`, `descending`, `none`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Ascending`, `None`
 
 ## States
 

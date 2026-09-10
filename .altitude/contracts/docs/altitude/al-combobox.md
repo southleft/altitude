@@ -35,10 +35,10 @@ API call).
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `filterMode` | enum | `auto`, `manual` | `'auto'` | _not expressed in Figma (by design)_ |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
-| `isActiveDropdown` | boolean | — | — | — |
+| `isActiveDropdown` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | — |
 | `isError` | boolean | — | — | — |
-| `isOptional` | boolean | — | — | — |
+| `isOptional` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isRequired` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `label` | string | — | `'Label'` | _not expressed in Figma (by design)_ |
 | `noResultsText` | string | — | `'No results found'` | _not expressed in Figma (by design)_ |
@@ -121,7 +121,7 @@ the user is typing a query that doesn't match a committed selection.
 The current text in the input. Reflects the selected option's label once
 an option has been chosen.
 
-**Figma-expression opt-out (T27):** `align`, `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `filterMode`, `isRequired`, `label`, `noResultsText`, `placeholder`, `selectedValue`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `align`, `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `filterMode`, `isActiveDropdown`, `isOptional`, `isRequired`, `label`, `noResultsText`, `placeholder`, `selectedValue`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

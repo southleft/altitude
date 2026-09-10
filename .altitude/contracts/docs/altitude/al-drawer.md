@@ -18,11 +18,11 @@ Opens from the left by default; alignment="right" selects the right edge.
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `alignment` | string | `'right'` | — | **Alignment** (VARIANT): `Default`, `Right` |
-| `ariaLabelledBy` | string | — | — | — |
-| `disableBackdropClick` | boolean | — | — | — |
+| `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `disableBackdropClick` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `hasBackdrop` | boolean | — | — | — |
 | `isActive` | boolean | — | — | — |
-| `width` | number | — | — | — |
+| `width` | number | — | — | _not expressed in Figma (by design)_ |
 
 #### `alignment`
 
@@ -51,6 +51,8 @@ Is active?
 #### `width`
 
 Width of drawer panel when expanded / collapsed as side panel
+
+**Figma-expression opt-out (T27):** `ariaLabelledBy`, `disableBackdropClick`, `width` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

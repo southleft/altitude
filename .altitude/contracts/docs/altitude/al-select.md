@@ -17,24 +17,24 @@ A choice from a known list, rendered as a field the user opens rather than types
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `align` | enum | `bottom`, `top` | `'bottom'` | — |
-| `ariaDescribedBy` | string | — | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `hasSearch` | boolean | — | `false` | — |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActive` | boolean | — | — | — |
-| `isActiveDropdown` | boolean | — | — | — |
+| `isActiveDropdown` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | — |
 | `isError` | boolean | — | — | — |
-| `isOptional` | boolean | — | — | — |
-| `isReadonly` | boolean | — | `true` | — |
-| `isRequired` | boolean | — | `false` | — |
+| `isOptional` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isReadonly` | boolean | — | `true` | _not expressed in Figma (by design)_ |
+| `isRequired` | boolean | — | `false` | _not expressed in Figma (by design)_ |
 | `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
-| `name` | string | — | — | — |
-| `placeholder` | string | — | — | — |
-| `title` | string | — | — | — |
-| `value` | string | — | — | — |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `placeholder` | string | — | — | _not expressed in Figma (by design)_ |
+| `title` | string | — | — | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `align`
 
@@ -118,6 +118,8 @@ The select's title
 #### `value`
 
 The select's value attribute
+
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `isActiveDropdown`, `isOptional`, `isReadonly`, `isRequired`, `name`, `placeholder`, `title`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

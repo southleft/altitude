@@ -17,7 +17,7 @@ A set of radios that are one question with exactly one answer. Like the checkbox
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
-| `direction` | enum | `column`, `row` | — | **Orientation** (VARIANT): `Default`, `Horizontal` |
+| `direction` | enum | `column`, `row` | — | **Orientation** (VARIANT): `Column`, `Row` |
 | `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
@@ -93,7 +93,7 @@ Label
 ### `direction` (Figma property "Orientation")
 
 - Code values: `column`, `row`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Horizontal`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Column`, `Row`
 
 ### `hideLegend` (Figma property "Legend")
 

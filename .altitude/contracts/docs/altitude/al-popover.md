@@ -17,12 +17,12 @@ Supply its content through the body, header and footer slots; use position to se
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaLabelledBy` | string | — | — | — |
-| `heading` | string | — | — | — |
+| `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `heading` | string | — | — | _not expressed in Figma (by design)_ |
 | `isActive` | boolean | — | — | — |
 | `isDismissible` | boolean | — | — | — |
 | `position` | string | `\| 'bottom-center' \| 'bottom-right' \| 'bottom-left' \| 'top-center' \| 'top-right' \| 'top-left' \| 'left' \| 'left-top' \| 'right' \| 'right-top'` | `'bottom-left'` | **Position** (VARIANT): `Bottom-center`, `Default`, `Left`, `Right` |
-| `transitionDelay` | number | — | `400` | — |
+| `transitionDelay` | number | — | `400` | _not expressed in Figma (by design)_ |
 | `variant` | string | `'menu'` | — | — |
 
 #### `ariaLabelledBy`
@@ -71,6 +71,8 @@ Number of ms of the dialog's open/close css transition delay
 Variants
 - **default** Displays the popover panel with padding
 - **menu** Displays the popover panel without padding
+
+**Figma-expression opt-out (T27):** `ariaLabelledBy`, `heading`, `transitionDelay` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

@@ -17,13 +17,13 @@ Use the trigger slot to open it and provide a clear heading and dismissal action
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaLabelledBy` | string | — | — | — |
-| `dialogTrigger` | string | `any` | — | — |
-| `disableClickOutside` | boolean | — | — | — |
-| `heading` | string | — | — | — |
+| `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `dialogTrigger` | string | `any` | — | _not expressed in Figma (by design)_ |
+| `disableClickOutside` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `heading` | string | — | — | _not expressed in Figma (by design)_ |
 | `isActive` | boolean | — | — | — |
-| `transitionDelay` | number | — | `400` | — |
-| `width` | number | — | — | — |
+| `transitionDelay` | number | — | `400` | _not expressed in Figma (by design)_ |
+| `width` | number | — | — | _not expressed in Figma (by design)_ |
 
 #### `ariaLabelledBy`
 
@@ -60,6 +60,8 @@ Number of ms of the dialog's open/close css transition delay
 
 The width of the dialog container
 - If no value is entered, it defaults to 432px
+
+**Figma-expression opt-out (T27):** `ariaLabelledBy`, `dialogTrigger`, `disableClickOutside`, `heading`, `transitionDelay`, `width` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

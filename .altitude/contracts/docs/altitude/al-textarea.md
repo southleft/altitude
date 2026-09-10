@@ -26,9 +26,9 @@ Component: al-textarea
 | `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `isFocused` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
-| `isOptional` | boolean | — | — | — |
+| `isOptional` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isReadonly` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isRequired` | boolean | — | — | — |
+| `isRequired` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `label` | string | — | `'Label'` | — |
 | `maxLength` | number | — | — | _not expressed in Figma (by design)_ |
 | `maxLengthValue` | number | — | — | _not expressed in Figma (by design)_ |
@@ -147,7 +147,7 @@ Rows attribute
 Value attribute
 - Specifies the value of an input element
 
-**Figma-expression opt-out (T27):** `ariaDescribedBy`, `cols`, `errorNote`, `fieldId`, `fieldNote`, `isActive`, `isReadonly`, `maxLength`, `maxLengthValue`, `minLength`, `name`, `placeholder`, `rows`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `cols`, `errorNote`, `fieldId`, `fieldNote`, `isActive`, `isOptional`, `isReadonly`, `isRequired`, `maxLength`, `maxLengthValue`, `minLength`, `name`, `placeholder`, `rows`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 
