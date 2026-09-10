@@ -54,7 +54,12 @@ import { execFileSync } from 'node:child_process';
 import { join, relative } from 'node:path';
 
 import { REPO_ROOT } from '../libs/altitude-mcp/src/lib/paths.mjs';
-import { listProjectIds, resolveProject, projectFromArgv } from '../libs/altitude-mcp/src/lib/ds-project.mjs';
+import {
+  listProjectIds,
+  resolveProject,
+  projectFromArgv,
+  excludedReasonFor,
+} from '../libs/altitude-mcp/src/lib/ds-project.mjs';
 
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   console.log(`check-brand-conformance.mjs — supersession conformance + new-base-component report.
@@ -249,11 +254,12 @@ function newBaseComponentReport(project, baseComponents) {
   if (!project.library.components) return { scoped: false, tags: [] };
 
   const superseded = new Set(Object.values(project.brandLibrary?.supersedes ?? {}));
-  const excluded = new Set(Object.keys(project.excluded ?? {}));
 
   const canonical = baseComponents.filter((c) => CANONICAL_MODULE.test(c.modulePath));
+  // excludedReasonFor, not a Set of keys: `excluded` accepts trailing-`*`
+  // prefix patterns (e.g. `al-icon-*`), which a plain key lookup would miss.
   const unconsidered = canonical.filter(
-    (c) => !allowlist.has(c.tag) && !superseded.has(c.tag) && !excluded.has(c.tag),
+    (c) => !allowlist.has(c.tag) && !superseded.has(c.tag) && !excludedReasonFor(project.excluded, c.tag),
   );
 
   const withTimestamp = unconsidered.map((c) => ({

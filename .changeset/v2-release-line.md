@@ -28,3 +28,9 @@ each additive and each rendering exactly what an omitted attribute already rende
   `.al-is-circle-sm`, which also lets the label offset rule say what it means
   (`.al-has-label.al-is-circle-sm`) instead of
   `:not(.al-is-circle-md):not(.al-is-circle-lg):not(.al-is-circle-xl)`.
+
+Parity tracking no longer counts the 37 `al-icon-*` per-glyph elements as components
+missing from Figma: `excluded` in `.altitude/ds-projects.json` now accepts a trailing-`*`
+prefix pattern (`excludedReasonFor()` in `libs/altitude-mcp/src/lib/ds-project.mjs`),
+which drops `missing-in-figma` from 59 to 22 and makes every aggregate over that manifest
+mean what it says.
