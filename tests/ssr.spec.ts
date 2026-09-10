@@ -44,18 +44,31 @@ test.describe('T5.2 — SSR fixture', () => {
 
     // Server-rendered, before a byte of JS runs.
     expect(html).toContain('shadowrootmode="open"');
-    expect(html).toMatch(/<al-theme[^>]*brand="southleft"/);
-    // The scoped-theming payload really is inside the DSD template: al-theme
-    // serializes its `:host([brand=…])` blocks into the shadow root, which is
-    // the cost `.altitude/SSR.md` documents. If that stops happening, the page
-    // cannot be branded with JS disabled and the next test would go red too.
-    expect(html).toContain(':host([brand=southleft][mode=dark])');
+    // `data-al-mode` is serialized, not left to `updated()`. The component
+    // mirrors `mode` onto the host in a JavaScript lifecycle; the third test
+    // below runs with JavaScript DISABLED, so without this in the markup the
+    // bundle's `[data-al-mode]` block would have nothing to match.
+    expect(html).toMatch(/<al-theme[^>]*data-al-mode="dark"/);
+    // And no `brand`: al-theme carries no palette any more. A design system is
+    // the stylesheet the page loads, which is the link asserted below.
+    expect(html).not.toMatch(/<al-theme[^>]*\sbrand=/);
+    // The DSD template really does carry the component's own CSS — the axes it
+    // still owns. This is the per-host serialization cost `.altitude/SSR.md`
+    // documents; if it stops happening, the axes stop working before hydration.
+    expect(html).toContain(':host([contrast=more])');
     expect(html).toContain('<slot>');
 
-    // The stylesheet the page links must exist — this is the 404 that made the
-    // fixture render unstyled for as long as it had a test.
-    const css = await request.get('http://localhost:5177/libs/al-web-components/dist/css/main.css');
-    expect(css.status()).toBe(200);
+    // Both stylesheets the page links must exist — the 404 that made this
+    // fixture render unstyled for as long as it had a test. The project bundle
+    // is the one that makes the page Southleft; it is what the removed
+    // `:host([brand=…])` blocks were replaced BY, so a 404 here is the modern
+    // form of the same defect.
+    for (const href of [
+      'http://localhost:5177/libs/al-web-components/dist/css/main.css',
+      'http://localhost:5177/libs/al-web-components/dist/css/css/project/southleft.css',
+    ]) {
+      expect((await request.get(href)).status(), href).toBe(200);
+    }
   });
 
   test('the non-opted-in pilots are plain elements, by design', async ({ request }) => {
@@ -79,7 +92,9 @@ test.describe('T5.2 — SSR fixture', () => {
     });
 
     // `color: var(--al-theme-color-background-primary-default)` — southleft's
-    // brand orange, resolved purely from the serialized DSD + main.css.
+    // primary 500 (#f05735), resolved with no JavaScript at all: `:root` in the
+    // linked project bundle, over main.css. It used to come from the DSD
+    // template's brand block; the value is the same, the source is not.
     expect(probe).toBe('rgb(240, 87, 53)');
     await context.close();
   });

@@ -203,6 +203,44 @@ export function resolveProject(explicitId = null) {
 }
 
 /**
+ * Resolve a project's `excluded` map for one tag, honouring trailing-`*`
+ * prefix patterns as well as exact tags.
+ *
+ * The pattern form exists because ONE module can register MANY tags:
+ * `components/icon/` ships `al-icon` plus 37 per-glyph elements
+ * (`al-icon-add`, `al-icon-bell`, …). None of them can ever be a Figma
+ * component set — icons live in the file as flat components resolved by
+ * name — and none of them has a story of its own, so
+ * `library.excludeTitlePrefixes` (which matches on story title) cannot reach
+ * them either. Before this, they counted as `missing-in-figma` and made up
+ * 37 of that bucket's 59 entries, which is how a parity summary came to read
+ * "3 in sync of 104" over a denominator that was more than a third icons.
+ *
+ * Listing all 38 by hand would be a maintenance trap: the next glyph added
+ * would silently re-pollute every aggregate.
+ *
+ * Exact keys beat patterns, and the longest matching pattern wins, so a
+ * specific tag can always be given a different (or no) exclusion.
+ *
+ * @param {Record<string,string>|null|undefined} excluded the project's `excluded` map
+ * @param {string} tag component tag, e.g. `al-icon-bell`
+ * @returns {string|null} the reason string, or null when the tag is not excluded
+ */
+export function excludedReasonFor(excluded, tag) {
+  if (!excluded || !tag) return null;
+  if (Object.prototype.hasOwnProperty.call(excluded, tag)) return excluded[tag];
+
+  let best = null;
+  for (const [key, reason] of Object.entries(excluded)) {
+    if (!key.endsWith('*')) continue;
+    const prefix = key.slice(0, -1);
+    if (!tag.startsWith(prefix)) continue;
+    if (!best || prefix.length > best.prefix.length) best = { prefix, reason };
+  }
+  return best ? best.reason : null;
+}
+
+/**
  * Build the Figma deep-link for a node id in this project's file.
  * `null` nodeId (molecules are mapped by name only) yields the file root.
  */

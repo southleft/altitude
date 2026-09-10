@@ -43,7 +43,7 @@ async function main() {
     await page.addScriptTag({ content: axeSource });
     const results = await page.evaluate(async () => {
       const ax = (window).axe;
-      return ax.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] });
+      return ax.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] });
     });
     const blocking = (results.violations || []).filter((v) =>
       v.impact === 'critical' || v.impact === 'serious'

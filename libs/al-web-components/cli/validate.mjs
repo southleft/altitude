@@ -412,7 +412,8 @@ function parseAttrs(s) {
   while (i < n) {
     while (i < n && (isWs(s[i]) || s[i] === '/')) i++;
     if (i >= n) break;
-    if (s[i] === '{') { // JSX spread / expression container: {...props}
+    if (s[i] === '{' || (s[i] === '$' && s[i + 1] === '{')) { // JSX spread or Lit element directive
+      if (s[i] === '$') i++; // Lit ${spread(args)} is an expression, not an attribute name.
       let depth = 0;
       while (i < n) { const c = s[i++]; if (c === '{') depth++; else if (c === '}') { depth--; if (depth === 0) break; } }
       out.push({ rawName: null, value: undefined, kind: 'spread' });

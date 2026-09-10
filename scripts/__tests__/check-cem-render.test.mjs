@@ -103,8 +103,8 @@ console.log('check-cem-render.test.mjs');
   const json = JSON.parse(out.slice(out.indexOf('{')));
   const al = json.packages.find((p) => p.package === 'libs/al-web-components');
   assert(
-    'the real al-card `action-right` slot is reported as documented-but-absent',
-    al.errors.some((e) => e.tag === 'al-card' && e.kind === 'slot' && e.name === 'action-right'),
+    'the repaired al-card action-right slot agrees with its public contract',
+    !al.errors.some((e) => e.tag === 'al-card' && e.kind === 'slot' && e.name === 'action-right'),
     JSON.stringify(al.errors)
   );
   const sl = json.packages.find((p) => p.package === 'libs/sl-web-components');

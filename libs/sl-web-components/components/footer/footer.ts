@@ -43,6 +43,7 @@ import styles from './footer.scss';
  * site already uses, so an asymmetric masthead never becomes a reason to
  * hand-roll `display: grid`.
  *
+ * @slot - Additional footer content, preserving the base footer's unnamed slot.
  * @slot brand - The first, wider column: wordmark, blurb, CTA, whatever annotation the page carries.
  * @slot columns - The remaining masthead columns. Each top-level element becomes one column.
  * @slot legal - Links for the bottom bar, beside the copyright.
@@ -54,6 +55,9 @@ import styles from './footer.scss';
  * @cssproperty --al-footer-template - The masthead track list. Defaults to `1.4fr 1fr 1fr`.
  * @cssproperty --al-footer-measure - The content column. Defaults to `79rem`.
  * @cssproperty --al-footer-padding-block - The footer's vertical rhythm. Defaults to `3.5rem`.
+ * @cssproperty --al-footer-gap - Spacing between the footer's direct content regions.
+ * @cssproperty --al-footer-background - Surface behind the footer content.
+ * @cssproperty --al-footer-border-block-start - Border along the footer's top edge.
  */
 export class SLFooter extends ALElement {
   static el = 'al-footer';
@@ -85,6 +89,7 @@ export class SLFooter extends ALElement {
               <slot name="brand"></slot>
             </div>
             <slot name="columns"></slot>
+            <slot></slot>
           </al-layout>
 
           ${this.quote

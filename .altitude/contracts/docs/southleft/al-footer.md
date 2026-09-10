@@ -65,10 +65,11 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 `hover`
 
-## Slots (3)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
+| `(default)` | Additional footer content, preserving the base footer's unnamed slot. | — | — |
 | `brand` | The first, wider column: wordmark, blurb, CTA, whatever annotation the page carries. | — | — |
 | `columns` | The remaining masthead columns. Each top-level element becomes one column. | — | — |
 | `legal` | Links for the bottom bar, beside the copyright. | — | — |
@@ -107,7 +108,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (8)
 
-`--al-font-weight-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xxl`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xxl`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-semibold-letter-spacing`
 
 ---
 

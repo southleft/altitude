@@ -98,9 +98,15 @@
     "root": {
       "tag": "div",
       "cls": "sl-c-cta-band",
+      "bw4": [
+        1,
+        0,
+        0,
+        0
+      ],
       "box": {
         "w": 1280,
-        "h": 623.1
+        "h": 627.1
       },
       "layout": {
         "display": "block",
@@ -108,14 +114,27 @@
         "align": "normal",
         "justify": "normal"
       },
-      "tokens": {},
+      "tokens": {
+        "border-block-start": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        },
+        "border-top-color": {
+          "code": "--al-theme-color-border-neutral-weak",
+          "figma": "theme/color/border/neutral-weak"
+        },
+        "border-top-width": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        }
+      },
       "children": [
         {
           "tag": "div",
           "cls": "sl-c-cta-band__texture",
           "box": {
             "w": 1280,
-            "h": 622.1
+            "h": 626.1
           },
           "layout": {
             "display": "block",
@@ -131,7 +150,7 @@
           "cls": "sl-c-cta-band__inner",
           "box": {
             "w": 1280,
-            "h": 622.1
+            "h": 626.1
           },
           "layout": {
             "display": "block",
@@ -145,6 +164,10 @@
               "tag": "p",
               "cls": "sl-c-cta-band__kicker",
               "text": "<cta>",
+              "fsPx": 13,
+              "lhPx": 20,
+              "ffCss": "IBM Plex Mono",
+              "fwCss": "500",
               "box": {
                 "w": 1184,
                 "h": 20
@@ -187,11 +210,11 @@
                   "figma": null
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-display-md-bold-letter-spacing",
+                  "code": "--al-theme-typography-display-md-semibold-letter-spacing",
                   "figma": null
                 }
               },
@@ -201,6 +224,10 @@
                   "cls": "al-c-heading al-c-heading--display-md al-is-bold",
                   "component": "al-heading",
                   "text": "Ready to build a system your team will actually use?",
+                  "fsPx": 72,
+                  "lhPx": 72,
+                  "ffCss": "Agrandir",
+                  "fwCss": "600",
                   "box": {
                     "w": 654.5,
                     "h": 216
@@ -221,11 +248,11 @@
                       "figma": null
                     },
                     "font-weight": {
-                      "code": "--al-font-weight-bold",
-                      "figma": "typography/font-weight/bold"
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
                     },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-display-md-bold-letter-spacing",
+                      "code": "--al-theme-typography-display-md-semibold-letter-spacing",
                       "figma": null
                     }
                   },
@@ -237,6 +264,10 @@
               "tag": "p",
               "cls": "sl-c-cta-band__dek",
               "text": "Tell us what you are working on.",
+              "fsPx": 22,
+              "lhPx": 34.1,
+              "ffCss": "IBM Plex Sans",
+              "fwCss": "400",
               "box": {
                 "w": 512,
                 "h": 34.1
@@ -260,7 +291,7 @@
               "cls": "sl-c-cta-band__actions",
               "box": {
                 "w": 1184,
-                "h": 36
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -275,8 +306,8 @@
                   "cls": "al-c-button",
                   "component": "al-button",
                   "box": {
-                    "w": 142,
-                    "h": 36
+                    "w": 128.3,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-flex",
@@ -318,24 +349,20 @@
                       "figma": "theme/space/xs"
                     },
                     "font-weight": {
-                      "code": "--al-font-weight-bold",
-                      "figma": "typography/font-weight/bold"
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
                     },
                     "gap": {
                       "code": "--al-theme-space-xs",
                       "figma": "theme/space/xs"
                     },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                       "figma": null
                     },
-                    "padding": {
-                      "code": "--al-theme-space-xs",
-                      "figma": "theme/space/xs"
-                    },
-                    "padding-bottom": {
-                      "code": "--al-theme-space-xs",
-                      "figma": "theme/space/xs"
+                    "min-height": {
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
                       "code": "--al-theme-space",
@@ -344,10 +371,6 @@
                     "padding-right": {
                       "code": "--al-theme-space",
                       "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-theme-space-xs",
-                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -359,8 +382,8 @@
                       "tag": "span",
                       "cls": "al-c-button__text",
                       "box": {
-                        "w": 110,
-                        "h": 20
+                        "w": 96.3,
+                        "h": 14
                       },
                       "layout": {
                         "display": "block",
@@ -374,9 +397,13 @@
                           "tag": "span",
                           "cls": "al-c-button__text",
                           "text": "Start a project",
+                          "fsPx": 14,
+                          "lhPx": 14,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "600",
                           "box": {
-                            "w": 110,
-                            "h": 17
+                            "w": 96.3,
+                            "h": 16
                           },
                           "layout": {
                             "display": "block",
@@ -399,18 +426,21 @@
     }
   },
   "tokens": [
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-theme-border-radius-role-action",
+    "--al-theme-border-width",
     "--al-theme-color-background-primary-default",
+    "--al-theme-color-border-neutral-weak",
     "--al-theme-color-content-neutral-default",
     "--al-theme-color-content-neutral-weak",
     "--al-theme-color-content-primary-default",
     "--al-theme-color-content-primary-weak",
+    "--al-theme-size-control",
     "--al-theme-space",
     "--al-theme-space-xs",
-    "--al-theme-typography-body-md-bold-letter-spacing",
+    "--al-theme-typography-body-sm-semibold-letter-spacing",
     "--al-theme-typography-display-md",
-    "--al-theme-typography-display-md-bold-letter-spacing"
+    "--al-theme-typography-display-md-semibold-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [],

@@ -16,7 +16,7 @@
  *   geometry-light.json / geometry-dark.json   window.__measure() summaries
  */
 import { spawn, execFileSync } from 'node:child_process';
-import { writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
+import { writeFileSync, readFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -31,6 +31,18 @@ const STATES = ['default', 'hover', 'focus', 'active', 'disabled'];
 const portArg = process.argv.indexOf('--port');
 const PORT = portArg > -1 ? Number(process.argv[portArg + 1]) : 7345;
 const NO_BUNDLE = process.argv.includes('--no-bundle');
+const componentArg=process.argv.indexOf('--component');
+const ONLY_COMPONENT=componentArg<0?null:process.argv[componentArg+1];
+if(componentArg>=0&&!/^[a-z]+-[a-z0-9-]+$/.test(ONLY_COMPONENT||''))throw new Error('--component requires one component tag');
+function writeObservation(name,value){
+  const path=join(OUT,name);
+  if(ONLY_COMPONENT&&existsSync(path)){
+    const previous=JSON.parse(readFileSync(path,'utf8'));
+    const merge=(old,next)=>[...old.filter(row=>row.tag!==ONLY_COMPONENT),...next];
+    value=Array.isArray(value)?merge(previous,value):Object.fromEntries(Object.entries(value).map(([state,rows])=>[state,merge(previous[state]||[],rows)]));
+  }
+  writeFileSync(path,JSON.stringify(value,null,name.startsWith('shots-index')?2:undefined)+'\n');
+}
 
 mkdirSync(OUT, { recursive: true });
 
@@ -112,7 +124,7 @@ try {
   await waitForHarness();
   const chromium = await loadChromium();
   const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 1400, height: 4000 } });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 
   /**
    * Pin the wall clock, or the measurement is not reproducible.
@@ -145,18 +157,19 @@ try {
   await page.clock.setFixedTime(new Date('2026-06-15T12:00:00Z'));
 
   for (const mode of ['light', 'dark']) {
-    await page.goto(`http://localhost:${PORT}/?mode=${mode}`, { waitUntil: 'networkidle' });
+    await page.goto(`http://localhost:${PORT}/?mode=${mode}${ONLY_COMPONENT?'&component='+encodeURIComponent(ONLY_COMPONENT):''}`, { waitUntil: 'networkidle' });
     await page.waitForFunction('window.__ATOMS_READY__ === true', null, { timeout: 30000 });
 
     const geometry = await page.evaluate('window.__measure()');
-    writeFileSync(join(OUT, `geometry-${mode}.json`), JSON.stringify(geometry) + '\n');
+    if(!geometry.length)throw new Error('No measured cases for '+ONLY_COMPONENT);
+    writeObservation(`geometry-${mode}.json`,geometry);
 
     const byState = {};
     for (const state of STATES) {
       byState[state] = await page.evaluate(`window.__spec(${JSON.stringify(state)})`);
       console.log(`[measure] ${mode}/${state}: ${byState[state].length} cases`);
     }
-    writeFileSync(join(OUT, `spec-${mode}.json`), JSON.stringify(byState) + '\n');
+    writeObservation(`spec-${mode}.json`,byState);
 
     /* ---------- ground-truth screenshots (visual bookend START) -----------
      * Spec 2026-08-28-visual-bookends-for-generation T1: one PNG per case,
@@ -180,17 +193,40 @@ try {
     const shotIndex = [];
     for (const wrap of caseHandles) {
       const meta = await wrap.evaluate((el) => {
-        const host = el.firstElementChild;
+        const host = el.dataset.measureRoot
+          ? el.firstElementChild?.shadowRoot?.querySelector(el.dataset.measureRoot)
+          : [...(el.firstElementChild?.shadowRoot?.children || [])].find(n => n.tagName !== 'STYLE') || el.firstElementChild;
         const r = host ? host.getBoundingClientRect() : { width: 0, height: 0 };
         return { tag: el.closest('section[data-atom]').dataset.atom, caseName: el.dataset.case || 'default',
-          w: r.width, h: r.height };
+          measureRoot: el.dataset.measureRoot || null, w: r.width, h: r.height };
       });
       if (meta.w < 1 || meta.h < 1) continue; // invisible in this case — nothing to capture
-      const host = await wrap.$(':scope > *:first-child');
+      const target = await wrap.evaluateHandle(el => el.dataset.measureRoot
+        ? el.firstElementChild?.shadowRoot?.querySelector(el.dataset.measureRoot)
+        : [...(el.firstElementChild?.shadowRoot?.children || [])].find(n => n.tagName !== 'STYLE') || el.firstElementChild);
+      const host = target.asElement();
       if (!host) continue;
       const slug = `${meta.tag}--${meta.caseName}`.replace(/[^A-Za-z0-9._-]+/g, '_');
       const file = join(shotsDir, `${slug}.png`);
       try {
+        // Open overlays from other cases must not paint over this reference.
+        // Measurement is already complete; isolate only for the visual capture.
+        await wrap.evaluate(async el => {
+          for (const other of document.querySelectorAll('.case')) if (other !== el) {
+            other.dataset.shotDisplay = other.style.display;
+            other.style.display = 'none';
+          }
+          // Floating surfaces need room on every side of their trigger.
+          // With 24px padding, a top tooltip starts above the viewport.
+          document.querySelector('#root').style.padding = el.dataset.measureRoot ? '300px' : '24px';
+          window.scrollTo(0,0);
+          const component = el.firstElementChild;
+          if (el.dataset.measureRoot && 'isActive' in component) {
+            component.isActive = true;
+            await component.updateComplete;
+          }
+        });
+        if (meta.measureRoot) await host.waitForElementState('visible', {timeout:2000});
         await host.screenshot({ path: file, timeout: 10000 });
         shotIndex.push({ tag: meta.tag, case: meta.caseName, mode, state: 'default',
           file: `shots/${mode}/${slug}.png`, w: Math.round(meta.w * 100) / 100, h: Math.round(meta.h * 100) / 100 });
@@ -198,9 +234,17 @@ try {
         // Recorded, never fatal: one unscreenshotable case (zero paint area,
         // detached overlay) must not kill the whole measurement run.
         shotIndex.push({ tag: meta.tag, case: meta.caseName, mode, state: 'default', file: null, error: String(e.message || e).split('\n')[0] });
+      } finally {
+        await page.evaluate(() => {
+          document.querySelector('#root').style.padding = '24px';
+          for (const el of document.querySelectorAll('[data-shot-display]')) {
+            el.style.display = el.dataset.shotDisplay;
+            delete el.dataset.shotDisplay;
+          }
+        });
       }
     }
-    writeFileSync(join(OUT, `shots-index-${mode}.json`), JSON.stringify(shotIndex, null, 2) + '\n');
+    writeObservation(`shots-index-${mode}.json`,shotIndex);
     const shotOk = shotIndex.filter((s) => s.file).length;
     console.log(`[measure] ${mode}/shots: ${shotOk} ground-truth PNGs (${shotIndex.length - shotOk} failed) -> ${shotsDir}`);
   }

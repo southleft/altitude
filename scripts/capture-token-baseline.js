@@ -97,7 +97,17 @@ function main() {
     process.exit(1);
   }
 
-  const files = walk(TOKEN_DIST, ['.css', '.scss', '.json']);
+  /*
+   * `css/project/*.css` are the per-project bundles (tokens-config.v5.mjs, step 4).
+   * They are COMPOSED from the per-brand `:root` files already walked here — the
+   * same declarations, re-emitted under `:root` plus two `[data-al-mode]` blocks —
+   * so baselining them restates ~8,700 lines that are already covered and doubles
+   * the diff on every token change for no extra signal. Same reasoning the legacy
+   * mirror gives for skipping `scss/host`. They still SHIP; they are just not
+   * baselined twice.
+   */
+  const files = walk(TOKEN_DIST, ['.css', '.scss', '.json'])
+    .filter((f) => !/[\\/]css[\\/]project[\\/]/.test(f));
   const all = files.flatMap(extractVars);
   // Deterministic order: by file, then by name.
   all.sort((a, b) => (a.file === b.file ? a.name.localeCompare(b.name) : a.file.localeCompare(b.file)));

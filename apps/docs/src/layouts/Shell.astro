@@ -2,7 +2,7 @@
 /**
  * The app shell from the design canvas: a fixed 264px sidebar beside a
  * single scrolling `<main>`. Every page of every design system's site renders
- * inside it — one shell, one design language, N brands.
+ * inside it — one shell, one design language, N design systems.
  *
  * TWO THEMING AXES, deliberately separate:
  *
@@ -10,20 +10,21 @@
  *   sidebar's pill switch, the same mechanism the canvas uses. It styles the
  *   documentation, not the thing being documented.
  *
- *   `<al-theme brand mode>` around the whole shell — the COMPONENTS' brand.
- *   Tokens land on `:host` and inherit into the light DOM inside it
- *   (`.altitude/BRANDS.md`; the mechanism `pnpm test:scoped-theming` proves),
- *   so every live preview on a project's site renders in that project's brand
- *   with no forked template and no second stylesheet. It composes on top of
- *   `dist/css/main.css` rather than replacing it, which is why the neutral
- *   reference brand emits no override block at all and still works.
+ *   `<al-theme data-al-project mode>` around the whole shell — the COMPONENTS'
+ *   design system. There is no `brand` attribute any more: a system's LOOK is
+ *   the token bundle the page loads, one file per system, linked per route in
+ *   <head> below. The attribute makes this element the nearest ancestor
+ *   declaring that bundle's tokens, so they inherit into the light DOM inside
+ *   it and every live preview on a project's site renders in that project's
+ *   system — no forked template, and the same proximity mechanism `brand`
+ *   relied on.
  *
  * The one place the two meet is the accent: `docs.css` re-declares `--blue`
  * ON the `al-theme` element as `var(--al-theme-color-content-primary-default)`.
- * Declared there and not on `:root`, so it resolves against the BRANDED value
+ * Declared there and not on `:root`, so it resolves against the PROJECT's value
  * rather than the base one — custom properties substitute where they are
  * declared, so a `:root` declaration would have frozen the base blue before the
- * brand could reach it.
+ * project's bundle could reach it.
  */
 import '@southleft/al-web-components/css/main.css';
 import '../styles/docs.css';
@@ -129,6 +130,30 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
     <script is:inline>window.alAutoRegistry = true;</script>
 
     {
+      /* THE DESIGN SYSTEM'S TOKEN BUNDLE, per route. One `dist/docs` holds
+         every project's site, so this is the one stylesheet that differs
+         between /docs/ and /docs/southleft/ — copied into `public/project/` by
+         `scripts/copy-brand-assets.mjs`.
+
+         WHY THE LINK ORDER DOES NOT MATTER, and why `data-al-project` sits on
+         `<al-theme>` rather than on `<html>`. Astro appends its own bundled
+         stylesheet links at the very END of <head>, after everything written
+         here, so `css/main.css` (imported in the frontmatter) always loads
+         last. Both files declare their tokens unlayered at equal specificity,
+         so on `<html>` main.css would simply win and a southleft route would
+         render Altitude.
+
+         The bundle is emitted as `:root, [data-al-project='<id>']`. Putting
+         that attribute on the theme host makes it the NEAREST ancestor
+         declaring those custom properties, and inheritance resolves to the
+         nearest declaration regardless of source order. Everything visible —
+         the chrome and every live preview — is inside this element, so the
+         whole page resolves the project's tokens. This is the same proximity
+         mechanism `brand` used before it was removed. */
+    }
+    <link rel="stylesheet" href={`${base}/project/${project.id}.css`} />
+
+    {
       /* Clears the boot blur. INLINE and in <head> so it is armed before the
          body exists and does not depend on the bundled module graph — if that
          fails to load, the backstop below still un-blurs rather than leaving
@@ -189,7 +214,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
       omits the attribute.
     */}
     <al-theme
-      brand={project.brand}
+      data-al-project={project.id}
       mode={project.defaultMode}
       contrast={project.contrast}
       data-brand-host

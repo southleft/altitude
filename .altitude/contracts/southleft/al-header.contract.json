@@ -11,6 +11,19 @@
   },
   "props": [
     {
+      "name": "elevated",
+      "description": "Add the base header's elevated shadow treatment.",
+      "type": "boolean",
+      "rawType": "boolean",
+      "default": "false",
+      "bindings": {
+        "code": {
+          "attribute": "elevated"
+        },
+        "figma": null
+      }
+    },
+    {
       "name": "menu-open",
       "description": "Whether the mobile panel is open. Reflected so the page can style against\n`al-header[menu-open]` and so the state is inspectable in devtools rather\nthan trapped in the shadow root.",
       "type": "boolean",
@@ -44,6 +57,10 @@
     }
   ],
   "slots": [
+    {
+      "name": "",
+      "description": "Additional navigation content, preserving the base header's unnamed slot."
+    },
     {
       "name": "actions",
       "description": "The right-hand cluster. Native `<button>`s get the circular icon treatment; anything else (an `<al-button>` CTA) is left alone."
@@ -93,6 +110,12 @@
     "root": {
       "tag": "header",
       "cls": "sl-c-header al-is-sticky",
+      "bw4": [
+        0,
+        0,
+        1,
+        0
+      ],
       "box": {
         "w": 1280,
         "h": 80
@@ -107,6 +130,18 @@
         "background-color": {
           "code": "--al-theme-color-background-neutral-weak",
           "figma": "theme/color/background/neutral-weak"
+        },
+        "border-block-end": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
+        },
+        "border-top-color": {
+          "code": "--al-theme-color-border-neutral-weak",
+          "figma": "theme/color/border/neutral-weak"
+        },
+        "border-top-width": {
+          "code": "--al-theme-border-width",
+          "figma": "theme/border/width/@"
         }
       },
       "children": [
@@ -116,7 +151,7 @@
           "component": "al-layout",
           "box": {
             "w": 1280,
-            "h": 36
+            "h": 40
           },
           "layout": {
             "display": "grid",
@@ -141,7 +176,7 @@
               "component": "al-layout",
               "box": {
                 "w": 1160,
-                "h": 36
+                "h": 40
               },
               "layout": {
                 "display": "flex",
@@ -223,7 +258,8 @@
                             "display": "block",
                             "direction": "row",
                             "align": "normal",
-                            "justify": "normal"
+                            "justify": "normal",
+                            "fillInline": true
                           },
                           "tokens": {},
                           "children": [
@@ -280,11 +316,11 @@
                               "figma": "theme/color/content/neutral-weak"
                             },
                             "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
+                              "code": "--al-font-weight-semibold",
+                              "figma": "typography/font-weight/semibold"
                             },
                             "letter-spacing": {
-                              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                               "figma": null
                             }
                           },
@@ -299,8 +335,8 @@
                   "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--align-center",
                   "component": "al-layout",
                   "box": {
-                    "w": 242.7,
-                    "h": 36
+                    "w": 235.1,
+                    "h": 40
                   },
                   "layout": {
                     "display": "flex",
@@ -371,6 +407,10 @@
                               "tag": "span",
                               "cls": "",
                               "text": "WorkInsightsAbout",
+                              "fsPx": 16,
+                              "lhPx": 20,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 134,
                                 "h": 20
@@ -393,8 +433,8 @@
                       "cls": "al-c-layout al-c-layout--row al-c-layout--gap-sm al-c-layout--align-center",
                       "component": "al-layout",
                       "box": {
-                        "w": 92.7,
-                        "h": 36
+                        "w": 85.1,
+                        "h": 40
                       },
                       "layout": {
                         "display": "flex",
@@ -422,8 +462,8 @@
                           "cls": "al-c-button",
                           "component": "al-button",
                           "box": {
-                            "w": 92.7,
-                            "h": 36
+                            "w": 85.1,
+                            "h": 40
                           },
                           "layout": {
                             "display": "inline-flex",
@@ -465,24 +505,20 @@
                               "figma": "theme/space/xs"
                             },
                             "font-weight": {
-                              "code": "--al-font-weight-bold",
-                              "figma": "typography/font-weight/bold"
+                              "code": "--al-font-weight-semibold",
+                              "figma": "typography/font-weight/semibold"
                             },
                             "gap": {
                               "code": "--al-theme-space-xs",
                               "figma": "theme/space/xs"
                             },
                             "letter-spacing": {
-                              "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                              "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                               "figma": null
                             },
-                            "padding": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
-                            },
-                            "padding-bottom": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
+                            "min-height": {
+                              "code": "--al-theme-size-control",
+                              "figma": "theme/size/control"
                             },
                             "padding-left": {
                               "code": "--al-theme-space",
@@ -491,10 +527,6 @@
                             "padding-right": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "padding-top": {
-                              "code": "--al-theme-space-xs",
-                              "figma": "theme/space/xs"
                             },
                             "row-gap": {
                               "code": "--al-theme-space-xs",
@@ -506,8 +538,8 @@
                               "tag": "span",
                               "cls": "al-c-button__text",
                               "box": {
-                                "w": 60.7,
-                                "h": 20
+                                "w": 53.1,
+                                "h": 14
                               },
                               "layout": {
                                 "display": "block",
@@ -521,9 +553,13 @@
                                   "tag": "span",
                                   "cls": "al-c-button__text",
                                   "text": "Contact",
+                                  "fsPx": 14,
+                                  "lhPx": 14,
+                                  "ffCss": "IBM Plex Sans",
+                                  "fwCss": "600",
                                   "box": {
-                                    "w": 60.7,
-                                    "h": 17
+                                    "w": 53.1,
+                                    "h": 16
                                   },
                                   "layout": {
                                     "display": "block",
@@ -554,6 +590,12 @@
         "root": {
           "tag": "header",
           "cls": "sl-c-header al-is-sticky",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 1280,
             "h": 80
@@ -568,6 +610,18 @@
             "background-color": {
               "code": "--al-theme-color-background-neutral-weak",
               "figma": "theme/color/background/neutral-weak"
+            },
+            "border-block-end": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-neutral-weak",
+              "figma": "theme/color/border/neutral-weak"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
             }
           },
           "children": [
@@ -577,7 +631,7 @@
               "component": "al-layout",
               "box": {
                 "w": 1280,
-                "h": 36
+                "h": 40
               },
               "layout": {
                 "display": "grid",
@@ -602,7 +656,7 @@
                   "component": "al-layout",
                   "box": {
                     "w": 1160,
-                    "h": 36
+                    "h": 40
                   },
                   "layout": {
                     "display": "flex",
@@ -684,7 +738,8 @@
                                 "display": "block",
                                 "direction": "row",
                                 "align": "normal",
-                                "justify": "normal"
+                                "justify": "normal",
+                                "fillInline": true
                               },
                               "tokens": {},
                               "children": [
@@ -741,11 +796,11 @@
                                   "figma": "theme/color/content/neutral-weak"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -760,8 +815,8 @@
                       "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--align-center",
                       "component": "al-layout",
                       "box": {
-                        "w": 242.7,
-                        "h": 36
+                        "w": 235.1,
+                        "h": 40
                       },
                       "layout": {
                         "display": "flex",
@@ -832,6 +887,10 @@
                                   "tag": "span",
                                   "cls": "",
                                   "text": "WorkInsightsAbout",
+                                  "fsPx": 16,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Sans",
+                                  "fwCss": "400",
                                   "box": {
                                     "w": 134,
                                     "h": 20
@@ -854,8 +913,8 @@
                           "cls": "al-c-layout al-c-layout--row al-c-layout--gap-sm al-c-layout--align-center",
                           "component": "al-layout",
                           "box": {
-                            "w": 92.7,
-                            "h": 36
+                            "w": 85.1,
+                            "h": 40
                           },
                           "layout": {
                             "display": "flex",
@@ -883,8 +942,8 @@
                               "cls": "al-c-button",
                               "component": "al-button",
                               "box": {
-                                "w": 92.7,
-                                "h": 36
+                                "w": 85.1,
+                                "h": 40
                               },
                               "layout": {
                                 "display": "inline-flex",
@@ -926,24 +985,20 @@
                                   "figma": "theme/space/xs"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "gap": {
                                   "code": "--al-theme-space-xs",
                                   "figma": "theme/space/xs"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 },
-                                "padding": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
-                                },
-                                "padding-bottom": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
+                                "min-height": {
+                                  "code": "--al-theme-size-control",
+                                  "figma": "theme/size/control"
                                 },
                                 "padding-left": {
                                   "code": "--al-theme-space",
@@ -952,10 +1007,6 @@
                                 "padding-right": {
                                   "code": "--al-theme-space",
                                   "figma": "theme/space/@"
-                                },
-                                "padding-top": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
                                 },
                                 "row-gap": {
                                   "code": "--al-theme-space-xs",
@@ -967,8 +1018,8 @@
                                   "tag": "span",
                                   "cls": "al-c-button__text",
                                   "box": {
-                                    "w": 60.7,
-                                    "h": 20
+                                    "w": 53.1,
+                                    "h": 14
                                   },
                                   "layout": {
                                     "display": "block",
@@ -982,9 +1033,13 @@
                                       "tag": "span",
                                       "cls": "al-c-button__text",
                                       "text": "Contact",
+                                      "fsPx": 14,
+                                      "lhPx": 14,
+                                      "ffCss": "IBM Plex Sans",
+                                      "fwCss": "600",
                                       "box": {
-                                        "w": 60.7,
-                                        "h": 17
+                                        "w": 53.1,
+                                        "h": 16
                                       },
                                       "layout": {
                                         "display": "block",
@@ -1015,6 +1070,12 @@
         "root": {
           "tag": "header",
           "cls": "sl-c-header al-is-sticky",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 1280,
             "h": 80
@@ -1029,6 +1090,18 @@
             "background-color": {
               "code": "--al-theme-color-background-neutral-weak",
               "figma": "theme/color/background/neutral-weak"
+            },
+            "border-block-end": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
+            },
+            "border-top-color": {
+              "code": "--al-theme-color-border-neutral-weak",
+              "figma": "theme/color/border/neutral-weak"
+            },
+            "border-top-width": {
+              "code": "--al-theme-border-width",
+              "figma": "theme/border/width/@"
             }
           },
           "children": [
@@ -1038,7 +1111,7 @@
               "component": "al-layout",
               "box": {
                 "w": 1280,
-                "h": 36
+                "h": 40
               },
               "layout": {
                 "display": "grid",
@@ -1063,7 +1136,7 @@
                   "component": "al-layout",
                   "box": {
                     "w": 1160,
-                    "h": 36
+                    "h": 40
                   },
                   "layout": {
                     "display": "flex",
@@ -1145,7 +1218,8 @@
                                 "display": "block",
                                 "direction": "row",
                                 "align": "normal",
-                                "justify": "normal"
+                                "justify": "normal",
+                                "fillInline": true
                               },
                               "tokens": {},
                               "children": [
@@ -1202,11 +1276,11 @@
                                   "figma": "theme/color/content/neutral-weak"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                                   "figma": null
                                 }
                               },
@@ -1221,8 +1295,8 @@
                       "cls": "al-c-layout al-c-layout--row al-c-layout--gap-md al-c-layout--align-center",
                       "component": "al-layout",
                       "box": {
-                        "w": 242.7,
-                        "h": 36
+                        "w": 235.1,
+                        "h": 40
                       },
                       "layout": {
                         "display": "flex",
@@ -1293,6 +1367,10 @@
                                   "tag": "span",
                                   "cls": "",
                                   "text": "WorkInsightsAbout",
+                                  "fsPx": 16,
+                                  "lhPx": 20,
+                                  "ffCss": "IBM Plex Sans",
+                                  "fwCss": "400",
                                   "box": {
                                     "w": 134,
                                     "h": 20
@@ -1315,8 +1393,8 @@
                           "cls": "al-c-layout al-c-layout--row al-c-layout--gap-sm al-c-layout--align-center",
                           "component": "al-layout",
                           "box": {
-                            "w": 92.7,
-                            "h": 36
+                            "w": 85.1,
+                            "h": 40
                           },
                           "layout": {
                             "display": "flex",
@@ -1344,8 +1422,8 @@
                               "cls": "al-c-button",
                               "component": "al-button",
                               "box": {
-                                "w": 92.7,
-                                "h": 36
+                                "w": 85.1,
+                                "h": 40
                               },
                               "layout": {
                                 "display": "inline-flex",
@@ -1387,24 +1465,20 @@
                                   "figma": "theme/space/xs"
                                 },
                                 "font-weight": {
-                                  "code": "--al-font-weight-bold",
-                                  "figma": "typography/font-weight/bold"
+                                  "code": "--al-font-weight-semibold",
+                                  "figma": "typography/font-weight/semibold"
                                 },
                                 "gap": {
                                   "code": "--al-theme-space-xs",
                                   "figma": "theme/space/xs"
                                 },
                                 "letter-spacing": {
-                                  "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                                   "figma": null
                                 },
-                                "padding": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
-                                },
-                                "padding-bottom": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
+                                "min-height": {
+                                  "code": "--al-theme-size-control",
+                                  "figma": "theme/size/control"
                                 },
                                 "padding-left": {
                                   "code": "--al-theme-space",
@@ -1413,10 +1487,6 @@
                                 "padding-right": {
                                   "code": "--al-theme-space",
                                   "figma": "theme/space/@"
-                                },
-                                "padding-top": {
-                                  "code": "--al-theme-space-xs",
-                                  "figma": "theme/space/xs"
                                 },
                                 "row-gap": {
                                   "code": "--al-theme-space-xs",
@@ -1428,8 +1498,8 @@
                                   "tag": "span",
                                   "cls": "al-c-button__text",
                                   "box": {
-                                    "w": 60.7,
-                                    "h": 20
+                                    "w": 53.1,
+                                    "h": 14
                                   },
                                   "layout": {
                                     "display": "block",
@@ -1443,9 +1513,13 @@
                                       "tag": "span",
                                       "cls": "al-c-button__text",
                                       "text": "Contact",
+                                      "fsPx": 14,
+                                      "lhPx": 14,
+                                      "ffCss": "IBM Plex Sans",
+                                      "fwCss": "600",
                                       "box": {
-                                        "w": 60.7,
-                                        "h": 17
+                                        "w": 53.1,
+                                        "h": 16
                                       },
                                       "layout": {
                                         "display": "block",
@@ -1474,18 +1548,21 @@
     ]
   },
   "tokens": [
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-theme-border-radius-role-action",
+    "--al-theme-border-width",
     "--al-theme-color-background-neutral-weak",
     "--al-theme-color-background-primary-default",
+    "--al-theme-color-border-neutral-weak",
     "--al-theme-color-content-neutral-weak",
     "--al-theme-color-content-primary-weak",
+    "--al-theme-size-control",
     "--al-theme-space",
     "--al-theme-space-lg",
     "--al-theme-space-xs",
     "--al-theme-space-xxs",
-    "--al-theme-typography-body-md-bold-letter-spacing",
-    "--al-theme-typography-body-xs-bold-letter-spacing"
+    "--al-theme-typography-body-sm-semibold-letter-spacing",
+    "--al-theme-typography-body-xs-semibold-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [],

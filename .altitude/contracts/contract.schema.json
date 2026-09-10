@@ -32,7 +32,7 @@
     },
     "description": {
       "type": "string",
-      "description": "The CEM's class-level description. Currently boilerplate (\"Component: al-button\") for every Altitude component — see README § Deviations."
+      "description": "The CEM's class-level description, i.e. the prose above `export class` in the component source. Boilerplate (\"Component: al-x\") wherever no class JSDoc prose has been written — 45 of 102 contracts as of 2026-09-05, down from 54. A contract may instead carry prose authored in `apps/docs/src/content/guidance/<name>.yaml` (`purpose`), which `carryForwardAuthoredDescription()` preserves ONLY while the CEM's own value is still boilerplate — see README § Deviations."
     },
     "semantics": {
       "type": "object",
@@ -281,7 +281,28 @@
         "ariaAttributes": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "CEM attribute names that carry ARIA semantics (name matches /aria/i), e.g. \"ariaControls\"."
+          "description": "CEM attribute names that carry ARIA semantics, e.g. \"ariaControls\". A whole camelCase segment must be `aria` — the rule was `/aria/i` until 2026-09-05, which also matched `variant` and put a style-emphasis prop in the ARIA surface of 22 contracts."
+        },
+        "keyboard": {
+          "type": "array",
+          "description": "Keyboard contract: which keys act on the component and what each does, transcribed from the component's own key handling rather than inferred from its role. Empty when the component handles no keys of its own — a native <button> whose Enter/Space activation the platform provides is NOT listed here, because `semantics.element` already says so.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["keys", "action"],
+            "properties": {
+              "keys": { "type": "string", "description": "Key or combination, in `KeyboardEvent.key` spelling, e.g. \"ArrowDown\", \"Enter\", \"Shift+Tab\"." },
+              "action": { "type": "string", "description": "What pressing it does, in the component's own terms." }
+            }
+          }
+        },
+        "focus": {
+          "type": ["string", "null"],
+          "description": "The focus contract in one sentence: what takes focus, what the indicator is, and which token draws it. `null` when the component takes no focus of its own."
+        },
+        "screenReader": {
+          "type": ["string", "null"],
+          "description": "What a screen reader announces, including any live-region behaviour. `null` when the component adds nothing beyond its element semantics."
         },
         "cssParts": {
           "type": "array",
@@ -327,6 +348,11 @@
       "properties": {
         "tag": { "type": "string", "description": "The rendered HTML tag for this node." },
         "cls": { "type": ["string", "null"], "description": "The node's authored class, when present." },
+        "fsPx": { "type": "number", "description": "Measured text font size in CSS pixels; semantic token bindings take precedence." },
+        "lhPx": { "type": "number", "description": "Measured text line height in CSS pixels." },
+        "ffCss": { "type": "string", "description": "Measured primary font family for text." },
+        "fwCss": { "type": "string", "description": "Measured CSS font weight for text." },
+        "bw4": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4, "description": "Measured top/right/bottom/left border widths; zero sides remain zero." },
         "text": {
           "type": "string",
           "description": "DERIVED (spec 2026-08-26-contract-coverage…, Checkbox walkthrough): the node's rendered text content as measured (capped at 300 chars) — the breadcrumbs '/' separator, a checkbox's 'Checkbox label', a button's 'Button'. Present only on nodes the measurement pass saw text in. This supersedes the interim figma.gen.json textContent curation for components measured after the field landed."
@@ -352,6 +378,7 @@
               "properties": {
                 "display": { "type": "string" },
                 "direction": { "type": "string" },
+                "fillInline": { "type": "boolean", "description": "Authored width or inline-size is 100%; the child fills the containing block's inline size." },
                 "align": { "type": "string" },
                 "justify": { "type": "string" },
                 "wrap": {"type": ["string", "null"], "description": "`flex-wrap`, recorded ONLY when the node genuinely wraps — measure-lib.js nulls the `nowrap` initial value rather than storing it on every node (measure-lib.js:431). Reaches Figma as `layoutWrap` via build-set-code.mjs's layoutWrapsFor, which Figma honours on HORIZONTAL auto-layout only; `display: grid` implies WRAP regardless of this value."},

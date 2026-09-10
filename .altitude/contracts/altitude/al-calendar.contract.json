@@ -319,7 +319,8 @@
         "display": "block",
         "direction": "row",
         "align": "normal",
-        "justify": "normal"
+        "justify": "normal",
+        "fillInline": true
       },
       "tokens": {
         "background-color": {
@@ -345,10 +346,6 @@
         "border-top-right-radius": {
           "code": "--al-theme-border-radius-lg",
           "figma": "theme/border/radius/lg"
-        },
-        "min-width": {
-          "code": "--al-base-space",
-          "figma": null
         }
       },
       "children": [
@@ -436,15 +433,15 @@
                   "figma": "theme/space/xs"
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                   "figma": null
                 },
                 "min-height": {
@@ -573,6 +570,10 @@
                       "tag": "span",
                       "cls": "al-u-is-vishidden al-c-button__text",
                       "text": "Previous Month",
+                      "fsPx": 14,
+                      "lhPx": 14,
+                      "ffCss": "Public Sans",
+                      "fwCss": "600",
                       "box": {
                         "w": 57.8,
                         "h": 30
@@ -760,15 +761,15 @@
                   "figma": "theme/space/xs"
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                  "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                   "figma": null
                 },
                 "min-height": {
@@ -820,6 +821,10 @@
                       "tag": "span",
                       "cls": "al-u-is-vishidden al-c-button__text",
                       "text": "Next Month",
+                      "fsPx": 14,
+                      "lhPx": 14,
+                      "ffCss": "Public Sans",
+                      "fwCss": "600",
                       "box": {
                         "w": 43,
                         "h": 30
@@ -930,10 +935,6 @@
             "justify": "normal"
           },
           "tokens": {
-            "padding": {
-              "code": "--al-theme-space",
-              "figma": "theme/space/@"
-            },
             "padding-bottom": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
@@ -959,7 +960,8 @@
                 "display": "table",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {},
               "children": [
@@ -997,6 +999,10 @@
                           "tag": "th",
                           "cls": "al-c-calendar__header-cell",
                           "text": "Sun",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 46.8,
                             "h": 37
@@ -1031,6 +1037,10 @@
                           "tag": "th",
                           "cls": "al-c-calendar__header-cell",
                           "text": "Mon",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 46.8,
                             "h": 37
@@ -1065,6 +1075,10 @@
                           "tag": "th",
                           "cls": "al-c-calendar__header-cell",
                           "text": "Tue",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 46.8,
                             "h": 37
@@ -1099,6 +1113,10 @@
                           "tag": "th",
                           "cls": "al-c-calendar__header-cell",
                           "text": "Wed",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 46.8,
                             "h": 37
@@ -1133,6 +1151,10 @@
                           "tag": "th",
                           "cls": "al-c-calendar__header-cell",
                           "text": "Thu",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 46.8,
                             "h": 37
@@ -1167,6 +1189,10 @@
                           "tag": "th",
                           "cls": "al-c-calendar__header-cell",
                           "text": "Fri",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 46.8,
                             "h": 37
@@ -1201,6 +1227,10 @@
                           "tag": "th",
                           "cls": "al-c-calendar__header-cell",
                           "text": "Sat",
+                          "fsPx": 12,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 46.9,
                             "h": 37
@@ -1300,6 +1330,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "1",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1347,6 +1387,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "2",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1394,6 +1444,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "3",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1441,6 +1501,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "4",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1488,6 +1558,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "5",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1535,6 +1615,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "6",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1599,6 +1689,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "7",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1646,6 +1746,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "8",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1693,6 +1803,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "9",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1740,6 +1860,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "10",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1787,6 +1917,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "11",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1834,6 +1974,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "12",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1881,6 +2031,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "13",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1945,6 +2105,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "14",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -1992,6 +2162,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n al-is-today",
                               "text": "15",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2039,6 +2219,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "16",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2086,6 +2276,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "17",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2133,6 +2333,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "18",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2180,6 +2390,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "19",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2227,6 +2447,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "20",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2291,6 +2521,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "21",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2338,6 +2578,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "22",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2385,6 +2635,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "23",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2432,6 +2692,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "24",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2479,6 +2749,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "25",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2526,6 +2806,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "26",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2573,6 +2863,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "27",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2637,6 +2937,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "28",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2684,6 +2994,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "29",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -2731,6 +3051,16 @@
                               "tag": "button",
                               "cls": "al-c-calendar__item\n \n al-is-available\n",
                               "text": "30",
+                              "fsPx": 14,
+                              "lhPx": 20,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
+                              "bw4": [
+                                1,
+                                1,
+                                1,
+                                1
+                              ],
                               "box": {
                                 "w": 36,
                                 "h": 36
@@ -3503,8 +3833,7 @@
     }
   },
   "tokens": [
-    "--al-base-space",
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-icon-height",
     "--al-icon-width",
     "--al-theme-border-radius",
@@ -3522,13 +3851,52 @@
     "--al-theme-space-md",
     "--al-theme-space-xs",
     "--al-theme-typography-body-sm",
-    "--al-theme-typography-body-sm-bold-letter-spacing",
     "--al-theme-typography-body-sm-letter-spacing",
+    "--al-theme-typography-body-sm-semibold-letter-spacing",
     "--al-theme-typography-body-xs",
     "--al-theme-typography-body-xs-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [],
+    "keyboard": [
+      {
+        "keys": "ArrowLeft",
+        "action": "Moves roving focus back one day."
+      },
+      {
+        "keys": "ArrowRight",
+        "action": "Moves roving focus forward one day."
+      },
+      {
+        "keys": "ArrowUp",
+        "action": "Moves roving focus back one week."
+      },
+      {
+        "keys": "ArrowDown",
+        "action": "Moves roving focus forward one week."
+      },
+      {
+        "keys": "Home",
+        "action": "Moves roving focus to the first day of the week, honouring `startOnMonday`."
+      },
+      {
+        "keys": "End",
+        "action": "Moves roving focus to the last day of the week, honouring `startOnMonday`."
+      },
+      {
+        "keys": "PageUp",
+        "action": "Moves roving focus back one month."
+      },
+      {
+        "keys": "PageDown",
+        "action": "Moves roving focus forward one month."
+      },
+      {
+        "keys": "Escape",
+        "action": "Closes the month-selector popup and returns focus to the month button."
+      }
+    ],
+    "focus": "Roving focus across the day grid: exactly one day is tabbable and the arrow keys move which one, so the grid is a single tab stop.",
     "cssParts": []
   },
   "bindings": {

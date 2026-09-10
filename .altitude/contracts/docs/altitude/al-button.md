@@ -4,7 +4,7 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<button>`
 
-Component: al-button
+The system's action control. It renders a real `<button>` — or an `<a role="button">` when `href` is set — so the element the user actually gets, and the keyboard behaviour that comes with it, follows the props rather than the styling. Everything else about a button is ranking: `variant` says how much weight this action carries against the others on screen.
 
 ## Figma
 
@@ -27,11 +27,11 @@ Component: al-button
 | `isPressed` | string | `boolean \| 'mixed'` | — | _not expressed in Figma (by design)_ |
 | `label` | string | — | — | — |
 | `name` | string | — | — | _not expressed in Figma (by design)_ |
-| `size` | enum | `lg`, `sm` | — | **Size** (VARIANT): `Default`, `Lg`, `Sm` |
+| `size` | enum | `lg`, `md`, `sm` | — | **Size** (VARIANT): `Lg`, `Md`, `Sm` |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
 | `type` | enum | `button`, `reset`, `submit` | — | _not expressed in Figma (by design)_ |
 | `value` | string | — | — | _not expressed in Figma (by design)_ |
-| `variant` | enum | `bare`, `neutral`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary` |
+| `variant` | enum | `bare`, `neutral`, `primary`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `ariaControls`
 
@@ -89,8 +89,10 @@ Indicates the name when submitted with form data.
 
 Size variant
 - **sm** renders a 32px control with 13px text
+- **md** renders the 40px control with 14px text, and is what an omitted
+  `size` renders — named for the same reason `primary` is, so the axis is
+  expressible rather than living as the absence of a value
 - **lg** renders a 48px control with 15px text
-- omitted renders the default 40px control with 14px text
 
 #### `target`
 
@@ -112,7 +114,10 @@ Indicates the value associated with the name when submitted with form data.
 
 Style variant — an EMPHASIS axis, strongest to weakest. Status is not on
 this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
-- **default** renders the primary button, the strongest emphasis
+- **primary** renders the strongest emphasis, and is what an omitted
+  `variant` renders — it is named here so the axis is expressible in code
+  the way `Primary` is on the Figma canvas, rather than living as the
+  absence of a value
 - **secondary** renders the secondary colour role's own fill
 - **tertiary** renders an outlined button on a transparent ground
 - **neutral** renders a low-emphasis filled button
@@ -134,13 +139,13 @@ this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ### `size` (Figma property "Size")
 
-- Code values: `lg`, `sm`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Lg`, `Sm`
+- Code values: `lg`, `md`, `sm`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Lg`, `Md`, `Sm`
 
 ### `variant` (Figma property "Variant")
 
-- Code values: `bare`, `neutral`, `secondary`, `tertiary`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Danger`, `Primary`, `Secondary`, `Tertiary`
+- Code values: `bare`, `neutral`, `primary`, `secondary`, `tertiary`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary`
 
 ## States
 
@@ -162,7 +167,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaControls`, `isAriaDisabled`, `variant`
+- ARIA-bearing attributes: `ariaControls`, `isAriaDisabled`
 - CSS parts: `button`
 
 ## Anatomy & token bindings
@@ -181,11 +186,10 @@ _No events declared._
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
-| letter-spacing | `--al-theme-typography-body-sm-bold-letter-spacing` | — |
+| letter-spacing | `--al-theme-typography-body-sm-semibold-letter-spacing` | — |
 | min-height | `--al-theme-size-control` | `theme/size/control` |
-| padding | `--al-theme-space` | `theme/space/@` |
 | padding-left | `--al-theme-space` | `theme/space/@` |
 | padding-right | `--al-theme-space` | `theme/space/@` |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
@@ -244,6 +248,19 @@ _No events declared._
 | --- | --- | --- |
 | background-color | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
 
+#### `primary`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
+| color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
+
+**On `hover`** (compound — wins over the generic state rule below):
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-primary-strong` | `theme/color/background/primary-strong` |
+
 #### `secondary`
 
 | CSS property | Code token | Figma variable |
@@ -282,12 +299,6 @@ _No events declared._
 | --- | --- | --- |
 | opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
-#### `hover`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-primary-strong` | `theme/color/background/primary-strong` |
-
 ### Per-`size`
 
 #### `lg`
@@ -296,6 +307,13 @@ _No events declared._
 | --- | --- | --- |
 | font-size | `--al-font-size-16` | `typography/font-size/16` |
 | min-height | `--al-theme-size-control-lg` | `theme/size/control-lg` |
+
+#### `md`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| font-size | `--al-font-size-14` | `typography/font-size/14` |
+| min-height | `--al-theme-size-control` | `theme/size/control` |
 
 #### `sm`
 
@@ -312,7 +330,7 @@ _No events declared._
 
 ## Tokens referenced (12)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

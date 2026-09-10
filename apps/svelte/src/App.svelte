@@ -6,7 +6,7 @@
   import JobBoard from './lib/JobBoard.svelte'
 </script>
 
-<al-theme brand="altitude" mode="dark">
+<al-theme mode="dark">
   <Router>
     <Layout>
       <Route path="/"><JobBoard /></Route>

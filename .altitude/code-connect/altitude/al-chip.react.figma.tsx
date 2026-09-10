@@ -6,7 +6,7 @@
  * Figma Code Connect — React wrapper surface for the "Chip"
  * component set (node 3540:43526).
  *
- * Mapped variant axes: Shape, Variant.
+ * Mapped variant axes: Dismissible, Shape, Variant.
  * Props the contract marks `omit` (no Figma axis): isDismissed.
  */
 import figma from '@figma/code-connect';
@@ -14,15 +14,23 @@ import { ALChip } from '@southleft/al-react';
 
 figma.connect(ALChip, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3540-43526', {
   props: {
+    isDismissible: figma.enum('Dismissible', {
+      Yes: true,
+    }),
     type: figma.enum('Shape', {
       Squared: 'squared',
     }),
     variant: figma.enum('Variant', {
+      Bare: 'bare',
+      Neutral: 'neutral',
+      Primary: 'primary',
       Secondary: 'secondary',
+      Tertiary: 'tertiary',
     }),
   },
   example: (props) => (
     <ALChip
+      isDismissible={props.isDismissible}
       type={props.type}
       variant={props.variant}
     >

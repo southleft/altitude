@@ -6,7 +6,7 @@
  * Figma Code Connect — web component surface for the "Checkbox Group"
  * component set (node 3570:2154).
  *
- * Mapped variant axes: Legend, State, State.
+ * Mapped variant axes: Orientation, Legend, State, State.
  * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, errorNote, fieldId, fieldNote, isRequired.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for error, field-note.
@@ -15,6 +15,10 @@ import figma, { html } from '@figma/code-connect/html';
 
 figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3570-2154', {
   props: {
+    direction: figma.enum('Orientation', {
+      Column: 'column',
+      Row: 'row',
+    }),
     hideLegend: figma.enum('Legend', {
       Hidden: true,
     }),
@@ -27,6 +31,7 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3570
   },
   example: (props) => html`
     <al-checkbox-group
+      direction="${props.direction}"
       hideLegend="${props.hideLegend}"
       isDisabled="${props.isDisabled}"
       isError="${props.isError}"

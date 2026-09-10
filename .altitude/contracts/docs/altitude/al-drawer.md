@@ -4,22 +4,25 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-drawer
+A viewport-edge panel for supporting content, with optional header and footer slots.
+Opens from the left by default; alignment="right" selects the right edge.
 
 ## Figma
 
-No Figma component set is mapped for `al-drawer` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Drawer**
+- Node id: `3703:12781` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3703-12781)
 
 ## Props (6)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `alignment` | string | `'right'` | — | — |
-| `ariaLabelledBy` | string | — | — | — |
-| `disableBackdropClick` | boolean | — | — | — |
+| `alignment` | string | `'right'` | — | **Alignment** (VARIANT): `Default`, `Right` |
+| `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `disableBackdropClick` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `hasBackdrop` | boolean | — | — | — |
 | `isActive` | boolean | — | — | — |
-| `width` | number | — | — | — |
+| `width` | number | — | — | _not expressed in Figma (by design)_ |
 
 #### `alignment`
 
@@ -49,19 +52,27 @@ Is active?
 
 Width of drawer panel when expanded / collapsed as side panel
 
+**Figma-expression opt-out (T27):** `ariaLabelledBy`, `disableBackdropClick`, `width` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `alignment` (Figma property "Alignment")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Right`
 
 ## States
 
 _No interaction states recorded._
 
-## Slots (1)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The drawer content | — | — |
+| `footer` | Drawer footer content. | — | — |
+| `header` | Drawer heading content. | — | — |
+| `trigger` | The control that opens the drawer. | — | — |
 
 ## Events (3)
 
@@ -78,11 +89,14 @@ _No interaction states recorded._
 
 ## Anatomy & token bindings
 
-**Anatomy case measured:** `Alignment=bottom` (source: `measured`)
+**Anatomy case measured:** `Alignment=default` (source: `measured`)
 
-### Root — `<div class="al-c-drawer al-is-active">`
+### Root — `<div class="al-c-drawer__container">`
 
-_None._
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| box-shadow | `--al-theme-box-shadow-xl` | `theme/box-shadow/xl` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -94,9 +108,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-drawer`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (11)
+## Tokens referenced (3)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-box-shadow-xl`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-bold-letter-spacing`
+`--al-theme-box-shadow-xl`, `--al-theme-color-background-neutral-default`, `--al-theme-space`
 
 ---
 

@@ -26,6 +26,9 @@ import { cpSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+/** Marks a copy whose absence must fail the build rather than warn. */
+const REQUIRED = true;
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DOCS = resolve(HERE, '..');
 const REPO = resolve(DOCS, '..', '..');
@@ -38,7 +41,7 @@ const REPO = resolve(DOCS, '..', '..');
  *
  * `brand-fonts`: Agrandir is the `southleft` brand's display face
  * (`font-family.secondary` token). The docs render southleft-branded previews
- * under `<al-theme brand="southleft">`, so without the file every such heading
+ * under the southleft token bundle, so without the file every such heading
  * falls back to `sans-serif`. Copied — not committed — for the same
  * one-source-of-truth reason as the logos; the license and provenance live
  * with the owning app (apps/southleft/public/fonts/README.md). `@font-face`
@@ -48,14 +51,29 @@ const REPO = resolve(DOCS, '..', '..');
 const ASSETS = [
   ['apps/southleft/public/logos', 'logos'],
   ['apps/southleft/public/fonts', 'brand-fonts', /^Agrandir-/],
+  // The design systems' token bundles, one file per system, each carrying both
+  // modes. REQUIRED, unlike the two above: with these missing every page renders
+  // the base palette and a southleft route is indistinguishable from an altitude
+  // one, so `REQUIRED` below turns absence into a failed build rather than a
+  // site that looks fine and is wrong. They are a build output of
+  // `pnpm --filter @southleft/al-web-components build`, which the docs build
+  // already runs after.
+  ['libs/al-web-components/dist/css/css/project', 'project', /\.css$/, REQUIRED],
 ];
 
 let copied = 0;
-for (const [from, to, only] of ASSETS) {
+for (const [from, to, only, required] of ASSETS) {
   const source = join(REPO, from);
   const dest = join(DOCS, 'public', to);
 
   if (!existsSync(source)) {
+    if (required) {
+      console.error(
+        `[brand-assets] ${from} is missing and is REQUIRED — the docs cannot render a design ` +
+          'system without its token bundle. Run `pnpm --filter @southleft/al-web-components build` first.'
+      );
+      process.exit(1);
+    }
     console.log(`[brand-assets] skip — ${from} is not in this checkout.`);
     continue;
   }

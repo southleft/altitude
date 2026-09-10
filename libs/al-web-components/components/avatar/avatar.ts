@@ -71,13 +71,12 @@ export class ALAvatar extends ALElement {
         <slot></slot>
         ${this.hasBadge
           ? html`
-            <${this.badgeEl}
+            <span class="al-c-avatar__status"><slot name="badge"><${this.badgeEl}
               class="al-c-avatar__badge"
               ?isDot=${true}
               variant=${ifDefined(this.badgeVariant)}
-              position="bottom-right"
             >
-            </${this.badgeEl}>`
+            </${this.badgeEl}></slot></span>`
           : null}
       </div>
     ` as TemplateResult<1>;

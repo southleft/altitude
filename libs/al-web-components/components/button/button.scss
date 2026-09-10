@@ -19,31 +19,20 @@
     @include al-theme-typography-body-sm-semibold;
     line-height: 1;
     box-sizing: border-box;
-    min-height: var(--al-button-height, var(--al-theme-size-control));
     display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: var(--al-theme-space-xs);
     margin: 0;
-    padding: var(--al-button-padding, 0 #{var(--al-theme-space)});
     border: none;
     border-radius: var(--al-theme-border-radius-role-action, var(--al-theme-border-radius));
     text-decoration: none;
     cursor: pointer;
     transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
     position: relative;
-    background-color: var(--al-theme-color-background-primary-default);
-    color: var(--al-theme-color-content-primary-weak);
     width: var(--al-button-width, auto);
     --al-icon-height: #{var(--al-theme-icon-lg)};
     --al-icon-width: #{var(--al-theme-icon-lg)};
-
-    /**
-     * Hover state
-     */
-    &:hover:not(:active, :disabled) {
-      background-color: var(--al-theme-color-background-primary-strong);
-    }
 
     /**
      * Focus outline for A11y
@@ -58,6 +47,28 @@
     &:disabled {
       cursor: not-allowed;
       opacity: var(--al-theme-opacity-disabled);
+    }
+  }
+
+  /**
+   * Primary button — the strongest emphasis on the axis.
+   *
+   * This carries the fill the BASE class used to carry, because "primary" was
+   * previously spelled as the absence of a `variant` and so had no selector of
+   * its own. Figma's set has always named it (`Variant=Primary`); the code
+   * expressed it as a default, which is why the two could never be compared.
+   * `render()` applies this class for `variant="primary"` AND for an omitted
+   * variant, so existing markup renders exactly as before.
+   */
+  .al-c-button--primary {
+    background-color: var(--al-theme-color-background-primary-default);
+    color: var(--al-theme-color-content-primary-weak);
+
+    /**
+     * Hover state
+     */
+    &:hover:not(:active, :disabled) {
+      background-color: var(--al-theme-color-background-primary-strong);
     }
   }
 
@@ -139,6 +150,21 @@
   /**
    * Size variants — heights come from the control scale (32 / 40 / 48).
    */
+  /**
+   * Medium button — the 40px control, and what an omitted `size` renders.
+   *
+   * Carries the height and padding the BASE class used to carry, for the same
+   * reason `--primary` carries the fill: the middle of a size axis was spelled
+   * as the absence of a value, so it had no selector and could not be compared
+   * against the Figma set's own `Size=Md`. `render()` applies this class for
+   * `size="md"` AND for an omitted size, so existing markup is unchanged.
+   */
+  .al-c-button--md {
+    min-height: var(--al-button-height, var(--al-theme-size-control));
+    padding: var(--al-button-padding, 0 #{var(--al-theme-space)});
+    font-size: var(--al-font-size-14);
+  }
+
   .al-c-button--sm {
     min-height: var(--al-button-height, var(--al-theme-size-control-sm));
     padding: var(--al-button-padding, 0 #{var(--al-theme-space-sm)});

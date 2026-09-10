@@ -17,6 +17,7 @@ figma.connect(ALProgress, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?
     circleSize: figma.enum('Size', {
       Lg: 'lg',
       Md: 'md',
+      Sm: 'sm',
       Xl: 'xl',
     }),
     isCircle: figma.enum('Shape', {

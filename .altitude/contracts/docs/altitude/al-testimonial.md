@@ -93,7 +93,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (12)
 
-`--al-font-weight-bold`, `--al-theme-border-width-md`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-width-md`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-typography-body-md-semibold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
 
 ---
 

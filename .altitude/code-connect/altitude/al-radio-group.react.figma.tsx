@@ -6,7 +6,7 @@
  * Figma Code Connect — React wrapper surface for the "Radio Group"
  * component set (node 3570:3422).
  *
- * Mapped variant axes: Legend, State, State.
+ * Mapped variant axes: Orientation, Legend, State, State.
  * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, errorNote, fieldId, fieldNote, isRequired.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for error, field-note.
@@ -16,6 +16,10 @@ import { ALRadioGroup } from '@southleft/al-react';
 
 figma.connect(ALRadioGroup, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3570-3422', {
   props: {
+    direction: figma.enum('Orientation', {
+      Column: 'column',
+      Row: 'row',
+    }),
     hideLegend: figma.enum('Legend', {
       Hidden: true,
     }),
@@ -28,6 +32,7 @@ figma.connect(ALRadioGroup, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS
   },
   example: (props) => (
     <ALRadioGroup
+      direction={props.direction}
       hideLegend={props.hideLegend}
       isDisabled={props.isDisabled}
       isError={props.isError}

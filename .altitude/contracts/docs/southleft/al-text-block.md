@@ -55,7 +55,7 @@ _No events declared._
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | column-gap | `--al-theme-space` | `theme/space/@` |
-| font | `--al-typography-preset-16` | — |
+| font | `--al-typography-preset-body-md` | — |
 | gap | `--al-theme-space` | `theme/space/@` |
 | row-gap | `--al-theme-space` | `theme/space/@` |
 
@@ -71,7 +71,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (2)
 
-`--al-theme-space`, `--al-typography-preset-16`
+`--al-theme-space`, `--al-typography-preset-body-md`
 
 ---
 

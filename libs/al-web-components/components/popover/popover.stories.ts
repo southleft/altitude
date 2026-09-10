@@ -185,7 +185,7 @@ WithMenuWithGroups.parameters = {
 const TemplateWithContent = (args) => html`
   <div style="position: fixed; inset-block-end: var(--al-theme-space); inset-inline-end: var(--al-theme-space); z-index: var(--al-z-index-400);">
     <al-popover ${spread(args)} data-testid="popover">
-      <al-toggle-button slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
+      <al-toggle-button label="Help" slot="trigger" variant="background" data-testid="popover-trigger"><al-icon-help size="lg"></al-icon-help></al-toggle-button>
       <al-tabs variant="stretch">
         <al-tab>Tab 1</al-tab>
         <al-tab>Tab 2</al-tab>

@@ -14,15 +14,16 @@
  * not a CSS facsimile — the two things the spec says Storybook structurally
  * cannot do are this switcher and this copyable, real-markup playground.
  *
- * And it renders it IN THIS SITE'S BRAND. The whole shell is already inside
- * `<al-theme brand=…>` (Shell.astro), so the element on the stage inherits that
- * project's scoped tokens with no per-brand markup here. The HTML snippet
- * states the wrapper explicitly, because a consumer copying it gets the
- * component but not the page it was sitting in — and without the wrapper the
- * markup they paste renders under the base bundle, not this brand.
+ * And it renders it IN THIS SITE'S DESIGN SYSTEM. The whole shell is already
+ * inside `<al-theme data-al-project=…>` with that system's bundle linked
+ * (Shell.astro), so the element on the stage inherits its tokens with no
+ * per-system markup here. The HTML snippet states BOTH halves explicitly,
+ * because a consumer copying it gets the component but not the page it was
+ * sitting in: the stylesheet is what makes it this system, and the theme host
+ * is what carries mode and the other axes.
  */
 interface Props {
-  /** The design-system project whose brand the stage renders under. */
+  /** The design-system project whose tokens the stage renders under. */
   project: { brand: string; id: string };
   /** Story-derived preview markup (lib/examples.mjs), or a reason there is none. */
   example?: { ok: boolean; html?: string; styles?: string; story?: string; reason?: string } | null;
@@ -159,8 +160,10 @@ const controlCount = enums.length + flags.length + (showTextControl ? 1 : 0) + i
  */
 const config = {
   tag: component.tag,
-  /** The brand the stage inherits, restated in the copyable HTML snippet. */
+  /** The system the stage inherits, restated in the copyable HTML snippet. */
   brand: project.brand,
+  /** Its bundle's id — what the copyable snippet tells a consumer to link. */
+  projectId: project.id,
   react: component.react,
   hasDefaultSlot: showTextControl,
   hasExample,
@@ -231,7 +234,7 @@ const config = {
     data-pg-loading
     data-pg-tag={component.tag}
   >
-    <span class="pg__stage-label">PREVIEW / {component.tag} / BRAND {project.brand.toUpperCase()}</span>
+    <span class="pg__stage-label">PREVIEW / {component.tag} / {project.id.toUpperCase()}</span>
     {/* Hand-rolled, not `<al-spinner>`: the one thing this has to survive is
         the window in which no Altitude element has upgraded yet, so a spinner
         that is itself an Altitude element would be the bug it exists to hide.
@@ -497,6 +500,7 @@ const config = {
     const config = JSON.parse(configEl.textContent || '{}') as {
       tag: string;
       brand: string;
+      projectId: string;
       react: string | null;
       hasDefaultSlot: boolean;
       hasExample: boolean;
@@ -758,13 +762,17 @@ ${children}${indent}</${name}>
       if (config.iconSlots.length > 0 && state.tab !== 'react') {
         element = withIconSlots(element, config.tag, state.icons);
       }
-      // The HTML path ships the theme host too: pasted on its own, outside an
-      // <al-theme>, the element renders under the base token bundle rather than
-      // this design system's brand. The React path does not — an app using the
-      // wrappers mounts its theme host once, at the root.
+      // The HTML path ships the STYLESHEET and the theme host too. Pasted on
+      // its own the element renders under whatever palette the destination page
+      // already has, which is the base bundle unless that page loaded a design
+      // system — and since `brand` was removed there is no attribute that can
+      // fix it afterwards. The link is the load-bearing half; the host carries
+      // mode and the other axes. The React path ships neither: an app using the
+      // wrappers imports its bundle and mounts its theme host once, at the root.
       return state.tab === 'react'
         ? element
-        : `<al-theme brand="${config.brand}">
+        : `<link rel="stylesheet" href="@southleft/al-web-components/project/${config.projectId}.css" />
+<al-theme>
   ${element}
 </al-theme>`;
     };

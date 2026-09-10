@@ -25,7 +25,7 @@ Component: al-range
 | `hasOutput` | boolean | — | — | **Output** (VARIANT): `No`, `Yes` |
 | `hasTooltip` | boolean | — | — | — |
 | `hideLabel` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Focus`, `Hover` |
 | `isError` | boolean | — | — | — |
 | `label` | string | — | — | _not expressed in Figma (by design)_ |
 | `lowerRangeValue` | number | — | — | _not expressed in Figma (by design)_ |
@@ -140,16 +140,23 @@ Input value
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
 
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Focus`, `Hover`
+
 ## States
 
 `hover`, `focus`, `active`, `disabled`
 
-## Slots (3)
+## Slots (5)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `after` | If content is slotted, it will override the default range "max" label text | — | — |
 | `before` | If content is slotted, it will override the default range "min" label text | — | — |
+| `error` | Error text replacing the errorNote property. | — | — |
+| `field-note` | Helper text replacing the fieldNote property. | — | — |
 | `label` | If content is slotted, it will override the default range label | — | — |
 
 ## Events (2)

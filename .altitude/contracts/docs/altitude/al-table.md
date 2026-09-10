@@ -28,9 +28,9 @@ inside a `<al-theme density="...">` scope.
 | `columns` | string | `Array<ALTableColumn>` | — | _not expressed in Figma (by design)_ |
 | `data` | string | `Array<ALTableRow>` | — | _not expressed in Figma (by design)_ |
 | `hideCaption` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isSelectable` | boolean | — | — | — |
+| `isSelectable` | boolean | — | — | **Selectable** (VARIANT): `No`, `Yes` |
 | `rowKey` | string | — | `'id'` | _not expressed in Figma (by design)_ |
-| `sortDirection` | string | `ALTableSortDirection` | `'none'` | **Sort** (VARIANT): `Ascending`, `None` |
+| `sortDirection` | enum | `ascending`, `descending`, `none` | `'none'` | _not expressed in Figma (by design)_ |
 | `sortKey` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `caption`
@@ -75,14 +75,14 @@ The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.
 
 The `key` of the column currently sorted, if any.
 
-**Figma-expression opt-out (T27):** `caption`, `columns`, `data`, `hideCaption`, `rowKey`, `sortKey` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `caption`, `columns`, `data`, `hideCaption`, `rowKey`, `sortDirection`, `sortKey` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 
-### `sortDirection` (Figma property "Sort")
+### `isSelectable` (Figma property "Selectable")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Ascending`, `None`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
 
 ## States
 
@@ -240,7 +240,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (19)
 
-`--al-font-family-mono`, `--al-font-size-12`, `--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-neutral-weak`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-faint`, `--al-theme-color-focus-ring`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-family-mono`, `--al-font-size-12`, `--al-font-weight-semibold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-neutral-weak`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-faint`, `--al-theme-color-focus-ring`, `--al-theme-space-md`, `--al-theme-space-sm`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

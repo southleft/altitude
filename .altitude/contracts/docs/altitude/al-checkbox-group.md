@@ -4,7 +4,7 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<fieldset>`
 
-Component: al-checkbox-group
+A set of checkboxes that are one question. It exists for its semantics, not its spacing — it renders a real `<fieldset>` with a `<legend>`, carries one field note and one error note for the whole set, and cascades `isRequired` and `isDisabled` down to every checkbox inside it.
 
 ## Figma
 
@@ -17,7 +17,7 @@ Component: al-checkbox-group
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
-| `direction` | enum | `column`, `row` | — | **Orientation** (VARIANT): `Default`, `Horizontal` |
+| `direction` | enum | `column`, `row` | — | **Orientation** (VARIANT): `Column`, `Row` |
 | `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
@@ -93,7 +93,7 @@ Label
 ### `direction` (Figma property "Orientation")
 
 - Code values: `column`, `row`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Horizontal`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Column`, `Row`
 
 ### `hideLegend` (Figma property "Legend")
 
@@ -157,7 +157,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (15)
 
-`--al-base-space`, `--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-theme-border-radius-lg`, `--al-theme-border-radius-round`, `--al-theme-border-radius-xs`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-size-control`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

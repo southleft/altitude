@@ -13,7 +13,11 @@ import { ALFocusTrap } from '../focus-trap/focus-trap';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 /**
- * Component: al-drawer
+ * A viewport-edge panel for supporting content, with optional header and footer slots.
+ * Opens from the left by default; alignment="right" selects the right edge.
+ * @slot header - Drawer heading content.
+ * @slot footer - Drawer footer content.
+ * @slot trigger - The control that opens the drawer.
  * @slot - The drawer content
  *
  * @event onDrawerOpen - Fired when the drawer opens. Detail: `{ active }` — the new open state.

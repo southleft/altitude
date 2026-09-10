@@ -4,7 +4,7 @@
   "name": "Drawer",
   "version": "1.0.0",
   "status": "source",
-  "description": "Component: al-drawer",
+  "description": "A viewport-edge panel for supporting content, with optional header and footer slots.\nOpens from the left by default; alignment=\"right\" selects the right edge.",
   "semantics": {
     "element": "div",
     "role": null
@@ -101,6 +101,18 @@
     {
       "name": "",
       "description": "The drawer content"
+    },
+    {
+      "name": "footer",
+      "description": "Drawer footer content."
+    },
+    {
+      "name": "header",
+      "description": "Drawer heading content."
+    },
+    {
+      "name": "trigger",
+      "description": "The control that opens the drawer."
     }
   ],
   "composition": {
@@ -134,8 +146,8 @@
       "tag": "div",
       "cls": "al-c-drawer al-is-active",
       "box": {
-        "w": 144,
-        "h": 36
+        "w": 130,
+        "h": 40
       },
       "layout": {
         "display": "flex",
@@ -149,8 +161,8 @@
           "tag": "div",
           "cls": "al-c-drawer__trigger",
           "box": {
-            "w": 144,
-            "h": 36
+            "w": 130,
+            "h": 40
           },
           "layout": {
             "display": "flex",
@@ -177,8 +189,8 @@
               "tag": "span",
               "cls": "",
               "box": {
-                "w": 144,
-                "h": 36
+                "w": 130,
+                "h": 40
               },
               "layout": {
                 "display": "block",
@@ -193,8 +205,8 @@
                   "cls": "al-c-button al-c-button--bare",
                   "component": "al-button",
                   "box": {
-                    "w": 144,
-                    "h": 36
+                    "w": 130,
+                    "h": 40
                   },
                   "layout": {
                     "display": "inline-flex",
@@ -236,24 +248,20 @@
                       "figma": "theme/space/xs"
                     },
                     "font-weight": {
-                      "code": "--al-font-weight-bold",
-                      "figma": "typography/font-weight/bold"
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
                     },
                     "gap": {
                       "code": "--al-theme-space-xs",
                       "figma": "theme/space/xs"
                     },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                       "figma": null
                     },
-                    "padding": {
-                      "code": "--al-theme-space-xs",
-                      "figma": "theme/space/xs"
-                    },
-                    "padding-bottom": {
-                      "code": "--al-theme-space-xs",
-                      "figma": "theme/space/xs"
+                    "min-height": {
+                      "code": "--al-theme-size-control",
+                      "figma": "theme/size/control"
                     },
                     "padding-left": {
                       "code": "--al-theme-space",
@@ -262,10 +270,6 @@
                     "padding-right": {
                       "code": "--al-theme-space",
                       "figma": "theme/space/@"
-                    },
-                    "padding-top": {
-                      "code": "--al-theme-space-xs",
-                      "figma": "theme/space/xs"
                     },
                     "row-gap": {
                       "code": "--al-theme-space-xs",
@@ -277,8 +281,8 @@
                       "tag": "span",
                       "cls": "al-c-button__text",
                       "box": {
-                        "w": 112,
-                        "h": 20
+                        "w": 98,
+                        "h": 14
                       },
                       "layout": {
                         "display": "block",
@@ -292,9 +296,13 @@
                           "tag": "span",
                           "cls": "al-c-button__text",
                           "text": "Toggle Drawer",
+                          "fsPx": 14,
+                          "lhPx": 14,
+                          "ffCss": "IBM Plex Sans",
+                          "fwCss": "600",
                           "box": {
-                            "w": 112,
-                            "h": 17
+                            "w": 98,
+                            "h": 16
                           },
                           "layout": {
                             "display": "block",
@@ -332,12 +340,8 @@
               "figma": "theme/color/background/neutral-default"
             },
             "box-shadow": {
-              "code": "--al-theme-box-shadow-md",
-              "figma": "theme/box-shadow/md"
-            },
-            "width": {
-              "code": "--al-base-space",
-              "figma": null
+              "code": "--al-theme-box-shadow-xl",
+              "figma": "theme/box-shadow/xl"
             }
           },
           "children": [
@@ -382,6 +386,10 @@
                   "tag": "div",
                   "cls": "al-c-drawer__body",
                   "text": "Drawer content",
+                  "fsPx": 16,
+                  "lhPx": 20,
+                  "ffCss": "IBM Plex Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 108.5,
                     "h": 17
@@ -430,8 +438,8 @@
           "tag": "div",
           "cls": "al-c-drawer al-is-active",
           "box": {
-            "w": 144,
-            "h": 36
+            "w": 130,
+            "h": 40
           },
           "layout": {
             "display": "flex",
@@ -445,8 +453,8 @@
               "tag": "div",
               "cls": "al-c-drawer__trigger",
               "box": {
-                "w": 144,
-                "h": 36
+                "w": 130,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
@@ -473,8 +481,8 @@
                   "tag": "span",
                   "cls": "",
                   "box": {
-                    "w": 144,
-                    "h": 36
+                    "w": 130,
+                    "h": 40
                   },
                   "layout": {
                     "display": "block",
@@ -489,8 +497,8 @@
                       "cls": "al-c-button al-c-button--bare",
                       "component": "al-button",
                       "box": {
-                        "w": 144,
-                        "h": 36
+                        "w": 130,
+                        "h": 40
                       },
                       "layout": {
                         "display": "inline-flex",
@@ -532,24 +540,20 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
-                        "padding": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "padding-bottom": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
+                        "min-height": {
+                          "code": "--al-theme-size-control",
+                          "figma": "theme/size/control"
                         },
                         "padding-left": {
                           "code": "--al-theme-space",
@@ -558,10 +562,6 @@
                         "padding-right": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
-                        },
-                        "padding-top": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
                         },
                         "row-gap": {
                           "code": "--al-theme-space-xs",
@@ -573,8 +573,8 @@
                           "tag": "span",
                           "cls": "al-c-button__text",
                           "box": {
-                            "w": 112,
-                            "h": 20
+                            "w": 98,
+                            "h": 14
                           },
                           "layout": {
                             "display": "block",
@@ -588,9 +588,13 @@
                               "tag": "span",
                               "cls": "al-c-button__text",
                               "text": "Toggle Drawer",
+                              "fsPx": 14,
+                              "lhPx": 14,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "600",
                               "box": {
-                                "w": 112,
-                                "h": 17
+                                "w": 98,
+                                "h": 16
                               },
                               "layout": {
                                 "display": "block",
@@ -628,12 +632,8 @@
                   "figma": "theme/color/background/neutral-default"
                 },
                 "box-shadow": {
-                  "code": "--al-theme-box-shadow-md",
-                  "figma": "theme/box-shadow/md"
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-box-shadow-xl",
+                  "figma": "theme/box-shadow/xl"
                 }
               },
               "children": [
@@ -678,6 +678,10 @@
                       "tag": "div",
                       "cls": "al-c-drawer__body",
                       "text": "Drawer content",
+                      "fsPx": 16,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 108.5,
                         "h": 17
@@ -726,8 +730,8 @@
           "tag": "div",
           "cls": "al-c-drawer al-is-active",
           "box": {
-            "w": 144,
-            "h": 36
+            "w": 130,
+            "h": 40
           },
           "layout": {
             "display": "flex",
@@ -741,8 +745,8 @@
               "tag": "div",
               "cls": "al-c-drawer__trigger",
               "box": {
-                "w": 144,
-                "h": 36
+                "w": 130,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
@@ -769,8 +773,8 @@
                   "tag": "span",
                   "cls": "",
                   "box": {
-                    "w": 144,
-                    "h": 36
+                    "w": 130,
+                    "h": 40
                   },
                   "layout": {
                     "display": "block",
@@ -785,8 +789,8 @@
                       "cls": "al-c-button al-c-button--bare",
                       "component": "al-button",
                       "box": {
-                        "w": 144,
-                        "h": 36
+                        "w": 130,
+                        "h": 40
                       },
                       "layout": {
                         "display": "inline-flex",
@@ -828,24 +832,20 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
-                        "padding": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "padding-bottom": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
+                        "min-height": {
+                          "code": "--al-theme-size-control",
+                          "figma": "theme/size/control"
                         },
                         "padding-left": {
                           "code": "--al-theme-space",
@@ -854,10 +854,6 @@
                         "padding-right": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
-                        },
-                        "padding-top": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
                         },
                         "row-gap": {
                           "code": "--al-theme-space-xs",
@@ -869,8 +865,8 @@
                           "tag": "span",
                           "cls": "al-c-button__text",
                           "box": {
-                            "w": 112,
-                            "h": 20
+                            "w": 98,
+                            "h": 14
                           },
                           "layout": {
                             "display": "block",
@@ -884,9 +880,13 @@
                               "tag": "span",
                               "cls": "al-c-button__text",
                               "text": "Toggle Drawer",
+                              "fsPx": 14,
+                              "lhPx": 14,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "600",
                               "box": {
-                                "w": 112,
-                                "h": 17
+                                "w": 98,
+                                "h": 16
                               },
                               "layout": {
                                 "display": "block",
@@ -924,12 +924,8 @@
                   "figma": "theme/color/background/neutral-default"
                 },
                 "box-shadow": {
-                  "code": "--al-theme-box-shadow-md",
-                  "figma": "theme/box-shadow/md"
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-box-shadow-xl",
+                  "figma": "theme/box-shadow/xl"
                 }
               },
               "children": [
@@ -974,6 +970,10 @@
                       "tag": "div",
                       "cls": "al-c-drawer__body",
                       "text": "Drawer content",
+                      "fsPx": 16,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 108.5,
                         "h": 17
@@ -1022,8 +1022,8 @@
           "tag": "div",
           "cls": "al-c-drawer al-is-active",
           "box": {
-            "w": 144,
-            "h": 36
+            "w": 130,
+            "h": 40
           },
           "layout": {
             "display": "flex",
@@ -1037,8 +1037,8 @@
               "tag": "div",
               "cls": "al-c-drawer__trigger",
               "box": {
-                "w": 144,
-                "h": 36
+                "w": 130,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
@@ -1065,8 +1065,8 @@
                   "tag": "span",
                   "cls": "",
                   "box": {
-                    "w": 144,
-                    "h": 36
+                    "w": 130,
+                    "h": 40
                   },
                   "layout": {
                     "display": "block",
@@ -1081,8 +1081,8 @@
                       "cls": "al-c-button al-c-button--bare",
                       "component": "al-button",
                       "box": {
-                        "w": 144,
-                        "h": 36
+                        "w": 130,
+                        "h": 40
                       },
                       "layout": {
                         "display": "inline-flex",
@@ -1124,24 +1124,20 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
-                        "padding": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "padding-bottom": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
+                        "min-height": {
+                          "code": "--al-theme-size-control",
+                          "figma": "theme/size/control"
                         },
                         "padding-left": {
                           "code": "--al-theme-space",
@@ -1150,10 +1146,6 @@
                         "padding-right": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
-                        },
-                        "padding-top": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
                         },
                         "row-gap": {
                           "code": "--al-theme-space-xs",
@@ -1165,8 +1157,8 @@
                           "tag": "span",
                           "cls": "al-c-button__text",
                           "box": {
-                            "w": 112,
-                            "h": 20
+                            "w": 98,
+                            "h": 14
                           },
                           "layout": {
                             "display": "block",
@@ -1180,9 +1172,13 @@
                               "tag": "span",
                               "cls": "al-c-button__text",
                               "text": "Toggle Drawer",
+                              "fsPx": 14,
+                              "lhPx": 14,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "600",
                               "box": {
-                                "w": 112,
-                                "h": 17
+                                "w": 98,
+                                "h": 16
                               },
                               "layout": {
                                 "display": "block",
@@ -1220,12 +1216,8 @@
                   "figma": "theme/color/background/neutral-default"
                 },
                 "box-shadow": {
-                  "code": "--al-theme-box-shadow-md",
-                  "figma": "theme/box-shadow/md"
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-box-shadow-xl",
+                  "figma": "theme/box-shadow/xl"
                 }
               },
               "children": [
@@ -1270,6 +1262,10 @@
                       "tag": "div",
                       "cls": "al-c-drawer__body",
                       "text": "Drawer content",
+                      "fsPx": 16,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 108.5,
                         "h": 17
@@ -1318,8 +1314,8 @@
           "tag": "div",
           "cls": "al-c-drawer al-is-active",
           "box": {
-            "w": 144,
-            "h": 36
+            "w": 130,
+            "h": 40
           },
           "layout": {
             "display": "flex",
@@ -1333,8 +1329,8 @@
               "tag": "div",
               "cls": "al-c-drawer__trigger",
               "box": {
-                "w": 144,
-                "h": 36
+                "w": 130,
+                "h": 40
               },
               "layout": {
                 "display": "flex",
@@ -1361,8 +1357,8 @@
                   "tag": "span",
                   "cls": "",
                   "box": {
-                    "w": 144,
-                    "h": 36
+                    "w": 130,
+                    "h": 40
                   },
                   "layout": {
                     "display": "block",
@@ -1377,8 +1373,8 @@
                       "cls": "al-c-button al-c-button--bare",
                       "component": "al-button",
                       "box": {
-                        "w": 144,
-                        "h": 36
+                        "w": 130,
+                        "h": 40
                       },
                       "layout": {
                         "display": "inline-flex",
@@ -1420,24 +1416,20 @@
                           "figma": "theme/space/xs"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space-xs",
                           "figma": "theme/space/xs"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-md-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
-                        "padding": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
-                        },
-                        "padding-bottom": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
+                        "min-height": {
+                          "code": "--al-theme-size-control",
+                          "figma": "theme/size/control"
                         },
                         "padding-left": {
                           "code": "--al-theme-space",
@@ -1446,10 +1438,6 @@
                         "padding-right": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
-                        },
-                        "padding-top": {
-                          "code": "--al-theme-space-xs",
-                          "figma": "theme/space/xs"
                         },
                         "row-gap": {
                           "code": "--al-theme-space-xs",
@@ -1461,8 +1449,8 @@
                           "tag": "span",
                           "cls": "al-c-button__text",
                           "box": {
-                            "w": 112,
-                            "h": 20
+                            "w": 98,
+                            "h": 14
                           },
                           "layout": {
                             "display": "block",
@@ -1476,9 +1464,13 @@
                               "tag": "span",
                               "cls": "al-c-button__text",
                               "text": "Toggle Drawer",
+                              "fsPx": 14,
+                              "lhPx": 14,
+                              "ffCss": "IBM Plex Sans",
+                              "fwCss": "600",
                               "box": {
-                                "w": 112,
-                                "h": 17
+                                "w": 98,
+                                "h": 16
                               },
                               "layout": {
                                 "display": "block",
@@ -1516,12 +1508,8 @@
                   "figma": "theme/color/background/neutral-default"
                 },
                 "box-shadow": {
-                  "code": "--al-theme-box-shadow-md",
-                  "figma": "theme/box-shadow/md"
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
+                  "code": "--al-theme-box-shadow-xl",
+                  "figma": "theme/box-shadow/xl"
                 }
               },
               "children": [
@@ -1566,6 +1554,10 @@
                       "tag": "div",
                       "cls": "al-c-drawer__body",
                       "text": "Drawer content",
+                      "fsPx": 16,
+                      "lhPx": 20,
+                      "ffCss": "IBM Plex Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 108.5,
                         "h": 17
@@ -1611,16 +1603,16 @@
     ]
   },
   "tokens": [
-    "--al-base-space",
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-theme-border-radius-role-action",
-    "--al-theme-box-shadow-md",
+    "--al-theme-box-shadow-xl",
     "--al-theme-color-background-neutral-default",
     "--al-theme-color-background-transparent-default",
     "--al-theme-color-content-neutral-default",
+    "--al-theme-size-control",
     "--al-theme-space",
     "--al-theme-space-xs",
-    "--al-theme-typography-body-md-bold-letter-spacing"
+    "--al-theme-typography-body-sm-semibold-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [

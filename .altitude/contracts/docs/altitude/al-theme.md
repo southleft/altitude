@@ -10,20 +10,15 @@ Component: al-theme
 
 No Figma component set is mapped for `al-theme` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
 
-## Props (6)
+## Props (5)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `brand` | enum | `altitude`, `southleft` | `'altitude'` | — |
 | `contrast` | enum | `more`, `normal` | `'normal'` | — |
 | `density` | enum | `comfortable`, `compact`, `cozy` | `'comfortable'` | — |
 | `mode` | enum | `dark`, `light` | `'light'` | — |
 | `motion` | string | `'full' \| 'reduced' \| 'expressive' \| undefined` | — | — |
 | `shape` | string | `'default' \| 'sharp' \| 'pill' \| undefined` | — | — |
-
-#### `brand`
-
-Brand identifier. Currently shipped: 'altitude' | 'southleft'.
 
 #### `contrast`
 
@@ -36,6 +31,19 @@ Density axis.
 #### `mode`
 
 Color mode.
+
+The VALUES no longer live in this component. They live in the design
+system's own stylesheet (`@southleft/al-web-components/project/<id>.css`),
+which carries `:root` for the default mode and `[data-al-mode='…']` for the
+others — the same shape Figma uses, where one collection holds Light and
+Dark as two modes of one system.
+
+This property is mirrored onto the host as `data-al-mode` so that stylesheet
+matches. A data attribute rather than reusing `[mode]` directly, for two
+reasons: the versioned registry renames the TAG (`al-theme-1-2-3`), so a
+tag-qualified selector would stop matching; and a bare `[mode='light']` in a
+global stylesheet would match unrelated elements. `data-al-mode` also means
+a page can set a mode on `<html>` or any subtree with no component at all.
 
 #### `motion`
 

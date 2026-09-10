@@ -6,7 +6,7 @@
  * Figma Code Connect — web component surface for the "Input Stepper"
  * component set (node 3558:61366).
  *
- * Mapped variant axes: Label, State, Variant.
+ * Mapped variant axes: Label, State, State, Variant.
  * Props the contract binds to an axis this generator could not map: label
  * (reasons in skipped.json — they are drift, not omissions).
  * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, count, errorNote, fieldId, fieldNote, isReadonly, isRequired, max, min, name, placeholder, step, value.
@@ -23,6 +23,9 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558
     isDisabled: figma.enum('State', {
       Disabled: true,
     }),
+    isError: figma.enum('State', {
+      Error: true,
+    }),
     variant: figma.enum('Variant', {
       Segmented: 'segmented',
       Trailing: 'trailing',
@@ -32,6 +35,7 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558
     <al-input-stepper
       hideLabel="${props.hideLabel}"
       isDisabled="${props.isDisabled}"
+      isError="${props.isError}"
       variant="${props.variant}"
     >
       <span slot="error">Error</span>

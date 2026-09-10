@@ -20,7 +20,7 @@
  * CLI also runs BEFORE any code is ever sent. */
 export function fileGuardSnippet(SC) {
   return String.raw`
-    if (figma.fileKey !== ${JSON.stringify(SC.fileKey)}) {
+    if (figma.fileKey !== ${JSON.stringify(SC.fileKey)} || figma.root.name !== ${JSON.stringify(SC.fileName)}) {
       throw new Error(
         'REFUSING TO WRITE: expected file ' + ${JSON.stringify(SC.fileKey)} + ' (' + ${JSON.stringify(SC.fileName)} +
         ') but the Desktop Bridge is focused on "' + figma.root.name + '" (' + figma.fileKey + ').'
@@ -305,8 +305,20 @@ export function docHeaderSnippet() {
 
       // The master has no separate link element, so the Description text
       // node's own trailing range carries the hyperlink.
+      //
+      // The node is addressed by an ALLOWLIST of names, because the master
+      // calls it 'Lede' and this lookup only knew 'Description'/'Text'. It
+      // therefore missed on EVERY generation and every page in the file kept
+      // the master's boilerplate copy while the run reported the miss and
+      // nobody read it (found 2026-09-06 generating al-text-block; 🛠 Badge
+      // and the rest of the 2026-08-26 sweep have the same generic lede).
+      // Keep this a list, not a rename: the master's own naming is the
+      // owner's to change.
+      const DESC_NAMES = ['Lede', 'Description', 'Text'];
       const descFrame = inst.findOne((n) => n.type === 'FRAME' && n.name === 'Description');
-      const descNode = descFrame ? descFrame.findOne((n) => n.type === 'TEXT') : inst.findOne((n) => n.type === 'TEXT' && n.name === 'Text');
+      const descNode = descFrame
+        ? descFrame.findOne((n) => n.type === 'TEXT')
+        : inst.findOne((n) => n.type === 'TEXT' && DESC_NAMES.indexOf(n.name) !== -1);
       if (descNode) {
         descNode.fontName = bodyFont;
         const desc = HEADER.description;

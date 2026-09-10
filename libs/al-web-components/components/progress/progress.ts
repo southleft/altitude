@@ -26,13 +26,14 @@ export class ALProgress extends ALElement {
   /**
    * Circle size property
    * - Sets the width of the circular progress indicator
-   * - **default** 16px
+   * - **sm** 16px, and what an omitted `circleSize` renders — named so the axis
+   *   is expressible in code rather than living as the absence of a value
    * - **md** 24px
    * - **lg** 32px
    * - **xl** 40px
    */
   @property()
-  accessor circleSize: 'md' | 'lg' | 'xl';
+  accessor circleSize: 'sm' | 'md' | 'lg' | 'xl';
 
   /**
    * Show label?
@@ -133,6 +134,8 @@ export class ALProgress extends ALElement {
         case 'xl':
           radius = 20;
           break;
+        // `sm` falls through: it IS the unset default, now named.
+        case 'sm':
         default:
           radius = 8;
       }
@@ -154,6 +157,8 @@ export class ALProgress extends ALElement {
           return 0.5;
         case 'xl':
           return 0.4;
+        // `sm` falls through: it IS the unset default, now named.
+        case 'sm':
         default:
           return 1;
       }
@@ -296,6 +301,8 @@ export class ALProgress extends ALElement {
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-progress', {
+      // Applied for an OMITTED circleSize too: sm IS the unset default, now named.
+      'al-is-circle-sm': this.circleSize === 'sm' || !this.circleSize,
       'al-is-circle-md': this.circleSize === 'md',
       'al-is-circle-lg': this.circleSize === 'lg',
       'al-is-circle-xl': this.circleSize === 'xl',

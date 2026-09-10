@@ -205,7 +205,7 @@ for (const tag of tags) {
   stamped += 1;
 }
 
-writeManifest(manifest, project);
+if (stamped > 0) writeManifest(manifest, project);
 console.log(`[${project.id}] Stamped ${stamped}/${tags.length} component(s) as synced at ${now}.`);
 if (refused > 0) {
   console.error(`[${project.id}] REFUSED ${refused}/${tags.length} — unverified components were left as they were, not stamped.`);

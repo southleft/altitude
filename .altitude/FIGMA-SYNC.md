@@ -158,8 +158,17 @@ with the text above, **this section is right**.
 
 **Rule 3 is wrong about icons.** `icon/*` and `theme/icon/*` DO exist as Figma variables
 and are legitimately synced. Only `z-index` and `breakpoint` are genuinely code-only,
-alongside `animation.duration.*` / `animation.timing.*` (no Figma variable type) and
-`border.radius.round` (a `%` Figma's unitless FLOAT cannot hold).
+alongside `border.radius.round` (a `%` Figma's unitless FLOAT cannot hold).
+
+**Rule 3 was also wrong about motion, corrected 2026-09-05.** `animation.duration.*`
+and `animation.timing.*` used to sit in that same code-only list on the grounds that no
+Figma variable type exists for them. No type does — but a duration carries fine as a
+FLOAT of MILLISECONDS (`0.1s` -> `100`; emitting `0.1` would read as a tenth of a
+millisecond) and an easing curve as a verbatim STRING. Both groups are now synced. They
+are not BINDABLE — Figma has no variable slot on a prototype transition — they are
+carried so the design side can see, review and diff the values ahead of the motion work.
+See `.altitude/contracts/DECISIONS.md` (2026-09-05), and note this does NOT change the
+axis table above: `motion` remains a `:host([attr])` axis, not a token-file axis.
 
 **Opacity is a PERCENTAGE on the Figma side — `opacity/40` = `40`, and the code's `0.4`
 is the SAME value. The two sides differ by a factor of 100 by design.**

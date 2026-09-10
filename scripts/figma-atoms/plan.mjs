@@ -59,6 +59,7 @@ function atom(tag, figmaName, axes, opts = {}) {
       // MOBILE width: a page section measured there reports its stacked mobile layout
       // (the hero came out 1371px tall). Page sections declare a desktop width.
       fillWidth: opts.fillWidth || undefined,
+      measureRoot: opts.measureRoot,
     };
   });
 
@@ -98,6 +99,7 @@ function atom(tag, figmaName, axes, opts = {}) {
     // that brand must not build it: the tag may not even exist there, and where it
     // does (card/header/footer) the brand API is a different component.
     brandOnly: opts.brandOnly || undefined,
+    baseOnly: opts.baseOnly || undefined,
   };
 }
 
@@ -389,6 +391,7 @@ export const PLAN = [
     },
     {
       always: { isactive: true },
+      measureRoot: '.al-c-tooltip__container',
       // al-tooltip positions its bubble against a TRIGGER. With only
       // default-slot text it rendered a childless inline-flex and measured
       // 0x0 — the last remaining "measured but got nothing" contract, and a
@@ -609,6 +612,7 @@ export const PLAN = [
     { Footer: boolAxis('__footer', 'no', 'yes') },
     {
       always: { isactive: true, heading: 'Dialog heading' },
+      measureRoot: '.al-c-dialog__container',
       slots: (r) => [
         { name: 'trigger', html: '<al-button>Open Dialog</al-button>' },
         { html: 'Dialog content' },
@@ -619,9 +623,10 @@ export const PLAN = [
   // Deps: al-button. Overlay like Dialog; `alignment` is the axis a Figma set
   // actually needs, since each edge is a different layout.
   atom('al-drawer', 'Drawer',
-    { Alignment: enumAxis('alignment', ['left', 'top', 'bottom']) },
+    { Alignment: enumAxis('alignment', ['right']) },
     {
       always: { isactive: true },
+      measureRoot: '.al-c-drawer__container',
       slots: () => [
         { name: 'trigger', html: '<al-button variant="bare">Toggle Drawer</al-button>' },
         { html: 'Drawer content' },
@@ -667,9 +672,10 @@ export const PLAN = [
   // trigger slot it renders nothing measurable. `isactive` holds it open, which is
   // the only state worth measuring for a Figma set.
   atom('al-popover', 'Popover',
-    { Position: enumAxis('position', ['bottom', 'left', 'right']) },
+    { Position: enumAxis('position', ['bottom-center', 'left', 'right']) },
     {
       always: { isactive: true, heading: 'Popover heading' },
+      measureRoot: '.al-c-popover__container',
       slots: () => [
         { name: 'trigger', html: '<al-button>Open Popover</al-button>' },
         { html: 'Popover content' },
@@ -867,6 +873,17 @@ export const PLAN = [
     }),
 
   /* --- southleft BRAND layer (@southleft/sl-web-components) --- */
+
+  atom('al-card', 'Card',
+    { Variant: enumAxis('variant', ['bare']) },
+    {
+      baseOnly: true, fill: () => true, fillWidth: 360,
+      slots: () => [
+        { name: 'header', html: 'Card heading' },
+        { html: 'Supporting content for the card.' },
+        { name: 'footer', html: 'Additional information' },
+      ],
+    }),
 
   atom('al-card', 'Card',
     { Variant: enumAxis('variant', ['bare', 'service', 'tool', 'article', 'work']) },

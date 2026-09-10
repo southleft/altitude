@@ -148,7 +148,6 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 | border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
 | border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
-| min-width | `--al-base-space` | — |
 
 ### State overrides (measured, root node)
 
@@ -732,9 +731,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-calendar`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (23)
+## Tokens referenced (22)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-icon`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
+`--al-font-weight-semibold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-icon`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-md`, `--al-theme-space-xs`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-sm-semibold-letter-spacing`, `--al-theme-typography-body-xs`, `--al-theme-typography-body-xs-letter-spacing`
 
 ---
 

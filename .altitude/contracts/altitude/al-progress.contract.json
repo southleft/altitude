@@ -12,12 +12,13 @@
   "props": [
     {
       "name": "circleSize",
-      "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **default** 16px\n- **md** 24px\n- **lg** 32px\n- **xl** 40px",
+      "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **sm** 16px, and what an omitted `circleSize` renders — named so the axis\n  is expressible in code rather than living as the absence of a value\n- **md** 24px\n- **lg** 32px\n- **xl** 40px",
       "type": "enum",
-      "rawType": "'md' | 'lg' | 'xl'",
+      "rawType": "'sm' | 'md' | 'lg' | 'xl'",
       "values": [
         "lg",
         "md",
+        "sm",
         "xl"
       ],
       "bindings": {
@@ -28,9 +29,9 @@
           "kind": "VARIANT",
           "property": "Size",
           "options": [
-            "Default",
             "Lg",
             "Md",
+            "Sm",
             "Xl"
           ],
           "pairWith": "Size"
@@ -179,7 +180,8 @@
         "display": "flex",
         "direction": "row",
         "align": "center",
-        "justify": "normal"
+        "justify": "normal",
+        "fillInline": true
       },
       "tokens": {
         "column-gap": {
@@ -207,7 +209,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "background": {
@@ -251,7 +254,8 @@
                 "display": "block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -271,6 +275,10 @@
           "tag": "div",
           "cls": "al-c-progress__label al-is-u-vishidden",
           "text": "0%",
+          "fsPx": 16,
+          "lhPx": 24,
+          "ffCss": "Public Sans",
+          "fwCss": "400",
           "box": {
             "w": 1,
             "h": 1
@@ -305,7 +313,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -333,7 +342,8 @@
                 "display": "block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -377,7 +387,8 @@
                     "display": "block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -397,6 +408,10 @@
               "tag": "div",
               "cls": "al-c-progress__label al-is-u-vishidden",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 1,
                 "h": 1
@@ -431,7 +446,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -459,7 +475,8 @@
                 "display": "block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -503,7 +520,8 @@
                     "display": "block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -523,6 +541,10 @@
               "tag": "div",
               "cls": "al-c-progress__label",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 24.3,
                 "h": 24
@@ -557,7 +579,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -577,6 +600,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                2,
+                2,
+                2,
+                2
+              ],
               "box": {
                 "w": 16,
                 "h": 16
@@ -619,14 +648,6 @@
                 "border-top-width": {
                   "code": "--al-theme-space-xxxs",
                   "figma": "theme/space/xxxs"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -664,14 +685,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -697,6 +710,10 @@
               "tag": "div",
               "cls": "al-c-progress__label al-is-u-vishidden",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 1,
                 "h": 1
@@ -731,7 +748,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -751,6 +769,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                2,
+                2,
+                2,
+                2
+              ],
               "box": {
                 "w": 16,
                 "h": 16
@@ -793,14 +817,6 @@
                 "border-top-width": {
                   "code": "--al-theme-space-xxxs",
                   "figma": "theme/space/xxxs"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -838,14 +854,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -871,6 +879,10 @@
               "tag": "div",
               "cls": "al-c-progress__label",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 24.3,
                 "h": 24
@@ -905,7 +917,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -925,6 +938,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                4,
+                4,
+                4,
+                4
+              ],
               "box": {
                 "w": 32,
                 "h": 32
@@ -971,14 +990,6 @@
                 "border-width": {
                   "code": "--al-theme-border-width-lg",
                   "figma": "theme/border/width/lg"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -1016,14 +1027,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -1049,6 +1052,10 @@
               "tag": "div",
               "cls": "al-c-progress__label al-is-u-vishidden",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 1,
                 "h": 1
@@ -1083,7 +1090,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1103,6 +1111,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                4,
+                4,
+                4,
+                4
+              ],
               "box": {
                 "w": 32,
                 "h": 32
@@ -1149,14 +1163,6 @@
                 "border-width": {
                   "code": "--al-theme-border-width-lg",
                   "figma": "theme/border/width/lg"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -1194,14 +1200,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -1227,6 +1225,10 @@
               "tag": "div",
               "cls": "al-c-progress__label",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 24.3,
                 "h": 24
@@ -1261,7 +1263,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1281,6 +1284,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                2,
+                2,
+                2,
+                2
+              ],
               "box": {
                 "w": 24,
                 "h": 24
@@ -1327,14 +1336,6 @@
                 "border-width": {
                   "code": "--al-theme-space-xxxs",
                   "figma": "theme/space/xxxs"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -1372,14 +1373,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -1405,6 +1398,10 @@
               "tag": "div",
               "cls": "al-c-progress__label al-is-u-vishidden",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 1,
                 "h": 1
@@ -1439,7 +1436,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1459,6 +1457,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                2,
+                2,
+                2,
+                2
+              ],
               "box": {
                 "w": 24,
                 "h": 24
@@ -1505,14 +1509,6 @@
                 "border-width": {
                   "code": "--al-theme-space-xxxs",
                   "figma": "theme/space/xxxs"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -1550,14 +1546,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -1583,6 +1571,10 @@
               "tag": "div",
               "cls": "al-c-progress__label",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 24.3,
                 "h": 24
@@ -1617,7 +1609,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1637,6 +1630,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                4,
+                4,
+                4,
+                4
+              ],
               "box": {
                 "w": 40,
                 "h": 40
@@ -1675,22 +1674,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "border-top-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "border-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -1728,14 +1711,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -1761,6 +1736,10 @@
               "tag": "div",
               "cls": "al-c-progress__label al-is-u-vishidden",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 1,
                 "h": 1
@@ -1795,7 +1774,8 @@
             "display": "flex",
             "direction": "row",
             "align": "center",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1815,6 +1795,12 @@
             {
               "tag": "div",
               "cls": "al-c-progress__track--circle",
+              "bw4": [
+                4,
+                4,
+                4,
+                4
+              ],
               "box": {
                 "w": 40,
                 "h": 40
@@ -1853,22 +1839,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "border-top-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "border-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -1906,14 +1876,6 @@
                 "border-top-right-radius": {
                   "code": "--al-theme-border-radius-round",
                   "figma": "theme/border/radius/round"
-                },
-                "height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "width": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": [
@@ -1939,6 +1901,10 @@
               "tag": "div",
               "cls": "al-c-progress__label",
               "text": "0%",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 24.3,
                 "h": 24

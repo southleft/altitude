@@ -4,35 +4,37 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-select
+A choice from a known list, rendered as a field the user opens rather than types into. It composes `al-input` for the field itself and `al-dropdown-panel` for the options, so it inherits the whole form-field treatment — label, required marker, field note, error note — and adds the open/closed state and keyboard traversal on top.
 
 ## Figma
 
-No Figma component set is mapped for `al-select` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Select**
+- Node id: `3704:13389` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3704-13389)
 
 ## Props (19)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `align` | enum | `bottom`, `top` | `'bottom'` | — |
-| `ariaDescribedBy` | string | — | — | — |
-| `errorNote` | string | — | — | — |
-| `fieldId` | string | — | — | — |
-| `fieldNote` | string | — | — | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
+| `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `hasSearch` | boolean | — | `false` | — |
-| `hideLabel` | boolean | — | — | — |
+| `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActive` | boolean | — | — | — |
-| `isActiveDropdown` | boolean | — | — | — |
+| `isActiveDropdown` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isDisabled` | boolean | — | — | — |
 | `isError` | boolean | — | — | — |
-| `isOptional` | boolean | — | — | — |
-| `isReadonly` | boolean | — | `true` | — |
-| `isRequired` | boolean | — | `false` | — |
-| `label` | string | — | `'Label'` | — |
-| `name` | string | — | — | — |
-| `placeholder` | string | — | — | — |
-| `title` | string | — | — | — |
-| `value` | string | — | — | — |
+| `isOptional` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isReadonly` | boolean | — | `true` | _not expressed in Figma (by design)_ |
+| `isRequired` | boolean | — | `false` | _not expressed in Figma (by design)_ |
+| `label` | string | — | `'Label'` | **Label** (VARIANT): `Hidden`, `Shown` |
+| `name` | string | — | — | _not expressed in Figma (by design)_ |
+| `placeholder` | string | — | — | _not expressed in Figma (by design)_ |
+| `title` | string | — | — | _not expressed in Figma (by design)_ |
+| `value` | string | — | — | _not expressed in Figma (by design)_ |
 
 #### `align`
 
@@ -117,19 +119,30 @@ The select's title
 
 The select's value attribute
 
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `isActiveDropdown`, `isOptional`, `isReadonly`, `isRequired`, `name`, `placeholder`, `title`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `hideLabel` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `label` (Figma property "Label")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
 
 ## States
 
 `disabled`
 
-## Slots (3)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The select content | — | — |
+| `before` | Optional leading content within the select control. | — | — |
 | `error` | If content is slotted, it will display in place of the errorNote property | — | — |
 | `field-note` | If content is slotted, it will display in place of the fieldNote property | — | — |
 

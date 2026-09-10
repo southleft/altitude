@@ -38,11 +38,13 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 _No interaction states recorded._
 
-## Slots (1)
+## Slots (3)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The dropdown panel content | — | — |
+| `footer` | Content below the dropdown body. | — | — |
+| `header` | Content above the dropdown body. | — | — |
 
 ## Events (0)
 

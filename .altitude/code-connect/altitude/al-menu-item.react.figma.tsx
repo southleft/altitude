@@ -6,8 +6,8 @@
  * Figma Code Connect — React wrapper surface for the "Menu Item"
  * component set (node 3543:47347).
  *
- * Mapped variant axes: State, Role, Selected.
- * Props the contract binds to an axis this generator could not map: isExpandableHeader, isFocused
+ * Mapped variant axes: State, State, Role, Selected.
+ * Props the contract binds to an axis this generator could not map: isExpandableHeader
  * (reasons in skipped.json — they are drift, not omissions).
  * Props the contract marks `omit` (no Figma axis): ariaControls, groupId, href, idx, indentation, isExpanded, isHidden, linkTitle, target, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
@@ -21,6 +21,9 @@ figma.connect(ALMenuItem, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?
     isDisabled: figma.enum('State', {
       Disabled: true,
     }),
+    isFocused: figma.enum('State', {
+      Focus: true,
+    }),
     isHeader: figma.enum('Role', {
       Header: true,
     }),
@@ -31,6 +34,7 @@ figma.connect(ALMenuItem, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?
   example: (props) => (
     <ALMenuItem
       isDisabled={props.isDisabled}
+      isFocused={props.isFocused}
       isHeader={props.isHeader}
       isSelected={props.isSelected}
     >

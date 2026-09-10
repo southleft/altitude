@@ -1,4 +1,5 @@
 import { html, unsafeCSS } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { property, query, queryAssignedElements } from 'lit/decorators.js';
 import register from '../../directives/register';
 import PackageJson from '../../package.json';
@@ -38,6 +39,13 @@ export class ALToggleButton extends ALElement {
   accessor variant: 'background';
 
   /**
+   * Accessible name for an icon-only toggle button. Visible slotted text supplies
+   * the name when this property is omitted.
+   */
+  @property()
+  accessor label: string;
+
+  /**
    * Indicates the selected state of the toggle button.
    */
   @property({ type: Boolean })
@@ -52,9 +60,9 @@ export class ALToggleButton extends ALElement {
 
   /**
    * Has toggle?
-   * - Is dynamically set if the first time slotted is a ALPopover or ALMenu
-   * - **true** does not toggle the isSelected state
-   * - **false** toggles the isSelected state
+   * - Dynamically enabled when the first slotted element is an ALPopover or ALMenu.
+   * - **true** toggles the isSelected state on activation.
+   * - **false** selects on activation; Escape or an outside click can deselect.
    */
   @property({ type: Boolean })
   accessor hasToggle: boolean;
@@ -232,12 +240,14 @@ export class ALToggleButton extends ALElement {
 
   /**
    * Handle on keydown
-   * 1. If enter key is pressed, set selected state
+   * Enter and Space use the same selection behavior as a click; Escape deselects.
    */
   handleOnKeydown(e: KeyboardEvent) {
-    /* 1 */
-    if (this.isSelected === false && e.code === 'Enter') {
-      this.selectToggleButton();
+    // Do not consume keyboard input from an interactive slotted descendant.
+    if (e.composedPath()[0] !== this.toggleButton) return;
+    if (e.code === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      if (!e.repeat) this.toggleSelected();
     }
 
     /* 2 */
@@ -274,7 +284,7 @@ export class ALToggleButton extends ALElement {
     });
 
     return html`
-      <div class="${componentClassNames}" @click=${this.handleOnClick} @keydown=${this.handleOnKeydown} tabindex="0">
+      <div class="${componentClassNames}" role="button" aria-label=${ifDefined(this.label)} aria-pressed=${this.isSelected ? 'true' : 'false'} @click=${this.handleOnClick} @keydown=${this.handleOnKeydown} tabindex="0">
         <div class="al-c-toggle-button__content">
           <slot></slot>
         </div>

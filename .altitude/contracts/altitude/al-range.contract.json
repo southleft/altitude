@@ -152,7 +152,18 @@
         "code": {
           "attribute": "isDisabled"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Active",
+            "Default",
+            "Disabled",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
@@ -331,6 +342,14 @@
       "description": "If content is slotted, it will override the default range \"min\" label text"
     },
     {
+      "name": "error",
+      "description": "Error text replacing the errorNote property."
+    },
+    {
+      "name": "field-note",
+      "description": "Helper text replacing the fieldNote property."
+    },
+    {
       "name": "label",
       "description": "If content is slotted, it will override the default range label"
     }
@@ -386,6 +405,10 @@
           "tag": "label",
           "cls": "al-c-range__label",
           "text": "Label",
+          "fsPx": 16,
+          "lhPx": 24,
+          "ffCss": "Public Sans",
+          "fwCss": "400",
           "box": {
             "w": 200.8,
             "h": 24
@@ -444,6 +467,10 @@
               "tag": "span",
               "cls": "al-c-range-prefix-text",
               "text": "0",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 9.8,
                 "h": 24
@@ -490,7 +517,8 @@
                     "direction": "row",
                     "align": "normal",
                     "justify": "normal",
-                    "grow": 1
+                    "grow": 1,
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -534,6 +562,10 @@
               "tag": "span",
               "cls": "al-c-range-suffix-text",
               "text": "100",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 26,
                 "h": 24
@@ -600,6 +632,10 @@
               "cls": "al-c-field-note",
               "component": "al-field-note",
               "text": "This is a field note.",
+              "fsPx": 14,
+              "lhPx": 20,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 119.9,
                 "h": 16
@@ -677,6 +713,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 200.8,
                 "h": 24
@@ -735,6 +775,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -781,7 +825,8 @@
                         "direction": "row",
                         "align": "normal",
                         "justify": "normal",
-                        "grow": 1
+                        "grow": 1,
+                        "fillInline": true
                       },
                       "tokens": {
                         "background": {
@@ -825,6 +870,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -891,6 +940,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -972,6 +1025,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 200.8,
                 "h": 24
@@ -1034,6 +1091,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -1080,7 +1141,8 @@
                         "direction": "row",
                         "align": "normal",
                         "justify": "normal",
-                        "grow": 1
+                        "grow": 1,
+                        "fillInline": true
                       },
                       "tokens": {
                         "background": {
@@ -1124,6 +1186,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -1194,6 +1260,10 @@
                   "cls": "al-c-field-note al-is-disabled",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -1275,6 +1345,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 200.8,
                 "h": 24
@@ -1333,6 +1407,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -1379,7 +1457,8 @@
                         "direction": "row",
                         "align": "normal",
                         "justify": "normal",
-                        "grow": 1
+                        "grow": 1,
+                        "fillInline": true
                       },
                       "tokens": {
                         "background": {
@@ -1423,6 +1502,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -1489,6 +1572,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -1575,6 +1662,10 @@
                   "cls": "al-c-field-note al-is-error",
                   "component": "al-field-note",
                   "text": "This is an error note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 130.8,
                     "h": 16
@@ -1652,6 +1743,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 292.8,
                 "h": 24
@@ -1710,6 +1805,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -1756,7 +1855,8 @@
                         "direction": "row",
                         "align": "normal",
                         "justify": "normal",
-                        "grow": 1
+                        "grow": 1,
+                        "fillInline": true
                       },
                       "tokens": {
                         "background": {
@@ -1800,6 +1900,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -1821,6 +1925,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-range__output",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 76,
                     "h": 40
@@ -1884,14 +1994,6 @@
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
                     },
-                    "min-width": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
-                    },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
                       "figma": "theme/space/sm"
@@ -1951,6 +2053,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -2032,6 +2138,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 292.8,
                 "h": 24
@@ -2094,6 +2204,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -2140,7 +2254,8 @@
                         "direction": "row",
                         "align": "normal",
                         "justify": "normal",
-                        "grow": 1
+                        "grow": 1,
+                        "fillInline": true
                       },
                       "tokens": {
                         "background": {
@@ -2184,6 +2299,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -2205,6 +2324,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-range__output",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 76,
                     "h": 40
@@ -2268,17 +2393,9 @@
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
                     },
-                    "min-width": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -2343,6 +2460,10 @@
                   "cls": "al-c-field-note al-is-disabled",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -2424,6 +2545,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 292.8,
                 "h": 24
@@ -2482,6 +2607,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -2528,7 +2657,8 @@
                         "direction": "row",
                         "align": "normal",
                         "justify": "normal",
-                        "grow": 1
+                        "grow": 1,
+                        "fillInline": true
                       },
                       "tokens": {
                         "background": {
@@ -2572,6 +2702,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -2593,6 +2727,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-range__output",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 76,
                     "h": 40
@@ -2660,14 +2800,6 @@
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
                     },
-                    "min-width": {
-                      "code": "--al-base-space",
-                      "figma": null
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
-                    },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
                       "figma": "theme/space/sm"
@@ -2727,6 +2859,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -2813,6 +2949,10 @@
                   "cls": "al-c-field-note al-is-error",
                   "component": "al-field-note",
                   "text": "This is an error note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 130.8,
                     "h": 16
@@ -2890,6 +3030,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 119.9,
                 "h": 64
@@ -2911,10 +3055,6 @@
                 },
                 "letter-spacing": {
                   "code": "--al-theme-typography-body-md-letter-spacing",
-                  "figma": null
-                },
-                "padding-bottom": {
-                  "code": "--al-base-space",
                   "figma": null
                 }
               },
@@ -2952,6 +3092,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -2982,7 +3126,8 @@
                     "direction": "row",
                     "align": "normal",
                     "justify": "normal",
-                    "grow": 1
+                    "grow": 1,
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -3030,7 +3175,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3075,7 +3221,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3116,7 +3263,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3218,10 +3366,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -3229,6 +3373,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-one-label",
                               "text": "0",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 30,
                                 "h": 32
@@ -3342,10 +3490,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -3353,6 +3497,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-two-label",
                               "text": "100",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 35.5,
                                 "h": 32
@@ -3421,6 +3569,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -3487,6 +3639,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -3568,6 +3724,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 119.9,
                 "h": 64
@@ -3594,10 +3754,6 @@
                 "opacity": {
                   "code": "--al-theme-opacity-disabled",
                   "figma": "theme/opacity/disabled"
-                },
-                "padding-bottom": {
-                  "code": "--al-base-space",
-                  "figma": null
                 }
               },
               "children": []
@@ -3634,6 +3790,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -3664,7 +3824,8 @@
                     "direction": "row",
                     "align": "normal",
                     "justify": "normal",
-                    "grow": 1
+                    "grow": 1,
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -3712,7 +3873,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3757,7 +3919,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3798,7 +3961,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -3900,10 +4064,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -3911,6 +4071,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-one-label",
                               "text": "0",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 30,
                                 "h": 32
@@ -4024,10 +4188,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -4035,6 +4195,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-two-label",
                               "text": "100",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 35.5,
                                 "h": 32
@@ -4103,6 +4267,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -4169,6 +4337,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -4246,6 +4418,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 130.8,
                 "h": 64
@@ -4267,10 +4443,6 @@
                 },
                 "letter-spacing": {
                   "code": "--al-theme-typography-body-md-letter-spacing",
-                  "figma": null
-                },
-                "padding-bottom": {
-                  "code": "--al-base-space",
                   "figma": null
                 }
               },
@@ -4308,6 +4480,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -4338,7 +4514,8 @@
                     "direction": "row",
                     "align": "normal",
                     "justify": "normal",
-                    "grow": 1
+                    "grow": 1,
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -4386,7 +4563,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -4431,7 +4609,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -4472,7 +4651,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -4574,10 +4754,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -4585,6 +4761,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-one-label",
                               "text": "0",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 30,
                                 "h": 32
@@ -4698,10 +4878,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -4709,6 +4885,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-two-label",
                               "text": "100",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 35.5,
                                 "h": 32
@@ -4777,6 +4957,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -4843,6 +5027,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -4929,6 +5117,10 @@
                   "cls": "al-c-field-note al-is-error",
                   "component": "al-field-note",
                   "text": "This is an error note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 130.8,
                     "h": 16
@@ -5006,6 +5198,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 251.8,
                 "h": 40
@@ -5068,6 +5264,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -5098,7 +5298,8 @@
                     "direction": "row",
                     "align": "normal",
                     "justify": "normal",
-                    "grow": 1
+                    "grow": 1,
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -5146,7 +5347,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -5191,7 +5393,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -5232,7 +5435,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -5334,10 +5538,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -5345,6 +5545,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-one-label",
                               "text": "0",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 30,
                                 "h": 32
@@ -5458,10 +5662,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -5469,6 +5669,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-two-label",
                               "text": "100",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 35.5,
                                 "h": 32
@@ -5537,6 +5741,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -5573,6 +5781,12 @@
                     {
                       "tag": "input",
                       "cls": "al-c-range__output-range-one",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 76,
                         "h": 40
@@ -5636,14 +5850,6 @@
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
                         },
-                        "min-width": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "padding": {
-                          "code": "--al-theme-space-sm",
-                          "figma": "theme/space/sm"
-                        },
                         "padding-left": {
                           "code": "--al-theme-space-sm",
                           "figma": "theme/space/sm"
@@ -5659,6 +5865,10 @@
                       "tag": "div",
                       "cls": "al-c-range__output-range-one-text",
                       "text": "Min",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 76,
                         "h": 20
@@ -5705,6 +5915,12 @@
                     {
                       "tag": "input",
                       "cls": "al-c-range__output-range-two",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 76,
                         "h": 40
@@ -5768,14 +5984,6 @@
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
                         },
-                        "min-width": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "padding": {
-                          "code": "--al-theme-space-sm",
-                          "figma": "theme/space/sm"
-                        },
                         "padding-left": {
                           "code": "--al-theme-space-sm",
                           "figma": "theme/space/sm"
@@ -5791,6 +5999,10 @@
                       "tag": "div",
                       "cls": "al-c-range__output-range-two-text",
                       "text": "Max",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 76,
                         "h": 20
@@ -5867,6 +6079,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -5948,6 +6164,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 251.8,
                 "h": 40
@@ -6014,6 +6234,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -6044,7 +6268,8 @@
                     "direction": "row",
                     "align": "normal",
                     "justify": "normal",
-                    "grow": 1
+                    "grow": 1,
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -6092,7 +6317,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -6137,7 +6363,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -6178,7 +6405,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -6280,10 +6508,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -6291,6 +6515,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-one-label",
                               "text": "0",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 30,
                                 "h": 32
@@ -6404,10 +6632,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -6415,6 +6639,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-two-label",
                               "text": "100",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 35.5,
                                 "h": 32
@@ -6483,6 +6711,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -6519,6 +6751,12 @@
                     {
                       "tag": "input",
                       "cls": "al-c-range__output-range-one",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 76,
                         "h": 40
@@ -6582,17 +6820,9 @@
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
                         },
-                        "min-width": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "padding": {
-                          "code": "--al-theme-space-sm",
-                          "figma": "theme/space/sm"
                         },
                         "padding-left": {
                           "code": "--al-theme-space-sm",
@@ -6609,6 +6839,10 @@
                       "tag": "div",
                       "cls": "al-c-range__output-range-one-text",
                       "text": "Min",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 76,
                         "h": 20
@@ -6659,6 +6893,12 @@
                     {
                       "tag": "input",
                       "cls": "al-c-range__output-range-two",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 76,
                         "h": 40
@@ -6722,17 +6962,9 @@
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
                         },
-                        "min-width": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
                         "opacity": {
                           "code": "--al-theme-opacity-disabled",
                           "figma": "theme/opacity/disabled"
-                        },
-                        "padding": {
-                          "code": "--al-theme-space-sm",
-                          "figma": "theme/space/sm"
                         },
                         "padding-left": {
                           "code": "--al-theme-space-sm",
@@ -6749,6 +6981,10 @@
                       "tag": "div",
                       "cls": "al-c-range__output-range-two-text",
                       "text": "Max",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 76,
                         "h": 20
@@ -6829,6 +7065,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -6906,6 +7146,10 @@
               "tag": "label",
               "cls": "al-c-range__label",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 251.8,
                 "h": 40
@@ -6968,6 +7212,10 @@
                   "tag": "span",
                   "cls": "al-c-range-prefix-text",
                   "text": "0",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 9.8,
                     "h": 24
@@ -6998,7 +7246,8 @@
                     "direction": "row",
                     "align": "normal",
                     "justify": "normal",
-                    "grow": 1
+                    "grow": 1,
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -7046,7 +7295,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -7091,7 +7341,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -7132,7 +7383,8 @@
                         "display": "block",
                         "direction": "row",
                         "align": "normal",
-                        "justify": "normal"
+                        "justify": "normal",
+                        "fillInline": true
                       },
                       "tokens": {
                         "background-color": {
@@ -7234,10 +7486,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -7245,6 +7493,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-one-label",
                               "text": "0",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 30,
                                 "h": 32
@@ -7358,10 +7610,6 @@
                             "line-height": {
                               "code": "--al-theme-space",
                               "figma": "theme/space/@"
-                            },
-                            "min-width": {
-                              "code": "--al-base-space",
-                              "figma": null
                             }
                           },
                           "children": [
@@ -7369,6 +7617,10 @@
                               "tag": "span",
                               "cls": "al-c-range__input-two-label",
                               "text": "100",
+                              "fsPx": 12,
+                              "lhPx": 16,
+                              "ffCss": "Public Sans",
+                              "fwCss": "400",
                               "box": {
                                 "w": 35.5,
                                 "h": 32
@@ -7437,6 +7689,10 @@
                   "tag": "span",
                   "cls": "al-c-range-suffix-text",
                   "text": "100",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 26,
                     "h": 24
@@ -7473,6 +7729,12 @@
                     {
                       "tag": "input",
                       "cls": "al-c-range__output-range-one",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 76,
                         "h": 40
@@ -7540,14 +7802,6 @@
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
                         },
-                        "min-width": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "padding": {
-                          "code": "--al-theme-space-sm",
-                          "figma": "theme/space/sm"
-                        },
                         "padding-left": {
                           "code": "--al-theme-space-sm",
                           "figma": "theme/space/sm"
@@ -7563,6 +7817,10 @@
                       "tag": "div",
                       "cls": "al-c-range__output-range-one-text",
                       "text": "Min",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 76,
                         "h": 20
@@ -7609,6 +7867,12 @@
                     {
                       "tag": "input",
                       "cls": "al-c-range__output-range-two",
+                      "bw4": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
                       "box": {
                         "w": 76,
                         "h": 40
@@ -7676,14 +7940,6 @@
                           "code": "--al-theme-size-control",
                           "figma": "theme/size/control"
                         },
-                        "min-width": {
-                          "code": "--al-base-space",
-                          "figma": null
-                        },
-                        "padding": {
-                          "code": "--al-theme-space-sm",
-                          "figma": "theme/space/sm"
-                        },
                         "padding-left": {
                           "code": "--al-theme-space-sm",
                           "figma": "theme/space/sm"
@@ -7699,6 +7955,10 @@
                       "tag": "div",
                       "cls": "al-c-range__output-range-two-text",
                       "text": "Max",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 76,
                         "h": 20
@@ -7775,6 +8035,10 @@
                   "cls": "al-c-field-note",
                   "component": "al-field-note",
                   "text": "This is a field note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 119.9,
                     "h": 16
@@ -7861,6 +8125,10 @@
                   "cls": "al-c-field-note al-is-error",
                   "component": "al-field-note",
                   "text": "This is an error note.",
+                  "fsPx": 14,
+                  "lhPx": 20,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 130.8,
                     "h": 16

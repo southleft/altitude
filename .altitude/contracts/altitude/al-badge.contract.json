@@ -52,12 +52,13 @@
     },
     {
       "name": "variant",
-      "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+      "description": "State variant\n- **neutral** renders the non-status badge, and is what an omitted\n  `variant` renders — named so the axis is expressible in code the way the\n  Figma set names it, rather than living as the absence of a value\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
       "type": "enum",
-      "rawType": "'info' | 'success' | 'warning' | 'danger'",
+      "rawType": "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
       "values": [
         "danger",
         "info",
+        "neutral",
         "success",
         "warning"
       ],
@@ -70,8 +71,8 @@
           "property": "Variant",
           "options": [
             "Danger",
-            "Default",
             "Info",
+            "Neutral",
             "Success",
             "Warning"
           ]
@@ -144,28 +145,16 @@
           "figma": "theme/space/xxs"
         },
         "font-weight": {
-          "code": "--al-font-weight-bold",
-          "figma": "typography/font-weight/bold"
+          "code": "--al-font-weight-semibold",
+          "figma": "typography/font-weight/semibold"
         },
         "gap": {
           "code": "--al-theme-space-xxs",
           "figma": "theme/space/xxs"
         },
         "letter-spacing": {
-          "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+          "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
           "figma": null
-        },
-        "min-height": {
-          "code": "--al-base-space",
-          "figma": null
-        },
-        "min-width": {
-          "code": "--al-base-space",
-          "figma": null
-        },
-        "padding": {
-          "code": "--al-theme-space-xs",
-          "figma": "theme/space/xs"
         },
         "padding-left": {
           "code": "--al-theme-space-xs",
@@ -185,6 +174,10 @@
           "tag": "div",
           "cls": "al-c-badge",
           "text": "8",
+          "fsPx": 12,
+          "lhPx": 12,
+          "ffCss": "Public Sans",
+          "fwCss": "600",
           "box": {
             "w": 8.1,
             "h": 14
@@ -233,28 +226,16 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
-            },
-            "min-height": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "min-width": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "padding": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
             },
             "padding-left": {
               "code": "--al-theme-space-xs",
@@ -327,15 +308,15 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
             },
             "min-height": {
@@ -407,28 +388,16 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
-            },
-            "min-height": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "min-width": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "padding": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
             },
             "padding-left": {
               "code": "--al-theme-space-xs",
@@ -448,6 +417,10 @@
               "tag": "div",
               "cls": "al-c-badge al-c-badge--danger",
               "text": "8",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "600",
               "box": {
                 "w": 8.1,
                 "h": 14
@@ -496,28 +469,16 @@
                   "figma": "theme/space/xxs"
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "gap": {
                   "code": "--al-theme-space-xxs",
                   "figma": "theme/space/xxs"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                   "figma": null
-                },
-                "min-height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "min-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "padding": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-xs",
@@ -590,15 +551,15 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
             },
             "min-height": {
@@ -670,28 +631,16 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
-            },
-            "min-height": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "min-width": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "padding": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
             },
             "padding-left": {
               "code": "--al-theme-space-xs",
@@ -711,6 +660,10 @@
               "tag": "div",
               "cls": "al-c-badge",
               "text": "8",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "600",
               "box": {
                 "w": 8.1,
                 "h": 14
@@ -759,28 +712,16 @@
                   "figma": "theme/space/xxs"
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "gap": {
                   "code": "--al-theme-space-xxs",
                   "figma": "theme/space/xxs"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                   "figma": null
-                },
-                "min-height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "min-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "padding": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-xs",
@@ -853,15 +794,15 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
             },
             "min-height": {
@@ -933,28 +874,16 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
-            },
-            "min-height": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "min-width": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "padding": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
             },
             "padding-left": {
               "code": "--al-theme-space-xs",
@@ -974,6 +903,10 @@
               "tag": "div",
               "cls": "al-c-badge al-c-badge--info",
               "text": "8",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "600",
               "box": {
                 "w": 8.1,
                 "h": 14
@@ -1022,28 +955,16 @@
                   "figma": "theme/space/xxs"
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "gap": {
                   "code": "--al-theme-space-xxs",
                   "figma": "theme/space/xxs"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                   "figma": null
-                },
-                "min-height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "min-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "padding": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-xs",
@@ -1116,15 +1037,15 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
             },
             "min-height": {
@@ -1196,28 +1117,16 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
-            },
-            "min-height": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "min-width": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "padding": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
             },
             "padding-left": {
               "code": "--al-theme-space-xs",
@@ -1237,6 +1146,10 @@
               "tag": "div",
               "cls": "al-c-badge al-c-badge--success",
               "text": "8",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "600",
               "box": {
                 "w": 8.1,
                 "h": 14
@@ -1285,28 +1198,16 @@
                   "figma": "theme/space/xxs"
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "gap": {
                   "code": "--al-theme-space-xxs",
                   "figma": "theme/space/xxs"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                   "figma": null
-                },
-                "min-height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "min-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "padding": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-xs",
@@ -1379,15 +1280,15 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
             },
             "min-height": {
@@ -1459,28 +1360,16 @@
               "figma": "theme/space/xxs"
             },
             "font-weight": {
-              "code": "--al-font-weight-bold",
-              "figma": "typography/font-weight/bold"
+              "code": "--al-font-weight-semibold",
+              "figma": "typography/font-weight/semibold"
             },
             "gap": {
               "code": "--al-theme-space-xxs",
               "figma": "theme/space/xxs"
             },
             "letter-spacing": {
-              "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+              "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
               "figma": null
-            },
-            "min-height": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "min-width": {
-              "code": "--al-base-space",
-              "figma": null
-            },
-            "padding": {
-              "code": "--al-theme-space-xs",
-              "figma": "theme/space/xs"
             },
             "padding-left": {
               "code": "--al-theme-space-xs",
@@ -1500,6 +1389,10 @@
               "tag": "div",
               "cls": "al-c-badge al-c-badge--warning",
               "text": "8",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "600",
               "box": {
                 "w": 8.1,
                 "h": 14
@@ -1548,28 +1441,16 @@
                   "figma": "theme/space/xxs"
                 },
                 "font-weight": {
-                  "code": "--al-font-weight-bold",
-                  "figma": "typography/font-weight/bold"
+                  "code": "--al-font-weight-semibold",
+                  "figma": "typography/font-weight/semibold"
                 },
                 "gap": {
                   "code": "--al-theme-space-xxs",
                   "figma": "theme/space/xxs"
                 },
                 "letter-spacing": {
-                  "code": "--al-theme-typography-body-xs-bold-letter-spacing",
+                  "code": "--al-theme-typography-body-xs-semibold-letter-spacing",
                   "figma": null
-                },
-                "min-height": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "min-width": {
-                  "code": "--al-base-space",
-                  "figma": null
-                },
-                "padding": {
-                  "code": "--al-theme-space-xs",
-                  "figma": "theme/space/xs"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-xs",
@@ -1592,14 +1473,13 @@
     ]
   },
   "tokens": [
-    "--al-base-space",
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-theme-border-radius-pill",
     "--al-theme-color-background-neutral-bold",
     "--al-theme-color-content-neutral-default",
     "--al-theme-space-xs",
     "--al-theme-space-xxs",
-    "--al-theme-typography-body-xs-bold-letter-spacing"
+    "--al-theme-typography-body-xs-semibold-letter-spacing"
   ],
   "conditionalBindings": {
     "variant": {
@@ -1613,28 +1493,6 @@
           "figma": "theme/color/content/danger-default"
         }
       },
-      "default": {
-        "background": {
-          "code": "--al-theme-color-background-neutral-bold",
-          "figma": "theme/color/background/neutral-bold"
-        },
-        "border-radius": {
-          "code": "--al-theme-border-radius-pill",
-          "figma": "theme/border/radius/pill"
-        },
-        "color": {
-          "code": "--al-theme-color-content-neutral-default",
-          "figma": "theme/color/content/neutral-default"
-        },
-        "gap": {
-          "code": "--al-theme-space-xxs",
-          "figma": "theme/space/xxs"
-        },
-        "padding": {
-          "code": "--al-theme-space-xs",
-          "figma": "theme/space/xs"
-        }
-      },
       "info": {
         "background": {
           "code": "--al-theme-color-background-info-weak",
@@ -1643,6 +1501,16 @@
         "color": {
           "code": "--al-theme-color-content-info-default",
           "figma": "theme/color/content/info-default"
+        }
+      },
+      "neutral": {
+        "background": {
+          "code": "--al-theme-color-background-neutral-bold",
+          "figma": "theme/color/background/neutral-bold"
+        },
+        "color": {
+          "code": "--al-theme-color-content-neutral-default",
+          "figma": "theme/color/content/neutral-default"
         }
       },
       "success": {
@@ -1694,9 +1562,7 @@
     }
   },
   "a11y": {
-    "ariaAttributes": [
-      "variant"
-    ],
+    "ariaAttributes": [],
     "cssParts": []
   },
   "bindings": {

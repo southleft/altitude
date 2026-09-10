@@ -70,6 +70,7 @@ export function convertAnatomyNode(node) {
     // copy and leaf-glyph geometry, straight from the contract.
     ...(node.text ? { text: node.text } : {}),
     ...(node.box ? { box: node.box } : {}),
+    ...(node.bw4 ? { bw4: node.bw4 } : {}),
     // PAGE-lane literal type metrics (generate-snippet attaches fsPx/lhPx —
     // the measured USED font-size/line-height; hero learnings note
     // 2026-08-28). Never present on real contracts, so component ops are
@@ -443,7 +444,11 @@ export function buildOps(contract, {
       // prop to count as backed.
       const curProps = cur && Array.isArray(cur.props) ? cur.props : null;
       let backing;
-      if (curProps) {
+      if (cur?.slot) {
+        const slot = (contract.slots || []).find(s => s.name === cur.slot);
+        if (!slot || slot.figmaOmit) continue;
+        backing = [];
+      } else if (curProps) {
         backing = curProps.map((n) => (contract.props || []).find((p) => p.name === n)).filter(Boolean);
         if (backing.length !== curProps.length) continue; // a named prop does not exist — curation is stale
       } else {
@@ -453,7 +458,7 @@ export function buildOps(contract, {
         if (!prop) continue; // no code prop backs this dimension — stays at its base value, never fabricated
         backing = [prop];
       }
-      if (backing.every((p) => p.bindings?.figma?.omit)) continue; // T27 opt-out applies to case axes too
+      if (backing.length && backing.every((p) => p.bindings?.figma?.omit)) continue; // T27 opt-out applies to case axes too
       const valueMap = cur?.valueMap || {};
       const optionOf = (raw) => valueMap[raw] || titleize(raw);
       const optionToRaw = {};

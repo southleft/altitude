@@ -23,11 +23,11 @@ export default {
       control: { type: 'radio' }
     },
     variant: {
-      options: ['default', 'neutral', 'bare', 'secondary', 'tertiary'],
+      options: ['primary', 'neutral', 'bare', 'secondary', 'tertiary'],
       control: { type: 'radio' }
     },
     size: {
-      options: ['default', 'sm', 'lg'],
+      options: ['sm', 'md', 'lg'],
       control: { type: 'radio' }
     },
     isPill: {

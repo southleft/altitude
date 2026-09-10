@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Altitude — MFE coexistence fixture</title>
     <link rel="stylesheet" href="@southleft/al-web-components/css/main.css" />
+    <!-- The design system's own token bundle: main.css is the reset, the layers,
+         the base element styles and the utilities; this is the PALETTE. One file
+         per system, :root plus [data-al-mode='...']. No brand attribute anywhere --
+         the page is Altitude because it loaded Altitude's tokens. -->
+    <link rel="stylesheet" href="@southleft/al-web-components/project/altitude.css" />
     <style>
       /*
        * No `window.alAutoRegistry` here — this fixture proves the
@@ -20,7 +25,7 @@
     </style>
   </head>
   <body>
-    <al-theme-shell brand="altitude" mode="dark">
+    <al-theme-shell mode="dark">
       <al-layout-shell gap="lg">
         <header>
           <al-heading-shell tagName="h1" variant="lg">Micro-frontend coexistence fixture (T0.3 + T4.6)</al-heading-shell>

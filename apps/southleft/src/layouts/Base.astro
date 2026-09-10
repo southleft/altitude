@@ -5,7 +5,19 @@
 // 'light'), rebuilt on the Altitude Astro fixture pattern (apps/astro):
 // alAutoRegistry inline in <head>, @southleft/al-web-components/css/main.css imported
 // once, deep component imports as a bundled <script> at the end of <body>.
+/*
+ * The design system's own token bundle, replacing `css/main.css`'s base
+ * palette. One file per system, `:root` for the default mode and
+ * `[data-al-mode='…']` for the other — the shape the Figma file uses, where a
+ * file IS a system and one collection carries both modes.
+ *
+ * `main.css` still supplies the reset, the cascade layers, the base element
+ * styles and the utility classes; it is the PALETTE that moves here. Nothing
+ * sets `brand` any more: this page renders Southleft because it loaded
+ * Southleft's tokens, not because an attribute selected them.
+ */
 import '@southleft/al-web-components/css/main.css';
+import '@southleft/al-web-components/project/southleft.css';
 import '../styles/fonts.css';
 import '../styles/layout.css';
 import Header from '../components/Header.astro';
@@ -108,7 +120,7 @@ const ldNodes = [organizationLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : 
         })();
       </script>
     )}
-    <al-theme id="sl-theme" brand="southleft" mode={theme} contrast="more">
+    <al-theme id="sl-theme" mode={theme} contrast="more">
       <script is:inline>
         // Persisted ink/paper preference (localStorage) wins over the
         // per-page default set above — runs before the theme host upgrades,

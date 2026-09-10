@@ -21,10 +21,10 @@ Component: al-menu-item
 | `href` | string | — | — | _not expressed in Figma (by design)_ |
 | `idx` | number | — | — | _not expressed in Figma (by design)_ |
 | `indentation` | number | — | `0` | _not expressed in Figma (by design)_ |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled` |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus` |
 | `isExpandableHeader` | boolean | — | — | **Role** (VARIANT): `Expandable`, `Header`, `Item` |
 | `isExpanded` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isFocused` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled` |
+| `isFocused` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus` |
 | `isHeader` | boolean | — | — | **Role** (VARIANT): `Expandable`, `Header`, `Item` |
 | `isHidden` | boolean | — | `false` | _not expressed in Figma (by design)_ |
 | `isSelected` | boolean | — | — | **Selected** (VARIANT): `No`, `Yes` |
@@ -76,8 +76,7 @@ Disabled attribute
 
 #### `isExpandableHeader`
 
-isExpandableHeader property
-- **true** Applies expandable functionality to the menu item
+Legacy compatibility property; it does not control the disclosure button.
 
 #### `isExpanded`
 
@@ -143,7 +142,7 @@ accessible name.
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`
 
 ### `isExpandableHeader` (Figma property "Role")
 
@@ -153,7 +152,7 @@ accessible name.
 ### `isFocused` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`
 
 ### `isHeader` (Figma property "Role")
 
@@ -210,7 +209,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (10)
 
-`--al-font-size-13`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-12`, `--al-font-weight-medium`, `--al-menu-item-height`, `--al-theme-border-radius`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

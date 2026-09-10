@@ -6,6 +6,11 @@
 // module loads (ESM imports are hoisted, so setting it here would be too late)
 // so each imported component self-registers its custom element.
 import '@southleft/al-web-components/css/main.css';
+// The design system's own token bundle. `css/main.css` carries the reset, the
+// cascade layers, the base element styles and the utilities; the PALETTE lives
+// here, one file per system, `:root` plus `[data-al-mode='...']`. Nothing sets
+// `brand` any more -- this page is Altitude because it loaded Altitude's tokens.
+import '@southleft/al-web-components/project/altitude.css';
 import './home.scss';
 import '@southleft/al-web-components/components/theme';
 

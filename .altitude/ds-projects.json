@@ -46,7 +46,8 @@
       },
       "excluded": {
         "al-theme-switcher": "Owns no pixels — an al-button + al-popover + al-menu composition; a Figma set would duplicate three components (altitude-figma-sync: NOT_COMPONENTS).",
-        "al-icon": "Icons live in Figma as 71 flat components on the 🛠 Icons page (resolved by name), not as a component set — there is nothing for a per-set parity check to bind to."
+        "al-icon": "Icons live in Figma as 71 flat components on the 🛠 Icons page (resolved by name), not as a component set — there is nothing for a per-set parity check to bind to.",
+        "al-icon-*": "The 37 per-glyph elements registered by the same components/icon/ module (al-icon-add, al-icon-bell, …), excluded for the same reason as al-icon itself. A trailing-* prefix pattern rather than 37 literal keys so the next glyph added does not silently re-enter the parity denominator: they made up 37 of the 59 missing-in-figma entries, which is how the summary came to read '3 in sync of 104'. See excludedReasonFor() in libs/altitude-mcp/src/lib/ds-project.mjs."
       },
       "docs": {
         "//": "Altitude's Storybook was retired (2026-08-25), following Southleft's (2026-08-23). The generated docs site at apps/docs is the canonical surface for both, and the axe sweep that used to need a Storybook build now runs against libs/al-web-components/story-fixture, verified at exact parity. `route` is empty because altitude is the default project and serves at the site root.",

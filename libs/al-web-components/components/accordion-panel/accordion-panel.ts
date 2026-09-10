@@ -11,6 +11,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 /**
  * Component: al-accordion-panel
+ * @slot header - The panel heading content inside the disclosure button.
  * @slot - The accordion panel content
  *
  * @event onAccordionPanelOpen - Fired when the panel expands. Detail: `{ index, expanded }` — the panel's index within the accordion and its new expanded state.

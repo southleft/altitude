@@ -15,6 +15,21 @@
       window.alAutoRegistry = true;
     </script>
     <link rel="stylesheet" href="../styles/main.scss" />
+    <!--
+      THE DESIGN SYSTEM'S OWN TOKEN BUNDLE. `main.scss` carries the reset, the
+      cascade layers, the base element styles, the utilities and a `:root` that
+      is DARK (`./dist/scss/theme/tokens-dark.scss`). It carries no
+      `[data-al-mode]` blocks at all, so with this file missing `<al-theme
+      mode="light">` had nothing to match: the host got `data-al-mode="light"`
+      and no rule ever selected it. The Foundations/Theme story rendered dark
+      while asking for light, which is what took its VRT baseline red.
+
+      One bundle, not two: each is `:root, [data-al-project='<id>']`, so a
+      second one loaded here would win `:root` for every other story. Two
+      systems in one document is proven by `pnpm test:brands` and
+      `pnpm run brands:compare`, which load them properly scoped.
+    -->
+    <link rel="stylesheet" href="../styles/dist/css/project/altitude.css" />
   </head>
   <body>
     <!--

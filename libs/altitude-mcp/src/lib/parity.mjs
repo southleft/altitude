@@ -41,7 +41,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, mkdirSy
 import { dirname, join } from 'node:path';
 
 import { WC_ROOT, REPO_ROOT } from './paths.mjs';
-import { resolveProject, figmaNodeUrlFor } from './ds-project.mjs';
+import { resolveProject, figmaNodeUrlFor, excludedReasonFor } from './ds-project.mjs';
 import { loadComponents, loadComponentsFrom } from './cem.mjs';
 import { getStoryInfo } from './stories.mjs';
 import { diffContracts, normKey } from './contract-diff.mjs';
@@ -640,7 +640,7 @@ export function computeParity(project) {
 
     // A config-level exclusion stands in for a manifest one, so a project whose
     // manifest has not been seeded yet still reports its known exclusions.
-    const configExclusion = Object.prototype.hasOwnProperty.call(excludedByConfig, c.tag) ? excludedByConfig[c.tag] : null;
+    const configExclusion = excludedReasonFor(excludedByConfig, c.tag);
 
     const assessed = manifest
       ? assessEntry(

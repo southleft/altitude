@@ -6,17 +6,21 @@
  * Figma Code Connect — web component surface for the "Table"
  * component set (node 3558:62965).
  *
- * Mapped variant axes: none.
- * Props the contract binds to an axis this generator could not map: sortDirection
- * (reasons in skipped.json — they are drift, not omissions).
- * Props the contract marks `omit` (no Figma axis): caption, columns, data, hideCaption, rowKey, sortKey.
+ * Mapped variant axes: Selectable.
+ * Props the contract marks `omit` (no Figma axis): caption, columns, data, hideCaption, rowKey, sortDirection, sortKey.
  */
 import figma, { html } from '@figma/code-connect/html';
 
 figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-62965', {
-  props: {},
+  props: {
+    isSelectable: figma.enum('Selectable', {
+      Yes: true,
+    }),
+  },
   example: (props) => html`
-    <al-table>
+    <al-table
+      isSelectable="${props.isSelectable}"
+    >
       Table
     </al-table>
   `,

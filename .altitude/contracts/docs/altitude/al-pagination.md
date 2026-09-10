@@ -77,10 +77,11 @@ Variant of pagination (e.g., 'small' for a compact view)
 
 _No interaction states recorded._
 
-## Slots (3)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
+| `inpage-label` | Label for the in-page pagination controls. | — | — |
 | `label` | If content is slotted, it will override the default pagination label | — | — |
 | `next` | If content is slotted, it will override the default "next" icon | — | — |
 | `prev` | If content is slotted, it will override the default "previous" icon | — | — |
@@ -93,7 +94,7 @@ _No interaction states recorded._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaLabel`, `variant`
+- ARIA-bearing attributes: `ariaLabel`
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -119,7 +120,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (18)
 
-`--al-font-weight-bold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-weak`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-semibold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-weak`, `--al-theme-opacity-disabled`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md`, `--al-theme-typography-body-md-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

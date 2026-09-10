@@ -37,6 +37,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isTokenLeaf, normalizeLeaf } from './lib/dtcg-token.mjs';
+import { figmaTokenDescription } from './lib/figma-token-description.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TOKENS = join(ROOT, 'libs/al-web-components/styles/tokens-dtcg');
@@ -46,13 +47,18 @@ const REM_PX = 16;
 
 /** Code-only prefixes (FIGMA-SYNC.md rule 3) — never reach Figma. */
 const CODE_ONLY_PREFIXES = ['z-index', 'breakpoint', 'icon', 'theme.icon'];
-/** No Figma variable type exists for these. */
-const NO_FIGMA_TYPE = [
-  'animation.duration',
-  'animation.timing',
-  'theme.animation.duration',
-  'theme.animation.timing',
-];
+/**
+ * No Figma variable type exists for these.
+ *
+ * EMPTY SINCE 2026-09-05. It used to hold the four `animation.*` groups, on the
+ * reasoning that Figma variables are only COLOR | FLOAT | STRING | BOOLEAN and
+ * none of those IS a duration or an easing curve. That is still true of the
+ * types, but it does not follow that the VALUES cannot be carried: a duration
+ * survives as a FLOAT of milliseconds, an easing curve as its STRING. See
+ * `MOTION_AS`. Kept as a mechanism rather than deleted — the next token group
+ * Figma genuinely cannot hold belongs here.
+ */
+const NO_FIGMA_TYPE = [];
 /** Real tokens, but styles rather than variables. */
 const STYLE_TYPES = new Set(['typography', 'boxShadow']);
 /**
@@ -62,6 +68,33 @@ const STYLE_TYPES = new Set(['typography', 'boxShadow']);
  * than imported wrong.
  */
 const WRONG_AS_FLOAT = ['border.radius.round'];
+
+/**
+ * MOTION TOKENS, AND THE UNIT THEY ARRIVE IN.
+ *
+ * Both groups author `cssType: "other"`, which `FIGMA_TYPE` maps to FLOAT — so
+ * with no special case a duration coerces `"0.1s"` to NaN and an easing curve
+ * coerces `"cubic-bezier(...)"` to NaN, and `toFigmaValue` drops both with a
+ * warning. The authored type cannot separate them; the path prefix can, exactly
+ * as `opacity` and `fontFamilies` are special-cased at the conversion site.
+ *
+ *   duration -> FLOAT of MILLISECONDS. Figma states every prototype duration in
+ *     ms, so `0.1s` has to arrive as `100`. Emitting `0.1` would read as a
+ *     tenth-of-a-millisecond transition — the same class of silent 100x error
+ *     the opacity note in `partition()` documents, and just as invisible.
+ *   timing   -> STRING, verbatim. A cubic-bezier has no numeric Figma form. As
+ *     a STRING a designer can read it and a generator can copy it into a
+ *     prototype transition.
+ *
+ * These are NOT bindable to a Figma prototype transition — Figma has no
+ * variable slot for one, so nothing on canvas can consume them yet. They are
+ * carried so the values are visible, reviewable and diffable on the design side
+ * ahead of the motion work that will use them (decision 2026-09-05).
+ */
+const MOTION_AS = {
+  FLOAT_MS: ['animation.duration', 'theme.animation.duration'],
+  STRING_VERBATIM: ['animation.timing', 'theme.animation.timing'],
+};
 
 /** Authored `cssType` (see scripts/lib/dtcg-token.mjs) → Figma resolvedType.
  *  Keyed on cssType, NOT DTCG `$type`: `$type` collapses boxShadow→shadow and
@@ -129,6 +162,11 @@ function toFigmaValue(raw, figmaType, path, warnings) {
     const s = String(raw).trim();
     if (s.endsWith('rem')) return parseFloat(s) * REM_PX;
     if (s.endsWith('px')) return parseFloat(s);
+    // Time -> milliseconds, because that is the only unit Figma states a
+    // duration in. `ms` MUST be tested before `s`, or "200ms" matches the
+    // seconds branch and is multiplied to 200000.
+    if (s.endsWith('ms')) return parseFloat(s);
+    if (/[\d.]s$/.test(s)) return parseFloat(s) * 1000;
     if (s.endsWith('%')) {
       // Figma stores letterSpacing/percent-ish values as a bare number; the unit
       // does not survive as a variable. Recorded so it is not a silent loss.
@@ -204,7 +242,15 @@ function partition(rawByMode, report) {
         (def.type === 'typography' ? report.styles.text : report.styles.effect)[path] = def;
         continue;
       }
-      const figmaType = FIGMA_TYPE[def.type];
+      /**
+       * MOTION OVERRIDE — see `MOTION_AS`. Both motion groups author
+       * `cssType: "other"` (-> FLOAT), which is correct for the duration ramp
+       * only once `toFigmaValue` has converted seconds to ms, and never
+       * correct for an easing curve. The path is what separates them.
+       */
+      const figmaType = isExcluded(path, MOTION_AS.STRING_VERBATIM)
+        ? 'STRING'
+        : FIGMA_TYPE[def.type];
       if (!figmaType) {
         report.warnings.push(`${path}: unmapped cssType '${def.type}' — skipped`);
         report.excluded.unmappedType.add(`${path} (${def.type})`);
@@ -249,7 +295,7 @@ function partition(rawByMode, report) {
         value = value.split(',')[0].trim().replace(/^["']|["']$/g, '');
       }
 
-      variables[mode][path.replace(/\./g, '/')] = { value, resolvedType: figmaType };
+      variables[mode][path.replace(/\./g, '/')] = { value, resolvedType: figmaType, description: figmaTokenDescription(path, def) };
     }
   }
   return variables;

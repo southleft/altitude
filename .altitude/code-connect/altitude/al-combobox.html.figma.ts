@@ -4,16 +4,16 @@
  * Re-run the generator; `--check` is the drift gate.
  *
  * Figma Code Connect — web component surface for the "Combobox"
- * component set (node 3558:63019).
+ * component set (node 3694:11119).
  *
  * Mapped variant axes: Label.
- * Props the contract marks `omit` (no Figma axis): align, ariaDescribedBy, errorNote, fieldId, fieldNote, filterMode, isRequired, label, noResultsText, placeholder, selectedValue, value.
+ * Props the contract marks `omit` (no Figma axis): align, ariaDescribedBy, errorNote, fieldId, fieldNote, filterMode, isActiveDropdown, isOptional, isRequired, label, noResultsText, placeholder, selectedValue, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for error, field-note.
  */
 import figma, { html } from '@figma/code-connect/html';
 
-figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3558-63019', {
+figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3694-11119', {
   props: {
     hideLabel: figma.enum('Label', {
       Hidden: true,

@@ -4,22 +4,24 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-tooltip
+A small floating label attached to a trigger, shown on hover and on focus. It owns the show/hide debounce and the positioning; you give it the control to attach to via the `trigger` slot and the text via the default slot.
 
 ## Figma
 
-No Figma component set is mapped for `al-tooltip` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Tooltip**
+- Node id: `3703:12726` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3703-12726)
 
 ## Props (6)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaDescribedBy` | string | — | — | — |
-| `hasArrow` | boolean | — | `true` | — |
+| `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `hasArrow` | boolean | — | `true` | **Arrow** (VARIANT): `No`, `Yes` |
 | `isActive` | boolean | — | — | — |
-| `isDynamic` | boolean | — | — | — |
-| `isInteractive` | boolean | — | — | — |
-| `position` | enum | `bottom`, `left`, `right`, `top` | `'top'` | — |
+| `isDynamic` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `isInteractive` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `position` | enum | `bottom`, `left`, `right`, `top` | `'top'` | **Position** (VARIANT): `Bottom`, `Left`, `Right`, `Top` |
 
 #### `ariaDescribedBy`
 
@@ -57,9 +59,19 @@ Positions the dropdown tooltip absolutely to the trigger.
 - **left** places the tooltip to the left
 - **right** places the tooltip to the right
 
+**Figma-expression opt-out (T27):** `ariaDescribedBy`, `isDynamic`, `isInteractive` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `hasArrow` (Figma property "Arrow")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
+
+### `position` (Figma property "Position")
+
+- Code values: `bottom`, `left`, `right`, `top`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bottom`, `Left`, `Right`, `Top`
 
 ## States
 
@@ -89,9 +101,27 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 **Anatomy case measured:** `Position=bottom,Arrow=no` (source: `measured`)
 
-### Root — `<div class="al-c-tooltip al-c-tooltip--bottom al-is-active al-has-prefix al-has-arrow">`
+### Root — `<div class="al-c-tooltip__container">`
 
-_None._
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
+| border-bottom-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-bottom-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
+| box-shadow | `--al-theme-box-shadow-lg` | `theme/box-shadow/lg` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
+| column-gap | `--al-theme-space-xs` | `theme/space/xs` |
+| font | `--al-theme-typography-body-xs` | — |
+| letter-spacing | `--al-theme-typography-body-xs-letter-spacing` | — |
+| padding | `--al-theme-space-xxs` | `theme/space/xxs` |
+| padding-bottom | `--al-theme-space-xxs` | `theme/space/xxs` |
+| padding-left | `--al-theme-space-xxs` | `theme/space/xxs` |
+| padding-right | `--al-theme-space-xs` | `theme/space/xs` |
+| padding-top | `--al-theme-space-xxs` | `theme/space/xxs` |
+| row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 

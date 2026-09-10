@@ -56,7 +56,8 @@ function renderCase(tag, c) {
   const props = c.props && Object.keys(c.props).length
     ? ` data-alprops="${esc(JSON.stringify(c.props))}"`
     : '';
-  return `<div class="case" data-case="${esc(c.id)}"${fill}${fw}><${tag}${attrs}${props}>${slots}</${tag}></div>`;
+  const measureRoot = c.measureRoot ? ` data-measure-root="${esc(c.measureRoot)}"` : '';
+  return `<div class="case" data-case="${esc(c.id)}"${measureRoot}${fill}${fw}><${tag}${attrs}${props}>${slots}</${tag}></div>`;
 }
 
 // main.css bakes DARK into :root. A branded project overrides BOTH modes with its
@@ -66,9 +67,10 @@ const TOKENS_HREF = {
   dark: brandCssHref(SC, 'dark', SC.libRoots[0]),
 };
 
-function page(mode) {
+function page(mode, onlyTag = null, onlyCase = null) {
   const blocks = ATOMS
-    .map((a) => `<section data-atom="${a.key || a.tag}">${a.cases.map((c) => renderCase(a.tag, c)).join('\n')}</section>`)
+    .filter(a => !onlyTag || a.tag === onlyTag)
+    .map((a) => `<section data-atom="${a.key || a.tag}">${a.cases.filter(c => !onlyCase || c.id === onlyCase).map((c) => renderCase(a.tag, c)).join('\n')}</section>`)
     .join('\n');
 
   // alAutoRegistry must be set INLINE IN <head> before any deep import evaluates —
@@ -146,7 +148,10 @@ ${blocks}
       for (const wrap of section.querySelectorAll('.case')) {
         const host = wrap.firstElementChild;
         if (!host) continue;
-        const root = host.shadowRoot ? [...host.shadowRoot.children].find((n) => n.tagName !== 'STYLE') : null;
+        const root = wrap.dataset.measureRoot
+          ? host.shadowRoot?.querySelector(wrap.dataset.measureRoot)
+          : host.shadowRoot ? [...host.shadowRoot.children].find((n) => n.tagName !== 'STYLE') : null;
+        if (!root && wrap.dataset.measureRoot) throw new Error('Missing measurement root: ' + section.dataset.atom + '/' + wrap.dataset.case);
         const t = root || host;
         const cs = getComputedStyle(t);
         const b = t.getBoundingClientRect();
@@ -184,7 +189,8 @@ createServer((req, res) => {
   if (url === '/' || url === '/index.html') {
     const mode = /[?&]mode=light/.test(req.url) ? 'light' : 'dark';
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
-    return res.end(page(mode));
+    const params = new URL(req.url, 'http://localhost').searchParams;
+    return res.end(page(mode, params.get('component'), params.get('case')));
   }
   if (url === '/__bundle.js') {
     // dist/ ships bare `lit` specifiers the browser cannot resolve; serve the

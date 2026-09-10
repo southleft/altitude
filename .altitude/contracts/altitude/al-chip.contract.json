@@ -33,7 +33,15 @@
         "code": {
           "attribute": "isDismissible"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "Dismissible",
+          "options": [
+            "No",
+            "Yes"
+          ],
+          "pairWith": "Dismissible"
+        }
       }
     },
     {
@@ -76,12 +84,11 @@
           "kind": "VARIANT",
           "property": "Variant",
           "options": [
-            "Danger",
-            "Default",
-            "Info",
+            "Bare",
+            "Neutral",
+            "Primary",
             "Secondary",
-            "Success",
-            "Warning"
+            "Tertiary"
           ]
         }
       }
@@ -118,8 +125,14 @@
     "root": {
       "tag": "button",
       "cls": "al-c-chip",
+      "bw4": [
+        1,
+        1,
+        1,
+        1
+      ],
       "box": {
-        "w": 53.8,
+        "w": 51.6,
         "h": 32
       },
       "layout": {
@@ -178,8 +191,8 @@
           "figma": "theme/space/xs"
         },
         "font-size": {
-          "code": "--al-font-size-13",
-          "figma": null
+          "code": "--al-font-size-12",
+          "figma": "typography/font-size/12"
         },
         "font-weight": {
           "code": "--al-font-weight-medium",
@@ -196,10 +209,6 @@
         "min-height": {
           "code": "--al-theme-size-control-sm",
           "figma": "theme/size/control-sm"
-        },
-        "padding": {
-          "code": "--al-theme-space-sm",
-          "figma": "theme/space/sm"
         },
         "padding-left": {
           "code": "--al-theme-space-sm",
@@ -219,9 +228,13 @@
           "tag": "button",
           "cls": "al-c-chip",
           "text": "Chip",
+          "fsPx": 12,
+          "lhPx": 12,
+          "ffCss": "Public Sans",
+          "fwCss": "500",
           "box": {
-            "w": 27.8,
-            "h": 15
+            "w": 25.6,
+            "h": 14
           },
           "layout": {
             "display": "inline-flex",
@@ -279,8 +292,8 @@
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -297,10 +310,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -324,9 +333,15 @@
         "case": "Variant=danger,Shape=default,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--danger",
+          "cls": "al-c-chip",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -341,8 +356,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-danger-default",
-              "figma": "theme/color/background/danger-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -377,16 +392,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-danger-weak",
-              "figma": "theme/color/content/danger-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -404,10 +419,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -424,11 +435,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--danger",
+              "cls": "al-c-chip",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -442,8 +457,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-danger-default",
-                  "figma": "theme/color/background/danger-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -478,16 +493,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-danger-weak",
-                  "figma": "theme/color/content/danger-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -504,10 +519,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -531,9 +542,15 @@
         "case": "Variant=danger,Shape=default,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--danger al-is-dismissible",
+          "cls": "al-c-chip al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -548,8 +565,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-danger-default",
-              "figma": "theme/color/background/danger-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -584,16 +601,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-danger-weak",
-              "figma": "theme/color/content/danger-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -611,10 +628,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -631,11 +644,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--danger al-is-dismissible",
+              "cls": "al-c-chip al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -649,8 +666,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-danger-default",
-                  "figma": "theme/color/background/danger-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -685,16 +702,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-danger-weak",
-                  "figma": "theme/color/content/danger-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -711,10 +728,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -798,9 +811,15 @@
         "case": "Variant=danger,Shape=squared,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--danger al-c-chip--squared",
+          "cls": "al-c-chip al-c-chip--squared",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -815,8 +834,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-danger-default",
-              "figma": "theme/color/background/danger-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -851,16 +870,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-danger-weak",
-              "figma": "theme/color/content/danger-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -878,10 +897,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -898,11 +913,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--danger al-c-chip--squared",
+              "cls": "al-c-chip al-c-chip--squared",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -916,8 +935,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-danger-default",
-                  "figma": "theme/color/background/danger-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -952,16 +971,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-danger-weak",
-                  "figma": "theme/color/content/danger-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -978,10 +997,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -1005,9 +1020,15 @@
         "case": "Variant=danger,Shape=squared,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--danger al-c-chip--squared al-is-dismissible",
+          "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -1022,8 +1043,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-danger-default",
-              "figma": "theme/color/background/danger-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -1058,16 +1079,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-danger-weak",
-              "figma": "theme/color/content/danger-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -1085,10 +1106,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -1105,11 +1122,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--danger al-c-chip--squared al-is-dismissible",
+              "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -1123,8 +1144,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-danger-default",
-                  "figma": "theme/color/background/danger-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -1159,16 +1180,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-danger-weak",
-                  "figma": "theme/color/content/danger-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -1185,10 +1206,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -1273,8 +1290,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -1333,8 +1356,8 @@
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -1351,10 +1374,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -1374,9 +1393,13 @@
               "tag": "button",
               "cls": "al-c-chip",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -1434,8 +1457,8 @@
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -1452,10 +1475,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -1480,8 +1499,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -1540,8 +1565,8 @@
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -1558,10 +1583,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -1581,9 +1602,13 @@
               "tag": "button",
               "cls": "al-c-chip al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -1641,8 +1666,8 @@
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -1659,10 +1684,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -1747,8 +1768,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip al-c-chip--squared",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -1807,8 +1834,8 @@
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -1825,10 +1852,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -1848,9 +1871,13 @@
               "tag": "button",
               "cls": "al-c-chip al-c-chip--squared",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -1908,8 +1935,8 @@
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -1926,10 +1953,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -1954,8 +1977,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -2014,8 +2043,8 @@
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -2032,10 +2061,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -2055,9 +2080,13 @@
               "tag": "button",
               "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -2115,8 +2144,8 @@
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2133,10 +2162,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -2220,9 +2245,15 @@
         "case": "Variant=info,Shape=default,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--info",
+          "cls": "al-c-chip",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -2237,8 +2268,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-info-default",
-              "figma": "theme/color/background/info-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -2273,16 +2304,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-info-weak",
-              "figma": "theme/color/content/info-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -2300,10 +2331,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -2320,11 +2347,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--info",
+              "cls": "al-c-chip",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -2338,8 +2369,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-info-default",
-                  "figma": "theme/color/background/info-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -2374,16 +2405,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-info-weak",
-                  "figma": "theme/color/content/info-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2400,10 +2431,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -2427,9 +2454,15 @@
         "case": "Variant=info,Shape=default,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--info al-is-dismissible",
+          "cls": "al-c-chip al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -2444,8 +2477,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-info-default",
-              "figma": "theme/color/background/info-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -2480,16 +2513,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-info-weak",
-              "figma": "theme/color/content/info-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -2507,10 +2540,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -2527,11 +2556,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--info al-is-dismissible",
+              "cls": "al-c-chip al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -2545,8 +2578,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-info-default",
-                  "figma": "theme/color/background/info-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -2581,16 +2614,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-info-weak",
-                  "figma": "theme/color/content/info-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2607,10 +2640,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -2694,9 +2723,15 @@
         "case": "Variant=info,Shape=squared,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--info al-c-chip--squared",
+          "cls": "al-c-chip al-c-chip--squared",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -2711,8 +2746,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-info-default",
-              "figma": "theme/color/background/info-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -2747,16 +2782,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-info-weak",
-              "figma": "theme/color/content/info-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -2774,10 +2809,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -2794,11 +2825,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--info al-c-chip--squared",
+              "cls": "al-c-chip al-c-chip--squared",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -2812,8 +2847,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-info-default",
-                  "figma": "theme/color/background/info-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -2848,16 +2883,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-info-weak",
-                  "figma": "theme/color/content/info-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -2874,10 +2909,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -2901,9 +2932,15 @@
         "case": "Variant=info,Shape=squared,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--info al-c-chip--squared al-is-dismissible",
+          "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -2918,8 +2955,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-info-default",
-              "figma": "theme/color/background/info-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -2954,16 +2991,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-info-weak",
-              "figma": "theme/color/content/info-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -2981,10 +3018,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -3001,11 +3034,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--info al-c-chip--squared al-is-dismissible",
+              "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -3019,8 +3056,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-info-default",
-                  "figma": "theme/color/background/info-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -3055,16 +3092,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-info-weak",
-                  "figma": "theme/color/content/info-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -3081,10 +3118,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -3169,8 +3202,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip al-c-chip--secondary",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -3185,8 +3224,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-transparent-default",
-              "figma": "theme/color/background/transparent-default"
+              "code": "--al-theme-color-background-secondary-default",
+              "figma": "theme/color/background/secondary-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -3204,10 +3243,6 @@
               "code": "--al-theme-border-radius-pill",
               "figma": "theme/border/radius/pill"
             },
-            "border-top-color": {
-              "code": "--al-theme-color-border-neutral-default",
-              "figma": "theme/color/border/neutral-default"
-            },
             "border-top-left-radius": {
               "code": "--al-theme-border-radius-pill",
               "figma": "theme/border/radius/pill"
@@ -3221,16 +3256,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-neutral-weak",
-              "figma": "theme/color/content/neutral-weak"
+              "code": "--al-theme-color-content-secondary-weak",
+              "figma": "theme/color/content/secondary-weak"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -3247,10 +3282,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -3270,9 +3301,13 @@
               "tag": "button",
               "cls": "al-c-chip al-c-chip--secondary",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -3286,8 +3321,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-transparent-default",
-                  "figma": "theme/color/background/transparent-default"
+                  "code": "--al-theme-color-background-secondary-default",
+                  "figma": "theme/color/background/secondary-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -3305,10 +3340,6 @@
                   "code": "--al-theme-border-radius-pill",
                   "figma": "theme/border/radius/pill"
                 },
-                "border-top-color": {
-                  "code": "--al-theme-color-border-neutral-default",
-                  "figma": "theme/color/border/neutral-default"
-                },
                 "border-top-left-radius": {
                   "code": "--al-theme-border-radius-pill",
                   "figma": "theme/border/radius/pill"
@@ -3322,16 +3353,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-neutral-weak",
-                  "figma": "theme/color/content/neutral-weak"
+                  "code": "--al-theme-color-content-secondary-weak",
+                  "figma": "theme/color/content/secondary-weak"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -3348,10 +3379,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -3376,8 +3403,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip al-c-chip--secondary al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -3392,8 +3425,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-transparent-default",
-              "figma": "theme/color/background/transparent-default"
+              "code": "--al-theme-color-background-secondary-default",
+              "figma": "theme/color/background/secondary-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -3411,10 +3444,6 @@
               "code": "--al-theme-border-radius-pill",
               "figma": "theme/border/radius/pill"
             },
-            "border-top-color": {
-              "code": "--al-theme-color-border-neutral-default",
-              "figma": "theme/color/border/neutral-default"
-            },
             "border-top-left-radius": {
               "code": "--al-theme-border-radius-pill",
               "figma": "theme/border/radius/pill"
@@ -3428,16 +3457,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-neutral-weak",
-              "figma": "theme/color/content/neutral-weak"
+              "code": "--al-theme-color-content-secondary-weak",
+              "figma": "theme/color/content/secondary-weak"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -3454,10 +3483,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -3477,9 +3502,13 @@
               "tag": "button",
               "cls": "al-c-chip al-c-chip--secondary al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -3493,8 +3522,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-transparent-default",
-                  "figma": "theme/color/background/transparent-default"
+                  "code": "--al-theme-color-background-secondary-default",
+                  "figma": "theme/color/background/secondary-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -3512,10 +3541,6 @@
                   "code": "--al-theme-border-radius-pill",
                   "figma": "theme/border/radius/pill"
                 },
-                "border-top-color": {
-                  "code": "--al-theme-color-border-neutral-default",
-                  "figma": "theme/color/border/neutral-default"
-                },
                 "border-top-left-radius": {
                   "code": "--al-theme-border-radius-pill",
                   "figma": "theme/border/radius/pill"
@@ -3529,16 +3554,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-neutral-weak",
-                  "figma": "theme/color/content/neutral-weak"
+                  "code": "--al-theme-color-content-secondary-weak",
+                  "figma": "theme/color/content/secondary-weak"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -3555,10 +3580,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -3643,8 +3664,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip al-c-chip--secondary al-c-chip--squared",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -3659,8 +3686,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-transparent-default",
-              "figma": "theme/color/background/transparent-default"
+              "code": "--al-theme-color-background-secondary-default",
+              "figma": "theme/color/background/secondary-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -3678,10 +3705,6 @@
               "code": "--al-theme-border-radius",
               "figma": "theme/border/radius/@"
             },
-            "border-top-color": {
-              "code": "--al-theme-color-border-neutral-default",
-              "figma": "theme/color/border/neutral-default"
-            },
             "border-top-left-radius": {
               "code": "--al-theme-border-radius",
               "figma": "theme/border/radius/@"
@@ -3695,16 +3718,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-neutral-weak",
-              "figma": "theme/color/content/neutral-weak"
+              "code": "--al-theme-color-content-secondary-weak",
+              "figma": "theme/color/content/secondary-weak"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -3721,10 +3744,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -3744,9 +3763,13 @@
               "tag": "button",
               "cls": "al-c-chip al-c-chip--secondary al-c-chip--squared",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -3760,8 +3783,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-transparent-default",
-                  "figma": "theme/color/background/transparent-default"
+                  "code": "--al-theme-color-background-secondary-default",
+                  "figma": "theme/color/background/secondary-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -3779,10 +3802,6 @@
                   "code": "--al-theme-border-radius",
                   "figma": "theme/border/radius/@"
                 },
-                "border-top-color": {
-                  "code": "--al-theme-color-border-neutral-default",
-                  "figma": "theme/color/border/neutral-default"
-                },
                 "border-top-left-radius": {
                   "code": "--al-theme-border-radius",
                   "figma": "theme/border/radius/@"
@@ -3796,16 +3815,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-neutral-weak",
-                  "figma": "theme/color/content/neutral-weak"
+                  "code": "--al-theme-color-content-secondary-weak",
+                  "figma": "theme/color/content/secondary-weak"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -3822,10 +3841,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -3850,8 +3865,14 @@
         "root": {
           "tag": "button",
           "cls": "al-c-chip al-c-chip--secondary al-c-chip--squared al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -3866,8 +3887,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-transparent-default",
-              "figma": "theme/color/background/transparent-default"
+              "code": "--al-theme-color-background-secondary-default",
+              "figma": "theme/color/background/secondary-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -3885,10 +3906,6 @@
               "code": "--al-theme-border-radius",
               "figma": "theme/border/radius/@"
             },
-            "border-top-color": {
-              "code": "--al-theme-color-border-neutral-default",
-              "figma": "theme/color/border/neutral-default"
-            },
             "border-top-left-radius": {
               "code": "--al-theme-border-radius",
               "figma": "theme/border/radius/@"
@@ -3902,16 +3919,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-neutral-weak",
-              "figma": "theme/color/content/neutral-weak"
+              "code": "--al-theme-color-content-secondary-weak",
+              "figma": "theme/color/content/secondary-weak"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -3928,10 +3945,6 @@
             "min-height": {
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
-            },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
             },
             "padding-left": {
               "code": "--al-theme-space-sm",
@@ -3951,9 +3964,13 @@
               "tag": "button",
               "cls": "al-c-chip al-c-chip--secondary al-c-chip--squared al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -3967,8 +3984,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-transparent-default",
-                  "figma": "theme/color/background/transparent-default"
+                  "code": "--al-theme-color-background-secondary-default",
+                  "figma": "theme/color/background/secondary-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -3986,10 +4003,6 @@
                   "code": "--al-theme-border-radius",
                   "figma": "theme/border/radius/@"
                 },
-                "border-top-color": {
-                  "code": "--al-theme-color-border-neutral-default",
-                  "figma": "theme/color/border/neutral-default"
-                },
                 "border-top-left-radius": {
                   "code": "--al-theme-border-radius",
                   "figma": "theme/border/radius/@"
@@ -4003,16 +4016,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-neutral-weak",
-                  "figma": "theme/color/content/neutral-weak"
+                  "code": "--al-theme-color-content-secondary-weak",
+                  "figma": "theme/color/content/secondary-weak"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -4029,10 +4042,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -4116,9 +4125,15 @@
         "case": "Variant=success,Shape=default,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--success",
+          "cls": "al-c-chip",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -4133,8 +4148,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-success-default",
-              "figma": "theme/color/background/success-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -4169,16 +4184,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-success-weak",
-              "figma": "theme/color/content/success-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -4196,10 +4211,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -4216,11 +4227,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--success",
+              "cls": "al-c-chip",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -4234,8 +4249,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-success-default",
-                  "figma": "theme/color/background/success-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -4270,16 +4285,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-success-weak",
-                  "figma": "theme/color/content/success-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -4296,10 +4311,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -4323,9 +4334,15 @@
         "case": "Variant=success,Shape=default,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--success al-is-dismissible",
+          "cls": "al-c-chip al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -4340,8 +4357,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-success-default",
-              "figma": "theme/color/background/success-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -4376,16 +4393,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-success-weak",
-              "figma": "theme/color/content/success-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -4403,10 +4420,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -4423,11 +4436,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--success al-is-dismissible",
+              "cls": "al-c-chip al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -4441,8 +4458,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-success-default",
-                  "figma": "theme/color/background/success-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -4477,16 +4494,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-success-weak",
-                  "figma": "theme/color/content/success-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -4503,10 +4520,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -4590,9 +4603,15 @@
         "case": "Variant=success,Shape=squared,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--success al-c-chip--squared",
+          "cls": "al-c-chip al-c-chip--squared",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -4607,8 +4626,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-success-default",
-              "figma": "theme/color/background/success-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -4643,16 +4662,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-success-weak",
-              "figma": "theme/color/content/success-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -4670,10 +4689,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -4690,11 +4705,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--success al-c-chip--squared",
+              "cls": "al-c-chip al-c-chip--squared",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -4708,8 +4727,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-success-default",
-                  "figma": "theme/color/background/success-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -4744,16 +4763,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-success-weak",
-                  "figma": "theme/color/content/success-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -4770,10 +4789,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -4797,9 +4812,15 @@
         "case": "Variant=success,Shape=squared,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--success al-c-chip--squared al-is-dismissible",
+          "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -4814,8 +4835,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-success-default",
-              "figma": "theme/color/background/success-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -4850,16 +4871,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-success-weak",
-              "figma": "theme/color/content/success-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -4877,10 +4898,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -4897,11 +4914,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--success al-c-chip--squared al-is-dismissible",
+              "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -4915,8 +4936,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-success-default",
-                  "figma": "theme/color/background/success-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -4951,16 +4972,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-success-weak",
-                  "figma": "theme/color/content/success-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -4977,10 +4998,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -5064,9 +5081,15 @@
         "case": "Variant=warning,Shape=default,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--warning",
+          "cls": "al-c-chip",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -5081,8 +5104,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-warning-default",
-              "figma": "theme/color/background/warning-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -5117,16 +5140,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-warning-weak",
-              "figma": "theme/color/content/warning-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -5144,10 +5167,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -5164,11 +5183,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--warning",
+              "cls": "al-c-chip",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -5182,8 +5205,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-warning-default",
-                  "figma": "theme/color/background/warning-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -5218,16 +5241,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-warning-weak",
-                  "figma": "theme/color/content/warning-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -5244,10 +5267,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -5271,9 +5290,15 @@
         "case": "Variant=warning,Shape=default,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--warning al-is-dismissible",
+          "cls": "al-c-chip al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -5288,8 +5313,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-warning-default",
-              "figma": "theme/color/background/warning-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -5324,16 +5349,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-warning-weak",
-              "figma": "theme/color/content/warning-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -5351,10 +5376,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -5371,11 +5392,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--warning al-is-dismissible",
+              "cls": "al-c-chip al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -5389,8 +5414,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-warning-default",
-                  "figma": "theme/color/background/warning-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -5425,16 +5450,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-warning-weak",
-                  "figma": "theme/color/content/warning-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -5451,10 +5476,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -5538,9 +5559,15 @@
         "case": "Variant=warning,Shape=squared,Dismissible=no",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--warning al-c-chip--squared",
+          "cls": "al-c-chip al-c-chip--squared",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 53.8,
+            "w": 51.6,
             "h": 32
           },
           "layout": {
@@ -5555,8 +5582,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-warning-default",
-              "figma": "theme/color/background/warning-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -5591,16 +5618,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-warning-weak",
-              "figma": "theme/color/content/warning-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -5618,10 +5645,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -5638,11 +5661,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--warning al-c-chip--squared",
+              "cls": "al-c-chip al-c-chip--squared",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -5656,8 +5683,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-warning-default",
-                  "figma": "theme/color/background/warning-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -5692,16 +5719,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-warning-weak",
-                  "figma": "theme/color/content/warning-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -5718,10 +5745,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -5745,9 +5768,15 @@
         "case": "Variant=warning,Shape=squared,Dismissible=yes",
         "root": {
           "tag": "button",
-          "cls": "al-c-chip al-c-chip--warning al-c-chip--squared al-is-dismissible",
+          "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
+          "bw4": [
+            1,
+            1,
+            1,
+            1
+          ],
           "box": {
-            "w": 77.8,
+            "w": 75.6,
             "h": 32
           },
           "layout": {
@@ -5762,8 +5791,8 @@
               "figma": "theme/color/background/transparent-default"
             },
             "background-color": {
-              "code": "--al-theme-color-background-warning-default",
-              "figma": "theme/color/background/warning-default"
+              "code": "--al-theme-color-background-transparent-default",
+              "figma": "theme/color/background/transparent-default"
             },
             "border": {
               "code": "--al-theme-border-width",
@@ -5798,16 +5827,16 @@
               "figma": "theme/border/width/@"
             },
             "color": {
-              "code": "--al-theme-color-content-warning-weak",
-              "figma": "theme/color/content/warning-weak"
+              "code": "--al-theme-color-content-neutral-default",
+              "figma": "theme/color/content/neutral-default"
             },
             "column-gap": {
               "code": "--al-theme-space-xs",
               "figma": "theme/space/xs"
             },
             "font-size": {
-              "code": "--al-font-size-13",
-              "figma": null
+              "code": "--al-font-size-12",
+              "figma": "typography/font-size/12"
             },
             "font-weight": {
               "code": "--al-font-weight-medium",
@@ -5825,10 +5854,6 @@
               "code": "--al-theme-size-control-sm",
               "figma": "theme/size/control-sm"
             },
-            "padding": {
-              "code": "--al-theme-space-sm",
-              "figma": "theme/space/sm"
-            },
             "padding-left": {
               "code": "--al-theme-space-sm",
               "figma": "theme/space/sm"
@@ -5845,11 +5870,15 @@
           "children": [
             {
               "tag": "button",
-              "cls": "al-c-chip al-c-chip--warning al-c-chip--squared al-is-dismissible",
+              "cls": "al-c-chip al-c-chip--squared al-is-dismissible",
               "text": "Chip",
+              "fsPx": 12,
+              "lhPx": 12,
+              "ffCss": "Public Sans",
+              "fwCss": "500",
               "box": {
-                "w": 27.8,
-                "h": 15
+                "w": 25.6,
+                "h": 14
               },
               "layout": {
                 "display": "inline-flex",
@@ -5863,8 +5892,8 @@
                   "figma": "theme/color/background/transparent-default"
                 },
                 "background-color": {
-                  "code": "--al-theme-color-background-warning-default",
-                  "figma": "theme/color/background/warning-default"
+                  "code": "--al-theme-color-background-transparent-default",
+                  "figma": "theme/color/background/transparent-default"
                 },
                 "border": {
                   "code": "--al-theme-border-width",
@@ -5899,16 +5928,16 @@
                   "figma": "theme/border/width/@"
                 },
                 "color": {
-                  "code": "--al-theme-color-content-warning-weak",
-                  "figma": "theme/color/content/warning-weak"
+                  "code": "--al-theme-color-content-neutral-default",
+                  "figma": "theme/color/content/neutral-default"
                 },
                 "column-gap": {
                   "code": "--al-theme-space-xs",
                   "figma": "theme/space/xs"
                 },
                 "font-size": {
-                  "code": "--al-font-size-13",
-                  "figma": null
+                  "code": "--al-font-size-12",
+                  "figma": "typography/font-size/12"
                 },
                 "font-weight": {
                   "code": "--al-font-weight-medium",
@@ -5925,10 +5954,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control-sm",
                   "figma": "theme/size/control-sm"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -6043,7 +6068,7 @@
     }
   },
   "tokens": [
-    "--al-font-size-13",
+    "--al-font-size-12",
     "--al-font-weight-medium",
     "--al-theme-border-radius-pill",
     "--al-theme-border-width",
@@ -6120,9 +6145,14 @@
     }
   },
   "a11y": {
-    "ariaAttributes": [
-      "variant"
+    "ariaAttributes": [],
+    "keyboard": [
+      {
+        "keys": "Escape",
+        "action": "Dismisses the chip. Only when `isDismissible`."
+      }
     ],
+    "focus": "Focus ring drawn from the shared focus treatment.",
     "cssParts": []
   },
   "bindings": {

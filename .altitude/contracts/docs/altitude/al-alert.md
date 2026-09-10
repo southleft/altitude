@@ -63,11 +63,12 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 _No interaction states recorded._
 
-## Slots (2)
+## Slots (3)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The alert's main content or title | — | — |
+| `action` | Optional action control displayed with the alert content. | — | — |
 | `icon` | Slot in an icon to override the default one | — | — |
 
 ## Events (2)
@@ -79,7 +80,7 @@ _No interaction states recorded._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings

@@ -4,23 +4,26 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-dialog
+A modal panel for a focused task or decision, with optional header and footer content.
+Use the trigger slot to open it and provide a clear heading and dismissal action.
 
 ## Figma
 
-No Figma component set is mapped for `al-dialog` in the **Altitude Design System** parity manifest (parity status: `missing-in-figma`). Map one in Figma, then run `pnpm run parity:seed`.
+- Component set: **Dialog**
+- Node id: `3704:13290` (pinned)
+- [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3704-13290)
 
 ## Props (7)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `ariaLabelledBy` | string | — | — | — |
-| `dialogTrigger` | string | `any` | — | — |
-| `disableClickOutside` | boolean | — | — | — |
-| `heading` | string | — | — | — |
+| `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
+| `dialogTrigger` | string | `any` | — | _not expressed in Figma (by design)_ |
+| `disableClickOutside` | boolean | — | — | _not expressed in Figma (by design)_ |
+| `heading` | string | — | — | _not expressed in Figma (by design)_ |
 | `isActive` | boolean | — | — | — |
-| `transitionDelay` | number | — | `400` | — |
-| `width` | number | — | — | — |
+| `transitionDelay` | number | — | `400` | _not expressed in Figma (by design)_ |
+| `width` | number | — | — | _not expressed in Figma (by design)_ |
 
 #### `ariaLabelledBy`
 
@@ -58,6 +61,8 @@ Number of ms of the dialog's open/close css transition delay
 The width of the dialog container
 - If no value is entered, it defaults to 432px
 
+**Figma-expression opt-out (T27):** `ariaLabelledBy`, `dialogTrigger`, `disableClickOutside`, `heading`, `transitionDelay`, `width` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+
 ## Variant axes
 
 This component has no Figma `VARIANT`-bound prop — no variant axis to document.
@@ -92,9 +97,21 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 **Anatomy case measured:** `Footer=no` (source: `measured`)
 
-### Root — `<div class="al-c-dialog al-is-active">`
+### Root — `<div class="al-c-dialog__container">`
 
-_None._
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
+| border-bottom-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-bottom-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-top-left-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| border-top-right-radius | `--al-theme-border-radius-lg` | `theme/border/radius/lg` |
+| box-shadow | `--al-theme-box-shadow-xl` | `theme/box-shadow/xl` |
+| column-gap | `--al-theme-space-lg` | `theme/space/lg` |
+| gap | `--al-theme-space-lg` | `theme/space/lg` |
+| min-width | `--al-theme-layout-max-width-sm` | `theme/layout/max-width/sm` |
+| row-gap | `--al-theme-space-lg` | `theme/space/lg` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -106,9 +123,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-dialog`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (12)
+## Tokens referenced (19)
 
-`--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-color-background-primary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-primary-weak`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-bold-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
+`--al-font-weight-semibold`, `--al-icon-height`, `--al-icon-width`, `--al-theme-border-radius`, `--al-theme-border-radius-lg`, `--al-theme-border-width`, `--al-theme-box-shadow-xl`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-layout-max-width-sm`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-semibold-letter-spacing`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-letter-spacing`
 
 ---
 

@@ -82,7 +82,11 @@ _No events declared._
 
 ### Root — `<div class="sl-c-marquee">`
 
-_None._
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| border-block | `--al-theme-border-width` | `theme/border/width/@` |
+| border-top-color | `--al-theme-color-border-neutral-weak` | `theme/color/border/neutral-weak` |
+| border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -94,9 +98,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-marquee`
 - Workspace: `@southleft/sl-web-components`
 
-## Tokens referenced (3)
+## Tokens referenced (5)
 
-`--al-font-family-secondary`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-default`
+`--al-font-family-secondary`, `--al-theme-border-width`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-default`
 
 ---
 

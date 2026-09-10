@@ -19,6 +19,7 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3538
     variant: figma.enum('Variant', {
       Danger: 'danger',
       Info: 'info',
+      Neutral: 'neutral',
       Success: 'success',
       Warning: 'warning',
     }),

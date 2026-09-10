@@ -4,7 +4,7 @@
   "name": "Input",
   "version": "1.1.0",
   "status": "source",
-  "description": "Component: al-input",
+  "description": "The single-line text field, and the system's reference implementation of a form control. It owns the whole field — label, asterisk, optional marker, field note, error note and character counter — so the surrounding page never has to assemble those parts itself, and it is form-associated, so its value reaches the owning `<form>`'s FormData across the shadow boundary.",
   "semantics": {
     "element": "div",
     "role": null
@@ -93,15 +93,7 @@
         "code": {
           "attribute": "hideLabel"
         },
-        "figma": {
-          "kind": "VARIANT",
-          "property": "Label",
-          "options": [
-            "Hidden",
-            "Shown"
-          ],
-          "pairWith": "Label"
-        }
+        "figma": null
       }
     },
     {
@@ -199,7 +191,9 @@
         "code": {
           "attribute": "isOptional"
         },
-        "figma": null
+        "figma": {
+          "omit": true
+        }
       }
     },
     {
@@ -225,7 +219,9 @@
         "code": {
           "attribute": "isRequired"
         },
-        "figma": null
+        "figma": {
+          "omit": true
+        }
       }
     },
     {
@@ -459,7 +455,8 @@
         "display": "flex",
         "direction": "column",
         "align": "normal",
-        "justify": "normal"
+        "justify": "normal",
+        "fillInline": true
       },
       "tokens": {
         "column-gap": {
@@ -520,6 +517,10 @@
               "tag": "span",
               "cls": "",
               "text": "Label",
+              "fsPx": 16,
+              "lhPx": 24,
+              "ffCss": "Public Sans",
+              "fwCss": "400",
               "box": {
                 "w": 41.3,
                 "h": 24
@@ -553,6 +554,12 @@
             {
               "tag": "input",
               "cls": "al-c-input__input",
+              "bw4": [
+                1,
+                1,
+                1,
+                1
+              ],
               "box": {
                 "w": 197,
                 "h": 40
@@ -561,7 +568,8 @@
                 "display": "inline-block",
                 "direction": "row",
                 "align": "normal",
-                "justify": "normal"
+                "justify": "normal",
+                "fillInline": true
               },
               "tokens": {
                 "background-color": {
@@ -615,10 +623,6 @@
                 "min-height": {
                   "code": "--al-theme-size-control",
                   "figma": "theme/size/control"
-                },
-                "padding": {
-                  "code": "--al-theme-space-sm",
-                  "figma": "theme/space/sm"
                 },
                 "padding-left": {
                   "code": "--al-theme-space-sm",
@@ -736,6 +740,10 @@
                       "cls": "al-c-field-note",
                       "component": "al-field-note",
                       "text": "This is a field note.",
+                      "fsPx": 14,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 119.9,
                         "h": 16
@@ -796,7 +804,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -872,6 +881,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -890,6 +903,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -898,7 +917,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -1081,6 +1101,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -1141,7 +1165,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1221,6 +1246,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -1239,6 +1268,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -1247,7 +1282,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -1438,6 +1474,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -1502,7 +1542,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -1578,6 +1619,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -1596,6 +1641,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -1604,7 +1655,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -1791,6 +1843,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -1877,6 +1933,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 130.8,
                             "h": 16
@@ -1937,7 +1997,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2013,6 +2074,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -2031,6 +2096,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -2039,7 +2110,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -2222,6 +2294,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -2282,7 +2358,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2343,6 +2420,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -2376,6 +2457,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -2384,7 +2471,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -2438,10 +2526,6 @@
                     "min-height": {
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -2559,6 +2643,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -2619,7 +2707,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -2684,6 +2773,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -2717,6 +2810,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -2725,7 +2824,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -2783,10 +2883,6 @@
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -2908,6 +3004,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -2972,7 +3072,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -3033,6 +3134,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -3066,6 +3171,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -3074,7 +3185,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -3132,10 +3244,6 @@
                     "min-height": {
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -3253,6 +3361,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -3339,6 +3451,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 130.8,
                             "h": 16
@@ -3399,7 +3515,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -3460,6 +3577,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -3493,6 +3614,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -3501,7 +3628,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -3555,10 +3683,6 @@
                     "min-height": {
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -3676,6 +3800,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -3736,7 +3864,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -3812,6 +3941,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -3830,6 +3963,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -3838,7 +3977,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -4021,6 +4161,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -4081,7 +4225,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -4161,6 +4306,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -4179,6 +4328,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -4187,7 +4342,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -4378,6 +4534,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -4442,7 +4602,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -4518,6 +4679,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -4536,6 +4701,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -4544,7 +4715,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -4731,6 +4903,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -4817,6 +4993,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 130.8,
                             "h": 16
@@ -4877,7 +5057,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -4953,6 +5134,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Label",
+                      "fsPx": 12,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 31,
                         "h": 20
@@ -4971,6 +5156,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 52
@@ -4979,7 +5170,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -5162,6 +5354,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -5222,7 +5418,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -5283,6 +5480,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -5316,6 +5517,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -5324,7 +5531,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -5378,10 +5586,6 @@
                     "min-height": {
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -5499,6 +5703,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -5559,7 +5767,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -5624,6 +5833,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -5657,6 +5870,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -5665,7 +5884,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -5723,10 +5943,6 @@
                     "opacity": {
                       "code": "--al-theme-opacity-disabled",
                       "figma": "theme/opacity/disabled"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -5848,6 +6064,10 @@
                           "cls": "al-c-field-note al-is-disabled",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -5912,7 +6132,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -5973,6 +6194,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -6006,6 +6231,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -6014,7 +6245,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -6072,10 +6304,6 @@
                     "min-height": {
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -6193,6 +6421,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16
@@ -6279,6 +6511,10 @@
                           "cls": "al-c-field-note al-is-error",
                           "component": "al-field-note",
                           "text": "This is an error note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 130.8,
                             "h": 16
@@ -6339,7 +6575,8 @@
             "display": "flex",
             "direction": "column",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "column-gap": {
@@ -6400,6 +6637,10 @@
                   "tag": "span",
                   "cls": "",
                   "text": "Label",
+                  "fsPx": 16,
+                  "lhPx": 24,
+                  "ffCss": "Public Sans",
+                  "fwCss": "400",
                   "box": {
                     "w": 41.3,
                     "h": 24
@@ -6433,6 +6674,12 @@
                 {
                   "tag": "input",
                   "cls": "al-c-input__input",
+                  "bw4": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ],
                   "box": {
                     "w": 197,
                     "h": 40
@@ -6441,7 +6688,8 @@
                     "display": "inline-block",
                     "direction": "row",
                     "align": "normal",
-                    "justify": "normal"
+                    "justify": "normal",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background-color": {
@@ -6495,10 +6743,6 @@
                     "min-height": {
                       "code": "--al-theme-size-control",
                       "figma": "theme/size/control"
-                    },
-                    "padding": {
-                      "code": "--al-theme-space-sm",
-                      "figma": "theme/space/sm"
                     },
                     "padding-left": {
                       "code": "--al-theme-space-sm",
@@ -6616,6 +6860,10 @@
                           "cls": "al-c-field-note",
                           "component": "al-field-note",
                           "text": "This is a field note.",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "400",
                           "box": {
                             "w": 119.9,
                             "h": 16

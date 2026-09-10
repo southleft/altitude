@@ -17,8 +17,8 @@ whenToUse:
     A dense toolbar needs an icon-only affordance: set `hideText`, supply
     `label`, and put the glyph in the `before` slot.
   - >-
-    You need to rank actions visually — `default`, `secondary`, `tertiary`,
-    `bare` and `danger` are the whole ladder, and there is no sixth treatment.
+    You need to rank actions visually — `primary`, `secondary`, `tertiary`,
+    `neutral` and `bare` are the whole ladder, and there is no sixth treatment.
 
 whenNotToUse:
   - text: >-
@@ -58,9 +58,11 @@ dos:
     Drive `isExpanded` from the open state of whatever the button controls, so
     the control and the thing it discloses never disagree.
   - >-
-    Reserve `variant="danger"` for actions that destroy data or cannot be
-    undone. A treatment used for merely important actions stops carrying a
-    warning.
+    Reserve `variant="primary"` for the one action you most want taken on a
+    screen. A strongest-emphasis treatment used for merely important actions
+    stops ranking anything. A destructive confirm is a primary button with
+    destructive copy — status lives on `al-badge` and `al-alert`, not on this
+    axis.
 
 donts:
   - >-

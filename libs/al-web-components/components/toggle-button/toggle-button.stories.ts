@@ -46,7 +46,7 @@ export const Default = Template.bind({});
 Default.args = {};
 
 const TemplateIcon = (args) => html`
-  <al-toggle-button ${spread(args)} data-testid="toggle-button">
+  <al-toggle-button label="Choose emoji" ${spread(args)} data-testid="toggle-button">
     <al-icon-emoji size="lg"></al-icon-emoji>
   </al-toggle-button>
 `;
@@ -76,7 +76,7 @@ const TemplateWithDropdown = (args) => html`
   <al-toggle-button ${spread(args)} data-testid="toggle-button">
     <al-popover heading="Heading" ?isDismissible=${true}>
       <span slot="trigger">Text label</span>
-      <al-icon-chevron-dow size="lg" slot="trigger"></al-icon-chevron-dow>
+      <al-icon-chevron-down size="lg" slot="trigger"></al-icon-chevron-down>
       <f-po>Content</f-po>
     </al-popover>
   </al-toggle-button>
@@ -85,7 +85,7 @@ export const DefaultWithDropdown = TemplateWithDropdown.bind({});
 DefaultWithDropdown.args = {};
 
 const TemplateWithDropdownIcon = (args) => html`
-  <al-toggle-button ${spread(args)} data-testid="toggle-button">
+  <al-toggle-button label="Choose emoji" ${spread(args)} data-testid="toggle-button">
     <al-popover>
       <al-icon-emoji slot="trigger" size="lg"></al-icon-emoji>
       <al-icon-chevron-down size="lg" slot="trigger"></al-icon-chevron-down>
@@ -180,4 +180,3 @@ BackgroundWithTooltipAndDropdown.args = {};
 /*------------------------------------*\
   #STORYBOOK TESTS
 \*------------------------------------*/
-

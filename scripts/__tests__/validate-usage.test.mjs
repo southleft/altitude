@@ -49,6 +49,13 @@ const has = (res, code) => codes(res).includes(code);
 const detailFor = (res, code) => (res.data?.violations ?? []).find((v) => v.code === code)?.detail ?? '';
 const seen = (res) => JSON.stringify(codes(res));
 
+{
+  const valid = run('<al-toggle-button ${spread(args)} label="Choose emoji"></al-toggle-button>', { ext: 'ts' });
+  assert('Lit element directives are not mistaken for attributes', valid.status === 0, seen(valid));
+  const invalid = run('<al-toggle-button ${spread(args)} hallucinated="yes"></al-toggle-button>', { ext: 'ts' });
+  assert('a Lit directive does not hide a following invalid attribute', has(invalid, 'ERR_UNKNOWN_ATTRIBUTE'), seen(invalid));
+}
+
 /** A positive fixture (must fire `code`) and a negative near-miss (must not). */
 function pair(code, positive, negative, opts = {}) {
   const p = run(positive, opts);
@@ -213,7 +220,7 @@ pair('WARN_HANDROLLED_LAYOUT',
 // ── 6. ERR_MISSING_THEME_HOST (llms.txt rule 4) ──────────────────────────────────────────────
 console.log('\n==> ERR_MISSING_THEME_HOST (rule 4)');
 const DOC_UNTHEMED = '<!doctype html>\n<html lang="en">\n<body>\n  <al-button>Go</al-button>\n</body>\n</html>\n';
-const DOC_THEMED = '<!doctype html>\n<html lang="en">\n<body>\n  <al-theme brand="altitude"><al-button>Go</al-button></al-theme>\n</body>\n</html>\n';
+const DOC_THEMED = '<!doctype html>\n<html lang="en">\n<body>\n  <al-theme><al-button>Go</al-button></al-theme>\n</body>\n</html>\n';
 pair('ERR_MISSING_THEME_HOST', DOC_UNTHEMED, DOC_THEMED);
 {
   const fragment = run('<al-layout direction="row"><al-button>A</al-button><al-heading>B</al-heading></al-layout>');
@@ -229,18 +236,18 @@ pair('ERR_MISSING_THEME_HOST', DOC_UNTHEMED, DOC_THEMED);
 // ── 7. WARN_MIXED_REGISTRATION (llms.txt rule 6) ─────────────────────────────────────────────
 console.log('\n==> WARN_MIXED_REGISTRATION (rule 6)');
 pair('WARN_MIXED_REGISTRATION',
-  '<script>window.alAutoRegistry = true;</script>\n<script type="module">\nimport { ALButton } from "@southleft/al-react";\n</script>\n<al-theme brand="altitude"><al-button>Go</al-button></al-theme>\n',
-  '<script>window.alAutoRegistry = true;</script>\n<script type="module">\nimport "@southleft/al-web-components/components/button";\n</script>\n<al-theme brand="altitude"><al-button>Go</al-button></al-theme>\n');
+  '<script>window.alAutoRegistry = true;</script>\n<script type="module">\nimport { ALButton } from "@southleft/al-react";\n</script>\n<al-theme><al-button>Go</al-button></al-theme>\n',
+  '<script>window.alAutoRegistry = true;</script>\n<script type="module">\nimport "@southleft/al-web-components/components/button";\n</script>\n<al-theme><al-button>Go</al-button></al-theme>\n');
 {
-  const versioned = run('<script>window.alAutoRegistry = true;</script>\n<script type="module">\nregisterAltitude({ mode: "versioned" }, [["al-button", ALButton]]);\n</script>\n<al-theme brand="altitude"><al-button>Go</al-button></al-theme>\n');
+  const versioned = run('<script>window.alAutoRegistry = true;</script>\n<script type="module">\nregisterAltitude({ mode: "versioned" }, [["al-button", ALButton]]);\n</script>\n<al-theme><al-button>Go</al-button></al-theme>\n');
   assert('flag + registerAltitude({mode:"versioned"}) fires', has(versioned, 'WARN_MIXED_REGISTRATION'), seen(versioned));
 
-  const versionedOnly = run('<script type="module">\nregisterAltitude({ mode: "versioned" }, [["al-button", ALButton]]);\n</script>\n<al-theme brand="altitude"><al-button>Go</al-button></al-theme>\n');
+  const versionedOnly = run('<script type="module">\nregisterAltitude({ mode: "versioned" }, [["al-button", ALButton]]);\n</script>\n<al-theme><al-button>Go</al-button></al-theme>\n');
   assert('the versioned path ALONE does not fire', !has(versionedOnly, 'WARN_MIXED_REGISTRATION'), seen(versionedOnly));
 
   const readme = 'Before: the fixture relied on `window.alAutoRegistry = true`.\n'
     + 'After: it calls `registerAltitude({mode: "versioned"})` per subtree.\n\n'
-    + '<al-theme brand="altitude"><al-button>Go</al-button></al-theme>\n';
+    + '<al-theme><al-button>Go</al-button></al-theme>\n';
   const doc = run(readme, { ext: 'md' });
   assert('a README describing both paths does not fire', !has(doc, 'WARN_MIXED_REGISTRATION'), seen(doc));
 }
@@ -318,7 +325,7 @@ console.log('\n==> --cem-extra (brand layer manifest)');
 // ── 9. exit codes — a warning must not fail a build unless --strict ─────────────────────────
 console.log('\n==> exit codes');
 {
-  const clean = run('<al-theme brand="altitude"><al-button variant="secondary">Go</al-button></al-theme>');
+  const clean = run('<al-theme><al-button variant="secondary">Go</al-button></al-theme>');
   assert('clean input exits 0', clean.status === 0, `status ${clean.status}, ${seen(clean)}`);
 
   const warnOnly = run('<al-button style="background-color: #ff0000">Go</al-button>');

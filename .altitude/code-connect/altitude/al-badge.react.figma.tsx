@@ -20,6 +20,7 @@ figma.connect(ALBadge, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?nod
     variant: figma.enum('Variant', {
       Danger: 'danger',
       Info: 'info',
+      Neutral: 'neutral',
       Success: 'success',
       Warning: 'warning',
     }),

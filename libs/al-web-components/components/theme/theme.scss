@@ -1,16 +1,20 @@
-// Generated scoped token blocks for the `brand` and `mode` axes.
+// NO PALETTE LIVES HERE.
 //
-// `styles/dist-v5/scss/host/` is written by `styles/tokens-config.v5.mjs`
-// (see the "scoped `:host` emission" comment there for why the blocks are
-// deltas, why brand blocks are split, and the specificity arithmetic). It is a
-// GITIGNORED BUILD ARTIFACT, so this `@use` — like `styles/main.scss:7` — only
-// resolves after `pnpm --filter @southleft/al-web-components build:tokens`, which
-// `package.json`'s `build` script always runs first.
+// This file used to `@use` the generated `:host([brand])` / `:host([mode])`
+// partials, which put a design system's colour, type and radius values inside
+// the component. Two consequences, both measured:
 //
-// `dist-v5/` and not the legacy `dist/` mirror: these partials are a new
-// artifact with no legacy import path, and `scripts/copy-tokens-to-legacy-dist.js`
-// deliberately skips them so they are not re-shipped as dead CSS.
-@use '../../styles/dist-v5/scss/host';
+//   * a page could load a system's own token bundle and STILL render the
+//     default system's palette, because `:host([mode='dark'])` sat on the
+//     element and beat `:root` for everything inside it; and
+//   * `@lit-labs/ssr` serialized all of it into every host's DSD template
+//     (~19.6KB each, .altitude/SSR.md).
+//
+// The values now live in the design system's own stylesheet — one file per
+// system, `:root` plus `[data-al-mode='…']` — which is how the Figma side has
+// always modelled it. This component mirrors `mode` onto its host for those
+// blocks to match (theme.ts, `updated()`), and keeps only the axes below, which
+// are genuine axes rather than a second set of values.
 
 @layer al.theme {
   /* T4.2 — base host. Token override values are applied via attribute

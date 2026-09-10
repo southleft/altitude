@@ -4,7 +4,8 @@
 
 **Status:** `source` · **Version:** `1.0.0` · **Element:** `<div>`
 
-Component: al-drawer
+A viewport-edge panel for supporting content, with optional header and footer slots.
+Opens from the left by default; alignment="right" selects the right edge.
 
 ## Figma
 
@@ -57,11 +58,14 @@ This component has no Figma `VARIANT`-bound prop — no variant axis to document
 
 _No interaction states recorded._
 
-## Slots (1)
+## Slots (4)
 
 | Slot | Description | Figma placeholder | Figma fan-out |
 | --- | --- | --- | --- |
 | `(default)` | The drawer content | — | — |
+| `footer` | Drawer footer content. | — | — |
+| `header` | Drawer heading content. | — | — |
+| `trigger` | The control that opens the drawer. | — | — |
 
 ## Events (3)
 
@@ -96,7 +100,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (10)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-radius-role-action`, `--al-theme-box-shadow-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-md-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius-role-action`, `--al-theme-box-shadow-xl`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-size-control`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-semibold-letter-spacing`
 
 ---
 

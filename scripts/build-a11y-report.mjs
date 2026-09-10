@@ -104,11 +104,10 @@ if (!STORYBOOK_DIR || !existsSync(join(STORYBOOK_DIR, 'index.json'))) {
 /* ------------------------------------------------- the axe rule taxonomy */
 
 /**
- * WCAG levels the run asserts. Identical to `.storybook/test-runner.ts:47`, so
- * this report and the CI gate are measuring the same standard — the ONLY
- * difference is that `color-contrast` is left enabled here.
+ * Automated WCAG A/AA checks through 2.2. This is measured evidence, not a
+ * conformance claim; keyboard and assistive-technology review remain separate.
  */
-const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 /** The one rule the CI gate excludes; reported separately so it is visible. */
 const CONTRAST_RULE = 'color-contrast';

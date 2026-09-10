@@ -6,22 +6,30 @@
  * Figma Code Connect — web component surface for the "Chip"
  * component set (node 3540:43526).
  *
- * Mapped variant axes: Shape, Variant.
+ * Mapped variant axes: Dismissible, Shape, Variant.
  * Props the contract marks `omit` (no Figma axis): isDismissed.
  */
 import figma, { html } from '@figma/code-connect/html';
 
 figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3540-43526', {
   props: {
+    isDismissible: figma.enum('Dismissible', {
+      Yes: true,
+    }),
     type: figma.enum('Shape', {
       Squared: 'squared',
     }),
     variant: figma.enum('Variant', {
+      Bare: 'bare',
+      Neutral: 'neutral',
+      Primary: 'primary',
       Secondary: 'secondary',
+      Tertiary: 'tertiary',
     }),
   },
   example: (props) => html`
     <al-chip
+      isDismissible="${props.isDismissible}"
       type="${props.type}"
       variant="${props.variant}"
     >

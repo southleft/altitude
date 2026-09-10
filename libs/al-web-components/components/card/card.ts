@@ -1,5 +1,9 @@
-import { html, unsafeCSS } from 'lit';
+import { TemplateResult, unsafeCSS } from 'lit';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { property } from 'lit/decorators.js';
+import register from '../../directives/register';
+import PackageJson from '../../package.json';
+import { ALLayout } from '../layout/layout';
 import { ALElement } from '../ALElement';
 import styles from './card.scss';
 
@@ -18,6 +22,12 @@ import styles from './card.scss';
  */
 export class ALCard extends ALElement {
   static el = 'al-card';
+
+  private elementMap = register({
+    elements: [[ALLayout.el, ALLayout]],
+    suffix: (globalThis as any).alAutoRegistry === true ? '' : PackageJson.version
+  });
+  private layoutEl = unsafeStatic(this.elementMap.get(ALLayout.el));
 
   static get styles() {
     return unsafeCSS(styles.toString());
@@ -84,10 +94,13 @@ export class ALCard extends ALElement {
             <slot name="image"></slot>
           </div>
         `}
-        ${this.slotNotEmpty('header') &&
+        ${ (this.slotNotEmpty('header') || this.slotNotEmpty('action-right')) &&
         html`
           <div class="al-c-card__header">
-            <slot name="header"></slot>
+            <${this.layoutEl} direction="row" align="center" gap="sm" grow>
+              <${this.layoutEl} grow><slot name="header"></slot></${this.layoutEl}>
+              <slot name="action-right"></slot>
+            </${this.layoutEl}>
           </div>
         `}
         <div class="al-c-card__body">
@@ -100,7 +113,7 @@ export class ALCard extends ALElement {
           </div>
         `}
       </div>
-    `;
+    ` as TemplateResult<1>;
   }
 }
 

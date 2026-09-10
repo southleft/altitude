@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { buildVariantDescription } from '../contracts/figma/build-metadata-ops.mjs';
+
+const contract = (tag) => JSON.parse(readFileSync(new URL(`../../.altitude/contracts/altitude/${tag}.contract.json`, import.meta.url)));
+const describe = (tag, variant) => buildVariantDescription(contract(tag), tag, variant, 'https://example.test/docs');
+assert.match(describe('al-tab', 'State=Focus, Active=Yes'), /isActive="true"/);
+assert.doesNotMatch(describe('al-tab', 'State=Default, Active=No'), /isActive="(?:true|false)"/);
+assert.match(describe('al-combobox', 'Label=Hidden'), /hideLabel="true"/);
+assert.doesNotMatch(describe('al-combobox', 'Label=Shown'), /hideLabel="(?:true|false)"/);
+assert.match(describe('al-badge', 'Shape=Dot'), /isDot="true"/);
+assert.match(describe('al-tab', 'State=Focus, Active=Yes'), /transient browser interaction/);
+assert.match(describe('al-tab', 'Unknown=Something'), /unmapped; this example does not reproduce/);
+assert.match(describe('al-banner', 'Dismissible=Yes'), /isDismissible="true"/);
+assert.match(describe('al-checkbox', 'State=Error, Checked=Off'), /isError="true"/);
+assert.doesNotMatch(describe('al-checkbox', 'State=Error, Checked=Off'), /isChecked="true"/);
+assert.match(describe('al-dialog','Footer=Yes'), /slot="footer"/);
+assert.doesNotMatch(describe('al-dialog','Footer=No'), /slot="footer"/);
+assert.match(describe('al-select','Label=Hidden'), /hideLabel="true"/);
+assert.match(describe('al-tooltip','Arrow=Yes, Position=Top'), /hasArrow="true"/);
+assert.match(describe('al-menu-item','Role=Expandable'), /isHeader="true" groupId="menu-group"/);
+assert.doesNotMatch(describe('al-menu-item','Role=Item'), /isHeader="true"/);
+console.log('metadata-ops: selected, hidden, dot, transient and unmapped variants verified');

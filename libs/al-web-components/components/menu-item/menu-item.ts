@@ -81,8 +81,8 @@ export class ALMenuItem extends ALElement {
   accessor isHeader: boolean;
 
   /**
-   * isExpandableHeader property
-   * - **true** Applies expandable functionality to the menu item
+   * Legacy compatibility property; it does not control the disclosure button.
+   * @deprecated Use isHeader with a groupId to render an expandable group header.
    */
   @property({ type: Boolean })
   accessor isExpandableHeader: boolean;

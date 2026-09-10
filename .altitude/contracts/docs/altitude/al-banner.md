@@ -26,7 +26,7 @@ glyph via the `icon` slot and its color via `--al-banner-icon-fill`.
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `isDismissed` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isDismissible` | boolean | — | — | — |
+| `isDismissible` | boolean | — | — | **Dismissible** (VARIANT): `No`, `Yes` |
 
 #### `isDismissed`
 
@@ -40,7 +40,10 @@ Whether the banner shows a dismiss control.
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `isDismissible` (Figma property "Dismissible")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
 
 ## States
 

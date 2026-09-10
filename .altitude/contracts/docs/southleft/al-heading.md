@@ -70,7 +70,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -83,8 +83,8 @@ _No events declared._
 | --- | --- | --- |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | font | `--al-theme-typography-heading-sm` | — |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
-| letter-spacing | `--al-theme-typography-heading-sm-bold-letter-spacing` | — |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
+| letter-spacing | `--al-theme-typography-heading-sm-semibold-letter-spacing` | — |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
@@ -98,7 +98,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-color-content-neutral-default`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-semibold-letter-spacing`
 
 ---
 

@@ -18,7 +18,7 @@ Component: al-heading
 | --- | --- | --- | --- | --- |
 | `isBold` | boolean | — | — | **Weight** (VARIANT): `Default` |
 | `tagName` | enum | `h1`, `h2`, `h3`, `h4`, `h5`, `h6` | `'h2'` | _not expressed in Figma (by design)_ |
-| `variant` | enum | `display-lg`, `display-md`, `display-sm`, `lg`, `md`, `sm` | — | **Variant** (VARIANT): `Default`, `Display Lg`, `Display Md`, `Display Sm`, `Lg`, `Md`, `Sm` |
+| `variant` | enum | `display-lg`, `display-md`, `display-sm`, `lg`, `md`, `sm` | — | **Variant** (VARIANT): `Display Lg`, `Display Md`, `Display Sm`, `Lg`, `Md`, `Sm` |
 
 #### `isBold`
 
@@ -59,7 +59,7 @@ Heading variants
 ### `variant` (Figma property "Variant")
 
 - Code values: `display-lg`, `display-md`, `display-sm`, `lg`, `md`, `sm`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Display Lg`, `Display Md`, `Display Sm`, `Lg`, `Md`, `Sm`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Display Lg`, `Display Md`, `Display Sm`, `Lg`, `Md`, `Sm`
 
 ## States
 
@@ -77,7 +77,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -90,12 +90,18 @@ _No events declared._
 | --- | --- | --- |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | font | `--al-theme-typography-heading-sm` | — |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
-| letter-spacing | `--al-theme-typography-heading-sm-bold-letter-spacing` | — |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
+| letter-spacing | `--al-theme-typography-heading-sm-semibold-letter-spacing` | — |
 
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
-This component's `.scss` has no BEM modifier classes and no nested pseudo-class/attribute state rules that resolve to a single `--al-*` token — no conditional bindings to derive (T18; see `.altitude/contracts/README.md`).
+### Per-variant (`variant`)
+
+#### `sm`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 ## Code
 
@@ -105,7 +111,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (4)
 
-`--al-font-weight-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-color-content-neutral-default`, `--al-theme-typography-heading-sm`, `--al-theme-typography-heading-sm-semibold-letter-spacing`
 
 ---
 

@@ -12,21 +12,22 @@ Component: al-toggle-button
 - Node id: `3543:47985` (pinned)
 - [Open in Figma](https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47985)
 
-## Props (4)
+## Props (5)
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `hasToggle` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isSelected` | boolean | — | `false` | **Selected** (VARIANT): `No`, `Yes` |
 | `isSmall` | boolean | — | — | **Size** (VARIANT): `Default`, `Small` |
+| `label` | string | — | — | — |
 | `variant` | string | `'background'` | — | **Variant** (VARIANT): `Background`, `Default` |
 
 #### `hasToggle`
 
 Has toggle?
-- Is dynamically set if the first time slotted is a ALPopover or ALMenu
-- **true** does not toggle the isSelected state
-- **false** toggles the isSelected state
+- Dynamically enabled when the first slotted element is an ALPopover or ALMenu.
+- **true** toggles the isSelected state on activation.
+- **false** selects on activation; Escape or an outside click can deselect.
 
 #### `isSelected`
 
@@ -36,6 +37,11 @@ Indicates the selected state of the toggle button.
 
 If true, a fixed width will be set on the button.
 - Dynamically set based on the slotted component
+
+#### `label`
+
+Accessible name for an icon-only toggle button. Visible slotted text supplies
+the name when this property is omitted.
 
 #### `variant`
 
@@ -64,7 +70,7 @@ Variant
 
 ## States
 
-`hover`
+`hover`, `focus`
 
 ## Slots (1)
 
@@ -81,7 +87,7 @@ Variant
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -102,11 +108,10 @@ Variant
 | border-top-left-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-right-radius | `--al-theme-border-radius` | `theme/border/radius/@` |
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
-| font-size | `--al-font-size-13` | — |
+| font-size | `--al-font-size-12` | `typography/font-size/12` |
 | font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
-| padding | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-left | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-right | `--al-theme-space-sm` | `theme/space/sm` |
 
@@ -126,6 +131,15 @@ Variant
 | background | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 | background-color | `--al-theme-color-background-neutral-strong` | `theme/color/background/neutral-strong` |
 
+**`focus`**
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| outline | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
+
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
 This component's `.scss` has no BEM modifier classes and no nested pseudo-class/attribute state rules that resolve to a single `--al-*` token — no conditional bindings to derive (T18; see `.altitude/contracts/README.md`).
@@ -136,9 +150,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-toggle-button`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (13)
+## Tokens referenced (15)
 
-`--al-font-size-13`, `--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-12`, `--al-font-weight-bold`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

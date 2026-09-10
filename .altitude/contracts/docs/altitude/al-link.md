@@ -18,7 +18,7 @@ Component: al-link
 | --- | --- | --- | --- | --- |
 | `ariaLabelledBy` | string | — | — | _not expressed in Figma (by design)_ |
 | `href` | string | — | — | _not expressed in Figma (by design)_ |
-| `isDisabled` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Focus`, `Hover` |
 | `label` | string | — | — | _not expressed in Figma (by design)_ |
 | `linkTitle` | string | — | — | _not expressed in Figma (by design)_ |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | _not expressed in Figma (by design)_ |
@@ -70,7 +70,10 @@ Variant
 
 ## Variant axes
 
-This component has no Figma `VARIANT`-bound prop — no variant axis to document.
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Focus`, `Hover`
 
 ## States
 
@@ -91,7 +94,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaLabelledBy`, `variant`
+- ARIA-bearing attributes: `ariaLabelledBy`
 - CSS parts: —
 
 ## Anatomy & token bindings

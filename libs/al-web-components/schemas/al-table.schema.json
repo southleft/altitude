@@ -83,8 +83,13 @@
           "type": "string"
         },
         "sortDirection": {
-          "description": "typescript: ALTableSortDirection",
-          "type": "string"
+          "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary.",
+          "type": "string",
+          "enum": [
+            "ascending",
+            "descending",
+            "none"
+          ]
         }
       }
     },

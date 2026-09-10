@@ -331,6 +331,27 @@ One rule each. Dated incident narrative for every trap below lives in
 15. **A case-axis dim with a leading space (`', State=Disabled'`) is a harness quirk** —
     it maps to no prop and stays un-fanned. Error/Disabled attribute cases are future
     case-axes, not interaction states.
+16. **Nested sets live at depth 3 on a real page, not 2** (2026-09-06). The chain is
+    page → `"Field Note"` → `"❖ Field Note"` → COMPONENT_SET; `shallowFindSet`'s
+    depth-2 bound predates that middle frame, so EVERY nested set on a real page
+    missed. al-combobox generated with no Input and no Field Note and said so —
+    `nested-set-not-found:al-input:Input` reads as "that set is gone" when it was
+    there the whole time. **A `nested-set-not-found` for a set you can see is a
+    LOOKUP bug, not a missing set**; the walk is bounded by never descending into an
+    INSTANCE or COMPONENT_SET, which is what keeps it off the 30s ceiling.
+17. **The doc header's description node is named `Lede`.** The lookup knew only
+    `Description`/`Text`, so it missed on every run since the sweep and every page in
+    the file kept the master's boilerplate copy ("Altitude is a system of tools…")
+    while `doc-header-description-node-not-found` sat unread in the misses. Address it
+    by an ALLOWLIST of names — the master's naming is the owner's to change.
+18. **Every `loadFontAsync` call site needs the cache + 3s race, not just the first.**
+    `fontFam` has both; the rewrap loop called `loadFontAsync` raw, once per font per
+    text node per instance. Invisible until nested sets actually resolved — then
+    al-combobox spent the whole 30s ceiling on repeat font waits and died AFTER
+    writing its variants. **A build that times out mid-way leaves partial artifacts**
+    (a loose COMPONENT_SET + header instance that the name-scoped clear does not
+    cover, and two sets then share a name — repair trap 10). Delete them before
+    retrying, and check the page after a timeout even if the next run succeeds.
 
 ## Verification gates (all must stay green after contract-affecting changes)
 

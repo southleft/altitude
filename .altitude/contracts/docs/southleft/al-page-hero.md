@@ -104,7 +104,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `heading-variant`
+- ARIA-bearing attributes: —
 - CSS parts: `band`, `dek`, `eyebrow`, `heading`
 
 ## Anatomy & token bindings
@@ -125,9 +125,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-page-hero`
 - Workspace: `@southleft/sl-web-components`
 
-## Tokens referenced (15)
+## Tokens referenced (17)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-bold-letter-spacing`, `--al-typography-preset-16`
+`--al-font-size-12`, `--al-font-weight-medium`, `--al-font-weight-semibold`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-color-background-secondary-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-secondary-weak`, `--al-theme-size-control-sm`, `--al-theme-space`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`, `--al-theme-typography-display-md`, `--al-theme-typography-display-md-semibold-letter-spacing`, `--al-typography-preset-body-md`
 
 ---
 

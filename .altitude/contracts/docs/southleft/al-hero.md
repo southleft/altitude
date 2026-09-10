@@ -110,9 +110,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-hero`
 - Workspace: `@southleft/sl-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (18)
 
-`--al-font-weight-bold`, `--al-layout-gap`, `--al-layout-padding`, `--al-text-block-font`, `--al-theme-color-content-neutral-default`, `--al-theme-space`, `--al-theme-space-xs`, `--al-theme-typography-display-lg`, `--al-theme-typography-display-lg-bold-letter-spacing`
+`--al-card-padding`, `--al-font-size-14`, `--al-layout-gap`, `--al-layout-padding`, `--al-text-block-font`, `--al-theme-border-radius`, `--al-theme-border-width`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-border-neutral-weak`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-content-primary-default`, `--al-theme-space`, `--al-theme-space-lg`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-display-lg`, `--al-theme-typography-display-lg-letter-spacing`
 
 ---
 

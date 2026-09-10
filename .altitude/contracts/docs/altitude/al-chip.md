@@ -17,9 +17,9 @@ Component: al-chip
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
 | `isDismissed` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isDismissible` | boolean | — | — | — |
+| `isDismissible` | boolean | — | — | **Dismissible** (VARIANT): `No`, `Yes` |
 | `type` | string | `'squared'` | — | **Shape** (VARIANT): `Default`, `Squared` |
-| `variant` | enum | `bare`, `neutral`, `primary`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning` |
+| `variant` | enum | `bare`, `neutral`, `primary`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `isDismissed`
 
@@ -54,6 +54,11 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ## Variant axes
 
+### `isDismissible` (Figma property "Dismissible")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `No`, `Yes`
+
 ### `type` (Figma property "Shape")
 
 - Code values: —
@@ -62,7 +67,7 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 ### `variant` (Figma property "Variant")
 
 - Code values: `bare`, `neutral`, `primary`, `secondary`, `tertiary`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Danger`, `Default`, `Info`, `Secondary`, `Success`, `Warning`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary`
 
 ## States
 
@@ -82,7 +87,7 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -105,12 +110,11 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 | border-top-width | `--al-theme-border-width` | `theme/border/width/@` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xs` | `theme/space/xs` |
-| font-size | `--al-font-size-13` | — |
+| font-size | `--al-font-size-12` | `typography/font-size/12` |
 | font-weight | `--al-font-weight-medium` | `typography/font-weight/medium` |
 | gap | `--al-theme-space-xs` | `theme/space/xs` |
 | letter-spacing | `--al-theme-typography-body-sm-letter-spacing` | — |
 | min-height | `--al-theme-size-control-sm` | `theme/size/control-sm` |
-| padding | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-left | `--al-theme-space-sm` | `theme/space/sm` |
 | padding-right | `--al-theme-space-sm` | `theme/space/sm` |
 | row-gap | `--al-theme-space-xs` | `theme/space/xs` |
@@ -182,7 +186,7 @@ axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ## Tokens referenced (13)
 
-`--al-font-size-13`, `--al-font-weight-medium`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-size-12`, `--al-font-weight-medium`, `--al-theme-border-radius-pill`, `--al-theme-border-width`, `--al-theme-border-width-md`, `--al-theme-color-background-transparent-default`, `--al-theme-color-border-neutral-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-focus-ring`, `--al-theme-size-control-sm`, `--al-theme-space-sm`, `--al-theme-space-xs`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

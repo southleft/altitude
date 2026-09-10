@@ -63,7 +63,7 @@ Target attribute for a link (i.e. set to _blank to open in new tab)
 
 ## States
 
-`hover`
+`hover`, `focus`
 
 ## Slots (1)
 
@@ -113,6 +113,24 @@ _No events declared._
 | background-color | `--al-theme-color-background-neutral-default` | `theme/color/background/neutral-default` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
+**`focus`** (node #0.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| outline | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
+
+**`focus`** (node #0.0.0)
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| outline | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-color | `--al-theme-color-focus-ring` | `theme/color/focus-ring` |
+| outline-offset | `--al-theme-border-width-md` | `theme/border/width/md` |
+| outline-width | `--al-theme-border-width-md` | `theme/border/width/md` |
+
 ## Conditional token bindings (T18 — derived from this component's own `.scss`)
 
 This component's `.scss` has no BEM modifier classes and no nested pseudo-class/attribute state rules that resolve to a single `--al-*` token — no conditional bindings to derive (T18; see `.altitude/contracts/README.md`).
@@ -123,9 +141,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-breadcrumbs-item`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (9)
+## Tokens referenced (11)
 
-`--al-theme-border-radius-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-lg`, `--al-theme-typography-body-lg-letter-spacing`
+`--al-theme-border-radius-md`, `--al-theme-border-width-md`, `--al-theme-color-background-neutral-default`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-color-content-neutral-weak`, `--al-theme-color-focus-ring`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-lg`, `--al-theme-typography-body-lg-letter-spacing`
 
 ---
 

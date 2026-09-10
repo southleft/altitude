@@ -82,6 +82,10 @@ export const DEFAULT_COMPONENT_CONFIG = Object.freeze({
   // Badge: [{ dimension: "Shape", prop: "isDot", property: "Type",
   // valueMap: { label: "Default", dot: "Dot" } }]). null -> auto-map only.
   caseAxes: null,
+  // Explicit multi-attribute recipes where one canvas axis composes code props.
+  variantAttributes: null,
+  // A measured optional-content dimension may use {dimension, slot, property}
+  // instead of prop. The named slot must exist in the public contract.
   textContent: null, // class token -> literal text (see header comment)
   // glyphs: CSS-mask-drawn marks copied verbatim from the component's own
   // stylesheet, matched by class + case-axis values, colored by the token
@@ -116,6 +120,12 @@ export const DEFAULT_COMPONENT_CONFIG = Object.freeze({
   // children that measured as wide as the space they sit in. Leave null for
   // anything that genuinely hugs (cards, chips, buttons).
   rootWidth: null,
+  // Viewport-height surfaces (drawer): retain the measured height explicitly.
+  rootHeight: null,
+  // CSS diamond pseudo-element on a floating surface. Size/color/axis mapping
+  // must be curated from the stylesheet; never inferred from component names.
+  rootArrow: null,
+  rootClip: false, // source overflow:hidden; preserves rounded container clipping
   fullWidthProp: 'fullWidth',
   fullWidthExtraPx: 160,
   iconSizeVar: 'theme/icon/md',
@@ -162,7 +172,7 @@ export function loadComponentConfig(repoRoot, tag, libRoots) {
   }
   const config = {
     ...DEFAULT_COMPONENT_CONFIG,
-    ...pick(overrides, ['enumProp', 'fullWidthProp', 'fullWidthExtraPx', 'iconSizeVar', 'caseAxes', 'textContent', 'glyphs', 'nestedIconGlyphs', 'nestedProps', 'rootWidth']),
+    ...pick(overrides, ['enumProp', 'fullWidthProp', 'fullWidthExtraPx', 'iconSizeVar', 'caseAxes', 'variantAttributes', 'textContent', 'glyphs', 'nestedIconGlyphs', 'nestedProps', 'rootWidth', 'rootHeight', 'rootArrow', 'rootClip']),
     label: { ...DEFAULT_COMPONENT_CONFIG.label, ...(overrides.label || {}) },
   };
   // `sheet` was the retired prop-sheet's cell pitch. Warned about rather than

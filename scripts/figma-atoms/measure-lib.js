@@ -840,7 +840,10 @@
       for (const wrap of section.querySelectorAll('.case')) {
         const host = wrap.firstElementChild;
         if (!host || !host.shadowRoot) continue;
-        const rootEl = [...host.shadowRoot.children].find((n) => n.tagName !== 'STYLE');
+        const rootEl = wrap.dataset.measureRoot
+          ? host.shadowRoot.querySelector(wrap.dataset.measureRoot)
+          : [...host.shadowRoot.children].find((n) => n.tagName !== 'STYLE');
+        if (!rootEl && wrap.dataset.measureRoot) throw new Error(`Missing measurement root ${wrap.dataset.measureRoot}: ${section.dataset.atom}/${wrap.dataset.case}`);
         if (!rootEl) continue;
         const rules = rewrite(rulesOf(host.shadowRoot));
         const rb = rootEl.getBoundingClientRect();

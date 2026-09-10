@@ -3,7 +3,7 @@
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "figmaObservedFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-09-01T00:32:45.045Z",
+  "figmaLastRefreshed": "2026-09-08T20:41:38.855Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -39,7 +39,7 @@
         "figmaDigest": "d49c0532cf2014a3f9dfaccafe46ac9564b01664",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "d3d55e1796261021f72dbab8311eaa3f5983ed2d",
+      "figmaCurrentDigest": "04550e702bcdb2bbb70b1c129cee138f93bc6a95",
       "figmaContract": {
         "props": {
           "Text": {
@@ -50,7 +50,7 @@
             "type": "VARIANT",
             "options": [
               "Danger",
-              "Default",
+              "Neutral",
               "Info",
               "Success",
               "Warning"
@@ -67,10 +67,10 @@
         "variants": [
           "Variant=Danger, Shape=Dot",
           "Variant=Danger, Shape=Label",
-          "Variant=Default, Shape=Dot",
-          "Variant=Default, Shape=Label",
           "Variant=Info, Shape=Dot",
           "Variant=Info, Shape=Label",
+          "Variant=Neutral, Shape=Dot",
+          "Variant=Neutral, Shape=Label",
           "Variant=Success, Shape=Dot",
           "Variant=Success, Shape=Label",
           "Variant=Warning, Shape=Dot",
@@ -125,7 +125,7 @@
         "figmaDigest": "1f720a2af3eab6ed53edccbb84436ed8b27ec19a",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "63bb73e48f379d410f101ea6102bf89fe55d4ca2",
+      "figmaCurrentDigest": "de8c4d979411ea94575dcd4d8d153623ca626dd1",
       "figmaContract": {
         "props": {
           "Text": {
@@ -136,7 +136,8 @@
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover"
+              "Hover",
+              "Focus"
             ]
           },
           "Current": {
@@ -159,6 +160,8 @@
           "State=Default, Current=No, Separator=Yes",
           "State=Default, Current=Yes, Separator=No",
           "State=Default, Current=Yes, Separator=Yes",
+          "State=Focus, Current=No, Separator=No",
+          "State=Focus, Current=No, Separator=Yes",
           "State=Hover, Current=No, Separator=No",
           "State=Hover, Current=No, Separator=Yes",
           "State=Hover, Current=Yes, Separator=No",
@@ -210,27 +213,23 @@
         "figmaDigest": "18828c1c7395c3b053821c991fa6b7e9f69d9e30",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "ae09085c22527edd334d798bfea762a28f2651d3",
+      "figmaCurrentDigest": "bde8f1dfd94f0b721542668d190b6eb25f5afbe2",
       "figmaContract": {
         "props": {
           "Text": {
             "type": "TEXT",
             "options": null
           },
+          "Show Text": {
+            "type": "BOOLEAN",
+            "options": null
+          },
           "Slot Before": {
             "type": "BOOLEAN",
             "options": null
           },
-          "Icon Before": {
-            "type": "INSTANCE_SWAP",
-            "options": null
-          },
           "Slot After": {
             "type": "BOOLEAN",
-            "options": null
-          },
-          "Icon After": {
-            "type": "INSTANCE_SWAP",
             "options": null
           },
           "State": {
@@ -246,7 +245,7 @@
             "type": "VARIANT",
             "options": [
               "Bare",
-              "Danger",
+              "Neutral",
               "Primary",
               "Secondary",
               "Tertiary"
@@ -255,7 +254,7 @@
           "Size": {
             "type": "VARIANT",
             "options": [
-              "Default",
+              "Md",
               "Sm",
               "Lg"
             ]
@@ -269,124 +268,124 @@
           }
         },
         "variants": [
-          "State=Default, Variant=Bare, Size=Default, Shape=Default",
-          "State=Default, Variant=Bare, Size=Default, Shape=Pill",
           "State=Default, Variant=Bare, Size=Lg, Shape=Default",
           "State=Default, Variant=Bare, Size=Lg, Shape=Pill",
+          "State=Default, Variant=Bare, Size=Md, Shape=Default",
+          "State=Default, Variant=Bare, Size=Md, Shape=Pill",
           "State=Default, Variant=Bare, Size=Sm, Shape=Default",
           "State=Default, Variant=Bare, Size=Sm, Shape=Pill",
-          "State=Default, Variant=Danger, Size=Default, Shape=Default",
-          "State=Default, Variant=Danger, Size=Default, Shape=Pill",
-          "State=Default, Variant=Danger, Size=Lg, Shape=Default",
-          "State=Default, Variant=Danger, Size=Lg, Shape=Pill",
-          "State=Default, Variant=Danger, Size=Sm, Shape=Default",
-          "State=Default, Variant=Danger, Size=Sm, Shape=Pill",
-          "State=Default, Variant=Primary, Size=Default, Shape=Default",
-          "State=Default, Variant=Primary, Size=Default, Shape=Pill",
+          "State=Default, Variant=Neutral, Size=Lg, Shape=Default",
+          "State=Default, Variant=Neutral, Size=Lg, Shape=Pill",
+          "State=Default, Variant=Neutral, Size=Md, Shape=Default",
+          "State=Default, Variant=Neutral, Size=Md, Shape=Pill",
+          "State=Default, Variant=Neutral, Size=Sm, Shape=Default",
+          "State=Default, Variant=Neutral, Size=Sm, Shape=Pill",
           "State=Default, Variant=Primary, Size=Lg, Shape=Default",
           "State=Default, Variant=Primary, Size=Lg, Shape=Pill",
+          "State=Default, Variant=Primary, Size=Md, Shape=Default",
+          "State=Default, Variant=Primary, Size=Md, Shape=Pill",
           "State=Default, Variant=Primary, Size=Sm, Shape=Default",
           "State=Default, Variant=Primary, Size=Sm, Shape=Pill",
-          "State=Default, Variant=Secondary, Size=Default, Shape=Default",
-          "State=Default, Variant=Secondary, Size=Default, Shape=Pill",
           "State=Default, Variant=Secondary, Size=Lg, Shape=Default",
           "State=Default, Variant=Secondary, Size=Lg, Shape=Pill",
+          "State=Default, Variant=Secondary, Size=Md, Shape=Default",
+          "State=Default, Variant=Secondary, Size=Md, Shape=Pill",
           "State=Default, Variant=Secondary, Size=Sm, Shape=Default",
           "State=Default, Variant=Secondary, Size=Sm, Shape=Pill",
-          "State=Default, Variant=Tertiary, Size=Default, Shape=Default",
-          "State=Default, Variant=Tertiary, Size=Default, Shape=Pill",
           "State=Default, Variant=Tertiary, Size=Lg, Shape=Default",
           "State=Default, Variant=Tertiary, Size=Lg, Shape=Pill",
+          "State=Default, Variant=Tertiary, Size=Md, Shape=Default",
+          "State=Default, Variant=Tertiary, Size=Md, Shape=Pill",
           "State=Default, Variant=Tertiary, Size=Sm, Shape=Default",
           "State=Default, Variant=Tertiary, Size=Sm, Shape=Pill",
-          "State=Disabled, Variant=Bare, Size=Default, Shape=Default",
-          "State=Disabled, Variant=Bare, Size=Default, Shape=Pill",
           "State=Disabled, Variant=Bare, Size=Lg, Shape=Default",
           "State=Disabled, Variant=Bare, Size=Lg, Shape=Pill",
+          "State=Disabled, Variant=Bare, Size=Md, Shape=Default",
+          "State=Disabled, Variant=Bare, Size=Md, Shape=Pill",
           "State=Disabled, Variant=Bare, Size=Sm, Shape=Default",
           "State=Disabled, Variant=Bare, Size=Sm, Shape=Pill",
-          "State=Disabled, Variant=Danger, Size=Default, Shape=Default",
-          "State=Disabled, Variant=Danger, Size=Default, Shape=Pill",
-          "State=Disabled, Variant=Danger, Size=Lg, Shape=Default",
-          "State=Disabled, Variant=Danger, Size=Lg, Shape=Pill",
-          "State=Disabled, Variant=Danger, Size=Sm, Shape=Default",
-          "State=Disabled, Variant=Danger, Size=Sm, Shape=Pill",
-          "State=Disabled, Variant=Primary, Size=Default, Shape=Default",
-          "State=Disabled, Variant=Primary, Size=Default, Shape=Pill",
+          "State=Disabled, Variant=Neutral, Size=Lg, Shape=Default",
+          "State=Disabled, Variant=Neutral, Size=Lg, Shape=Pill",
+          "State=Disabled, Variant=Neutral, Size=Md, Shape=Default",
+          "State=Disabled, Variant=Neutral, Size=Md, Shape=Pill",
+          "State=Disabled, Variant=Neutral, Size=Sm, Shape=Default",
+          "State=Disabled, Variant=Neutral, Size=Sm, Shape=Pill",
           "State=Disabled, Variant=Primary, Size=Lg, Shape=Default",
           "State=Disabled, Variant=Primary, Size=Lg, Shape=Pill",
+          "State=Disabled, Variant=Primary, Size=Md, Shape=Default",
+          "State=Disabled, Variant=Primary, Size=Md, Shape=Pill",
           "State=Disabled, Variant=Primary, Size=Sm, Shape=Default",
           "State=Disabled, Variant=Primary, Size=Sm, Shape=Pill",
-          "State=Disabled, Variant=Secondary, Size=Default, Shape=Default",
-          "State=Disabled, Variant=Secondary, Size=Default, Shape=Pill",
           "State=Disabled, Variant=Secondary, Size=Lg, Shape=Default",
           "State=Disabled, Variant=Secondary, Size=Lg, Shape=Pill",
+          "State=Disabled, Variant=Secondary, Size=Md, Shape=Default",
+          "State=Disabled, Variant=Secondary, Size=Md, Shape=Pill",
           "State=Disabled, Variant=Secondary, Size=Sm, Shape=Default",
           "State=Disabled, Variant=Secondary, Size=Sm, Shape=Pill",
-          "State=Disabled, Variant=Tertiary, Size=Default, Shape=Default",
-          "State=Disabled, Variant=Tertiary, Size=Default, Shape=Pill",
           "State=Disabled, Variant=Tertiary, Size=Lg, Shape=Default",
           "State=Disabled, Variant=Tertiary, Size=Lg, Shape=Pill",
+          "State=Disabled, Variant=Tertiary, Size=Md, Shape=Default",
+          "State=Disabled, Variant=Tertiary, Size=Md, Shape=Pill",
           "State=Disabled, Variant=Tertiary, Size=Sm, Shape=Default",
           "State=Disabled, Variant=Tertiary, Size=Sm, Shape=Pill",
-          "State=Focus, Variant=Bare, Size=Default, Shape=Default",
-          "State=Focus, Variant=Bare, Size=Default, Shape=Pill",
           "State=Focus, Variant=Bare, Size=Lg, Shape=Default",
           "State=Focus, Variant=Bare, Size=Lg, Shape=Pill",
+          "State=Focus, Variant=Bare, Size=Md, Shape=Default",
+          "State=Focus, Variant=Bare, Size=Md, Shape=Pill",
           "State=Focus, Variant=Bare, Size=Sm, Shape=Default",
           "State=Focus, Variant=Bare, Size=Sm, Shape=Pill",
-          "State=Focus, Variant=Danger, Size=Default, Shape=Default",
-          "State=Focus, Variant=Danger, Size=Default, Shape=Pill",
-          "State=Focus, Variant=Danger, Size=Lg, Shape=Default",
-          "State=Focus, Variant=Danger, Size=Lg, Shape=Pill",
-          "State=Focus, Variant=Danger, Size=Sm, Shape=Default",
-          "State=Focus, Variant=Danger, Size=Sm, Shape=Pill",
-          "State=Focus, Variant=Primary, Size=Default, Shape=Default",
-          "State=Focus, Variant=Primary, Size=Default, Shape=Pill",
+          "State=Focus, Variant=Neutral, Size=Lg, Shape=Default",
+          "State=Focus, Variant=Neutral, Size=Lg, Shape=Pill",
+          "State=Focus, Variant=Neutral, Size=Md, Shape=Default",
+          "State=Focus, Variant=Neutral, Size=Md, Shape=Pill",
+          "State=Focus, Variant=Neutral, Size=Sm, Shape=Default",
+          "State=Focus, Variant=Neutral, Size=Sm, Shape=Pill",
           "State=Focus, Variant=Primary, Size=Lg, Shape=Default",
           "State=Focus, Variant=Primary, Size=Lg, Shape=Pill",
+          "State=Focus, Variant=Primary, Size=Md, Shape=Default",
+          "State=Focus, Variant=Primary, Size=Md, Shape=Pill",
           "State=Focus, Variant=Primary, Size=Sm, Shape=Default",
           "State=Focus, Variant=Primary, Size=Sm, Shape=Pill",
-          "State=Focus, Variant=Secondary, Size=Default, Shape=Default",
-          "State=Focus, Variant=Secondary, Size=Default, Shape=Pill",
           "State=Focus, Variant=Secondary, Size=Lg, Shape=Default",
           "State=Focus, Variant=Secondary, Size=Lg, Shape=Pill",
+          "State=Focus, Variant=Secondary, Size=Md, Shape=Default",
+          "State=Focus, Variant=Secondary, Size=Md, Shape=Pill",
           "State=Focus, Variant=Secondary, Size=Sm, Shape=Default",
           "State=Focus, Variant=Secondary, Size=Sm, Shape=Pill",
-          "State=Focus, Variant=Tertiary, Size=Default, Shape=Default",
-          "State=Focus, Variant=Tertiary, Size=Default, Shape=Pill",
           "State=Focus, Variant=Tertiary, Size=Lg, Shape=Default",
           "State=Focus, Variant=Tertiary, Size=Lg, Shape=Pill",
+          "State=Focus, Variant=Tertiary, Size=Md, Shape=Default",
+          "State=Focus, Variant=Tertiary, Size=Md, Shape=Pill",
           "State=Focus, Variant=Tertiary, Size=Sm, Shape=Default",
           "State=Focus, Variant=Tertiary, Size=Sm, Shape=Pill",
-          "State=Hover, Variant=Bare, Size=Default, Shape=Default",
-          "State=Hover, Variant=Bare, Size=Default, Shape=Pill",
           "State=Hover, Variant=Bare, Size=Lg, Shape=Default",
           "State=Hover, Variant=Bare, Size=Lg, Shape=Pill",
+          "State=Hover, Variant=Bare, Size=Md, Shape=Default",
+          "State=Hover, Variant=Bare, Size=Md, Shape=Pill",
           "State=Hover, Variant=Bare, Size=Sm, Shape=Default",
           "State=Hover, Variant=Bare, Size=Sm, Shape=Pill",
-          "State=Hover, Variant=Danger, Size=Default, Shape=Default",
-          "State=Hover, Variant=Danger, Size=Default, Shape=Pill",
-          "State=Hover, Variant=Danger, Size=Lg, Shape=Default",
-          "State=Hover, Variant=Danger, Size=Lg, Shape=Pill",
-          "State=Hover, Variant=Danger, Size=Sm, Shape=Default",
-          "State=Hover, Variant=Danger, Size=Sm, Shape=Pill",
-          "State=Hover, Variant=Primary, Size=Default, Shape=Default",
-          "State=Hover, Variant=Primary, Size=Default, Shape=Pill",
+          "State=Hover, Variant=Neutral, Size=Lg, Shape=Default",
+          "State=Hover, Variant=Neutral, Size=Lg, Shape=Pill",
+          "State=Hover, Variant=Neutral, Size=Md, Shape=Default",
+          "State=Hover, Variant=Neutral, Size=Md, Shape=Pill",
+          "State=Hover, Variant=Neutral, Size=Sm, Shape=Default",
+          "State=Hover, Variant=Neutral, Size=Sm, Shape=Pill",
           "State=Hover, Variant=Primary, Size=Lg, Shape=Default",
           "State=Hover, Variant=Primary, Size=Lg, Shape=Pill",
+          "State=Hover, Variant=Primary, Size=Md, Shape=Default",
+          "State=Hover, Variant=Primary, Size=Md, Shape=Pill",
           "State=Hover, Variant=Primary, Size=Sm, Shape=Default",
           "State=Hover, Variant=Primary, Size=Sm, Shape=Pill",
-          "State=Hover, Variant=Secondary, Size=Default, Shape=Default",
-          "State=Hover, Variant=Secondary, Size=Default, Shape=Pill",
           "State=Hover, Variant=Secondary, Size=Lg, Shape=Default",
           "State=Hover, Variant=Secondary, Size=Lg, Shape=Pill",
+          "State=Hover, Variant=Secondary, Size=Md, Shape=Default",
+          "State=Hover, Variant=Secondary, Size=Md, Shape=Pill",
           "State=Hover, Variant=Secondary, Size=Sm, Shape=Default",
           "State=Hover, Variant=Secondary, Size=Sm, Shape=Pill",
-          "State=Hover, Variant=Tertiary, Size=Default, Shape=Default",
-          "State=Hover, Variant=Tertiary, Size=Default, Shape=Pill",
           "State=Hover, Variant=Tertiary, Size=Lg, Shape=Default",
           "State=Hover, Variant=Tertiary, Size=Lg, Shape=Pill",
+          "State=Hover, Variant=Tertiary, Size=Md, Shape=Default",
+          "State=Hover, Variant=Tertiary, Size=Md, Shape=Pill",
           "State=Hover, Variant=Tertiary, Size=Sm, Shape=Default",
           "State=Hover, Variant=Tertiary, Size=Sm, Shape=Pill"
         ]
@@ -399,9 +398,31 @@
       "note": "Known missing in Figma (altitude-figma-sync MISSING_IN_FIGMA) — needs a bespoke build."
     },
     "al-card": {
-      "figma": null,
+      "figma": {
+        "name": "Card",
+        "nodeId": "3702:12161"
+      },
       "lastSync": null,
-      "figmaCurrentDigest": null
+      "figmaCurrentDigest": "d3a930cb42eb7abfb3f0655a5174f2a16988f0c5",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Variant": {
+            "type": "VARIANT",
+            "options": [
+              "Bare",
+              "Default"
+            ]
+          }
+        },
+        "variants": [
+          "Variant=Bare",
+          "Variant=Default"
+        ]
+      }
     },
     "al-checkbox-group": {
       "figma": {
@@ -417,7 +438,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "cb527afddffe7ee22fc158a21d84554e76ee7ef8",
+      "figmaCurrentDigest": "cc8b7fcbeca4805e5ebb1ee0bf629736eadfc7f3",
       "figmaContract": {
         "props": {
           "Text": {
@@ -434,8 +455,8 @@
           "Orientation": {
             "type": "VARIANT",
             "options": [
-              "Default",
-              "Horizontal"
+              "Column",
+              "Row"
             ]
           },
           "State": {
@@ -448,18 +469,18 @@
           }
         },
         "variants": [
-          "Legend=Hidden, Orientation=Default, State=Default",
-          "Legend=Hidden, Orientation=Default, State=Disabled",
-          "Legend=Hidden, Orientation=Default, State=Error",
-          "Legend=Hidden, Orientation=Horizontal, State=Default",
-          "Legend=Hidden, Orientation=Horizontal, State=Disabled",
-          "Legend=Hidden, Orientation=Horizontal, State=Error",
-          "Legend=Shown, Orientation=Default, State=Default",
-          "Legend=Shown, Orientation=Default, State=Disabled",
-          "Legend=Shown, Orientation=Default, State=Error",
-          "Legend=Shown, Orientation=Horizontal, State=Default",
-          "Legend=Shown, Orientation=Horizontal, State=Disabled",
-          "Legend=Shown, Orientation=Horizontal, State=Error"
+          "Legend=Hidden, Orientation=Column, State=Default",
+          "Legend=Hidden, Orientation=Column, State=Disabled",
+          "Legend=Hidden, Orientation=Column, State=Error",
+          "Legend=Hidden, Orientation=Row, State=Default",
+          "Legend=Hidden, Orientation=Row, State=Disabled",
+          "Legend=Hidden, Orientation=Row, State=Error",
+          "Legend=Shown, Orientation=Column, State=Default",
+          "Legend=Shown, Orientation=Column, State=Disabled",
+          "Legend=Shown, Orientation=Column, State=Error",
+          "Legend=Shown, Orientation=Row, State=Default",
+          "Legend=Shown, Orientation=Row, State=Disabled",
+          "Legend=Shown, Orientation=Row, State=Error"
         ]
       }
     },
@@ -475,7 +496,7 @@
         "figmaDigest": "d25ae5c815b9feccf32b361b1ca92c0914964e47",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "589b2ff412ad2a56a7d9cbd6bd363f0f13c65470",
+      "figmaCurrentDigest": "adee37a2e3f0555ac6cb6d03a83afd3922d6fc69",
       "figmaContract": {
         "props": {
           "Text": {
@@ -488,7 +509,8 @@
               "Default",
               "Disabled",
               "Focus",
-              "Hover"
+              "Hover",
+              "Error"
             ]
           },
           "Checked": {
@@ -520,6 +542,8 @@
           "State=Disabled, Checked=Off, Label=Shown",
           "State=Disabled, Checked=On, Label=Hidden",
           "State=Disabled, Checked=On, Label=Shown",
+          "State=Error, Checked=Off, Label=Hidden",
+          "State=Error, Checked=Off, Label=Shown",
           "State=Focus, Checked=Indeterminate, Label=Hidden",
           "State=Focus, Checked=Indeterminate, Label=Shown",
           "State=Focus, Checked=Off, Label=Hidden",
@@ -549,7 +573,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "5932b14af2ee97bd52912436e9dec152e89d0255",
+      "figmaCurrentDigest": "821a0dcf877b139a2e0b93d8106922193eb89bd1",
       "figmaContract": {
         "props": {
           "Text": {
@@ -566,12 +590,11 @@
           "Variant": {
             "type": "VARIANT",
             "options": [
-              "Danger",
-              "Default",
-              "Info",
               "Secondary",
-              "Success",
-              "Warning"
+              "Bare",
+              "Primary",
+              "Tertiary",
+              "Neutral"
             ]
           },
           "Dismissible": {
@@ -590,61 +613,53 @@
           }
         },
         "variants": [
-          "State=Default, Variant=Danger, Dismissible=No, Shape=Default",
-          "State=Default, Variant=Danger, Dismissible=No, Shape=Squared",
-          "State=Default, Variant=Danger, Dismissible=Yes, Shape=Default",
-          "State=Default, Variant=Danger, Dismissible=Yes, Shape=Squared",
-          "State=Default, Variant=Default, Dismissible=No, Shape=Default",
-          "State=Default, Variant=Default, Dismissible=No, Shape=Squared",
-          "State=Default, Variant=Default, Dismissible=Yes, Shape=Default",
-          "State=Default, Variant=Default, Dismissible=Yes, Shape=Squared",
-          "State=Default, Variant=Info, Dismissible=No, Shape=Default",
-          "State=Default, Variant=Info, Dismissible=No, Shape=Squared",
-          "State=Default, Variant=Info, Dismissible=Yes, Shape=Default",
-          "State=Default, Variant=Info, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Bare, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Bare, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Bare, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Bare, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Neutral, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Neutral, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Neutral, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Neutral, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Primary, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Primary, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Primary, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Primary, Dismissible=Yes, Shape=Squared",
           "State=Default, Variant=Secondary, Dismissible=No, Shape=Default",
           "State=Default, Variant=Secondary, Dismissible=No, Shape=Squared",
           "State=Default, Variant=Secondary, Dismissible=Yes, Shape=Default",
           "State=Default, Variant=Secondary, Dismissible=Yes, Shape=Squared",
-          "State=Default, Variant=Success, Dismissible=No, Shape=Default",
-          "State=Default, Variant=Success, Dismissible=No, Shape=Squared",
-          "State=Default, Variant=Success, Dismissible=Yes, Shape=Default",
-          "State=Default, Variant=Success, Dismissible=Yes, Shape=Squared",
-          "State=Default, Variant=Warning, Dismissible=No, Shape=Default",
-          "State=Default, Variant=Warning, Dismissible=No, Shape=Squared",
-          "State=Default, Variant=Warning, Dismissible=Yes, Shape=Default",
-          "State=Default, Variant=Warning, Dismissible=Yes, Shape=Squared",
-          "State=Focus, Variant=Danger, Dismissible=No, Shape=Default",
-          "State=Focus, Variant=Danger, Dismissible=No, Shape=Squared",
-          "State=Focus, Variant=Danger, Dismissible=Yes, Shape=Default",
-          "State=Focus, Variant=Danger, Dismissible=Yes, Shape=Squared",
-          "State=Focus, Variant=Default, Dismissible=No, Shape=Default",
-          "State=Focus, Variant=Default, Dismissible=No, Shape=Squared",
-          "State=Focus, Variant=Default, Dismissible=Yes, Shape=Default",
-          "State=Focus, Variant=Default, Dismissible=Yes, Shape=Squared",
-          "State=Focus, Variant=Info, Dismissible=No, Shape=Default",
-          "State=Focus, Variant=Info, Dismissible=No, Shape=Squared",
-          "State=Focus, Variant=Info, Dismissible=Yes, Shape=Default",
-          "State=Focus, Variant=Info, Dismissible=Yes, Shape=Squared",
+          "State=Default, Variant=Tertiary, Dismissible=No, Shape=Default",
+          "State=Default, Variant=Tertiary, Dismissible=No, Shape=Squared",
+          "State=Default, Variant=Tertiary, Dismissible=Yes, Shape=Default",
+          "State=Default, Variant=Tertiary, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Bare, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Bare, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Bare, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Bare, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Neutral, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Neutral, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Neutral, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Neutral, Dismissible=Yes, Shape=Squared",
+          "State=Focus, Variant=Primary, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Primary, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Primary, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Primary, Dismissible=Yes, Shape=Squared",
           "State=Focus, Variant=Secondary, Dismissible=No, Shape=Default",
           "State=Focus, Variant=Secondary, Dismissible=No, Shape=Squared",
           "State=Focus, Variant=Secondary, Dismissible=Yes, Shape=Default",
           "State=Focus, Variant=Secondary, Dismissible=Yes, Shape=Squared",
-          "State=Focus, Variant=Success, Dismissible=No, Shape=Default",
-          "State=Focus, Variant=Success, Dismissible=No, Shape=Squared",
-          "State=Focus, Variant=Success, Dismissible=Yes, Shape=Default",
-          "State=Focus, Variant=Success, Dismissible=Yes, Shape=Squared",
-          "State=Focus, Variant=Warning, Dismissible=No, Shape=Default",
-          "State=Focus, Variant=Warning, Dismissible=No, Shape=Squared",
-          "State=Focus, Variant=Warning, Dismissible=Yes, Shape=Default",
-          "State=Focus, Variant=Warning, Dismissible=Yes, Shape=Squared"
+          "State=Focus, Variant=Tertiary, Dismissible=No, Shape=Default",
+          "State=Focus, Variant=Tertiary, Dismissible=No, Shape=Squared",
+          "State=Focus, Variant=Tertiary, Dismissible=Yes, Shape=Default",
+          "State=Focus, Variant=Tertiary, Dismissible=Yes, Shape=Squared"
         ]
       }
     },
     "al-combobox": {
       "figma": {
         "name": "Combobox",
-        "nodeId": "3558:63019"
+        "nodeId": "3694:11119"
       },
       "lastSync": {
         "date": "2026-08-28T02:12:32.490Z",
@@ -655,7 +670,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "beb515cccfeb50862c79a429b0d9f741397965da",
+      "figmaCurrentDigest": "88350bc2d0cf904edc7dd21a1b2af9cf0e159be8",
       "figmaContract": {
         "props": {
           "Text": {
@@ -699,9 +714,31 @@
       "figmaCurrentDigest": null
     },
     "al-dialog": {
-      "figma": null,
+      "figma": {
+        "name": "Dialog",
+        "nodeId": "3704:13290"
+      },
       "lastSync": null,
-      "figmaCurrentDigest": null
+      "figmaCurrentDigest": "bb237096ec69209641f070ef8be9953d840fd1a5",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Footer": {
+            "type": "VARIANT",
+            "options": [
+              "No",
+              "Yes"
+            ]
+          }
+        },
+        "variants": [
+          "Footer=No",
+          "Footer=Yes"
+        ]
+      }
     },
     "al-divider": {
       "figma": {
@@ -735,9 +772,31 @@
       }
     },
     "al-drawer": {
-      "figma": null,
+      "figma": {
+        "name": "Drawer",
+        "nodeId": "3703:12781"
+      },
       "lastSync": null,
-      "figmaCurrentDigest": null
+      "figmaCurrentDigest": "0b8fcc76422f020d9e2aa367e204b4206390f7f8",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Alignment": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Right"
+            ]
+          }
+        },
+        "variants": [
+          "Alignment=Default",
+          "Alignment=Right"
+        ]
+      }
     },
     "al-dropdown-panel": {
       "figma": null,
@@ -759,7 +818,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "d93c1b0fd0d9886d7078e0856d87aed12de663a9",
+      "figmaCurrentDigest": "cfc063fc0d11ad720ddfe4bf9e6cd369102b6f78",
       "figmaContract": {
         "props": {
           "Text": {
@@ -894,7 +953,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "01fc25dee4fa91b3ab503fbb62fc57260a339bc5",
+      "figmaCurrentDigest": "e473558c55e1cc2bc2fd8b428ad65f33327af57b",
       "figmaContract": {
         "props": {
           "Text": {
@@ -904,7 +963,6 @@
           "Variant": {
             "type": "VARIANT",
             "options": [
-              "Default",
               "Display Lg",
               "Display Md",
               "Display Sm",
@@ -921,7 +979,6 @@
           }
         },
         "variants": [
-          "Variant=Default, Weight=Default",
           "Variant=Display Lg, Weight=Default",
           "Variant=Display Md, Weight=Default",
           "Variant=Display Sm, Weight=Default",
@@ -1137,7 +1194,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "8748b07cc9f9308db8c97fbb3a6e14c436becfdd",
+      "figmaCurrentDigest": "af1a3aec3071737be223e65c4fa78fb553051d09",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1151,7 +1208,8 @@
               "Default",
               "Disabled",
               "Focus",
-              "Hover"
+              "Hover",
+              "Error"
             ]
           },
           "Label": {
@@ -1169,6 +1227,8 @@
           "State=Default, Label=Shown",
           "State=Disabled, Label=Hidden",
           "State=Disabled, Label=Shown",
+          "State=Error, Label=Hidden",
+          "State=Error, Label=Shown",
           "State=Focus, Label=Hidden",
           "State=Focus, Label=Shown",
           "State=Hover, Label=Hidden",
@@ -1190,10 +1250,22 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "8e934e82e9457db470e71bb92e52de46ce1eb2d4",
+      "figmaCurrentDigest": "4284d4ddd5a8ceaef0f0eb8135509aadb69b9b5f",
       "figmaContract": {
         "props": {
           "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Show Label": {
+            "type": "BOOLEAN",
+            "options": null
+          },
+          "Show Helper": {
+            "type": "BOOLEAN",
+            "options": null
+          },
+          "Value": {
             "type": "TEXT",
             "options": null
           },
@@ -1215,47 +1287,15 @@
               "Hover",
               "Error"
             ]
-          },
-          "Label": {
-            "type": "VARIANT",
-            "options": [
-              "Hidden",
-              "Shown"
-            ]
-          },
-          "Label Position": {
-            "type": "VARIANT",
-            "options": [
-              "Top",
-              "Inset"
-            ]
           }
         },
         "variants": [
-          "State=Active, Label=Hidden, Label Position=Inset",
-          "State=Active, Label=Hidden, Label Position=Top",
-          "State=Active, Label=Shown, Label Position=Inset",
-          "State=Active, Label=Shown, Label Position=Top",
-          "State=Default, Label=Hidden, Label Position=Inset",
-          "State=Default, Label=Hidden, Label Position=Top",
-          "State=Default, Label=Shown, Label Position=Inset",
-          "State=Default, Label=Shown, Label Position=Top",
-          "State=Disabled, Label=Hidden, Label Position=Inset",
-          "State=Disabled, Label=Hidden, Label Position=Top",
-          "State=Disabled, Label=Shown, Label Position=Inset",
-          "State=Disabled, Label=Shown, Label Position=Top",
-          "State=Error, Label=Hidden, Label Position=Inset",
-          "State=Error, Label=Hidden, Label Position=Top",
-          "State=Error, Label=Shown, Label Position=Inset",
-          "State=Error, Label=Shown, Label Position=Top",
-          "State=Focus, Label=Hidden, Label Position=Inset",
-          "State=Focus, Label=Hidden, Label Position=Top",
-          "State=Focus, Label=Shown, Label Position=Inset",
-          "State=Focus, Label=Shown, Label Position=Top",
-          "State=Hover, Label=Hidden, Label Position=Inset",
-          "State=Hover, Label=Hidden, Label Position=Top",
-          "State=Hover, Label=Shown, Label Position=Inset",
-          "State=Hover, Label=Shown, Label Position=Top"
+          "State=Active",
+          "State=Default",
+          "State=Disabled",
+          "State=Error",
+          "State=Focus",
+          "State=Hover"
         ]
       }
     },
@@ -1278,7 +1318,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "276e9a9ebe0c2929d5fc7052c6840c7acaf26e69",
+      "figmaCurrentDigest": "b6ea998778fe3581638ed38e82fa00d257e3ad51",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1298,12 +1338,14 @@
             "options": [
               "Default",
               "Focus",
-              "Hover"
+              "Hover",
+              "Disabled"
             ]
           }
         },
         "variants": [
           "State=Default",
+          "State=Disabled",
           "State=Focus",
           "State=Hover"
         ]
@@ -1409,7 +1451,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "93c007f4af3a49d6abbf9e0afd9bb44a27e06285",
+      "figmaCurrentDigest": "bcbcb343e5cddb5568570f7c66ab6417501a7196",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1420,7 +1462,8 @@
             "type": "VARIANT",
             "options": [
               "Default",
-              "Disabled"
+              "Disabled",
+              "Focus"
             ]
           },
           "Selected": {
@@ -1449,7 +1492,13 @@
           "State=Disabled, Selected=No, Role=Expandable",
           "State=Disabled, Selected=No, Role=Item",
           "State=Disabled, Selected=Yes, Role=Expandable",
-          "State=Disabled, Selected=Yes, Role=Item"
+          "State=Disabled, Selected=Yes, Role=Item",
+          "State=Focus, Selected=No, Role=Expandable",
+          "State=Focus, Selected=No, Role=Header",
+          "State=Focus, Selected=No, Role=Item",
+          "State=Focus, Selected=Yes, Role=Expandable",
+          "State=Focus, Selected=Yes, Role=Header",
+          "State=Focus, Selected=Yes, Role=Item"
         ]
       }
     },
@@ -1502,7 +1551,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "353e70fee521a44ae7f37b8b7318b0c1f377c16d",
+      "figmaCurrentDigest": "344ac5e53a8143f03e86757185964020e5acb4c0",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1514,7 +1563,8 @@
             "options": [
               "Default",
               "Hover",
-              "Disabled"
+              "Disabled",
+              "Focus"
             ]
           },
           "Selected": {
@@ -1541,6 +1591,8 @@
           "State=Disabled, Selected=No, Kind=Number",
           "State=Disabled, Selected=Yes, Kind=Expandable",
           "State=Disabled, Selected=Yes, Kind=Number",
+          "State=Focus, Selected=No, Kind=Number",
+          "State=Focus, Selected=Yes, Kind=Number",
           "State=Hover, Selected=No, Kind=Number",
           "State=Hover, Selected=Yes, Kind=Number"
         ]
@@ -1560,7 +1612,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "24cea2a04da07fe84af7ce90e7d6a12d92984d40",
+      "figmaCurrentDigest": "010d4787183b660b2d47f63f29cbd40c76785b82",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1582,9 +1634,35 @@
       }
     },
     "al-popover": {
-      "figma": null,
+      "figma": {
+        "name": "Popover",
+        "nodeId": "3702:12374"
+      },
       "lastSync": null,
-      "figmaCurrentDigest": null
+      "figmaCurrentDigest": "a721d3432eb450a4836a186f9431eb2bed1ba170",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Position": {
+            "type": "VARIANT",
+            "options": [
+              "Bottom-center",
+              "Default",
+              "Left",
+              "Right"
+            ]
+          }
+        },
+        "variants": [
+          "Position=Bottom-center",
+          "Position=Default",
+          "Position=Left",
+          "Position=Right"
+        ]
+      }
     },
     "al-progress": {
       "figma": {
@@ -1600,7 +1678,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "6c2acafbca0e7de4d4b7d56727fde4092cc331d0",
+      "figmaCurrentDigest": "319e91f0897fffdbcd467f5484ae4d8f4cef917f",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1624,7 +1702,7 @@
           "Size": {
             "type": "VARIANT",
             "options": [
-              "Default",
+              "Sm",
               "Lg",
               "Md",
               "Xl"
@@ -1632,15 +1710,15 @@
           }
         },
         "variants": [
-          "Label=Hidden, Shape=Bar, Size=Default",
-          "Label=Hidden, Shape=Circle, Size=Default",
+          "Label=Hidden, Shape=Bar, Size=Sm",
           "Label=Hidden, Shape=Circle, Size=Lg",
           "Label=Hidden, Shape=Circle, Size=Md",
+          "Label=Hidden, Shape=Circle, Size=Sm",
           "Label=Hidden, Shape=Circle, Size=Xl",
-          "Label=Shown, Shape=Bar, Size=Default",
-          "Label=Shown, Shape=Circle, Size=Default",
+          "Label=Shown, Shape=Bar, Size=Sm",
           "Label=Shown, Shape=Circle, Size=Lg",
           "Label=Shown, Shape=Circle, Size=Md",
+          "Label=Shown, Shape=Circle, Size=Sm",
           "Label=Shown, Shape=Circle, Size=Xl"
         ]
       }
@@ -1659,7 +1737,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "427dafa3a165d89b1508680965c6fb0986e9ab20",
+      "figmaCurrentDigest": "132357b486bb6568e4329dcb6507944c0add52f3",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1676,8 +1754,8 @@
           "Orientation": {
             "type": "VARIANT",
             "options": [
-              "Default",
-              "Horizontal"
+              "Column",
+              "Row"
             ]
           },
           "State": {
@@ -1690,18 +1768,18 @@
           }
         },
         "variants": [
-          "Legend=Hidden, Orientation=Default, State=Default",
-          "Legend=Hidden, Orientation=Default, State=Disabled",
-          "Legend=Hidden, Orientation=Default, State=Error",
-          "Legend=Hidden, Orientation=Horizontal, State=Default",
-          "Legend=Hidden, Orientation=Horizontal, State=Disabled",
-          "Legend=Hidden, Orientation=Horizontal, State=Error",
-          "Legend=Shown, Orientation=Default, State=Default",
-          "Legend=Shown, Orientation=Default, State=Disabled",
-          "Legend=Shown, Orientation=Default, State=Error",
-          "Legend=Shown, Orientation=Horizontal, State=Default",
-          "Legend=Shown, Orientation=Horizontal, State=Disabled",
-          "Legend=Shown, Orientation=Horizontal, State=Error"
+          "Legend=Hidden, Orientation=Column, State=Default",
+          "Legend=Hidden, Orientation=Column, State=Disabled",
+          "Legend=Hidden, Orientation=Column, State=Error",
+          "Legend=Hidden, Orientation=Row, State=Default",
+          "Legend=Hidden, Orientation=Row, State=Disabled",
+          "Legend=Hidden, Orientation=Row, State=Error",
+          "Legend=Shown, Orientation=Column, State=Default",
+          "Legend=Shown, Orientation=Column, State=Disabled",
+          "Legend=Shown, Orientation=Column, State=Error",
+          "Legend=Shown, Orientation=Row, State=Default",
+          "Legend=Shown, Orientation=Row, State=Disabled",
+          "Legend=Shown, Orientation=Row, State=Error"
         ]
       }
     },
@@ -1787,20 +1865,18 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "f42187b572ad3d93e65a6fbf678503b0b3e1ffc6",
+      "figmaCurrentDigest": "5717db3388c0be68e3a3769af57ccc1a584b481b",
       "figmaContract": {
         "props": {
-          "Text": {
-            "type": "TEXT",
-            "options": null
-          },
-          "Slot Before": {
-            "type": "BOOLEAN",
-            "options": null
-          },
-          "Slot After": {
-            "type": "BOOLEAN",
-            "options": null
+          "State": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Hover",
+              "Focus",
+              "Active",
+              "Disabled"
+            ]
           },
           "Behavior": {
             "type": "VARIANT",
@@ -1818,10 +1894,26 @@
           }
         },
         "variants": [
-          "Behavior=Default, Output=No",
-          "Behavior=Default, Output=Yes",
-          "Behavior=Range, Output=No",
-          "Behavior=Range, Output=Yes"
+          "State=Active, Behavior=Default, Output=No",
+          "State=Active, Behavior=Default, Output=Yes",
+          "State=Active, Behavior=Range, Output=No",
+          "State=Active, Behavior=Range, Output=Yes",
+          "State=Default, Behavior=Default, Output=No",
+          "State=Default, Behavior=Default, Output=Yes",
+          "State=Default, Behavior=Range, Output=No",
+          "State=Default, Behavior=Range, Output=Yes",
+          "State=Disabled, Behavior=Default, Output=No",
+          "State=Disabled, Behavior=Default, Output=Yes",
+          "State=Disabled, Behavior=Range, Output=No",
+          "State=Disabled, Behavior=Range, Output=Yes",
+          "State=Focus, Behavior=Default, Output=No",
+          "State=Focus, Behavior=Default, Output=Yes",
+          "State=Focus, Behavior=Range, Output=No",
+          "State=Focus, Behavior=Range, Output=Yes",
+          "State=Hover, Behavior=Default, Output=No",
+          "State=Hover, Behavior=Default, Output=Yes",
+          "State=Hover, Behavior=Range, Output=No",
+          "State=Hover, Behavior=Range, Output=Yes"
         ]
       }
     },
@@ -1831,9 +1923,35 @@
       "figmaCurrentDigest": null
     },
     "al-select": {
-      "figma": null,
+      "figma": {
+        "name": "Select",
+        "nodeId": "3704:13389"
+      },
       "lastSync": null,
-      "figmaCurrentDigest": null
+      "figmaCurrentDigest": "3af5555dbf4b234c6b05e867a623fa5242b7c713",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Slot Before": {
+            "type": "BOOLEAN",
+            "options": null
+          },
+          "Label": {
+            "type": "VARIANT",
+            "options": [
+              "Hidden",
+              "Shown"
+            ]
+          }
+        },
+        "variants": [
+          "Label=Hidden",
+          "Label=Shown"
+        ]
+      }
     },
     "al-skeleton": {
       "figma": null,
@@ -1900,7 +2018,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "db626a13a32b553c30aed508a94423218201a8fb",
+      "figmaCurrentDigest": "59bf4427a3e84af410ce8cc717945d4ee3fac95c",
       "figmaContract": {
         "props": {
           "State": {
@@ -1929,7 +2047,7 @@
         "figmaDigest": "32277d5ac3d0d607db31acf450765670a4d28a7a",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "cdd4ed97090e15075ed8b16acc4e3628b269aa0f",
+      "figmaCurrentDigest": "6153c83519dd8f36fe433093155d58231087e140",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1982,7 +2100,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "6767ff388ad5cb5fc123597524ea8c724dfda75f",
+      "figmaCurrentDigest": "e68d5f12903c2c2371873b348102148dcad19e2d",
       "figmaContract": {
         "props": {
           "Text": {
@@ -2003,28 +2121,15 @@
               "No",
               "Yes"
             ]
-          },
-          "Sort": {
-            "type": "VARIANT",
-            "options": [
-              "Ascending",
-              "None"
-            ]
           }
         },
         "variants": [
-          "State=Default, Selectable=No, Sort=Ascending",
-          "State=Default, Selectable=No, Sort=None",
-          "State=Default, Selectable=Yes, Sort=Ascending",
-          "State=Default, Selectable=Yes, Sort=None",
-          "State=Focus, Selectable=No, Sort=Ascending",
-          "State=Focus, Selectable=No, Sort=None",
-          "State=Focus, Selectable=Yes, Sort=Ascending",
-          "State=Focus, Selectable=Yes, Sort=None",
-          "State=Hover, Selectable=No, Sort=Ascending",
-          "State=Hover, Selectable=No, Sort=None",
-          "State=Hover, Selectable=Yes, Sort=Ascending",
-          "State=Hover, Selectable=Yes, Sort=None"
+          "State=Default, Selectable=No",
+          "State=Default, Selectable=Yes",
+          "State=Focus, Selectable=No",
+          "State=Focus, Selectable=Yes",
+          "State=Hover, Selectable=No",
+          "State=Hover, Selectable=Yes"
         ]
       }
     },
@@ -2042,7 +2147,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "0db105cc3a8f6ff7bb3a232f71cf7de6e2ca1221",
+      "figmaCurrentDigest": "73e54bbbcdf6c5ad3635d61c271935aeca0274b9",
       "figmaContract": {
         "props": {
           "Text": {
@@ -2070,34 +2175,30 @@
     },
     "al-text-block": {
       "figma": {
-        "name": "Text Passage",
-        "nodeId": "3435:888"
+        "name": "Text Block",
+        "nodeId": "3694:10744"
       },
       "lastSync": {
         "date": "2026-08-22T03:30:29.827Z",
         "codeHash": "8137040f321a2503759f0c51d8dd5d05b06dd8f7",
         "figmaDigest": null
       },
-      "figmaCurrentDigest": "065645bf4c8f31026681cdb4af4c99d8c31e80dc",
+      "figmaCurrentDigest": "339413d378ee6115c77889d453a8a434c365edf1",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
               "Default"
             ]
-          },
-          "Width": {
-            "type": "VARIANT",
-            "options": [
-              "Default",
-              "Sm"
-            ]
           }
         },
         "variants": [
-          "State=Default, Width=Default",
-          "State=Default, Width=Sm"
+          "State=Default"
         ]
       }
     },
@@ -2115,13 +2216,9 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "754eb8bd6a91fc4e6680f38b0b667cac3aabe305",
+      "figmaCurrentDigest": "b72e9e67621ea91293b54d670dbf05ea95876075",
       "figmaContract": {
         "props": {
-          "Text": {
-            "type": "TEXT",
-            "options": null
-          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -2132,28 +2229,15 @@
               "Hover",
               "Error"
             ]
-          },
-          "Label": {
-            "type": "VARIANT",
-            "options": [
-              "Hidden",
-              "Shown"
-            ]
           }
         },
         "variants": [
-          "State=Active, Label=Hidden",
-          "State=Active, Label=Shown",
-          "State=Default, Label=Hidden",
-          "State=Default, Label=Shown",
-          "State=Disabled, Label=Hidden",
-          "State=Disabled, Label=Shown",
-          "State=Error, Label=Hidden",
-          "State=Error, Label=Shown",
-          "State=Focus, Label=Hidden",
-          "State=Focus, Label=Shown",
-          "State=Hover, Label=Hidden",
-          "State=Hover, Label=Shown"
+          "State=Active",
+          "State=Default",
+          "State=Disabled",
+          "State=Error",
+          "State=Focus",
+          "State=Hover"
         ]
       }
     },
@@ -2195,7 +2279,7 @@
         "contractVersion": "1.1.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "5dd542d09826ee6f19cea0eed6ec882d07f7e299",
+      "figmaCurrentDigest": "ebe36ee9fac16dbb229b79c008c5314c3b107015",
       "figmaContract": {
         "props": {
           "Text": {
@@ -2206,7 +2290,8 @@
             "type": "VARIANT",
             "options": [
               "Default",
-              "Hover"
+              "Hover",
+              "Focus"
             ]
           },
           "Variant": {
@@ -2240,6 +2325,14 @@
           "State=Default, Variant=Default, Selected=No, Size=Small",
           "State=Default, Variant=Default, Selected=Yes, Size=Default",
           "State=Default, Variant=Default, Selected=Yes, Size=Small",
+          "State=Focus, Variant=Background, Selected=No, Size=Default",
+          "State=Focus, Variant=Background, Selected=No, Size=Small",
+          "State=Focus, Variant=Background, Selected=Yes, Size=Default",
+          "State=Focus, Variant=Background, Selected=Yes, Size=Small",
+          "State=Focus, Variant=Default, Selected=No, Size=Default",
+          "State=Focus, Variant=Default, Selected=No, Size=Small",
+          "State=Focus, Variant=Default, Selected=Yes, Size=Default",
+          "State=Focus, Variant=Default, Selected=Yes, Size=Small",
           "State=Hover, Variant=Background, Selected=No, Size=Default",
           "State=Hover, Variant=Background, Selected=No, Size=Small",
           "State=Hover, Variant=Default, Selected=No, Size=Default",
@@ -2298,14 +2391,51 @@
       }
     },
     "al-tooltip": {
-      "figma": null,
+      "figma": {
+        "name": "Tooltip",
+        "nodeId": "3703:12726"
+      },
       "lastSync": null,
-      "figmaCurrentDigest": null,
-      "note": "Known missing in Figma (altitude-figma-sync MISSING_IN_FIGMA) — needs a bespoke build."
+      "figmaCurrentDigest": "588e03d15dedd3ad496267caecec88474a770e22",
+      "note": "Known missing in Figma (altitude-figma-sync MISSING_IN_FIGMA) — needs a bespoke build.",
+      "figmaContract": {
+        "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Arrow": {
+            "type": "VARIANT",
+            "options": [
+              "No",
+              "Yes"
+            ]
+          },
+          "Position": {
+            "type": "VARIANT",
+            "options": [
+              "Bottom",
+              "Left",
+              "Right",
+              "Top"
+            ]
+          }
+        },
+        "variants": [
+          "Arrow=No, Position=Bottom",
+          "Arrow=No, Position=Left",
+          "Arrow=No, Position=Right",
+          "Arrow=No, Position=Top",
+          "Arrow=Yes, Position=Bottom",
+          "Arrow=Yes, Position=Left",
+          "Arrow=Yes, Position=Right",
+          "Arrow=Yes, Position=Top"
+        ]
+      }
     }
   },
   "figmaOnly": [],
-  "updated": "2026-09-01T00:32:45.046Z",
+  "updated": "2026-09-08T20:41:38.857Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }

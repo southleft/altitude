@@ -98,6 +98,10 @@
     {
       "name": "",
       "description": "The accordion panel content"
+    },
+    {
+      "name": "header",
+      "description": "The panel heading content inside the disclosure button."
     }
   ],
   "composition": {
@@ -120,6 +124,12 @@
     "root": {
       "tag": "div",
       "cls": "al-c-accordion-panel al-is-last",
+      "bw4": [
+        0,
+        0,
+        1,
+        0
+      ],
       "box": {
         "w": 175,
         "h": 57
@@ -128,7 +138,8 @@
         "display": "block",
         "direction": "row",
         "align": "normal",
-        "justify": "normal"
+        "justify": "normal",
+        "fillInline": true
       },
       "tokens": {
         "border-block-end": {
@@ -167,7 +178,8 @@
                 "display": "flex",
                 "direction": "row",
                 "align": "center",
-                "justify": "space-between"
+                "justify": "space-between",
+                "fillInline": true
               },
               "tokens": {
                 "background": {
@@ -231,15 +243,15 @@
                       "figma": "theme/space/@"
                     },
                     "font-weight": {
-                      "code": "--al-font-weight-bold",
-                      "figma": "typography/font-weight/bold"
+                      "code": "--al-font-weight-semibold",
+                      "figma": "typography/font-weight/semibold"
                     },
                     "gap": {
                       "code": "--al-theme-space",
                       "figma": "theme/space/@"
                     },
                     "letter-spacing": {
-                      "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                      "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                       "figma": null
                     },
                     "row-gap": {
@@ -252,6 +264,10 @@
                       "tag": "span",
                       "cls": "",
                       "text": "Panel header",
+                      "fsPx": 14,
+                      "lhPx": 20,
+                      "ffCss": "Public Sans",
+                      "fwCss": "600",
                       "box": {
                         "w": 88.4,
                         "h": 20
@@ -356,6 +372,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel al-is-last",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 57
@@ -364,7 +386,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -403,7 +426,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -467,15 +491,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -488,6 +512,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -592,6 +620,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel al-is-disabled al-is-last",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 57
@@ -600,7 +634,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -639,7 +674,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -707,15 +743,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -728,6 +764,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -832,6 +872,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 57
@@ -840,7 +886,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -883,7 +930,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -947,15 +995,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -968,6 +1016,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -1072,6 +1124,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel al-is-disabled",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 57
@@ -1080,7 +1138,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -1123,7 +1182,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -1191,15 +1251,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -1212,6 +1272,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -1316,6 +1380,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel al-is-active al-is-last",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 113
@@ -1324,7 +1394,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -1363,7 +1434,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -1427,15 +1499,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -1448,6 +1520,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -1599,6 +1675,10 @@
                       "tag": "div",
                       "cls": "al-c-accordion-panel__body-inner",
                       "text": "Panel body content",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 143,
                         "h": 19
@@ -1645,6 +1725,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel al-is-active al-is-disabled al-is-last",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 113
@@ -1653,7 +1739,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -1692,7 +1779,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -1760,15 +1848,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -1781,6 +1869,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -1932,6 +2024,10 @@
                       "tag": "div",
                       "cls": "al-c-accordion-panel__body-inner",
                       "text": "Panel body content",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 143,
                         "h": 19
@@ -1978,6 +2074,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel al-is-active",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 113
@@ -1986,7 +2088,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -2029,7 +2132,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -2093,15 +2197,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -2114,6 +2218,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -2265,6 +2373,10 @@
                       "tag": "div",
                       "cls": "al-c-accordion-panel__body-inner",
                       "text": "Panel body content",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 143,
                         "h": 19
@@ -2311,6 +2423,12 @@
         "root": {
           "tag": "div",
           "cls": "al-c-accordion-panel al-is-active al-is-disabled",
+          "bw4": [
+            0,
+            0,
+            1,
+            0
+          ],
           "box": {
             "w": 175,
             "h": 113
@@ -2319,7 +2437,8 @@
             "display": "block",
             "direction": "row",
             "align": "normal",
-            "justify": "normal"
+            "justify": "normal",
+            "fillInline": true
           },
           "tokens": {
             "border-block-end": {
@@ -2362,7 +2481,8 @@
                     "display": "flex",
                     "direction": "row",
                     "align": "center",
-                    "justify": "space-between"
+                    "justify": "space-between",
+                    "fillInline": true
                   },
                   "tokens": {
                     "background": {
@@ -2430,15 +2550,15 @@
                           "figma": "theme/space/@"
                         },
                         "font-weight": {
-                          "code": "--al-font-weight-bold",
-                          "figma": "typography/font-weight/bold"
+                          "code": "--al-font-weight-semibold",
+                          "figma": "typography/font-weight/semibold"
                         },
                         "gap": {
                           "code": "--al-theme-space",
                           "figma": "theme/space/@"
                         },
                         "letter-spacing": {
-                          "code": "--al-theme-typography-body-sm-bold-letter-spacing",
+                          "code": "--al-theme-typography-body-sm-semibold-letter-spacing",
                           "figma": null
                         },
                         "row-gap": {
@@ -2451,6 +2571,10 @@
                           "tag": "span",
                           "cls": "",
                           "text": "Panel header",
+                          "fsPx": 14,
+                          "lhPx": 20,
+                          "ffCss": "Public Sans",
+                          "fwCss": "600",
                           "box": {
                             "w": 88.4,
                             "h": 20
@@ -2602,6 +2726,10 @@
                       "tag": "div",
                       "cls": "al-c-accordion-panel__body-inner",
                       "text": "Panel body content",
+                      "fsPx": 16,
+                      "lhPx": 24,
+                      "ffCss": "Public Sans",
+                      "fwCss": "400",
                       "box": {
                         "w": 143,
                         "h": 19
@@ -2664,14 +2792,14 @@
     }
   },
   "tokens": [
-    "--al-font-weight-bold",
+    "--al-font-weight-semibold",
     "--al-theme-border-width",
     "--al-theme-color-background-neutral-default",
     "--al-theme-color-background-transparent-default",
     "--al-theme-icon-lg",
     "--al-theme-opacity-disabled",
     "--al-theme-space",
-    "--al-theme-typography-body-sm-bold-letter-spacing"
+    "--al-theme-typography-body-sm-semibold-letter-spacing"
   ],
   "a11y": {
     "ariaAttributes": [

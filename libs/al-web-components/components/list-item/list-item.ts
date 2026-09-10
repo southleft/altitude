@@ -28,6 +28,9 @@ import styles from './list-item.scss';
 
 /**
  * Component: al-list-item
+ * @slot before - Optional leading content.
+ * @slot after - Optional trailing content.
+ * @slot items - Nested list items displayed when this item expands.
  * @slot - The content of the list item
  */
 export class ALListItem extends ALElement {

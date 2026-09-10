@@ -23,14 +23,16 @@ export class ALBadge extends ALElement {
 
   /**
    * State variant
-   * - **default** Displays a badge with the default state
+   * - **neutral** renders the non-status badge, and is what an omitted
+   *   `variant` renders — named so the axis is expressible in code the way the
+   *   Figma set names it, rather than living as the absence of a value
    * - **info** renders a badge with info state treatment
    * - **success** renders a badge with success state treatment
    * - **warning** renders a badge with warning state treatment
    * - **danger** renders a badge with danger state treatment
    */
   @property()
-  accessor variant: 'info' | 'success' | 'warning' | 'danger';
+  accessor variant: 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
   /**
    * Positions the badge absolutely to its parent container.
@@ -62,6 +64,9 @@ export class ALBadge extends ALElement {
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-badge', {
+      // Applied for an OMITTED variant too: neutral is the non-status default,
+      // and its fill now lives on this modifier rather than the base class.
+      'al-c-badge--neutral': this.variant === 'neutral' || !this.variant,
       'al-c-badge--info': this.variant === 'info',
       'al-c-badge--success': this.variant === 'success',
       'al-c-badge--warning': this.variant === 'warning',

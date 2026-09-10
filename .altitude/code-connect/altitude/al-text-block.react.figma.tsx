@@ -3,8 +3,8 @@
  * .altitude/contracts/altitude/al-text-block.contract.json — DO NOT HAND-EDIT.
  * Re-run the generator; `--check` is the drift gate.
  *
- * Figma Code Connect — React wrapper surface for the "Text Passage"
- * component set (node 3435:888).
+ * Figma Code Connect — React wrapper surface for the "Text Block"
+ * component set (node 3694:10744).
  *
  * Mapped variant axes: none.
  * Props the contract marks `omit` (no Figma axis): maxWidth.
@@ -12,11 +12,11 @@
 import figma from '@figma/code-connect';
 import { ALTextBlock } from '@southleft/al-react';
 
-figma.connect(ALTextBlock, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3435-888', {
+figma.connect(ALTextBlock, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3694-10744', {
   props: {},
   example: (props) => (
     <ALTextBlock>
-      Text Passage
+      Text Block
     </ALTextBlock>
   ),
 });

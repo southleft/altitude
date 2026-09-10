@@ -694,9 +694,9 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 - Tag: `al-time-selector-list`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (13)
+## Tokens referenced (12)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-box-shadow-lg`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-background-neutral-strong`, `--al-theme-color-background-transparent-default`, `--al-theme-color-content-neutral-default`, `--al-theme-opacity-disabled`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-semibold-letter-spacing`, `--al-theme-typography-body-sm`, `--al-theme-typography-body-sm-letter-spacing`
 
 ---
 

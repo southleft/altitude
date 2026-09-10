@@ -16,7 +16,7 @@ Component: al-progress
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `circleSize` | enum | `lg`, `md`, `xl` | — | **Size** (VARIANT): `Default`, `Lg`, `Md`, `Xl` |
+| `circleSize` | enum | `lg`, `md`, `sm`, `xl` | — | **Size** (VARIANT): `Lg`, `Md`, `Sm`, `Xl` |
 | `currentProgress` | number | — | `0` | _not expressed in Figma (by design)_ |
 | `duration` | number | — | `0` | _not expressed in Figma (by design)_ |
 | `endProgress` | number | — | `100` | _not expressed in Figma (by design)_ |
@@ -29,7 +29,8 @@ Component: al-progress
 
 Circle size property
 - Sets the width of the circular progress indicator
-- **default** 16px
+- **sm** 16px, and what an omitted `circleSize` renders — named so the axis
+  is expressible in code rather than living as the absence of a value
 - **md** 24px
 - **lg** 32px
 - **xl** 40px
@@ -78,8 +79,8 @@ Show label?
 
 ### `circleSize` (Figma property "Size")
 
-- Code values: `lg`, `md`, `xl`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Lg`, `Md`, `Xl`
+- Code values: `lg`, `md`, `sm`, `xl`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Lg`, `Md`, `Sm`, `Xl`
 
 ### `isCircle` (Figma property "Shape")
 

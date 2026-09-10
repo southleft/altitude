@@ -18,7 +18,7 @@ Component: al-badge
 | --- | --- | --- | --- | --- |
 | `isDot` | boolean | — | — | **Shape** (VARIANT): `Dot`, `Label` |
 | `position` | enum | `bottom-left`, `bottom-right`, `top-left`, `top-right` | — | _not expressed in Figma (by design)_ |
-| `variant` | enum | `danger`, `info`, `success`, `warning` | — | **Variant** (VARIANT): `Danger`, `Default`, `Info`, `Success`, `Warning` |
+| `variant` | enum | `danger`, `info`, `neutral`, `success`, `warning` | — | **Variant** (VARIANT): `Danger`, `Info`, `Neutral`, `Success`, `Warning` |
 
 #### `isDot`
 
@@ -36,7 +36,9 @@ Positions the badge absolutely to its parent container.
 #### `variant`
 
 State variant
-- **default** Displays a badge with the default state
+- **neutral** renders the non-status badge, and is what an omitted
+  `variant` renders — named so the axis is expressible in code the way the
+  Figma set names it, rather than living as the absence of a value
 - **info** renders a badge with info state treatment
 - **success** renders a badge with success state treatment
 - **warning** renders a badge with warning state treatment
@@ -53,8 +55,8 @@ State variant
 
 ### `variant` (Figma property "Variant")
 
-- Code values: `danger`, `info`, `success`, `warning`
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Danger`, `Default`, `Info`, `Success`, `Warning`
+- Code values: `danger`, `info`, `neutral`, `success`, `warning`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Danger`, `Info`, `Neutral`, `Success`, `Warning`
 
 ## States
 
@@ -72,7 +74,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -92,12 +94,9 @@ _No events declared._
 | border-top-right-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 | column-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
 | gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-| letter-spacing | `--al-theme-typography-body-xs-bold-letter-spacing` | — |
-| min-height | `--al-base-space` | — |
-| min-width | `--al-base-space` | — |
-| padding | `--al-theme-space-xs` | `theme/space/xs` |
+| letter-spacing | `--al-theme-typography-body-xs-semibold-letter-spacing` | — |
 | padding-left | `--al-theme-space-xs` | `theme/space/xs` |
 | padding-right | `--al-theme-space-xs` | `theme/space/xs` |
 | row-gap | `--al-theme-space-xxs` | `theme/space/xxs` |
@@ -113,22 +112,19 @@ _No events declared._
 | background | `--al-theme-color-background-danger-weak` | `theme/color/background/danger-weak` |
 | color | `--al-theme-color-content-danger-default` | `theme/color/content/danger-default` |
 
-#### `default`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
-| border-radius | `--al-theme-border-radius-pill` | `theme/border/radius/pill` |
-| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
-| gap | `--al-theme-space-xxs` | `theme/space/xxs` |
-| padding | `--al-theme-space-xs` | `theme/space/xs` |
-
 #### `info`
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
 | background | `--al-theme-color-background-info-weak` | `theme/color/background/info-weak` |
 | color | `--al-theme-color-content-info-default` | `theme/color/content/info-default` |
+
+#### `neutral`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background | `--al-theme-color-background-neutral-bold` | `theme/color/background/neutral-bold` |
+| color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
 
 #### `success`
 
@@ -176,9 +172,9 @@ _No events declared._
 - Tag: `al-badge`
 - Workspace: `@southleft/al-web-components`
 
-## Tokens referenced (8)
+## Tokens referenced (7)
 
-`--al-base-space`, `--al-font-weight-bold`, `--al-theme-border-radius-pill`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius-pill`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-neutral-default`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-xs-semibold-letter-spacing`
 
 ---
 

@@ -47,6 +47,10 @@
     ],
     "slots": [
       {
+        "name": "header",
+        "description": "The panel heading content inside the disclosure button."
+      },
+      {
         "name": "(default)",
         "description": "The accordion panel content"
       }
@@ -128,6 +132,10 @@
     ],
     "slots": [
       {
+        "name": "action",
+        "description": "Optional action control displayed with the alert content."
+      },
+      {
         "name": "(default)",
         "description": "The alert's main content or title"
       },
@@ -184,8 +192,8 @@
       },
       {
         "name": "variant",
-        "type": "'info' | 'success' | 'warning' | 'danger'",
-        "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment"
+        "type": "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
+        "description": "State variant\n- **neutral** renders the non-status badge, and is what an omitted\n  `variant` renders — named so the axis is expressible in code the way the\n  Figma set names it, rather than living as the absence of a value\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment"
       },
       {
         "name": "position",
@@ -335,13 +343,13 @@
       },
       {
         "name": "variant",
-        "type": "'neutral' | 'bare' | 'secondary' | 'tertiary'",
-        "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **default** renders the primary button, the strongest emphasis\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border"
+        "type": "'primary' | 'neutral' | 'bare' | 'secondary' | 'tertiary'",
+        "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **primary** renders the strongest emphasis, and is what an omitted\n  `variant` renders — it is named here so the axis is expressible in code\n  the way `Primary` is on the Figma canvas, rather than living as the\n  absence of a value\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border"
       },
       {
         "name": "size",
-        "type": "'sm' | 'lg'",
-        "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text"
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **md** renders the 40px control with 14px text, and is what an omitted\n  `size` renders — named for the same reason `primary` is, so the axis is\n  expressible rather than living as the absence of a value\n- **lg** renders a 48px control with 15px text"
       },
       {
         "name": "isPill",
@@ -1549,6 +1557,18 @@
     ],
     "slots": [
       {
+        "name": "header",
+        "description": "Drawer heading content."
+      },
+      {
+        "name": "footer",
+        "description": "Drawer footer content."
+      },
+      {
+        "name": "trigger",
+        "description": "The control that opens the drawer."
+      },
+      {
         "name": "(default)",
         "description": "The drawer content"
       }
@@ -1578,6 +1598,14 @@
     ],
     "events": [],
     "slots": [
+      {
+        "name": "header",
+        "description": "Content above the dropdown body."
+      },
+      {
+        "name": "footer",
+        "description": "Content below the dropdown body."
+      },
       {
         "name": "(default)",
         "description": "The dropdown panel content"
@@ -1745,6 +1773,14 @@
       }
     ],
     "slots": [
+      {
+        "name": "field-note",
+        "description": "Helper text replacing the fieldNote property."
+      },
+      {
+        "name": "error",
+        "description": "Error text replacing the errorNote property."
+      },
       {
         "name": "(default)",
         "description": "The component's content"
@@ -3206,6 +3242,18 @@
     "events": [],
     "slots": [
       {
+        "name": "before",
+        "description": "Optional leading content."
+      },
+      {
+        "name": "after",
+        "description": "Optional trailing content."
+      },
+      {
+        "name": "items",
+        "description": "Nested list items displayed when this item expands."
+      },
+      {
         "name": "(default)",
         "description": "The content of the list item"
       }
@@ -3300,7 +3348,7 @@
       {
         "name": "isExpandableHeader",
         "type": "boolean",
-        "description": "isExpandableHeader property\n- **true** Applies expandable functionality to the menu item"
+        "description": "Legacy compatibility property; it does not control the disclosure button."
       },
       {
         "name": "isExpanded",
@@ -3528,6 +3576,10 @@
     ],
     "slots": [
       {
+        "name": "inpage-label",
+        "description": "Label for the in-page pagination controls."
+      },
+      {
         "name": "label",
         "description": "If content is slotted, it will override the default pagination label"
       },
@@ -3632,8 +3684,8 @@
       },
       {
         "name": "circleSize",
-        "type": "'md' | 'lg' | 'xl'",
-        "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **default** 16px\n- **md** 24px\n- **lg** 32px\n- **xl** 40px"
+        "type": "'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **sm** 16px, and what an omitted `circleSize` renders — named so the axis\n  is expressible in code rather than living as the absence of a value\n- **md** 24px\n- **lg** 32px\n- **xl** 40px"
       },
       {
         "name": "showLabel",
@@ -3964,6 +4016,14 @@
     ],
     "slots": [
       {
+        "name": "field-note",
+        "description": "Helper text replacing the fieldNote property."
+      },
+      {
+        "name": "error",
+        "description": "Error text replacing the errorNote property."
+      },
+      {
         "name": "label",
         "description": "If content is slotted, it will override the default range label"
       },
@@ -4098,6 +4158,10 @@
     ],
     "slots": [
       {
+        "name": "emptyMessage",
+        "description": "Content displayed when there are no matching results."
+      },
+      {
         "name": "(default)",
         "description": "The search's dropdown content"
       },
@@ -4226,6 +4290,10 @@
       }
     ],
     "slots": [
+      {
+        "name": "before",
+        "description": "Optional leading content within the select control."
+      },
       {
         "name": "(default)",
         "description": "The select content"
@@ -4528,7 +4596,7 @@
       },
       {
         "name": "sortDirection",
-        "type": "ALTableSortDirection",
+        "type": "'ascending' | 'descending' | 'none'",
         "description": "The sort direction of `sortKey`. Mirrors the `aria-sort` vocabulary."
       }
     ],
@@ -4801,12 +4869,7 @@
         "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used."
       }
     ],
-    "slots": [
-      {
-        "name": "(default)",
-        "description": "The component content"
-      }
-    ],
+    "slots": [],
     "cssParts": [],
     "cssProperties": [],
     "doNotFlag": []
@@ -4815,14 +4878,9 @@
     "tag": "al-theme",
     "attributes": [
       {
-        "name": "brand",
-        "type": "'altitude' | 'southleft'",
-        "description": "Brand identifier. Currently shipped: 'altitude' | 'southleft'."
-      },
-      {
         "name": "mode",
         "type": "'light' | 'dark'",
-        "description": "Color mode."
+        "description": "Color mode.\n\nThe VALUES no longer live in this component. They live in the design\nsystem's own stylesheet (`@southleft/al-web-components/project/<id>.css`),\nwhich carries `:root` for the default mode and `[data-al-mode='…']` for the\nothers — the same shape Figma uses, where one collection holds Light and\nDark as two modes of one system.\n\nThis property is mirrored onto the host as `data-al-mode` so that stylesheet\nmatches. A data attribute rather than reusing `[mode]` directly, for two\nreasons: the versioned registry renames the TAG (`al-theme-1-2-3`), so a\ntag-qualified selector would stop matching; and a bare `[mode='light']` in a\nglobal stylesheet would match unrelated elements. `data-al-mode` also means\na page can set a mode on `<html>` or any subtree with no component at all."
       },
       {
         "name": "density",
@@ -5010,6 +5068,11 @@
         "description": "Variant\n- **default** renders the toggle button without background styles\n- **background** renders the toggle button with background styles"
       },
       {
+        "name": "label",
+        "type": "string",
+        "description": "Accessible name for an icon-only toggle button. Visible slotted text supplies\nthe name when this property is omitted."
+      },
+      {
         "name": "isSelected",
         "type": "boolean",
         "description": "Indicates the selected state of the toggle button."
@@ -5022,7 +5085,7 @@
       {
         "name": "hasToggle",
         "type": "boolean",
-        "description": "Has toggle?\n- Is dynamically set if the first time slotted is a ALPopover or ALMenu\n- **true** does not toggle the isSelected state\n- **false** toggles the isSelected state"
+        "description": "Has toggle?\n- Dynamically enabled when the first slotted element is an ALPopover or ALMenu.\n- **true** toggles the isSelected state on activation.\n- **false** selects on activation; Escape or an outside click can deselect."
       }
     ],
     "events": [

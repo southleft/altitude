@@ -96,7 +96,7 @@ const overrides = brandOverrides(project.brand);
           <Logo project={project} variant="mark" class="hero__mark" />
           <div class="hero__measure">
             <span></span>
-            <span class="micro">&lt;al-theme brand="{project.brand}"&gt;</span>
+            <span class="micro">project/{project.id}.css</span>
             <span></span>
           </div>
         </div>
@@ -235,7 +235,7 @@ const overrides = brandOverrides(project.brand);
         <p class="status-card__foot">
           {
             overrides.reason ??
-              `Applied by <al-theme brand="${project.brand}"> on :host, composing over the base token bundle rather than replacing it. Everything not listed resolves to the shared value.`
+              `Declared by project/${project.id}.css, this system's own stylesheet, over the base token bundle rather than replacing it. Everything not listed resolves to the shared value.`
           }
         </p>
       </div>

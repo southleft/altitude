@@ -54,6 +54,7 @@ import styles from './header.scss';
  * `aria-controls` relationship between them. Everything positional is still
  * `<al-layout>`.
  *
+ * @slot - Additional navigation content, preserving the base header's unnamed slot.
  * @slot brand - The wordmark. Usually `<al-logo variant="southleft">`.
  * @slot nav - The primary links, as flat `<a>` elements. The component gives them the pill treatment and marks `aria-current="page"` as the filled state. Hidden below the `64rem` breakpoint, where the mobile panel takes over.
  * @slot actions - The right-hand cluster. Native `<button>`s get the circular icon treatment; anything else (an `<al-button>` CTA) is left alone.
@@ -67,6 +68,10 @@ import styles from './header.scss';
  * @cssproperty --al-header-height - Bar height. Defaults to `4rem`, and `5rem` from the `48rem` breakpoint up.
  * @cssproperty --al-header-measure - The content column. Defaults to `79rem`.
  * @cssproperty --al-header-background - Bar surface. Defaults to the page background at 85% so the blur reads.
+ * @cssproperty --al-header-min-height - Minimum bar height; overrides the brand height.
+ * @cssproperty --al-header-padding - Padding around the bar, before its constrained content.
+ * @cssproperty --al-header-border-block-end - The bottom border of the bar.
+ * @cssproperty --al-header-backdrop-filter - Backdrop treatment behind the bar.
  *
  * @fires sl-header-menu-toggle - When the mobile panel opens or closes. `detail.open` carries the new state.
  */
@@ -80,6 +85,9 @@ export class SLHeader extends ALElement {
   /** Stick the bar to the top of the scroll container. On by default — the site's header is sticky. */
   @property({ type: Boolean, reflect: true })
   accessor sticky: boolean = true;
+  /** Add the base header's elevated shadow treatment. */
+  @property({ type: Boolean, reflect: true })
+  accessor elevated: boolean = false;
 
   /**
    * Whether the mobile panel is open. Reflected so the page can style against
@@ -97,6 +105,7 @@ export class SLHeader extends ALElement {
   render() {
     const componentClassNames = this.componentClassNames('sl-c-header', {
       'al-is-sticky': this.sticky,
+      'al-is-elevated': this.elevated,
     });
 
     return html`
@@ -109,6 +118,7 @@ export class SLHeader extends ALElement {
               <nav class="sl-c-header__nav" part="nav" aria-label="Primary">
                 <al-layout direction="row" align="center" gap="xs">
                   <slot name="nav"></slot>
+                  <slot></slot>
                 </al-layout>
               </nav>
 

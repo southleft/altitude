@@ -674,6 +674,18 @@
             {
               "description": "The footer's vertical rhythm. Defaults to `3.5rem`.",
               "name": "--al-footer-padding-block"
+            },
+            {
+              "description": "Spacing between the footer's direct content regions.",
+              "name": "--al-footer-gap"
+            },
+            {
+              "description": "Surface behind the footer content.",
+              "name": "--al-footer-background"
+            },
+            {
+              "description": "Border along the footer's top edge.",
+              "name": "--al-footer-border-block-start"
             }
           ],
           "cssParts": [
@@ -691,6 +703,10 @@
             }
           ],
           "slots": [
+            {
+              "description": "Additional footer content, preserving the base footer's unnamed slot.",
+              "name": ""
+            },
             {
               "description": "The first, wider column: wordmark, blurb, CTA, whatever annotation the page carries.",
               "name": "brand"
@@ -822,6 +838,22 @@
             {
               "description": "Bar surface. Defaults to the page background at 85% so the blur reads.",
               "name": "--al-header-background"
+            },
+            {
+              "description": "Minimum bar height; overrides the brand height.",
+              "name": "--al-header-min-height"
+            },
+            {
+              "description": "Padding around the bar, before its constrained content.",
+              "name": "--al-header-padding"
+            },
+            {
+              "description": "The bottom border of the bar.",
+              "name": "--al-header-border-block-end"
+            },
+            {
+              "description": "Backdrop treatment behind the bar.",
+              "name": "--al-header-backdrop-filter"
             }
           ],
           "cssParts": [
@@ -847,6 +879,10 @@
             }
           ],
           "slots": [
+            {
+              "description": "Additional navigation content, preserving the base header's unnamed slot.",
+              "name": ""
+            },
             {
               "description": "The wordmark. Usually `<al-logo variant=\"southleft\">`.",
               "name": "brand"
@@ -887,6 +923,17 @@
             },
             {
               "kind": "field",
+              "name": "elevated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Add the base header's elevated shadow treatment.",
+              "attribute": "elevated",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "menuOpen",
               "type": {
                 "text": "boolean"
@@ -916,6 +963,15 @@
               "default": "true",
               "description": "Stick the bar to the top of the scroll container. On by default — the site's header is sticky.",
               "fieldName": "sticky"
+            },
+            {
+              "name": "elevated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Add the base header's elevated shadow treatment.",
+              "fieldName": "elevated"
             },
             {
               "name": "menu-open",

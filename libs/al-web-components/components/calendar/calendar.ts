@@ -680,7 +680,7 @@ export class ALCalendar extends ALElement {
             ?isDisabled="${!this.canChangeSubNavMonth()}"
           >
           ${this.previousButtonText}
-          <slot slot="before">
+          <slot name="before" slot="before">
             <${this.iconChevronLeftEl}></${this.iconChevronLeftEl}>
           </slot>
           </${this.buttonEl}>
@@ -698,7 +698,7 @@ export class ALCalendar extends ALElement {
             ?isDisabled="${!this.canChangeAddNavMonth()}"
           >
             ${this.nextButtonText}
-            <slot slot="after">
+            <slot name="after" slot="after">
               <${this.iconChevronRightEl}></${this.iconChevronRightEl}>
             </slot>
           </${this.buttonEl}>

@@ -59,7 +59,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `badgeVariant`, `variant`
+- ARIA-bearing attributes: —
 - CSS parts: —
 
 ## Anatomy & token bindings
@@ -78,9 +78,9 @@ _No events declared._
 | border-top-left-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | border-top-right-radius | `--al-theme-border-radius-round` | `theme/border/radius/round` |
 | color | `--al-theme-color-content-neutral-default` | `theme/color/content/neutral-default` |
-| font-weight | `--al-font-weight-bold` | `typography/font-weight/bold` |
+| font-weight | `--al-font-weight-semibold` | `typography/font-weight/semibold` |
 | height | `--al-theme-icon-xxxl` | `theme/icon/xxxl` |
-| letter-spacing | `--al-theme-typography-body-md-bold-letter-spacing` | — |
+| letter-spacing | `--al-theme-typography-body-md-semibold-letter-spacing` | — |
 | line-height | `--al-theme-icon-xxxl` | `theme/icon/xxxl` |
 | width | `--al-theme-icon-xxxl` | `theme/icon/xxxl` |
 
@@ -96,7 +96,7 @@ This component's `.scss` has no BEM modifier classes and no nested pseudo-class/
 
 ## Tokens referenced (11)
 
-`--al-font-weight-bold`, `--al-theme-border-radius-round`, `--al-theme-color-background-danger-weak`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-danger-default`, `--al-theme-color-content-neutral-default`, `--al-theme-icon-xxxl`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-bold-letter-spacing`, `--al-theme-typography-body-xs-bold-letter-spacing`
+`--al-font-weight-semibold`, `--al-theme-border-radius-round`, `--al-theme-color-background-danger-weak`, `--al-theme-color-background-neutral-bold`, `--al-theme-color-content-danger-default`, `--al-theme-color-content-neutral-default`, `--al-theme-icon-xxxl`, `--al-theme-space-xs`, `--al-theme-space-xxs`, `--al-theme-typography-body-md-semibold-letter-spacing`, `--al-theme-typography-body-xs-semibold-letter-spacing`
 
 ---
 

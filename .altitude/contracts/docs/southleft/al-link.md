@@ -87,7 +87,7 @@ _No events declared._
 
 ## Accessibility
 
-- ARIA-bearing attributes: `ariaLabelledBy`, `variant`
+- ARIA-bearing attributes: `ariaLabelledBy`
 - CSS parts: —
 
 ## Anatomy & token bindings

@@ -6,8 +6,8 @@
  * Figma Code Connect — React wrapper surface for the "Input"
  * component set (node 3544:48650).
  *
- * Mapped variant axes: Label, State, State, State, Label Position.
- * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, autoComplete, errorNote, fieldId, fieldNote, isActive, isReadonly, label, max, maxLength, maxLengthValue, min, minLength, name, placeholder, type, value.
+ * Mapped variant axes: State, State, State, Label Position.
+ * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, autoComplete, errorNote, fieldId, fieldNote, isActive, isOptional, isReadonly, isRequired, label, max, maxLength, maxLengthValue, min, minLength, name, placeholder, type, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for before, after, error, field-note.
  */
@@ -16,9 +16,6 @@ import { ALInput } from '@southleft/al-react';
 
 figma.connect(ALInput, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3544-48650', {
   props: {
-    hideLabel: figma.enum('Label', {
-      Hidden: true,
-    }),
     isDisabled: figma.enum('State', {
       Disabled: true,
     }),
@@ -35,7 +32,6 @@ figma.connect(ALInput, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?nod
   },
   example: (props) => (
     <ALInput
-      hideLabel={props.hideLabel}
       isDisabled={props.isDisabled}
       isError={props.isError}
       isFocused={props.isFocused}

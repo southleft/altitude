@@ -90,7 +90,7 @@ export function componentMarkdown(component, context = DEFAULT_CONTEXT, guidance
   const lines = [
     `# ${component.name}`,
     '',
-    `In ${context.site.fullName}, rendered under \`<al-theme brand="${context.project.brand}">\`.`,
+    `In ${context.site.fullName}, rendered under \`project/${context.project.id}.css\`.`,
     '',
     `\`<${component.tag}>\`${component.react ? ` · React: \`<${component.react}>\`` : ''}${
       component.status ? ` · status: ${component.status}` : ''
@@ -196,7 +196,7 @@ export function overviewMarkdown(context = DEFAULT_CONTEXT) {
     `- Documented properties: ${registry.stats.documentedProps} of ${registry.stats.totalProps}`,
     `- Components with a React wrapper: ${registry.stats.withReact}`,
     `- Design tokens: ${TOKEN_COUNT}`,
-    `- Brand: \`<al-theme brand="${project.brand}">\``,
+    `- Design system stylesheet: \`project/${project.id}.css\``,
     '',
     '## Taxonomy',
     '',
@@ -248,8 +248,8 @@ export function foundationsMarkdown(context = DEFAULT_CONTEXT) {
     '',
     overrides.available
       ? overrides.properties.length
-        ? `This brand redeclares ${overrides.properties.length} of those properties inside ` +
-          `\`<al-theme brand="${context.project.brand}">\`; everything else resolves to the base bundle.`
+        ? `This system redeclares ${overrides.properties.length} of those properties in ` +
+          `\`project/${context.project.id}.css\`; everything else resolves to the base bundle.`
         : overrides.reason
       : overrides.reason,
     '',
@@ -333,7 +333,7 @@ export function motionMarkdown(context = DEFAULT_CONTEXT) {
   return [
     '# Motion',
     '',
-    `How ${context.site.fullName} moves, under \`<al-theme brand="${context.project.brand}">\`. ` +
+    `How ${context.site.fullName} moves, under \`project/${context.project.id}.css\`. ` +
       `${MOTION_TOKEN_COUNT} motion tokens, ${CHOREOGRAPHY_COUNT} choreography tokens, ` +
       `${PRESET_COUNT} keyframe presets — read from the token layer, the theme stylesheet and the ` +
       'published runtime, never transcribed.',
@@ -624,7 +624,7 @@ export function migrationMarkdown(context = DEFAULT_CONTEXT) {
   return [
     `_The v1 → v2 migration guide for the component library behind ${site.fullName}, served` +
       ` verbatim from \`${MIGRATION.path}\` in the repository. Rendered examples resolve under` +
-      ` \`<al-theme brand="${project.brand}">\`._`,
+      ` \`project/${project.id}.css\`._`,
     '',
     migrationSource(),
   ].join('\n');
