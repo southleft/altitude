@@ -17,8 +17,6 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--al-theme-color-background-neutral-bold);
-    color: var(--al-theme-color-content-neutral-default);
     padding: 0 var(--al-theme-space-xs);
     border-radius: var(--al-theme-border-radius-pill);
     min-width: 20px;
@@ -51,6 +49,19 @@
         border-radius: var(--al-theme-border-radius-role-indicator, var(--al-theme-border-radius-round));
       }
     }
+  }
+
+  /**
+   * Neutral badge — the non-status treatment.
+   *
+   * Carries the fill the BASE class used to carry, because "neutral" was
+   * previously spelled as the absence of a `variant` and so had no selector of
+   * its own. `render()` applies this class for `variant="neutral"` AND for an
+   * omitted variant, so existing markup renders exactly as before.
+   */
+  .al-c-badge--neutral {
+    background: var(--al-theme-color-background-neutral-bold);
+    color: var(--al-theme-color-content-neutral-default);
   }
 
   /**

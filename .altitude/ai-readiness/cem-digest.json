@@ -192,8 +192,8 @@
       },
       {
         "name": "variant",
-        "type": "'info' | 'success' | 'warning' | 'danger'",
-        "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment"
+        "type": "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
+        "description": "State variant\n- **neutral** renders the non-status badge, and is what an omitted\n  `variant` renders — named so the axis is expressible in code the way the\n  Figma set names it, rather than living as the absence of a value\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment"
       },
       {
         "name": "position",
@@ -343,13 +343,13 @@
       },
       {
         "name": "variant",
-        "type": "'neutral' | 'bare' | 'secondary' | 'tertiary'",
-        "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **default** renders the primary button, the strongest emphasis\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border"
+        "type": "'primary' | 'neutral' | 'bare' | 'secondary' | 'tertiary'",
+        "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **primary** renders the strongest emphasis, and is what an omitted\n  `variant` renders — it is named here so the axis is expressible in code\n  the way `Primary` is on the Figma canvas, rather than living as the\n  absence of a value\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border"
       },
       {
         "name": "size",
-        "type": "'sm' | 'lg'",
-        "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text"
+        "type": "'sm' | 'md' | 'lg'",
+        "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **md** renders the 40px control with 14px text, and is what an omitted\n  `size` renders — named for the same reason `primary` is, so the axis is\n  expressible rather than living as the absence of a value\n- **lg** renders a 48px control with 15px text"
       },
       {
         "name": "isPill",
@@ -3684,8 +3684,8 @@
       },
       {
         "name": "circleSize",
-        "type": "'md' | 'lg' | 'xl'",
-        "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **default** 16px\n- **md** 24px\n- **lg** 32px\n- **xl** 40px"
+        "type": "'sm' | 'md' | 'lg' | 'xl'",
+        "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **sm** 16px, and what an omitted `circleSize` renders — named so the axis\n  is expressible in code rather than living as the absence of a value\n- **md** 24px\n- **lg** 32px\n- **xl** 40px"
       },
       {
         "name": "showLabel",

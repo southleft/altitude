@@ -17,7 +17,7 @@ export default {
       control: 'boolean'
     },
     circleSize: {
-      options: ['default', 'md', 'lg', 'xl'],
+      options: ['sm', 'md', 'lg', 'xl'],
       control: { type: 'radio' }
     },
     showLabel: {

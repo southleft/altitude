@@ -37,9 +37,10 @@
           "type": "boolean"
         },
         "variant": {
-          "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+          "description": "State variant\n- **neutral** renders the non-status badge, and is what an omitted\n  `variant` renders — named so the axis is expressible in code the way the\n  Figma set names it, rather than living as the absence of a value\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
           "type": "string",
           "enum": [
+            "neutral",
             "info",
             "success",
             "warning",

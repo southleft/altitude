@@ -55,9 +55,10 @@
           ]
         },
         "variant": {
-          "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **default** renders the primary button, the strongest emphasis\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border",
+          "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **primary** renders the strongest emphasis, and is what an omitted\n  `variant` renders — it is named here so the axis is expressible in code\n  the way `Primary` is on the Figma canvas, rather than living as the\n  absence of a value\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border",
           "type": "string",
           "enum": [
+            "primary",
             "neutral",
             "bare",
             "secondary",
@@ -65,10 +66,11 @@
           ]
         },
         "size": {
-          "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text",
+          "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **md** renders the 40px control with 14px text, and is what an omitted\n  `size` renders — named for the same reason `primary` is, so the axis is\n  expressible rather than living as the absence of a value\n- **lg** renders a 48px control with 15px text",
           "type": "string",
           "enum": [
             "sm",
+            "md",
             "lg"
           ]
         },

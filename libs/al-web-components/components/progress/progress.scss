@@ -44,14 +44,23 @@
    * - The background for the circular progress indicator
    */
   .al-c-progress__track--circle {
-    height: 16px;
-    width: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: none;
     border-radius: var(--al-theme-border-radius-round);
     border: var(--al-theme-space-xxxs) solid var(--al-theme-color-content-neutral-default);
+
+    /**
+     * Small circular progress track — 16px, and what an omitted `circleSize`
+     * renders. Carries the dimensions the base used to carry, so the smallest
+     * step of the axis has a selector of its own instead of being the absence
+     * of one.
+     */
+    .al-is-circle-sm & {
+      height: 16px;
+      width: 16px;
+    }
 
     /**
      * Medium circular progress track
@@ -119,7 +128,15 @@
     /**
      * Adjustment for small circular indicator when there is a visible label
      */
-    .al-has-label:not(.al-is-circle-md):not(.al-is-circle-lg):not(.al-is-circle-xl) & {
+    /*
+     * Positive, not negative: this used to be
+     * `:not(.al-is-circle-md):not(.al-is-circle-lg):not(.al-is-circle-xl)`,
+     * the only way to say "the small one" while small was the UNNAMED default.
+     * `al-is-circle-sm` is now applied for `circleSize="sm"` and for an omitted
+     * one alike, so the rule can name what it means — and a new size added to
+     * the axis no longer silently joins this branch.
+     */
+    .al-has-label.al-is-circle-sm & {
       inset-block-start: var(--al-theme-space-xxs);
     }
   }

@@ -27,11 +27,11 @@ Component: al-button
 | `isPressed` | string | `boolean \| 'mixed'` | — | — |
 | `label` | string | — | — | — |
 | `name` | string | — | — | — |
-| `size` | enum | `lg`, `sm` | — | **Size** (VARIANT): `Default`, `Lg`, `Sm` |
+| `size` | enum | `lg`, `md`, `sm` | — | **Size** (VARIANT): `Default`, `Lg`, `Sm` |
 | `target` | enum | `_blank`, `_parent`, `_self`, `_top` | — | — |
 | `type` | enum | `button`, `reset`, `submit` | — | — |
 | `value` | string | — | — | — |
-| `variant` | enum | `bare`, `neutral`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary` |
+| `variant` | enum | `bare`, `neutral`, `primary`, `secondary`, `tertiary` | — | **Variant** (VARIANT): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary` |
 
 #### `ariaControls`
 
@@ -89,8 +89,10 @@ Indicates the name when submitted with form data.
 
 Size variant
 - **sm** renders a 32px control with 13px text
+- **md** renders the 40px control with 14px text, and is what an omitted
+  `size` renders — named for the same reason `primary` is, so the axis is
+  expressible rather than living as the absence of a value
 - **lg** renders a 48px control with 15px text
-- omitted renders the default 40px control with 14px text
 
 #### `target`
 
@@ -112,7 +114,10 @@ Indicates the value associated with the name when submitted with form data.
 
 Style variant — an EMPHASIS axis, strongest to weakest. Status is not on
 this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
-- **default** renders the primary button, the strongest emphasis
+- **primary** renders the strongest emphasis, and is what an omitted
+  `variant` renders — it is named here so the axis is expressible in code
+  the way `Primary` is on the Figma canvas, rather than living as the
+  absence of a value
 - **secondary** renders the secondary colour role's own fill
 - **tertiary** renders an outlined button on a transparent ground
 - **neutral** renders a low-emphasis filled button
@@ -124,12 +129,12 @@ this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
 
 ### `size` (Figma property "Size")
 
-- Code values: `lg`, `sm`
+- Code values: `lg`, `md`, `sm`
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Lg`, `Sm`
 
 ### `variant` (Figma property "Variant")
 
-- Code values: `bare`, `neutral`, `secondary`, `tertiary`
+- Code values: `bare`, `neutral`, `primary`, `secondary`, `tertiary`
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bare`, `Neutral`, `Primary`, `Secondary`, `Tertiary`
 
 ## States
@@ -235,13 +240,14 @@ _No events declared._
 
 | CSS property | Code token | Figma variable |
 | --- | --- | --- |
-| --al-icon-height | `--al-theme-icon-lg` | `theme/icon/lg` |
-| --al-icon-width | `--al-theme-icon-lg` | `theme/icon/lg` |
 | background-color | `--al-theme-color-background-primary-default` | `theme/color/background/primary-default` |
-| border-radius | `--al-theme-border-radius-role-action` | `theme/border/radius/role/action` |
 | color | `--al-theme-color-content-primary-weak` | `theme/color/content/primary-weak` |
-| gap | `--al-theme-space-xs` | `theme/space/xs` |
-| min-height | `--al-theme-size-control` | `theme/size/control` |
+
+**On `hover`** (compound — wins over the generic state rule below):
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| background-color | `--al-theme-color-background-primary-strong` | `theme/color/background/primary-strong` |
 
 #### `secondary`
 
@@ -281,12 +287,6 @@ _No events declared._
 | --- | --- | --- |
 | opacity | `--al-theme-opacity-disabled` | `theme/opacity/disabled` |
 
-#### `hover`
-
-| CSS property | Code token | Figma variable |
-| --- | --- | --- |
-| background-color | `--al-theme-color-background-primary-strong` | `theme/color/background/primary-strong` |
-
 ### Per-`size`
 
 #### `lg`
@@ -295,6 +295,13 @@ _No events declared._
 | --- | --- | --- |
 | font-size | `--al-font-size-16` | `typography/font-size/16` |
 | min-height | `--al-theme-size-control-lg` | `theme/size/control-lg` |
+
+#### `md`
+
+| CSS property | Code token | Figma variable |
+| --- | --- | --- |
+| font-size | `--al-font-size-14` | `typography/font-size/14` |
+| min-height | `--al-theme-size-control` | `theme/size/control` |
 
 #### `sm`
 

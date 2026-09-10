@@ -18,7 +18,7 @@ export default {
     },
     variant: {
       control: 'radio',
-      options: ['default', 'info', 'success', 'warning', 'danger']
+      options: ['neutral', 'info', 'success', 'warning', 'danger']
     },
     position: {
       control: 'radio',

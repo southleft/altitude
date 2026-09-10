@@ -178,11 +178,12 @@
     },
     {
       "name": "size",
-      "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **lg** renders a 48px control with 15px text\n- omitted renders the default 40px control with 14px text",
+      "description": "Size variant\n- **sm** renders a 32px control with 13px text\n- **md** renders the 40px control with 14px text, and is what an omitted\n  `size` renders — named for the same reason `primary` is, so the axis is\n  expressible rather than living as the absence of a value\n- **lg** renders a 48px control with 15px text",
       "type": "enum",
-      "rawType": "'sm' | 'lg'",
+      "rawType": "'sm' | 'md' | 'lg'",
       "values": [
         "lg",
+        "md",
         "sm"
       ],
       "bindings": {
@@ -193,8 +194,8 @@
           "kind": "VARIANT",
           "property": "Size",
           "options": [
-            "Default",
             "Lg",
+            "Md",
             "Sm"
           ]
         }
@@ -255,12 +256,13 @@
     },
     {
       "name": "variant",
-      "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **default** renders the primary button, the strongest emphasis\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border",
+      "description": "Style variant — an EMPHASIS axis, strongest to weakest. Status is not on\nthis axis: `al-badge` and `al-alert` carry info/success/warning/danger.\n- **primary** renders the strongest emphasis, and is what an omitted\n  `variant` renders — it is named here so the axis is expressible in code\n  the way `Primary` is on the Figma canvas, rather than living as the\n  absence of a value\n- **secondary** renders the secondary colour role's own fill\n- **tertiary** renders an outlined button on a transparent ground\n- **neutral** renders a low-emphasis filled button\n- **bare** renders the button with no fill and no border",
       "type": "enum",
-      "rawType": "'neutral' | 'bare' | 'secondary' | 'tertiary'",
+      "rawType": "'primary' | 'neutral' | 'bare' | 'secondary' | 'tertiary'",
       "values": [
         "bare",
         "neutral",
+        "primary",
         "secondary",
         "tertiary"
       ],
@@ -8078,33 +8080,21 @@
         }
       },
       "primary": {
-        "--al-icon-height": {
-          "code": "--al-theme-icon-lg",
-          "figma": "theme/icon/lg"
-        },
-        "--al-icon-width": {
-          "code": "--al-theme-icon-lg",
-          "figma": "theme/icon/lg"
-        },
         "background-color": {
           "code": "--al-theme-color-background-primary-default",
           "figma": "theme/color/background/primary-default"
-        },
-        "border-radius": {
-          "code": "--al-theme-border-radius",
-          "figma": "theme/border/radius/@"
         },
         "color": {
           "code": "--al-theme-color-content-primary-weak",
           "figma": "theme/color/content/primary-weak"
         },
-        "gap": {
-          "code": "--al-theme-space-xs",
-          "figma": "theme/space/xs"
-        },
-        "min-height": {
-          "code": "--al-theme-size-control",
-          "figma": "theme/size/control"
+        "state": {
+          "hover": {
+            "background-color": {
+              "code": "--al-theme-color-background-primary-strong",
+              "figma": "theme/color/background/primary-strong"
+            }
+          }
         }
       },
       "secondary": {
@@ -8166,12 +8156,6 @@
           "code": "--al-theme-opacity-disabled",
           "figma": "theme/opacity/disabled"
         }
-      },
-      "hover": {
-        "background-color": {
-          "code": "--al-theme-color-background-primary-strong",
-          "figma": "theme/color/background/primary-strong"
-        }
       }
     },
     "size": {
@@ -8183,6 +8167,16 @@
         "min-height": {
           "code": "--al-theme-size-control-lg",
           "figma": "theme/size/control-lg"
+        }
+      },
+      "md": {
+        "font-size": {
+          "code": "--al-font-size-14",
+          "figma": "typography/font-size/14"
+        },
+        "min-height": {
+          "code": "--al-theme-size-control",
+          "figma": "theme/size/control"
         }
       },
       "sm": {

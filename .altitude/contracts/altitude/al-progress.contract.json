@@ -12,12 +12,13 @@
   "props": [
     {
       "name": "circleSize",
-      "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **default** 16px\n- **md** 24px\n- **lg** 32px\n- **xl** 40px",
+      "description": "Circle size property\n- Sets the width of the circular progress indicator\n- **sm** 16px, and what an omitted `circleSize` renders — named so the axis\n  is expressible in code rather than living as the absence of a value\n- **md** 24px\n- **lg** 32px\n- **xl** 40px",
       "type": "enum",
-      "rawType": "'md' | 'lg' | 'xl'",
+      "rawType": "'sm' | 'md' | 'lg' | 'xl'",
       "values": [
         "lg",
         "md",
+        "sm",
         "xl"
       ],
       "bindings": {
@@ -28,9 +29,9 @@
           "kind": "VARIANT",
           "property": "Size",
           "options": [
-            "Default",
             "Lg",
             "Md",
+            "Sm",
             "Xl"
           ],
           "pairWith": "Size"

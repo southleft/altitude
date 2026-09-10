@@ -39,23 +39,28 @@ export class ALButton extends ALElement {
   /**
    * Style variant — an EMPHASIS axis, strongest to weakest. Status is not on
    * this axis: `al-badge` and `al-alert` carry info/success/warning/danger.
-   * - **default** renders the primary button, the strongest emphasis
+   * - **primary** renders the strongest emphasis, and is what an omitted
+   *   `variant` renders — it is named here so the axis is expressible in code
+   *   the way `Primary` is on the Figma canvas, rather than living as the
+   *   absence of a value
    * - **secondary** renders the secondary colour role's own fill
    * - **tertiary** renders an outlined button on a transparent ground
    * - **neutral** renders a low-emphasis filled button
    * - **bare** renders the button with no fill and no border
    */
   @property()
-  accessor variant: 'neutral' | 'bare' | 'secondary' | 'tertiary';
+  accessor variant: 'primary' | 'neutral' | 'bare' | 'secondary' | 'tertiary';
 
   /**
    * Size variant
    * - **sm** renders a 32px control with 13px text
+   * - **md** renders the 40px control with 14px text, and is what an omitted
+   *   `size` renders — named for the same reason `primary` is, so the axis is
+   *   expressible rather than living as the absence of a value
    * - **lg** renders a 48px control with 15px text
-   * - omitted renders the default 40px control with 14px text
    */
   @property()
-  accessor size: 'sm' | 'lg';
+  accessor size: 'sm' | 'md' | 'lg';
 
   /**
    * Pill shape
@@ -200,11 +205,16 @@ export class ALButton extends ALElement {
 
   render() {
     const componentClassNames = this.componentClassNames('al-c-button', {
+      // Applied for an OMITTED variant too: primary is the default emphasis,
+      // and the fill now lives on this modifier rather than the base class.
+      'al-c-button--primary': this.variant === 'primary' || !this.variant,
       'al-c-button--secondary': this.variant === 'secondary',
       'al-c-button--tertiary': this.variant === 'tertiary',
       'al-c-button--bare': this.variant === 'bare',
       'al-c-button--neutral': this.variant === 'neutral',
       'al-c-button--sm': this.size === 'sm',
+      // Applied for an OMITTED size too — see the `primary` note above.
+      'al-c-button--md': this.size === 'md' || !this.size,
       'al-c-button--lg': this.size === 'lg',
       'al-c-button--pill': this.isPill === true,
       'al-c-button--full-width': this.fullWidth === true,

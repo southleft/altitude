@@ -52,12 +52,13 @@
     },
     {
       "name": "variant",
-      "description": "State variant\n- **default** Displays a badge with the default state\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
+      "description": "State variant\n- **neutral** renders the non-status badge, and is what an omitted\n  `variant` renders — named so the axis is expressible in code the way the\n  Figma set names it, rather than living as the absence of a value\n- **info** renders a badge with info state treatment\n- **success** renders a badge with success state treatment\n- **warning** renders a badge with warning state treatment\n- **danger** renders a badge with danger state treatment",
       "type": "enum",
-      "rawType": "'info' | 'success' | 'warning' | 'danger'",
+      "rawType": "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
       "values": [
         "danger",
         "info",
+        "neutral",
         "success",
         "warning"
       ],
@@ -70,8 +71,8 @@
           "property": "Variant",
           "options": [
             "Danger",
-            "Default",
             "Info",
+            "Neutral",
             "Success",
             "Warning"
           ]
@@ -1492,28 +1493,6 @@
           "figma": "theme/color/content/danger-default"
         }
       },
-      "default": {
-        "background": {
-          "code": "--al-theme-color-background-neutral-bold",
-          "figma": "theme/color/background/neutral-bold"
-        },
-        "border-radius": {
-          "code": "--al-theme-border-radius-pill",
-          "figma": "theme/border/radius/pill"
-        },
-        "color": {
-          "code": "--al-theme-color-content-neutral-default",
-          "figma": "theme/color/content/neutral-default"
-        },
-        "gap": {
-          "code": "--al-theme-space-xxs",
-          "figma": "theme/space/xxs"
-        },
-        "padding": {
-          "code": "--al-theme-space-xs",
-          "figma": "theme/space/xs"
-        }
-      },
       "info": {
         "background": {
           "code": "--al-theme-color-background-info-weak",
@@ -1522,6 +1501,16 @@
         "color": {
           "code": "--al-theme-color-content-info-default",
           "figma": "theme/color/content/info-default"
+        }
+      },
+      "neutral": {
+        "background": {
+          "code": "--al-theme-color-background-neutral-bold",
+          "figma": "theme/color/background/neutral-bold"
+        },
+        "color": {
+          "code": "--al-theme-color-content-neutral-default",
+          "figma": "theme/color/content/neutral-default"
         }
       },
       "success": {
