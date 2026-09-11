@@ -249,12 +249,21 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
       // and into `mode` on <al-theme> for the components, so one control moves
       // both axes together instead of leaving branded previews in light mode on
       // a dark page.
+      //
+      // Every host that opts in with `data-follow-mode` moves too, not only the
+      // brand host. A page that nests a second `<al-theme>` for one axis (the
+      // Motion page's `motion` scope) gets `mode` RESET to `light` on that
+      // host — a bare `<al-theme>` is a full recipe, it does not inherit — so
+      // left alone it becomes a light island on a dark page and everything
+      // inside it that reads `--fg` paints black on black. Opt-in rather than
+      // every `al-theme`: the al-theme playground's own stage demos `mode` and
+      // must not be overwritten by the chrome switch.
       const label = document.querySelector<HTMLElement>('[data-theme-label]');
-      const host = document.querySelector<HTMLElement>('[data-brand-host]');
+      const hosts = document.querySelectorAll<HTMLElement>('[data-brand-host], [data-follow-mode]');
       const paint = () => {
         const mode = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
         if (label) label.textContent = mode.toUpperCase();
-        host?.setAttribute('mode', mode);
+        hosts.forEach((host) => host.setAttribute('mode', mode));
       };
       document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
         const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
