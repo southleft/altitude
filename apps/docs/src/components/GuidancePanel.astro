@@ -91,86 +91,163 @@ const escapeHtml = (text: string) =>
 const inline = (text: string) =>
   escapeHtml(text).replace(/`([^`]+)`/g, '<code>$1</code>');
 
-const SECTIONS = g
+/**
+ * The two judgement pairs read side by side — WHEN TO USE against WHEN NOT
+ * TO, DO against DON'T — because each answer is only useful next to its
+ * opposite. Each pair is an <al-layout> two-column grid (arrangement is the
+ * layout primitive's, R4), which collapses to one column below the medium
+ * breakpoint on its own. The remaining sections keep the single column.
+ */
+const SINGLE = g
   ? [
-      { id: 'when-to-use', label: 'WHEN TO USE', items: g.whenToUse, tone: 'yes' },
-      { id: 'dos', label: 'DO', items: g.dos, tone: 'yes' },
-      { id: 'donts', label: 'DON’T', items: g.donts, tone: 'no' },
-      { id: 'accessibility', label: 'ACCESSIBILITY IN PRACTICE', items: g.accessibility, tone: 'neutral' },
-      { id: 'content', label: 'CONTENT GUIDELINES', items: g.content, tone: 'neutral' },
+      { id: 'accessibility', label: 'ACCESSIBILITY IN PRACTICE', items: g.accessibility },
+      { id: 'content', label: 'CONTENT GUIDELINES', items: g.content },
     ]
   : [];
 ---
 
-<div class="section-rule">
-  <span>GUIDANCE</span>
-  <span>{g ? 'AUTHORED · CITED TO SOURCE' : `NOT YET AUTHORED · ${authored} COMPONENTS COVERED`}</span>
-</div>
+<!--
+  Guidance is NOT one of the page's collapsed sections. It is the human half of
+  the page — the one part that is a judgement rather than a manifest dump — so
+  it stays in view between the playground and the folded reference below, with
+  room around it so it reads as its own movement rather than the first row of
+  the accordion.
+-->
+<section class="guidance-section" data-guidance-section-wrap>
+  <!-- A real heading, not a section rule: guidance is a movement of the
+       page in its own right, and the rules below mark the folded reference. -->
+  <div class="guidance-head">
+    <h2 class="t-display-md guidance-head__title">Guidance</h2>
+    <span class="micro guidance-head__meta">
+      {g ? 'AUTHORED · CITED TO SOURCE' : `NOT YET AUTHORED · ${authored} COMPONENTS COVERED`}
+    </span>
+  </div>
 
-{
-  !g && (
-    <p class="empty-note" data-guidance-missing data-guidance-slug={slug}>
-      NO USAGE GUIDANCE HAS BEEN WRITTEN FOR THIS COMPONENT YET. THE API BELOW IS GENERATED FROM THE
-      MANIFEST AND IS COMPLETE; WHAT IS MISSING IS WHEN TO REACH FOR IT AND WHEN NOT TO.
-    </p>
-  )
-}
+  {
+    !g && (
+      <p class="empty-note" data-guidance-missing data-guidance-slug={slug}>
+        NO USAGE GUIDANCE HAS BEEN WRITTEN FOR THIS COMPONENT YET. THE API BELOW IS GENERATED FROM THE
+        MANIFEST AND IS COMPLETE; WHAT IS MISSING IS WHEN TO REACH FOR IT AND WHEN NOT TO.
+      </p>
+    )
+  }
 
-{
-  g && (
-    <div class="guidance" data-guidance-panel data-guidance-slug={slug}>
-      <p class="guidance__purpose" data-guidance-section="purpose" set:html={inline(g.purpose)} />
+  {
+    g && (
+      <div class="guidance" data-guidance-panel data-guidance-slug={slug}>
+        <p class="guidance__purpose" data-guidance-section="purpose" set:html={inline(g.purpose)} />
 
-      <div class="guidance__block" data-guidance-section="when-not-to-use">
-        <p class="micro guidance__label guidance__label--no">WHEN NOT TO USE</p>
-        <ul class="guidance__list guidance__list--no">
-          {g.whenNotToUse.map((row) => (
-            <li>
-              <span set:html={inline(row.text)} />
-              {row.instead && (
-                <a class="guidance__instead" href={siblingHref(row.instead)}>
-                  USE {row.instead.toUpperCase()} →
-                </a>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
+        <al-layout variant="grid" columns={2} align="start" class="guidance__pair">
+          <div class="guidance__block" data-guidance-section="when-to-use">
+            <p class="micro guidance__label guidance__label--yes">WHEN TO USE</p>
+            <ul class="guidance__list guidance__list--yes">
+              {g.whenToUse.map((item) => (
+                <li set:html={inline(item)} />
+              ))}
+            </ul>
+          </div>
+          <div class="guidance__block" data-guidance-section="when-not-to-use">
+            <p class="micro guidance__label guidance__label--no">WHEN NOT TO USE</p>
+            <ul class="guidance__list guidance__list--no">
+              {g.whenNotToUse.map((row) => (
+                <li>
+                  <span set:html={inline(row.text)} />
+                  {row.instead && (
+                    <a class="guidance__instead" href={siblingHref(row.instead)}>
+                      USE {row.instead.toUpperCase()} →
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </al-layout>
 
-      {SECTIONS.map((section) => (
-        <div class="guidance__block" data-guidance-section={section.id}>
-          <p class={`micro guidance__label guidance__label--${section.tone}`}>{section.label}</p>
-          <ul class={`guidance__list guidance__list--${section.tone}`}>
-            {section.items.map((item) => (
-              <li set:html={inline(item)} />
+        <al-layout variant="grid" columns={2} align="start" class="guidance__pair">
+          <div class="guidance__block" data-guidance-section="dos">
+            <p class="micro guidance__label guidance__label--yes">DO</p>
+            <ul class="guidance__list guidance__list--yes">
+              {g.dos.map((item) => (
+                <li set:html={inline(item)} />
+              ))}
+            </ul>
+          </div>
+          <div class="guidance__block" data-guidance-section="donts">
+            <p class="micro guidance__label guidance__label--no">DON’T</p>
+            <ul class="guidance__list guidance__list--no">
+              {g.donts.map((item) => (
+                <li set:html={inline(item)} />
+              ))}
+            </ul>
+          </div>
+        </al-layout>
+
+        {SINGLE.map((section) => (
+          <div class="guidance__block" data-guidance-section={section.id}>
+            <p class="micro guidance__label guidance__label--neutral">{section.label}</p>
+            <ul class="guidance__list guidance__list--neutral">
+              {section.items.map((item) => (
+                <li set:html={inline(item)} />
+              ))}
+            </ul>
+          </div>
+        ))}
+
+        <div class="guidance__block guidance__block--sources" data-guidance-section="sources">
+          <p class="micro guidance__label">WHERE THIS CAME FROM</p>
+          <ul class="guidance__sources">
+            {g.sources.map((source) => (
+              <li data-guidance-source={source.path} data-guidance-contains={source.contains}>
+                <code>{source.path}</code>
+                <span>{source.note}</span>
+              </li>
             ))}
           </ul>
+          <p class="guidance__gate">
+            Each line above names a file and a literal string that must still appear in it.
+            <code>pnpm gate:guidance</code> re-reads them from this built page, so guidance that has
+            stopped being true fails a check rather than misleading you.
+          </p>
         </div>
-      ))}
-
-      <div class="guidance__block guidance__block--sources" data-guidance-section="sources">
-        <p class="micro guidance__label">WHERE THIS CAME FROM</p>
-        <ul class="guidance__sources">
-          {g.sources.map((source) => (
-            <li data-guidance-source={source.path} data-guidance-contains={source.contains}>
-              <code>{source.path}</code>
-              <span>{source.note}</span>
-            </li>
-          ))}
-        </ul>
-        <p class="guidance__gate">
-          Each line above names a file and a literal string that must still appear in it.
-          <code>pnpm gate:guidance</code> re-reads them from this built page, so guidance that has
-          stopped being true fails a check rather than misleading you.
-        </p>
       </div>
-    </div>
-  )
-}
+    )
+  }
+</section>
 
 <style>
-  .guidance {
-    margin-bottom: 44px;
+  .guidance-section {
+    margin: 88px 0 64px;
+  }
+
+  /* Same 16px inset as the collapsed sections below — heading and body alike —
+     so the whole reference half shares one text edge. */
+  .guidance-head,
+  .guidance,
+  .guidance-section > .empty-note {
+    margin-bottom: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .guidance-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .guidance-head__title {
+    margin: 0;
+  }
+
+  .guidance-head__meta {
+    color: var(--fg-weak);
+  }
+
+  .guidance-section > .empty-note {
+    border-top: 0;
   }
 
   .guidance__purpose {
@@ -180,8 +257,31 @@ const SECTIONS = g
     max-width: 660px;
   }
 
-  .guidance__block + .guidance__block {
+  .guidance__block + .guidance__block,
+  .guidance__pair + .guidance__pair,
+  .guidance__pair + .guidance__block {
     margin-top: 26px;
+  }
+
+  /* Two columns of judgement: the pair shares the purpose paragraph's measure
+     doubled, so each column keeps roughly the single-column line length. */
+  .guidance__pair {
+    max-width: 1100px;
+    /* Wider than the `gap` scale's top step (xl = 32px): two prose columns
+       need a gutter that reads as a gutter, not a word space. The custom
+       property is the layout's documented escape hatch for exactly this
+       (layout.scss, `--al-layout-gap`). */
+    --al-layout-gap: 72px;
+  }
+
+  .guidance__pair .guidance__list {
+    max-width: none;
+  }
+
+  /* The two columns are siblings; the stacked-block rhythm above must not
+     push the right-hand one down. */
+  .guidance__pair > .guidance__block {
+    margin-top: 0;
   }
 
   .guidance__label {

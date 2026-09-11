@@ -278,6 +278,30 @@ const canonical = new URL(Astro.url.pathname, SITE.url).toString();
       paint();
     </script>
 
+    <script>
+      // Exclusive accordion fallback. Component pages fold every section below
+      // the playground into `<details name="component-sections">`
+      // (DocsSection.astro); the shared `name` is what makes opening one close
+      // the rest. Browsers that predate the attribute (Baseline 2024) ignore it
+      // and would let every section stay open, so this reproduces the rule for
+      // them. Feature-detected: where `name` is implemented, the browser already
+      // did the closing before `toggle` fires and this is a no-op.
+      if (!('name' in HTMLDetailsElement.prototype)) {
+        document.addEventListener(
+          'toggle',
+          (event) => {
+            const opened = event.target as HTMLDetailsElement;
+            const group = opened?.getAttribute?.('name');
+            if (!opened.open || !group) return;
+            for (const other of document.querySelectorAll<HTMLDetailsElement>(`details[name="${group}"]`)) {
+              if (other !== opened) other.open = false;
+            }
+          },
+          true,
+        );
+      }
+    </script>
+
     <BrandTheme />
 
     <!--

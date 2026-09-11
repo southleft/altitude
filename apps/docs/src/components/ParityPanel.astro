@@ -10,11 +10,10 @@
  * The panel's job is to be HONEST before it is reassuring. Three things it
  * insists on saying, because the Storybook badges it replaces could not:
  *   * WHICH design system. One library backs several, each with its own Figma
- *     file, so parity is one row per project rather than one badge. The
- *     whole-library site shows every project's row; a SCOPED project's site
- *     shows only its own (parityForProject) — another system's Figma file is
- *     not this reader's business, and would read as drift in a file they
- *     cannot open.
+ *     file, so a row names its project rather than being one anonymous badge.
+ *     Each site shows ITS OWN project's row only (parityForProject) — another
+ *     system's Figma file is not this reader's business, and would read as
+ *     drift in a file they cannot open.
  *   * WHAT DECIDED the status — a contract diff, a byte hash, or nothing at all
  *     (`driftBasis`).
  *   * WHETHER FIGMA WAS EVER READ. While `figmaCurrentDigest` is unobserved,
@@ -28,6 +27,7 @@ import {
   PARITY_AVAILABLE,
   PARITY_FAILURES,
 } from '../lib/parity.mjs';
+import DocsSection from './DocsSection.astro';
 
 interface Props {
   tag: string;
@@ -42,10 +42,11 @@ const rows = parityForProject(tag, project);
 const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);
 ---
 
-<div class="section-rule">
-  <span>FIGMA PARITY</span>
-  <span>{PARITY_AVAILABLE ? `${rows.length} ${rows.length === 1 ? 'PROJECT' : 'PROJECTS'}` : 'UNAVAILABLE'}</span>
-</div>
+<DocsSection
+  id="parity"
+  label="FIGMA PARITY"
+  meta={PARITY_AVAILABLE ? (rows[0] ? rows[0].projectName.toUpperCase() : 'NOT TRACKED') : 'UNAVAILABLE'}
+>
 
 {
   !PARITY_AVAILABLE && (
@@ -220,6 +221,7 @@ const unobserved = rows.filter((row) => !row.figmaObserved && row.figmaSetName);
     </div>
   )
 }
+</DocsSection>
 
 <style>
   .parity {

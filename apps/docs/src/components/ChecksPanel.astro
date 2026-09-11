@@ -21,6 +21,7 @@
  * `.altitude/a11y/report.json` via `../lib/a11y.mjs`. None is written here.
  */
 import { a11yFor, A11Y_REPORT, A11Y_MANUAL_AVAILABLE } from '../lib/a11y.mjs';
+import DocsSection from './DocsSection.astro';
 
 interface Props {
   /** The component record — the panel needs its library, not only its slug. */
@@ -48,10 +49,11 @@ const STATE_TONE = {
 };
 ---
 
-<div class="section-rule">
-  <span>ACCESSIBILITY</span>
-  <span>{A11Y_REPORT.available ? `AXE ${A11Y_REPORT.source.axeVersion}` : 'NOT MEASURED'}</span>
-</div>
+<DocsSection
+  id="accessibility"
+  label="ACCESSIBILITY"
+  meta={A11Y_REPORT.available ? `AXE ${A11Y_REPORT.source.axeVersion}` : 'NOT MEASURED'}
+>
 
 {
   !A11Y_REPORT.available && (
@@ -159,6 +161,7 @@ const STATE_TONE = {
     </div>
   )
 }
+</DocsSection>
 
 <style>
   .checks {

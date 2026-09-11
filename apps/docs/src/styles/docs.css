@@ -590,6 +590,69 @@ input:focus {
   text-transform: none;
 }
 
+/*
+ * Collapsible section (DocsSection.astro). The summary IS a `.section-rule`,
+ * so a closed page is a stack of the same hairline rules the site already
+ * draws — plus one mono glyph, `+` closed / `−` open, the vocabulary the
+ * guidance lists already use. `list-style: none` on the summary AND the
+ * `::-webkit-details-marker` rule are both needed: Safari ignores the first.
+ */
+.docs-section {
+  margin: 0;
+}
+
+.docs-section__summary {
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 14px;
+  padding: 14px 16px 0;
+  user-select: none;
+}
+
+.docs-section__summary::-webkit-details-marker {
+  display: none;
+}
+
+.docs-section__summary:hover .docs-section__label,
+.docs-section__summary:focus-visible .docs-section__label {
+  color: var(--blue);
+}
+
+.docs-section__summary:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+
+.docs-section__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.docs-section__glyph::before {
+  content: '+';
+  display: inline-block;
+  width: 10px;
+  color: var(--blue);
+  font: 500 12px/1 var(--mono);
+}
+
+.docs-section[open] > .docs-section__summary .docs-section__glyph::before {
+  content: '−';
+}
+
+/* Bodies indent to the summary's text edge, so a section's content sits under
+   its label rather than jutting past it. */
+.docs-section__body {
+  padding: 6px 16px 0;
+}
+
+/* A closed section is only its rule; the rule's own bottom margin (16px) is the
+   rhythm between closed siblings. */
+.docs-section:not([open]) > .docs-section__summary {
+  margin-bottom: 18px;
+}
+
 /* ----------------------------------------------------------------- shell */
 
 .shell {
@@ -1476,6 +1539,50 @@ html[data-booting] .shell {
 .pg__code {
   grid-column: 1 / -1;
   border-top: 1px solid var(--line);
+}
+
+/* The snippet's disclosure row — same mono voice and `+`/`−` glyph as the
+   page sections (DocsSection), sized to the playground's tab strip. */
+.pg__code-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.pg__code-summary::-webkit-details-marker {
+  display: none;
+}
+
+.pg__code-summary:hover {
+  color: var(--blue);
+}
+
+.pg__code-summary:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+.pg__code-glyph::before {
+  content: '+';
+  display: inline-block;
+  width: 10px;
+  color: var(--blue);
+  font: 500 12px/1 var(--mono);
+}
+
+.pg__code[open] > .pg__code-summary .pg__code-glyph::before {
+  content: '−';
+}
+
+.pg__code[open] > .pg__code-summary {
+  border-bottom: 1px solid var(--line);
 }
 
 .pg__tabs {

@@ -425,7 +425,20 @@ const config = {
     }
   </div>
 
-  <div class="pg__code">
+  {/*
+    The snippet is COLLAPSED by default: the stage and controls are what the
+    reader came for, the code is the thing they take away once the controls
+    are set. A `<details>` of its own, deliberately NOT in the page's
+    exclusive `component-sections` group — it lives inside the always-open
+    playground, and opening the API table below must not fold the snippet the
+    reader is comparing it against. The tabs and COPY sit in the body, not the
+    summary, so a click on them never toggles the disclosure.
+  */}
+  <details class="pg__code" data-pg-code-disclosure>
+    <summary class="pg__code-summary">
+      <span class="pg__code-glyph" aria-hidden="true"></span>
+      CODE — {component.react ? 'HTML / REACT' : 'HTML'}
+    </summary>
     <div class="pg__tabs" role="tablist" aria-label="Framework">
       <button class="pg__tab" type="button" role="tab" data-tab="html" aria-selected="true">
         HTML
@@ -440,7 +453,7 @@ const config = {
       <button class="pg__copy" type="button" data-pg-copy>COPY</button>
     </div>
     <pre class="code" data-pg-code></pre>
-  </div>
+  </details>
 </div>
 
 <script type="application/json" data-pg-config set:html={JSON.stringify(config)} />
