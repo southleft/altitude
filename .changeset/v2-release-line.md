@@ -34,3 +34,10 @@ missing from Figma: `excluded` in `.altitude/ds-projects.json` now accepts a tra
 prefix pattern (`excludedReasonFor()` in `libs/altitude-mcp/src/lib/ds-project.mjs`),
 which drops `missing-in-figma` from 59 to 22 and makes every aggregate over that manifest
 mean what it says.
+
+`<al-theme>` no longer stamps `data-al-mode="undefined"` on its host when a consumer
+sets `el.mode = undefined` (the docs playground does this for every empty enum control).
+An unset property now removes the mirror instead, so the host falls through to whatever
+mode its ancestor or `:root` carries — "no opinion" rather than a selector that matches
+nothing. Setting `mode` again re-mirrors as before; the nested-reset contract for an
+explicit or defaulted value is unchanged and still covered by `test:scoped-theming`.

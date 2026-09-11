@@ -21,6 +21,7 @@ import Playground from '../Playground.astro';
 import ParityPanel from '../ParityPanel.astro';
 import ChecksPanel from '../ChecksPanel.astro';
 import GuidancePanel from '../GuidancePanel.astro';
+import DocsSection from '../DocsSection.astro';
 import { exampleFor } from '../../lib/examples.mjs';
 import { figmaLinkFor } from '../../lib/parity.mjs';
 
@@ -105,7 +106,11 @@ const pairTable = (rows, nameKey = 'name') =>
     </p>
 
     <!-- Playground first: the reader arrives wanting to see the component, so it
-         sits directly under the title/lede, above the authored guidance. -->
+         sits directly under the title/lede, above the authored guidance. The
+         playground and the guidance are the two sections always in view;
+         everything below them is a closed <DocsSection> (one open at a time)
+         so the reference half reads as a table of contents until the reader
+         picks a part. -->
     <Playground component={component} project={project} example={example} />
 
     <!-- Design guidance — authored, cited to source, and gate-checked. Absent
@@ -120,68 +125,70 @@ const pairTable = (rows, nameKey = 'name') =>
     <ParityPanel tag={component.tag} project={project} />
     <ChecksPanel component={component} />
 
-    <div class="section-rule"><span>INSTALL</span><span class="section-rule__raw">{component.importPath}</span></div>
-    <pre class="code code--inline detail-install">{`import '${component.importPath}';${
-      component.react ? `\nimport { ${component.react} } from '@southleft/al-react';` : ''
-    }`}</pre>
+    <DocsSection id="install" label="INSTALL" meta={component.importPath} rawMeta>
+      <pre class="code code--inline detail-install">{`import '${component.importPath}';${
+        component.react ? `
+import { ${component.react} } from '@southleft/al-react';` : ''
+      }`}</pre>
+    </DocsSection>
 
-    <div class="section-rule">
-      <span>API — {component.props.length} PROPS</span>
-      <span>{component.props.filter((p) => p.description).length} DOCUMENTED</span>
-    </div>
-    <PropsTable rows={component.props} />
+    <DocsSection
+      id="props"
+      label={`API — ${component.props.length} PROPS`}
+      meta={`${component.props.filter((p) => p.description).length} DOCUMENTED`}
+    >
+      <PropsTable rows={component.props} />
+    </DocsSection>
 
-    <div class="section-rule"><span>SLOTS</span><span>{component.slots.length}</span></div>
-    {
-      component.slots.length ? (
-        // EXEMPT: .spec-table rows are TABULAR data semantics, not section
-        // arrangement — kept as CSS grid throughout this page.
-        <div class="spec-table spec-table--pair">
-          <div class="spec-table__head">
-            <span>SLOT</span>
-            <span>DESCRIPTION</span>
-          </div>
-          {pairTable(component.slots).map((row) => (
-            <div class="spec-table__row">
-              <span class="spec-table__name">{row.name}</span>
-              <span class="spec-table__type">{row.description || '—'}</span>
+    <DocsSection id="slots" label="SLOTS" meta={String(component.slots.length)}>
+      {
+        component.slots.length ? (
+          // EXEMPT: .spec-table rows are TABULAR data semantics, not section
+          // arrangement — kept as CSS grid throughout this page.
+          <div class="spec-table spec-table--pair">
+            <div class="spec-table__head">
+              <span>SLOT</span>
+              <span>DESCRIPTION</span>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p class="empty-note">THIS COMPONENT DECLARES NO SLOTS IN THE MANIFEST.</p>
-      )
-    }
-
-    <div class="section-rule"><span>EVENTS</span><span>{component.events.length}</span></div>
-    {
-      component.events.length ? (
-        <div class="spec-table spec-table--props">
-          <div class="spec-table__head">
-            <span>EVENT</span>
-            <span>DESCRIPTION</span>
-            <span>TYPE</span>
+            {pairTable(component.slots).map((row) => (
+              <div class="spec-table__row">
+                <span class="spec-table__name">{row.name}</span>
+                <span class="spec-table__type">{row.description || '—'}</span>
+              </div>
+            ))}
           </div>
-          {component.events.map((event) => (
-            <div class="spec-table__row">
-              <span class="spec-table__name">{event.name}</span>
-              <span class="spec-table__type">{event.description || '—'}</span>
-              <span class="spec-table__default">{event.type}</span>
+        ) : (
+          <p class="empty-note">THIS COMPONENT DECLARES NO SLOTS IN THE MANIFEST.</p>
+        )
+      }
+    </DocsSection>
+
+    <DocsSection id="events" label="EVENTS" meta={String(component.events.length)}>
+      {
+        component.events.length ? (
+          <div class="spec-table spec-table--props">
+            <div class="spec-table__head">
+              <span>EVENT</span>
+              <span>DESCRIPTION</span>
+              <span>TYPE</span>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p class="empty-note">THIS COMPONENT DECLARES NO EVENTS IN THE MANIFEST.</p>
-      )
-    }
+            {component.events.map((event) => (
+              <div class="spec-table__row">
+                <span class="spec-table__name">{event.name}</span>
+                <span class="spec-table__type">{event.description || '—'}</span>
+                <span class="spec-table__default">{event.type}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p class="empty-note">THIS COMPONENT DECLARES NO EVENTS IN THE MANIFEST.</p>
+        )
+      }
+    </DocsSection>
 
     {
       component.cssParts.length > 0 && (
-        <>
-          <div class="section-rule">
-            <span>CSS PARTS</span>
-            <span>{component.cssParts.length}</span>
-          </div>
+        <DocsSection id="css-parts" label="CSS PARTS" meta={String(component.cssParts.length)}>
           <div class="spec-table spec-table--pair">
             <div class="spec-table__head">
               <span>PART</span>
@@ -194,17 +201,17 @@ const pairTable = (rows, nameKey = 'name') =>
               </div>
             ))}
           </div>
-        </>
+        </DocsSection>
       )
     }
 
     {
       component.cssProperties.length > 0 && (
-        <>
-          <div class="section-rule">
-            <span>CSS CUSTOM PROPERTIES</span>
-            <span>{component.cssProperties.length}</span>
-          </div>
+        <DocsSection
+          id="css-properties"
+          label="CSS CUSTOM PROPERTIES"
+          meta={String(component.cssProperties.length)}
+        >
           <div class="spec-table spec-table--props">
             <div class="spec-table__head">
               <span>PROPERTY</span>
@@ -219,17 +226,13 @@ const pairTable = (rows, nameKey = 'name') =>
               </div>
             ))}
           </div>
-        </>
+        </DocsSection>
       )
     }
 
     {
       component.methods.length > 0 && (
-        <>
-          <div class="section-rule">
-            <span>PUBLIC METHODS</span>
-            <span>{component.methods.length}</span>
-          </div>
+        <DocsSection id="methods" label="PUBLIC METHODS" meta={String(component.methods.length)}>
           <div class="spec-table spec-table--pair">
             <div class="spec-table__head">
               <span>METHOD</span>
@@ -242,7 +245,7 @@ const pairTable = (rows, nameKey = 'name') =>
               </div>
             ))}
           </div>
-        </>
+        </DocsSection>
       )
     }
 

@@ -292,8 +292,21 @@ const TIERS = [
   <!--
     Everything below is inside the scope. `<al-theme>` is `display: contents`,
     so it changes the token cascade and nothing about the layout.
+
+    `mode` IS SET, AND MUST STAY SET. A bare `<al-theme>` is a full recipe:
+    every axis it does not name resets to its default, not to the ancestor's
+    value (`mode` defaults to `light` and is mirrored as `data-al-mode`,
+    theme.ts `updated()`; the same reset rule is asserted for `contrast` in
+    scripts/verify-contrast-axis.mjs). Without this attribute the scope was a
+    LIGHT island inside the dark shell: `--fg` resolved to light ink (#1d1d1a)
+    over the page's dark ground, and every element that sets `color:
+    var(--fg)` directly — the axis table's property column, the Replay /
+    Toggle buttons, the preset tile names — rendered 1.1:1, black on black.
+    Server-rendered as the project default so first paint matches the shell
+    host; `data-follow-mode` hands it to the theme switch in Shell.astro,
+    which re-asserts the visitor's stored preference on both hosts together.
   -->
-  <al-theme data-motion-scope>
+  <al-theme data-motion-scope mode={project.defaultMode} data-follow-mode>
     <div class="page page--continued">
       <div class="probe" data-motion-probe>
         <div class="micro probe__head">RESOLVED AT THIS ELEMENT, RIGHT NOW</div>

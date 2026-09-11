@@ -1,0 +1,51 @@
+---
+/**
+ * One collapsible section of a component page.
+ *
+ * Every section below the playground — guidance, parity, accessibility,
+ * install, the API tables — is one of these: closed by default, one open at a
+ * time, its header the same hairline `.section-rule` the rest of the site
+ * uses, so a page reads as a table of contents until the reader opens the
+ * part they came for.
+ *
+ * NATIVE `<details name>`, NOT A COMPONENT. The exclusive-accordion attribute
+ * (`name` on `<details>`, Baseline 2024) gives "only one open" with zero
+ * script and, more importantly, CLOSED AT FIRST PAINT — an `al-accordion`
+ * would render every section expanded until the deferred registry bundle
+ * upgraded it, then snap shut. The docs chrome is also deliberately the
+ * canvas's own hand-authored language rather than the library (docs.css
+ * header), and the build-time gates read the emitted HTML for
+ * `data-*` markers, which a closed `<details>` still carries. `Shell.astro`
+ * ships a three-line fallback for browsers that predate `name`.
+ *
+ * `open` exists for the one case that must not start collapsed: pass it and
+ * the section is expanded on load (still part of the group, so opening a
+ * sibling closes it).
+ */
+interface Props {
+  /** Stable id, emitted as `data-docs-section` for gates and deep links. */
+  id: string;
+  /** Left label of the rule — uppercase mono, e.g. "API — 14 PROPS". */
+  label: string;
+  /** Right-hand meta of the rule, e.g. "12 DOCUMENTED". Optional. */
+  meta?: string;
+  /** Meta is case-significant (an import path, a tag) — do not uppercase it. */
+  rawMeta?: boolean;
+  /** Exclusive group. Every section on a page shares the default. */
+  group?: string;
+  /** Start expanded. */
+  open?: boolean;
+}
+
+const { id, label, meta, rawMeta = false, group = 'component-sections', open = false } = Astro.props;
+---
+
+<details class="docs-section" name={group} data-docs-section={id} id={`section-${id}`} open={open}>
+  <summary class="section-rule docs-section__summary">
+    <span class="docs-section__label"><span class="docs-section__glyph" aria-hidden="true"></span>{label}</span>
+    {meta !== undefined && <span class:list={['docs-section__meta', rawMeta && 'section-rule__raw']}>{meta}</span>}
+  </summary>
+  <div class="docs-section__body">
+    <slot />
+  </div>
+</details>

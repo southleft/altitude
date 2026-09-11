@@ -182,15 +182,15 @@ for (const { project, registry: scoped } of CONTEXTS) {
       }
       statusesChecked += 1;
     }
-    if (!project.isDefault) {
-      for (const other of CONTEXTS) {
-        if (other.project.id === project.id) continue;
-        if (html.includes(`data-parity-project="${other.project.id}"`)) {
-          failures.push(
-            `${project.id}/${component.tag}: renders ${other.project.id}'s parity row — a scoped site must show only its own design system's Figma status.`,
-          );
-          foreignRows += 1;
-        }
+    // Every site, the default one included: since 2026-09-11 no site is an
+    // umbrella — each shows only the Figma status of the system it documents.
+    for (const other of CONTEXTS) {
+      if (other.project.id === project.id) continue;
+      if (html.includes(`data-parity-project="${other.project.id}"`)) {
+        failures.push(
+          `${project.id}/${component.tag}: renders ${other.project.id}'s parity row — a site must show only its own design system's Figma status.`,
+        );
+        foreignRows += 1;
       }
     }
 

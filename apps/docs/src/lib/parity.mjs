@@ -186,18 +186,20 @@ export const PARITY_TOTALS = (() => {
 })();
 
 /**
- * Parity rows for one component ON ONE PROJECT'S SITE.
+ * Parity rows for one component ON ONE PROJECT'S SITE — that project's row
+ * only, on every site.
  *
- * The whole-library site (the registry's `default`) is the umbrella: it shows
- * every design system's row, because a component's Figma story there genuinely
- * is "in sync for Altitude, missing for Southleft". A SCOPED project's site
- * shows only its own row — the other systems' Figma files are not that
- * system's business, and listing them would read as drift in a design file its
- * readers cannot open.
+ * The whole-library site used to be an umbrella that listed every design
+ * system's row ("in sync for Altitude, missing for Southleft"). Reversed
+ * 2026-09-11 (owner decision): a reader on a project's site is looking at that
+ * project's Figma file, and another system's row reads as drift in a file
+ * they cannot open — on the default site exactly as on a scoped one. The
+ * cross-project view still exists where it belongs: `PARITY_TOTALS` /
+ * `totalsForProject` on the overview, and the MCP's `altitude_check_parity`
+ * with a `project` argument.
  */
 export function parityForProject(tag, project) {
-  const rows = parityFor(tag);
-  return project.isDefault ? rows : rows.filter((row) => row.project === project.id);
+  return parityFor(tag).filter((row) => row.project === project.id);
 }
 
 /**

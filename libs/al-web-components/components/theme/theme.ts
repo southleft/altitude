@@ -98,7 +98,14 @@ export class ALTheme extends ALElement {
   updated(changed: Map<string, unknown>) {
     super.updated(changed as never);
     if (changed.has('mode') || !this.hasAttribute('data-al-mode')) {
-      this.setAttribute('data-al-mode', this.mode);
+      // An unset property (a consumer writing `el.mode = undefined`, which the
+      // docs playground does for every empty enum control) means "no opinion":
+      // drop the mirror so the host falls through to whatever mode its
+      // ancestor or `:root` carries. Writing it through would stamp the string
+      // "undefined" on the host — a selector that matches nothing and reads as
+      // a bug in the inspector.
+      if (this.mode) this.setAttribute('data-al-mode', this.mode);
+      else this.removeAttribute('data-al-mode');
     }
   }
 
