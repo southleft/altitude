@@ -83,12 +83,27 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
 
-    padding: 0;
     color: var(--al-theme-color-content-neutral-faint);
     background-color: var(--al-theme-color-background-neutral-weak);
     position: sticky; /* 1 */
     inset-block-start: 0;
     z-index: var(--al-z-index-100);
+  }
+
+  /**
+   * Sortable header cells
+   *
+   * The padding belongs to whichever element the header's text sits in, and
+   * only one of them can own it. A sortable header puts its label inside
+   * `__sort-button`, which pads itself so the whole cell is the click target —
+   * so the cell must not pad it a second time. A header with no button has
+   * nothing else to carry the padding, which is why zeroing it lives here and
+   * not on `--header`: it used to sit there, and every non-sortable column
+   * rendered its label flush against the cell edge while the values below it
+   * kept the shared `__cell` padding, so header and column did not line up.
+   */
+  .al-c-table__cell--sortable {
+    padding: 0;
   }
 
   /**
@@ -135,8 +150,15 @@
      * provides the visual inset around the mark, so the padding was both
      * redundant and impossible — removed rather than widening the column, which
      * would have doubled it to 80px for no gain.
+     *
+     * The same reasoning zeroes the shared `__cell` padding here. It applied to
+     * the body checkbox cell all along (`--header` used to zero only the header
+     * one), which is the 40px-inside-40px case this comment describes; stating
+     * it as `padding: 0` makes the intent explicit and keeps the select column's
+     * header and body cells the same width.
      */
     width: 40px;
+    padding: 0;
   }
 
   /**
