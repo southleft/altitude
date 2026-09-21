@@ -41,3 +41,15 @@ An unset property now removes the mirror instead, so the host falls through to w
 mode its ancestor or `:root` carries — "no opinion" rather than a selector that matches
 nothing. Setting `mode` again re-mirrors as before; the nested-reset contract for an
 explicit or defaulted value is unchanged and still covered by `test:scoped-theming`.
+
+`al-table` header cells line up with the column beneath them again. `--header` carried
+`padding: 0`, on the assumption that `__sort-button` — which pads itself so the whole cell
+is the click target — is always there to supply it. A column with `isSortable` unset renders
+a bare `<th>`, so every non-sortable header sat flush against the cell edge while its values
+kept the shared `__cell` padding. The zeroing moves onto a new `__cell--sortable` modifier,
+applied only on the branch that renders the button, and `__select-cell` states `padding: 0`
+outright — the 40px checkbox hit area is that column's inset, as its comment already said,
+and the body cell had been inheriting the shared padding into a 40px box all along.
+
+Visual change, so `al-table`'s VRT baseline needs refreshing from the runner
+(`baselines:adopt`), and its measured anatomy re-measured wherever spec-light.json exists.

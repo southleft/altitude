@@ -203,7 +203,12 @@ export class ALTable extends ALElement {
     const iconName = direction === 'ascending' ? 'caret-up' : direction === 'descending' ? 'caret-down' : 'caret-up-down';
 
     return html`
-      <th scope="col" class="al-c-table__cell al-c-table__cell--header" style=${style} aria-sort=${direction}>
+      <th
+        scope="col"
+        class="al-c-table__cell al-c-table__cell--header al-c-table__cell--sortable"
+        style=${style}
+        aria-sort=${direction}
+      >
         <button type="button" class="al-c-table__sort-button" @click=${() => this.handleSort(column.key)}>
           <span>${column.label}</span>
           <${this.iconEl} class="al-c-table__sort-icon" name=${iconName} size="sm"></${this.iconEl}>
