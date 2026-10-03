@@ -163,10 +163,33 @@ export class ALButton extends ALElement {
    * Handle click events
    * 1. When we click on button which has type=submit trigger requestSubmit on closest form element in order to invoke submit event on form element
    */
-  handleOnClick() {
+  handleOnClick(event: Event) {
+    /*
+     * Disabled guard. `isDisabled` sets native `disabled`, so the browser never
+     * dispatches this click; `isAriaDisabled` deliberately does not (the button
+     * stays focusable), so without this guard a submit or reset button marked
+     * `isAriaDisabled` still submitted or reset its form.
+     */
+    if (this.isDisabled || this.isAriaDisabled) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      return;
+    }
     /* 1 */
     if (this.type === 'submit' || this.type === 'reset') {
       this.formController.submit(this.type);
+    }
+  }
+
+  /**
+   * Link-mode disabled guard. An `<a>` has no native `disabled`, so an
+   * `href` button marked `isDisabled` or `isAriaDisabled` rendered
+   * `aria-disabled` and still navigated. Cancel the navigation instead.
+   */
+  handleOnLinkClick(event: Event) {
+    if (this.isDisabled || this.isAriaDisabled) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
     }
   }
 
@@ -226,6 +249,7 @@ export class ALButton extends ALElement {
       return html`
         <a
           href="${ifDefined(this.href)}"
+          @click=${this.handleOnLinkClick}
           role="button"
           class="${componentClassNames}"
           aria-label=${ifDefined(this.label)}
