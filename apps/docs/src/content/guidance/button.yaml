@@ -50,10 +50,10 @@ dos:
     a worked example, and it is the only combination that produces one
     accessible name.
   - >-
-    Gate the action in your own click handler when the button is disabled. The
-    component renders `aria-disabled` but not the native `disabled` attribute,
-    and its click handler has no disabled branch, so a disabled submit button
-    still submits.
+    Prefer `isDisabled`: it sets the native `disabled` attribute, so the button
+    can be neither clicked nor submitted. Use `isAriaDisabled` only when the
+    button must stay focusable to explain why it is unavailable; the component
+    cancels its click, form submission and link navigation in both cases.
   - >-
     Drive `isExpanded` from the open state of whatever the button controls, so
     the control and the thing it discloses never disagree.
