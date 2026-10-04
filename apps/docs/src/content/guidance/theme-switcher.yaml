@@ -38,13 +38,15 @@ dos:
     the switcher walks up to the nearest one and sets its attributes, which
     scopes the change instead of mutating the document.
   - >-
-    Set `scopedOnly` when you want the deprecated global stylesheet swap to
-    never run, even if the theme host is missing. It turns a silent fallback
-    into a no-op you can notice.
+    Wrap the switcher in `<al-theme>` rather than reaching for `scopedOnly`.
+    The flag is deprecated along with the swap it disables; if you must
+    suppress the fallback before 3.0.0, set the `scopedOnly` JS property — it
+    is a plain field, not an attribute, so writing it in markup does nothing.
   - >-
     Read `scoped` from the `onThemeSwitcherChange` detail if you need to know
     which path ran. It is `true` when a theme ancestor was found and updated,
-    `false` when the legacy swap was used.
+    `false` when none was found — in which case the legacy swap ran, unless
+    `scopedOnly` suppressed it.
   - >-
     Add a brand by adding an entry to the component's brand table rather than by
     branching in consumer code — the list is data, and the component does not
@@ -54,8 +56,8 @@ donts:
   - >-
     Don't depend on the global swap. It removes and re-appends a
     `<style id="al-tokens-sheet">` element in the document head, is marked
-    deprecated with a removal target of 3.0.0, and exists only because one
-    in-repo fixture still uses the switcher with no theme wrapper.
+    and is deprecated with a removal target of 3.0.0. Every in-repo consumer
+    now wraps the switcher in `<al-theme>`, so nothing in the repo reaches it.
   - >-
     Don't put two switchers over the same theme host expecting them to stay in
     step. Each one sets attributes on the host; neither reads the other's state.
@@ -73,7 +75,9 @@ accessibility:
   - >-
     The switcher composes a button, a popover and a menu, so it inherits their
     keyboard behaviour rather than defining its own — the trigger is a real
-    button and the entries are real menu items.
+    button, and the entries are a list of buttons (`al-menu` renders
+    `role="list"`, not `role="menu"`), so they are tabbed through rather than
+    arrow-keyed.
   - >-
     A theme change is a visual change with no announcement. If the switch also
     changes meaning — a high-contrast mode, say — say so in text near the
@@ -100,8 +104,8 @@ sources:
   - path: libs/al-web-components/components/theme-switcher/theme-switcher.ts
     contains: DEPRECATED global-swap
     note: >-
-      The legacy document-level stylesheet swap, why it is still present, and
-      its removal target.
+      The legacy document-level stylesheet swap, when it runs, and its removal
+      target.
   - path: libs/al-web-components/components/theme-switcher/theme-switcher.ts
     contains: onThemeSwitcherChange
     note: >-

@@ -14,9 +14,9 @@ import styles from './card.scss';
  * @slot actions-start - Trailing-action row, leading edge (bottom-left). Use for a "View" / "Open" primary action.
  * @slot actions-end - Trailing-action row, trailing edge (bottom-right). Use for the canonical bottom-right primary action.
  * @slot action-right - Top-right single control (kebab / overflow menu).
- * @slot image - Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps.
+ * @slot image - Media rendered above the header, inset by the image region's own padding. Takes the full width of that region; an `<al-avatar>` sits here too, which is the common case across the example apps.
  *
- *   NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that owns its own padding, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which move the padding onto the content column.
+ *   NOT flush to the card edge. In v2 the card itself has no padding (`.al-c-card` is `padding: 0`) and each region — image, header, body, actions, footer — owns its own; `.al-c-card__image` keeps a `--al-theme-space` inset and nothing turns it off (card.scss). That is deliberate: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that renders it, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which put the media flush and the padding on the content column.
  * @slot header - Card heading row. Rendered above a hairline rule. Compose the row itself with `<al-layout>` when it carries a title and a control.
  * @slot footer - Card footer row, below a hairline rule and on a tinted ground. Compose it with `<al-layout>` rather than relying on slot order.
  */

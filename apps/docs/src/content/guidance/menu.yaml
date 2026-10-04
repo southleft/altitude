@@ -12,8 +12,10 @@ whenToUse:
     The list needs keyboard traversal: arrow keys move between items, Home and
     End jump to the ends, and only one item holds a tab stop at a time.
   - >-
-    The items group under headings that expand and collapse. Group headers get
-    their `aria-controls` populated with the ids of the items they own.
+    The items group under headings that expand and collapse. Each group header
+    renders a disclosure control carrying `aria-expanded`; the ids of the items
+    it owns are collected on its `ariaControls` property but not rendered as
+    `aria-controls`, because an IDREF cannot cross the shadow boundary.
 
 whenNotToUse:
   - text: >-
@@ -116,5 +118,6 @@ sources:
   - path: libs/al-web-components/components/menu-item/menu-item.ts
     contains: ALLink
     note: >-
-      Each item renders a real link or button — the fact that decides the whole
-      role question above.
+      Each item renders an `al-link`, a real `<a>` or `<button>` (a header with
+      no `href` renders a `<div tabindex="-1">` instead) — the fact that decides
+      the whole role question above.

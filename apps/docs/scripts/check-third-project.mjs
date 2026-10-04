@@ -106,7 +106,7 @@ check('G1', href('/components') === '/docs/proofclient/components', `href built 
 check('G1', site.fullName === FIXTURE_ENTRY.name, `site name is "${site.fullName}"`);
 check('G1', site.name === FIXTURE_ENTRY.name, 'a name that does not end in "Design System" must survive unchanged');
 check('G1', site.url.endsWith('/docs/proofclient'), `site url is "${site.url}"`);
-check('G1', site.npmPackage.endsWith('/al-web-components'), `install line is "${site.npmPackage}"`);
+check('G1', site.npmPackage === FIXTURE_ENTRY.library.workspace, `install line is "${site.npmPackage}", expected "${FIXTURE_ENTRY.library.workspace}"`);
 
 /* --------------------------------------------------------- G2 — scoping */
 

@@ -77,6 +77,10 @@ export const VENDOR = (scopeMatch?.[1] ?? rootPackage.name ?? 'unknown').toUpper
 
 /* --------------------------------------------------------- the pure mapper */
 
+function npmPackageName(workspace) {
+  return workspace.startsWith('@') ? workspace : `@${VENDOR.toLowerCase()}/${workspace}`;
+}
+
 /**
  * One registry entry → one docs project record. PURE: everything it reads is on
  * the entry it is handed, which is what lets `check-third-project.mjs` feed it
@@ -162,8 +166,12 @@ export function docsProject(entry, { isDefault }) {
     /** tag → why this system deliberately has no Figma set for it. */
     excluded: entry.excluded ?? {},
     storybookProductionBase: entry.storybook?.productionBase ?? null,
-    /** `@<vendor>/<library workspace>` — what a consumer installs. */
-    npmPackage: `@${VENDOR.toLowerCase()}/${entry.library?.workspace ?? ''}`,
+    /**
+     * What a consumer installs. The registry's `library.workspace` is already
+     * the scoped package name (`@southleft/al-web-components`), so it is used
+     * verbatim; the vendor scope is only added to a bare name.
+     */
+    npmPackage: npmPackageName(entry.library?.workspace ?? ''),
   };
 }
 

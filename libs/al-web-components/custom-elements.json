@@ -1531,7 +1531,28 @@
             {
               "kind": "method",
               "name": "handleOnClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
               "description": "Handle click events\n1. When we click on button which has type=submit trigger requestSubmit on closest form element in order to invoke submit event on form element"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnLinkClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Link-mode disabled guard. An `<a>` has no native `disabled`, so an\n`href` button marked `isDisabled` or `isAriaDisabled` rendered\n`aria-disabled` and still navigated. Cancel the navigation instead."
             }
           ],
           "attributes": [
@@ -2399,7 +2420,7 @@
               "name": "action-right"
             },
             {
-              "description": "Media rendered above the header, INSIDE the card's padding. Takes the full content width; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge — this line previously claimed it was, and it never has been: `.al-c-card` carries a single outer `padding` and `.al-c-card__image` neither resets nor negates it (card.scss). The claim was wrong rather than the code: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that owns its own padding, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which move the padding onto the content column.",
+              "description": "Media rendered above the header, inset by the image region's own padding. Takes the full width of that region; an `<al-avatar>` sits here too, which is the common case across the example apps. NOT flush to the card edge. In v2 the card itself has no padding (`.al-c-card` is `padding: 0`) and each region — image, header, body, actions, footer — owns its own; `.al-c-card__image` keeps a `--al-theme-space` inset and nothing turns it off (card.scss). That is deliberate: the slot is used for avatars in `apps/angular`, `apps/astro` and `apps/svelte`, and bleeding it to the edge would wreck all of them. A card that needs edge-to-edge media wants a card that renders it, not a flag here — see the `article` / `work` variants on Southleft's `al-card` in `libs/sl-web-components`, which put the media flush and the padding on the content column.",
               "name": "image"
             },
             {
@@ -2530,7 +2551,7 @@
           "name": "ALCheckboxGroup",
           "slots": [
             {
-              "description": "The component content, a set of checkbox items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`.",
+              "description": "The component content, a set of checkbox items. Items stack in a column by default; for a row, set `direction=\"row\"`. Slot the checkboxes as direct children — the group does not find checkboxes nested in another container.",
               "name": ""
             },
             {
@@ -18649,7 +18670,7 @@
           "name": "ALRadioGroup",
           "slots": [
             {
-              "description": "The radio content, a set of radio items. Items stack in a column by default; for a row, nest them in `<al-layout direction=\"row\" wrap>`.",
+              "description": "The radio content, a set of radio items. Items stack in a column by default; for a row, set `direction=\"row\"`. Slot the radios as direct children — the group does not find radios nested in another container.",
               "name": ""
             },
             {
@@ -23660,7 +23681,7 @@
                   }
                 }
               ],
-              "description": "Set theme by key. The data-driven implementation:\n\n  1. Walk up the DOM until we find an `<al-theme>` ancestor (the scoped\n     target). When present, set `brand` and `mode` attributes on it —\n     no global mutation.\n\n  2. If no `<al-theme>` ancestor exists AND `scopedOnly` is false,\n     perform the legacy `<style id=\"al-tokens-sheet\">` swap. DEPRECATED,\n     removal target 3.0.0 — kept because `apps/web-components/index.html`\n     uses the switcher with no wrapper. See MIGRATION.md § \"Legacy\n     fallback\".\n\n  3. Dispatch `onThemeSwitcherChange` with the resolved attrs."
+              "description": "Set theme by key. The data-driven implementation:\n\n  1. Walk up the DOM until we find an `<al-theme>` ancestor (the scoped\n     target). When present, set `brand` and `mode` attributes on it —\n     no global mutation.\n\n  2. If no `<al-theme>` ancestor exists AND `scopedOnly` is false,\n     perform the legacy `<style id=\"al-tokens-sheet\">` swap. DEPRECATED,\n     removal target 3.0.0 — kept for external consumers that have not\n     added an `<al-theme>` wrapper yet. See MIGRATION.md § \"Legacy\n     fallback\".\n\n  3. Dispatch `onThemeSwitcherChange` with the resolved attrs."
             },
             {
               "kind": "method",
@@ -23678,7 +23699,7 @@
           ],
           "events": [
             {
-              "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used.",
+              "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when none was found — in which case the deprecated global swap ran, unless `scopedOnly` suppressed it.",
               "name": "onThemeSwitcherChange"
             }
           ],

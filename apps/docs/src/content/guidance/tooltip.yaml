@@ -42,9 +42,10 @@ dos:
     Use `isDynamic` when the tooltip sits near a viewport edge; it repositions
     based on where the trigger is rather than always honouring `position`.
   - >-
-    Set `isInteractive` only when the tooltip's content genuinely has to be
-    reached with the pointer, and accept that a tooltip you can move into is
-    harder to dismiss.
+    Set `isInteractive` only when the tooltip's content has to be clicked
+    into. It turns off hover and focus opening entirely: the tooltip then opens
+    on click or Enter/Space and stays open until an outside click, Escape or
+    Tab.
 
 donts:
   - >-
