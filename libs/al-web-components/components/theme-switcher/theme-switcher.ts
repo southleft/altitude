@@ -11,8 +11,8 @@ import { ALIconSettings } from '../icon/icons/settings';
 import styles from './theme-switcher.scss';
 // T4.5 — legacy stylesheet imports retained for the DEPRECATED global-swap
 // fallback (removal target 3.0.0; see MIGRATION.md § "Legacy fallback").
-// Reachable only when the switcher finds no <al-theme> ancestor.
-// `apps/web-components/index.html` is the remaining in-repo consumer.
+// Reachable only when the switcher finds no <al-theme> ancestor; every
+// in-repo consumer is now wrapped, so nothing in the repo reaches it.
 import tokensAltitudeDark from '../../styles/dist/scss/brand/tokens-altitude-dark.scss';
 import tokensAltitudeLight from '../../styles/dist/scss/brand/tokens-altitude-light.scss';
 import tokensSouthleft from '../../styles/dist/scss/brand/tokens-southleft-dark.scss';
@@ -52,7 +52,7 @@ const BRANDS: BrandEntry[] = [
 /**
  * Component: al-theme-switcher
  *
- * @event onThemeSwitcherChange - Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used.
+ * @event onThemeSwitcherChange - Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when none was found — in which case the deprecated global swap ran, unless `scopedOnly` suppressed it.
  */
 export class ALThemeSwitcher extends ALElement {
   static el = 'al-theme-switcher';
@@ -98,8 +98,8 @@ export class ALThemeSwitcher extends ALElement {
    *
    *   2. If no `<al-theme>` ancestor exists AND `scopedOnly` is false,
    *      perform the legacy `<style id="al-tokens-sheet">` swap. DEPRECATED,
-   *      removal target 3.0.0 — kept because `apps/web-components/index.html`
-   *      uses the switcher with no wrapper. See MIGRATION.md § "Legacy
+   *      removal target 3.0.0 — kept for external consumers that have not
+   *      added an `<al-theme>` wrapper yet. See MIGRATION.md § "Legacy
    *      fallback".
    *
    *   3. Dispatch `onThemeSwitcherChange` with the resolved attrs.

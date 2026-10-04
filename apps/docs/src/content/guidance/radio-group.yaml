@@ -45,9 +45,10 @@ dos:
 
 donts:
   - >-
-    Don't add an arrangement prop or wrap the group in your own flex container.
-    Items stack in a column by default; for a row, nest them in `<al-layout
-    direction="row" wrap>`.
+    Don't wrap the items in your own flex container or `<al-layout>`. Items
+    stack in a column by default; for a row, set `direction="row"`. The group
+    finds its radios among its direct children, so nesting them breaks
+    arrow-key selection.
   - >-
     Don't manage the unchecking yourself. Arrow navigation moves the checked
     item, sets the new one, focuses its input and dispatches the change event in
@@ -68,8 +69,8 @@ accessibility:
     across shadow boundaries.
   - >-
     Moving the selection also moves focus: the newly checked radio's inner input
-    is focused directly, and disabled inputs are skipped by the selector that
-    finds it.
+    is focused directly, and disabled radios are stepped over. If every radio
+    is disabled, the selection and focus stay where they are.
   - >-
     Enter re-commits the currently targeted radio, so a keyboard user who
     arrived by Tab can confirm without hunting for Space.
@@ -106,8 +107,8 @@ sources:
   - path: libs/al-web-components/components/radio-group/radio-group.ts
     contains: al-layout
     note: >-
-      The slot documentation sending row arrangement to `al-layout` rather than
-      to a prop here.
+      The `direction` prop, which parameterises the group's own nested
+      `<al-layout>` rather than adding a separate arrangement mechanism.
   - path: AGENTS.md
     contains: Arrangement vs. semantics
     note: >-

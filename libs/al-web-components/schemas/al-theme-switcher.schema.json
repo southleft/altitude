@@ -18,7 +18,7 @@
     "events": [
       {
         "name": "onThemeSwitcherChange",
-        "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when the deprecated global swap was used."
+        "description": "Fired when the theme changes. Detail: `{ currentTheme, currentLogo, scoped }` — `scoped` is `true` when an ancestor `<al-theme>` was found and updated, `false` when none was found — in which case the deprecated global swap ran, unless `scopedOnly` suppressed it."
       }
     ],
     "cssParts": [],

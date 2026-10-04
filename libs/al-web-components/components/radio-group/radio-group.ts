@@ -14,7 +14,8 @@ import styles from './radio-group.scss';
 /**
  * Component: al-radio-group
  * @slot - The radio content, a set of radio items. Items stack in a column
- *         by default; for a row, nest them in `<al-layout direction="row" wrap>`.
+ *         by default; for a row, set `direction="row"`. Slot the radios as direct
+ *         children — the group does not find radios nested in another container.
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
  *

@@ -1,9 +1,10 @@
 purpose: >-
   A modal that interrupts the page: it traps focus, closes on Escape, and
   returns focus to whatever opened it. It brings its own trigger — slot the
-  control that opens it into the `trigger` slot and the component wires
-  `aria-expanded` on it — so the open state lives in one place rather than being
-  synchronised by the page.
+  control that opens it into the `trigger` slot and the component sets
+  `isExpanded` on it, which `al-button` renders as `aria-expanded` (a plain
+  element gets no attribute) — so the open state lives in one place rather than
+  being synchronised by the page.
 
 whenToUse:
   - >-
@@ -38,18 +39,19 @@ whenNotToUse:
 
 dos:
   - >-
-    Slot the trigger into the `trigger` slot instead of calling `open()` from
-    the page. The component sets `aria-expanded` on the slotted control and
-    stores it as the focus-restore target, and neither happens if you open the
-    dialog from outside.
+    Prefer the `trigger` slot. If you open the dialog from the page, pass the
+    click event to `open(e)` so the component stores `e.target` as the trigger;
+    with no event and no slotted trigger it can only fall back to whatever had
+    focus before the dialog opened.
   - >-
     Listen for `onDialogClose` when you need to react to the dialog closing at
     all. `onDialogCloseButton` fires only for the close button — the backdrop
     click and the Escape key do not reach it.
   - >-
-    Keep `transitionDelay` in step with your close animation. It is what delays
-    focus-trap activation, so a value shorter than the transition traps focus
-    before the dialog is visible.
+    Keep `transitionDelay` in step with the dialog's open transition. It delays
+    focus-trap activation only on open (the trap is removed immediately on
+    close), so a value shorter than the transition traps focus before the
+    dialog is visible.
   - >-
     Set `disableClickOutside` for a dialog the user must answer, so a stray
     click on the backdrop cannot discard a half-finished decision.
@@ -87,9 +89,10 @@ accessibility:
     dialog opened — so focus is not lost when a trigger component does not
     expose a button.
   - >-
-    Escape is handled by a shared DialogController rather than a local key
-    listener, so the behaviour is the same one every other overlay in the system
-    uses.
+    Escape closes the dialog through a keydown handler on the dialog itself,
+    with the headless `DialogController`'s document-level listener as a
+    backstop. Both call the same `close()`, so focus restoration and
+    `onDialogClose` are identical either way.
 
 content:
   - >-

@@ -51,9 +51,11 @@ dos:
 
 donts:
   - >-
-    Don't add an arrangement prop to this component or wrap it in your own flex
-    container to get a row. Its slot content is already nested in a layout —
-    nest the items in `<al-layout direction="row" wrap>` instead.
+    Don't wrap the items in your own flex container or `<al-layout>` to get a
+    row — set `direction="row"`, which parameterises the layout the group
+    already renders. The group finds its checkboxes among its direct children,
+    so nesting them hides them from the `isRequired`/`isDisabled` cascade and
+    from `checkedValues`.
   - >-
     Don't use a checkbox group where the answer is binary. One question with a
     yes and a no is a single checkbox, or a toggle if it takes effect
@@ -103,8 +105,8 @@ sources:
   - path: libs/al-web-components/components/checkbox-group/checkbox-group.ts
     contains: al-layout
     note: >-
-      The slot documentation sending row arrangement to `al-layout` rather than
-      to a prop on this component.
+      The `direction` prop, which parameterises the group's own nested
+      `<al-layout>` rather than adding a separate arrangement mechanism.
   - path: AGENTS.md
     contains: Arrangement vs. semantics
     note: >-

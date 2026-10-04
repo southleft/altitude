@@ -14,7 +14,8 @@ import styles from './checkbox-group.scss';
 /**
  * Component: al-checkbox-group
  * @slot - The component content, a set of checkbox items. Items stack in a column
- *         by default; for a row, nest them in `<al-layout direction="row" wrap>`.
+ *         by default; for a row, set `direction="row"`. Slot the checkboxes as direct
+ *         children — the group does not find checkboxes nested in another container.
  * @slot field-note - If content is slotted, it will display in place of the fieldNote property
  * @slot error - If content is slotted, it will display in place of the errorNote property
  * @event onCheckboxGroupChange - Fired when any checkbox in the group changes. Detail: `{ checked, value, checkedValues }` — the state and value of the checkbox that changed, plus the values of every currently-checked checkbox in the group.

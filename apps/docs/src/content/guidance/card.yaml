@@ -54,15 +54,15 @@ dos:
 
 donts:
   - >-
-    Don't slot content into `action-right`. The slot is documented on the
-    component but the template renders no `<slot name="action-right">`, so
-    anything assigned to it does not appear. Put an overflow control in
-    `actions-end` until that is fixed.
+    Don't put more than one control in `action-right`. It renders at the
+    trailing end of the header row, beside the `header` slot, and is sized for
+    a single overflow (kebab) menu; a row of actions belongs in `actions-start`
+    and `actions-end`.
   - >-
-    Don't expect `image` to bleed to the card edge. The card carries a single
-    outer padding and the image region neither resets nor negates it. A card
-    that needs edge-to-edge media wants a component that renders it, not a flag
-    here.
+    Don't expect `image` to bleed to the card edge. The card itself has no
+    padding — each region owns its own — and the image region keeps a fixed
+    inset that nothing turns off. A card that needs edge-to-edge media wants a
+    component that renders it, not a flag here.
   - >-
     Don't make the whole card a link when it also contains buttons. Nested
     interactive regions leave the user with no way to tell which target they are
@@ -111,8 +111,8 @@ sources:
   - path: libs/al-web-components/components/card/card.ts
     contains: action-right
     note: >-
-      The slot is declared in the component's documentation; the render function
-      below it emits no matching slot element.
+      The header row renders the `action-right` slot after the `header` slot,
+      so it lands at the row's trailing edge.
   - path: AGENTS.md
     contains: Arrangement vs. semantics
     note: >-

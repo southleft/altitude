@@ -52,18 +52,19 @@ dos:
 
 donts:
   - >-
-    Don't expect the options to exist in the DOM while the select is closed. The
-    dropdown panel is only rendered when the panel is open, so anything that
-    walks the light DOM for options — a test, a form serializer, an autofill
-    heuristic — will find nothing until it is opened.
+    Don't expect the options to be laid out or exposed while the select is
+    closed. They stay in the light DOM, but the dropdown panel and the `<slot>`
+    that projects them render only while open, so until then they are
+    unslotted: no layout, and not in the accessibility tree. Anything that
+    measures them or queries them by role comes up empty.
   - >-
     Don't stamp `role="option"` onto the slotted items. They are `al-list-item`s
     that render their own `<button>`, and an interactive role wrapping an
     interactive control is exactly the pattern the component avoided on purpose.
   - >-
-    Don't use this for multi-select without checking what the composed panel
-    actually renders — the component registers `al-checkbox` for that case, but
-    the behaviour is not a documented public prop.
+    Don't use this for multi-select. There is no multi-select mode: `value`
+    holds one string, and although `al-checkbox` is registered, nothing in the
+    template renders it.
   - >-
     Don't reach for a select when the answer is a date. There is a dedicated
     picker with the calendar semantics that come with it.
@@ -119,4 +120,5 @@ sources:
   - path: libs/al-web-components/components/select/select.ts
     contains: isActiveDropdown
     note: >-
-      The panel — and therefore every option — is rendered only while open.
+      The panel and the slot that projects the options are rendered only while
+      open; the options themselves stay in the light DOM.
