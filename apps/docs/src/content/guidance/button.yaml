@@ -50,8 +50,8 @@ dos:
     a worked example, and it is the only combination that produces one
     accessible name.
   - >-
-    Prefer `isDisabled`: it sets the native `disabled` attribute, so the button
-    can be neither clicked nor submitted. Use `isAriaDisabled` only when the
+    Prefer `isDisabled`: on a `<button>` it sets the native `disabled`
+    attribute, so the button can be neither clicked nor submitted. Use `isAriaDisabled` only when the
     button must stay focusable to explain why it is unavailable; the component
     cancels its click, form submission and link navigation in both cases.
   - >-
@@ -95,10 +95,13 @@ accessibility:
     whose children are partly checked. It is state you must keep in sync, not a
     style hook.
   - >-
-    `isDisabled` renders `aria-disabled` only. The control therefore keeps its
-    tab stop and can still be reached, focused and announced as unavailable —
-    which is the accessible behaviour — but it also remains clickable, so the
-    guard has to live in your handler.
+    `isDisabled` sets the native `disabled` attribute on the `<button>`, so it
+    leaves the tab order and the browser never fires its click.
+    `isAriaDisabled` renders `aria-disabled="true"` and keeps the tab stop; the
+    component cancels that click itself, along with any form submit or reset.
+    On the `href` branch, where `<a>` has no native `disabled`, both flags
+    render `aria-disabled`, the link stays focusable, and the component cancels
+    the navigation. None of these cases needs a guard in your handler.
   - >-
     Setting `href` produces `<a role="button">`. Assistive technology will
     announce a button while the browser still treats it as a link for
@@ -130,9 +133,10 @@ sources:
   - path: libs/al-web-components/components/button/button.ts
     contains: aria-disabled
     note: >-
-      The disabled treatment is advisory only: `aria-disabled` is emitted, the
-      native `disabled` attribute is not, and the click handler does not check
-      it.
+      The disabled wiring: native `disabled` from `isDisabled` on the
+      `<button>` branch, `aria-disabled` from `isAriaDisabled` (and from either
+      flag on the `href` branch), and the click guards that cancel click, form
+      submit/reset and link navigation.
   - path: libs/al-web-components/components/button/button.ts
     contains: aria-controls
     note: >-

@@ -49,15 +49,17 @@ dos:
     characters"), and `errorNote` for what went wrong after.
   - >-
     Set `maxLength` when there is a real limit; it renders both the native
-    `maxlength` and a live `n/max` counter, and drive the counter with
-    `maxLengthValue`.
+    `maxlength` and a live `n/max` counter that the component updates as the
+    user types.
 
 donts:
   - >-
-    Don't rely on the error note being announced. Only the FIELD note is given
-    the `aria-describedby` id — the error block is rendered without it, so a
-    screen-reader user reaches the error only by browsing the field, not on
-    focus.
+    Don't assign `errorNote` late or rely on slotted `error` content being
+    announced. The error note gets its own id, and the input's
+    `aria-describedby` lists it whenever `isError` renders it — but that id is
+    generated only if `errorNote` is set when the element connects, so an
+    `errorNote` assigned afterwards, or content in the `error` slot, is not
+    referenced.
   - >-
     Don't expect `isError` to set `aria-invalid`. The component renders no
     `aria-invalid` at all, so the invalid state is conveyed visually and through
@@ -87,8 +89,8 @@ accessibility:
     to the field note. If you pass your own id, you own keeping it pointed at
     something that exists.
   - >-
-    `isDisabled` renders the native `disabled` attribute here — unlike
-    `al-button` — so a disabled input genuinely leaves the tab order.
+    `isDisabled` renders the native `disabled` attribute, so a disabled input
+    genuinely leaves the tab order.
 
 content:
   - >-
@@ -118,8 +120,8 @@ sources:
   - path: libs/al-web-components/components/input/input.ts
     contains: aria-describedby
     note: >-
-      The describedby wiring: it reaches the input and the field note, and no
-      equivalent id is put on the error block.
+      The describedby list: the field-note id and, while the error renders,
+      the error-note id.
   - path: libs/al-web-components/components/input/input.ts
     contains: al-c-input__label
     note: >-
