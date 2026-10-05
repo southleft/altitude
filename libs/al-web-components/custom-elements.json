@@ -1531,7 +1531,28 @@
             {
               "kind": "method",
               "name": "handleOnClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
               "description": "Handle click events\n1. When we click on button which has type=submit trigger requestSubmit on closest form element in order to invoke submit event on form element"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnLinkClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Link-mode disabled guard. An `<a>` has no native `disabled`, so an\n`href` button marked `isDisabled` or `isAriaDisabled` rendered\n`aria-disabled` and still navigated. Cancel the navigation instead."
             }
           ],
           "attributes": [

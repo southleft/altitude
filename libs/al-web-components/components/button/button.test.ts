@@ -92,6 +92,67 @@ describe('al-button', () => {
     expect(submits).toBe(0);
   });
 
+  it('does not submit the form when an isAriaDisabled submit button is clicked', async () => {
+    // isAriaDisabled leaves the inner <button> enabled (so it stays focusable),
+    // which means the browser DOES dispatch the click. handleOnClick's disabled
+    // guard is the only thing that stops FormController.submit().
+    const form = await fixture<HTMLFormElement>(html`
+      <form @submit=${(e: Event) => e.preventDefault()}>
+        <al-button type="submit" isAriaDisabled>Go</al-button>
+      </form>
+    `);
+    let submits = 0;
+    form.addEventListener('submit', () => submits++);
+    const button = (form.querySelector('al-button') as ALButton).shadowRoot!.querySelector('button')!;
+    expect(button.disabled).toBe(false);
+    expect(button.getAttribute('aria-disabled')).toBe('true');
+    button.click();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(submits).toBe(0);
+  });
+
+  it('does not reset the form when an isAriaDisabled reset button is clicked', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <input name="a" />
+        <al-button type="reset" isAriaDisabled>Reset</al-button>
+      </form>
+    `);
+    const input = form.querySelector('input') as HTMLInputElement;
+    input.value = 'dirty';
+    (form.querySelector('al-button') as ALButton).shadowRoot!.querySelector('button')!.click();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(input.value).toBe('dirty');
+  });
+
+  it('cancels navigation when a link-mode button is isDisabled', async () => {
+    // An <a> has no native `disabled`, so handleOnLinkClick must cancel the
+    // default action. A fragment href keeps the test runner's page in place
+    // even if the guard regresses — the failure shows up as a changed hash.
+    const before = window.location.hash;
+    const el = await fixture<ALButton>(html`<al-button href="#al-button-disabled-nav" isDisabled>Docs</al-button>`);
+    const anchor = q(el, 'a') as HTMLAnchorElement;
+    expect(anchor.getAttribute('aria-disabled')).toBe('true');
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+    try {
+      anchor.dispatchEvent(click);
+      await new Promise((r) => setTimeout(r, 0));
+      expect(click.defaultPrevented).toBe(true);
+      expect(window.location.hash).toBe(before);
+    } finally {
+      if (window.location.hash !== before) history.replaceState(null, '', before || window.location.pathname + window.location.search);
+    }
+  });
+
+  it('still sets native disabled on the inner <button> when isDisabled is set', async () => {
+    // The click guard must not replace native `disabled`: it is what removes
+    // the button from the tab order and what assistive tech reads as disabled.
+    const el = await fixture<ALButton>(html`<al-button isDisabled>Save</al-button>`);
+    const button = q(el, 'button') as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    expect(button.hasAttribute('disabled')).toBe(true);
+  });
+
   it('maps each variant to its own modifier class and nothing else', async () => {
     for (const [variant, cls] of [
       ['secondary', 'al-c-button--secondary'],
