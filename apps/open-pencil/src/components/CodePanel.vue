@@ -66,7 +66,11 @@ const oversizeSelection = useSceneComputed(() => {
 })
 
 function selectionToHTML(ids: string[]): string {
-  const document = sceneNodesToDesignDocument(store.graph, ids, { geometryFacts: false })
+  // Only the markup is shown, so children hidden behind inline SVG are never built.
+  const document = sceneNodesToDesignDocument(store.graph, ids, {
+    geometryFacts: false,
+    markupOnly: true
+  })
   return serializeHTML(document)
 }
 

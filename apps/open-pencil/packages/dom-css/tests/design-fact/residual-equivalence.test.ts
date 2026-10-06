@@ -12,7 +12,9 @@ import {
   defaultsForType
 } from '#dom-css/design-fact/fields'
 import { encodeFactJSON } from '#dom-css/design-fact/json'
+import { sceneGraphToDesignDocument } from '#dom-css/from-scene-graph'
 import { serializeHTML } from '#dom-css/serialize'
+import { designDocumentToSceneGraph } from '#dom-css/to-scene-graph'
 
 import { SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
 
@@ -130,6 +132,44 @@ describe('residual fact equivalence', () => {
         expect(attrs).toEqual(designFactToAttrs(designFactFromNode(graph, node, { geometryFacts })))
       }
     }
+  })
+
+  test('markupOnly emits the same HTML without building children under inline SVG', () => {
+    const graph = new SceneGraph()
+    const page = graph.getPages()[0]
+    const union = graph.createNode('BOOLEAN_OPERATION', page.id, {
+      name: 'Union',
+      width: 24,
+      height: 24,
+      booleanOperation: 'UNION',
+      fills: [{ type: 'SOLID', color: { r: 0, g: 0, b: 0, a: 1 }, opacity: 1, visible: true }],
+      vectorNetwork: TRIANGLE
+    })
+    for (const name of ['A', 'B']) {
+      graph.createNode('VECTOR', union.id, {
+        name,
+        width: 24,
+        height: 24,
+        fills: [{ type: 'SOLID', color: { r: 0, g: 0, b: 0, a: 1 }, opacity: 1, visible: true }],
+        vectorNetwork: TRIANGLE
+      })
+    }
+
+    const full = sceneGraphToDesignDocument(graph, { rootId: page.id })
+    const markup = sceneGraphToDesignDocument(graph, { rootId: page.id, markupOnly: true })
+    expect(serializeHTML(markup)).toBe(serializeHTML(full))
+
+    const [fullUnion] = full.children
+    const [markupUnion] = markup.children
+    if (fullUnion?.type !== 'element' || markupUnion?.type !== 'element') {
+      throw new Error('expected element roots')
+    }
+    expect(fullUnion.rawHTML).toContain('<svg')
+    expect(markupUnion.children).toHaveLength(0)
+    // The default document still carries the operands for the in-memory round trip.
+    expect(fullUnion.children).toHaveLength(2)
+    const rebuilt = designDocumentToSceneGraph(full)
+    expect([...rebuilt.nodes.values()].filter((node) => node.type === 'VECTOR')).toHaveLength(2)
   })
 
   test('attribute values escape markup characters in one pass', () => {

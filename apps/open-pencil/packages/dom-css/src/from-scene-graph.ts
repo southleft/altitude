@@ -58,6 +58,13 @@ export interface SceneGraphToDesignOptions {
    * caller, so concurrent exports never share a report.
    */
   omittedGeometry?: OmittedGeometry[]
+  /**
+   * Build only what HTML serialisation emits. A vector emitted as inline SVG serialises
+   * that SVG instead of its children, so its children are not built at all (nor reported
+   * in `omittedGeometry`). Leave off for documents that go back into a scene graph: the
+   * in-memory round trip restores those children. Default false.
+   */
+  markupOnly?: boolean
 }
 
 type ResolvedDesignOptions = Required<Omit<SceneGraphToDesignOptions, 'omittedGeometry'>> &
@@ -74,7 +81,8 @@ function resolveDesignOptions(
     cssVarPrefix: options.cssVarPrefix ?? '',
     inlineVectorSVG: options.inlineVectorSVG ?? true,
     geometryFacts: options.geometryFacts ?? true,
-    omittedGeometry: options.omittedGeometry
+    omittedGeometry: options.omittedGeometry,
+    markupOnly: options.markupOnly ?? false
   }
 }
 
@@ -399,11 +407,13 @@ function sceneNodeToDesignNode(
     }
   }
 
-  const children = nodeChildren(graph, node)
-    .map((child) => sceneNodeToDesignNode(graph, child, options))
-    .filter((child): child is DesignNode => child !== null)
+  const buildChildren = () =>
+    nodeChildren(graph, node)
+      .map((child) => sceneNodeToDesignNode(graph, child, options))
+      .filter((child): child is DesignNode => child !== null)
 
   if (node.type === 'CANVAS') {
+    const children = buildChildren()
     return {
       type: 'element',
       tagName: 'main',
@@ -415,11 +425,15 @@ function sceneNodeToDesignNode(
     }
   }
 
+  const emitsSVG = options.inlineVectorSVG && VECTOR_TYPES.has(node.type)
+  // Children are built before the node's own SVG, as they always were, unless they will
+  // not be emitted: then the SVG decides whether they are needed at all.
+  let children = options.markupOnly && emitsSVG ? [] : buildChildren()
+  const rawHTML = emitsSVG ? vectorSVG(graph, node) : undefined
+  if (options.markupOnly && emitsSVG && rawHTML === undefined) children = buildChildren()
+
   const inlineStyle = styleFromSceneNode(node)
   applyVariableCSS(inlineStyle, fact)
-
-  const rawHTML =
-    options.inlineVectorSVG && VECTOR_TYPES.has(node.type) ? vectorSVG(graph, node) : undefined
 
   return {
     type: 'element',
