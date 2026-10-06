@@ -181,6 +181,9 @@ function toFigmaValue(raw, figmaType, path, warnings) {
     return n;
   }
 
+  // DTCG `cubicBezier` is a 4-number array; carry it as the same CSS string the
+  // token build emits (`cubic-bezier(0.2,0,0,1)`), not `String([...])`.
+  if (Array.isArray(raw)) return `cubic-bezier(${raw.join(',')})`;
   return String(raw);
 }
 

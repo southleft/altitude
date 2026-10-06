@@ -1,0 +1,111 @@
+{
+  "$description": "The default shape. No host rule is emitted: the role tokens stay undeclared so each component's brand-aware fallback wins (.altitude/AXES.md §2.3). Each $value records the most common fallback; the actual one is chosen per call site.",
+  "$extensions": {
+    "org.altitude.axis": {
+      "axis": "shape",
+      "attribute": "shape",
+      "mode": "default",
+      "default": true
+    }
+  },
+  "theme": {
+    "border": {
+      "radius": {
+        "role": {
+          "action": {
+            "$value": "{theme.border.radius.@}",
+            "$type": "dimension",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "borderRadius"
+              },
+              "org.altitude.axis": {
+                "css": "omit"
+              },
+              "org.primer.llm": {
+                "usage": "Shape-axis corner-radius ROLES (action: buttons and interactive controls; control: form-control boxes; surface: containers; indicator: avatars and badge dots). Defined only in tier-2/axis/shape/<mode>.json and emitted as <al-theme> host rules, never on :root, so the brand-aware fallback each component writes wins when shape is unset: var(--al-theme-border-radius-role-<role>, var(--al-theme-border-radius<-step>)). Legal CSS surface: border-radius."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "border-radius"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "b9f7a194-d294-4bd7-8cb6-c21b8df09b5e"
+              }
+            }
+          },
+          "control": {
+            "$value": "{theme.border.radius.@}",
+            "$type": "dimension",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "borderRadius"
+              },
+              "org.altitude.axis": {
+                "css": "omit"
+              },
+              "org.primer.llm": {
+                "usage": "Shape-axis corner-radius ROLES (action: buttons and interactive controls; control: form-control boxes; surface: containers; indicator: avatars and badge dots). Defined only in tier-2/axis/shape/<mode>.json and emitted as <al-theme> host rules, never on :root, so the brand-aware fallback each component writes wins when shape is unset: var(--al-theme-border-radius-role-<role>, var(--al-theme-border-radius<-step>)). Legal CSS surface: border-radius."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "border-radius"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "cd690e6f-94fe-4dd7-a57e-135ed469d9bb"
+              }
+            }
+          },
+          "surface": {
+            "$value": "{theme.border.radius.@}",
+            "$type": "dimension",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "borderRadius"
+              },
+              "org.altitude.axis": {
+                "css": "omit"
+              },
+              "org.primer.llm": {
+                "usage": "Shape-axis corner-radius ROLES (action: buttons and interactive controls; control: form-control boxes; surface: containers; indicator: avatars and badge dots). Defined only in tier-2/axis/shape/<mode>.json and emitted as <al-theme> host rules, never on :root, so the brand-aware fallback each component writes wins when shape is unset: var(--al-theme-border-radius-role-<role>, var(--al-theme-border-radius<-step>)). Legal CSS surface: border-radius."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "border-radius"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "8ffe676c-fa04-44a4-90a7-b92460462e7c"
+              }
+            }
+          },
+          "indicator": {
+            "$value": "{theme.border.radius.round}",
+            "$type": "dimension",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "borderRadius"
+              },
+              "org.altitude.axis": {
+                "css": "omit"
+              },
+              "org.primer.llm": {
+                "usage": "Shape-axis corner-radius ROLES (action: buttons and interactive controls; control: form-control boxes; surface: containers; indicator: avatars and badge dots). Defined only in tier-2/axis/shape/<mode>.json and emitted as <al-theme> host rules, never on :root, so the brand-aware fallback each component writes wins when shape is unset: var(--al-theme-border-radius-role-<role>, var(--al-theme-border-radius<-step>)). Legal CSS surface: border-radius."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "border-radius"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "00f22f23-9e81-4004-8a67-d0962745a691"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

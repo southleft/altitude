@@ -1,3 +1,6 @@
+@use 'sass:list';
+@use 'sass:map';
+
 /* ------------------------------------*\
   #MOTION MIXINS
 \*------------------------------------ */
@@ -30,6 +33,31 @@
   #TRANSITIONS
 \*------------------------------------ */
 
+/// The motion USE CASES: which duration role pairs with which easing role.
+///
+/// The same table is authored as DTCG `transition` composites —
+/// `theme.animation.transition.<use>` in
+/// `styles/tokens-dtcg/tier-2/axis/motion/<mode>.json` — so a design tool
+/// importing the tokens sees the same pairings. Those composites are never
+/// emitted as custom properties (see "WHY MIXINS AND NOT TOKENS" above), which
+/// is why this map exists; `styles/tokens-config.v5.mjs` fails the token build
+/// if the two disagree. See `.altitude/MOTION.md`.
+$al-motion-uses: (
+  hover: (fast, standard),
+  expand: (base, standard),
+  overlay: (slow, standard),
+  emphasis: (base, emphasized),
+);
+
+/// The legacy tier-2 token each duration role falls back to — the same
+/// fallback every wired component writes by hand. `slow` falls back to
+/// `-long`, not to the base duration.
+$al-motion-legacy-duration: (
+  fast: --al-theme-animation-duration,
+  base: --al-theme-animation-duration,
+  slow: --al-theme-animation-duration-long,
+);
+
 /**
  * Emit a transition using the theme's motion role tokens.
  *
@@ -46,13 +74,31 @@
  *   .al-c-thing { @include al-motion-transition(background-color border-color, fast); }
  *   .al-c-panel { @include al-motion-transition(height, slow, emphasized); }
  */
+/// `$role` also accepts a USE CASE from `$al-motion-uses` (`hover` | `expand`
+/// | `overlay` | `emphasis`), which sets the easing too and makes `$timing`
+/// irrelevant — the preferred spelling, see `.altitude/MOTION.md`:
+///
+///   .al-c-thing { @include al-motion-transition(background-color border-color, hover); }
+///   .al-c-panel { @include al-motion-transition(height, expand); }
+///
+/// (Silent `///` comments on purpose: the loud block above is compiled into
+/// every component bundle, so editing it would change all of them.)
 @mixin al-motion-transition($properties: all, $role: base, $timing: standard) {
-  $duration: var(--al-theme-animation-duration-role-#{$role}, var(--al-theme-animation-duration));
+  @if map.has-key($al-motion-uses, $role) {
+    $pair: map.get($al-motion-uses, $role);
+    $role: list.nth($pair, 1);
+    $timing: list.nth($pair, 2);
+  }
+  @if not map.has-key($al-motion-legacy-duration, $role) {
+    @error 'al-motion-transition: unknown role or use case `#{$role}`.';
+  }
+  $legacy: map.get($al-motion-legacy-duration, $role);
+  $duration: var(--al-theme-animation-duration-role-#{$role}, var(#{$legacy}));
   $easing: var(--al-theme-animation-timing-role-#{$timing}, var(--al-theme-animation-timing));
 
   $parts: ();
   @each $property in $properties {
-    $parts: append($parts, #{$property} #{$duration} #{$easing}, comma);
+    $parts: list.append($parts, #{$property} #{$duration} #{$easing}, comma);
   }
 
   transition: $parts;
