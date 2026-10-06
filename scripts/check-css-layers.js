@@ -173,6 +173,52 @@ function main() {
     }
   }
 
+  // ---- generated AXIS partials (density / contrast / motion / shape) ----
+  //
+  // `scss/host/axis/*.scss` are the same blind spot by another route: theme.scss
+  // pulls them in with `meta.load-css()`. Unlike the brand/mode partials they
+  // are UNLAYERED by design — theme.scss loads them inside its own
+  // `@layer al.theme { … }` block so the compiled CSS keeps one layer block —
+  // so the layer rule is inverted here: a partial must NOT open a layer (it
+  // would nest as `al.theme.al.theme`), and theme.scss must load every one of
+  // them from inside `@layer al.theme`. Same budget and `:root` ban as above.
+  let axisFiles = 0;
+  const axisDir = path.join(GENERATED_HOST, 'axis');
+  if (fs.existsSync(axisDir)) {
+    const themeScss = fs.readFileSync(path.join(COMPONENTS, 'theme', 'theme.scss'), 'utf8');
+    const layerAt = themeScss.search(/@layer\s+al\.theme\s*\{/);
+    for (const name of fs.readdirSync(axisDir).sort()) {
+      if (!name.endsWith('.scss')) continue;
+      axisFiles++;
+      const text = fs.readFileSync(path.join(axisDir, name), 'utf8');
+      const localErrors = [];
+      if (/@layer\b/.test(text.replace(/\/\/.*$/gm, ''))) {
+        localErrors.push('axis partial must not open a layer — theme.scss loads it inside `@layer al.theme`');
+      }
+      const ref = themeScss.indexOf(`dist-v5/scss/host/axis/${name.replace(/\.scss$/, '')}'`);
+      if (ref === -1) localErrors.push('not loaded by components/theme/theme.scss');
+      else if (layerAt === -1 || ref < layerAt) localErrors.push('loaded by theme.scss outside its `@layer al.theme` block');
+      for (const sel of parseSelectors(text)) {
+        if (allow.has(sel)) continue;
+        const [i, c, t] = specificity(sel);
+        if (i > 0 || c > 3 || c + t > 3) {
+          localErrors.push(`selector exceeds 0,3,0 budget (specificity ${i},${c},${t}): '${sel}'`);
+        }
+        if (/(^|[^-\w]):root\b/.test(sel)) {
+          localErrors.push(`generated axis partial must not emit \`:root\`: '${sel}'`);
+        }
+      }
+      if (localErrors.length === 0) {
+        ok++;
+        continue;
+      }
+      errors += localErrors.length;
+      console.error(`[css-layers] FAIL — dist-v5/scss/host/axis/${name}:`);
+      for (const e of localErrors.slice(0, 5)) console.error(`    ${e}`);
+    }
+  }
+  hostFiles += axisFiles;
+
   if (errors === 0) {
     console.log(
       `[css-layers] ${STRICT ? 'STRICT ' : ''}PASS — ${ok} stylesheet(s) compliant ` +

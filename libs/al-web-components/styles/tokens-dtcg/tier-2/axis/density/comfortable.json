@@ -1,0 +1,105 @@
+{
+  "$description": "The default density, and what the :root bundle carries (tier-2/spacing.json). No host rule is emitted for it; the token build fails if these values drift from tier-2/spacing.json.",
+  "$extensions": {
+    "org.altitude.axis": {
+      "axis": "density",
+      "attribute": "density",
+      "mode": "comfortable",
+      "default": true
+    }
+  },
+  "theme": {
+    "space": {
+      "sm": {
+        "$value": "12px",
+        "$type": "dimension",
+        "$extensions": {
+          "org.altitude.token": {
+            "cssType": "spacing"
+          },
+          "org.primer.llm": {
+            "usage": "Semantic spacing roles (not a 1:1 alias of the tier-1 space scale — has its own role names). Legal CSS surface: margin, padding, gap."
+          },
+          "com.salesforce.styling": {
+            "cssProperties": [
+              "margin",
+              "padding",
+              "gap",
+              "row-gap",
+              "column-gap",
+              "grid-gap",
+              "top",
+              "right",
+              "bottom",
+              "left",
+              "inset"
+            ]
+          },
+          "com.adobe.id": {
+            "uuid": "06e13174-19af-443c-9784-f66b69721f7b"
+          }
+        }
+      },
+      "md": {
+        "$value": "20px",
+        "$type": "dimension",
+        "$extensions": {
+          "org.altitude.token": {
+            "cssType": "spacing"
+          },
+          "org.primer.llm": {
+            "usage": "Semantic spacing roles (not a 1:1 alias of the tier-1 space scale — has its own role names). Legal CSS surface: margin, padding, gap."
+          },
+          "com.salesforce.styling": {
+            "cssProperties": [
+              "margin",
+              "padding",
+              "gap",
+              "row-gap",
+              "column-gap",
+              "grid-gap",
+              "top",
+              "right",
+              "bottom",
+              "left",
+              "inset"
+            ]
+          },
+          "com.adobe.id": {
+            "uuid": "40e541ee-3689-4e0a-98a5-a99fdc311352"
+          }
+        }
+      },
+      "lg": {
+        "$value": "24px",
+        "$type": "dimension",
+        "$extensions": {
+          "org.altitude.token": {
+            "cssType": "spacing"
+          },
+          "org.primer.llm": {
+            "usage": "Semantic spacing roles (not a 1:1 alias of the tier-1 space scale — has its own role names). Legal CSS surface: margin, padding, gap."
+          },
+          "com.salesforce.styling": {
+            "cssProperties": [
+              "margin",
+              "padding",
+              "gap",
+              "row-gap",
+              "column-gap",
+              "grid-gap",
+              "top",
+              "right",
+              "bottom",
+              "left",
+              "inset"
+            ]
+          },
+          "com.adobe.id": {
+            "uuid": "c65edf52-500b-425d-a7c9-9b5702f9b942"
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildTheme } from './engine';
 import { MODE_SEMANTICS, ROLE_STOPS } from './ramps';
 import tokens from '../styles/dist/tokens.json';
-import themeCss from '../components/theme/theme.scss?raw';
+import axes from '../styles/dist/axes.json';
 
 /**
  * REGRESSION GUARD (2026-09-02) — every custom property the engine writes must
@@ -30,12 +30,12 @@ import themeCss from '../components/theme/theme.scss?raw';
 
 /**
  * The ONE documented exception. These nine role-axis properties deliberately
- * carry no tier-2 `:root` default — `components/theme/theme.scss` declares them
- * per `<al-theme shape>` / `<al-theme motion>` value and every consuming
- * component reads them as `var(--…-role-x, var(--…-legacy))`. See that file's
- * "shape axis" / "motion axis" comments. They are still verified below: each
- * one must appear in theme.scss, so this allowlist cannot quietly outlive the
- * declarations that justify it.
+ * carry no tier-2 `:root` default — the `<al-theme shape>` / `<al-theme motion>`
+ * host rules generated from `styles/tokens-dtcg/tier-2/axis/` declare them, and
+ * every consuming component reads them as `var(--…-role-x, var(--…-legacy))`
+ * (`.altitude/AXES.md` §2.3). They are still verified below: each one must be
+ * declared by a rule in `styles/dist/axes.json` (the manifest of those rules),
+ * so this allowlist cannot quietly outlive the declarations that justify it.
  */
 const CSS_ONLY_ROLE_PROPERTIES = [
   '--al-theme-border-radius-role-action',
@@ -102,12 +102,17 @@ describe('theme-engine emits only token names that exist', () => {
     ).toEqual([]);
   });
 
-  it('keeps the CSS-only role allowlist honest — each entry is declared in theme.scss', () => {
+  it('keeps the CSS-only role allowlist honest — each entry is declared by an axis rule', () => {
+    const declared = new Set(
+      Object.values(axes.axes).flatMap((axis) =>
+        axis.rules.flatMap((rule) => Object.keys(rule.declarations))
+      )
+    );
     for (const property of CSS_ONLY_ROLE_PROPERTIES) {
       expect(
-        themeCss.includes(`${property}:`),
-        `${property} is allowlisted as "declared in theme.scss, not in tokens.json" but ` +
-          `components/theme/theme.scss never declares it`
+        declared.has(property),
+        `${property} is allowlisted as "declared by <al-theme>, not in tokens.json" but ` +
+          `no rule in styles/dist/axes.json declares it`
       ).toBe(true);
     }
   });

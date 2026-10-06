@@ -22,13 +22,13 @@
  * in step with the `brands` array in `styles/tokens-config.v5.mjs`.
  */
 
-/** `<al-theme density>` values (`components/theme/theme.scss`). */
+/** `<al-theme density>` values — the mode files in `styles/tokens-dtcg/tier-2/axis/density/`. */
 export type PresetDensity = 'compact' | 'cozy' | 'comfortable';
-/** `<al-theme contrast>` values (`components/theme/theme.scss`). */
+/** `<al-theme contrast>` values — the mode files in `styles/tokens-dtcg/tier-2/axis/contrast/`. */
 export type PresetContrast = 'normal' | 'more';
-/** `<al-theme shape>` values. Repoints `theme.border.radius.role.*`. */
+/** `<al-theme shape>` values — `styles/tokens-dtcg/tier-2/axis/shape/`. Repoints `theme.border.radius.role.*`. */
 export type PresetShape = 'default' | 'sharp' | 'pill';
-/** `<al-theme motion>` values. `reduced` still wins under OS `prefers-reduced-motion` unless `full` is set. */
+/** `<al-theme motion>` values — `styles/tokens-dtcg/tier-2/axis/motion/`. `reduced` still wins under OS `prefers-reduced-motion` unless `full` is set. */
 export type PresetMotion = 'full' | 'reduced' | 'expressive';
 
 /**
