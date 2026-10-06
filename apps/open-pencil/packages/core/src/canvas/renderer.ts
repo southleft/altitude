@@ -114,6 +114,9 @@ export class SkiaRenderer {
   scenePictureVersion = -1
   scenePictureFontGeneration = -1
   scenePicturePositionPreviewVersion = -1
+  /** Scene version whose world positions the graph cache may still hold. */
+  absPosCacheSceneVersion = -1
+  absPosCacheGraph: SceneGraph | null = null
   scenePicturePageId: string | null = null
   sceneBacking: SceneBacking | null = null
   sceneBackingPreviewUntil = 0
