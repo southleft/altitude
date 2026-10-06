@@ -47,6 +47,22 @@ export function toggleSelectedTextUnderline(): void {
   })
 }
 
+/**
+ * Actions of the menu groups kept off the menubars (`menubar: false` in the schema). The
+ * keyboard registry binds their shortcuts, which the native menu used to provide.
+ */
+export const CONTEXTUAL_MENU_ACTIONS: Partial<Record<string, () => void>> = {
+  'text.bold': toggleSelectedTextBold,
+  'text.italic': toggleSelectedTextItalic,
+  'text.underline': toggleSelectedTextUnderline,
+  'arrange.align-left': () => alignSelected('horizontal', 'min'),
+  'arrange.align-center': () => alignSelected('horizontal', 'center'),
+  'arrange.align-right': () => alignSelected('horizontal', 'max'),
+  'arrange.align-top': () => alignSelected('vertical', 'min'),
+  'arrange.align-middle': () => alignSelected('vertical', 'center'),
+  'arrange.align-bottom': () => alignSelected('vertical', 'max')
+}
+
 export function createSharedEditorMenuActions(
   setTheme: (theme: 'light' | 'dark' | 'auto') => void
 ) {
@@ -75,14 +91,6 @@ export function createSharedEditorMenuActions(
     'theme-light': () => setTheme('light'),
     'theme-dark': () => setTheme('dark'),
     'theme-auto': () => setTheme('auto'),
-    'text.bold': toggleSelectedTextBold,
-    'text.italic': toggleSelectedTextItalic,
-    'text.underline': toggleSelectedTextUnderline,
-    'arrange.align-left': () => alignSelected('horizontal', 'min'),
-    'arrange.align-center': () => alignSelected('horizontal', 'center'),
-    'arrange.align-right': () => alignSelected('horizontal', 'max'),
-    'arrange.align-top': () => alignSelected('vertical', 'min'),
-    'arrange.align-middle': () => alignSelected('vertical', 'center'),
-    'arrange.align-bottom': () => alignSelected('vertical', 'max')
+    ...CONTEXTUAL_MENU_ACTIONS
   }
 }

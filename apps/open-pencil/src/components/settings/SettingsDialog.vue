@@ -12,16 +12,13 @@ import {
   type SettingsSection
 } from '@/app/settings/dialog'
 import { provideSettingsNavigation } from '@/app/settings/navigation/use'
-import ChatSettingsSection from '@/components/settings/chat/ChatSettingsSection.vue'
 import DiagnosticsSettingsPanel from '@/components/settings/diagnostics/DiagnosticsSettingsPanel.vue'
 import GeneralSettingsPanel from '@/components/settings/general/GeneralSettingsPanel.vue'
 import SettingsPage from '@/components/settings/layout/SettingsPage.vue'
 import MCPWorkspacePanel from '@/components/settings/mcp/MCPWorkspacePanel.vue'
 import MediaSettingsPanel from '@/components/settings/media/MediaSettingsPanel.vue'
-import ModelsPanel from '@/components/settings/models/ModelsPanel.vue'
 import StorageSettingsPanel from '@/components/settings/storage/StorageSettingsPanel.vue'
 import ToolAccessSettingsPanel from '@/components/settings/tool-access/ToolAccessSettingsPanel.vue'
-import UsageSettingsPanel from '@/components/settings/usage/UsageSettingsPanel.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import {
   AppAlertDialogRoot,
@@ -40,12 +37,11 @@ const { settings, common } = useI18n()
 const navigation = provideSettingsNavigation()
 tryOnScopeDispose(registerSettingsNavigation(navigation.request))
 const { editing, confirming } = navigation
+// Built-in AI sections (`ai`, `usage`) stay dormant: external agents connect over MCP instead.
 const sections = computed(
   () =>
     [
       { value: 'general', label: settings.value.general },
-      { value: 'ai', label: settings.value.aiAndAgents },
-      { value: 'usage', label: settings.value.usage },
       { value: 'diagnostics', label: settings.value.diagnostics },
       { value: 'mcp', label: settings.value.mcp },
       { value: 'tools', label: settings.value.toolAccess },
@@ -103,14 +99,6 @@ function onOpenChange(open: boolean): void {
           <template #leading><icon-lucide-settings class="size-3.5" /></template>
           {{ settings.general }}
         </AppTabsTrigger>
-        <AppTabsTrigger value="ai" data-test-id="settings-section-ai">
-          <template #leading><icon-lucide-sparkles class="size-3.5" /></template>
-          {{ settings.aiAndAgents }}
-        </AppTabsTrigger>
-        <AppTabsTrigger value="usage" data-test-id="settings-section-usage">
-          <template #leading><icon-lucide-chart-no-axes-combined class="size-3.5" /></template>
-          {{ settings.usage }}
-        </AppTabsTrigger>
         <AppTabsTrigger value="diagnostics" data-test-id="settings-section-diagnostics">
           <template #leading><icon-lucide-activity class="size-3.5" /></template>
           {{ settings.diagnostics }}
@@ -135,16 +123,6 @@ function onOpenChange(open: boolean): void {
 
       <AppTabsContent value="general" as-child>
         <SettingsPage><GeneralSettingsPanel /></SettingsPage>
-      </AppTabsContent>
-      <AppTabsContent value="ai" as-child>
-        <section class="flex min-h-0 min-w-0 flex-1 flex-col" data-test-id="settings-ai-panel">
-          <ModelsPanel>
-            <ChatSettingsSection />
-          </ModelsPanel>
-        </section>
-      </AppTabsContent>
-      <AppTabsContent value="usage" as-child>
-        <SettingsPage><UsageSettingsPanel /></SettingsPage>
       </AppTabsContent>
       <AppTabsContent value="diagnostics" as-child>
         <SettingsPage><DiagnosticsSettingsPanel /></SettingsPage>

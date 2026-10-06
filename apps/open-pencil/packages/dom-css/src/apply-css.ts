@@ -17,6 +17,7 @@ import {
   parseCSSNumber,
   pickStyle
 } from './css-values'
+import { transformFactsFromCSS } from './transform'
 import type { DesignElement, DesignStyleDeclaration } from './types'
 
 /**
@@ -24,8 +25,8 @@ import type { DesignElement, DesignStyleDeclaration } from './types'
  *
  * Split from `to-scene-graph.ts`, which owns document STRUCTURE (which element becomes
  * which node, and where). This owns VALUE translation for one node, and it is where the
- * "CSS wins for CSS-expressible properties" half of the precedence rule lives — see
- * `.slate/ROUND-TRIP.md`.
+ * "CSS wins for CSS-expressible properties" half of the precedence rule lives — see the
+ * round-trip contract in `packages/docs/development/round-trip.md`.
  */
 
 const DOM_CSS_PLUGIN_ID = 'open-pencil-dom-css'
@@ -306,17 +307,24 @@ const BLEND_MODE_FROM_CSS: Record<string, string> = {
 }
 
 /**
- * Read back `transform: rotate(Ndeg)` / `scaleX(-1)` / `scaleY(-1)` and `mix-blend-mode`.
- * Only the forms this bridge emits are recognised; anything richer stays unread rather
- * than being half-applied.
+ * Read back rotation, flips and `mix-blend-mode`.
+ *
+ * The authored inline transform is preferred when present: it is the exact functional form
+ * the exporter wrote. Otherwise the computed value is used, which a browser always reports
+ * as a matrix — see `transform.ts`.
  */
-function applyTransformAndBlend(node: SceneNode, style: DesignStyleDeclaration): void {
-  const transform = pickStyle(style, 'transform')
+function applyTransformAndBlend(
+  node: SceneNode,
+  element: DesignElement,
+  style: DesignStyleDeclaration
+): void {
+  const transform =
+    transformFactsFromCSS(pickStyle(element.inlineStyle, 'transform')) ??
+    transformFactsFromCSS(pickStyle(style, 'transform'))
   if (transform) {
-    const rotate = /rotate\(\s*(-?[\d.]+)deg\s*\)/i.exec(transform)
-    if (rotate) node.rotation = Number.parseFloat(rotate[1])
-    if (/scaleX\(\s*-1\s*\)/i.test(transform)) node.flipX = true
-    if (/scaleY\(\s*-1\s*\)/i.test(transform)) node.flipY = true
+    node.rotation = transform.rotation
+    if (transform.flipX) node.flipX = true
+    if (transform.flipY) node.flipY = true
   }
 
   const blend = pickStyle(style, 'mix-blend-mode')
@@ -333,7 +341,7 @@ export function applyElementStyle(
   setNodeBox(node, style)
   applyPositioning(node, style)
   applyPadding(node, style)
-  applyTransformAndBlend(node, style)
+  applyTransformAndBlend(node, element, style)
 
   const fills = fillsFromStyle(style, 'background-color')
   if (fills.length > 0) node.fills = fills

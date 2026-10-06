@@ -175,4 +175,22 @@ describe('MCP runtime service', () => {
     expect(service.state.status).toBe('running')
     expect(calls).toEqual(['connect', 'disconnect-bridge', 'disconnect-server', 'connect'])
   })
+
+  test('records MCP client requests until the server stops', async () => {
+    let onRequest: (() => void) | undefined
+    const { service } = setup({
+      connect: (_getStore, _token, request) => {
+        onRequest = request
+        return () => undefined
+      }
+    })
+    await service.start(getStore)
+    expect(service.state.lastClientRequestAt).toBeNull()
+
+    onRequest?.()
+    expect(service.state.lastClientRequestAt).toEqual(expect.any(Number))
+
+    await service.stop()
+    expect(service.state.lastClientRequestAt).toBeNull()
+  })
 })

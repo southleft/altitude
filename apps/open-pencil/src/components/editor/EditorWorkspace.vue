@@ -10,6 +10,7 @@ import { loadEditorLayout, saveEditorLayout } from '@/app/shell/layout-storage'
 import { appMenuShortcut } from '@/app/shell/menu/shortcut'
 import { resolvedAppTheme } from '@/app/shell/theme'
 import { activeTab } from '@/app/tabs'
+import AgentConnectPopover from '@/components/agent-connect/AgentConnectPopover.vue'
 import BrandMark from '@/components/brand/BrandMark.vue'
 import CanvasSplitRoot from '@/components/canvas/CanvasSplitRoot.vue'
 import CollabPanel from '@/components/CollabPanel/CollabPanel.vue'
@@ -69,7 +70,10 @@ const horizontalSplitterStyles = tv(splitterTheme)({ direction: 'horizontal' })
       :max-size="30"
       class="flex flex-col"
     >
-      <div class="flex shrink-0 items-center justify-between border-b border-border px-1.5 py-1.5">
+      <div
+        class="flex shrink-0 items-center justify-between gap-2 border-b border-border px-1.5 py-1.5"
+      >
+        <AgentConnectPopover />
         <CollabPanel />
       </div>
       <PropertiesPanel />

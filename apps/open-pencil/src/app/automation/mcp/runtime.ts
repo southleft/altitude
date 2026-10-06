@@ -26,12 +26,23 @@ export interface MCPRuntimeState {
   failure: MCPFailure | null
   checking: boolean
   externallyManaged: boolean
+  /**
+   * When the app last received a request from an MCP client (an agent's stdio
+   * bridge, an HTTP session, or the CLI). Stdio bridges hold no connection to
+   * the server between calls, so recent activity is the only observable sign
+   * that an agent is connected.
+   */
+  lastClientRequestAt: number | null
 }
 
 export type MCPRuntimeResult = { ok: true } | { ok: false; error: Error }
 
 export interface MCPRuntimeDependencies {
-  connect: (getStore: () => EditorStore, authToken: string | null) => () => void
+  connect: (
+    getStore: () => EditorStore,
+    authToken: string | null,
+    onRequest: () => void
+  ) => () => void
   canConnect: () => boolean
   readHealth: (authToken?: string | null) => Promise<AutomationHealth | null>
   setToolDescriptors: (tools: NonNullable<AutomationHealth['tools']>) => void
@@ -76,7 +87,8 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
     version: null,
     failure: null,
     checking: false,
-    externallyManaged: false
+    externallyManaged: false,
+    lastClientRequestAt: null
   })
 
   let server: AutomationServerHandle | null = null
@@ -91,6 +103,10 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
       () => undefined
     )
     return next
+  }
+
+  function recordClientRequest(): void {
+    state.lastClientRequestAt = Date.now()
   }
 
   function applyHealth(health: AutomationHealth): void {
@@ -147,7 +163,11 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
       if (health) {
         state.externallyManaged = server?.managed === false
         if (activeStore && dependencies.canConnect()) {
-          disconnectAutomation = dependencies.connect(activeStore, server?.authToken ?? null)
+          disconnectAutomation = dependencies.connect(
+            activeStore,
+            server?.authToken ?? null,
+            recordClientRequest
+          )
         }
         applyHealth(health)
         return { ok: true }
@@ -179,6 +199,7 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
     state.version = null
     state.failure = disconnectError ? mcpFailure('unknown', disconnectError.message) : null
     state.externallyManaged = false
+    state.lastClientRequestAt = null
     dependencies.setToolDescriptors([])
     return disconnectError ? { ok: false, error: disconnectError } : { ok: true }
   }
@@ -206,9 +227,19 @@ export function createMCPRuntimeService(dependencies: MCPRuntimeDependencies) {
   }
 }
 
+/**
+ * Whether this build can host local MCP automation. The desktop app spawns the
+ * server and the development server runs one; a statically hosted browser build
+ * has neither and does not connect to a server on the user's machine.
+ */
+export function canHostMCPAutomation(): boolean {
+  return import.meta.env.DEV || isTauri()
+}
+
 const appMCPRuntime = createMCPRuntimeService({
-  connect: (getStore, authToken) => connectAutomation(getStore, authToken).disconnect,
-  canConnect: () => import.meta.env.DEV || isTauri(),
+  connect: (getStore, authToken, onRequest) =>
+    connectAutomation(getStore, authToken, { onRequest }).disconnect,
+  canConnect: canHostMCPAutomation,
   readHealth: readAutomationHealth,
   setToolDescriptors: setMCPToolDescriptors,
   spawn: spawnMCPIfNeeded,

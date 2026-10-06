@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Conformance gap report.
  *
@@ -12,15 +11,20 @@
  *
  * Source-derived and re-runnable: as mappings land, the numbers here move on their own.
  *
- *   node scripts/conformance/gap-report.mjs            # write .slate/CONFORMANCE.md
- *   node scripts/conformance/gap-report.mjs --check    # exit 1 if the report is stale
+ * It reads source files as text and imports nothing from them, so it reports on the bridge
+ * without depending on package internals. The live round trip (`roundtrip.ts`, the gate) is
+ * the measurement; this is the to-do list.
+ *
+ *   bun run conformance:report            # write .slate/CONFORMANCE.md (local, untracked)
+ *   bun run conformance:report:check      # exit 1 if the local report is stale
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
+import { resolveWorkspaceRoot } from '@open-pencil/package-artifacts'
+
+const ROOT = await resolveWorkspaceRoot(import.meta.dir)
 const OUT = join(ROOT, '.slate', 'CONFORMANCE.md')
 
 const SCENE_TYPES = join(ROOT, 'packages/scene-graph/src/types.ts')
@@ -30,9 +34,9 @@ const SCENE_TYPES = join(ROOT, 'packages/scene-graph/src/types.ts')
 const TO_SCENE = join(ROOT, 'packages/dom-css/src/to-scene-graph.ts')
 const APPLY_CSS = join(ROOT, 'packages/dom-css/src/apply-css.ts')
 const FROM_SCENE = join(ROOT, 'packages/dom-css/src/from-scene-graph.ts')
-const DESIGN_FACT = join(ROOT, 'packages/dom-css/src/design-fact.ts')
+const DESIGN_FACT = join(ROOT, 'packages/dom-css/src/design-fact/fields.ts')
 
-const read = (p) => readFileSync(p, 'utf8')
+const read = (path: string) => readFileSync(path, 'utf8')
 
 /**
  * Properties carried by the design-fact carrier rather than by CSS.
@@ -41,14 +45,14 @@ const read = (p) => readFileSync(p, 'utf8')
  * round trip was at 99.9% — the report was blind to the carrier that closed the gap. A
  * property is bridged if it comes home, not if it comes home a particular way.
  */
-function factCarriedProperties() {
+function factCarriedProperties(): Set<string> {
   const src = read(DESIGN_FACT)
-  const carried = new Set()
+  const carried = new Set<string>()
 
   // RESIDUAL_FIELDS: the explicit allow-list of CSS-inexpressible facts.
   const block = /const RESIDUAL_FIELDS = \[([\s\S]*?)\] as const/.exec(src)
-  if (!block) throw new Error('RESIDUAL_FIELDS not found — design-fact.ts shape changed')
-  for (const m of block[1].matchAll(/'([a-zA-Z][a-zA-Z0-9]*)'/g)) carried.add(m[1])
+  if (!block) throw new Error('RESIDUAL_FIELDS not found — design-fact/fields.ts shape changed')
+  for (const m of (block[1] ?? '').matchAll(/'([a-zA-Z][a-zA-Z0-9]*)'/g)) carried.add(m[1] ?? '')
 
   // Facts with a dedicated field on DesignFact rather than a slot in the residual bag.
   for (const field of [
@@ -69,13 +73,15 @@ function factCarriedProperties() {
 
   // Shared-style ids are carried through STYLE_ID_FIELDS.
   const styleBlock = /const STYLE_ID_FIELDS = \[([\s\S]*?)\] as const/.exec(src)
-  for (const m of (styleBlock?.[1] ?? '').matchAll(/'([a-zA-Z]+StyleId)'/g)) carried.add(m[1])
+  for (const m of (styleBlock?.[1] ?? '').matchAll(/'([a-zA-Z]+StyleId)'/g)) {
+    carried.add(m[1] ?? '')
+  }
 
   return carried
 }
 
 /** Property names declared on the SceneNode interface. */
-function sceneNodeProperties() {
+function sceneNodeProperties(): Set<string> {
   const src = read(SCENE_TYPES)
   const start = src.indexOf('export interface SceneNode')
   if (start === -1) throw new Error(`SceneNode interface not found in ${SCENE_TYPES}`)
@@ -93,11 +99,11 @@ function sceneNodeProperties() {
   }
 
   const body = src.slice(open + 1, end)
-  const props = new Set()
+  const props = new Set<string>()
   for (const line of body.split('\n')) {
     // Only top-level members: exactly one indent level, `name?: type`.
     const m = /^ {2}([a-zA-Z][a-zA-Z0-9]*)\??:/.exec(line)
-    if (m) props.add(m[1])
+    if (m?.[1]) props.add(m[1])
   }
   if (props.size === 0) throw new Error('parsed zero SceneNode properties — the shape changed')
   return props
@@ -110,38 +116,38 @@ function sceneNodeProperties() {
  * access is destructured rather than a `node.x` member expression. A gap list that
  * cries wolf is worse than no gap list.
  */
-function destructuredFrom(src) {
-  const out = new Set()
+function destructuredFrom(src: string): Set<string> {
+  const out = new Set<string>()
   for (const m of src.matchAll(/\{([^{}]*)\}\s*=\s*node\b/g)) {
-    for (const part of m[1].split(',')) {
+    for (const part of (m[1] ?? '').split(',')) {
       // `paddingRight: pr` binds a new name but still READS paddingRight.
       const name = /^\s*([a-zA-Z][a-zA-Z0-9]*)/.exec(part)
-      if (name) out.add(name[1])
+      if (name?.[1]) out.add(name[1])
     }
   }
   return out
 }
 
 /** Properties the bridge writes when turning HTML/CSS into scene nodes. */
-function propertiesWritten() {
+function propertiesWritten(): Set<string> {
   const src = [read(TO_SCENE), read(APPLY_CSS)].join('\n')
-  const out = new Set()
-  for (const m of src.matchAll(/node\.([a-zA-Z][a-zA-Z0-9]*)\s*=[^=]/g)) out.add(m[1])
+  const out = new Set<string>()
+  for (const m of src.matchAll(/node\.([a-zA-Z][a-zA-Z0-9]*)\s*=[^=]/g)) out.add(m[1] ?? '')
   // `Object.assign(node, { ... })` writes every key in the literal.
   for (const m of src.matchAll(/Object\.assign\(\s*node\s*,\s*\{([^{}]*)\}/g)) {
-    for (const part of m[1].split(',')) {
+    for (const part of (m[1] ?? '').split(',')) {
       const name = /^\s*([a-zA-Z][a-zA-Z0-9]*)\s*[:,}]?/.exec(part)
-      if (name) out.add(name[1])
+      if (name?.[1]) out.add(name[1])
     }
   }
   return out
 }
 
 /** Properties the bridge reads when turning scene nodes back into HTML/CSS. */
-function propertiesRead() {
+function propertiesRead(): Set<string> {
   const src = read(FROM_SCENE)
-  const out = new Set()
-  for (const m of src.matchAll(/node\.([a-zA-Z][a-zA-Z0-9]*)\b/g)) out.add(m[1])
+  const out = new Set<string>()
+  for (const m of src.matchAll(/node\.([a-zA-Z][a-zA-Z0-9]*)\b/g)) out.add(m[1] ?? '')
   for (const name of destructuredFrom(src)) out.add(name)
   return out
 }
@@ -152,7 +158,11 @@ function propertiesRead() {
  * asserting a gap it cannot prove. Every entry is either a real miss in the detector
  * or an incidental mention; both deserve eyes.
  */
-function mentionedButUndetected(props, detected, src) {
+function mentionedButUndetected(
+  props: ReadonlySet<string>,
+  detected: ReadonlySet<string>,
+  src: string
+): string[] {
   return [...props]
     .filter((p) => !detected.has(p))
     .filter((p) => new RegExp(`\\b${p}\\b`).test(src))
@@ -163,7 +173,14 @@ function mentionedButUndetected(props, detected, src) {
  * Themes, in the order we intend to close them. `why` states the consequence of the gap
  * in terms of what a user loses, not in terms of the property name.
  */
-const THEMES = [
+interface Theme {
+  id: string
+  title: string
+  why: string
+  match: string[] | ((prop: string) => boolean)
+}
+
+const THEMES: Theme[] = [
   {
     id: 'variables',
     title: 'Variables and tokens',
@@ -203,7 +220,13 @@ const THEMES = [
     id: 'constraints',
     title: 'Constraints and stacking',
     why: 'Resize behaviour and paint order are lost; a resized frame will not reflow the way the designer set it up to.',
-    match: ['horizontalConstraint', 'verticalConstraint', 'itemReverseZIndex', 'strokesIncludedInLayout', 'counterAxisAlignContent']
+    match: [
+      'horizontalConstraint',
+      'verticalConstraint',
+      'itemReverseZIndex',
+      'strokesIncludedInLayout',
+      'counterAxisAlignContent'
+    ]
   },
   {
     id: 'text',
@@ -221,7 +244,9 @@ const THEMES = [
     why: 'No CSS equivalent exists and none should be invented. These belong in SVG, and the bridge needs an explicit SVG escape hatch rather than a lossy box.',
     match: (p) =>
       p.endsWith('Geometry') ||
-      /^(vectorNetwork|arcData|starInnerRadius|pointCount|handleMirroring|booleanOperation)$/.test(p) ||
+      /^(vectorNetwork|arcData|starInnerRadius|pointCount|handleMirroring|booleanOperation)$/.test(
+        p
+      ) ||
       /^stroke(Cap|Join|MiterLimit)$/.test(p)
   },
   {
@@ -232,9 +257,9 @@ const THEMES = [
   }
 ]
 
-function themeFor(prop) {
+function themeFor(prop: string): Theme | null {
   for (const t of THEMES) {
-    const hit = typeof t.match === 'function' ? t.match(prop) : t.match.includes(prop)
+    const hit = Array.isArray(t.match) ? t.match.includes(prop) : t.match(prop)
     if (hit) return t
   }
   return null
@@ -242,12 +267,37 @@ function themeFor(prop) {
 
 /** Editor bookkeeping — correctly absent from a code representation, not a gap. */
 const NOT_A_GAP = new Set([
-  'id', 'parentId', 'childIds', 'type', 'name', 'autoRename', 'locked', 'visible',
-  'expanded', 'internalOnly', 'field', 'source', 'librarySource', 'sourceLibraryKey',
-  'pluginData', 'pluginRelaunchData', 'exportSettings', 'guides', 'isPublishable',
-  'isSymbolPublishable', 'publishId', 'publishedVersion', 'propertyId', 'defaultValue',
-  'preferredValues', 'symbolDescription', 'symbolLinks', 'sharedSymbolVersion',
-  'derivedLayout', 'derivedTextGlyphs', 'textPicture'
+  'id',
+  'parentId',
+  'childIds',
+  'type',
+  'name',
+  'autoRename',
+  'locked',
+  'visible',
+  'expanded',
+  'internalOnly',
+  'field',
+  'source',
+  'librarySource',
+  'sourceLibraryKey',
+  'pluginData',
+  'pluginRelaunchData',
+  'exportSettings',
+  'guides',
+  'isPublishable',
+  'isSymbolPublishable',
+  'publishId',
+  'publishedVersion',
+  'propertyId',
+  'defaultValue',
+  'preferredValues',
+  'symbolDescription',
+  'symbolLinks',
+  'sharedSymbolVersion',
+  'derivedLayout',
+  'derivedTextGlyphs',
+  'textPicture'
 ])
 
 function build() {
@@ -273,31 +323,32 @@ function build() {
   const unsure = mentionedButUndetected(new Set(missing), detected, bridgeSrc)
   const unsureSet = new Set(unsure)
 
-  const buckets = new Map(THEMES.map((t) => [t.id, []]))
-  const unthemed = []
+  const buckets = new Map<string, string[]>(THEMES.map((t) => [t.id, []]))
+  const unthemed: string[] = []
   for (const p of missing) {
     if (unsureSet.has(p)) continue
     const t = themeFor(p)
-    if (t) buckets.get(t.id).push(p)
+    if (t) buckets.get(t.id)?.push(p)
     else unthemed.push(p)
   }
 
   const pct = ((covered.length / considered.length) * 100).toFixed(0)
-  void viaFact
-  const L = []
+  const L: string[] = []
   L.push('# Conformance gap')
   L.push('')
-  L.push('> Generated by `node scripts/conformance/gap-report.mjs`. Do not hand-edit.')
+  L.push('> Generated by `bun run conformance:report`. Do not hand-edit.')
   L.push('')
   L.push('Every element should carry two facts: what it **is** (scene graph) and what it')
   L.push('**means** (CSS). This is the list of facts that currently survive only one way.')
   L.push('Names here are the point — a degradation with a name is a task, a degradation')
   L.push('without one is a bug report six weeks late.')
   L.push('')
-  L.push(`**${covered.length} of ${considered.length} properties bridged (${pct}%).** ${missing.length} unmapped.`)
+  L.push(
+    `**${covered.length} of ${considered.length} properties bridged (${pct}%).** ${missing.length} unmapped.`
+  )
   L.push('')
   L.push('A property is bridged if it comes home, whether via CSS or via the design-fact')
-  L.push('carrier. See `.slate/ROUND-TRIP.md` for which carrier owns what, and why.')
+  L.push('carrier. See `packages/docs/development/round-trip.md` for which carrier owns what.')
   L.push('')
   L.push('| | count |')
   L.push('| --- | --- |')
@@ -339,7 +390,7 @@ function build() {
   L.push('Ordered by what we intend to close first.')
   L.push('')
   for (const t of THEMES) {
-    const items = buckets.get(t.id)
+    const items = buckets.get(t.id) ?? []
     if (!items.length) continue
     L.push(`### ${t.title} (${items.length})`)
     L.push('')
@@ -373,7 +424,7 @@ if (process.argv.includes('--check')) {
     current = ''
   }
   if (current !== body) {
-    console.error('Conformance report is stale. Run: node scripts/conformance/gap-report.mjs')
+    console.error('Conformance report is stale. Run: bun run conformance:report')
     process.exit(1)
   }
   console.log('Conformance report is up to date.')

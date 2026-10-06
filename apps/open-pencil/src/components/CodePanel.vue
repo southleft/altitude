@@ -128,7 +128,7 @@ const statusText = computed(() => {
   if (status.value === 'updating') return code.value.updating
   if (status.value === 'error') return code.value.previewFailed
   if (oversizeSelection.value) {
-    return code.value.selectionTooLarge.replace('{count}', String(oversizeSelection.value))
+    return code.value.selectionTooLarge({ count: oversizeSelection.value })
   }
   if (pinnedToEdit.value) return code.value.pinnedToEdit
   if (dirty.value) return code.value.updatedLive
@@ -147,9 +147,16 @@ function beginDesignSession(): DesignJSXEditSession | null {
   return result.session
 }
 
-function beginDOMSession(): DOMCodeSession {
-  domSession ??= createDOMCodeSession(store)
-  return domSession
+function beginDOMSession(): DOMCodeSession | null {
+  if (domSession) return domSession
+  const result = createDOMCodeSession(store)
+  if (!result.ok) {
+    status.value = 'error'
+    error.value = result.error
+    return null
+  }
+  domSession = result.session
+  return result.session
 }
 
 async function commitCurrentSession(): Promise<void> {
@@ -180,7 +187,10 @@ async function runPreview(version: number): Promise<void> {
   error.value = ''
   let result: { ok: true } | { ok: false; error: string }
   if (source.value === 'html-css') {
-    result = await previewDOMCode(store, beginDOMSession(), draft.value)
+    const session = beginDOMSession()
+    result = session
+      ? await previewDOMCode(store, session, draft.value)
+      : { ok: false, error: error.value }
   } else {
     const session = beginDesignSession()
     result = session

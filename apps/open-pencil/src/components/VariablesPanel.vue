@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import VariablesSection from './properties/VariablesSection.vue'
 import VariablesDialog from './variables/VariablesDialog.vue'
+import VariablesSection from './variables/VariablesSection.vue'
 
 /**
  * Variables as a first-class tab.

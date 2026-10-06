@@ -30,7 +30,7 @@ function cleanEntry(entry: AppMenuEntry): unknown | null {
 }
 
 function cleanGroup(group: AppMenuGroupSchema): unknown | null {
-  if (!isNativeVisible(group)) return null
+  if (!isNativeVisible(group) || group.menubar === false) return null
   return {
     label: group.label,
     items: group.items.map(cleanEntry).filter(Boolean)

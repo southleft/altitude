@@ -56,16 +56,8 @@ const { menu: t, settings } = useI18n()
 
 const { topMenus } = useAppMenu()
 
-/**
- * Menus whose every action is already contextual in the Design tab.
- *
- * `TypographySection` renders for TEXT nodes and `PositionSection` carries the align
- * controls, so these two top-level menus were a second, worse copy of controls the user
- * already has in front of them. Filtered at the menubar only — the schema still feeds
- * keyboard shortcuts and the command palette, so nothing becomes unreachable.
- */
-const CONTEXTUAL_MENUS = new Set(['Text', 'Arrange'])
-const menubarMenus = computed(() => topMenus.value.filter((m) => !CONTEXTUAL_MENUS.has(m.label)))
+/** Groups the schema keeps off the menubar; the native menu is generated the same way. */
+const menubarMenus = computed(() => topMenus.value.filter((menu) => menu.menubar))
 const menuCls = useMenuUI()
 const mainMenuCls = useMenuUI({ content: 'min-w-52' })
 const subMenuCls = useMenuUI({ content: 'min-w-44' })
@@ -113,9 +105,9 @@ const subMenuCls = useMenuUI({ content: 'min-w-44' })
     </div>
     <div v-if="!IS_TAURI" class="flex items-center px-1 pb-1">
       <MenubarRoot class="scrollbar-none flex items-center gap-0.5 overflow-x-auto">
-        <MenubarMenu v-for="menu in menubarMenus" :key="menu.label">
+        <MenubarMenu v-for="menu in menubarMenus" :key="menu.id">
           <MenubarTrigger
-            v-test-id="`menubar-${menu.label.toLowerCase()}`"
+            v-test-id="`menubar-${menu.id}`"
             class="flex cursor-pointer items-center rounded px-2 py-1 text-[11px] text-surface/80 transition-colors select-none hover:bg-hover hover:text-surface data-[state=open]:bg-hover data-[state=open]:text-surface"
           >
             {{ menu.label }}

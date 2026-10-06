@@ -18,15 +18,14 @@ import {
   SWIPE_VELOCITY_THRESHOLD
 } from '@/constants'
 
-import ChatPanel from './ChatPanel.vue'
 import CodePanel from './CodePanel.vue'
 import DesignPanel from './DesignPanel.vue'
-import VariablesPanel from './VariablesPanel.vue'
 import LayerTree from './LayerTree/LayerTree.vue'
 import PagesPanel from './PagesPanel.vue'
+import VariablesPanel from './VariablesPanel.vue'
 
 type Snap = 'closed' | 'half' | 'full'
-type DrawerTab = 'layers' | 'design' | 'variables' | 'code' | 'ai'
+type DrawerTab = 'layers' | 'design' | 'variables' | 'code'
 
 const store = useEditorStore()
 const { settings } = useI18n()
@@ -45,14 +44,13 @@ const snap = computed({
 
 function getDrawerTab(): DrawerTab {
   if (store.state.activeRibbonTab === 'code') return 'code'
-  if (store.state.activeRibbonTab === 'ai') return 'ai'
   if (store.state.panelMode === 'design') return 'design'
   if (store.state.panelMode === 'variables') return 'variables'
   return 'layers'
 }
 
 function setDrawerTab(tab: DrawerTab) {
-  if (tab === 'code' || tab === 'ai') {
+  if (tab === 'code') {
     store.state.activeRibbonTab = tab
     return
   }
@@ -173,15 +171,6 @@ const drawerTransition = useMotionTransition({
           >
             <icon-lucide-code class="size-4" />
           </TabsTrigger>
-
-          <TabsTrigger
-            data-test-id="mobile-ribbon-ai"
-            value="ai"
-            class="flex h-full cursor-pointer items-center justify-center px-3 transition-colors outline-none select-none data-[state=active]:text-accent"
-            @click="toggleTab('ai')"
-          >
-            <icon-lucide-sparkles class="size-4" />
-          </TabsTrigger>
         </TabsList>
       </nav>
 
@@ -212,12 +201,6 @@ const drawerTransition = useMotionTransition({
         <TabsContent value="code" class="mt-0 h-full data-[state=inactive]:hidden">
           <div data-test-id="mobile-drawer-code" class="flex h-full flex-col">
             <CodePanel :active="isOpen && getDrawerTab() === 'code'" />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="ai" class="mt-0 h-full data-[state=inactive]:hidden">
-          <div data-test-id="mobile-drawer-ai" class="flex h-full flex-col">
-            <ChatPanel />
           </div>
         </TabsContent>
       </div>

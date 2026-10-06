@@ -10,7 +10,7 @@ test('menu bar is visible in browser mode', async () => {
 test('menu bar has all top-level menus', async () => {
   const triggers = editor.page.locator('[role="menubar"] [role="menuitem"]')
   const labels = await triggers.allTextContents()
-  expect(labels).toEqual(['File', 'Edit', 'View', 'Object', 'Text', 'Arrange'])
+  expect(labels).toEqual(['File', 'Edit', 'View', 'Object'])
 })
 
 test('File menu opens and shows items', async () => {

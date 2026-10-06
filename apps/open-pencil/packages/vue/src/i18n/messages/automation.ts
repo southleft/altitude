@@ -106,7 +106,32 @@ export const automationMessageDefaults = {
   statusStarting: 'Starting',
   statusRunning: 'Running',
   statusStopped: 'Stopped',
-  statusError: 'Error'
+  statusError: 'Error',
+  agentConnect: 'Connect AI',
+  agentConnected: 'AI connected',
+  agentConnectTitle: 'Connect your AI agent',
+  agentConnectDescription: params(
+    'Use {clients}, or another MCP client with your own subscription. No API keys needed.'
+  ),
+  agentStatusConnected: 'Connected',
+  agentStatusConnectedHint: 'An agent sent a request in the last few minutes.',
+  agentStatusWaiting: 'Not connected',
+  agentStatusWaitingHint:
+    'The local MCP server is running. Add OpenPencil to your agent, then ask it to look at this document.',
+  agentStatusStarting: 'Starting the MCP server',
+  agentStatusOffline: 'MCP server not running',
+  agentStatusOfflineHint: 'Agents connect through the local MCP server. Start it to connect.',
+  agentStatusUnavailable: 'Not available on the web',
+  agentStatusUnavailableHint:
+    'The web version cannot reach an MCP server on your computer. Use the OpenPencil desktop app to connect an agent.',
+  agentStepInstall: 'Install the MCP bridge',
+  agentStepClaudeCode: params('Add it to {client}'),
+  agentStepOtherClients: 'Other clients',
+  agentStepOtherClientsHint: params('For {clients}, add this to the MCP configuration.'),
+  agentDevelopmentNote:
+    'This development server keeps its MCP discovery file private, so the stdio bridge cannot find it. Turn off Require authentication in MCP settings, then connect over HTTP:',
+  agentSetupGuide: 'Setup guide',
+  agentOpenSettings: 'MCP settings'
 } as const
 
 export const automationMessages = i18n('automation', automationMessageDefaults)

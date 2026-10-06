@@ -5,6 +5,7 @@ import { useI18n, useSceneComputed } from '@open-pencil/vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
 import IconButton from '@/components/ui/button/IconButton.vue'
+import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 
@@ -30,17 +31,19 @@ const variableCount = useSceneComputed(() => {
  */
 const switchable = useSceneComputed(() => {
   void editor.state.sceneVersion
-  return editor
-    .getCollections()
-    // `modes` is optional-in-practice: a collection added through the API without one
-    // would otherwise throw here and take the whole properties panel down with it.
-    .filter((collection) => (collection.modes?.length ?? 0) > 1)
-    .map((collection) => ({
-      id: collection.id,
-      name: collection.name || 'Untitled collection',
-      activeModeId: editor.graph.activeMode.get(collection.id) ?? collection.defaultModeId,
-      options: collection.modes.map((mode) => ({ value: mode.modeId, label: mode.name }))
-    }))
+  return (
+    editor
+      .getCollections()
+      // `modes` is optional-in-practice: a collection added through the API without one
+      // would otherwise throw here and take the whole properties panel down with it.
+      .filter((collection) => (collection.modes?.length ?? 0) > 1)
+      .map((collection) => ({
+        id: collection.id,
+        name: collection.name || 'Untitled collection',
+        activeModeId: editor.graph.activeMode.get(collection.id) ?? collection.defaultModeId,
+        options: collection.modes.map((mode) => ({ value: mode.modeId, label: mode.name }))
+      }))
+  )
 })
 
 const hasVariables = computed(() => variableCount.value > 0)
@@ -71,9 +74,11 @@ function selectMode(collectionId: string, modeId: string): void {
         class="flex items-center gap-2"
         data-test-id="variables-mode-row"
       >
-        <span class="min-w-0 flex-1 truncate text-[11px] text-muted" :title="collection.name">
-          {{ collection.name }}
-        </span>
+        <Tip as-child :label="collection.name">
+          <span class="min-w-0 flex-1 truncate text-[11px] text-muted">
+            {{ collection.name }}
+          </span>
+        </Tip>
         <AppSelect
           :model-value="collection.activeModeId"
           :options="collection.options"

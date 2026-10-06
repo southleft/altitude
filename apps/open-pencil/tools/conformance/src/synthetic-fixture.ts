@@ -13,9 +13,10 @@ import { BLACK } from '@open-pencil/scene-graph/constants'
  *
  * Add a case here whenever a new fact starts travelling; the gate then guards it forever.
  */
-export function buildSyntheticFixture() {
+export function buildSyntheticFixture(): SceneGraph {
   const graph = new SceneGraph()
   const page = graph.getPages()[0]
+  if (!page) throw new Error('A new scene graph has no page.')
 
   const theme = graph.createCollection('Theme')
   const primary = graph.createVariable('color/primary/default', 'COLOR', theme.id, {
@@ -32,7 +33,7 @@ export function buildSyntheticFixture() {
     name: 'Button',
     width: 200,
     height: 100,
-    variantPropSpecs: { Size: ['sm', 'lg'] }
+    variantPropSpecs: [{ propDefId: 'Size', value: 'sm' }]
   })
 
   for (const [index, size] of ['sm', 'lg'].entries()) {
@@ -46,8 +47,8 @@ export function buildSyntheticFixture() {
       itemSpacing: 8,
       paddingLeft: 12,
       paddingRight: 12,
-      counterAxisSizing: 'AUTO',
-      primaryAxisSizing: 'AUTO',
+      counterAxisSizing: 'HUG',
+      primaryAxisSizing: 'HUG',
       horizontalConstraint: 'STRETCH',
       topLeftRadius: 4,
       topRightRadius: 4,
@@ -63,7 +64,9 @@ export function buildSyntheticFixture() {
           visible: true
         }
       ],
-      componentPropertyDefinitions: { label: { type: 'TEXT', defaultValue: 'Save' } }
+      componentPropertyDefinitions: [
+        { id: 'label', name: 'label', type: 'TEXT', defaultValue: 'Save' }
+      ]
     })
     graph.bindVariable(component.id, 'fills/0/color', primary.id)
     graph.bindVariable(component.id, 'itemSpacing', gap.id)
@@ -95,7 +98,8 @@ export function buildSyntheticFixture() {
     componentId: set.id,
     componentKey: 'published-key-1'
   })
-  graph.bindVariable(instance.id, 'opacity', graph.createVariable('opacity/muted', 'FLOAT', theme.id, 0.5).id)
+  const muted = graph.createVariable('opacity/muted', 'FLOAT', theme.id, 0.5)
+  graph.bindVariable(instance.id, 'opacity', muted.id)
 
   // Gradient + multi-layer paint, per-layer flags, dashed stroke, blend mode, rotation.
   graph.createNode('FRAME', page.id, {

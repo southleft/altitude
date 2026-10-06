@@ -6,6 +6,17 @@
 
 - The desktop app now requires macOS 13 or later; the web app supports Chrome 111, Edge 111, Firefox 128, and Safari 16.4 or later.
 
+### Added
+
+- Keep design meaning in exported HTML/CSS: each element records its layer name, node type, component identity, token bindings, and paints in `data-op-*` attributes, token-bound values export as `var(--token, value)`, and vector layers export as inline SVG. Importing that markup restores them, rebuilds variables with their types and fallback values, and reports anything it could not restore. `open-pencil export --format html` includes the attributes by default.
+- Show the selected layers in the Code panel's HTML/CSS mode, and apply edits only to those layers as one undoable step.
+- Reach variables and modes from a Variables tab in the right panel, whatever is selected.
+
+### Changed
+
+- Replace the in-app AI chat tab with a **Connect AI** button that sets up Claude Code, Cursor, or another MCP client to work on the open document with your own subscription, and shows whether an agent is connected. Built-in AI provider and API-key settings are hidden.
+- Remove the Text and Arrange menus from the menu bar and the desktop menu, since their actions are in the Design panel. Their commands stay in the command palette, and their shortcuts now also work in the browser.
+
 ### Fixed
 
 - Show what to update instead of a blank window when the browser or system WebView is too old, naming the detected macOS, Safari, Chrome, Edge, Firefox, WebKitGTK, or WebView2 version and linking a prefilled bug report, and explain a failed start the same way (#744).

@@ -119,6 +119,7 @@ export const developmentSidebar = (
             { text: 'Renderer Lifecycle', link: '/development/renderer-lifecycle' },
             { text: 'Renderer Profiler', link: '/development/renderer-profiler' },
             { text: 'Vector Conversion', link: '/development/vector-conversion' },
+            { text: 'HTML/CSS Round Trip', link: '/development/round-trip' },
           ]
         : []),
     ],

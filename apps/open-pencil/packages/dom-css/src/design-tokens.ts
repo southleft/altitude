@@ -6,7 +6,7 @@ import type { DesignFact, DesignStyleDeclaration } from './types'
 /**
  * Tokens as CSS.
  *
- * Separated from `design-fact.ts` because these are two different jobs: that module
+ * Separated from `design-fact/` because these are two different jobs: that module
  * decides WHICH facts travel and how they are encoded; this one decides how a token
  * BINDING becomes a CSS declaration. Keeping them together pushed one file past every
  * size and complexity threshold the repo enforces.
@@ -74,8 +74,14 @@ const BINDING_CSS_PROPERTY: Record<string, string> = {
   y: 'top'
 }
 
-/** For a TEXT node a fill paints the glyphs, not a background. */
-function cssPropertyForBinding(field: string, nodeType: string | undefined): string | undefined {
+/**
+ * The CSS property a bound field is written to. For a TEXT node a fill paints the glyphs,
+ * not a background.
+ */
+export function cssPropertyForBinding(
+  field: string,
+  nodeType: string | undefined
+): string | undefined {
   if (field === 'fills/0/color' && nodeType === 'TEXT') return 'color'
   return BINDING_CSS_PROPERTY[field]
 }

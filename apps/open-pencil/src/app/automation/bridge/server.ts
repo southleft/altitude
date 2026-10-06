@@ -10,10 +10,19 @@ import { makeFigmaFromStore } from '@/app/automation/bridge/figma-factory'
 import { createAutomationCommandHandlers } from '@/app/automation/bridge/handlers'
 import type { EditorStore } from '@/app/editor/active-store'
 
+export interface AutomationConnectionOptions {
+  automationURL?: string
+  /** Called when an MCP client request reaches the app, before it is handled. */
+  onRequest?: (command: string) => void
+}
+
 export function connectAutomation(
   getStore: () => EditorStore,
   authToken: string | null = null,
-  automationURL = __OPENPENCIL_LOCAL_AUTOMATION_URL__
+  {
+    automationURL = __OPENPENCIL_LOCAL_AUTOMATION_URL__,
+    onRequest
+  }: AutomationConnectionOptions = {}
 ) {
   const token = authToken ?? randomHex(32)
   let ws: WebSocket | null = null
@@ -55,6 +64,7 @@ export function connectAutomation(
           args?: unknown
         }
         if (msg.type !== 'request' || !msg.id) return
+        onRequest?.(msg.command)
         try {
           const result = await handleRequest(msg.id, msg.command, msg.args)
           if (socket.readyState !== WebSocket.OPEN) return

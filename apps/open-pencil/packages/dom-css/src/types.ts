@@ -1,4 +1,4 @@
-import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import type { Effect, Fill, SceneGraph, SceneNode, Stroke } from '@open-pencil/scene-graph'
 
 export type DesignNode = DesignElement | DesignText
 
@@ -28,7 +28,7 @@ export interface DesignElement {
    * What this element IS, as opposed to how it looks. CSS cannot express node type,
    * component identity or token bindings, so without this they are lost on every
    * crossing. Mirrored into `data-op-*` attributes, which is the form that survives
-   * HTML serialisation. See `design-fact.ts`.
+   * HTML serialisation. See `design-fact/`.
    */
   design?: DesignFact
 }
@@ -52,9 +52,9 @@ export interface DesignFact {
    * four CSS can express. The CSS declarations stay idiomatic for rendering; these keep
    * the truth.
    */
-  fills?: unknown[]
-  strokes?: unknown[]
-  effects?: unknown[]
+  fills?: Fill[]
+  strokes?: Stroke[]
+  effects?: Effect[]
   /**
    * Canvas coordinates. CSS expresses position only for absolutely positioned boxes; for
    * flow children it is derived, so the value has to travel as a fact to survive.

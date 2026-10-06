@@ -14,6 +14,8 @@ import type {
   KeyboardShortcutOptions,
   KeyboardShortcutRunOptions
 } from '@/app/shell/keyboard/types'
+import { CONTEXTUAL_MENU_ACTIONS } from '@/app/shell/menu/editor-actions'
+import { APP_MENU_SCHEMA, type AppMenuGroupSchema } from '@/app/shell/menu/schema'
 import { appMenuTinykeysShortcut } from '@/app/shell/menu/shortcut'
 
 type ShortcutAction = (options: KeyboardShortcutRunOptions) => void
@@ -31,6 +33,24 @@ function commandShortcut(
   keys = editorCommandMetadata(command).keybinding
 ): ShortcutDefinition | null {
   return keys ? { id: command, keys, run: ({ runCommand }) => runCommand(command) } : null
+}
+
+/**
+ * Shortcuts of menu groups kept off the menubars. With no menu item there is no native
+ * accelerator either, so the registry binds them in the browser and on desktop alike.
+ */
+function contextualMenuShortcuts(): ShortcutDefinition[] {
+  const groups: readonly AppMenuGroupSchema[] = APP_MENU_SCHEMA
+  return groups
+    .filter((group) => group.menubar === false)
+    .flatMap((group) =>
+      group.items.flatMap((entry): ShortcutDefinition[] => {
+        if (entry.type === 'separator') return []
+        const action = CONTEXTUAL_MENU_ACTIONS[entry.id]
+        const keys = appMenuTinykeysShortcut(entry.id)
+        return action && keys ? [{ id: entry.id, keys, run: () => action() }] : []
+      })
+    )
 }
 
 function commandShortcuts(...commands: EditorCommandId[]): ShortcutDefinition[] {
@@ -139,7 +159,6 @@ export function registerKeyboardShortcuts(options: KeyboardShortcutOptions) {
       keys: appMenuTinykeysShortcut('toggle-ui') ?? '$mod+Backslash',
       run: ({ actions }) => actions.toggleUI()
     },
-    { id: 'toggle-ai', keys: '$mod+KeyJ', run: ({ actions }) => actions.toggleAI() },
     {
       id: 'open-settings',
       keys: appMenuTinykeysShortcut('settings') ?? '$mod+Comma',
@@ -215,7 +234,8 @@ export function registerKeyboardShortcuts(options: KeyboardShortcutOptions) {
     { id: 'delete-alt', keys: 'Alt+Delete', run: ({ actions }) => actions.smartDelete(true) },
     { id: 'enter', keys: 'Enter', run: ({ actions }) => actions.confirmOrEnterText() },
     { id: 'escape', keys: 'Escape', run: ({ actions }) => actions.escapeOrDeselect() },
-    ...opacityBindings()
+    ...opacityBindings(),
+    ...contextualMenuShortcuts()
   ]
 
   const bindings: KeyBindingMap = {}

@@ -12,20 +12,16 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import { AppDialogBody } from '@/components/ui/dialog'
 import AppPlaceholder from '@/components/ui/feedback/AppPlaceholder.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
-import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
 
 import ToolAccessList from './ToolAccessList.vue'
 
 const automation = useAutomationMessages()
-const { target, tools, disabled, selectTarget, reset } = useToolAccessSettings()
+// The built-in AI target stays dormant, so only local MCP tools are configurable here.
+const { target, tools, disabled, reset } = useToolAccessSettings()
 const { search, enabledCount, groups, expanded, setGroupEnabled, isEnabled, setToolEnabled } =
   useToolAccess(tools, disabled)
 const { restart } = useMCPSettings()
 
-const targetOptions = computed(() => [
-  { value: 'ai', label: automation.value.builtInAI },
-  { value: 'mcp', label: automation.value.localMCP }
-])
 const labelledGroups = computed<ToolAccessGroup[]>(() =>
   groups.value.map((group) => ({
     ...group,
@@ -45,13 +41,6 @@ function setExpanded(effect: 'read' | 'write', open: boolean) {
       class="flex shrink-0 flex-wrap items-center gap-2 border-b border-border px-5 py-3 sm:px-6"
       data-slot="tool-access-toolbar"
     >
-      <SegmentedControl
-        :model-value="target"
-        :options="targetOptions"
-        :label="automation.toolAccessTarget"
-        class="max-sm:w-full"
-        @update:model-value="selectTarget"
-      />
       <span class="text-xs text-muted">
         {{ automation.toolsEnabled({ enabled: enabledCount, total: tools.length }) }}
       </span>

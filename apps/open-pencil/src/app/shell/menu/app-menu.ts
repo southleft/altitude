@@ -26,6 +26,7 @@ import { openStorageWorkspace } from '@/app/shell/menu/navigation'
 import type {
   AppMenuActionItem,
   AppMenuEntry,
+  AppMenuGroupId,
   AppMenuGroupSchema,
   AppMenuIcon
 } from '@/app/shell/menu/schema'
@@ -37,7 +38,10 @@ import { useAppTheme } from '@/app/shell/theme'
 import { closeTab, activeTab } from '@/app/tabs'
 
 export interface AppMenuGroup {
+  id: AppMenuGroupId
   label: string
+  /** False when the group belongs in the command palette but not on the menubar. */
+  menubar: boolean
   paletteIcon?: Component
   items: MenuEntry[]
 }
@@ -310,7 +314,9 @@ export function useAppMenu() {
   function buildGroup(group: AppMenuGroupSchema): AppMenuGroup | null {
     if (!isVisible(group)) return null
     return {
+      id: group.id,
       label: groupLabel(group),
+      menubar: group.menubar ?? true,
       paletteIcon: group.paletteIcon ? APP_MENU_ICONS[group.paletteIcon] : undefined,
       items: group.items.map(buildEntry).filter((item): item is MenuEntry => item !== null)
     }
@@ -350,7 +356,7 @@ export function useAppMenu() {
 
   const commandGroups = computed<CommandPaletteGroup[]>(() =>
     topMenus.value.map((group) => ({
-      id: group.label.toLowerCase(),
+      id: group.id,
       label: group.label,
       items: group.items.flatMap((entry) => paletteEntries(entry, group.label, group.paletteIcon))
     }))

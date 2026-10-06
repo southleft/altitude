@@ -2,11 +2,7 @@ import { SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
 
 import { applyElementStyle, applyTextStyle, hasBoxStyle } from './apply-css'
 import { mergedStyle } from './css-values'
-import {
-  RESTORABLE_NODE_TYPES,
-  applyDesignFactToNode,
-  designFactFromAttrs
-} from './design-fact'
+import { RESTORABLE_NODE_TYPES, applyDesignFactToNode, designFactFromAttrs } from './design-fact'
 import type {
   DesignDocument,
   DesignElement,
@@ -14,6 +10,7 @@ import type {
   DesignNode,
   DesignStyleDeclaration
 } from './types'
+import { VariableRecovery } from './variable-recovery'
 
 /**
  * A node type we refuse to restore, and why. Restoring the type is normally strictly
@@ -25,27 +22,48 @@ const UNRESTORABLE_TYPES: Record<string, string> = {
   DOCUMENT: 'the document root is created by the graph itself'
 }
 
-/** Design facts the last import could not honour. Named, never silent. */
+/** A design fact an import could not honour. Named, never silent. */
 export interface ImportDegradation {
   nodeName: string
   fact: string
   reason: string
 }
 
-let degradations: ImportDegradation[] = []
-
-/** Degradations recorded by the most recent `designDocumentToSceneGraph` call. */
-export function lastImportDegradations(): readonly ImportDegradation[] {
-  return degradations
-}
-
-/** The design fact for an element: the typed field if present, else the attributes. */
-function resolveDesignFact(element: DesignElement): DesignFact | undefined {
-  return element.design ?? designFactFromAttrs(element.attrs)
-}
-
 export interface DesignDocumentToSceneGraphOptions {
   pageName?: string
+  /**
+   * Receives every degradation this import records: refused node types, invalid markup
+   * facts, variables rebuilt without values. Owned by the caller, so concurrent imports
+   * never share a report.
+   */
+  degradations?: ImportDegradation[]
+}
+
+/** Per-call state. Nothing about one import may leak into another. */
+interface ImportContext {
+  graph: SceneGraph
+  degradations: ImportDegradation[]
+  facts: WeakMap<DesignElement, DesignFact | null>
+}
+
+function elementName(element: DesignElement): string {
+  return element.attrs['data-op-name'] || element.attrs.id || element.attrs.class || element.tagName
+}
+
+/**
+ * The design fact for an element: the typed field if present, else the attributes. Parsed
+ * once per element, so markup issues are reported once however often the fact is read.
+ */
+function resolveDesignFact(ctx: ImportContext, element: DesignElement): DesignFact | undefined {
+  const cached = ctx.facts.get(element)
+  if (cached !== undefined) return cached ?? undefined
+  const fact =
+    element.design ??
+    designFactFromAttrs(element.attrs, ({ fact: label, reason }) =>
+      ctx.degradations.push({ nodeName: elementName(element), fact: label, reason })
+    )
+  ctx.facts.set(element, fact ?? null)
+  return fact
 }
 
 function textContent(node: DesignNode): string {
@@ -72,7 +90,7 @@ function isTextLikeElement(node: DesignElement): boolean {
 }
 
 function createTextNode(
-  graph: SceneGraph,
+  { graph }: ImportContext,
   parentId: string,
   text: string,
   style: DesignStyleDeclaration,
@@ -89,9 +107,14 @@ function createTextNode(
   return node
 }
 
-function createElementNode(graph: SceneGraph, parentId: string, element: DesignElement): SceneNode {
+function createElementNode(
+  ctx: ImportContext,
+  parentId: string,
+  element: DesignElement
+): SceneNode {
+  const { graph } = ctx
   const style = mergedStyle(element)
-  const elementFact = resolveDesignFact(element)
+  const elementFact = resolveDesignFact(ctx, element)
 
   /**
    * A design fact saying `nodeType: TEXT` is authoritative.
@@ -109,7 +132,7 @@ function createElementNode(graph: SceneGraph, parentId: string, element: DesignE
     element.children.every((child) => child.type === 'text')
 
   if (isTextByFact || looksLikeText) {
-    return createTextNode(graph, parentId, textContent(element), style, elementFact)
+    return createTextNode(ctx, parentId, textContent(element), style, elementFact)
   }
 
   const fact = elementFact
@@ -125,7 +148,11 @@ function createElementNode(graph: SceneGraph, parentId: string, element: DesignE
         ? undefined
         : 'not a known scene node type — markup may be hand-edited or from another tool')
     if (refusal) {
-      degradations.push({ nodeName: name, fact: `nodeType=${fact.nodeType}`, reason: refusal })
+      ctx.degradations.push({
+        nodeName: name,
+        fact: `nodeType=${fact.nodeType}`,
+        reason: refusal
+      })
     } else {
       nodeType = fact.nodeType as SceneNode['type']
     }
@@ -139,24 +166,24 @@ function createElementNode(graph: SceneGraph, parentId: string, element: DesignE
   applyDesignFactToNode(node, fact)
 
   for (const child of element.children) {
-    createDesignNode(graph, node.id, child, style)
+    createDesignNode(ctx, node.id, child, style)
   }
 
   return node
 }
 
 function createDesignNode(
-  graph: SceneGraph,
+  ctx: ImportContext,
   parentId: string,
   node: DesignNode,
   inheritedStyle: DesignStyleDeclaration = {}
 ): SceneNode | null {
   if (node.type === 'text') {
     if (node.text.trim().length === 0) return null
-    return createTextNode(graph, parentId, node.text, inheritedStyle)
+    return createTextNode(ctx, parentId, node.text, inheritedStyle)
   }
 
-  return createElementNode(graph, parentId, node)
+  return createElementNode(ctx, parentId, node)
 }
 
 function fitPageToChildren(page: SceneNode, graph: SceneGraph): void {
@@ -173,11 +200,12 @@ function fitPageToChildren(page: SceneNode, graph: SceneGraph): void {
  * graph, the binding resolves to nothing. Two sources, in order of fidelity:
  *
  *  1. `document.sourceGraph` — present on the in-memory path, fully lossless.
- *  2. The design facts themselves — each ref carries id and name, so an HTML-only
- *     document can still rebuild variable identity. Values live in the CSS custom
- *     properties and are not recovered here, which is recorded as a degradation.
+ *  2. The design facts themselves — each ref carries id and name, the bound field implies
+ *     the type, and the `var(--x, literal)` fallback carries the value where one was written.
+ *     Variables without a recoverable value are recorded as a degradation.
  */
-function restoreVariables(graph: SceneGraph, document: DesignDocument): void {
+function restoreVariables(ctx: ImportContext, document: DesignDocument): void {
+  const { graph } = ctx
   const source = document.sourceGraph
   if (source) {
     for (const [id, variable] of source.variables) graph.variables.set(id, variable)
@@ -188,44 +216,23 @@ function restoreVariables(graph: SceneGraph, document: DesignDocument): void {
     return
   }
 
-  // HTML-only path: synthesise identity from the refs actually referenced.
-  const seen = new Map<string, string>()
+  const recovery = new VariableRecovery()
   const visit = (node: DesignNode): void => {
     if (node.type !== 'element') return
-    const fact = resolveDesignFact(node)
-    for (const [, ref] of Object.entries(fact?.boundVariables ?? {})) {
-      if (ref.id && !seen.has(ref.id)) seen.set(ref.id, ref.name ?? ref.id)
-    }
+    recovery.visit(node, resolveDesignFact(ctx, node))
     for (const child of node.children) visit(child)
   }
   for (const child of document.children) visit(child)
-  if (seen.size === 0) return
 
-  const collectionId = 'recovered-from-markup'
-  const modeId = 'recovered-default'
-  graph.variableCollections.set(collectionId, {
-    id: collectionId,
-    name: 'Recovered from markup',
-    modes: [{ modeId, name: 'Default' }],
-    defaultModeId: modeId,
-    variableIds: [...seen.keys()]
-  })
-  graph.activeMode.set(collectionId, modeId)
-  for (const [id, name] of seen) {
-    graph.variables.set(id, {
-      id,
-      name,
-      type: 'COLOR',
-      collectionId,
-      valuesByMode: {},
-      description: 'Recovered from data-op-vars; value not carried in markup.',
-      hiddenFromPublishing: false
-    })
-  }
-  degradations.push({
+  const { variables, withValues } = recovery.restoreInto(graph)
+  if (variables === 0) return
+  ctx.degradations.push({
     nodeName: '(document)',
-    fact: `${seen.size} variable definitions`,
-    reason: 'rebuilt from markup refs — identity and name only, values live in the CSS'
+    fact: `${variables} variable definitions`,
+    reason:
+      withValues === variables
+        ? 'rebuilt from markup refs — single mode, values from CSS fallbacks'
+        : `rebuilt from markup refs — ${variables - withValues} without a CSS fallback value`
   })
 }
 
@@ -233,16 +240,20 @@ export function designDocumentToSceneGraph(
   document: DesignDocument,
   options: DesignDocumentToSceneGraphOptions = {}
 ): SceneGraph {
-  degradations = []
   const graph = new SceneGraph()
+  const ctx: ImportContext = {
+    graph,
+    degradations: options.degradations ?? [],
+    facts: new WeakMap()
+  }
   const page = graph.getPages().find((node) => node.type === 'CANVAS') ?? graph.addPage('DesignDOM')
 
   page.name = options.pageName ?? 'DesignDOM'
 
-  restoreVariables(graph, document)
+  restoreVariables(ctx, document)
 
   for (const child of document.children) {
-    createDesignNode(graph, page.id, child)
+    createDesignNode(ctx, page.id, child)
   }
 
   fitPageToChildren(page, graph)

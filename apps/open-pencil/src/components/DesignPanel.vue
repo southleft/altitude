@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import { useI18n, useSelectionState, useEditorCommands } from '@open-pencil/vue'
 
@@ -28,9 +28,7 @@ import PositionSection from './properties/PositionSection.vue'
 import SelectionActionsControl from './properties/SelectionActionsControl.vue'
 import StrokeSection from './properties/stroke/StrokeSection.vue'
 import TypographySection from './properties/TypographySection.vue'
-import VariablesDialog from './variables/VariablesDialog.vue'
 
-const variablesOpen = ref(false)
 const store = useEditorStore()
 const libraryService = useLibraryService()
 const activeTool = computed(() => store.state.activeTool)
@@ -184,6 +182,4 @@ const { panels } = useI18n()
     <PageSection />
     <ExportSection />
   </div>
-
-  <VariablesDialog v-model:open="variablesOpen" />
 </template>

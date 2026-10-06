@@ -7,7 +7,8 @@ import { openSettingsDialog } from '@/app/settings/dialog'
 
 import type { ToolAccessTarget } from '../types'
 
-const target = ref<ToolAccessTarget>('ai')
+// Local MCP is the only reachable target while the built-in AI stays dormant.
+const target = ref<ToolAccessTarget>('mcp')
 
 export function openToolAccessSettings(value: ToolAccessTarget) {
   target.value = value

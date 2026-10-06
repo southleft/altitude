@@ -53,15 +53,26 @@ export interface AppMenuSeparatorItem {
 
 export type AppMenuEntry = AppMenuActionItem | AppMenuSeparatorItem
 
+export type AppMenuGroupId = 'file' | 'edit' | 'view' | 'object' | 'text' | 'arrange'
+
 export interface AppMenuGroupSchema {
+  /** Stable identity. Labels are translated, so never filter or key by them. */
+  id: AppMenuGroupId
   label: string
   target?: AppMenuTarget
+  /**
+   * False hides the group from the browser and native menubars. Its items stay in the
+   * command palette and its shortcuts are bound by the keyboard registry, so nothing
+   * becomes unreachable.
+   */
+  menubar?: boolean
   paletteIcon?: AppMenuIcon
   items: AppMenuEntry[]
 }
 
 export const APP_MENU_SCHEMA = [
   {
+    id: 'file',
     label: 'File',
     paletteIcon: 'file',
     items: [
@@ -107,6 +118,7 @@ export const APP_MENU_SCHEMA = [
     ]
   },
   {
+    id: 'edit',
     label: 'Edit',
     paletteIcon: 'pencil',
     items: [
@@ -150,6 +162,7 @@ export const APP_MENU_SCHEMA = [
     ]
   },
   {
+    id: 'view',
     label: 'View',
     paletteIcon: 'eye',
     items: [
@@ -233,6 +246,7 @@ export const APP_MENU_SCHEMA = [
     ]
   },
   {
+    id: 'object',
     label: 'Object',
     paletteIcon: 'layers',
     items: [
@@ -370,7 +384,10 @@ export const APP_MENU_SCHEMA = [
     ]
   },
   {
+    // Contextual in the Design tab (TypographySection), so kept off the menubars.
+    id: 'text',
     label: 'Text',
+    menubar: false,
     paletteIcon: 'type',
     items: [
       { id: 'text.bold', label: 'Bold', shortcut: 'MOD+B' },
@@ -379,7 +396,10 @@ export const APP_MENU_SCHEMA = [
     ]
   },
   {
+    // Contextual in the Design tab (PositionSection), so kept off the menubars.
+    id: 'arrange',
     label: 'Arrange',
+    menubar: false,
     paletteIcon: 'layers',
     items: [
       {

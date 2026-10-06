@@ -1,3 +1,5 @@
+import { params } from '@nanostores/i18n'
+
 import { i18n } from '#vue/i18n/create'
 
 export const codeMessageDefaults = {
@@ -16,7 +18,9 @@ export const codeMessageDefaults = {
    */
   pinnedToEdit: 'Pinned to your edit — Reset to follow selection',
   /** Shown instead of freezing the editor while a huge subtree is serialised. */
-  selectionTooLarge: 'Selection too large to preview ({count}+ layers) — select a smaller frame',
+  selectionTooLarge: params<{ count: number }>(
+    'Selection too large to preview ({count}+ layers) — select a smaller frame'
+  ),
   previewFailed: 'Preview failed',
   generatedReadOnly: 'Generated, read only',
   reset: 'Reset',

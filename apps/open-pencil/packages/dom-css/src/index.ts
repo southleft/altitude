@@ -9,7 +9,7 @@ export {
   tailwindHTMLToDesignDocument,
   tailwindHTMLToSceneGraph
 } from './convert'
-export { designDocumentToSceneGraph, lastImportDegradations } from './to-scene-graph'
+export { designDocumentToSceneGraph } from './to-scene-graph'
 export { sceneGraphToDesignDocument, sceneNodesToDesignDocument } from './from-scene-graph'
 export {
   DESIGN_ATTRS,
@@ -17,16 +17,11 @@ export {
   applyDesignFactToNode,
   designFactFromAttrs,
   designFactFromNode,
-  designFactToAttrs,
-  lastOmittedGeometry,
-  resetOmittedGeometry
+  designFactToAttrs
 } from './design-fact'
-export {
-  applyVariableCSS,
-  cssVarName,
-  variableCollectionsToCSS
-} from './design-tokens'
+export { applyVariableCSS, cssVarName, variableCollectionsToCSS } from './design-tokens'
 export type { DesignFactOptions, OmittedGeometry } from './design-fact'
+export type { FactIssue, FactIssueSink } from './design-fact/schema'
 export type { TokenCSSOptions } from './design-tokens'
 export type { ImportDegradation } from './to-scene-graph'
 export { compileTailwindCSS } from './tailwind'

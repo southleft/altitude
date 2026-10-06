@@ -1,22 +1,16 @@
-import type { Ref } from 'vue'
-
 import { opacityFromBuffer } from '@open-pencil/core/editor'
-import type { useEditorCommands, useViewportKind } from '@open-pencil/vue'
+import type { useEditorCommands } from '@open-pencil/vue'
 
 import type { EditorStore } from '@/app/editor/active-store'
 
 type KeyboardActionsOptions = {
   store: EditorStore
-  activeTab: Ref<'design' | 'variables' | 'code' | 'ai'>
-  isMobile: ReturnType<typeof useViewportKind>['isMobile']
   runCommand: ReturnType<typeof useEditorCommands>['runCommand']
   setOpacityTarget: ReturnType<typeof useEditorCommands>['setOpacityTarget']
 }
 
 export function createKeyboardActions({
   store,
-  activeTab,
-  isMobile,
   runCommand,
   setOpacityTarget
 }: KeyboardActionsOptions) {
@@ -90,17 +84,6 @@ export function createKeyboardActions({
     store.state.showUI = !store.state.showUI
   }
 
-  function toggleAI() {
-    if (isMobile.value) {
-      store.state.activeRibbonTab = store.state.activeRibbonTab === 'ai' ? 'panels' : 'ai'
-      if (store.state.mobileDrawerSnap === 'closed') {
-        store.state.mobileDrawerSnap = 'half'
-      }
-    } else {
-      activeTab.value = activeTab.value === 'ai' ? 'design' : 'ai'
-    }
-  }
-
   function exportSelectionPNG() {
     if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'png')
   }
@@ -139,7 +122,6 @@ export function createKeyboardActions({
     escapeOrDeselect,
     toggleAutoLayout,
     toggleUI,
-    toggleAI,
     exportSelectionPNG,
     opacityDigit
   }

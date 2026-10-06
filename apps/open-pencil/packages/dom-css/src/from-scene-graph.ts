@@ -11,7 +11,7 @@ import {
   strokeColorToCSS,
   strokeToCSS
 } from './css-values'
-import { designFactFromNode, designFactToAttrs, resetOmittedGeometry } from './design-fact'
+import { designFactFromNode, designFactToAttrs, type OmittedGeometry } from './design-fact'
 import { applyVariableCSS } from './design-tokens'
 import type { DesignDocument, DesignFact, DesignNode, DesignStyleDeclaration } from './types'
 
@@ -49,10 +49,33 @@ export interface SceneGraphToDesignOptions {
    * Carry raw vector geometry (`vectorNetwork`, `fillGeometry`, `strokeGeometry`) as
    * facts. Default true, which is exact but bulky — on a real design system these three
    * fields were 95% of a 114MB export. Set false for markup meant to be read; the inline
-   * SVG still carries the artwork, and the omission is reported by
-   * `lastOmittedGeometry()`.
+   * SVG still carries the artwork, and the omission is reported through
+   * `omittedGeometry`.
    */
   geometryFacts?: boolean
+  /**
+   * Receives the geometry fields left out when `geometryFacts` is false. Owned by the
+   * caller, so concurrent exports never share a report.
+   */
+  omittedGeometry?: OmittedGeometry[]
+}
+
+type ResolvedDesignOptions = Required<Omit<SceneGraphToDesignOptions, 'omittedGeometry'>> &
+  Pick<SceneGraphToDesignOptions, 'omittedGeometry'>
+
+function resolveDesignOptions(
+  graph: SceneGraph,
+  options: SceneGraphToDesignOptions
+): ResolvedDesignOptions {
+  return {
+    rootId: options.rootId ?? graph.rootId,
+    includeSourceIds: options.includeSourceIds ?? true,
+    includeDesignFacts: options.includeDesignFacts ?? true,
+    cssVarPrefix: options.cssVarPrefix ?? '',
+    inlineVectorSVG: options.inlineVectorSVG ?? true,
+    geometryFacts: options.geometryFacts ?? true,
+    omittedGeometry: options.omittedGeometry
+  }
 }
 
 function nodeChildren(graph: SceneGraph, node: SceneNode): SceneNode[] {
@@ -349,14 +372,15 @@ function tagNameForNode(node: SceneNode): string {
 function sceneNodeToDesignNode(
   graph: SceneGraph,
   node: SceneNode,
-  options: Required<SceneGraphToDesignOptions>
+  options: ResolvedDesignOptions
 ): DesignNode | null {
   if (!node.visible || node.internalOnly) return null
 
   const fact = options.includeDesignFacts
     ? designFactFromNode(graph, node, {
         cssVarPrefix: options.cssVarPrefix,
-        geometryFacts: options.geometryFacts
+        geometryFacts: options.geometryFacts,
+        omittedGeometry: options.omittedGeometry
       })
     : undefined
 
@@ -395,9 +419,7 @@ function sceneNodeToDesignNode(
   applyVariableCSS(inlineStyle, fact)
 
   const rawHTML =
-    options.inlineVectorSVG && VECTOR_TYPES.has(node.type)
-      ? vectorSVG(graph, node)
-      : undefined
+    options.inlineVectorSVG && VECTOR_TYPES.has(node.type) ? vectorSVG(graph, node) : undefined
 
   return {
     type: 'element',
@@ -441,16 +463,7 @@ export function sceneNodesToDesignDocument(
   nodeIds: readonly string[],
   options: SceneGraphToDesignOptions = {}
 ): DesignDocument {
-  const resolvedOptions: Required<SceneGraphToDesignOptions> = {
-    rootId: options.rootId ?? graph.rootId,
-    includeSourceIds: options.includeSourceIds ?? true,
-    includeDesignFacts: options.includeDesignFacts ?? true,
-    cssVarPrefix: options.cssVarPrefix ?? '',
-    inlineVectorSVG: options.inlineVectorSVG ?? true,
-    geometryFacts: options.geometryFacts ?? true
-  }
-
-  resetOmittedGeometry()
+  const resolvedOptions = resolveDesignOptions(graph, options)
 
   const children = nodeIds
     .map((id) => graph.getNode(id))
@@ -465,17 +478,8 @@ export function sceneGraphToDesignDocument(
   graph: SceneGraph,
   options: SceneGraphToDesignOptions = {}
 ): DesignDocument {
-  const root = graph.getNode(options.rootId ?? graph.rootId)
-  const resolvedOptions: Required<SceneGraphToDesignOptions> = {
-    rootId: options.rootId ?? graph.rootId,
-    includeSourceIds: options.includeSourceIds ?? true,
-    includeDesignFacts: options.includeDesignFacts ?? true,
-    cssVarPrefix: options.cssVarPrefix ?? '',
-    inlineVectorSVG: options.inlineVectorSVG ?? true,
-    geometryFacts: options.geometryFacts ?? true
-  }
-
-  resetOmittedGeometry()
+  const resolvedOptions = resolveDesignOptions(graph, options)
+  const root = graph.getNode(resolvedOptions.rootId)
 
   const children = root
     ? nodeChildren(graph, root)
