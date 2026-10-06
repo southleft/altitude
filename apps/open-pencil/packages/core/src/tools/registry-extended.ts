@@ -71,6 +71,7 @@ import {
   ungroupNode
 } from './structure'
 import {
+  addMode,
   bindVariable,
   createCollection,
   createVariable,
@@ -79,9 +80,14 @@ import {
   findVariables,
   getCollection,
   getVariable,
+  importDesignTokensTool,
   listCollections,
   listVariables,
+  removeMode,
+  renameMode,
+  setActiveMode,
   setVariable,
+  setVariableAlias,
   unbindVariable
 } from './variables'
 import {
@@ -176,6 +182,12 @@ export const EXTENDED_TOOLS: ToolDef[] = [
   getCollection,
   createCollection,
   deleteCollection,
+  addMode,
+  renameMode,
+  removeMode,
+  setActiveMode,
+  setVariableAlias,
+  importDesignTokensTool,
   // Vector & export
   booleanUnion,
   booleanSubtract,
