@@ -1,4 +1,11 @@
-import type { Effect, Fill, SceneGraph, SceneNode, Stroke } from '@open-pencil/scene-graph'
+import type {
+  CodeBinding,
+  Effect,
+  Fill,
+  SceneGraph,
+  SceneNode,
+  Stroke
+} from '@open-pencil/scene-graph'
 
 export type DesignNode = DesignElement | DesignText
 
@@ -40,6 +47,8 @@ export interface DesignFact {
   name?: string
   componentId?: string
   componentKey?: string
+  /** Code identity of a component or component set (tag, attributes, slots). */
+  codeBinding?: CodeBinding
   /** Binding field (e.g. `fills/0/color`, `paddingLeft`) -> the variable it is bound to. */
   boundVariables?: Record<string, DesignVariableRef>
   /** Collection id -> mode id, for nodes that pin a variable mode. */

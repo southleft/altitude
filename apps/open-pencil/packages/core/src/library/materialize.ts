@@ -3,6 +3,7 @@ import { cloneNodeProps, type SceneGraph, type SceneNode } from '@open-pencil/sc
 import { findLibraryDefinition } from './definitions'
 import { assertLibraryAssetKey, assertLibraryId, libraryAssetIdentityKey } from './identity'
 import type { ComponentLibraryRevision, LibraryAssetDescriptor } from './types'
+import { copyBoundVariables } from './variables'
 
 const INTERNAL_LIBRARY_PAGE_NAME = 'OpenPencil library definitions'
 
@@ -163,6 +164,7 @@ export function materializeLibraryAsset(
   }
   markDefinitions(consumer, revision, mappedIds)
   copyImages(revision.graph, consumer, mappedIds)
+  copyBoundVariables(revision.graph, consumer, mappedIds.keys())
 
   const rootId = mappedIds.get(descriptor.sourceNodeId)
   const root = rootId ? consumer.getNode(rootId) : undefined

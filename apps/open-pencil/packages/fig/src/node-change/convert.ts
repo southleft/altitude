@@ -15,6 +15,7 @@ import { convertEffects, convertFills, convertStrokes } from './paint'
 import { expandPathTextLayoutBox } from './path/text-layout'
 import {
   extractBoundVariables,
+  extractCodeBinding,
   extractExportSettings,
   extractLibrarySource,
   extractTextPathBox,
@@ -668,6 +669,7 @@ export function nodeChangeToProps(
     exportSettings: extractExportSettings(nc),
     pluginData: extractPluginData(nc),
     librarySource: extractLibrarySource(nc),
+    codeBinding: extractCodeBinding(nc),
     pluginRelaunchData: extractPluginRelaunchData(nc),
     clipsContent: nc.frameMaskDisabled === false && nc.resizeToFit !== true,
     componentId: extractSymbolId(nc),

@@ -4,6 +4,7 @@ import type { SceneNode } from '@open-pencil/scene-graph'
 import { contentHash } from './hash'
 import { assertLibraryAssetKey } from './identity'
 import type { LibraryAssetDescriptor, PortableLibrarySnapshot } from './types'
+import { copyBoundVariables } from './variables'
 
 const VOLATILE_NODE_FIELDS = new Set([
   'id',
@@ -106,6 +107,7 @@ export function extractLibrarySnapshot(
     if (componentId) snapshot.updateNode(targetId, { componentId })
   }
   remapSnapshotReferences(snapshot, mappedIds)
+  copyBoundVariables(source, snapshot, closure)
 
   for (const imageHash of new Set(
     [...closure].flatMap((id) => {

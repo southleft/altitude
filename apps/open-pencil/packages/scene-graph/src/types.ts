@@ -1,5 +1,6 @@
 /* eslint-disable max-lines -- scene node contracts are kept together as the public graph type surface */
 
+import type { CodeBinding } from './code-binding'
 import type { CanvasGuide } from './guides'
 import type { InstanceOverrideState } from './instance-overrides'
 import type { Color, Matrix, Rect, Vector } from './primitives'
@@ -554,6 +555,8 @@ export interface SceneNode {
   sharedSymbolVersion: string | null
   publishedVersion: string | null
   librarySource: LibraryAssetSource | null
+  /** Code identity on components and component sets; instances resolve it through them. */
+  codeBinding: CodeBinding | null
   isPublishable: boolean
   isSymbolPublishable: boolean
   symbolDescription: string

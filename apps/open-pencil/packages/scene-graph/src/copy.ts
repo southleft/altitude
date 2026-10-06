@@ -21,6 +21,7 @@ import type {
   Stroke,
   StyleRun
 } from './'
+import { copyCodeBinding } from './code-binding'
 import { geometryCommandCoordCount } from './geometry'
 import { cloneInstanceOverrideState } from './instance-overrides'
 import { createDefaultSourceMetadata } from './node-defaults'
@@ -276,6 +277,7 @@ export function cloneNodeProps(
     componentPropertyAssignments: { ...src.componentPropertyAssignments },
     symbolLinks: copySpread(src.symbolLinks),
     variantPropSpecs: copySpread(src.variantPropSpecs),
+    codeBinding: copyCodeBinding(src.codeBinding),
     pluginData: copySpread(src.pluginData),
     pluginRelaunchData: copySpread(src.pluginRelaunchData),
     exportSettings: copySpread(src.exportSettings),

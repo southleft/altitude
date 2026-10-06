@@ -12,6 +12,9 @@
 - Show the selected layers in the Code panel's HTML/CSS mode, and apply edits only to those layers as one undoable step.
 - Reach variables and modes from a Variables tab in the right panel, whatever is selected.
 - Import DTCG design tokens as variable collections and modes from the Variables panel (**Import tokens…**), `open-pencil tokens import`, or the `import_design_tokens` MCP tool. A JSON mapping turns axes such as mode, brand, density, contrast, shape, and motion into collections with modes; aliases stay live across collections; units, code syntax (`var(--…)`), and token paths are kept and survive `.fig` files; re-importing updates variables in place and keeps bindings; and every token that does not import exactly is reported by name. New `add_mode`, `rename_mode`, `remove_mode`, `set_active_mode`, and `set_variable_alias` tools let agents manage modes and aliases.
+- Record which code element renders a component: a component or component set can carry a code binding (tag, React wrapper, property-to-attribute and slot mapping) that survives copies, undo, library revisions, `.fig` files, and HTML round trips. Instances of a bound component export as that element in HTML (`<al-button size="sm">Send</al-button>`, design facts kept) and as its React wrapper in React JSX (`<ALButton size="sm">`), and as a re-renderable `<Instance component="Button" Size="Sm" />` in design JSX.
+- Library revisions carry the variables their components are bound to, and adding a library component to a document brings along the variables it does not have yet.
+- Add workspace commands to the CLI through `OPENPENCIL_CLI_EXTENSIONS`, a list of modules that each export `{ name, command }`.
 
 ### Changed
 

@@ -1,7 +1,12 @@
 import { encodeBase64 } from '@open-pencil/core/bytes'
 import { colorToCSS } from '@open-pencil/core/color'
 import { renderNodesToSVG } from '@open-pencil/core/io/formats/svg'
-import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import {
+  codeBindingOwner,
+  resolveInstanceCodeElement,
+  type SceneGraph,
+  type SceneNode
+} from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
 
 import {
@@ -377,6 +382,65 @@ function tagNameForNode(node: SceneNode): string {
   return 'div'
 }
 
+/** A component placed in a slot (an icon) renders through its own code binding. */
+function slotComponentElement(
+  graph: SceneGraph,
+  component: SceneNode,
+  slot: string
+): DesignNode | null {
+  const owner = codeBindingOwner(graph, component)
+  const binding = owner?.codeBinding
+  if (!binding) return null
+  const attrs: Record<string, string> = { ...binding.attributes }
+  if (slot) attrs.slot = slot
+  return { type: 'element', tagName: binding.tagName, attrs, children: [] }
+}
+
+/**
+ * An instance of a code-bound component exports as that component's element — `<al-button
+ * size="md">Label</al-button>` — rather than a box rebuilt from its layers. The element owns
+ * its internal styling, so the instance's layers are not emitted; slot content comes from
+ * the TEXT, BOOLEAN and INSTANCE_SWAP properties the binding names. Design facts still
+ * travel, so the instance (overrides included) survives an HTML round trip.
+ */
+function codeBoundInstanceNode(
+  graph: SceneGraph,
+  node: SceneNode,
+  options: ResolvedDesignOptions,
+  fact: DesignFact | undefined
+): DesignNode | null {
+  const element = resolveInstanceCodeElement(graph, node)
+  if (!element) return null
+  const attrs: Record<string, string> = Object.fromEntries(element.attributes)
+  Object.assign(attrs, attrsForNode(graph, node, options.includeSourceIds, fact))
+  const children: DesignNode[] = []
+  for (const slot of element.slots) {
+    if (slot.text !== undefined) {
+      const text: DesignNode = { type: 'text', text: slot.text }
+      children.push(
+        slot.slot
+          ? { type: 'element', tagName: 'span', attrs: { slot: slot.slot }, children: [text] }
+          : text
+      )
+    } else if (slot.component) {
+      const child = slotComponentElement(graph, slot.component, slot.slot)
+      if (child) children.push(child)
+    }
+  }
+  const inlineStyle: DesignStyleDeclaration = {}
+  addPositioning(inlineStyle, node)
+  return {
+    type: 'element',
+    tagName: element.binding.tagName,
+    attrs,
+    inlineStyle,
+    sourceSceneNodeId: node.id,
+    sourceSceneNode: node,
+    design: fact,
+    children
+  }
+}
+
 function sceneNodeToDesignNode(
   graph: SceneGraph,
   node: SceneNode,
@@ -391,6 +455,11 @@ function sceneNodeToDesignNode(
         omittedGeometry: options.omittedGeometry
       })
     : { fact: undefined, attrs: {} }
+
+  if (node.type === 'INSTANCE') {
+    const element = codeBoundInstanceNode(graph, node, options, fact)
+    if (element) return element
+  }
 
   if (node.type === 'TEXT') {
     const inlineStyle = styleFromTextNode(node)

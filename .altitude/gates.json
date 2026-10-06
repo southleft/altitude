@@ -22,7 +22,8 @@
     "canvas": "Needs extracted Figma canvas contracts under .altitude/figma-sync/**/canvas-contracts/. These are GITIGNORED live observations - absent on a clone, which is why the gates that read them cannot be CI gates.",
     "figma-export": "Needs a saved figma_export_tokens JSON (.altitude/figma-sync/last-export.json).",
     "figma-shim": "Needs the Figma MCP shim reachable on 127.0.0.1:9401 (scripts/figma-atoms/mcp-shim.mjs, Figma desktop running).",
-    "network": "Needs outbound network access, or a deployed URL to check."
+    "network": "Needs outbound network access, or a deployed URL to check.",
+    "open-pencil": "Needs Bun on PATH and an installed, built OpenPencil checkout - apps/open-pencil/node_modules and packages/core/dist (cd apps/open-pencil && bun install && bun run build:packages)."
   },
   "tiers": {
     "fast": "No build required. needs are a subset of {none, install, git-history, clean-tree}.",
@@ -844,6 +845,23 @@
       "ciVia": "gate:contracts",
       "tier": "build",
       "group": "contracts"
+    },
+    {
+      "id": "canvas:parity",
+      "npmScript": "canvas:parity",
+      "command": "pnpm run canvas:parity",
+      "purpose": "CODE <-> CANVAS parity against a canvas Altitude code GENERATES: OpenPencil builds the component library headlessly from the code contracts, CEM and DTCG tokens, and the unchanged diffContracts() runs against each code contract. Reports API parity, token parity and the disagreements per component; exit 1 below the aggregate floors.",
+      "purposeSource": "package.json-comment",
+      "needs": [
+        "install",
+        "open-pencil"
+      ],
+      "blocking": false,
+      "ci": null,
+      "ciVia": null,
+      "tier": "build",
+      "group": "contracts",
+      "note": "NOT YET BLOCKING, for two reasons. (1) The v2-checks workflow installs no Bun and does not build apps/open-pencil, so the gate cannot run in CI until that job exists; .github/workflows/open-pencil.yml is where it belongs. (2) The remaining disagreements are owner decisions, not builder bugs: curated Figma State options with no declared code state, measured case dimensions no code prop pairs with, stale measured cases (Variant=danger on al-button), composite shadow tokens with no canvas binding. Flip to blocking once CI runs it and those are triaged. Unlike contracts:diff the canvas here is generated, not observed, so nothing about it is laptop-only."
     },
     {
       "id": "contracts:diff",

@@ -359,6 +359,16 @@ function makeProbes(root) {
       const ok = await dnsResolves('registry.npmjs.org', 1500);
       return { ok, detail: ok ? 'registry.npmjs.org resolves' : 'registry.npmjs.org does not resolve — offline?' };
     },
+
+    'open-pencil': async () => {
+      const fix = 'run `cd apps/open-pencil && bun install && bun run build:packages`';
+      const bun = spawnSync('bun', ['--version'], { encoding: 'utf8', shell: process.platform === 'win32' });
+      if (bun.status !== 0) return { ok: false, detail: 'bun is not on PATH — install Bun 1.4+' };
+      const missing = ['apps/open-pencil/node_modules', 'apps/open-pencil/packages/core/dist'].filter((p) => !has(p));
+      return missing.length
+        ? { ok: false, detail: `${missing.join(', ')} absent — ${fix}` }
+        : { ok: true, detail: `bun ${bun.stdout.trim()}, OpenPencil installed and built` };
+    },
   };
 }
 
