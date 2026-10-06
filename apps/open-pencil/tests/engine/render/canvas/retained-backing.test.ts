@@ -52,6 +52,7 @@ function createRenderer(surfaceFactory: (info: ImageInfo) => Surface | null) {
     scenePicturePositionPreviewVersion: 0,
     scenePicturePageId: null,
     subtreePictureCache: new Map(),
+    subtreePictureDirtyIds: new Set(),
     subtreePictureCachePageId: null,
     subtreePictureCacheSceneVersion: 0,
     subtreePictureCachePositionPreviewVersion: 0,

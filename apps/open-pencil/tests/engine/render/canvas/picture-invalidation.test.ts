@@ -32,6 +32,7 @@ test('full picture invalidation resets tiled font-dependent resources', () => {
     subtreePictureCacheSceneVersion: 1,
     subtreePictureCachePositionPreviewVersion: 1,
     subtreePictureCacheFontGeneration: 1,
+    subtreePictureDirtyIds: new Set(),
     tiledScene: { invalidateStructure: mock() }
   } as SkiaRenderer
 
@@ -65,7 +66,8 @@ test('node picture invalidation removes pictures that depend on a changed child'
       ['child', []]
     ]),
     effectRasterCache: new EffectRasterCache(),
-    subtreePictureCache: new Map()
+    subtreePictureCache: new Map(),
+    subtreePictureDirtyIds: new Set()
   } as SkiaRenderer
 
   invalidateNodePicture(renderer, 'child')

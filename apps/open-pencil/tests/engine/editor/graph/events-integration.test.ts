@@ -7,19 +7,23 @@ import { createGraphEventSubscription } from '#core/editor/graph-events'
 
 function createRenderer() {
   const invalidated: string[] = []
+  const retained: string[] = []
   const renderer: Pick<
     SkiaRenderer,
-    'invalidateVectorPath' | 'invalidateNodePicture' | 'tiledScene'
+    'invalidateVectorPath' | 'invalidateNodePicture' | 'invalidateRetainedSubtree' | 'tiledScene'
   > & {
     invalidated: string[]
+    retained: string[]
   } = {
     invalidateVectorPath: () => undefined,
     invalidateNodePicture: (nodeId: string) => invalidated.push(nodeId),
+    invalidateRetainedSubtree: (nodeId: string) => retained.push(nodeId),
     tiledScene: {
       invalidateNode: mock(),
       invalidateStructure: mock()
     } as SkiaRenderer['tiledScene'],
-    invalidated
+    invalidated,
+    retained
   }
   return renderer
 }
@@ -99,5 +103,40 @@ describe('graph event picture invalidation integration', () => {
     renderer.invalidated.length = 0
     graph.reparentNode(child.id, second.id)
     expect(renderer.invalidated).toContain(child.id)
+  })
+
+  test('structure changes mark the retained subtree the node left', () => {
+    const { graph, renderer } = setup()
+    const page = graph.getPages()[0]
+    if (!page) throw new Error('Expected default page')
+    const first = graph.createNode('FRAME', page.id)
+    const second = graph.createNode('FRAME', page.id)
+    const child = graph.createNode('RECTANGLE', first.id)
+    const other = graph.createNode('RECTANGLE', second.id)
+
+    renderer.retained.length = 0
+    graph.reparentNode(child.id, second.id)
+    expect(renderer.retained).toEqual([first.id])
+
+    renderer.retained.length = 0
+    graph.reorderChild(child.id, first.id, 0)
+    expect(renderer.retained).toEqual([second.id])
+
+    renderer.retained.length = 0
+    graph.deleteNode(other.id)
+    expect(renderer.retained).toEqual([second.id])
+  })
+
+  test('position previews mark retained subtrees without invalidating node pictures', () => {
+    const { graph, renderer } = setup()
+    const page = graph.getPages()[0]
+    if (!page) throw new Error('Expected default page')
+    const node = graph.createNode('RECTANGLE', page.id)
+
+    renderer.invalidated.length = 0
+    renderer.retained.length = 0
+    graph.updateNodePreview(node.id, { x: 40 })
+    expect(renderer.retained).toEqual([node.id])
+    expect(renderer.invalidated).toEqual([])
   })
 })

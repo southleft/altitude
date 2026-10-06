@@ -30,6 +30,7 @@ import { destroyRenderer } from './renderer/lifecycle'
 import { installRendererDomainMethods } from './renderer/methods'
 import { initializeRendererPaints } from './renderer/paints'
 import * as RenderPipeline from './renderer/pipeline'
+import { markRetainedSubtreeDirty } from './renderer/retained-backing/invalidation'
 import type { SceneBacking, SceneBackingBuild } from './renderer/retained-backing/types'
 import * as RendererState from './renderer/state'
 import * as RenderText from './text'
@@ -144,6 +145,10 @@ export class SkiaRenderer {
   subtreePictureCacheSceneVersion = -1
   subtreePictureCachePositionPreviewVersion = -1
   subtreePictureCacheFontGeneration = -1
+  subtreePictureCacheGraph: SceneGraph | null = null
+  subtreePictureCacheFingerprint = ''
+  /** Nodes touched since the subtree picture scope last advanced. */
+  subtreePictureDirtyIds = new Set<string>()
   readonly labelCache = new LabelCache()
   readonly labelParagraphCache = new LabelParagraphCache(undefined, undefined, {
     onMissingGlyphs: (missing) => RendererFonts.resolveLabelFontCoverage(this, missing)
@@ -494,6 +499,11 @@ export class SkiaRenderer {
 
   invalidateNodePicture(nodeId: string): void {
     RendererState.invalidateNodePicture(this, nodeId)
+  }
+
+  /** Re-record the retained top-level subtree containing this node at the next scene version. */
+  invalidateRetainedSubtree(nodeId: string): void {
+    markRetainedSubtreeDirty(this, nodeId)
   }
 
   flashNode(nodeId: string): void {
