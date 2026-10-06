@@ -1,0 +1,61 @@
+{
+  "name": "altitude",
+  "description": "Altitude DTCG tokens (libs/al-web-components/styles/tokens-dtcg) as the collection layout of scripts/build-figma-payload.mjs, with the brand layer added as a Brand x Mode collection. Variable names follow scripts/figma-atoms/token-map.mjs; codeSyntax.WEB is the emitted --al-* custom property.",
+  "layers": [
+    { "files": ["tier-1/*.json", "tier-2/*.json"] },
+    { "files": ["tier-2/theme/{mode}/*.json", "tier-3/theme/{mode}/*.json"] },
+    { "files": ["tier-2/brand/{brand}/*.json"] },
+    { "files": ["tier-2/brand/{brand}/mode/{mode}/*.json"] }
+  ],
+  "axes": [
+    {
+      "name": "mode",
+      "label": "Mode",
+      "modes": [
+        { "name": "light", "label": "Light" },
+        { "name": "dark", "label": "Dark" }
+      ]
+    },
+    {
+      "name": "brand",
+      "label": "Brand",
+      "modes": [
+        { "name": "altitude", "label": "Altitude" },
+        { "name": "southleft", "label": "Southleft" }
+      ]
+    }
+  ],
+  "collections": [
+    { "name": "Tier 1 | Primitive", "files": ["tier-1/**"], "hiddenFromPublishing": true },
+    { "name": "Tier 2 | Semantic", "files": ["tier-2/*.json"] },
+    {
+      "name": "Tier 3 | Component",
+      "axes": ["mode"],
+      "tokens": [
+        "theme.color.header.background",
+        "theme.color.header.background.**",
+        "theme.color.body.background",
+        "theme.color.body.background.**"
+      ]
+    },
+    { "name": "Tier 2 | Theme", "axes": ["mode"] },
+    { "name": "Tier 2 | Brand", "axes": ["brand", "mode"] }
+  ],
+  "naming": {
+    "dropSegments": [],
+    "rename": [
+      { "from": "font-size.", "to": "typography/font-size/" },
+      { "from": "line-height.", "to": "typography/line-height/" },
+      { "from": "font-family.", "to": "typography/font-family/" },
+      { "from": "font-weight.", "to": "typography/font-weight/" },
+      { "from": "letter-spacing.", "to": "typography/letter-spacing/" },
+      { "from": "text-decoration.", "to": "typography/text-decoration/" },
+      { "from": "animation.distance.", "to": "animation/distance/" },
+      { "from": "color.brand.paper.", "to": "color/neutral/paper/" },
+      { "from": "color.brand.ink.", "to": "color/neutral/ink/" },
+      { "from": "theme.border.radius.role-", "to": "theme/border/radius/role/" }
+    ]
+  },
+  "cssVar": { "prefix": "al", "dropSegments": ["@", "$root"] },
+  "keepExtensions": ["org.altitude.token"]
+}
