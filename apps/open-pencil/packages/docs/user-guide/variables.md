@@ -8,7 +8,7 @@ description: Design variables, collections, modes, and fill bindings in OpenPenc
 Variables store reusable design tokens — colors, spacing values, and other properties — that can be bound to nodes. Change a variable's value and every node using it updates.
 ## Opening the Variables Dialog
 
-With no nodes selected, the Design tab shows page-level properties including a Variables section with collection and variable counts. Click the settings icon to open the variables dialog.
+The **Variables** tab in the right panel is always available, whatever is selected. It shows the variable and collection counts, a mode picker for each collection with more than one mode, and an **Import tokens…** button. Click the settings icon (**Open variables**) to open the variables dialog, where you edit collections, modes, and values.
 
 ## Collections
 
@@ -49,7 +49,7 @@ When the variable's value changes (or when switching modes), all bound fills upd
 
 ## Importing Design Tokens
 
-Click **Import tokens…** in the Variables panel to import DTCG token files (a folder, JSON files, or a ZIP archive) as collections and modes. Choose a mapping preset to split a multi-file token tree into collections such as Theme (Light/Dark) or Brand. Importing the same tokens again updates the variables in place and keeps their bindings; tokens that no longer exist are listed, and deleted only when you choose to. See [Design tokens](/programmable/design-tokens) for mappings and type handling.
+Click **Import tokens…** in the Variables tab to import DTCG token files (a folder, JSON files, or a ZIP archive) as collections and modes. Choose a mapping preset to split a multi-file token tree into collections such as Theme (Light/Dark) or Brand. Importing the same tokens again updates the variables in place and keeps their bindings; tokens that no longer exist are listed, and deleted only when you choose to. See [Design tokens](/programmable/design-tokens) for mappings and type handling.
 
 ## Tips
 

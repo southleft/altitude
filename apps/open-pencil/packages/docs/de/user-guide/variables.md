@@ -9,7 +9,7 @@ Variablen speichern wiederverwendbare Designtoken wie Farben und Abstände. Obje
 
 ## Variablen öffnen
 
-Wenn kein Objekt ausgewählt ist, zeigt der Bereich Design die Seiteneigenschaften. Das Einstellungssymbol im Bereich Variablen öffnet den Dialog.
+Die Registerkarte **Variablen** im rechten Panel ist unabhängig von der Auswahl verfügbar. Sie zeigt die Anzahl der Variablen und Sammlungen, eine Modusauswahl für Sammlungen mit mehreren Modi und die Schaltfläche **Tokens importieren…**. Das Einstellungssymbol (**Variablen öffnen**) öffnet den Dialog.
 
 ## Sammlungen und Modi
 

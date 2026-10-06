@@ -37,9 +37,13 @@ Zeigt Darstellung, Füllung, Kontur, Effekte, Typografie, Anordnung und Export d
 
 Zeigt die Auswahl als JSX mit Syntaxhervorhebung und ermöglicht den Export als HTML mit Tailwind CSS v4.
 
-### AI
+### Variablen
 
-Öffnet den AI-Chat. <kbd>⌘</kbd><kbd>J</kbd> beziehungsweise <kbd>Strg</kbd><kbd>J</kbd> schaltet ihn um.
+Zeigt die Anzahl der Variablen und Sammlungen, eine Modusauswahl für Sammlungen mit mehreren Modi und die Schaltfläche **Tokens importieren…**. Das Einstellungssymbol öffnet den Variablendialog. Siehe [Variablen](./variables).
+
+### KI verbinden
+
+Die Schaltfläche **KI verbinden** oben im Panel öffnet die Einrichtungsschritte, mit denen Claude Code, Claude Desktop, Cursor oder ein anderer MCP-Client über den lokalen MCP-Server verbunden wird. Siehe [MCP-Server](/programmable/mcp-server#connect-ai).
 
 ## Kleine Bildschirme
 

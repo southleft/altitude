@@ -8,15 +8,15 @@ description: AI, MCP, CLI, JSX y API de plugins de Figma para automatizar diseñ
 
 OpenPencil trata los archivos de diseño como datos estructurados. Las operaciones del editor —crear formas, modificar rellenos, configurar la disposición automática o exportar recursos— también están disponibles mediante CLI, agentes de AI y API.
 
-## Chat con AI
+## Agentes de AI
 
-El asistente integrado puede ejecutar más de 90 herramientas. Una instrucción puede cambiar las sombras de varios botones, crear un componente con variante oscura o exportar todos los marcos de una página a escala 2×.
+Claude Code, Claude Desktop, Cursor y otros clientes MCP pueden ejecutar más de 90 herramientas. El botón **Conectar IA** del editor muestra los pasos de configuración. El chat con AI integrado no está disponible en esta distribución. Una instrucción puede cambiar las sombras de varios botones, crear un componente con variante oscura o exportar todos los marcos de una página a escala 2×.
 
 [Chat con AI →](./ai-chat)
 
 ## MCP
 
-Claude Code, Cursor, Windsurf y otros clientes MCP pueden usar las mismas herramientas. El servidor admite stdio y HTTP y mantiene sesiones independientes.
+Claude Code, Cursor, Windsurf y otros clientes MCP pueden usar estas herramientas. El servidor admite stdio y HTTP y mantiene sesiones independientes.
 
 [Servidor MCP →](/programmable/mcp-server)
 

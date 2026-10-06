@@ -9,7 +9,7 @@ OpenPencil's design JSX creates scene nodes, not browser DOM. You can use readab
 
 ## Creating Designs
 
-The `render` tool accepts JSX strings in AI chat and MCP. In application or headless library code, import `Frame`, `Text`, `renderTree`, and other authoring exports from `@open-pencil/core/design-jsx`. The scripting environment determines which APIs are exposed to `eval`; package exports are not automatically globals there.
+The `render` tool accepts JSX strings from AI agents over MCP. In application or headless library code, import `Frame`, `Text`, `renderTree`, and other authoring exports from `@open-pencil/core/design-jsx`. The scripting environment determines which APIs are exposed to `eval`; package exports are not automatically globals there.
 
 The [shared design-authoring reference](../reference/design-authoring) contains executable examples, layout guidance, and the supported syntax inventory. It is generated from the same source used by chat, ACP, codegen prompts, and the installable agent skill.
 

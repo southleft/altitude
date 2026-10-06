@@ -5,7 +5,7 @@ description: Crear diseños desde JSX y exportar selecciones como JSX con Tailwi
 
 # Renderizador JSX
 
-OpenPencil puede convertir JSX declarativo en un árbol de diseño. El mismo sistema está disponible en el chat con AI, MCP y `eval`.
+OpenPencil puede convertir JSX declarativo en un árbol de diseño. El mismo sistema está disponible para agentes de AI mediante MCP y en `eval`.
 
 ```jsx
 <Frame flex="col" gap={16} p={24} w={320} bg="#ffffff" radius={16}>

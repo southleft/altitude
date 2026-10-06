@@ -28,4 +28,4 @@ El menú contextual mueve la selección a otra página. Al cambiar de página, O
 
 El panel derecho muestra los controles aplicables a la selección: posición, tamaño, apariencia, rellenos, contornos, efectos, tipografía, disposición y exportación.
 
-Sin selección, muestra el fondo y las variables de la página actual.
+Sin selección, la pestaña **Diseño** muestra el fondo de la página actual. Las variables tienen su propia pestaña **Variables**, y el botón **Conectar IA** muestra cómo conectar un agente de AI mediante [MCP](/programmable/mcp-server#connect-ai).

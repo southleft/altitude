@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: Automation
-description: AI chat, CLI, JSX renderer, MCP server, and other automation surfaces built on the OpenPencil editor engine.
+description: AI agents over MCP, CLI, JSX renderer, and other automation surfaces built on the OpenPencil editor engine.
 ---
 
 # Automation
@@ -18,9 +18,9 @@ It is also meant to be a toolkit: something you can embed into other products, w
 
 That is why the automation surface matters. The app, the CLI, the AI tools, the JSX renderer, the MCP server, and the SDK all build on the same underlying editor engine.
 
-## AI Chat
+## AI Agents
 
-The built-in assistant has access to 90+ tools that cover the full surface of the editor. Describe what you want in natural language — "add a 16px drop shadow to all buttons", "create a card component with dark mode variant", "export every frame on this page at 2×".
+Connect Claude Code, Claude Desktop, Cursor, or another MCP client and it gets 90+ tools that cover the full surface of the editor. Describe what you want in natural language — "add a 16px drop shadow to all buttons", "create a card component with dark mode variant", "export every frame on this page at 2×". The **Connect AI** button in the editor shows the setup steps. The built-in chat panel is not available in this distribution.
 
 [AI Chat →](./ai-chat)
 
@@ -54,7 +54,7 @@ The CLI also connects to the running desktop app via RPC, so you can script the 
 
 ## MCP Server
 
-Connect Claude Code, Cursor, Windsurf, or any MCP-compatible client to OpenPencil. The server exposes 90 tools for reading, creating, and modifying designs — the same tools the built-in AI chat uses. Runs over stdio or HTTP with session support.
+Connect Claude Code, Cursor, Windsurf, or any MCP-compatible client to OpenPencil. The server exposes 90 tools for reading, creating, and modifying designs — the same tools the editor's AI integrations use. Runs over stdio or HTTP with session support.
 
 [MCP Server →](./mcp-server)
 

@@ -5,7 +5,7 @@ description: Créer des designs à partir de JSX et exporter une sélection en J
 
 # Moteur JSX
 
-OpenPencil convertit du JSX déclaratif en arbre de design. Le même système est disponible dans le chat avec l’AI, MCP et `eval`.
+OpenPencil convertit du JSX déclaratif en arbre de design. Le même système est disponible pour les agents AI via MCP et dans `eval`.
 
 ```jsx
 <Frame flex="col" gap={16} p={24} w={320} bg="#ffffff" radius={16}>

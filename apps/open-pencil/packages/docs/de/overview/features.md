@@ -19,7 +19,7 @@ OpenPencil öffnet und speichert `.fig`-Dateien direkt. Import und Export verwen
 
 ## Eigenschaften
 
-Die Registerkarten Design, Code und AI passen sich der aktuellen Auswahl an:
+Registerkarten Design, Variablen und Code. Die Registerkarte Design passt sich der aktuellen Auswahl an:
 
 - **Darstellung:** Deckkraft, einheitlicher oder separater Eckenradius und Sichtbarkeit.
 - **Füllung:** Volltonfarbe, lineare, radiale, Winkel- und Diamantverläufe sowie Bilder.
@@ -61,11 +61,11 @@ Seiten können hinzugefügt, gelöscht und umbenannt werden und behalten jeweils
 openpencil export design.fig -f jsx --style tailwind
 ```
 
-## AI-Chat
+## AI-Agenten
 
-<kbd>⌘</kbd><kbd>J</kbd> öffnet den Assistenten. Mehr als 90 Werkzeuge erstellen Formen, ändern Stile und Anordnungen, bearbeiten Komponenten und Variablen, führen boolesche Operationen aus, analysieren Designtoken und exportieren Ressourcen. Unterstützt werden Anthropic, OpenAI, Google AI, OpenRouter und kompatible Endpunkte.
+Claude Code, Claude Desktop, Cursor und andere MCP-Clients können mit dem geöffneten Dokument arbeiten. Die Schaltfläche **KI verbinden** oben im rechten Panel zeigt die Einrichtungsschritte und ob ein Agent verbunden ist. Mehr als 90 Werkzeuge erstellen Formen, ändern Stile und Anordnungen, bearbeiten Komponenten und Variablen, führen boolesche Operationen aus, analysieren Designtoken und exportieren Ressourcen.
 
-Werkzeugaufrufe erscheinen als einklappbare Einträge auf einer Zeitleiste. Zur visuellen Prüfung stellt der Assistent seine Änderungen dar und vergleicht das Ergebnis mit der Anfrage. Sämtliche Änderungen durch AI können rückgängig gemacht werden.
+Der integrierte AI-Chat ist in dieser Distribution nicht verfügbar. Siehe [AI-Chat](/programmable/ai-chat) und [MCP-Server](/programmable/mcp-server#connect-ai).
 
 ## MCP-Server
 

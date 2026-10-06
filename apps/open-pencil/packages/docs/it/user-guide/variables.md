@@ -9,7 +9,7 @@ Le variabili memorizzano valori riutilizzabili, come colori e spaziature. Una pr
 
 ## Aprire l’editor
 
-Quando non è selezionato alcun oggetto, la scheda **Design** mostra le proprietà della pagina. L’icona delle impostazioni nella sezione Variabili apre l’editor.
+La scheda **Variabili** del pannello destro è disponibile qualunque sia la selezione. Mostra il numero di variabili e collezioni, un selettore di modalità per le collezioni con più modalità e il pulsante **Importa token…**. L’icona delle impostazioni (**Apri variabili**) apre l’editor.
 
 ## Raccolte e modalità
 

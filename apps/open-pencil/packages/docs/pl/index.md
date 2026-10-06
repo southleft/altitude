@@ -1,12 +1,12 @@
 ---
 layout: home
 title: OpenPencil — edytor graficzny open source
-description: Otwarta alternatywa dla Figmy z obsługą .fig, wbudowanym AI i programowym dostępem do wszystkich operacji.
+description: Otwarta alternatywa dla Figmy z obsługą .fig, agentami AI przez MCP i programowym dostępem do wszystkich operacji.
 
 hero:
   name: OpenPencil
   text: Edytor graficzny open source
-  tagline: Otwiera pliki Figmy. Zawiera AI. Zapewnia pełny dostęp programowy. Pozwala tworzyć własne edytory.
+  tagline: Otwiera pliki Figmy. Współpracuje z Twoim agentem AI. Zapewnia pełny dostęp programowy. Pozwala tworzyć własne edytory.
   actions:
     - theme: brand
       text: Otwórz w przeglądarce
@@ -29,8 +29,8 @@ features:
     title: Nie tylko aplikacja
     details: Vue SDK pozwala tworzyć własne interfejsy edycji, osadzać OpenPencil w innych produktach i budować wyspecjalizowane edytory na wspólnym silniku.
   - icon: 🤖
-    title: Wbudowane AI
-    details: Czat AI używa 90 narzędzi do tworzenia obiektów, ustawiania stylów i układu oraz analizowania tokenów. Serwer MCP łączy się z Claude Code, Cursor i Windsurf.
+    title: Agenci AI przez MCP
+    details: Połącz Claude Code, Claude Desktop, Cursor lub Windsurf przez MCP. 90 narzędzi do tworzenia obiektów, ustawiania stylów i układu oraz analizowania tokenów.
   - icon: 📖
     title: Open source
     details: Licencja MIT. Można analizować i zmieniać edytor, silnik, kodek plików i CLI.

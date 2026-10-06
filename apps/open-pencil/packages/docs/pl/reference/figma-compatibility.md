@@ -27,7 +27,7 @@ Porównanie funkcji Figma Design z obecnymi możliwościami OpenPencil.
 | Widok konturów | 🔲 | Brak widoku szkieletowego wszystkich warstw |
 | Własna miniatura | 🔲 | Miniatura jest generowana, ale nie można wybrać własnej |
 | Krok przesunięcia | 🔲 | Dostępne 1 i 10 pikseli; brak wartości własnych |
-| Menu aplikacji | ✅ | File, Edit, View, Object, Text i Arrange w przeglądarce; menu systemowe w Tauri |
+| Menu aplikacji | ✅ | File, Edit, View i Object w przeglądarce; menu systemowe w Tauri. Formatowanie tekstu i wyrównanie są dostępne w palecie poleceń, skrótach i karcie „Projekt” |
 | Narzędzia AI | 🟡 | 90 narzędzi przez dostawców modeli i MCP; brak generowania obrazów i wyszukiwania AI |
 
 ## Warstwy i kształty

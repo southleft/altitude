@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: AI i automatyzacja
-description: Czat AI, CLI, JSX, serwer MCP i inne narzędzia automatyzacji oparte na silniku OpenPencil.
+description: Agenci AI, CLI, JSX, serwer MCP i inne narzędzia automatyzacji oparte na silniku OpenPencil.
 ---
 
 # AI i automatyzacja
@@ -10,9 +10,9 @@ OpenPencil pozwala traktować pliki projektowe jak dane. Wszystkie operacje edyt
 
 Interfejs edytora i narzędzia automatyzacji korzystają z tego samego silnika. Każde działanie dostępne w interfejsie można również wykonać ze skryptu.
 
-## Czat AI
+## Agenci AI
 
-Wbudowany asystent używa ponad 90 narzędzi. Opisz zadanie zwykłym językiem, na przykład: „dodaj wszystkim przyciskom cień 16 px”, „utwórz komponent karty z wariantem ciemnym” albo „wyeksportuj wszystkie ramki na tej stronie w skali 2×”.
+Claude Code, Claude Desktop, Cursor i inni klienci MCP mogą używać ponad 90 narzędzi. Przycisk **Połącz AI** w edytorze pokazuje kroki konfiguracji. Wbudowany czat AI nie jest dostępny w tej dystrybucji. Opisz zadanie zwykłym językiem, na przykład: „dodaj wszystkim przyciskom cień 16 px”, „utwórz komponent karty z wariantem ciemnym” albo „wyeksportuj wszystkie ramki na tej stronie w skali 2×”.
 
 [Czat AI →](./ai-chat)
 
@@ -46,7 +46,7 @@ CLI łączy się również przez RPC z uruchomioną aplikacją komputerową i st
 
 ## Serwer MCP
 
-Claude Code, Cursor, Windsurf i inni klienci MCP mogą korzystać z tych samych 90 narzędzi co czat AI. Serwer obsługuje stdio i HTTP z sesjami.
+Claude Code, Cursor, Windsurf i inni klienci MCP mogą korzystać z tych 90 narzędzi. Serwer obsługuje stdio i HTTP z sesjami.
 
 [Serwer MCP →](/programmable/mcp-server)
 

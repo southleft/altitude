@@ -160,7 +160,7 @@ Penpot usa Potok. `UpdateEvent` cambia lo stato, `WatchEvent` esegue gli effetti
 
 ## 11. Script ed estensibilità
 
-Il comando [`eval`](/programmable/cli/scripting) fornisce un’API compatibile con i plugin Figma per script senza interfaccia, operazioni in serie e test automatizzati. Chat AI, server MCP e CLI offrono inoltre 90 strumenti per lettura, creazione, modifica, struttura, variabili, tracciati vettoriali, analisi, differenze, operazioni booleane e disposizione.
+Il comando [`eval`](/programmable/cli/scripting) fornisce un’API compatibile con i plugin Figma per script senza interfaccia, operazioni in serie e test automatizzati. Il server MCP per gli agenti AI e la CLI offrono inoltre 90 strumenti per lettura, creazione, modifica, struttura, variabili, tracciati vettoriali, analisi, differenze, operazioni booleane e disposizione.
 
 Penpot offre plugin isolati, ma non un’API equivalente per script senza interfaccia o integrazione MCP.
 

@@ -19,7 +19,7 @@ Open and save native Figma files directly. The import/export pipeline uses the s
 
 ## Properties Panel
 
-Context-sensitive Design | Code | AI tabs:
+Design | Variables | Code tabs. The Design tab is context-sensitive:
 
 - **Appearance** — opacity, corner radius (uniform or per-corner), visibility
 - **Fill** — solid, gradient (linear/radial/angular/diamond), image
@@ -63,13 +63,11 @@ Open multiple documents in tabs. <kbd>⌘</kbd><kbd>T</kbd> new tab, <kbd>⌘</k
 
 CLI: `openpencil export design.fig -f jsx --style tailwind`
 
-## AI Chat
+## AI Agents
 
-Press <kbd>⌘</kbd><kbd>J</kbd> to open the AI assistant. 90+ tools that can create shapes, set styles, manage layout, work with components and variables, run boolean operations, analyze design tokens, and export assets. Connect Anthropic, OpenAI, Google AI, OpenRouter, or any compatible endpoint.
+Connect Claude Code, Claude Desktop, Cursor, or another MCP client to work on the open document. The **Connect AI** button at the top of the right panel shows the setup steps and whether an agent is connected. Agents get 90+ tools that can create shapes, set styles, manage layout, work with components and variables, run boolean operations, analyze design tokens, and export assets.
 
-Tool calls display as collapsible timeline entries. Visual verification — the assistant renders its work and checks it against your request. Full undo support for all AI mutations.
-
-See [AI Chat](/programmable/ai-chat) for setup and provider details.
+The built-in AI chat panel is not available in this distribution. See [AI Chat](/programmable/ai-chat) and [MCP Server](/programmable/mcp-server#connect-ai).
 
 ## MCP Server
 

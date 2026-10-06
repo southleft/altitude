@@ -1,12 +1,12 @@
 ---
 layout: home
 title: OpenPencil — Open-Source Design Editor
-description: Open-source Figma alternative. Opens .fig files, built-in AI, fully programmable.
+description: Open-source Figma alternative. Opens .fig files, connects AI agents over MCP, fully programmable.
 
 hero:
   name: OpenPencil
   text: Open-Source Design Editor
-  tagline: Opens Figma files. Built-in AI. Fully programmable. Also a toolkit for building custom editors.
+  tagline: Opens Figma files. Works with your AI agent. Fully programmable. Also a toolkit for building custom editors.
   actions:
     - theme: brand
       text: Try Online
@@ -30,7 +30,7 @@ features:
     details: Build custom editing surfaces with the Vue SDK, embed OpenPencil into other products, or assemble workflow-specific editors around the same core.
   - icon: 🤖
     title: AI-Native
-    details: Built-in chat with 90 tools — create shapes, set styles, manage layout, analyze tokens. MCP server for Claude Code, Cursor, Windsurf.
+    details: Connect Claude Code, Claude Desktop, Cursor, or Windsurf over MCP. 90 tools — create shapes, set styles, manage layout, analyze tokens.
   - icon: 📖
     title: Open Source
     details: MIT license. Read and modify everything — the editor, the engine, the file codec, the CLI.

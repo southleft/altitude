@@ -28,4 +28,4 @@ Le menu contextuel déplace la sélection vers une autre page. Lors d’un chang
 
 Le panneau droit affiche les contrôles adaptés à la sélection : position, taille, apparence, remplissages, contours, effets, typographie, disposition et exportation.
 
-Sans sélection, il affiche l’arrière-plan et les variables de la page actuelle.
+Sans sélection, l’onglet **Design** affiche l’arrière-plan de la page actuelle. Les variables ont leur propre onglet **Variables**, et le bouton **Connecter l’IA** explique comment connecter un agent AI via [MCP](/programmable/mcp-server#connect-ai).
