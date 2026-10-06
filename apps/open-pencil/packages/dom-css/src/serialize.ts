@@ -42,8 +42,23 @@ function escapeText(value: string): string {
   return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 }
 
+const ATTR_ESCAPES: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;'
+}
+const ATTR_SPECIAL = /[&<>"]/
+const ATTR_SPECIAL_GLOBAL = /[&<>"]/g
+
+/**
+ * One scan, and none of the copying when nothing needs escaping. Fact attributes carry
+ * megabytes of JSON on a large export, and four chained `replaceAll` passes copied every
+ * one of them four times.
+ */
 function escapeAttr(value: string): string {
-  return escapeText(value).replaceAll('"', '&quot;')
+  if (!ATTR_SPECIAL.test(value)) return value
+  return value.replace(ATTR_SPECIAL_GLOBAL, (char) => ATTR_ESCAPES[char] ?? char)
 }
 
 function serializeText(node: DesignText): string {
@@ -77,18 +92,24 @@ export function mergeClassNames(...values: Array<string | undefined>): string | 
 function serializeAttrs(node: DesignElement, options: SerializeHTMLOptions): string {
   const style = serializeStyle(node)
   const tailwindClass = options.style === 'tailwind' ? serializeTailwindClasses(node) : undefined
-  const attrsWithoutStyle = { ...node.attrs }
-  delete attrsWithoutStyle.style
-  const sourceAttrs = options.style === 'tailwind' && tailwindClass ? attrsWithoutStyle : node.attrs
-  const attrs: Record<string, string | undefined> = { ...sourceAttrs }
-  if (tailwindClass) attrs.class = mergeClassNames(node.attrs.class, tailwindClass)
-  if (style && options.style !== 'tailwind') attrs.style = style
-  const serialized = Object.entries(attrs)
-    .filter((entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1] !== '')
-    .map(([name, value]) => `${name}="${escapeAttr(value)}"`)
-
-  if (serialized.length === 0) return ''
-  return ` ${serialized.join(' ')}`
+  const inlineStyle = style && options.style !== 'tailwind' ? style : undefined
+  const mergedClass = tailwindClass ? mergeClassNames(node.attrs.class, tailwindClass) : undefined
+  // Same names, order and values as spreading the attrs and overriding class/style, without
+  // building the intermediate objects for every element.
+  let serialized = ''
+  const append = (name: string, value: string | undefined) => {
+    if (typeof value === 'string' && value !== '') serialized += ` ${name}="${escapeAttr(value)}"`
+  }
+  for (const name in node.attrs) {
+    if (!Object.hasOwn(node.attrs, name)) continue
+    if (name === 'style' && tailwindClass) continue
+    if (name === 'class' && tailwindClass) append(name, mergedClass)
+    else if (name === 'style' && inlineStyle) append(name, inlineStyle)
+    else append(name, node.attrs[name])
+  }
+  if (tailwindClass && !Object.hasOwn(node.attrs, 'class')) append('class', mergedClass)
+  if (inlineStyle && !Object.hasOwn(node.attrs, 'style')) append('style', inlineStyle)
+  return serialized
 }
 
 function serializeElement(node: DesignElement, options: SerializeHTMLOptions): string {

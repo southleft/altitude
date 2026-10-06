@@ -12,6 +12,7 @@ import {
   defaultsForType
 } from '#dom-css/design-fact/fields'
 import { encodeFactJSON } from '#dom-css/design-fact/json'
+import { serializeHTML } from '#dom-css/serialize'
 
 import { SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
 
@@ -129,5 +130,20 @@ describe('residual fact equivalence', () => {
         expect(attrs).toEqual(designFactToAttrs(designFactFromNode(graph, node, { geometryFacts })))
       }
     }
+  })
+
+  test('attribute values escape markup characters in one pass', () => {
+    const html = serializeHTML({
+      type: 'document',
+      children: [
+        {
+          type: 'element',
+          tagName: 'div',
+          attrs: { 'data-op-name': `a&b <c> "d" &amp; plain` },
+          children: []
+        }
+      ]
+    })
+    expect(html).toBe('<div data-op-name="a&amp;b &lt;c&gt; &quot;d&quot; &amp;amp; plain"></div>')
   })
 })
