@@ -11,6 +11,7 @@
 - Keep design meaning in exported HTML/CSS: each element records its layer name, node type, component identity, token bindings, and paints in `data-op-*` attributes, token-bound values export as `var(--token, value)`, and vector layers export as inline SVG. Importing that markup restores them, rebuilds variables with their types and fallback values, and reports anything it could not restore. `open-pencil export --format html` includes the attributes by default.
 - Show the selected layers in the Code panel's HTML/CSS mode, and apply edits only to those layers as one undoable step.
 - Reach variables and modes from a Variables tab in the right panel, whatever is selected.
+- Import DTCG design tokens as variable collections and modes from the Variables panel (**Import tokens…**), `open-pencil tokens import`, or the `import_design_tokens` MCP tool. A JSON mapping turns axes such as mode, brand, density, contrast, shape, and motion into collections with modes; aliases stay live across collections; units, code syntax (`var(--…)`), and token paths are kept and survive `.fig` files; re-importing updates variables in place and keeps bindings; and every token that does not import exactly is reported by name. New `add_mode`, `rename_mode`, `remove_mode`, `set_active_mode`, and `set_variable_alias` tools let agents manage modes and aliases.
 
 ### Changed
 
@@ -19,6 +20,7 @@
 
 ### Fixed
 
+- Resolve a variable that aliases a variable in another collection in that collection's active mode (or the layer's explicit mode for it), instead of always its default mode.
 - Show what to update instead of a blank window when the browser or system WebView is too old, naming the detected macOS, Safari, Chrome, Edge, Firefox, WebKitGTK, or WebView2 version and linking a prefilled bug report, and explain a failed start the same way (#744).
 - Start on macOS 13 with WebKit older than Safari 17.4, which previously failed with `Promise.withResolvers is not a function` (#744).
 
