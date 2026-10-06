@@ -115,6 +115,15 @@ function validateResidual(
   return Object.keys(residual).length ? residual : undefined
 }
 
+/** The motion spec in `data-op-motion`, validated; invalid transitions are dropped. */
+function motionFromAttrs(attrs: Record<string, string>, report: FactIssueSink) {
+  const raw = parseJSONAttr(attrs[DESIGN_ATTRS.motion], DESIGN_ATTRS.motion, report)
+  if (raw === undefined) return undefined
+  const motion = parseMotionSpec(raw)
+  if (!motion) report({ fact: DESIGN_ATTRS.motion, reason: 'no valid transitions' })
+  return motion ?? undefined
+}
+
 /**
  * Recover a design fact from `data-op-*` attributes after an HTML round trip.
  *
@@ -171,12 +180,8 @@ export function designFactFromAttrs(
   const validResidual = residual ? validateResidual(residual, nodeType, report) : undefined
   if (validResidual) fact.residual = validResidual
 
-  const rawMotion = parseJSONAttr(attrs[DESIGN_ATTRS.motion], DESIGN_ATTRS.motion, report)
-  if (rawMotion !== undefined) {
-    const motion = parseMotionSpec(rawMotion)
-    if (motion) fact.motion = motion
-    else report({ fact: DESIGN_ATTRS.motion, reason: 'no valid transitions' })
-  }
+  const motion = motionFromAttrs(attrs, report)
+  if (motion) fact.motion = motion
 
   return Object.keys(fact).length ? fact : undefined
 }
