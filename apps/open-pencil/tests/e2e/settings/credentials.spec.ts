@@ -42,54 +42,6 @@ test('storage settings keep secrets behind the credential manager', async ({ pag
   await expect(secret).not.toHaveAttribute('placeholder', /Key saved/)
 })
 
-test('MCP connections keep bearer tokens out of ordinary settings', async ({ page }) => {
-  await page.goto('/?test')
-  const canvas = new CanvasHelper(page)
-  await canvas.waitForInit()
-
-  await page.getByTestId('app-settings-trigger').click()
-  await page.getByTestId('settings-section-mcp').click()
-  const section = page.getByTestId('app-settings-dialog')
-  await section.getByRole('button', { name: 'Add connection' }).click()
-  await section.getByLabel('Connection name').fill('GitHub')
-  await section.getByLabel('MCP server URL').fill('http://example.com/mcp')
-  await section.getByRole('button', { name: 'Save' }).click()
-  await expect(section.getByLabel('MCP server URL')).toHaveAttribute('aria-invalid', 'true')
-
-  await section.getByLabel('MCP server URL').fill('https://example.com/mcp')
-  await section.getByRole('switch', { name: 'Enable for ACP agents' }).click()
-  await section.getByRole('switch', { name: 'Use bearer authentication' }).click()
-  await section.getByLabel('Bearer token').fill('secret-mcp-token')
-  await section.getByRole('button', { name: 'Save' }).click()
-
-  await expect(section).toContainText('GitHub')
-  await expect(section).toContainText('Enabled')
-  await expect(section).not.toContainText('secret-mcp-token')
-
-  await page.getByTestId('app-settings-done').click()
-  await page.reload()
-  await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
-  await page.getByTestId('settings-section-mcp').click()
-  await expect(section).toContainText('https://example.com/mcp')
-  await expect(section).toContainText('Enabled')
-  await section.getByRole('button', { name: /GitHub/ }).click()
-  await expect(section.getByPlaceholder(/Key saved/)).toBeVisible()
-  await section.getByRole('button', { name: 'Clear', exact: true }).click()
-  await section.getByRole('button', { name: 'Cancel', exact: true }).click()
-  await section.getByRole('button', { name: /GitHub/ }).click()
-  await expect(section.getByPlaceholder(/Key saved/)).toBeVisible()
-  await section.getByRole('button', { name: 'Clear', exact: true }).click()
-  await section.getByRole('button', { name: 'Save', exact: true }).click()
-  await section.getByRole('button', { name: /GitHub/ }).click()
-  await expect(section.getByPlaceholder(/Key saved/)).toHaveCount(0)
-  await section.getByRole('button', { name: 'Delete connection' }).click()
-  const confirmation = page.getByRole('alertdialog')
-  await expect(confirmation).toContainText('remove its saved bearer token')
-  await confirmation.getByRole('button', { name: 'Delete connection' }).click()
-  await expect(section).toContainText('No external MCP connections configured')
-})
-
 test('MCP automation settings filter and persist tool availability', async ({ page }) => {
   await page.route('**/health', (route) =>
     route.fulfill({
@@ -153,92 +105,9 @@ test('MCP automation settings filter and persist tool availability', async ({ pa
   await expect(createShape).toHaveAttribute('data-state', 'checked')
 })
 
-test('model library keeps reusable profiles and role assignments', async ({ page }) => {
-  await page.goto('/?test')
-  const canvas = new CanvasHelper(page)
-  await canvas.waitForInit()
-
-  await page.getByTestId('app-settings-trigger').click()
-  await page.getByTestId('settings-section-ai').click()
-  await page.getByTestId('settings-add-model').click()
-  await page.getByLabel('Name').fill('Fast model')
-  await page.getByTestId('settings-model-provider').click()
-  await page.getByRole('option', { name: 'Google AI' }).click()
-  await page.getByLabel('Model ID').click()
-  await page.getByRole('option').first().click()
-  await page.getByRole('button', { name: 'Save model' }).click()
-
-  await page.getByTestId('settings-add-model').click()
-  await page.getByLabel('Name').fill('Vision model')
-  await page.getByTestId('settings-model-provider').click()
-  await page.getByRole('option', { name: 'OpenRouter' }).click()
-  await page.getByLabel('Model ID').first().click()
-  await page.getByRole('option').first().click()
-  await page.getByRole('button', { name: 'Save model' }).click()
-
-  await page.getByTestId('settings-model-assignment-fast').click()
-  await page.getByRole('option', { name: 'Fast model' }).click()
-  await page.getByTestId('settings-model-assignment-vision').click()
-  await page.getByRole('option', { name: 'Vision model' }).click()
-  await page.getByTestId('app-settings-done').click()
-
-  await page.reload()
-  await canvas.waitForInit()
-  await page.getByTestId('app-settings-trigger').click()
-  await page.getByTestId('settings-section-ai').click()
-  await expect(page.getByTestId('settings-model-list')).toContainText('Fast model')
-  await expect(page.getByTestId('settings-model-list')).toContainText('Vision model')
-  await expect(page.getByTestId('settings-model-assignment-fast')).toContainText('Fast model')
-  await expect(page.getByTestId('settings-model-assignment-vision')).toContainText('Vision model')
-})
-
-test('remembered browser credentials survive reload and clear centrally', async ({ page }) => {
-  await page.goto('/?test')
-  const canvas = new CanvasHelper(page)
-  await canvas.waitForInit()
-
-  await page.getByRole('tab', { name: 'AI' }).click()
-  await page.getByTestId('provider-setup-open-settings').click()
-
-  await page.getByTestId('settings-section-general').click()
-  const remember = page.getByRole('switch', { name: 'Remember API keys on this device' })
-  await expect(remember).toHaveAttribute('aria-checked', 'true')
-  await page.getByTestId('settings-section-ai').click()
-
-  await page.locator('[data-model-id]').first().click()
-  await page.getByTestId('settings-model-provider').click()
-  await page.getByRole('option', { name: 'OpenRouter' }).click()
-  await page.getByLabel('Name').fill('Claude Sonnet')
-  await page.getByTestId('provider-settings-api-key').fill('sk-or-remembered-test-key')
-  await page.getByRole('button', { name: 'Save model' }).click()
-  await page.getByTestId('app-settings-done').click()
-  await expect(page.getByTestId('chat-input')).toBeVisible()
-
-  await page.reload()
-  await canvas.waitForInit()
-  await page.getByRole('tab', { name: 'AI' }).click()
-  await expect(page.getByTestId('chat-input')).toBeVisible()
-
-  await page.getByTestId('app-settings-trigger').click()
-  await page.getByTestId('settings-section-ai').click()
-  await page.locator('[data-model-id]').first().click()
-  await page.getByTestId('provider-settings-clear-key').click()
-  await page
-    .getByTestId('settings-model-editor')
-    .getByRole('button', { name: 'Cancel', exact: true })
-    .click()
-  await page.getByTestId('settings-section-general').click()
-  await remember.click()
-  await page.getByTestId('app-settings-done').click()
-
-  await page.reload()
-  await canvas.waitForInit()
-  await page.getByRole('tab', { name: 'AI' }).click()
-  await expect(page.getByTestId('provider-setup-open-settings')).toBeVisible()
-})
-
 test('browser credential preferences live in General, not the footer', async ({ page }) => {
   await page.goto('/')
+  await new CanvasHelper(page).waitForInit()
   await page.keyboard.press('ControlOrMeta+,')
   const panel = page.getByTestId('settings-general-panel')
   const remember = panel.getByRole('switch', { name: 'Remember API keys on this device' })

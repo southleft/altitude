@@ -17,16 +17,16 @@ test('settings tabs associate panels and support vertical keyboard navigation', 
   await expect(dialog).toHaveScreenshot('settings-tabs-general.png')
   await general.focus()
   await general.press('ArrowDown')
-  const ai = page.getByTestId('settings-section-ai')
-  await expect(ai).toBeFocused()
-  await expect(ai).toHaveAttribute('aria-selected', 'true')
+  const diagnostics = page.getByTestId('settings-section-diagnostics')
+  await expect(diagnostics).toBeFocused()
+  await expect(diagnostics).toHaveAttribute('aria-selected', 'true')
   await expect(dialog.getByRole('tabpanel')).toHaveCount(1)
-  await expect(page.getByTestId('settings-ai-panel')).toBeVisible()
+  await expect(page.getByTestId('settings-diagnostics-panel')).toBeVisible()
   await expect(dialog.getByRole('tabpanel')).toHaveAttribute(
     'aria-labelledby',
-    (await ai.getAttribute('id')) ?? ''
+    (await diagnostics.getAttribute('id')) ?? ''
   )
-  await ai.press('Home')
+  await diagnostics.press('Home')
   await expect(general).toBeFocused()
   await expect(page.getByTestId('settings-general-panel')).toBeVisible()
   await general.press('End')
