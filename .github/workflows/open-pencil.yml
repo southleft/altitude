@@ -54,3 +54,31 @@ jobs:
         run: bun test packages/dom-css/tests
       - name: Round-trip fidelity gate
         run: bun run conformance:gate
+
+  canvas-parity:
+    name: Code ↔ canvas parity (non-blocking)
+    runs-on: ubuntu-latest
+    # Reports API and token parity between Altitude's code contracts and the
+    # library OpenPencil generates from them (scripts/contracts/canvas-parity.mjs).
+    # Non-blocking until component owners triage the remaining disagreements;
+    # see .altitude/gates.json `canvas:parity`.
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: apps/open-pencil/package.json
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @southleft/al-web-components build:tokens
+      - name: Install and build OpenPencil
+        working-directory: apps/open-pencil
+        run: bun install --frozen-lockfile && bun run build:packages
+      - run: pnpm run canvas:parity
