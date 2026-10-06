@@ -20,8 +20,31 @@ import selection from './commands/selection'
 import tokens from './commands/tokens'
 import tree from './commands/tree'
 import variables from './commands/variables'
+import { loadCommandExtensions } from './extensions'
 
 const { version } = await import('../package.json')
+
+const builtIns = {
+  analyze,
+  convert,
+  documents,
+  eval: evalCmd,
+  export: exportCmd,
+  import: importCmd,
+  find,
+  formats,
+  fonts,
+  info,
+  lint,
+  libraries,
+  query,
+  node,
+  pages,
+  selection,
+  tokens,
+  tree,
+  variables
+}
 
 const main = defineCommand({
   meta: {
@@ -30,25 +53,8 @@ const main = defineCommand({
     version
   },
   subCommands: {
-    analyze,
-    convert,
-    documents,
-    eval: evalCmd,
-    export: exportCmd,
-    import: importCmd,
-    find,
-    formats,
-    fonts,
-    info,
-    lint,
-    libraries,
-    query,
-    node,
-    pages,
-    selection,
-    tokens,
-    tree,
-    variables
+    ...builtIns,
+    ...(await loadCommandExtensions(new Set(Object.keys(builtIns))))
   }
 })
 
