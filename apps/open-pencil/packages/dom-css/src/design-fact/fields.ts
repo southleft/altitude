@@ -8,6 +8,7 @@ export const DESIGN_ATTRS = {
   name: 'data-op-name',
   componentId: 'data-op-component-id',
   componentKey: 'data-op-component-key',
+  codeBinding: 'data-op-code',
   boundVariables: 'data-op-vars',
   variableModes: 'data-op-var-modes',
   styleIds: 'data-op-styles',

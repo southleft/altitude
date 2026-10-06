@@ -1,4 +1,4 @@
-import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import { copyCodeBinding, type SceneGraph, type SceneNode } from '@open-pencil/scene-graph'
 import { copyEffects, copyFills, copyStrokes } from '@open-pencil/scene-graph/copy'
 
 import { cssVarNameForVariable } from '../design-tokens'
@@ -116,6 +116,7 @@ function collectIdentity(node: SceneNode, fact: DesignFact): void {
   if (node.name) fact.name = node.name
   if (node.componentId) fact.componentId = node.componentId
   if (node.componentKey) fact.componentKey = node.componentKey
+  if (node.codeBinding) fact.codeBinding = copyCodeBinding(node.codeBinding) ?? undefined
 }
 
 /** Paint structure and canvas position — the partially-CSS-expressible group. */
@@ -206,6 +207,7 @@ export function applyDesignFactToNode(node: SceneNode, fact: DesignFact | undefi
   if (fact.name) node.name = fact.name
   if (fact.componentId) node.componentId = fact.componentId
   if (fact.componentKey) node.componentKey = fact.componentKey
+  if (fact.codeBinding) node.codeBinding = copyCodeBinding(fact.codeBinding)
   if (typeof fact.x === 'number') node.x = fact.x
   if (typeof fact.y === 'number') node.y = fact.y
 

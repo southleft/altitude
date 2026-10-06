@@ -1,4 +1,12 @@
-import type { SceneGraph, SceneNode, NodeType } from '@open-pencil/scene-graph'
+import {
+  codeBindingOwner,
+  resolveInstanceCodeElement,
+  type NodeType,
+  type ResolvedCodeElement,
+  type ResolvedCodeSlot,
+  type SceneGraph,
+  type SceneNode
+} from '@open-pencil/scene-graph'
 
 import { DEFAULT_FONT_FAMILY } from '#core/constants'
 import { resolveNodeTextDirection } from '#core/text/direction'
@@ -296,9 +304,73 @@ function collectProps(node: SceneNode, graph: SceneGraph): [string, unknown][] {
   return props
 }
 
+// --- Code-bound instances ---
+
+const JSX_ATTRIBUTE_NAME = /^[A-Za-z_][\w-]*$/
+
+/** A string attribute, as an expression when the value would break a quoted literal. */
+function codeAttr(name: string, value: string): string {
+  return /["{}<>]/.test(value) ? `${name}={${JSON.stringify(value)}}` : formatProp(name, value)
+}
+
+function slotChildJSX(graph: SceneGraph, slot: ResolvedCodeSlot, prefix: string): string | null {
+  if (slot.text !== undefined) {
+    const text = escapeJSXText(slot.text)
+    return slot.slot ? `${prefix}<span slot="${slot.slot}">${text}</span>` : `${prefix}${text}`
+  }
+  if (!slot.component) return null
+  const binding = codeBindingOwner(graph, slot.component)?.codeBinding
+  if (!binding) return null
+  const attrs = Object.entries(binding.attributes ?? {}).map(([k, v]) => codeAttr(k, v))
+  if (slot.slot) attrs.push(codeAttr('slot', slot.slot))
+  return `${prefix}<${binding.tagName}${attrs.length ? ` ${attrs.join(' ')}` : ''} />`
+}
+
+/**
+ * React output for an instance of a code-bound component: `<ALButton size="md">Label</ALButton>`
+ * through its `react` binding, or the custom element tag when there is none.
+ */
+function codeElementJSX(graph: SceneGraph, element: ResolvedCodeElement, indent: number): string {
+  const prefix = '  '.repeat(indent)
+  const tag = element.binding.react?.component ?? element.binding.tagName
+  const attrs = element.attributes.map(([name, value]) =>
+    value === 'true' ? name : codeAttr(name, value)
+  )
+  const opening = `<${tag}${attrs.length ? ` ${attrs.join(' ')}` : ''}`
+  const children = element.slots
+    .map((slot) => slotChildJSX(graph, slot, `${prefix}  `))
+    .filter((child): child is string => child !== null)
+  if (children.length === 0) return `${prefix}${opening} />`
+  return [`${prefix}${opening}>`, ...children, `${prefix}</${tag}>`].join('\n')
+}
+
+/**
+ * Design-JSX for the same instance: `<Instance component="Button" Size="Md" />` re-renders
+ * as an instance of the right variant, which a Frame rebuilt from its layers would not.
+ */
+function codeBoundInstanceDesignJSX(graph: SceneGraph, node: SceneNode, indent: number): string {
+  const component = node.componentId ? graph.getNode(node.componentId) : undefined
+  const set = component?.parentId ? graph.getNode(component.parentId) : undefined
+  const owner = set?.type === 'COMPONENT_SET' ? set : component
+  const props: [string, unknown][] = [['component', owner?.name ?? node.name]]
+  for (const [name, value] of Object.entries(component?.componentPropertyValues ?? {})) {
+    // A JSX attribute name cannot hold spaces; such an axis falls back to the set default.
+    if (JSX_ATTRIBUTE_NAME.test(name)) props.push([name, value])
+  }
+  return `${'  '.repeat(indent)}<Instance ${props.map(([k, v]) => formatProp(k, v)).join(' ')} />`
+}
+
 // --- JSX rendering ---
 
 function nodeToJSX(node: SceneNode, graph: SceneGraph, indent: number, format: JSXFormat): string {
+  if (node.type === 'INSTANCE') {
+    const element = resolveInstanceCodeElement(graph, node)
+    if (element) {
+      return format === 'tailwind'
+        ? codeElementJSX(graph, element, indent)
+        : codeBoundInstanceDesignJSX(graph, node, indent)
+    }
+  }
   const tagMap = format === 'tailwind' ? NODE_TYPE_TO_TW_TAG : NODE_TYPE_TO_TAG
   const tag = tagMap[node.type]
   if (!tag) return ''

@@ -1,5 +1,7 @@
 import type { GenericSchema } from 'valibot'
 
+import { parseCodeBinding, type CodeBinding } from '@open-pencil/scene-graph'
+
 import type { DesignFact } from '../types'
 import { DESIGN_ATTRS, RESIDUAL_FIELD_SET, RESTORABLE_NODE_TYPES, defaultsForType } from './fields'
 import { encodeFactJSON, mapAwareReviver } from './json'
@@ -24,6 +26,7 @@ export function designFactToAttrs(fact: DesignFact | undefined): Record<string, 
   if (fact.name) attrs[DESIGN_ATTRS.name] = fact.name
   if (fact.componentId) attrs[DESIGN_ATTRS.componentId] = fact.componentId
   if (fact.componentKey) attrs[DESIGN_ATTRS.componentKey] = fact.componentKey
+  if (fact.codeBinding) attrs[DESIGN_ATTRS.codeBinding] = encodeFactJSON(fact.codeBinding)
   if (fact.boundVariables) {
     attrs[DESIGN_ATTRS.boundVariables] = encodeFactJSON(fact.boundVariables)
   }
@@ -68,6 +71,18 @@ function parseArrayAttr(
   if (Array.isArray(parsed)) return parsed
   report({ fact: label, reason: 'expected an array' })
   return undefined
+}
+
+/** A component's code binding from `data-op-code`; a malformed one is dropped and named. */
+function codeBindingAttr(
+  attrs: Record<string, string>,
+  report: FactIssueSink
+): CodeBinding | undefined {
+  const raw = parseJSONAttr(attrs[DESIGN_ATTRS.codeBinding], DESIGN_ATTRS.codeBinding, report)
+  if (raw === undefined) return undefined
+  const binding = parseCodeBinding(raw)
+  if (!binding) report({ fact: DESIGN_ATTRS.codeBinding, reason: 'not a valid code binding' })
+  return binding ?? undefined
 }
 
 function valueKind(value: unknown): string {
@@ -132,6 +147,8 @@ export function designFactFromAttrs(
   if (componentId) fact.componentId = componentId
   const componentKey = attrs[DESIGN_ATTRS.componentKey]
   if (componentKey) fact.componentKey = componentKey
+  const codeBinding = codeBindingAttr(attrs, report)
+  if (codeBinding) fact.codeBinding = codeBinding
 
   const objectAttr = <TSchema extends GenericSchema>(attr: string, schema: TSchema) => {
     const parsed = parseJSONAttr(attrs[attr], attr, report)
