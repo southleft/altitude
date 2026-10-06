@@ -19,12 +19,20 @@ const files = {
 }
 
 const mapping = {
-  layers: [{ files: ['base.json'] }, { files: ['theme/{mode}.json'] }, { files: ['brand/{brand}.json'] }],
+  layers: [
+    { files: ['base.json'] },
+    { files: ['theme/{mode}.json'] },
+    { files: ['brand/{brand}.json'] }
+  ],
   axes: [
     { name: 'mode', modes: ['light', 'dark'] },
     { name: 'brand', modes: ['a', 'b'] }
   ],
-  collections: [{ name: 'Base' }, { name: 'Theme', axes: ['mode'] }, { name: 'Brand', axes: ['brand'] }],
+  collections: [
+    { name: 'Base' },
+    { name: 'Theme', axes: ['mode'] },
+    { name: 'Brand', axes: ['brand'] }
+  ],
   naming: { dropSegments: [] },
   cssVar: { prefix: 'al', dropSegments: ['@'] }
 }
@@ -55,7 +63,9 @@ describe('variableCollectionsToCSS with imported tokens', () => {
   test('leaves a token out of modes its source does not define', () => {
     const graph = new SceneGraph()
     importDesignTokens(graph, files, mapping)
-    const inB = variableCollectionsToCSS(graph, { modes: tokenModeSelection(graph, { brand: 'b' }) })
+    const inB = variableCollectionsToCSS(graph, {
+      modes: tokenModeSelection(graph, { brand: 'b' })
+    })
     expect(declarations(inB)['--al-only']).toBe('2px')
     const all = variableCollectionsToCSS(graph)
     expect(all.match(/--al-only/g)).toHaveLength(1)
@@ -64,6 +74,8 @@ describe('variableCollectionsToCSS with imported tokens', () => {
 
   test('variables without code syntax keep the slug of their name', () => {
     expect(cssVarNameForVariable({ name: 'color/primary' }, 'al')).toBe('--al-color-primary')
-    expect(cssVarNameForVariable({ name: 'x', codeSyntax: { WEB: 'var(--ds-y)' } }, 'al')).toBe('--ds-y')
+    expect(cssVarNameForVariable({ name: 'x', codeSyntax: { WEB: 'var(--ds-y)' } }, 'al')).toBe(
+      '--ds-y'
+    )
   })
 })

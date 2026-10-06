@@ -26,7 +26,11 @@ function byCSS(graph: SceneGraph, name: string): Variable | undefined {
 describe.skipIf(!hasTokens)('Altitude preset on the real token tree', () => {
   test('lays tokens out in the Figma collection convention plus Brand × Mode', async () => {
     const graph = new SceneGraph()
-    const result = importDesignTokens(graph, await readTokenTree(paths.tokens), await readAltitudePreset())
+    const result = importDesignTokens(
+      graph,
+      await readTokenTree(paths.tokens),
+      await readAltitudePreset()
+    )
     expect(result.collections.map((c) => c.name)).toEqual([
       'Tier 1 | Primitive',
       'Tier 2 | Semantic',
@@ -35,7 +39,12 @@ describe.skipIf(!hasTokens)('Altitude preset on the real token tree', () => {
       'Tier 2 | Brand'
     ])
     const brand = result.collections.find((c) => c.name === 'Tier 2 | Brand')
-    expect(brand?.modes).toEqual(['Altitude / Light', 'Altitude / Dark', 'Southleft / Light', 'Southleft / Dark'])
+    expect(brand?.modes).toEqual([
+      'Altitude / Light',
+      'Altitude / Dark',
+      'Southleft / Light',
+      'Southleft / Dark'
+    ])
     expect(result.stats.variables).toBeGreaterThan(500)
   })
 
@@ -44,10 +53,14 @@ describe.skipIf(!hasTokens)('Altitude preset on the real token tree', () => {
     importDesignTokens(graph, await readTokenTree(paths.tokens), await readAltitudePreset())
     expect(byCSS(graph, '--al-theme-space')?.name).toBe('theme/space/@')
     expect(byCSS(graph, '--al-font-size-12')?.name).toBe('typography/font-size/12')
-    expect(byCSS(graph, '--al-theme-border-radius-role-surface')?.name).toBe('theme/border/radius/role/surface')
+    expect(byCSS(graph, '--al-theme-border-radius-role-surface')?.name).toBe(
+      'theme/border/radius/role/surface'
+    )
     const bg = byCSS(graph, '--al-theme-color-background-primary-default')
     expect(bg?.name).toBe('theme/color/background/primary-default')
-    expect(readTokenMetadata(bg ?? {})?.extensions).toEqual({ 'org.altitude.token': { cssType: 'color' } })
+    expect(readTokenMetadata(bg ?? {})?.extensions).toEqual({
+      'org.altitude.token': { cssType: 'color' }
+    })
   })
 
   test('re-importing the same tree is a no-op', async () => {
@@ -61,17 +74,26 @@ describe.skipIf(!hasTokens)('Altitude preset on the real token tree', () => {
 
   test('every token that is not a variable is named', async () => {
     const graph = new SceneGraph()
-    const result = importDesignTokens(graph, await readTokenTree(paths.tokens), await readAltitudePreset())
+    const result = importDesignTokens(
+      graph,
+      await readTokenTree(paths.tokens),
+      await readAltitudePreset()
+    )
     const dropped = result.issues.filter((issue) =>
-      ['invalid-value', 'unsupported-type', 'unresolved-alias', 'circular-alias'].includes(issue.code)
+      ['invalid-value', 'unsupported-type', 'unresolved-alias', 'circular-alias'].includes(
+        issue.code
+      )
     )
     for (const issue of dropped) expect(issue.token).toBeTruthy()
     expect(result.stats.tokens - result.stats.variables).toBe(dropped.length)
   })
 
-  test.skipIf(!hasDist)('re-export reproduces every non-composite --al-* value per brand × mode', async () => {
-    const report = await runTokenParity(paths.root)
-    expect(report.combinations).toHaveLength(4)
-    expect(report.nonComposite.percent).toBe(100)
-  })
+  test.skipIf(!hasDist)(
+    're-export reproduces every non-composite --al-* value per brand × mode',
+    async () => {
+      const report = await runTokenParity(paths.root)
+      expect(report.combinations).toHaveLength(4)
+      expect(report.nonComposite.percent).toBe(100)
+    }
+  )
 })

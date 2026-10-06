@@ -17,7 +17,9 @@ describe('parity CSS helpers', () => {
     expect(canonicalCSSValue('0px 2px 2px 0px #1313114d')).toBe(
       canonicalCSSValue('0px 2px 2px 0px rgba(19, 19, 17, 0.3)')
     )
-    expect(canonicalCSSValue('cubic-bezier(0.2,0,0,1)')).toBe(canonicalCSSValue('cubic-bezier(0.2, 0, 0, 1)'))
+    expect(canonicalCSSValue('cubic-bezier(0.2,0,0,1)')).toBe(
+      canonicalCSSValue('cubic-bezier(0.2, 0, 0, 1)')
+    )
     expect(canonicalCSSValue('400 1rem/1.5rem Inter')).toBe('400 16px/24px Inter')
     expect(canonicalCSSValue('1px')).not.toBe(canonicalCSSValue('2px'))
   })
