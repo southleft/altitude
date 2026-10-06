@@ -29,6 +29,23 @@ export function findMode(
 
 const collectionInput = v.pipe(v.string(), v.description('Collection ID or name'))
 const modeInput = v.pipe(v.string(), v.description('Mode ID or name'))
+const collectionModeInput = v.object({ collection: collectionInput, mode: modeInput })
+
+type CollectionModeLookup =
+  | { collection: VariableCollection; mode: VariableCollectionMode }
+  | { error: string }
+
+/** The collection and mode named by a tool's `collection` and `mode` arguments. */
+function findCollectionMode(
+  figma: FigmaAPI,
+  args: { collection: string; mode: string }
+): CollectionModeLookup {
+  const collection = findCollection(figma, args.collection)
+  if (!collection) return { error: `Collection "${args.collection}" not found` }
+  const mode = findMode(collection, args.mode)
+  if (!mode) return { error: `Mode "${args.mode}" not found in "${collection.name}"` }
+  return { collection, mode }
+}
 
 export const addMode = defineTool({
   name: 'add_mode',
@@ -66,10 +83,9 @@ export const renameMode = defineTool({
     name: v.pipe(v.string(), v.minLength(1), v.description('New mode name'))
   }),
   execute: (figma, args) => {
-    const collection = findCollection(figma, args.collection)
-    if (!collection) return { error: `Collection "${args.collection}" not found` }
-    const mode = findMode(collection, args.mode)
-    if (!mode) return { error: `Mode "${args.mode}" not found in "${collection.name}"` }
+    const found = findCollectionMode(figma, args)
+    if ('error' in found) return found
+    const { collection, mode } = found
     figma.graph.renameMode(collection.id, mode.modeId, args.name)
     return { collectionId: collection.id, modeId: mode.modeId, name: args.name }
   }
@@ -80,12 +96,11 @@ export const removeMode = defineTool({
   description:
     "Remove a mode and every variable's value for it. A collection's last mode cannot be removed.",
   execution: { kind: 'sync', mutation: 'document' },
-  input: v.object({ collection: collectionInput, mode: modeInput }),
+  input: collectionModeInput,
   execute: (figma, args) => {
-    const collection = findCollection(figma, args.collection)
-    if (!collection) return { error: `Collection "${args.collection}" not found` }
-    const mode = findMode(collection, args.mode)
-    if (!mode) return { error: `Mode "${args.mode}" not found in "${collection.name}"` }
+    const found = findCollectionMode(figma, args)
+    if ('error' in found) return found
+    const { collection, mode } = found
     if (collection.modes.length <= 1) return { error: 'A collection must keep at least one mode' }
     figma.graph.removeMode(collection.id, mode.modeId)
     return { collectionId: collection.id, removed: mode.modeId }
@@ -97,12 +112,11 @@ export const setActiveMode = defineTool({
   description:
     'Switch the document-wide active mode of a collection (for example Light/Dark or a brand). Nodes with an explicit mode keep it.',
   execution: { kind: 'sync', mutation: 'view' },
-  input: v.object({ collection: collectionInput, mode: modeInput }),
+  input: collectionModeInput,
   execute: (figma, args) => {
-    const collection = findCollection(figma, args.collection)
-    if (!collection) return { error: `Collection "${args.collection}" not found` }
-    const mode = findMode(collection, args.mode)
-    if (!mode) return { error: `Mode "${args.mode}" not found in "${collection.name}"` }
+    const found = findCollectionMode(figma, args)
+    if ('error' in found) return found
+    const { collection, mode } = found
     figma.graph.setActiveMode(collection.id, mode.modeId)
     return { collectionId: collection.id, activeModeId: mode.modeId }
   }
