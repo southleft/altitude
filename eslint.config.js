@@ -7,6 +7,8 @@ import litA11y from 'eslint-plugin-lit-a11y';
 export default [
   {
     ignores: [
+      // OpenPencil runs its own oxlint/tsgo gate (`bun run check` in apps/open-pencil).
+      'apps/open-pencil/**',
       '**/dist/**',
       '**/dist-vite/**',
       '**/dist-v5/**',

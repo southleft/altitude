@@ -93,6 +93,8 @@ const COLOR_PROPERTIES = ['/color$/', 'fill', 'stroke'];
 export default {
   customSyntax: 'postcss-scss',
   ignoreFiles: [
+    // OpenPencil uses Tailwind and its own lint gate.
+    'apps/open-pencil/**',
     '**/node_modules/**',
     '**/dist/**',
     '**/dist-v5/**',

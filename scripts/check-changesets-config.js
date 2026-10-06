@@ -79,8 +79,11 @@ function collectPnpmWorkspaces() {
     .filter(Boolean)
     .map((m) => m[1].trim());
 
+  // `!dir/name` excludes one directory, as pnpm does (apps/open-pencil is a Bun workspace).
+  const excluded = new Set(globs.filter((g) => g.startsWith('!')).map((g) => g.slice(1).replace(/\/$/, '')));
   const names = new Map();
   for (const glob of globs) {
+    if (glob.startsWith('!')) continue;
     if (!glob.endsWith('/*')) {
       console.error(`  NOTE   unsupported workspace glob "${glob}" - not expanded by this check`);
       continue;
@@ -89,6 +92,7 @@ function collectPnpmWorkspaces() {
     let entries;
     try { entries = readdirSync(join(ROOT, rel)); } catch { continue; }
     for (const entry of entries) {
+      if (excluded.has(`${rel}/${entry}`)) continue;
       const pkgPath = join(ROOT, rel, entry, 'package.json');
       if (!existsSync(pkgPath)) continue;
       try {
