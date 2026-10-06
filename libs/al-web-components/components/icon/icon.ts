@@ -26,6 +26,23 @@ function warnOnce(key: string, message: string, level: 'warn' | 'error' = 'error
 }
 
 /**
+ * Run `fn` once the current burst of module evaluation is over: after the next
+ * animation frame and then one more macrotask.
+ *
+ * The missing-glyph diagnostic waits this long because "not registered and no
+ * resolver" is routinely a transient state. Importing the package root defines
+ * <al-icon>, which upgrades every `<al-icon name>` already in the page
+ * synchronously — before a following `import '.../icon/lazy'` (or an explicit
+ * `registerIcons(...)`) has run. Judging at that instant logged an error for
+ * every icon on a correctly configured page.
+ */
+function afterStartup(fn: () => void): void {
+  const later = () => setTimeout(fn, 0);
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(later);
+  else later();
+}
+
+/**
  * Component: al-icon
  *
  * @slot - an inline `<svg>`. Rendered only when `name` is not set, which
@@ -58,6 +75,7 @@ export class ALIcon extends ALIconBase {
 
   private _token = 0;
   private _unsubscribe?: () => void;
+  private _missingCheckPending = false;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -127,6 +145,44 @@ export class ALIcon extends ALIconBase {
     const target = LEGACY_ALIASES[name] ?? name;
 
     if (!hasIconResolver()) {
+      // Not an error yet: a resolver or an explicit registration may arrive
+      // later in this same startup (registry subscribers re-sync this element
+      // when it does). Re-check once startup has settled.
+      this._scheduleMissingCheck();
+      return;
+    }
+
+    const token = ++this._token;
+    void resolveIcon(target, weight).then((def) => {
+      // Guard against out-of-order resolution when `name` changes mid-flight.
+      if (token !== this._token) return;
+      if (!def) {
+        warnOnce(`unknown:${name}`, `[altitude] <al-icon name="${name}"> — no such icon.`);
+      }
+      this._def = def;
+    });
+  }
+
+  /**
+   * Deferred missing-glyph diagnostic. Logs only if, once startup has settled,
+   * this element still has a name that is neither registered nor resolvable.
+   */
+  private _scheduleMissingCheck(): void {
+    if (this._missingCheckPending) return;
+    this._missingCheckPending = true;
+    afterStartup(() => {
+      this._missingCheckPending = false;
+      const name = this.name;
+      if (!name || this._def) return;
+
+      // Something arrived after all: draw it (or hand off to the resolver,
+      // whose own "no such icon" diagnostic covers a name it cannot load).
+      if (this._lookup(name, this._weight) || hasIconResolver()) {
+        this._sync();
+        return;
+      }
+
+      const target = LEGACY_ALIASES[name] ?? name;
       const aliasNote =
         target === name ? '' : `  "${name}" is a deprecated alias for the Phosphor icon "${target}".\n`;
       warnOnce(
@@ -140,17 +196,6 @@ export class ALIcon extends ALIconBase {
           `  Or enable dynamic loading of all glyphs (+~13 KB gzipped, not SSR-renderable):\n` +
           `    import '@southleft/al-web-components/dist/components/icon/lazy.js';`
       );
-      return;
-    }
-
-    const token = ++this._token;
-    void resolveIcon(target, weight).then((def) => {
-      // Guard against out-of-order resolution when `name` changes mid-flight.
-      if (token !== this._token) return;
-      if (!def) {
-        warnOnce(`unknown:${name}`, `[altitude] <al-icon name="${name}"> — no such icon.`);
-      }
-      this._def = def;
     });
   }
 

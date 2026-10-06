@@ -36,7 +36,7 @@
     },
     {
       "name": "data",
-      "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
+      "description": "Row data for data-driven rendering. Must be paired with `columns`.\nEach cell value (`row[column.key]`) may be a string (or number) or a DOM\n`Node` — e.g. an `al-badge` element — which is rendered into the cell\nas-is, so rich cell content does not require the slotted mode.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
       "type": "string",
       "rawType": "Array<ALTableRow>",
       "bindings": {

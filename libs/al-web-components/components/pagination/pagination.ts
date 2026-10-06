@@ -107,10 +107,13 @@ export class ALPagination extends ALElement {
   accessor pageSize: number = 10;
 
   /**
-   * Dropdown options for choosing the number of items displayed per page
+   * Dropdown options for choosing the number of items displayed per page.
+   * Include the `pageSize` value in this list, or the page-size select renders
+   * a value that matches none of its options. The default list includes the
+   * default `pageSize` of 10.
    */
   @property()
-  accessor pageSizeOptions: Array<number> = [20, 40, 60, 80, 100];
+  accessor pageSizeOptions: Array<number> = [10, 20, 40, 60, 80, 100];
 
   /**
    * Variant of pagination (e.g., 'small' for a compact view)

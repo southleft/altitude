@@ -190,4 +190,16 @@ describe('al-textarea', () => {
     expect((el.constructor as any).formAssociated).toBeFalsy();
     expect(new FormData(form).get('bio'), 'current behavior — textarea is not form-associated').toBeNull();
   });
+  it('gives multi-line text room: vertical padding, body line height and the input inset', async () => {
+    // The shared al-input mixin sizes single-line fields (40px, line-height 1,
+    // no block padding). Applied to a textarea that put the first line against
+    // the top border and crushed wrapped lines together.
+    const el = await fixture<ALTextarea>(html`<al-textarea label="Bio" rows="3" value="One\nTwo"></al-textarea>`);
+    await el.updateComplete;
+    const cs = getComputedStyle(inner(el));
+    expect(parseFloat(cs.paddingTop)).toBeGreaterThan(0);
+    expect(parseFloat(cs.paddingBottom)).toBeGreaterThan(0);
+    expect(parseFloat(cs.lineHeight)).toBeGreaterThan(parseFloat(cs.fontSize));
+    expect(cs.paddingLeft, 'same 12px inline inset as al-input').toBe('12px');
+  });
 });

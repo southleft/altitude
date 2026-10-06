@@ -109,7 +109,9 @@ export class ALListItem extends ALElement {
   accessor isActive: boolean;
 
   /**
-   * Current state
+   * Current state. Fills the item with the primary background and the matching
+   * on-primary text colour; when the item renders a link (`href`) the link also
+   * gets `aria-current="page"`.
    */
   @property({ type: Boolean })
   accessor isCurrent: boolean;
@@ -493,7 +495,7 @@ export class ALListItem extends ALElement {
     if (this.href) {
       return html`
         <li role=${this._listRole} class="${componentClassName}" @keydown=${this.handleKeyDown}>
-          <a class="al-c-list-item__link al-c-list-item-href__link" href=${this.href} target=${this.target} tabindex=${ifDefined(this.isDisabled ? '-1' : undefined)}>
+          <a class="al-c-list-item__link al-c-list-item-href__link" href=${this.href} target=${this.target} aria-current=${ifDefined(this.isCurrent ? 'page' : undefined)} tabindex=${ifDefined(this.isDisabled ? '-1' : undefined)}>
             <span class="al-c-list-item__body">
               ${this.slotNotEmpty('before') && html` <div class="al-c-list-item__icon"><slot name="before"></slot></div> `}
               <div class="al-c-list-item__text">
