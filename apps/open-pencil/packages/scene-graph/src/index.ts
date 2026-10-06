@@ -4,6 +4,8 @@ export * from './instance-overrides'
 export * from './images'
 export * from './components/properties'
 export * from './copy'
+export * from './code-binding'
+export * from './components/code-binding'
 export {
   copyInstanceComponentProps,
   hasInstanceOverride,

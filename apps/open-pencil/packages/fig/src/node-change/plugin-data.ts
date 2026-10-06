@@ -2,6 +2,7 @@ import type { NodeChange, PluginData, PluginRelaunchData } from '@open-pencil/ki
 import { guidToString } from '@open-pencil/kiwi/fig/guid'
 import {
   clampExportScale,
+  parseCodeBinding,
   type ExportFormatId,
   type ExportSetting,
   type PluginDataEntry,
@@ -22,6 +23,7 @@ export const EXPORT_SETTINGS_PLUGIN_KEY = 'exportSettings'
 export const TEXT_PATH_BOX_PLUGIN_KEY = 'textPathBox'
 export const LIBRARY_SOURCE_PLUGIN_KEY = 'librarySource'
 export const ENABLED_LIBRARIES_PLUGIN_KEY = 'enabledLibraries'
+export const CODE_BINDING_PLUGIN_KEY = 'codeBinding'
 
 const NATIVE_EXPORT_FORMATS: Record<string, ExportFormatId> = {
   PNG: 'png',
@@ -284,4 +286,29 @@ export function serializePluginRelaunchData(
     message: entry.message,
     isDeleted: entry.isDeleted
   }))
+}
+
+/**
+ * A component's code identity (tag, attribute and slot mapping). Figma has no field for it,
+ * so it travels as OpenPencil plugin data, which Figma keeps without interpreting.
+ */
+export function extractCodeBinding(nc: NodeChange): SceneNode['codeBinding'] {
+  const value = getOpenPencilPluginValue(nc, CODE_BINDING_PLUGIN_KEY)
+  if (!value) return null
+  try {
+    return parseCodeBinding(JSON.parse(value))
+  } catch {
+    return null
+  }
+}
+
+export function applyCodeBindingPluginData(node: SceneNode): void {
+  if (node.codeBinding) {
+    upsertPluginData(node, CODE_BINDING_PLUGIN_KEY, JSON.stringify(node.codeBinding))
+  } else {
+    node.pluginData = node.pluginData.filter(
+      (entry) =>
+        !(entry.pluginId === OPEN_PENCIL_PLUGIN_ID && entry.key === CODE_BINDING_PLUGIN_KEY)
+    )
+  }
 }

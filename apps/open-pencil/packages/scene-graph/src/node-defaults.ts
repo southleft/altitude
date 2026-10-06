@@ -153,6 +153,7 @@ export function createDefaultNode(
     sharedSymbolVersion: null,
     publishedVersion: null,
     librarySource: null,
+    codeBinding: null,
     isPublishable: false,
     isSymbolPublishable: false,
     symbolDescription: '',

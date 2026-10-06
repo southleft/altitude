@@ -14,6 +14,7 @@ import { effectiveFigmaRawNodeFields, effectiveFigmaSourcePayload } from '../sou
 import { bytesToHex } from './bytes'
 import { exportCanvasGuides } from './canvas-guides'
 import {
+  applyCodeBindingPluginData,
   applyExportSettingsPluginData,
   applyLibrarySourcePluginData,
   applyTextPathBoxPluginData,
@@ -1020,6 +1021,7 @@ export function sceneNodeToKiwiWithContext(
 
   applyExportSettingsPluginData(node)
   applyLibrarySourcePluginData(node)
+  applyCodeBindingPluginData(node)
   applyTextPathBoxPluginData(node)
   const pluginData = mergePluginData(node.pluginData)
   if (pluginData.length > 0) nc.pluginData = pluginData
