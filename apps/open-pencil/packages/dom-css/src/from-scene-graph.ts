@@ -1,6 +1,6 @@
 import { encodeBase64 } from '@open-pencil/core/bytes'
 import { colorToCSS } from '@open-pencil/core/color'
-import { renderNodesToSVG } from '@open-pencil/core/io/formats/svg'
+import { renderNodesToSVG, SVG_BLEND_MODE } from '@open-pencil/core/io/formats/svg'
 import { motionSpecTransitionCSS, resolveMotionContext } from '@open-pencil/core/motion'
 import {
   codeBindingOwner,
@@ -180,25 +180,6 @@ function addStroke(style: DesignStyleDeclaration, node: SceneNode): void {
   style['border-left-width'] = `${node.borderLeftWeight}px`
 }
 
-/** Scene blend modes map onto `mix-blend-mode` almost one-for-one. */
-const BLEND_MODE_CSS: Record<string, string> = {
-  DARKEN: 'darken',
-  MULTIPLY: 'multiply',
-  COLOR_BURN: 'color-burn',
-  LIGHTEN: 'lighten',
-  SCREEN: 'screen',
-  COLOR_DODGE: 'color-dodge',
-  OVERLAY: 'overlay',
-  SOFT_LIGHT: 'soft-light',
-  HARD_LIGHT: 'hard-light',
-  DIFFERENCE: 'difference',
-  EXCLUSION: 'exclusion',
-  HUE: 'hue',
-  SATURATION: 'saturation',
-  COLOR: 'color',
-  LUMINOSITY: 'luminosity'
-}
-
 /** A grid track in CSS terms: FIXED -> px, FR -> fr, AUTO -> auto. */
 function gridTrackToCSS(track: { sizing: string; value: number }): string {
   if (track.sizing === 'FR') return `${track.value}fr`
@@ -238,8 +219,9 @@ function addTransformAndBlend(style: DesignStyleDeclaration, node: SceneNode): v
   if (node.flipY) transforms.push('scaleY(-1)')
   if (transforms.length) style.transform = transforms.join(' ')
 
-  const blend = BLEND_MODE_CSS[node.blendMode]
-  if (blend) style['mix-blend-mode'] = blend
+  // Scene blend modes map onto `mix-blend-mode` one-for-one; `normal` is the CSS default.
+  const blend = SVG_BLEND_MODE[node.blendMode]
+  if (blend && blend !== 'normal') style['mix-blend-mode'] = blend
 }
 
 function addPadding(style: DesignStyleDeclaration, node: SceneNode): void {
