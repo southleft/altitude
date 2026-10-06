@@ -4,28 +4,12 @@ import * as awarenessProtocol from 'y-protocols/awareness'
 import type { Awareness } from 'y-protocols/awareness'
 import * as Y from 'yjs'
 
-import { randomIndex } from '@open-pencil/core/random'
-
 import { connectCollabRoom } from '@/app/collab/room'
+import type { CollabRuntime } from '@/app/collab/state'
 import type { CollabRoomTransport } from '@/app/collab/transport'
 import type { CollabState } from '@/app/collab/types'
 import { bindCollabGraphEvents, registerYjsObservers } from '@/app/collab/yjs-sync'
 import type { EditorStore } from '@/app/editor/active-store'
-import { PEER_COLORS } from '@/constants'
-
-export type CollabRuntime = {
-  ydoc: Y.Doc | null
-  awareness: awarenessProtocol.Awareness | null
-  ynodes: Y.Map<Y.Map<unknown>> | null
-  yimages: Y.Map<Uint8Array> | null
-  room: CollabRoomTransport | null
-  persistence: IndexeddbPersistence | null
-  connectedStore: EditorStore | null
-  suppressGraphSync: boolean
-  suppressYjsEvents: boolean
-  unbindGraphEvents: (() => void) | null
-  stopZoomWatch: (() => void) | null
-}
 
 type ConnectCollabSessionOptions = {
   roomId: string
@@ -61,32 +45,6 @@ type CollabSessionResources = {
   unbindGraphEvents: (() => void) | null
   stopZoomWatch: (() => void) | null
   resetFollow: () => void
-}
-
-export function createCollabRuntime(): CollabRuntime {
-  return {
-    ydoc: null,
-    awareness: null,
-    ynodes: null,
-    yimages: null,
-    room: null,
-    persistence: null,
-    connectedStore: null,
-    suppressGraphSync: false,
-    suppressYjsEvents: false,
-    unbindGraphEvents: null,
-    stopZoomWatch: null
-  }
-}
-
-export function createInitialCollabState(localName: string): CollabState {
-  return {
-    connected: false,
-    roomId: null,
-    peers: [],
-    localName,
-    localColor: PEER_COLORS[randomIndex(PEER_COLORS.length)]
-  }
 }
 
 export function createCollabConnectionActions({

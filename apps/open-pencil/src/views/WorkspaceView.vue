@@ -59,6 +59,7 @@ useEditorMenu()
 
 const collab = useCollab(getActiveStore)
 provide(COLLAB_KEY, collab)
+if (route.path.startsWith('/share/')) collab.preload()
 exposeCollaborationActions(collab)
 
 useEventListener(
