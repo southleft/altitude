@@ -37,6 +37,7 @@ import { createShapeActions } from './shapes'
 import { createDefaultEditorState } from './state'
 import { createStructureActions } from './structure'
 import { createTextActions } from './text'
+import { createTokenImportActions } from './tokens'
 import type {
   EditorContext,
   EditorEventName,
@@ -228,6 +229,7 @@ export function createEditor(options?: EditorOptions) {
   const text = createTextActions(ctx)
   const nodes = createNodeActions(ctx)
   const variables = createVariableActions(ctx)
+  const tokenImport = createTokenImportActions(ctx)
   const vectorize = createVectorizeActions(ctx)
   const alignment = createAlignmentActions(ctx)
   const clipboardBridge = createClipboardBridge(clipboard, selection)
@@ -351,6 +353,7 @@ export function createEditor(options?: EditorOptions) {
 
     // Variables
     ...variables,
+    ...tokenImport,
 
     // Text editing
     ...text,

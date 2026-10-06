@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import TokensImportDialog from './variables/TokensImportDialog.vue'
 import VariablesDialog from './variables/VariablesDialog.vue'
 import VariablesSection from './variables/VariablesSection.vue'
 
@@ -14,6 +15,7 @@ import VariablesSection from './variables/VariablesSection.vue'
  * selected.
  */
 const variablesOpen = ref(false)
+const tokensImportOpen = ref(false)
 </script>
 
 <template>
@@ -21,7 +23,11 @@ const variablesOpen = ref(false)
     data-test-id="variables-panel"
     class="scrollbar-thin flex-1 overflow-x-hidden overflow-y-auto pb-4"
   >
-    <VariablesSection @open-dialog="variablesOpen = true" />
+    <VariablesSection
+      @open-dialog="variablesOpen = true"
+      @import-tokens="tokensImportOpen = true"
+    />
     <VariablesDialog v-model:open="variablesOpen" />
+    <TokensImportDialog v-model:open="tokensImportOpen" />
   </div>
 </template>

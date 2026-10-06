@@ -14,10 +14,16 @@ declare global {
     suggestedName?: string
   }
 
+  interface DirectoryPickerOptions {
+    id?: string
+    mode?: 'read' | 'readwrite'
+  }
+
   interface Window {
     openPencil?: OpenPencilWindowAPI
     showOpenFilePicker?(options?: FilePickerOptions): Promise<FileSystemFileHandle[]>
     showSaveFilePicker?(options?: FilePickerOptions): Promise<FileSystemFileHandle>
+    showDirectoryPicker?(options?: DirectoryPickerOptions): Promise<FileSystemDirectoryHandle>
     mockWindowOpen?(url: string): void
   }
 }
