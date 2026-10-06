@@ -39,6 +39,16 @@ function groupGaps(report: ParityReport): Map<string, Set<string>> {
       groups.set(key, names)
     }
   }
+  for (const combination of report.axes) {
+    for (const entry of combination.entries) {
+      if (entry.status === 'match') continue
+      const label = entry.category === 'value' ? 'NON-COMPOSITE' : entry.category
+      const key = `axis ${label} ${entry.status}: ${entry.reason ?? 'value differs'}`
+      const names = groups.get(key) ?? new Set<string>()
+      names.add(`${entry.name} [${combination.axis}=${combination.mode}]`)
+      groups.set(key, names)
+    }
+  }
   return groups
 }
 
@@ -59,7 +69,18 @@ try {
           `  (match ${c.counts.match}, mismatch ${c.counts.mismatch}, missing ${c.counts.missing}, extra ${c.counts.extra})`
       )
     }
+    if (!report.axesManifest)
+      console.log('  axes: dist-v5/axes.json not found; axis modes not checked')
+    for (const c of report.axes) {
+      const matched = c.entries.filter((e) => e.status === 'match').length
+      console.log(
+        `  ${`${c.axis} = ${c.mode}`.padEnd(22)} axis tokens ${matched}/${c.entries.length}`
+      )
+    }
     console.log('')
+    console.log(
+      `  unrepresentable ${report.unrepresentable.matched}/${report.unrepresentable.total} (CSS keywords; not in the floor)`
+    )
     console.log(
       `  non-composite  ${report.nonComposite.matched}/${report.nonComposite.total}  ${report.nonComposite.percent}%`
     )

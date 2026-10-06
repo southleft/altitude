@@ -67,9 +67,11 @@ export function canonicalCSSValue(value: string): string {
   text = text.replace(/#[0-9a-f]{3,8}\b/gi, (hex) => colorText(hex) ?? hex)
   text = text.replace(/\b(?:rgba?|hsla?)\([^()]*\)/gi, (fn) => colorText(fn) ?? fn)
   text = text.replace(
-    /(^|[\s,(/])(-?(?:\d+\.?\d*|\.\d+))(rem|px|ms|s)?(?=$|[\s,)/])/g,
+    /(^|[\s,(/])(-?(?:\d+\.?\d*|\.\d+))(rem|px|ms|s|%)?(?=$|[\s,)/])/g,
     (_, lead: string, num: string, unit?: string) => {
       const n = Number(num)
+      // Zero is zero in every length unit (0%, 0px, 0rem all compute the same radius).
+      if (n === 0 && unit !== 's' && unit !== 'ms') return `${lead}0`
       if (unit === 'rem') return `${lead}${round(n * 16)}px`
       if (unit === 's') return `${lead}${round(n * 1000)}ms`
       return `${lead}${round(n)}${unit ?? ''}`

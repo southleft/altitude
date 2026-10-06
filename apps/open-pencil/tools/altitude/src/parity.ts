@@ -14,6 +14,12 @@ import {
 import { variableCollectionsToCSS } from '@open-pencil/dom-css'
 import { SceneGraph } from '@open-pencil/scene-graph'
 
+import {
+  compareAxes,
+  readAxesManifest,
+  type AxisParityCombination,
+  type AxisParityEntry
+} from './axes'
 import { canonicalCSSValue, parseCustomProperties, resolveCustomProperties } from './css'
 import { altitudePaths, readAltitudePreset, readTokenTree } from './tree'
 
@@ -50,8 +56,14 @@ export interface ParityCombination {
 export interface ParityReport {
   altitudeRoot: string
   combinations: ParityCombination[]
+  /** Axis mode parity from `dist-v5/axes.json`; empty when the manifest is not built. */
+  axes: AxisParityCombination[]
+  axesManifest: boolean
+  /** Brand × mode and axis values; the floor applies here. */
   nonComposite: { total: number; matched: number; percent: number }
   composite: { total: number; matched: number; percent: number }
+  /** Axis values that are CSS keywords (`currentColor`) no variable can hold. */
+  unrepresentable: { total: number; matched: number; percent: number }
   overall: { total: number; matched: number; percent: number }
   importIssues: TokenImportResult['issues']
 }
@@ -210,24 +222,51 @@ export async function runTokenParity(
     }
   }
 
-  const sum = (pick: (c: ParityCombination) => { total: number; matched: number }) => {
-    const total = combinations.reduce((n, c) => n + pick(c).total, 0)
-    const matched = combinations.reduce((n, c) => n + pick(c).matched, 0)
+  const baseContext = Object.fromEntries(config.axes.map((axis) => [axis.name, axis.defaultMode]))
+  const manifest = await readAxesManifest(paths.dist)
+  const baseFile = join(
+    paths.dist,
+    'css/brand',
+    `tokens-${baseContext.brand}-${baseContext.mode}.css`
+  )
+  const baseValues = existsSync(baseFile)
+    ? resolveCustomProperties(parseCustomProperties(await readFile(baseFile, 'utf8')))
+    : new Map<string, string>()
+  const axes = manifest ? compareAxes(graph, manifest, baseValues, baseContext) : []
+  const axisEntries = axes.flatMap((combination) => combination.entries)
+  const axisTally = (category: AxisParityEntry['category']) => {
+    const set = axisEntries.filter((entry) => entry.category === category)
+    return { total: set.length, matched: set.filter((entry) => entry.status === 'match').length }
+  }
+
+  const sum = (
+    pick: (c: ParityCombination) => { total: number; matched: number },
+    extra: { total: number; matched: number }
+  ) => {
+    const total = combinations.reduce((n, c) => n + pick(c).total, extra.total)
+    const matched = combinations.reduce((n, c) => n + pick(c).matched, extra.matched)
     return { total, matched, percent: percent(matched, total) }
   }
-  const nonComposite = sum((c) => c.nonComposite)
-  const composite = sum((c) => c.composite)
+  const nonComposite = sum((c) => c.nonComposite, axisTally('value'))
+  const composite = sum((c) => c.composite, axisTally('composite'))
+  const unrepresentable = axisTally('unrepresentable')
   return {
     altitudeRoot: paths.root,
     combinations,
+    axes,
+    axesManifest: manifest !== null,
     nonComposite,
     composite,
+    unrepresentable: {
+      ...unrepresentable,
+      percent: percent(unrepresentable.matched, unrepresentable.total)
+    },
     overall: {
-      total: nonComposite.total + composite.total,
-      matched: nonComposite.matched + composite.matched,
+      total: nonComposite.total + composite.total + unrepresentable.total,
+      matched: nonComposite.matched + composite.matched + unrepresentable.matched,
       percent: percent(
-        nonComposite.matched + composite.matched,
-        nonComposite.total + composite.total
+        nonComposite.matched + composite.matched + unrepresentable.matched,
+        nonComposite.total + composite.total + unrepresentable.total
       )
     },
     importIssues: result.issues
