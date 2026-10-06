@@ -12,6 +12,7 @@ import AppSelect from '@/components/ui/select/AppSelect.vue'
 const emit = defineEmits<{ openDialog: []; importTokens: [] }>()
 
 const editor = useEditorStore()
+const variableMessages = useVariableMessages()
 const collectionCount = useSceneComputed(() => {
   void editor.state.sceneVersion
   return editor.getCollectionCount()
@@ -39,7 +40,7 @@ const switchable = useSceneComputed(() => {
       .filter((collection) => (collection.modes?.length ?? 0) > 1)
       .map((collection) => ({
         id: collection.id,
-        name: collection.name || 'Untitled collection',
+        name: collection.name || variableMessages.value.untitledCollection,
         activeModeId: editor.graph.activeMode.get(collection.id) ?? collection.defaultModeId,
         options: collection.modes.map((mode) => ({ value: mode.modeId, label: mode.name }))
       }))
@@ -48,7 +49,6 @@ const switchable = useSceneComputed(() => {
 
 const hasVariables = computed(() => variableCount.value > 0)
 const { panels } = useI18n()
-const variableMessages = useVariableMessages()
 
 function selectMode(collectionId: string, modeId: string): void {
   editor.setActiveMode(collectionId, modeId)
