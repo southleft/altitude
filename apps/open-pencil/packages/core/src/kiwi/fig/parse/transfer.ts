@@ -2,7 +2,12 @@ import type { InstanceNodeChange } from '@open-pencil/fig/instance-overrides'
 import { SceneGraph } from '@open-pencil/scene-graph'
 import type { EnabledLibraryBinding, SceneNode } from '@open-pencil/scene-graph'
 
-import { getLazyFigImportContext, setLazyFigImportContext } from '#core/kiwi/fig/lazy-import'
+import {
+  getLazyFigImportContext,
+  setLazyFigImportContext,
+  type LazyFigImportContext,
+  type LazyFigImportSource
+} from '#core/kiwi/fig/lazy-import'
 import type { PortableSceneGraphData } from '#core/kiwi/fig/parse/portable-data'
 
 export interface SerializedLazyFigImportContext {
@@ -12,16 +17,66 @@ export interface SerializedLazyFigImportContext {
   populatedRootIds: string[]
 }
 
+/** One slice of a retained lazy source, small enough to deserialize without a long task. */
+export interface LazyFigImportSourceChunk {
+  changeMap: Array<[string, InstanceNodeChange]>
+  guidToNodeId: Array<[string, string]>
+}
+
+export interface SerializeSceneGraphOptions {
+  /**
+   * Leave the lazy-import source out: the sender keeps it and serves it on request.
+   * Only the populated page IDs travel, as `lazyFigImportRetained`.
+   */
+  retainLazySource?: boolean
+}
+
 export interface SerializedSceneGraph extends PortableSceneGraphData {
   instanceIndex: Array<[string, string[]]>
   figKiwiVersion: number | null
   figSchemaDeflated: Uint8Array | null
   enabledLibraries?: Array<[string, EnabledLibraryBinding]>
   lazyFigImport?: SerializedLazyFigImportContext
+  /** Set instead of `lazyFigImport` when the sender retained the source. */
+  lazyFigImportRetained?: { populatedRootIds: string[] }
 }
 
-export function serializeSceneGraph(graph: SceneGraph): SerializedSceneGraph {
-  const lazyFigImport = getLazyFigImportContext(graph)
+/** Split a lazy source's maps into chunks of at most `size` entries each. */
+export function* lazyFigImportSourceChunks(
+  source: LazyFigImportSource,
+  size: number
+): Generator<LazyFigImportSourceChunk> {
+  const changes = [...source.changeMap]
+  const guids = [...source.guidToNodeId]
+  for (let start = 0; start < Math.max(changes.length, guids.length); start += size) {
+    yield {
+      changeMap: changes.slice(start, start + size),
+      guidToNodeId: guids.slice(start, start + size)
+    }
+  }
+}
+
+function serializeLazyFigImport(
+  context: LazyFigImportContext | undefined,
+  retainSource: boolean
+): Pick<SerializedSceneGraph, 'lazyFigImport' | 'lazyFigImportRetained'> {
+  if (!context) return {}
+  const populatedRootIds = [...context.populatedRootIds]
+  if (retainSource) return { lazyFigImportRetained: { populatedRootIds } }
+  return {
+    lazyFigImport: {
+      changeMap: [...context.changeMap],
+      guidToNodeId: [...context.guidToNodeId],
+      blobs: context.blobs,
+      populatedRootIds
+    }
+  }
+}
+
+export function serializeSceneGraph(
+  graph: SceneGraph,
+  options: SerializeSceneGraphOptions = {}
+): SerializedSceneGraph {
   return {
     rootId: graph.rootId,
     nodes: [...graph.nodes],
@@ -34,45 +89,33 @@ export function serializeSceneGraph(graph: SceneGraph): SerializedSceneGraph {
     figSchemaDeflated: graph.figSchemaDeflated,
     documentColorSpace: graph.documentColorSpace,
     enabledLibraries: [...graph.enabledLibraries],
-    lazyFigImport: lazyFigImport
-      ? {
-          changeMap: [...lazyFigImport.changeMap],
-          guidToNodeId: [...lazyFigImport.guidToNodeId],
-          blobs: lazyFigImport.blobs,
-          populatedRootIds: [...lazyFigImport.populatedRootIds]
-        }
-      : undefined
+    ...serializeLazyFigImport(getLazyFigImportContext(graph), options.retainLazySource ?? false)
   }
 }
 
+/** A view's buffer, when the view owns all of it and moving it cannot detach anything else. */
+function ownedBuffer(view: Uint8Array): ArrayBuffer | undefined {
+  return view.buffer instanceof ArrayBuffer &&
+    view.byteOffset === 0 &&
+    view.byteLength === view.buffer.byteLength
+    ? view.buffer
+    : undefined
+}
+
+/**
+ * Buffers that can move instead of being copied. The sender must not read them again:
+ * it gives up image and schema bytes, and blobs whenever they are sent.
+ */
 export function serializedSceneGraphTransferList(data: SerializedSceneGraph): Transferable[] {
   const buffers = new Set<ArrayBuffer>()
-  for (const [, image] of data.images) {
-    if (
-      image.buffer instanceof ArrayBuffer &&
-      image.byteOffset === 0 &&
-      image.byteLength === image.buffer.byteLength
-    ) {
-      buffers.add(image.buffer)
-    }
-  }
-  for (const blob of data.lazyFigImport?.blobs ?? []) {
-    if (
-      blob.buffer instanceof ArrayBuffer &&
-      blob.byteOffset === 0 &&
-      blob.byteLength === blob.buffer.byteLength
-    ) {
-      buffers.add(blob.buffer)
-    }
-  }
-  if (data.figSchemaDeflated) {
-    if (
-      data.figSchemaDeflated.buffer instanceof ArrayBuffer &&
-      data.figSchemaDeflated.byteOffset === 0 &&
-      data.figSchemaDeflated.byteLength === data.figSchemaDeflated.buffer.byteLength
-    ) {
-      buffers.add(data.figSchemaDeflated.buffer)
-    }
+  const views = [
+    ...data.images.map(([, image]) => image),
+    ...(data.lazyFigImport?.blobs ?? []),
+    ...(data.figSchemaDeflated ? [data.figSchemaDeflated] : [])
+  ]
+  for (const view of views) {
+    const buffer = ownedBuffer(view)
+    if (buffer) buffers.add(buffer)
   }
   return [...buffers]
 }

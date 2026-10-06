@@ -22,7 +22,11 @@ import { CANVAS_BG_COLOR, IS_BROWSER, IS_TAURI } from '#core/constants'
 import { applyEnabledLibrariesPluginData } from '#core/io/formats/fig/library-metadata'
 import { findFigThumbnailPageId } from '#core/io/formats/fig/thumbnail-page'
 import { renderThumbnail } from '#core/io/formats/raster'
-import { populateAllLazyFigImportRoots } from '#core/kiwi/fig/lazy-import'
+import {
+  ensureLazyFigImportContext,
+  isLazyFigImportDeferred,
+  populateAllLazyFigImportRoots
+} from '#core/kiwi/fig/lazy-import'
 import {
   sceneNodeToKiwi,
   fractionalPosition,
@@ -451,6 +455,8 @@ export async function exportFigFile(
 ): Promise<Uint8Array> {
   const originalArchive = await originalFigArchive(sourceGraph)
   if (originalArchive) return originalArchive.slice()
+  // Unpopulated pages are exported populated, which needs a source a worker may still hold.
+  if (isLazyFigImportDeferred(sourceGraph)) await ensureLazyFigImportContext(sourceGraph)
   const graph = cloneSceneGraphForFigExport(sourceGraph)
   populateAllLazyFigImportRoots(graph)
   await initCodec()

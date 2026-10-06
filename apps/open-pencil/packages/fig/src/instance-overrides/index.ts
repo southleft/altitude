@@ -43,27 +43,120 @@ import type { InstanceNodeChange, OverrideContext, ComponentPropValue } from './
 import { overrideCandidates } from './utils'
 
 /**
- * Identify nodes whose kiwi NC has explicit property values that DIFFER
- * from their component source. Only these need protection from sync.
+ * Indexes over the source changes that do not depend on the evolving scene graph.
+ *
+ * Lazy `.fig` population calls `populateAndApplyOverrides` once per page with the same
+ * read-only change map and GUID mapping. Rebuilding these from ~100k source changes cost
+ * about half a second per page — even for pages with nothing to populate — so they are
+ * built once per (changeMap, guidToNodeId) pair and shared. Consumers treat them as
+ * read-only; the one set that population extends (`geometryOverrideNodes`) is copied.
  */
-function* changedNodeEntries(
+interface SourceChangeIndex {
+  changeMapSize: number
+  guidToNodeIdSize: number
+  overrideKeyToGuid: Map<string, string>
+  assetRefToGuid: Map<string, string>
+  nodeIdToGuid: Map<string, string>
+  propDefaults: Map<string, ComponentPropValue>
+  propNames: Map<string, string>
+  geometryOverrideNodes: ReadonlySet<string>
+  /** Imported nodes whose change carries a field `buildKiwiPropertyNodes` compares. */
+  propertyCandidates: Array<[string, JSONObject]>
+}
+
+const sourceChangeIndexes = new WeakMap<
+  Map<string, InstanceNodeChange>,
+  { guidToNodeId: Map<string, string>; index: SourceChangeIndex }
+>()
+
+function hasComparedKiwiProperty(nc: JSONObject): boolean {
+  return (
+    nc.cornerRadius !== undefined ||
+    nc.rectangleCornerRadiiIndependent !== undefined ||
+    nc.visible === false ||
+    nc.fillPaints !== undefined ||
+    nc.strokePaints !== undefined ||
+    nc.textData !== undefined
+  )
+}
+
+function buildSourceChangeIndex(
   changeMap: Map<string, InstanceNodeChange>,
   guidToNodeId: Map<string, string>
-): Generator<[string, InstanceNodeChange]> {
+): SourceChangeIndex {
+  const overrideKeyToGuid = new Map<string, string>()
+  const assetRefToGuid = new Map<string, string>()
+  const propDefaults = new Map<string, ComponentPropValue>()
+  const propNames = new Map<string, string>()
+  for (const [id, nc] of changeMap) {
+    if (nc.overrideKey) overrideKeyToGuid.set(guidToString(nc.overrideKey), id)
+    if (typeof nc.key === 'string') {
+      assetRefToGuid.set(nc.key, id)
+      if (typeof nc.version === 'string') assetRefToGuid.set(`${nc.key}@${nc.version}`, id)
+    }
+    if (!nc.componentPropDefs?.length) continue
+    for (const def of nc.componentPropDefs) {
+      if (!def.id) continue
+      const defId = guidToString(def.id)
+      if (def.initialValue) propDefaults.set(defId, def.initialValue)
+      if (def.name) propNames.set(defId, def.name)
+    }
+  }
+
+  const nodeIdToGuid = new Map<string, string>()
+  const geometryOverrideNodes = new Set<string>()
+  const propertyCandidates: Array<[string, JSONObject]> = []
   for (const [figmaId, nodeId] of guidToNodeId) {
+    nodeIdToGuid.set(nodeId, figmaId)
     const nc = changeMap.get(figmaId)
-    if (nc) yield [nodeId, nc]
+    if (!nc) continue
+    if (nc.fillGeometry?.length || nc.strokeGeometry?.length) geometryOverrideNodes.add(nodeId)
+    const json = nc as JSONObject
+    if (hasComparedKiwiProperty(json)) propertyCandidates.push([nodeId, json])
+  }
+
+  return {
+    changeMapSize: changeMap.size,
+    guidToNodeIdSize: guidToNodeId.size,
+    overrideKeyToGuid,
+    assetRefToGuid,
+    nodeIdToGuid,
+    propDefaults,
+    propNames,
+    geometryOverrideNodes,
+    propertyCandidates
   }
 }
 
-function buildKiwiPropertyNodes(
-  graph: SceneGraph,
+/**
+ * The cached source index for this change map and GUID mapping. Both maps are read-only
+ * once import has built them; a different mapping object or a size change rebuilds the
+ * index, so a caller that does mutate them between populations is never served stale data.
+ */
+function sourceChangeIndexFor(
   changeMap: Map<string, InstanceNodeChange>,
   guidToNodeId: Map<string, string>
-): Set<string> {
+): SourceChangeIndex {
+  const cached = sourceChangeIndexes.get(changeMap)
+  if (
+    cached?.guidToNodeId === guidToNodeId &&
+    cached.index.changeMapSize === changeMap.size &&
+    cached.index.guidToNodeIdSize === guidToNodeId.size
+  ) {
+    return cached.index
+  }
+  const index = buildSourceChangeIndex(changeMap, guidToNodeId)
+  sourceChangeIndexes.set(changeMap, { guidToNodeId, index })
+  return index
+}
+
+/**
+ * Identify nodes whose kiwi NC has explicit property values that DIFFER
+ * from their component source. Only these need protection from sync.
+ */
+function buildKiwiPropertyNodes(graph: SceneGraph, index: SourceChangeIndex): Set<string> {
   const result = new Set<string>()
-  for (const [nodeId, change] of changedNodeEntries(changeMap, guidToNodeId)) {
-    const nc = change as JSONObject
+  for (const [nodeId, nc] of index.propertyCandidates) {
     const node = graph.getNode(nodeId)
     if (!node?.componentId) continue
     const comp = graph.getNode(node.componentId)
@@ -82,17 +175,6 @@ function buildKiwiPropertyNodes(
     if (hasDiffRadius || hasDiffVisible || hasDiffFills || hasDiffStrokes || hasDiffText) {
       result.add(nodeId)
     }
-  }
-  return result
-}
-
-function buildKiwiGeometryNodes(
-  changeMap: Map<string, InstanceNodeChange>,
-  guidToNodeId: Map<string, string>
-): Set<string> {
-  const result = new Set<string>()
-  for (const [nodeId, nc] of changedNodeEntries(changeMap, guidToNodeId)) {
-    if (nc.fillGeometry?.length || nc.strokeGeometry?.length) result.add(nodeId)
   }
   return result
 }
@@ -225,52 +307,25 @@ function buildOverrideContext(
   blobs: Uint8Array[],
   activeNodeIds?: Set<string>
 ): OverrideContext {
-  const overrideKeyToGuid = new Map<string, string>()
-  const assetRefToGuid = new Map<string, string>()
-  for (const [id, nc] of changeMap) {
-    if (nc.overrideKey) overrideKeyToGuid.set(guidToString(nc.overrideKey), id)
-    if (typeof nc.key !== 'string') continue
-    assetRefToGuid.set(nc.key, id)
-    if (typeof nc.version === 'string') assetRefToGuid.set(`${nc.key}@${nc.version}`, id)
-  }
-
-  const propDefaults = new Map<string, ComponentPropValue>()
-  const propNames = new Map<string, string>()
-  for (const [, nc] of changeMap) {
-    if (!nc.componentPropDefs?.length) continue
-    for (const def of nc.componentPropDefs) {
-      if (!def.id) continue
-      const id = guidToString(def.id)
-      if (def.initialValue) propDefaults.set(id, def.initialValue)
-      if (def.name) propNames.set(id, def.name)
-    }
-  }
-
-  const nodeIdToGuid = new Map<string, string>()
-  for (const [figmaId, nodeId] of guidToNodeId) {
-    nodeIdToGuid.set(nodeId, figmaId)
-  }
-
-  const kiwiPropertyNodes = buildKiwiPropertyNodes(graph, changeMap, guidToNodeId)
-  const geometryOverrideNodes = buildKiwiGeometryNodes(changeMap, guidToNodeId)
-
+  const index = sourceChangeIndexFor(changeMap, guidToNodeId)
   return {
     graph,
     changeMap,
     guidToNodeId,
     blobs,
-    overrideKeyToGuid,
-    assetRefToGuid,
-    nodeIdToGuid,
-    propDefaults,
-    propNames,
+    overrideKeyToGuid: index.overrideKeyToGuid,
+    assetRefToGuid: index.assetRefToGuid,
+    nodeIdToGuid: index.nodeIdToGuid,
+    propDefaults: index.propDefaults,
+    propNames: index.propNames,
     preComputedRoot: new Map(),
     preComputedClones: new Map(),
     componentIdRoot: new Map(),
     swappedInstances: new Set(),
     protectedFields: new Map(),
-    kiwiPropertyNodes,
-    geometryOverrideNodes,
+    kiwiPropertyNodes: buildKiwiPropertyNodes(graph, index),
+    // Population adds Figma-derived geometry targets, so each run gets its own copy.
+    geometryOverrideNodes: new Set(index.geometryOverrideNodes),
     activeNodeIds
   }
 }

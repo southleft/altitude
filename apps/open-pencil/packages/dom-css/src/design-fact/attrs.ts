@@ -18,7 +18,11 @@ import {
 
 /** Serialise a design fact into `data-op-*` attributes. */
 export function designFactToAttrs(fact: DesignFact | undefined): Record<string, string> {
-  if (!fact) return {}
+  return fact ? factToAttrs(fact) : {}
+}
+
+/** `designFactToAttrs`, optionally with the residual already encoded by the caller. */
+export function factToAttrs(fact: DesignFact, encodedResidual?: string): Record<string, string> {
   const attrs: Record<string, string> = {}
   if (fact.nodeType) attrs[DESIGN_ATTRS.nodeType] = fact.nodeType
   if (fact.name) attrs[DESIGN_ATTRS.name] = fact.name
@@ -37,7 +41,9 @@ export function designFactToAttrs(fact: DesignFact | undefined): Record<string, 
   if (fact.x !== undefined || fact.y !== undefined) {
     attrs[DESIGN_ATTRS.position] = encodeFactJSON({ x: fact.x ?? 0, y: fact.y ?? 0 })
   }
-  if (fact.residual) attrs[DESIGN_ATTRS.residual] = encodeFactJSON(fact.residual)
+  if (fact.residual) {
+    attrs[DESIGN_ATTRS.residual] = encodedResidual ?? encodeFactJSON(fact.residual)
+  }
   return attrs
 }
 

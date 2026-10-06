@@ -5,7 +5,6 @@ import { onMounted, onUnmounted, provide, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { startMCPRuntime, stopMCPRuntime } from '@/app/automation/mcp/runtime'
-import { startWebMCP } from '@/app/automation/webmcp/runtime'
 import { exposeCollaborationActions } from '@/app/browser-bridge'
 import { COLLAB_KEY, useCollab } from '@/app/collab/use'
 import { createDemoShapes } from '@/app/demo/document'
@@ -15,6 +14,7 @@ import { openWebLinkFromLocation, withoutWebLinkParams } from '@/app/document/io
 import { focusNodesByName } from '@/app/editor/selection/focus'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { appRuntimeConfig } from '@/app/runtime/config'
+import { runWhenIdle } from '@/app/runtime/idle'
 import { useKeyboard } from '@/app/shell/keyboard/use'
 import { useEditorMenu } from '@/app/shell/menu/use'
 import { toast } from '@/app/shell/ui'
@@ -59,6 +59,7 @@ useEditorMenu()
 
 const collab = useCollab(getActiveStore)
 provide(COLLAB_KEY, collab)
+if (route.path.startsWith('/share/')) collab.preload()
 exposeCollaborationActions(collab)
 
 useEventListener(
@@ -141,9 +142,20 @@ async function bindAssociatedFileOpen(): Promise<void> {
 }
 
 let stopWebMCP: (() => void) | undefined
+let workspaceUnmounted = false
+
+/**
+ * Browser-native tools are for agents, not for the first paint: their registration and
+ * the tool registry behind it load once the editor is idle.
+ */
+const cancelWebMCPStart = runWhenIdle(() => {
+  void import('@/app/automation/webmcp/runtime').then(({ startWebMCP }) => {
+    if (!workspaceUnmounted) stopWebMCP = startWebMCP(getActiveStore)
+    return undefined
+  })
+})
 
 onMounted(async () => {
-  stopWebMCP = startWebMCP(getActiveStore)
   await startMCPRuntime(getActiveStore)
 
   try {
@@ -167,6 +179,8 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  workspaceUnmounted = true
+  cancelWebMCPStart()
   stopWebMCP?.()
   void stopMCPRuntime()
   fileAssociationCleanup.value?.()

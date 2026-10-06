@@ -72,7 +72,9 @@ function parseViaWorker(buffer: ArrayBuffer, options: ParseFigFileOptions): Prom
         const graph = deserializeSceneGraph(e.data.graph)
         if (options.populate === 'first-page') {
           cleanupAbort()
-          registerFigPopulationWorker(graph, worker, channel.port1)
+          registerFigPopulationWorker(graph, worker, channel.port1, {
+            retainedPopulatedRootIds: e.data.graph.lazyFigImportRetained?.populatedRootIds
+          })
           registerOriginalArchiveRequest(
             graph,
             () =>

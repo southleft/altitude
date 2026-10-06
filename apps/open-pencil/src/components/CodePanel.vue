@@ -66,13 +66,16 @@ const oversizeSelection = useSceneComputed(() => {
 })
 
 function selectionToHTML(ids: string[]): string {
-  const document = sceneNodesToDesignDocument(store.graph, ids, { geometryFacts: false })
+  // Only the markup is shown, so children hidden behind inline SVG are never built.
+  const document = sceneNodesToDesignDocument(store.graph, ids, {
+    geometryFacts: false,
+    markupOnly: true
+  })
   return serializeHTML(document)
 }
 
-const generatedJSX = useSceneComputed(() => {
+function generateSource(): string {
   if (!editorActive.value || designSession.value || domSession) return ''
-  void store.state.sceneVersion
   const ids = [...store.state.selectedIds]
   if (ids.length === 0) return starterSourceFor(source.value)
   if (oversizeSelection.value) return ''
@@ -84,7 +87,49 @@ const generatedJSX = useSceneComputed(() => {
     store.graph,
     source.value === 'tailwind-jsx' ? 'tailwind' : 'openpencil'
   )
+}
+
+/**
+ * What the generated source depends on besides the scene contents. A change here (a new
+ * selection, source mode or edit session) regenerates at once, as it always did.
+ */
+const generationTarget = useSceneComputed(() =>
+  [
+    editorActive.value,
+    Boolean(designSession.value),
+    source.value,
+    oversizeSelection.value,
+    [...store.state.selectedIds].join(',')
+  ].join('|')
+)
+
+/** Quiet time after a scene edit before the selection is serialised again. */
+const SCENE_REGENERATE_DELAY_MS = 200
+
+/**
+ * Re-serialising the selection walks its whole subtree, and `sceneVersion` moves on every
+ * committed edit. Recomputing on each bump froze the editor for hundreds of milliseconds
+ * per edit on large selections, so scene-only changes wait for a quiet moment and never run
+ * while a gesture holds an interactive edit.
+ */
+const generatedJSX = shallowRef(generateSource())
+const regenerateAfterSceneEdit = useDebounceFn(() => {
+  if (store.isInteractiveEditing()) {
+    void regenerateAfterSceneEdit()
+    return
+  }
+  generatedJSX.value = generateSource()
+}, SCENE_REGENERATE_DELAY_MS)
+
+watch(generationTarget, () => {
+  generatedJSX.value = generateSource()
 })
+watch(
+  () => store.state.sceneVersion,
+  () => {
+    if (editorActive.value) void regenerateAfterSceneEdit()
+  }
+)
 
 const sourceOptions = computed(() => [
   { value: 'design-jsx' as const, label: code.value.sourceDesignJSX },

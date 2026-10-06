@@ -27,6 +27,7 @@
 ### Performance
 
 - Keep large design-system pages responsive. Shared style pickers now open as a searchable list that renders only visible rows, labels and hover outlines skip off-screen and too-small layers, and a property edit re-renders only the top-level layer it touched. On an 82,000-layer page with 3,250 fill styles, selecting a component drops from 12.8 s to 0.2 s, an opacity edit from 2.7 s to about 1 s, and hover and zoom frames from 77–97 ms to 21–42 ms at p95.
+- Open and browse large `.fig` files with shorter main-thread pauses, load the web app with less JavaScript, and generate HTML/CSS faster. On a 98,000-node design system the longest freeze while opening drops from about 6.3 s to 4.9 s and switching to a not-yet-loaded page from about 2.8 s to 2.0 s; the startup bundle shrinks from 1.59 MB to 1.28 MB (gzip) and the offline precache from 16.9 MB to 12.9 MB, with the renderer download starting alongside the page; and the Code panel's HTML for a 3,000-node icon set takes 0.25 s instead of 0.7 s, recomputed only after edits settle.
 
 ## 0.15.1 — 2026-09-18
 

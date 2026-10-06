@@ -42,12 +42,34 @@ function serveCanvasKitWasm(root: string): Connect.NextHandleFunction {
 
 export function copyCanvasKitAssetsPlugin(): Plugin {
   let root = process.cwd()
+  let base = '/'
 
   return {
     name: 'copy-canvaskit-wasm',
     enforce: 'pre',
     configResolved(config: ResolvedConfig) {
       root = config.root
+      base = config.base
+    },
+    /**
+     * Start the 2.8 MB (gzip) renderer download with the HTML instead of after the app's
+     * JavaScript has loaded and mounted the canvas. The URL and the anonymous same-origin
+     * fetch mode match what `getCanvasKit()` requests, so the browser reuses the response.
+     */
+    transformIndexHtml() {
+      return [
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'preload',
+            href: `${base.endsWith('/') ? base : `${base}/`}canvaskit.wasm`,
+            as: 'fetch',
+            type: 'application/wasm',
+            crossorigin: 'anonymous'
+          },
+          injectTo: 'head'
+        }
+      ]
     },
     buildStart() {
       syncWasmFromNodeModules(

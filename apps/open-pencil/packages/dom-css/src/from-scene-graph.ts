@@ -11,9 +11,9 @@ import {
   strokeColorToCSS,
   strokeToCSS
 } from './css-values'
-import { designFactFromNode, designFactToAttrs, type OmittedGeometry } from './design-fact'
+import { designFactWithAttrsFromNode, type OmittedGeometry } from './design-fact'
 import { applyVariableCSS } from './design-tokens'
-import type { DesignDocument, DesignFact, DesignNode, DesignStyleDeclaration } from './types'
+import type { DesignDocument, DesignNode, DesignStyleDeclaration } from './types'
 
 const DOM_CSS_PLUGIN_ID = 'open-pencil-dom-css'
 const IMAGE_SOURCE_URL_KEY = 'image-source-url'
@@ -58,6 +58,13 @@ export interface SceneGraphToDesignOptions {
    * caller, so concurrent exports never share a report.
    */
   omittedGeometry?: OmittedGeometry[]
+  /**
+   * Build only what HTML serialisation emits. A vector emitted as inline SVG serialises
+   * that SVG instead of its children, so its children are not built at all (nor reported
+   * in `omittedGeometry`). Leave off for documents that go back into a scene graph: the
+   * in-memory round trip restores those children. Default false.
+   */
+  markupOnly?: boolean
 }
 
 type ResolvedDesignOptions = Required<Omit<SceneGraphToDesignOptions, 'omittedGeometry'>> &
@@ -74,7 +81,8 @@ function resolveDesignOptions(
     cssVarPrefix: options.cssVarPrefix ?? '',
     inlineVectorSVG: options.inlineVectorSVG ?? true,
     geometryFacts: options.geometryFacts ?? true,
-    omittedGeometry: options.omittedGeometry
+    omittedGeometry: options.omittedGeometry,
+    markupOnly: options.markupOnly ?? false
   }
 }
 
@@ -348,12 +356,12 @@ function attrsForNode(
   graph: SceneGraph,
   node: SceneNode,
   includeSourceIds: boolean,
-  fact?: DesignFact
+  factAttrs: Record<string, string>
 ): Record<string, string> {
   const attrs: Record<string, string> = includeSourceIds
     ? { 'data-open-pencil-node-id': node.id }
     : {}
-  Object.assign(attrs, designFactToAttrs(fact))
+  Object.assign(attrs, factAttrs)
   const sourceURL = imageSourceURL(node)
   if (sourceURL) attrs.src = sourceURL
   const fill = node.fills.at(0)
@@ -376,13 +384,13 @@ function sceneNodeToDesignNode(
 ): DesignNode | null {
   if (!node.visible || node.internalOnly) return null
 
-  const fact = options.includeDesignFacts
-    ? designFactFromNode(graph, node, {
+  const { fact, attrs: factAttrs } = options.includeDesignFacts
+    ? designFactWithAttrsFromNode(graph, node, {
         cssVarPrefix: options.cssVarPrefix,
         geometryFacts: options.geometryFacts,
         omittedGeometry: options.omittedGeometry
       })
-    : undefined
+    : { fact: undefined, attrs: {} }
 
   if (node.type === 'TEXT') {
     const inlineStyle = styleFromTextNode(node)
@@ -390,7 +398,7 @@ function sceneNodeToDesignNode(
     return {
       type: 'element',
       tagName: 'span',
-      attrs: attrsForNode(graph, node, options.includeSourceIds, fact),
+      attrs: attrsForNode(graph, node, options.includeSourceIds, factAttrs),
       inlineStyle,
       sourceSceneNodeId: node.id,
       sourceSceneNode: node,
@@ -399,15 +407,17 @@ function sceneNodeToDesignNode(
     }
   }
 
-  const children = nodeChildren(graph, node)
-    .map((child) => sceneNodeToDesignNode(graph, child, options))
-    .filter((child): child is DesignNode => child !== null)
+  const buildChildren = () =>
+    nodeChildren(graph, node)
+      .map((child) => sceneNodeToDesignNode(graph, child, options))
+      .filter((child): child is DesignNode => child !== null)
 
   if (node.type === 'CANVAS') {
+    const children = buildChildren()
     return {
       type: 'element',
       tagName: 'main',
-      attrs: attrsForNode(graph, node, options.includeSourceIds, fact),
+      attrs: attrsForNode(graph, node, options.includeSourceIds, factAttrs),
       sourceSceneNodeId: node.id,
       sourceSceneNode: node,
       design: fact,
@@ -415,16 +425,20 @@ function sceneNodeToDesignNode(
     }
   }
 
+  const emitsSVG = options.inlineVectorSVG && VECTOR_TYPES.has(node.type)
+  // Children are built before the node's own SVG, as they always were, unless they will
+  // not be emitted: then the SVG decides whether they are needed at all.
+  let children = options.markupOnly && emitsSVG ? [] : buildChildren()
+  const rawHTML = emitsSVG ? vectorSVG(graph, node) : undefined
+  if (options.markupOnly && emitsSVG && rawHTML === undefined) children = buildChildren()
+
   const inlineStyle = styleFromSceneNode(node)
   applyVariableCSS(inlineStyle, fact)
-
-  const rawHTML =
-    options.inlineVectorSVG && VECTOR_TYPES.has(node.type) ? vectorSVG(graph, node) : undefined
 
   return {
     type: 'element',
     tagName: tagNameForNode(node),
-    attrs: attrsForNode(graph, node, options.includeSourceIds, fact),
+    attrs: attrsForNode(graph, node, options.includeSourceIds, factAttrs),
     inlineStyle,
     sourceSceneNodeId: node.id,
     sourceSceneNode: node,
