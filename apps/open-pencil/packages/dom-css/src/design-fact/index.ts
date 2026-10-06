@@ -1,7 +1,7 @@
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { copyEffects, copyFills, copyStrokes } from '@open-pencil/scene-graph/copy'
 
-import { cssVarName } from '../design-tokens'
+import { cssVarNameForVariable } from '../design-tokens'
 import type { DesignFact, DesignVariableRef } from '../types'
 import {
   BULKY_GEOMETRY_FIELDS,
@@ -43,7 +43,7 @@ function variableRef(graph: SceneGraph, variableId: string, prefix?: string): De
   return {
     id: variableId,
     name: variable.name,
-    cssVar: cssVarName(variable.name, prefix)
+    cssVar: cssVarNameForVariable(variable, prefix)
   }
 }
 
