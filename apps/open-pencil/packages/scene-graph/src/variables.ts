@@ -187,17 +187,21 @@ export function setDefaultMode(graph: SceneGraph, collectionId: string, modeId: 
   collection.defaultModeId = modeId
 }
 
-export function resolveVariable(
+/** Picks the mode to read for a collection while following an alias chain. */
+type ModeForCollection = (collectionId: string) => string | undefined
+
+function resolveVariableWith(
   graph: SceneGraph,
   variableId: string,
-  modeId?: string,
-  visited?: Set<string>
+  modeFor: ModeForCollection,
+  visited: Set<string>
 ): VariableValue | undefined {
-  if (visited?.has(variableId)) return undefined
+  if (visited.has(variableId)) return undefined
   const variable = graph.variables.get(variableId)
   if (!variable) return undefined
   const collection = graph.variableCollections.get(variable.collectionId)
-  const preferredModeId = modeId ?? getActiveModeId(graph, variable.collectionId)
+  const preferredModeId =
+    modeFor(variable.collectionId) ?? getActiveModeId(graph, variable.collectionId)
   const fallbackModeId = collection?.defaultModeId
   let value = Object.hasOwn(variable.valuesByMode, preferredModeId)
     ? variable.valuesByMode[preferredModeId]
@@ -211,11 +215,51 @@ export function resolveVariable(
   }
   value ??= Object.values(variable.valuesByMode)[0]
   if (value && typeof value === 'object' && 'aliasId' in value) {
-    const seen = visited ?? new Set<string>()
-    seen.add(variableId)
-    return resolveVariable(graph, value.aliasId, preferredModeId, seen)
+    visited.add(variableId)
+    return resolveVariableWith(graph, value.aliasId, modeFor, visited)
   }
   return value
+}
+
+/**
+ * Resolve a variable, following aliases.
+ *
+ * `modeId` applies to the variable's own collection. An alias into another collection
+ * resolves in that collection's active mode, as Figma does, rather than forcing a mode id
+ * that collection does not have back onto its default.
+ */
+export function resolveVariable(
+  graph: SceneGraph,
+  variableId: string,
+  modeId?: string,
+  visited?: Set<string>
+): VariableValue | undefined {
+  const ownCollectionId = graph.variables.get(variableId)?.collectionId
+  return resolveVariableWith(
+    graph,
+    variableId,
+    (collectionId) =>
+      collectionId === ownCollectionId && modeId ? modeId : getActiveModeId(graph, collectionId),
+    visited ?? new Set<string>()
+  )
+}
+
+/**
+ * Resolve a variable with an explicit mode per collection. Collections missing from
+ * `modes` use their active mode. Used to evaluate one combination of modes (for example
+ * one brand × theme pair) without touching the document's active modes.
+ */
+export function resolveVariableInModes(
+  graph: SceneGraph,
+  variableId: string,
+  modes: Readonly<Record<string, string>>
+): VariableValue | undefined {
+  return resolveVariableWith(
+    graph,
+    variableId,
+    (collectionId) => modes[collectionId] ?? getActiveModeId(graph, collectionId),
+    new Set<string>()
+  )
 }
 
 export function resolveColorVariable(graph: SceneGraph, variableId: string): Color | undefined {
@@ -229,15 +273,26 @@ export function resolveNumberVariable(graph: SceneGraph, variableId: string): nu
   return typeof value === 'number' ? value : undefined
 }
 
+/** Resolve for a node: every collection on the alias chain uses the node's mode for it. */
+export function resolveVariableForNode(
+  graph: SceneGraph,
+  nodeId: string,
+  variableId: string
+): VariableValue | undefined {
+  return resolveVariableWith(
+    graph,
+    variableId,
+    (collectionId) => getNodeVariableModeId(graph, nodeId, collectionId),
+    new Set<string>()
+  )
+}
+
 export function resolveColorVariableForNode(
   graph: SceneGraph,
   nodeId: string,
   variableId: string
 ): Color | undefined {
-  const variable = graph.variables.get(variableId)
-  if (!variable) return undefined
-  const modeId = getNodeVariableModeId(graph, nodeId, variable.collectionId)
-  const value = resolveVariable(graph, variableId, modeId)
+  const value = resolveVariableForNode(graph, nodeId, variableId)
   if (value && typeof value === 'object' && 'r' in value) return value
   return undefined
 }
@@ -247,10 +302,7 @@ export function resolveNumberVariableForNode(
   nodeId: string,
   variableId: string
 ): number | undefined {
-  const variable = graph.variables.get(variableId)
-  if (!variable) return undefined
-  const modeId = getNodeVariableModeId(graph, nodeId, variable.collectionId)
-  const value = resolveVariable(graph, variableId, modeId)
+  const value = resolveVariableForNode(graph, nodeId, variableId)
   return typeof value === 'number' ? value : undefined
 }
 

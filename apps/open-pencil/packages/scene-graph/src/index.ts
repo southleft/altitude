@@ -228,6 +228,14 @@ export class SceneGraph {
     return Variables.resolveVariable(this, variableId, modeId, visited)
   }
 
+  /** Resolve with an explicit mode per collection id; others use their active mode. */
+  resolveVariableInModes(
+    variableId: string,
+    modes: Readonly<Record<string, string>>
+  ): VariableValue | undefined {
+    return Variables.resolveVariableInModes(this, variableId, modes)
+  }
+
   resolveColorVariable(variableId: string): Color | undefined {
     return Variables.resolveColorVariable(this, variableId)
   }

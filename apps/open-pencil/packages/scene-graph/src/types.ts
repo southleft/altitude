@@ -602,6 +602,16 @@ export type VariableType = 'COLOR' | 'FLOAT' | 'STRING' | 'BOOLEAN'
 export type VariableValue = Color | number | string | boolean | { aliasId: string }
 export type VariableModeMap = Record<string, string>
 
+/** Platform code names for a variable, matching Figma's `codeSyntax` (`WEB: var(--al-x)`). */
+export type VariableCodeSyntaxPlatform = 'WEB' | 'ANDROID' | 'iOS'
+export type VariableCodeSyntax = Partial<Record<VariableCodeSyntaxPlatform, string>>
+
+/**
+ * Namespaced, JSON-serialisable metadata in the DTCG `$extensions` style
+ * (`{ "org.openpencil.dtcg": { … } }`). Owners validate their own namespace on read.
+ */
+export type VariableExtensions = Record<string, unknown>
+
 export interface Variable {
   id: string
   name: string
@@ -614,6 +624,10 @@ export interface Variable {
   key?: string
   /** Published library version (from NodeChange.version). Used for assetRef resolution in colorVar. */
   version?: string
+  /** Code names per platform; `WEB` holds the CSS reference such as `var(--al-space-md)`. */
+  codeSyntax?: VariableCodeSyntax
+  /** Source metadata such as the design token path, authored type, and unit. */
+  extensions?: VariableExtensions
 }
 
 /** Scalar numeric node fields accepted by numeric property controls. */
@@ -632,4 +646,6 @@ export interface VariableCollection {
   modes: VariableCollectionMode[]
   defaultModeId: string
   variableIds: string[]
+  /** Source metadata such as which design-token axes a mode stands for. */
+  extensions?: VariableExtensions
 }

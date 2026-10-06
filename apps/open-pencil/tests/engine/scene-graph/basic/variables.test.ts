@@ -317,4 +317,66 @@ describe('Variables', () => {
 
     expect(graph.resolveColorVariable('v1')).toBeUndefined()
   })
+
+  function crossCollectionGraph(): SceneGraph {
+    const graph = new SceneGraph()
+    graph.addCollection({
+      id: 'brand',
+      name: 'Brand',
+      modes: [
+        { modeId: 'a', name: 'Altitude' },
+        { modeId: 's', name: 'Southleft' }
+      ],
+      defaultModeId: 'a',
+      variableIds: []
+    })
+    graph.addCollection({
+      id: 'theme',
+      name: 'Theme',
+      modes: [
+        { modeId: 'light', name: 'Light' },
+        { modeId: 'dark', name: 'Dark' }
+      ],
+      defaultModeId: 'light',
+      variableIds: []
+    })
+    graph.addVariable({
+      id: 'accent',
+      name: 'accent',
+      type: 'FLOAT',
+      collectionId: 'brand',
+      valuesByMode: { a: 1, s: 2 },
+      description: '',
+      hiddenFromPublishing: false
+    })
+    graph.addVariable({
+      id: 'role',
+      name: 'role',
+      type: 'FLOAT',
+      collectionId: 'theme',
+      valuesByMode: { light: { aliasId: 'accent' }, dark: { aliasId: 'accent' } },
+      description: '',
+      hiddenFromPublishing: false
+    })
+    return graph
+  }
+
+  test('alias into another collection resolves in that collection’s active mode', () => {
+    const graph = crossCollectionGraph()
+    expect(graph.resolveVariable('role', 'dark')).toBe(1)
+    graph.setActiveMode('brand', 's')
+    expect(graph.resolveVariable('role', 'dark')).toBe(2)
+  })
+
+  test('explicit modes per collection resolve without touching active modes', () => {
+    const graph = crossCollectionGraph()
+    expect(graph.resolveVariableInModes('role', { theme: 'dark', brand: 's' })).toBe(2)
+    expect(graph.getActiveModeId('brand')).toBe('a')
+  })
+
+  test('node modes apply to every collection on an alias chain', () => {
+    const graph = crossCollectionGraph()
+    const frame = graph.createNode('FRAME', pageId(graph), { variableModes: { brand: 's' } })
+    expect(graph.resolveNumberVariableForNode(frame.id, 'role')).toBe(2)
+  })
 })
