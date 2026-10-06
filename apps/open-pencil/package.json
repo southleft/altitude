@@ -82,7 +82,7 @@
     "conformance:report": "bun tools/conformance/src/gap-report.ts",
     "conformance:report:check": "bun tools/conformance/src/gap-report.ts --check",
     "build:packages": "bun tools/package-artifacts/src/build.ts",
-    "open-pencil": "OPENPENCIL_TOKEN_PRESETS=tools/altitude/presets bun packages/cli/src/index.ts",
+    "open-pencil": "OPENPENCIL_TOKEN_PRESETS=tools/altitude/presets OPENPENCIL_CLI_EXTENSIONS=tools/altitude/src/command.ts bun packages/cli/src/index.ts",
     "docs:dev": "bun --filter @open-pencil/docs dev",
     "docs:build": "bun --filter @open-pencil/docs build",
     "docs:build:production": "bun --filter @open-pencil/docs build:production",

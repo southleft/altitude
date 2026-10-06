@@ -121,6 +121,7 @@ export const developmentSidebar = (
             { text: 'Renderer Profiler', link: '/development/renderer-profiler' },
             { text: 'Vector Conversion', link: '/development/vector-conversion' },
             { text: 'HTML/CSS Round Trip', link: '/development/round-trip' },
+            { text: 'Code-Bound Library', link: '/development/code-bound-library' },
           ]
         : []),
     ],

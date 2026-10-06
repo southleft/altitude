@@ -11,6 +11,40 @@ code as the source of truth** and the canvas checked against it.
 - Upstream architecture and conventions: [`AGENTS.md`](AGENTS.md). They still apply inside
   this folder.
 
+## Library from code
+
+Altitude code generates the canvas component library, and a gate checks that the canvas
+agrees with the code it came from.
+
+```sh
+# in apps/open-pencil
+bun run open-pencil altitude build-library ../.. --out altitude.fig
+bun run open-pencil altitude build-library ../.. --publish --catalog ./libraries
+# at the Altitude root
+pnpm run canvas:parity
+```
+
+- **Builder** (`tools/altitude/src/library/`): imports the DTCG tokens, then builds one
+  component set per code contract with measured anatomy. Variant axes come from the
+  contracts' Figma bindings, case dimensions and uncurated enums (`plan.mjs` curation: no
+  omitted or behavioural fan-out); layout comes from the measured anatomy; fills, strokes,
+  radii, spacing and text colour bind to the imported variables per variant and state.
+  Every set carries a `codeBinding` (tag, `@southleft/al-react` wrapper, attribute and slot
+  mapping). Contracts without measured anatomy are named skips. Rebuilds are idempotent:
+  `--publish` adds a library revision only when an asset changed.
+- **Canvas contracts**: `open-pencil altitude canvas-contracts` emits
+  `canvas-contract.schema.json` files; `figma.fileKey`/`figma.nodeId` hold OpenPencil
+  identifiers (`open-pencil:altitude`, the set's `componentKey`) because the schema has no
+  other place for them.
+- **Gate** (`scripts/contracts/canvas-parity.mjs`, `needs: [install, open-pencil]`): runs
+  the unchanged `diffContracts()` per component and reports API parity, token parity and the
+  disagreements; exit 1 below the floors. Not blocking yet: CI does not install Bun, and
+  the remaining disagreements are curation decisions for the component owners.
+- **Codegen**: instances of library components export as `<al-*>` elements in HTML and as
+  `<AL*>` wrappers in React JSX, valid under `altitude-validate`.
+
+Details: [`packages/docs/development/code-bound-library.md`](packages/docs/development/code-bound-library.md).
+
 ## It is a separate toolchain
 
 OpenPencil is a **Bun** workspace with its own lockfile, lint (oxlint) and type gate. It is
