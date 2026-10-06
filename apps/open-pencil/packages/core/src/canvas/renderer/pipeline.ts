@@ -158,6 +158,23 @@ function measure<T>(fn: () => T): { value: T; duration: number } {
   return { value, duration: now() - start }
 }
 
+/**
+ * Graph mutations clear the cache themselves; a new scene version also drops it in case a
+ * mutation bypassed the graph API. Repaint-only frames keep cached positions for hit tests.
+ */
+function syncAbsolutePositionCache(r: SkiaRenderer, graph: SceneGraph, sceneVersion: number) {
+  if (
+    sceneVersion >= 0 &&
+    sceneVersion === r.absPosCacheSceneVersion &&
+    graph === r.absPosCacheGraph
+  ) {
+    return
+  }
+  graph.clearAbsPosCache()
+  r.absPosCacheSceneVersion = sceneVersion
+  r.absPosCacheGraph = graph
+}
+
 export function render(
   r: SkiaRenderer,
   graph: SceneGraph,
@@ -181,7 +198,7 @@ export function render(
   p.setScenePictureRecordTime(0)
   p.setFlushTime(0)
 
-  graph.clearAbsPosCache()
+  syncAbsolutePositionCache(r, graph, sceneVersion)
 
   const canvas = r.surface.getCanvas()
   if (layer === 'overlays') {

@@ -34,6 +34,7 @@ import IconButton from '@/components/ui/button/IconButton.vue'
 import PanelFieldGroup from '@/components/ui/panel/PanelFieldGroup.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
+import AppVirtualSelect from '@/components/ui/select/AppVirtualSelect.vue'
 
 const fillCtx = useFillControls()
 const okhcl = useOkHCL()
@@ -82,10 +83,12 @@ function updateSolidColor(
   >
     <PanelSection :label="panels.fill" :empty="!isMixed && items.length === 0">
       <template #actions>
-        <AppSelect
+        <AppVirtualSelect
           v-if="stylesVisible && !hasStyle"
           :model-value="styleValue"
           :options="styleOptions"
+          :search-placeholder="common.search"
+          :empty-label="common.noResults"
           @update:model-value="updateStyle"
         >
           <template #trigger>
@@ -93,16 +96,18 @@ function updateSolidColor(
               ><icon-lucide-layout-grid class="size-3.5"
             /></IconButton>
           </template>
-        </AppSelect>
+        </AppVirtualSelect>
         <IconButton :label="panels.addFill" @click="actions.add({ ...fillCtx.defaultFill })">
           <icon-lucide-plus class="size-3.5" />
         </IconButton>
       </template>
 
-      <AppSelect
+      <AppVirtualSelect
         v-if="stylesVisible && hasStyle"
         :model-value="styleValue"
         :options="styleOptions"
+        :search-placeholder="common.search"
+        :empty-label="common.noResults"
         :label="panels.fillStyle"
         data-property="fill-style"
         class="mb-1.5"

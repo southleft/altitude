@@ -6,6 +6,7 @@ import type { RotationPreview } from '#core/geometry'
 
 import { LabelCache } from './cache'
 import {
+  COMPONENT_LABEL_TEXT_X,
   hasFrameTitle,
   labelLayout,
   type LabelKind,
@@ -79,14 +80,16 @@ function catalogHitTest(kind: 'section' | 'component') {
     if (kind === 'section') {
       const sections = options.viewport
         ? cache
-            .getSections(graph, options.viewport, options.preview)
+            .getSections(graph, options.viewport, options.preview, { minWorldWidth: 0 })
             .map(({ node, nested }) => ({ nodeId: node.id, nested }))
         : cache.getAllSections()
       candidates = sections.map(({ nodeId, nested }) => ({ nodeId, inside: nested }))
     } else {
       const components = options.viewport
         ? cache
-            .getComponents(graph, options.viewport, options.preview)
+            .getComponents(graph, options.viewport, options.preview, {
+              minWorldWidth: COMPONENT_LABEL_TEXT_X / zoom
+            })
             .map(({ node }) => ({ nodeId: node.id }))
         : cache.getAllComponents()
       candidates = components.map(({ nodeId }) => ({ nodeId, inside: false }))

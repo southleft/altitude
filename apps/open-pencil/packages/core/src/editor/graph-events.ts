@@ -84,6 +84,8 @@ export function createGraphEventSubscription(options: GraphEventOptions) {
   }
 
   function onNodePreviewUpdated(id: string, changes: Partial<SceneNode>) {
+    // Retained subtree pictures are world-space, so even position previews change them.
+    for (const renderer of options.getRenderers()) renderer.invalidateRetainedSubtree(id)
     const { nodePicture } = rendererInvalidationForChanges(changes, { preview: true })
     invalidateRenderersForChange(
       options.getGraph(),
@@ -95,9 +97,11 @@ export function createGraphEventSubscription(options: GraphEventOptions) {
     options.emitEditorEvent('node:previewUpdated', id, changes)
   }
 
-  function onNodeStructureChanged(nodeId: string) {
+  function onNodeStructureChanged(nodeId: string, previousParentId: string | null = null) {
     for (const renderer of options.getRenderers()) {
       renderer.invalidateNodePicture(nodeId)
+      // The node has left (or been removed from) the previous parent's retained subtree.
+      if (previousParentId) renderer.invalidateRetainedSubtree(previousParentId)
       renderer.tiledScene.invalidateStructure()
     }
     options.scheduleComponentSync(nodeId)
@@ -115,15 +119,15 @@ export function createGraphEventSubscription(options: GraphEventOptions) {
       },
       deleted: (id, _parentId) => {
         options.emitEditorEvent('node:deleted', id, _parentId)
-        onNodeStructureChanged(id)
+        onNodeStructureChanged(id, _parentId)
       },
       reparented: (nodeId, oldParentId, newParentId) => {
         options.emitEditorEvent('node:reparented', nodeId, oldParentId, newParentId)
-        onNodeStructureChanged(nodeId)
+        onNodeStructureChanged(nodeId, oldParentId)
       },
       reordered: (nodeId, parentId, index, previousParentId) => {
         options.emitEditorEvent('node:reordered', nodeId, parentId, index, previousParentId)
-        onNodeStructureChanged(nodeId)
+        onNodeStructureChanged(nodeId, previousParentId)
       }
     })
   }

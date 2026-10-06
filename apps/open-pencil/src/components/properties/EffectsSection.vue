@@ -17,9 +17,10 @@ import FillSwatch from '@/components/ui/paint/FillSwatch.vue'
 import PanelFieldGroup from '@/components/ui/panel/PanelFieldGroup.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
+import AppVirtualSelect from '@/components/ui/select/AppVirtualSelect.vue'
 
 const effectsCtx = useEffectsControls()
-const { panels } = useI18n()
+const { panels, common } = useI18n()
 const blendModeOptions = useBlendModeOptions()
 const {
   visible: stylesVisible,
@@ -47,17 +48,19 @@ function effectPreview(effect: Effect): Fill {
   >
     <PanelSection :label="panels.effects" :empty="!isMixed && items.length === 0">
       <template #actions>
-        <AppSelect
+        <AppVirtualSelect
           v-if="stylesVisible && !hasStyle"
           :model-value="styleValue"
           :options="styleOptions"
+          :search-placeholder="common.search"
+          :empty-label="common.noResults"
           @update:model-value="updateStyle"
         >
           <template #trigger
             ><IconButton :label="panels.effectStyle" data-property="effect-style"
               ><icon-lucide-layout-grid class="size-3.5" /></IconButton
           ></template>
-        </AppSelect>
+        </AppVirtualSelect>
         <IconButton
           :label="panels.addEffect"
           @click="actions.add(effectsCtx.createDefaultEffect())"
@@ -66,10 +69,12 @@ function effectPreview(effect: Effect): Fill {
         </IconButton>
       </template>
 
-      <AppSelect
+      <AppVirtualSelect
         v-if="stylesVisible && hasStyle"
         :model-value="styleValue"
         :options="styleOptions"
+        :search-placeholder="common.search"
+        :empty-label="common.noResults"
         :label="panels.effectStyle"
         data-property="effect-style"
         class="mb-1.5"

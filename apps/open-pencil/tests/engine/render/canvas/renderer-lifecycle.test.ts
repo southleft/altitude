@@ -56,6 +56,7 @@ function createRenderer() {
     nodePictureCache: new Map(),
     effectRasterCache: new EffectRasterCache(),
     subtreePictureCache: new Map(),
+    subtreePictureDirtyIds: new Set(),
     scenePicture: null,
     sceneBacking: null,
     sceneBackingBuild: null,

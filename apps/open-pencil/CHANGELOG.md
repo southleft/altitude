@@ -24,6 +24,10 @@
 - Show what to update instead of a blank window when the browser or system WebView is too old, naming the detected macOS, Safari, Chrome, Edge, Firefox, WebKitGTK, or WebView2 version and linking a prefilled bug report, and explain a failed start the same way (#744).
 - Start on macOS 13 with WebKit older than Safari 17.4, which previously failed with `Promise.withResolvers is not a function` (#744).
 
+### Performance
+
+- Keep large design-system pages responsive. Shared style pickers now open as a searchable list that renders only visible rows, labels and hover outlines skip off-screen and too-small layers, and a property edit re-renders only the top-level layer it touched. On an 82,000-layer page with 3,250 fill styles, selecting a component drops from 12.8 s to 0.2 s, an opacity edit from 2.7 s to about 1 s, and hover and zoom frames from 77–97 ms to 21–42 ms at p95.
+
 ## 0.15.1 — 2026-09-18
 
 ### Added

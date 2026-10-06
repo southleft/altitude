@@ -9,10 +9,10 @@ import {
 } from '@open-pencil/scene-graph/geometry'
 
 import type { SkiaRenderer } from '#core/canvas/renderer'
-import { clearSubtreePictureCache } from '#core/canvas/renderer/state'
 import { worldNodeVisualBounds } from '#core/canvas/renderer/visual-bounds'
 import { emitNavigationTrace } from '#core/profiler'
 
+import { ensureSubtreePictureCacheScope } from './retained-backing/invalidation'
 import { clamp, smoothAverage } from './retained-backing/timing'
 import type { SceneBackingGeometry } from './retained-backing/types'
 
@@ -184,26 +184,6 @@ function createSceneBackingSurface(r: SkiaRenderer, width: number, height: numbe
     )
     return null
   }
-}
-
-function ensureSubtreePictureCacheScope(
-  r: SkiaRenderer,
-  graph: SceneGraph,
-  sceneVersion: number
-): void {
-  if (
-    r.subtreePictureCachePageId === r.pageId &&
-    r.subtreePictureCacheSceneVersion === sceneVersion &&
-    r.subtreePictureCachePositionPreviewVersion === graph.positionPreviewVersion &&
-    r.subtreePictureCacheFontGeneration === r.fontGeneration
-  ) {
-    return
-  }
-  clearSubtreePictureCache(r)
-  r.subtreePictureCachePageId = r.pageId
-  r.subtreePictureCacheSceneVersion = sceneVersion
-  r.subtreePictureCachePositionPreviewVersion = graph.positionPreviewVersion
-  r.subtreePictureCacheFontGeneration = r.fontGeneration
 }
 
 /**

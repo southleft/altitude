@@ -36,14 +36,94 @@ export function sharedStyleTypeForKind(kind: SharedStyleKind): SharedStyleType {
   return STYLE_TYPES[kind]
 }
 
-export function getSharedStyles(graph: SceneGraph, kind: SharedStyleKind): SharedStyle[] {
-  const type = sharedStyleTypeForKind(kind)
-  const styles: SharedStyle[] = []
-  for (const node of graph.getAllNodes()) {
-    if (node.sharedStyleType !== type || !node.source.id) continue
-    styles.push({ id: node.source.id, nodeId: node.id, name: node.name, type })
+const STYLE_INDEX_KEYS = new Set<string>(['sharedStyleType', 'name', 'source'])
+
+/**
+ * Style definitions grouped by type, kept current from graph events. Queries read live
+ * names and source ids, so an unchanged catalog returns the same sorted array instance.
+ */
+class SharedStyleIndex {
+  private nodesRef: Map<string, SceneNode> | null = null
+  private readonly candidates = new Map<SharedStyleType, Set<string>>()
+  private readonly sorted = new Map<SharedStyleType, SharedStyle[]>()
+  private readonly snapshots = new Map<SharedStyleType, string[]>()
+
+  constructor(private readonly graph: SceneGraph) {
+    graph.onNodeEvents({
+      created: (node) => this.track(node),
+      updated: (id, changes) => {
+        if (!this.nodesRef || !Object.keys(changes).some((key) => STYLE_INDEX_KEYS.has(key))) {
+          return
+        }
+        this.untrack(id)
+        const node = graph.getNode(id)
+        if (node) this.track(node)
+      },
+      deleted: (id) => this.untrack(id)
+    })
   }
-  return styles.sort((left, right) => left.name.localeCompare(right.name))
+
+  list(type: SharedStyleType): SharedStyle[] {
+    if (this.nodesRef !== this.graph.nodes) this.rebuild()
+    const snapshot: string[] = []
+    const styles: SharedStyle[] = []
+    for (const nodeId of this.candidates.get(type) ?? []) {
+      const node = this.graph.getNode(nodeId)
+      if (node?.sharedStyleType !== type || !node.source.id) continue
+      snapshot.push(nodeId, node.source.id, node.name)
+      styles.push({ id: node.source.id, nodeId, name: node.name, type })
+    }
+    const cached = this.sorted.get(type)
+    const previous = this.snapshots.get(type)
+    if (cached && previous && sameEntries(previous, snapshot)) return cached
+    styles.sort((left, right) => left.name.localeCompare(right.name))
+    this.sorted.set(type, styles)
+    this.snapshots.set(type, snapshot)
+    return styles
+  }
+
+  private rebuild(): void {
+    this.nodesRef = this.graph.nodes
+    this.candidates.clear()
+    this.sorted.clear()
+    this.snapshots.clear()
+    for (const node of this.graph.getAllNodes()) this.track(node)
+  }
+
+  private track(node: SceneNode): void {
+    if (!this.nodesRef || !node.sharedStyleType) return
+    let set = this.candidates.get(node.sharedStyleType)
+    if (!set) {
+      set = new Set()
+      this.candidates.set(node.sharedStyleType, set)
+    }
+    set.add(node.id)
+  }
+
+  private untrack(id: string): void {
+    for (const set of this.candidates.values()) set.delete(id)
+  }
+}
+
+function sameEntries(left: readonly string[], right: readonly string[]): boolean {
+  if (left.length !== right.length) return false
+  for (let i = 0; i < left.length; i++) if (left[i] !== right[i]) return false
+  return true
+}
+
+const styleIndexes = new WeakMap<SceneGraph, SharedStyleIndex>()
+
+/**
+ * Sorted style definitions of one kind. The per-graph index is built on first use and
+ * returns the same array until a definition is added, removed, renamed or re-identified.
+ */
+export function getSharedStyles(graph: SceneGraph, kind: SharedStyleKind): SharedStyle[] {
+  let index = styleIndexes.get(graph)
+  if (!index) {
+    index = new SharedStyleIndex(graph)
+    styleIndexes.set(graph, index)
+  }
+  return index.list(sharedStyleTypeForKind(kind))
 }
 
 export function styleDetachmentChanges(
