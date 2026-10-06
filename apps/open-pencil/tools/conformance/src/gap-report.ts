@@ -59,6 +59,7 @@ function factCarriedProperties(): Set<string> {
     'name',
     'componentId',
     'componentKey',
+    'codeBinding',
     'boundVariables',
     'variableModes',
     'fills',

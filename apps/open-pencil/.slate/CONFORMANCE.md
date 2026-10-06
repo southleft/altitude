@@ -7,7 +7,7 @@ Every element should carry two facts: what it **is** (scene graph) and what it
 Names here are the point — a degradation with a name is a task, a degradation
 without one is a bug report six weeks late.
 
-**115 of 115 properties bridged (100%).** 0 unmapped.
+**116 of 116 properties bridged (100%).** 0 unmapped.
 
 A property is bridged if it comes home, whether via CSS or via the design-fact
 carrier. See `packages/docs/development/round-trip.md` for which carrier owns what.
@@ -15,7 +15,7 @@ carrier. See `packages/docs/development/round-trip.md` for which carrier owns wh
 | | count |
 | --- | --- |
 | Bridged via CSS | 56 |
-| Carried as a design fact | 59 |
+| Carried as a design fact | 60 |
 | Of those, one-way in CSS | 1 |
 | One-way only (cannot round-trip) | 1 |
 | Unmapped | 0 |
