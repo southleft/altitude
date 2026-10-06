@@ -52,13 +52,20 @@ export class TokenState {
     readonly path: string[]
   ) {}
 
-  /** Resolve and convert in every context. False when the token cannot become a variable. */
+  /**
+   * Resolve and convert in every context. False when the token cannot become a variable.
+   * A value that fails to convert in only some contexts (Altitude's contrast="more" border
+   * is `currentColor`) leaves the token absent there instead of dropping it everywhere.
+   */
   convert(resolved: ResolvedContexts, config: ResolvedTokenImportConfig, log: IssueLog): boolean {
     for (const context of resolved.contexts) {
       const ctxKey = contextKey(context)
       const token = resolved.resolvers.get(ctxKey)?.resolve(this.key) ?? null
       this.byContext.set(ctxKey, token)
-      if (token && !this.accept(ctxKey, token, config, log)) return false
+      if (!token) continue
+      const outcome = this.accept(ctxKey, token, config, log)
+      if (outcome === 'fatal') return false
+      if (outcome === 'skip') this.byContext.set(ctxKey, null)
     }
     return this.type !== undefined
   }
@@ -68,12 +75,12 @@ export class TokenState {
     token: ResolvedToken,
     config: ResolvedTokenImportConfig,
     log: IssueLog
-  ): boolean {
+  ): 'ok' | 'skip' | 'fatal' {
     this.origin ??= token.def
     const result = convertTokenValue(token.type, token.value, config)
     if (!result.ok) {
       log.add(result.code, this.key, result.message, token.def.file)
-      return false
+      return result.code === 'invalid-value' ? 'skip' : 'fatal'
     }
     if (this.type && this.type !== result.converted.type) {
       log.add(
@@ -81,13 +88,17 @@ export class TokenState {
         this.key,
         `Resolves to ${this.type} in one context and ${result.converted.type} in another`
       )
-      return false
+      return 'fatal'
     }
     this.type = result.converted.type
+    const firstUnit = [...this.converted.values()].at(0)?.unit
+    if (firstUnit !== undefined && result.converted.unit !== firstUnit) {
+      this.lossy ??= `Unit differs between modes (${firstUnit} and ${result.converted.unit}); a variable carries one unit, so CSS uses ${firstUnit}`
+    }
     this.converted.set(ctxKey, result.converted)
     this.compositeKind ??= result.compositeKind
     this.lossy ??= result.converted.lossy
-    return true
+    return 'ok'
   }
 }
 

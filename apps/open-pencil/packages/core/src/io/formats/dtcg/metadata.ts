@@ -21,6 +21,7 @@ const VariableMetadataSchema = v.object({
   remBase: v.optional(v.number()),
   composite: v.optional(v.unknown()),
   absentModes: v.optional(v.array(v.string())),
+  cssOmittedModes: v.optional(v.array(v.string())),
   file: v.optional(v.string()),
   deprecated: v.optional(v.union([v.boolean(), v.string()])),
   extensions: v.optional(v.record(v.string(), v.unknown()))
@@ -78,12 +79,15 @@ export function variableCSSName(variable: Pick<Variable, 'codeSyntax'>): string 
   return match ? match[1] : null
 }
 
-/** True when the token behind `variable` is not defined in the named mode. */
+/** True when the token behind `variable` is not defined, or not emitted, in the named mode. */
 export function isTokenAbsentInMode(
   variable: Pick<Variable, 'extensions'>,
   modeName: string
 ): boolean {
-  return readTokenMetadata(variable)?.absentModes?.includes(modeName) ?? false
+  const metadata = readTokenMetadata(variable)
+  return Boolean(
+    metadata?.absentModes?.includes(modeName) || metadata?.cssOmittedModes?.includes(modeName)
+  )
 }
 
 /**

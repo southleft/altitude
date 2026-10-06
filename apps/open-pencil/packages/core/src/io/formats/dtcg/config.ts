@@ -95,7 +95,18 @@ export const TokenImportConfigSchema = v.object({
   /** Pixels per `rem`, used to store rem dimensions as canvas pixels. Default 16. */
   remBase: v.optional(v.pipe(v.number(), v.minValue(1))),
   /** `$extensions` namespaces copied into variable metadata, e.g. `org.altitude.token`. */
-  keepExtensions: v.optional(v.array(NonEmptyString))
+  keepExtensions: v.optional(v.array(NonEmptyString)),
+  /**
+   * Keep a token's value but leave it out of CSS in modes whose definition carries this
+   * extension value, e.g. an axis default that a stylesheet resets to `initial`.
+   */
+  omitFromCSSWhen: v.optional(
+    v.object({
+      extension: NonEmptyString,
+      property: NonEmptyString,
+      values: v.array(v.string())
+    })
+  )
 })
 
 export type TokenImportConfig = v.InferOutput<typeof TokenImportConfigSchema>
@@ -122,6 +133,7 @@ export interface ResolvedTokenImportConfig {
   composites: Record<CompositeKind, CompositeStrategy>
   remBase: number
   keepExtensions: string[]
+  omitFromCSSWhen: { extension: string; property: string; values: string[] } | null
 }
 
 const DEFAULT_SOURCE = 'tokens'
@@ -236,6 +248,7 @@ export function resolveTokenImportConfig(input: unknown = {}): ResolvedTokenImpo
     cssVar: resolveCSSVar(config),
     composites: resolveComposites(config),
     remBase: config.remBase ?? 16,
-    keepExtensions: config.keepExtensions ?? []
+    keepExtensions: config.keepExtensions ?? [],
+    omitFromCSSWhen: config.omitFromCSSWhen ?? null
   }
 }

@@ -132,4 +132,44 @@ describe('DTCG import: mode mapping and placement', () => {
     )
     expect(() => planTokenImport({}, { axes: [{ name: 'mode', modes: [] }] })).toThrow('axes.0.modes')
   })
+
+  test('axis files: partial failures stay variables, CSS omission and unit changes are recorded', () => {
+    const files = {
+      'base.json': { border: { $type: 'color', $value: '#cccccc' } },
+      'axis/contrast/normal.json': {},
+      'axis/contrast/more.json': { border: { $type: 'color', $value: 'currentColor' } },
+      'axis/shape/default.json': {
+        radius: {
+          $type: 'dimension',
+          $value: '50%',
+          $extensions: { 'org.example.axis': { css: 'initial' } }
+        }
+      },
+      'axis/shape/sharp.json': { radius: { $type: 'dimension', $value: '0px' } }
+    }
+    const mapping = {
+      layers: [
+        { files: ['base.json'] },
+        { files: ['axis/contrast/{contrast}.json'] },
+        { files: ['axis/shape/{shape}.json'] }
+      ],
+      axes: [
+        { name: 'contrast', modes: ['normal', 'more'] },
+        { name: 'shape', modes: ['default', 'sharp'] }
+      ],
+      collections: [
+        { name: 'Contrast', axes: ['contrast'] },
+        { name: 'Shape', axes: ['shape'] }
+      ],
+      omitFromCSSWhen: { extension: 'org.example.axis', property: 'css', values: ['initial'] }
+    }
+    const graph = new SceneGraph()
+    const result = importDesignTokens(graph, files, mapping)
+    const border = variableByPath(graph, 'border')
+    expect(readTokenMetadata(border)?.absentModes).toEqual(['More'])
+    expect(result.issues).toContainEqual(expect.objectContaining({ code: 'invalid-value', token: 'border' }))
+    const radius = readTokenMetadata(variableByPath(graph, 'radius'))
+    expect(radius?.cssOmittedModes).toEqual(['Default'])
+    expect(result.issues).toContainEqual(expect.objectContaining({ code: 'lossy-value', token: 'radius' }))
+  })
 })

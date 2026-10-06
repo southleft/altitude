@@ -57,6 +57,8 @@ export interface TokenVariableMetadata {
   composite?: unknown
   /** Collection mode names in which the token is not defined. */
   absentModes?: string[]
+  /** Mode names where the value is kept but left out of CSS (see `omitFromCSSWhen`). */
+  cssOmittedModes?: string[]
   file?: string
   deprecated?: boolean | string
   /** Kept `$extensions` namespaces from the source token. */

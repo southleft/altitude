@@ -2,6 +2,7 @@ import type { VariableValue } from '@open-pencil/scene-graph'
 
 import type { ResolvedTokenImportConfig } from './config'
 import { tokenCSSName, tokenVariableId, tokenVariableName } from './naming'
+import { isRecord } from './parse'
 import { contextKey } from './resolve'
 import { liveAliasTarget, type IssueLog, type ResolvedContexts, type TokenState } from './state'
 import type {
@@ -23,6 +24,7 @@ export interface VariableBuildContext {
 interface ModeValues {
   valuesByMode: Record<string, VariableValue>
   absentModes: string[]
+  cssOmittedModes: string[]
   sample?: ConvertedValue
 }
 
@@ -31,7 +33,7 @@ function modeValues(
   collection: PlannedCollection,
   build: VariableBuildContext
 ): ModeValues {
-  const result: ModeValues = { valuesByMode: {}, absentModes: [] }
+  const result: ModeValues = { valuesByMode: {}, absentModes: [], cssOmittedModes: [] }
   for (const mode of collection.modes) {
     const ctxKey = contextKey({ ...build.resolved.base, ...mode.context })
     const token = state.byContext.get(ctxKey)
@@ -41,6 +43,7 @@ function modeValues(
       continue
     }
     result.sample ??= converted
+    if (omittedFromCSS(token.def, build.config)) result.cssOmittedModes.push(mode.name)
     const alias = liveAliasTarget(state, token, build.states, build.plannable)
     if (alias) {
       result.valuesByMode[mode.name] = { aliasId: tokenVariableId(build.config.name, alias) }
@@ -56,6 +59,15 @@ function modeValues(
     result.valuesByMode[mode.name] = structuredClone(converted.value)
   }
   return result
+}
+
+function omittedFromCSS(def: TokenDefinition, config: ResolvedTokenImportConfig): boolean {
+  const rule = config.omitFromCSSWhen
+  if (!rule) return false
+  const namespace = def.extensions?.[rule.extension]
+  if (!isRecord(namespace)) return false
+  const value = namespace[rule.property]
+  return typeof value === 'string' && rule.values.includes(value)
 }
 
 function pickExtensions(
@@ -85,6 +97,7 @@ function buildMetadata(
   if (sample.remBase !== undefined) metadata.remBase = sample.remBase
   if (sample.composite !== undefined) metadata.composite = sample.composite
   if (values.absentModes.length) metadata.absentModes = values.absentModes
+  if (values.cssOmittedModes.length) metadata.cssOmittedModes = values.cssOmittedModes
   if (origin?.file) metadata.file = origin.file
   if (origin?.deprecated !== undefined) metadata.deprecated = origin.deprecated
   const extensions = pickExtensions(origin, build.config.keepExtensions)
