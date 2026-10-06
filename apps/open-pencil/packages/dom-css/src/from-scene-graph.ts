@@ -1,6 +1,7 @@
 import { encodeBase64 } from '@open-pencil/core/bytes'
 import { colorToCSS } from '@open-pencil/core/color'
 import { renderNodesToSVG } from '@open-pencil/core/io/formats/svg'
+import { motionSpecTransitionCSS, resolveMotionContext } from '@open-pencil/core/motion'
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import { BLACK } from '@open-pencil/scene-graph/constants'
 
@@ -338,6 +339,18 @@ function styleFromTextNode(node: SceneNode): DesignStyleDeclaration {
   return style
 }
 
+/**
+ * `transition` from the motion spec that governs the node: its own, or for a variant or an
+ * instance, its component set's. Expanded per use case with the role-token fallbacks, the
+ * way Altitude's `al-motion-transition()` mixin writes it — never as a composite token.
+ */
+function addMotionTransition(style: DesignStyleDeclaration, graph: SceneGraph, node: SceneNode) {
+  if (node.type === 'COMPONENT_SET') return
+  const context = resolveMotionContext(graph, node.id)
+  const css = context ? motionSpecTransitionCSS(graph, context.spec) : null
+  if (css) style.transition = css
+}
+
 function imageSourceURL(node: SceneNode): string | undefined {
   return node.pluginData.find(
     (entry) => entry.pluginId === DOM_CSS_PLUGIN_ID && entry.key === IMAGE_SOURCE_URL_KEY
@@ -416,6 +429,7 @@ function sceneNodeToDesignNode(
   }
 
   const inlineStyle = styleFromSceneNode(node)
+  addMotionTransition(inlineStyle, graph, node)
   applyVariableCSS(inlineStyle, fact)
 
   const rawHTML =

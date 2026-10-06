@@ -1,4 +1,9 @@
-import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import {
+  motionPluginData,
+  readMotionSpec,
+  type SceneGraph,
+  type SceneNode
+} from '@open-pencil/scene-graph'
 import { copyEffects, copyFills, copyStrokes } from '@open-pencil/scene-graph/copy'
 
 import { cssVarNameForVariable } from '../design-tokens'
@@ -168,6 +173,9 @@ export function designFactFromNode(
   const residual = residualFacts(node, options.geometryFacts ?? true, options.omittedGeometry)
   if (residual) fact.residual = residual
 
+  const motion = readMotionSpec(node)
+  if (motion) fact.motion = motion
+
   return fact
 }
 
@@ -211,6 +219,7 @@ export function applyDesignFactToNode(node: SceneNode, fact: DesignFact | undefi
 
   applyPaints(node, fact)
   applyTokenFacts(node, fact)
+  if (fact.motion) node.pluginData = motionPluginData(node, fact.motion)
 
   // Residual facts have no CSS representation, so nothing in the markup can contradict
   // them — but only fields on the allow-list may be written. Identity and tree structure

@@ -1,4 +1,11 @@
-import type { Effect, Fill, SceneGraph, SceneNode, Stroke } from '@open-pencil/scene-graph'
+import type {
+  Effect,
+  Fill,
+  MotionSpec,
+  SceneGraph,
+  SceneNode,
+  Stroke
+} from '@open-pencil/scene-graph'
 
 export type DesignNode = DesignElement | DesignText
 
@@ -68,6 +75,12 @@ export interface DesignFact {
    * restoring them can never clobber someone's change.
    */
   residual?: Record<string, unknown>
+  /**
+   * The node's motion spec (component transitions bound to motion role tokens). The
+   * exported `transition` declaration is derived from it and never read back, because the
+   * declaration has lost the use case, the variant states and the token bindings.
+   */
+  motion?: MotionSpec
 }
 
 export interface DesignVariableRef {

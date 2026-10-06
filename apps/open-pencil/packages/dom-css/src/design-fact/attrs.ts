@@ -1,5 +1,7 @@
 import type { GenericSchema } from 'valibot'
 
+import { parseMotionSpec } from '@open-pencil/scene-graph'
+
 import type { DesignFact } from '../types'
 import { DESIGN_ATTRS, RESIDUAL_FIELD_SET, RESTORABLE_NODE_TYPES, defaultsForType } from './fields'
 import { encodeFactJSON, mapAwareReviver } from './json'
@@ -38,6 +40,7 @@ export function designFactToAttrs(fact: DesignFact | undefined): Record<string, 
     attrs[DESIGN_ATTRS.position] = encodeFactJSON({ x: fact.x ?? 0, y: fact.y ?? 0 })
   }
   if (fact.residual) attrs[DESIGN_ATTRS.residual] = encodeFactJSON(fact.residual)
+  if (fact.motion) attrs[DESIGN_ATTRS.motion] = encodeFactJSON(fact.motion)
   return attrs
 }
 
@@ -167,6 +170,13 @@ export function designFactFromAttrs(
   const residual = objectAttr(DESIGN_ATTRS.residual, ResidualSchema)
   const validResidual = residual ? validateResidual(residual, nodeType, report) : undefined
   if (validResidual) fact.residual = validResidual
+
+  const rawMotion = parseJSONAttr(attrs[DESIGN_ATTRS.motion], DESIGN_ATTRS.motion, report)
+  if (rawMotion !== undefined) {
+    const motion = parseMotionSpec(rawMotion)
+    if (motion) fact.motion = motion
+    else report({ fact: DESIGN_ATTRS.motion, reason: 'no valid transitions' })
+  }
 
   return Object.keys(fact).length ? fact : undefined
 }
