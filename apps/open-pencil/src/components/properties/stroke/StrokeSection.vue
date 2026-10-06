@@ -33,6 +33,7 @@ import Tip from '@/components/ui/overlay/Tip.vue'
 import FillSwatchTrigger from '@/components/ui/paint/FillSwatchTrigger.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
+import AppVirtualSelect from '@/components/ui/select/AppVirtualSelect.vue'
 const {
   visible: stylesVisible,
   hasStyle,
@@ -97,10 +98,12 @@ function onToggleSides(activeNode: SceneNode | null) {
   >
     <PanelSection :label="panels.stroke" :empty="!isMixed && items.length === 0">
       <template #actions>
-        <AppSelect
+        <AppVirtualSelect
           v-if="stylesVisible && !hasStyle"
           :model-value="styleValue"
           :options="styleOptions"
+          :search-placeholder="common.search"
+          :empty-label="common.noResults"
           @update:model-value="updateStyle"
         >
           <template #trigger>
@@ -108,16 +111,18 @@ function onToggleSides(activeNode: SceneNode | null) {
               ><icon-lucide-layout-grid class="size-3.5"
             /></IconButton>
           </template>
-        </AppSelect>
+        </AppVirtualSelect>
         <IconButton :label="panels.addStroke" @click="actions.add(strokeCtx.defaultStroke)">
           <icon-lucide-plus class="size-3.5" />
         </IconButton>
       </template>
 
-      <AppSelect
+      <AppVirtualSelect
         v-if="stylesVisible && hasStyle"
         :model-value="styleValue"
         :options="styleOptions"
+        :search-placeholder="common.search"
+        :empty-label="common.noResults"
         :label="panels.strokeStyle"
         data-property="stroke-style"
         class="mb-1.5"
