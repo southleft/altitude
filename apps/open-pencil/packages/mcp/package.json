@@ -1,0 +1,79 @@
+{
+  "name": "@open-pencil/mcp",
+  "version": "0.15.1",
+  "license": "MIT",
+  "type": "module",
+  "imports": {
+    "#mcp/*": {
+      "types": "./src/*.ts",
+      "bun": "./src/*.ts",
+      "default": "./dist/*.mjs"
+    }
+  },
+  "main": "./dist/server.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.mts",
+      "import": "./dist/server.mjs",
+      "default": "./dist/server.mjs"
+    },
+    "./stdio": {
+      "types": "./dist/stdio.d.mts",
+      "import": "./dist/stdio.mjs",
+      "default": "./dist/stdio.mjs"
+    },
+    "./transport": {
+      "types": "./dist/transport.d.mts",
+      "bun": "./src/transport/paths.ts",
+      "import": "./dist/transport.mjs",
+      "default": "./dist/transport.mjs"
+    },
+    "./discovery": {
+      "types": "./dist/discovery.d.mts",
+      "bun": "./src/transport/discovery.ts",
+      "import": "./dist/discovery.mjs",
+      "default": "./dist/discovery.mjs"
+    },
+    "./tools": {
+      "types": "./dist/tools.d.mts",
+      "bun": "./src/tool/index.ts",
+      "import": "./dist/tools.mjs",
+      "default": "./dist/tools.mjs"
+    }
+  },
+  "bin": {
+    "openpencil-mcp": "./dist/stdio.mjs",
+    "openpencil-mcp-http": "./dist/index.mjs"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "bunx tsdown --config tsdown.config.ts",
+    "prepublishOnly": "bun run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-pencil/open-pencil.git",
+    "directory": "packages/mcp"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.17",
+    "@modelcontextprotocol/server": "^2.0.0",
+    "@open-pencil/core": "workspace:*",
+    "@valibot/to-json-schema": "^1.8.0",
+    "hono": "^4.13.2",
+    "package-manager-detector": "^1.8.0",
+    "valibot": "^1.4.2",
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.5",
+    "@types/ws": "^8.18.1"
+  }
+}

@@ -1,0 +1,286 @@
+import { SceneGraph } from '@open-pencil/scene-graph'
+
+import type { ExportTarget } from './types'
+
+export interface ExtractedGraph {
+  graph: SceneGraph
+  pageId: string | null
+  nodeIds: string[]
+}
+
+function includeReferencedStyles(source: SceneGraph, ids: Set<string>): void {
+  const referencedStyleIds = new Set<string>()
+  for (const id of ids) {
+    const node = source.getNode(id)
+    if (!node) continue
+    for (const styleId of [
+      node.fillStyleId,
+      node.strokeStyleId,
+      node.textStyleId,
+      node.effectStyleId,
+      node.gridStyleId
+    ]) {
+      if (styleId) referencedStyleIds.add(styleId)
+    }
+  }
+  for (const node of source.getAllNodes()) {
+    if (node.sharedStyleType && node.source.id && referencedStyleIds.has(node.source.id)) {
+      ids.add(node.id)
+    }
+  }
+}
+
+function cloneIntoGraph(source: SceneGraph, ids: Set<string>): SceneGraph {
+  const graph = new SceneGraph()
+  graph.rootId = source.rootId
+  graph.nodes = new Map()
+  graph.images = new Map()
+  graph.variables = new Map()
+  graph.variableCollections = new Map()
+  graph.activeMode = new Map(source.activeMode)
+  graph.figKiwiVersion = source.figKiwiVersion
+  graph.figSchemaDeflated = source.figSchemaDeflated
+  graph.documentColorSpace = source.documentColorSpace
+
+  includeReferencedStyles(source, ids)
+
+  const sortedIds = [...ids].sort((a, b) => {
+    if (a === source.rootId) return -1
+    if (b === source.rootId) return 1
+    const aNode = source.getNode(a)
+    const bNode = source.getNode(b)
+    const aDepth = depthOf(source, aNode)
+    const bDepth = depthOf(source, bNode)
+    return aDepth - bDepth
+  })
+
+  for (const id of sortedIds) {
+    const node = source.getNode(id)
+    if (!node) continue
+    graph.nodes.set(id, structuredClone(node))
+  }
+
+  const rootClone = graph.getNode(source.rootId)
+  if (rootClone) {
+    rootClone.parentId = null
+    rootClone.childIds = rootClone.childIds.filter((id) => ids.has(id))
+  }
+
+  for (const id of sortedIds) {
+    if (id === source.rootId) continue
+    const node = graph.getNode(id)
+    if (!node) continue
+    if (!node.parentId || !ids.has(node.parentId)) {
+      node.parentId = source.rootId
+    }
+    node.childIds = node.childIds.filter((childId) => ids.has(childId))
+  }
+
+  const { imageHashes, variableIds } = collectReferencedResources(source, graph)
+
+  for (const imageHash of imageHashes) {
+    const image = source.images.get(imageHash)
+    if (image) graph.images.set(imageHash, image)
+  }
+
+  for (const variableId of variableIds) {
+    const variable = source.variables.get(variableId)
+    if (!variable) continue
+    graph.variables.set(variableId, structuredClone(variable))
+    const collection = source.variableCollections.get(variable.collectionId)
+    if (!collection) continue
+    const existing = graph.variableCollections.get(collection.id)
+    if (!existing) {
+      graph.variableCollections.set(collection.id, {
+        ...structuredClone(collection),
+        variableIds: []
+      })
+    }
+    graph.variableCollections.get(collection.id)?.variableIds.push(variableId)
+  }
+
+  graph.clearAbsPosCache()
+  return graph
+}
+
+function collectReferencedResources(source: SceneGraph, graph: SceneGraph) {
+  const imageHashes = new Set<string>()
+  const variableIds = new Set<string>()
+  for (const node of graph.nodes.values()) {
+    for (const fill of node.fills) {
+      if (fill.type === 'IMAGE' && fill.imageHash) imageHashes.add(fill.imageHash)
+    }
+    for (const variableId of Object.values(node.boundVariables)) {
+      collectVariableClosure(source, variableId, variableIds)
+    }
+  }
+  return { imageHashes, variableIds }
+}
+
+function collectVariableClosure(source: SceneGraph, variableId: string, out: Set<string>) {
+  if (out.has(variableId)) return
+  const variable = source.variables.get(variableId)
+  if (!variable) return
+  out.add(variableId)
+  for (const value of Object.values(variable.valuesByMode)) {
+    if (typeof value === 'object' && 'aliasId' in value) {
+      collectVariableClosure(source, value.aliasId, out)
+    }
+  }
+}
+
+function depthOf(source: SceneGraph, node: ReturnType<SceneGraph['getNode']>): number {
+  let depth = 0
+  let current = node
+  while (current?.parentId) {
+    depth += 1
+    current = source.getNode(current.parentId)
+  }
+  return depth
+}
+
+function collectDescendants(source: SceneGraph, id: string, out: Set<string>) {
+  if (out.has(id)) return
+  out.add(id)
+  const node = source.getNode(id)
+  if (!node) return
+  for (const childId of node.childIds) {
+    collectDescendants(source, childId, out)
+  }
+}
+
+function collectAncestors(source: SceneGraph, id: string, out: Set<string>) {
+  let current = source.getNode(id)
+  while (current?.parentId) {
+    out.add(current.parentId)
+    current = source.getNode(current.parentId)
+  }
+}
+
+function resolveInstanceComponentId(source: SceneGraph, componentId: string): string {
+  const seen = new Set<string>()
+  let currentId = componentId
+  while (!seen.has(currentId)) {
+    seen.add(currentId)
+    const node = source.getNode(currentId)
+    if (node?.type !== 'INSTANCE' || !node.componentId) return currentId
+    currentId = node.componentId
+  }
+  return componentId
+}
+
+function collectComponentDependencies(source: SceneGraph, ids: Set<string>) {
+  let changed = true
+  while (changed) {
+    changed = false
+    for (const id of Array.from(ids)) {
+      const node = source.getNode(id)
+      if (node?.type !== 'INSTANCE' || !node.componentId) continue
+      const componentId = resolveInstanceComponentId(source, node.componentId)
+      if (ids.has(componentId)) continue
+      const before = ids.size
+      collectAncestors(source, componentId, ids)
+      collectDescendants(source, componentId, ids)
+      changed ||= ids.size !== before
+    }
+  }
+}
+
+export function findPageId(source: SceneGraph, nodeId: string): string | null {
+  let current = source.getNode(nodeId)
+  while (current?.parentId) {
+    const parent = source.getNode(current.parentId)
+    if (!parent) return null
+    if (parent.type === 'CANVAS') return parent.id
+    current = parent
+  }
+  return current?.type === 'CANVAS' ? current.id : null
+}
+
+function ancestorChain(source: SceneGraph, id: string): string[] {
+  const chain: string[] = []
+  let current = source.getNode(id)
+  while (current?.parentId) {
+    chain.push(current.parentId)
+    current = source.getNode(current.parentId)
+  }
+  return chain.reverse()
+}
+
+function collectSelectionIds(source: SceneGraph, nodeIds: string[]): Set<string> {
+  const ids = new Set<string>([source.rootId])
+  const pageIds = new Set<string>()
+
+  for (const nodeId of nodeIds) {
+    const node = source.getNode(nodeId)
+    if (!node) continue
+    for (const ancestorId of ancestorChain(source, nodeId)) {
+      ids.add(ancestorId)
+      const ancestor = source.getNode(ancestorId)
+      if (ancestor?.type === 'CANVAS') pageIds.add(ancestorId)
+    }
+    collectDescendants(source, nodeId, ids)
+  }
+
+  for (const pageId of pageIds) {
+    ids.add(pageId)
+  }
+
+  collectComponentDependencies(source, ids)
+  return ids
+}
+
+function pageNodeIds(source: SceneGraph, pageId: string): Set<string> {
+  const ids = new Set<string>([source.rootId])
+  collectDescendants(source, pageId, ids)
+  collectComponentDependencies(source, ids)
+  return ids
+}
+
+function rootNodeIds(source: SceneGraph): Set<string> {
+  const ids = new Set<string>()
+  for (const node of source.nodes.values()) {
+    ids.add(node.id)
+  }
+  return ids
+}
+
+export function extractExportGraph(source: SceneGraph, target: ExportTarget): ExtractedGraph {
+  switch (target.scope) {
+    case 'document': {
+      const graph = cloneIntoGraph(source, rootNodeIds(source))
+      return {
+        graph,
+        pageId: graph.getPages()[0]?.id ?? null,
+        nodeIds: graph.getPages()[0]?.childIds ?? []
+      }
+    }
+    case 'page': {
+      const graph = cloneIntoGraph(source, pageNodeIds(source, target.pageId))
+      const page = graph.getNode(target.pageId)
+      return {
+        graph,
+        pageId: page?.id ?? null,
+        nodeIds: page?.childIds ?? []
+      }
+    }
+    case 'selection': {
+      const graph = cloneIntoGraph(source, collectSelectionIds(source, target.nodeIds))
+      const firstId = target.nodeIds[0]
+      const first = firstId ? source.getNode(firstId) : undefined
+      const pageId = first
+        ? (ancestorChain(source, first.id).find((id) => source.getNode(id)?.type === 'CANVAS') ??
+          null)
+        : null
+      return {
+        graph,
+        pageId,
+        nodeIds: target.nodeIds.filter((id) => graph.getNode(id) !== undefined)
+      }
+    }
+    case 'node':
+      return extractExportGraph(source, { scope: 'selection', nodeIds: [target.nodeId] })
+    default:
+      return extractExportGraph(source, { scope: 'document' })
+  }
+}

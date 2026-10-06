@@ -1,0 +1,86 @@
+<script setup lang="ts">
+import { useFileDialog, useObjectUrl } from '@vueuse/core'
+import { computed, shallowRef, watch } from 'vue'
+
+import type { Fill, ImageScaleMode } from '@open-pencil/scene-graph'
+
+import { useEditorStore } from '@/app/editor/active-store'
+import AppButton from '@/components/ui/button/AppButton.vue'
+import AppSelect from '@/components/ui/select/AppSelect.vue'
+
+const IMAGE_SCALE_MODES: { value: ImageScaleMode; label: string }[] = [
+  { value: 'FILL', label: 'Fill' },
+  { value: 'FIT', label: 'Fit' },
+  { value: 'CROP', label: 'Crop' },
+  { value: 'TILE', label: 'Tile' }
+]
+
+const { fill } = defineProps<{ fill: Fill }>()
+const emit = defineEmits<{ update: [fill: Fill] }>()
+
+const store = useEditorStore()
+
+const imageBlob = shallowRef<Blob | null>(null)
+const imagePreviewURL = useObjectUrl(imageBlob)
+
+watch(
+  () => fill.imageHash,
+  (hash) => {
+    if (!hash) {
+      imageBlob.value = null
+      return
+    }
+    const data = store.getImage(hash)
+    imageBlob.value = data ? new Blob([data]) : null
+  },
+  { immediate: true }
+)
+
+const { open: pickImage, onChange: onFileChange } = useFileDialog({
+  accept: 'image/png,image/jpeg,image/webp',
+  multiple: false
+})
+
+onFileChange(async (files) => {
+  const file = files?.[0]
+  if (!file) return
+  const bytes = new Uint8Array(await file.arrayBuffer())
+  const hash = store.storeImage(bytes)
+  emit('update', {
+    ...fill,
+    type: 'IMAGE',
+    imageHash: hash,
+    imageScaleMode: fill.imageScaleMode ?? 'FILL'
+  })
+})
+
+const scaleMode = computed({
+  get: () => fill.imageScaleMode ?? ('FILL' as ImageScaleMode),
+  set: (mode: ImageScaleMode) => emit('update', { ...fill, imageScaleMode: mode })
+})
+</script>
+
+<template>
+  <div class="space-y-2">
+    <div
+      v-if="imagePreviewURL"
+      class="flex h-24 items-center justify-center overflow-hidden rounded border border-border"
+    >
+      <img :src="imagePreviewURL" class="max-h-full max-w-full object-contain" />
+    </div>
+    <AppButton
+      variant="outline"
+      class="w-full"
+      data-test-id="fill-picker-choose-image"
+      @click="pickImage()"
+    >
+      <template #leading><icon-lucide-image class="size-3" /></template>
+      {{ fill.imageHash ? 'Replace' : 'Choose image' }}
+    </AppButton>
+    <AppSelect
+      :model-value="scaleMode"
+      :options="IMAGE_SCALE_MODES"
+      @update:model-value="(m) => (scaleMode = m as ImageScaleMode)"
+    />
+  </div>
+</template>
