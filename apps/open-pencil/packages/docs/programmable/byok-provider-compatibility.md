@@ -4,6 +4,10 @@ OpenPencil has no backend. When you bring your own API key, the browser talks to
 directly — so a provider only works in the **web build** if it sets CORS headers correctly, and a
 model is only useful for the AI chat panel if its **streaming tool calls** are well-formed.
 
+::: warning Not available in this distribution
+The built-in AI chat panel is not included in this distribution, so these results apply only to builds that ship it. To use an AI agent here, connect it through the [MCP server](./mcp-server#connect-ai).
+:::
+
 Both of those vary a lot between providers, and neither is documented by the providers themselves.
 This page records what has actually been measured.
 

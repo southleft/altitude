@@ -6,6 +6,7 @@ export const variablesMessageDefaults = {
   createCollection: 'Create collection',
   renameCollection: 'Rename collection',
   deleteCollection: 'Delete collection',
+  untitledCollection: 'Untitled collection',
   localVariables: 'Local variables',
   noVariableCollections: 'No variable collections',
   modes: 'Modes',

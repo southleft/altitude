@@ -5,7 +5,7 @@ description: Creare design da JSX ed esportare una selezione in JSX con Tailwind
 
 # Motore JSX
 
-OpenPencil converte JSX dichiarativo in un albero di design. Lo stesso sistema è disponibile nella chat AI, in MCP e in `eval`.
+OpenPencil converte JSX dichiarativo in un albero di design. Lo stesso sistema è disponibile per gli agenti AI tramite MCP e in `eval`.
 
 ```jsx
 <Frame flex="col" gap={16} p={24} w={320} bg="#ffffff" radius={16}>

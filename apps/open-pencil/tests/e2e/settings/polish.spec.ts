@@ -52,10 +52,10 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
 
 test('external Settings requests respect a dirty editor', async ({ page }) => {
   await openSettings(page)
-  await page.getByTestId('settings-section-ai').click()
-  await page.getByTestId('settings-add-model').click()
-  const name = page.getByRole('textbox', { name: 'Name', exact: true })
-  await name.fill('Keep this draft')
+  await page.getByTestId('settings-section-storage').click()
+  await page.getByRole('button', { name: /S3 storage/ }).click()
+  const endpoint = page.getByRole('textbox', { name: 'Endpoint', exact: true })
+  await endpoint.fill('https://keep-this-draft.example.com')
   const requestSection = () =>
     page.evaluate(async () => {
       const path = '/src/app/settings/dialog.ts'
@@ -65,43 +65,8 @@ test('external Settings requests respect a dirty editor', async ({ page }) => {
   await requestSection()
   await expect(page.getByRole('alertdialog')).toBeVisible()
   await page.getByRole('button', { name: 'Keep editing', exact: true }).click()
-  await expect(name).toHaveValue('Keep this draft')
+  await expect(endpoint).toHaveValue('https://keep-this-draft.example.com')
   await requestSection()
   await page.getByRole('button', { name: 'Discard', exact: true }).click()
   await expect(page.getByRole('button', { name: /Pexels/ })).toBeVisible()
-})
-
-test('model credential Clear is staged until Save and Cancel preserves the saved key', async ({
-  page
-}) => {
-  await openSettings(page)
-  const credential = await page.evaluateHandle(async () => {
-    const path = '/src/app/ai/models/index.ts'
-    const models = await import(path)
-    const draft = models.createModelProfileDraft()
-    draft.name = 'Credential retention test'
-    draft.providerID = 'openai'
-    draft.customModelID = 'test-only-model'
-    const profile = models.saveModelProfileDraft(draft)
-    await models.setModelConnectionAPIKey(profile.connectionId, 'test-only-secret')
-    return { status: () => models.modelConnectionCredentialStatus(profile.connectionId) }
-  })
-  try {
-    await page.getByTestId('settings-section-ai').click()
-    const row = page.getByRole('button', { name: /Credential retention test/ })
-    await row.click()
-    const clear = page.getByTestId('provider-settings-clear-key')
-    await expect(clear).toBeVisible()
-    await clear.click()
-    expect(await credential.evaluate((saved) => saved.status())).toBe('configured')
-    await page.getByRole('button', { name: 'Cancel', exact: true }).click()
-    await row.click()
-    await expect(clear).toBeVisible()
-    await clear.click()
-    await page.getByRole('button', { name: 'Save model', exact: true }).click()
-    await expect(row).toBeVisible()
-    expect(await credential.evaluate((saved) => saved.status())).toBe('missing')
-  } finally {
-    await credential.dispose()
-  }
 })

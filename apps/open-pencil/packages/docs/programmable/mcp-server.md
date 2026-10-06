@@ -11,15 +11,37 @@ Two transports: **stdio** for MCP clients, and **Streamable HTTP** for browser e
 
 Tool definitions own native Valibot input schemas, execution/mutation metadata, capabilities, and optional interface exposure exclusions. Tools are included by default; `exposure: { mcp: false, ai: false, webmcp: false }` can exclude them independently from each adapter. Exposure does not bypass execution support or user permissions: WebMCP still requires supported execution and explicit Off, Inspect, or Edit access. AI and MCP consume the same schema through Standard Schema; WebMCP derives its JSON Schema from that input. Numeric strings are accepted consistently across adapters, while non-finite values are rejected. Programmatic integrations use MCP SDK v2; custom tools replace the former `params`/`ParamDef` contract with `input` and execution metadata.
 
+## Connect AI {#connect-ai}
+
+The **Connect AI** button at the top of the right panel, next to the collaboration control, opens the **Connect your AI agent** popover. It shows the connection status and the setup steps for the desktop app:
+
+- **Connected** — an agent sent a request in the last 15 minutes. The button then reads **AI connected**.
+- **Not connected** — the local MCP server is running and waiting for an agent.
+- **Starting the MCP server** — the server is starting.
+- **MCP server not running** — use **Restart MCP server** to start it.
+- **Not available on the web** — the static web build cannot reach an MCP server on your computer. Use the desktop app.
+
+Each setup step has a copy button:
+
+1. **Install the MCP bridge** — `npm install -g @open-pencil/mcp@<version>`, pinned to the running app's version.
+2. **Add it to Claude Code** — `claude mcp add --scope user open-pencil -- openpencil-mcp`.
+3. **Other clients** — for Claude Desktop, Cursor, and other MCP clients, add this to the MCP configuration:
+
+```json
+{ "mcpServers": { "open-pencil": { "command": "openpencil-mcp" } } }
+```
+
+On the development server, the stdio bridge cannot find the server's private discovery file, so the popover shows `claude mcp add --transport http open-pencil <endpoint>` instead. Turn off **Require authentication** in MCP settings before using it. The popover footer links to this guide and to **MCP settings**.
+
 ## Tool access settings
 
-Use **Settings → Tool access** (select **Local MCP**) to search and toggle the local server's tools, individually or by read-only/side-effect group. Group switches affect all group members, even during search. **Restore defaults** enables the configurable MCP tools again. Existing MCP preferences are preserved separately from the **Built-in AI** settings.
+Use **Settings → Tool access** to search and toggle the local MCP server's tools, individually or by read-only/side-effect group. Group switches affect all group members, even during search. **Restore defaults** enables the configurable MCP tools again.
 
 Restart the MCP server, then reconnect stdio clients, to apply changes. For an externally managed server, restart its owning process. The list reflects the tools discovered from the server; disabling a dedicated tool does not prevent an enabled script tool from performing the same operation. These switches are not a sandbox and do not configure remote MCP servers or WebMCP.
 
 ## Browser-native WebMCP (experimental) {#webmcp}
 
-WebMCP is **off by default**. Open **Settings → MCP → WebMCP** and choose **Inspect** for read-only access or **Edit** to also allow scoped, undoable changes. **Off** unregisters all browser tools; changing modes revokes the previous registrations immediately. This preference is independent of local MCP authentication, tool switches, and outbound connections.
+WebMCP is **off by default**. Open **Settings → MCP → WebMCP** and choose **Inspect** for read-only access or **Edit** to also allow scoped, undoable changes. **Off** unregisters all browser tools; changing modes revokes the previous registrations immediately. This preference is independent of local MCP authentication and tool switches.
 
 For local testing, use a Chrome version exposing `document.modelContext`, enable `chrome://flags/#enable-webmcp-testing`, and relaunch the browser. Open a document, enable access in Settings, and connect a WebMCP-capable browser agent or the [Model Context Tool Inspector](https://developer.chrome.com/docs/ai/webmcp). Settings shows browser support and registration status. See the [Chrome WebMCP guide](https://developer.chrome.com/docs/ai/webmcp) for current availability.
 

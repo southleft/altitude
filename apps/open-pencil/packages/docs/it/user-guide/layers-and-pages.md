@@ -28,4 +28,4 @@ Il menu contestuale sposta la selezione in un’altra pagina. Al cambio di pagin
 
 Il pannello destro mostra i controlli applicabili alla selezione: posizione, dimensioni, aspetto, riempimenti, contorni, effetti, tipografia, disposizione ed esportazione.
 
-Senza selezione mostra sfondo e variabili della pagina corrente.
+Senza selezione la scheda **Design** mostra lo sfondo della pagina corrente. Le variabili hanno una scheda **Variabili** dedicata e il pulsante **Collega l’IA** spiega come collegare un agente AI tramite [MCP](/programmable/mcp-server#connect-ai).

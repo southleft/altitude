@@ -19,7 +19,7 @@ OpenPencil otwiera i zapisuje pliki `.fig` bez wcześniejszej konwersji. Import 
 
 ## Panel właściwości
 
-Zawartość kart „Projekt”, „Kod” i „AI” zależy od zaznaczenia.
+Karty „Projekt”, „Zmienne” i „Kod”. Zawartość karty „Projekt” zależy od zaznaczenia.
 
 - **Wygląd:** przezroczystość, wspólny lub osobny promień narożników i widoczność.
 - **Zalew:** kolor jednolity, gradient liniowy, radialny, kątowy lub diamentowy oraz obraz.
@@ -61,11 +61,11 @@ Strony można dodawać, usuwać i przemianowywać; każda zachowuje własne poł
 openpencil export design.fig -f jsx --style tailwind
 ```
 
-## Czat AI
+## Agenci AI
 
-Naciśnij <kbd>⌘</kbd><kbd>J</kbd>. Ponad 90 narzędzi tworzy figury, zmienia style i układ, pracuje z komponentami i zmiennymi, wykonuje operacje logiczne, analizuje tokeny projektu i eksportuje zasoby. Można podłączyć Anthropic, OpenAI, Google AI, OpenRouter albo zgodny punkt końcowy.
+Claude Code, Claude Desktop, Cursor i inni klienci MCP mogą pracować na otwartym dokumencie. Przycisk **Połącz AI** u góry prawego panelu pokazuje kroki konfiguracji oraz to, czy agent jest połączony. Ponad 90 narzędzi tworzy figury, zmienia style i układ, pracuje z komponentami i zmiennymi, wykonuje operacje logiczne, analizuje tokeny projektu i eksportuje zasoby.
 
-Wywołania narzędzi pojawiają się na zwijanej osi czasu. Do kontroli wizualnej asystent eksportuje wynik i porównuje go z poleceniem. Wszystkie zmiany AI można cofnąć.
+Wbudowany czat AI nie jest dostępny w tej dystrybucji. Zobacz [Czat AI](/programmable/ai-chat) i [serwer MCP](/programmable/mcp-server#connect-ai).
 
 ## Serwer MCP
 

@@ -190,7 +190,7 @@ Serialisierbare Änderungen passen gut zu Penpots serverbasierter Zusammenarbeit
 
 ## 11. Scripts und Erweiterbarkeit
 
-Der Befehl [`eval`](/programmable/cli/scripting) stellt eine Figma-kompatible Plugin API für Skripte ohne Oberfläche, Stapelvorgänge und automatisierte Tests bereit. Außerdem sind 90 AI-Werkzeuge über AI-Chat, MCP-Server und CLI verfügbar. Sie decken Lesen, Erstellen, Ändern, Struktur, Variablen, Vektorpfade, Analyse, Vergleiche, boolesche Operationen und Anordnung ab.
+Der Befehl [`eval`](/programmable/cli/scripting) stellt eine Figma-kompatible Plugin API für Skripte ohne Oberfläche, Stapelvorgänge und automatisierte Tests bereit. Außerdem stehen AI-Agenten über den MCP-Server sowie der CLI 90 Werkzeuge zur Verfügung. Sie decken Lesen, Erstellen, Ändern, Struktur, Variablen, Vektorpfade, Analyse, Vergleiche, boolesche Operationen und Anordnung ab.
 
 Penpot besitzt isoliert ausgeführte Plugins, aber keine vergleichbare Skript-API ohne Oberfläche oder MCP-Integration.
 

@@ -5,7 +5,7 @@
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/4wXc9fuZfm)
 [![GitHub Discussions](https://img.shields.io/github/discussions/open-pencil/open-pencil?logo=github&label=Discussions)](https://github.com/open-pencil/open-pencil/discussions)
 
-Open-source design editor. Opens `.fig` and `.pen` design files, includes built-in AI, and ships as a programmable toolkit with a headless Vue SDK for building custom editors.
+Open-source design editor. Opens `.fig` and `.pen` design files, connects to your AI agent over MCP, and ships as a programmable toolkit with a headless Vue SDK for building custom editors.
 
 > **Status:** Active development. Usable today, with some rough edges as features evolve.
 
@@ -28,8 +28,8 @@ Requires macOS 13 or later with current Safari updates, Windows 10 or later, or 
 ## What it does
 
 - **Opens `.fig` and `.pen` files** — read and write native Figma files, open supported Pencil documents from the app or OS file browser, copy & paste nodes between apps
-- **AI builds designs** — describe what you want in chat, 100+ tools create and modify nodes. Connect OpenRouter, Anthropic, OpenAI, Google AI, DeepSeek, Z.ai, MiniMax, or compatible endpoints
-- **Fully programmable** — headless CLI, XPath queries, Figma Plugin API via `eval`, MCP server for AI agents, and desktop agent integrations for Claude Code, Codex, and Gemini CLI
+- **AI builds designs** — connect Claude Code, Claude Desktop, Cursor, or another MCP client with **Connect AI**; 100+ tools create and modify nodes
+- **Fully programmable** — headless CLI, XPath queries, Figma Plugin API via `eval`, and an MCP server for AI agents
 - **Lint, convert, and extract tokens** — inspect documents, lint naming/layout/accessibility, convert between supported formats, analyze colors/typography/spacing/clusters, and extract design tokens
 - **Components and variants** — create reusable components, group variants into component sets, insert local assets as instances, and switch variants from the inspector
 - **Image vectorization** — convert image layers into editable vector layers with Recraft or fal.ai
@@ -167,30 +167,19 @@ All commands support `--json` for machine-readable output.
 
 ## AI & MCP
 
-### Built-in chat
+### Connect AI
 
-Press <kbd>⌘</kbd><kbd>J</kbd> (<kbd>Ctrl</kbd><kbd>J</kbd> on Windows and Linux) to open the AI assistant. It has 100+ tools that can create shapes, set fills and strokes, manage auto-layout, work with components and variables, run boolean operations, analyze design tokens, and export assets. Bring your own API key for OpenRouter, Anthropic, OpenAI, Google AI, DeepSeek, Z.ai, MiniMax, or compatible endpoints. No backend, no account.
+The built-in chat panel is not available in this distribution. Bring the agent you already use instead: click **Connect AI** at the top of the right panel for copyable setup steps for Claude Code, Claude Desktop, Cursor, and other MCP clients. The agent connects to the desktop app's local MCP server and uses its 100+ design tools with your own subscription, so no provider API keys are needed. The button reads **AI connected** once an agent has sent a request. The web build cannot reach a local MCP server; use the desktop app.
 
-Not every provider works in the browser, and not every model streams tool calls correctly. See [BYOK provider & model compatibility](packages/docs/programmable/byok-provider-compatibility.md) for measured results — contributions welcome.
+To let Claude Code use OpenPencil tools without a prompt for each call, add this to `~/.claude/settings.json`:
 
-### Coding agents (desktop)
-
-Use Claude Code, Codex, or Gemini CLI directly in the chat panel. The agent connects to the editor's MCP server and uses all 100+ design tools. Requires the desktop app and the agent CLI installed locally.
-
-Pi is also available as an optional AI SDK Harness provider. Install its companion CLI with `npm install -g @open-pencil/harness`, then add a **Pi** model profile in **Settings → AI & agents**. The companion is installed separately so OpenPencil does not bundle a JavaScript runtime for users who do not enable Harness providers.
-
-**Setup (Claude Code):**
-
-1. Install the ACP adapter: `npm install -g @agentclientprotocol/claude-agent-acp`
-2. Add MCP permission to `~/.claude/settings.json`:
-   ```json
-   {
-     "permissions": {
-       "allow": ["mcp__open-pencil__*"]
-     }
-   }
-   ```
-3. Open the desktop app → <kbd>⌘</kbd><kbd>J</kbd> → select **Claude Code** from the provider dropdown
+```json
+{
+  "permissions": {
+    "allow": ["mcp__open-pencil__*"]
+  }
+}
+```
 
 ### MCP server
 

@@ -19,7 +19,7 @@ OpenPencil ouvre et enregistre directement les fichiers `.fig`. L’import et l�
 
 ## Panneau de propriétés
 
-Les onglets Design, Code et AI s’adaptent à la sélection :
+Onglets Design, Variables et Code. L’onglet Design s’adapte à la sélection :
 
 - **Apparence :** opacité, rayon uniforme ou par coin et visibilité.
 - **Remplissage :** couleur unie, dégradés linéaire, radial, angulaire et diamant, et images.
@@ -61,11 +61,11 @@ Vous pouvez créer, supprimer et renommer des pages ; chacune conserve sa positi
 openpencil export design.fig -f jsx --style tailwind
 ```
 
-## Chat AI
+## Agents AI
 
-<kbd>⌘</kbd><kbd>J</kbd> ouvre l’assistant. Plus de 90 outils créent des formes, modifient styles et dispositions, travaillent avec les composants et variables, exécutent des opérations booléennes, analysent les jetons de design et exportent des ressources. Anthropic, OpenAI, Google AI, OpenRouter et les points d’accès compatibles sont pris en charge.
+Claude Code, Claude Desktop, Cursor et les autres clients MCP peuvent travailler sur le document ouvert. Le bouton **Connecter l’IA** en haut du panneau de droite affiche les étapes de configuration et indique si un agent est connecté. Plus de 90 outils créent des formes, modifient styles et dispositions, travaillent avec les composants et variables, exécutent des opérations booléennes, analysent les jetons de design et exportent des ressources.
 
-Les appels d’outils apparaissent sur une chronologie repliable. Pour vérifier les modifications, l’assistant rend le résultat et le compare à la demande. Toutes les modifications réalisées par l’AI peuvent être annulées.
+Le chat AI intégré n’est pas disponible dans cette distribution. Voir [Chat avec l’AI](/programmable/ai-chat) et [serveur MCP](/programmable/mcp-server#connect-ai).
 
 ## Serveur MCP
 

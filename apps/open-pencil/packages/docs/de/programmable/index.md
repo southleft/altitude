@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: AI und Automatisierung
-description: OpenPencil über AI-Chat, CLI, JSX, MCP und APIs automatisieren.
+description: OpenPencil über AI-Agenten, CLI, JSX, MCP und APIs automatisieren.
 ---
 
 # AI und Automatisierung
@@ -10,9 +10,9 @@ OpenPencil behandelt Designdateien als strukturierte Daten. Vorgänge aus dem Ed
 
 Editor und Automatisierung verwenden denselben Kern. Ein Vorgang verhält sich daher gleich, ob er über die Oberfläche, ein Skript oder einen Agenten ausgelöst wird.
 
-## AI-Chat
+## AI-Agenten
 
-Der integrierte Assistent kann mehr als 90 Werkzeuge ausführen. Eine Anweisung kann beispielsweise Schatten mehrerer Schaltflächen ändern, eine Komponente mit dunkler Variante erstellen oder alle Rahmen einer Seite im Maßstab 2× exportieren.
+Claude Code, Claude Desktop, Cursor und andere MCP-Clients können mehr als 90 Werkzeuge ausführen. Die Schaltfläche **KI verbinden** im Editor zeigt die Einrichtungsschritte. Der integrierte AI-Chat ist in dieser Distribution nicht verfügbar. Eine Anweisung kann beispielsweise Schatten mehrerer Schaltflächen ändern, eine Komponente mit dunkler Variante erstellen oder alle Rahmen einer Seite im Maßstab 2× exportieren.
 
 [AI-Chat →](./ai-chat)
 
@@ -40,7 +40,7 @@ Die CLI untersucht, exportiert und analysiert `.fig`-Dateien ohne geöffneten Ed
 
 ## MCP-Server
 
-Claude Code, Cursor, Windsurf und andere MCP-Clients können dieselben 90 Werkzeuge verwenden wie der integrierte AI-Chat. Der Server unterstützt stdio und HTTP mit Sitzungen.
+Claude Code, Cursor, Windsurf und andere MCP-Clients können diese 90 Werkzeuge verwenden. Der Server unterstützt stdio und HTTP mit Sitzungen.
 
 [MCP-Server →](/programmable/mcp-server)
 

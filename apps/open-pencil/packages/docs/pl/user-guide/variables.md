@@ -9,7 +9,7 @@ Zmienne przechowują tokeny projektu przeznaczone do ponownego użycia: kolory, 
 
 ## Otwieranie edytora zmiennych
 
-Usuń zaznaczenie ze wszystkich obiektów. Karta „Projekt” pokaże właściwości strony, w tym sekcję „Zmienne”. Kliknij ikonę ustawień, aby otworzyć okno.
+Karta „Zmienne” w prawym panelu jest dostępna niezależnie od zaznaczenia. Pokazuje liczbę zmiennych i kolekcji, wybór trybu dla kolekcji z więcej niż jednym trybem oraz przycisk **Importuj tokeny…**. Kliknij ikonę ustawień (**Otwórz zmienne**), aby otworzyć okno.
 
 ## Kolekcje
 

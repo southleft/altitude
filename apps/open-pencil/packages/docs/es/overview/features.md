@@ -19,7 +19,7 @@ OpenPencil abre y guarda archivos `.fig` directamente. La importación y exporta
 
 ## Panel de propiedades
 
-Las pestañas Diseño, Código e AI se adaptan a la selección:
+Pestañas Diseño, Variables y Código. La pestaña Diseño se adapta a la selección:
 
 - **Apariencia:** opacidad, radio uniforme o por esquina y visibilidad.
 - **Relleno:** color sólido, degradados lineal, radial, angular y diamante, e imágenes.
@@ -61,11 +61,11 @@ Puedes crear, eliminar y renombrar páginas; cada una conserva su posición y es
 openpencil export design.fig -f jsx --style tailwind
 ```
 
-## Chat con AI
+## Agentes de AI
 
-<kbd>⌘</kbd><kbd>J</kbd> abre el asistente. Más de 90 herramientas crean formas, modifican estilos y disposiciones, trabajan con componentes y variables, ejecutan operaciones booleanas, analizan variables de diseño y exportan recursos. Admite Anthropic, OpenAI, Google AI, OpenRouter y extremos compatibles.
+Claude Code, Claude Desktop, Cursor y otros clientes MCP pueden trabajar con el documento abierto. El botón **Conectar IA** de la parte superior del panel derecho muestra los pasos de configuración y si hay un agente conectado. Más de 90 herramientas crean formas, modifican estilos y disposiciones, trabajan con componentes y variables, ejecutan operaciones booleanas, analizan variables de diseño y exportan recursos.
 
-Las llamadas a herramientas aparecen en una cronología plegable. Para verificar visualmente los cambios, el asistente renderiza el resultado y lo compara con la solicitud. Todas las modificaciones realizadas por AI se pueden deshacer.
+El chat con AI integrado no está disponible en esta distribución. Consulta [Chat con AI](/programmable/ai-chat) y [servidor MCP](/programmable/mcp-server#connect-ai).
 
 ## Servidor MCP
 

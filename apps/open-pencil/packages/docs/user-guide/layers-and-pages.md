@@ -51,7 +51,7 @@ Disabling recovery stops automatic preservation and removes recovery copies owne
 
 ## Properties Panel
 
-The properties panel on the right has three tabs:
+The properties panel on the right has three tabs: **Design**, **Variables**, and **Code**. The top of the panel also holds the collaboration control and the **Connect AI** button.
 
 ### Design Tab
 
@@ -67,26 +67,27 @@ Shows the properties of the selected node(s), organized in sections:
 
 When no nodes are selected, the Design tab shows page-level properties including the canvas background color.
 
+### Variables Tab
+
+Shows variable and collection counts, a mode picker for each collection with more than one mode, and an **Import tokens…** button. The settings icon opens the full variables dialog. See [Variables](./variables).
+
 ### Code Tab
 
-Displays the selected node as code with syntax highlighting, line numbers, and a copy button. A format toggle lets you switch between two output modes:
+Displays the selection as code with syntax highlighting, line numbers, and a copy button. A source selector switches between three modes:
 
-- **OpenPencil JSX** — custom component tree compatible with `renderJSX()` for programmatic round-trip
-- **Tailwind CSS v4** — HTML with utility classes (`<div className="flex gap-4 p-3">`) ready to paste into React/Vue projects
+- **Design JSX** — OpenPencil component tree compatible with `renderJSX()` for programmatic round-trip; editable
+- **Tailwind JSX** — HTML with Tailwind v4 utility classes (`<div className="flex gap-4 p-3">`) ready to paste into React/Vue projects; read-only
+- **HTML/CSS** — HTML with a stylesheet; editable
 
-### AI Tab
+All three modes follow the current canvas selection. With nothing selected, the panel shows a starter snippet.
 
-An [AI chat interface](../programmable/ai-chat) (also toggled with <kbd>⌘</kbd><kbd>J</kbd>) that can create and modify design elements via natural language. Configure reusable models and provider connections in Settings, and browse locally saved conversations.
+### Connect AI
 
-## Keyboard Shortcuts
-
-| Action | Mac | Windows / Linux |
-|--------|-----|-----------------|
-| Toggle AI chat | <kbd>⌘</kbd><kbd>J</kbd> | <kbd>Ctrl</kbd> + <kbd>J</kbd> |
+The **Connect AI** button opens a popover with setup steps for connecting Claude Code, Claude Desktop, Cursor, or another MCP client to OpenPencil through the local MCP server. When an agent has recently sent a request, the button reads **AI connected**. See [MCP Server](../programmable/mcp-server#connect-ai).
 
 ## Mobile Layout
 
-On mobile and small screens, the side panels are replaced by a swipeable bottom drawer. Tabs at the top of the drawer switch between Layers, Properties, Design, and Code views. The toolbar collapses to a compact horizontal strip with category switching.
+On mobile and small screens, the side panels are replaced by a swipeable bottom drawer. Tabs at the top of the drawer switch between Layers, Design, Variables, and Code views. The toolbar collapses to a compact horizontal strip with category switching.
 
 ## Tips
 

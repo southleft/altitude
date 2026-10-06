@@ -9,7 +9,7 @@ Las variables almacenan valores reutilizables, como colores y espaciados. Una pr
 
 ## Abrir el editor
 
-Sin objetos seleccionados, la pestaña **Diseño** muestra las propiedades de la página. El icono de ajustes de la sección Variables abre el editor.
+La pestaña **Variables** del panel derecho está disponible sea cual sea la selección. Muestra el número de variables y colecciones, un selector de modo para las colecciones con más de un modo y el botón **Importar tokens…**. El icono de ajustes (**Abrir variables**) abre el editor.
 
 ## Colecciones y modos
 

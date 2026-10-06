@@ -9,7 +9,7 @@ Les variables stockent des valeurs réutilisables, comme des couleurs et des esp
 
 ## Ouvrir l’éditeur
 
-Lorsqu’aucun objet n’est sélectionné, l’onglet **Design** affiche les propriétés de la page. L’icône des réglages de la section Variables ouvre l’éditeur.
+L’onglet **Variables** du panneau de droite est disponible quelle que soit la sélection. Il affiche le nombre de variables et de collections, un sélecteur de mode pour les collections comportant plusieurs modes et le bouton **Importer des tokens…**. L’icône des réglages (**Ouvrir les variables**) ouvre l’éditeur.
 
 ## Collections et modes
 

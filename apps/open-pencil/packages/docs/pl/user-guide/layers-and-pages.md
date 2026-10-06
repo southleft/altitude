@@ -47,13 +47,17 @@ Jeśli nic nie jest zaznaczone, karta pokazuje właściwości strony.
 
 Zaznaczony obiekt jest prezentowany jako JSX z wyróżnianiem składni. Dostępny jest także HTML z klasami Tailwind CSS v4.
 
-### AI
+### Zmienne
 
-Czat AI tworzy i zmienia obiekty na podstawie poleceń w zwykłym języku. Kartę można otworzyć lub zamknąć skrótem <kbd>⌘</kbd><kbd>J</kbd> albo <kbd>Ctrl</kbd><kbd>J</kbd>.
+Karta pokazuje liczbę zmiennych i kolekcji, wybór trybu dla kolekcji z więcej niż jednym trybem oraz przycisk **Importuj tokeny…**. Ikona ustawień otwiera okno zmiennych. Zobacz [Zmienne](./variables).
+
+### Połącz AI
+
+Przycisk **Połącz AI** u góry panelu otwiera kroki konfiguracji, które łączą Claude Code, Claude Desktop, Cursor lub innego klienta MCP z lokalnym serwerem MCP. Zobacz [serwer MCP](/programmable/mcp-server#connect-ai).
 
 ## Małe ekrany
 
-Na telefonach i małych ekranach panele boczne zastępuje wysuwany panel dolny z kartami „Warstwy”, „Właściwości”, „Projekt” i „Kod”. Panel narzędzi staje się zwartym poziomym paskiem.
+Na telefonach i małych ekranach panele boczne zastępuje wysuwany panel dolny z kartami „Warstwy”, „Projekt”, „Zmienne” i „Kod”. Panel narzędzi staje się zwartym poziomym paskiem.
 
 ## Wskazówki
 

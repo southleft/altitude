@@ -11,7 +11,7 @@ JSX dient außerdem als lesbare Darstellung eines vorhandenen Designs. Änderung
 
 ## Design erstellen
 
-Das Werkzeug `render`, verfügbar in AI-Chat, MCP und CLI `eval`, akzeptiert JSX:
+Das Werkzeug `render`, verfügbar für AI-Agenten über MCP und in CLI `eval`, akzeptiert JSX:
 
 ```jsx
 <Frame name="Card" w={320} h="hug" flex="col" gap={16} p={24} bg="#FFF" rounded={16}>

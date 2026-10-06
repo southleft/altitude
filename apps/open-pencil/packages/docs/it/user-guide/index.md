@@ -6,7 +6,7 @@ description: Navigare, disegnare, modificare testo, usare componenti e configura
 
 # Guida utente
 
-OpenPencil è un editor di design locale e open source, compatibile con Figma, con AI integrata e API di automazione.
+OpenPencil è un editor di design locale e open source, compatibile con Figma, con collegamento di agenti AI tramite MCP e API di automazione.
 
 ## Primi passi
 
