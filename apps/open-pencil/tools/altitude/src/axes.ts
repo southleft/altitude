@@ -50,6 +50,10 @@ interface AxesManifest {
 /** CSS keywords a variable cannot hold; Altitude uses them for high-contrast borders. */
 const CSS_KEYWORDS = new Set(['currentcolor', 'inherit', 'initial', 'unset', 'revert'])
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
 function isManifest(value: unknown): value is AxesManifest {
   return typeof value === 'object' && value !== null && 'axes' in value
 }
@@ -77,8 +81,8 @@ function expectedFor(
     const fallback = base.get(name)
     return fallback === undefined ? null : { expected: fallback, category: 'value' }
   }
-  if (typeof raw === 'object') {
-    return { expected: transitionText(raw as Record<string, unknown>), category: 'composite' }
+  if (isRecord(raw)) {
+    return { expected: transitionText(raw), category: 'composite' }
   }
   const text = String(raw)
   return {

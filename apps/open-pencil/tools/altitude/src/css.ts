@@ -1,5 +1,7 @@
 import { converter, parse } from 'culori'
 
+import { colorToCSS } from '@open-pencil/core/color'
+
 const toRGB = converter('rgb')
 
 /**
@@ -55,8 +57,11 @@ function colorText(input: string): string | null {
   const color = parse(input)
   if (!color) return null
   const source = toRGB(color)
-  const channel = (n: number | undefined) => Math.round(Math.min(1, Math.max(0, n ?? 0)) * 255)
-  return `rgba(${channel(source.r)}, ${channel(source.g)}, ${channel(source.b)}, ${round(source.alpha ?? 1, 2)})`
+  // 8-bit channels and two-digit alpha: #1313114d and rgba(19, 19, 17, 0.3) are equal.
+  const channel = (n: number | undefined) =>
+    Math.round(Math.min(1, Math.max(0, n ?? 0)) * 255) / 255
+  const alpha = Number(round(source.alpha ?? 1, 2))
+  return colorToCSS({ r: channel(source.r), g: channel(source.g), b: channel(source.b), a: alpha })
 }
 
 const NAMED_COLORS = new Set(['transparent', 'white', 'black', 'currentcolor'])
