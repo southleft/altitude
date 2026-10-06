@@ -54,6 +54,7 @@ Common commands:
 - `find` — find nodes by name/type
 - `query` — XPath selectors for node search
 - `variables` — list variables and collections
+- `tokens import` — import or update DTCG design tokens as collections and modes
 - `export` — export PNG/JPG/WEBP/SVG/PDF/JSX/.fig
 - `convert` — convert between supported document formats
 - `analyze` — colors, typography, spacing, repeated clusters
@@ -74,6 +75,16 @@ openpencil selection --json
 openpencil variables design.fig
 openpencil variables --collection "Colors" --type COLOR
 ```
+
+### Design tokens
+
+```bash
+openpencil tokens import ./tokens                                   # dry run: collections and named degradations
+openpencil tokens import ./tokens --preset ./tokens.preset.json --into design.fig
+openpencil tokens import ./tokens --preset acme --into design.fig --prune --json  # preset from $OPENPENCIL_TOKEN_PRESETS
+```
+
+A mapping preset declares layers, axes (mode, brand, density, …) and collections; see the [design tokens guide](https://openpencil.dev/programmable/design-tokens). Re-importing updates variables by token path and keeps bindings. Over MCP, use `import_design_tokens` (`tokens` or `files`, optional `mapping`), then `add_mode`, `rename_mode`, `remove_mode`, `set_active_mode`, and `set_variable_alias` to adjust modes and aliases.
 
 ### Search and XPath query
 

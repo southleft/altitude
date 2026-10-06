@@ -19,7 +19,12 @@ export {
   designFactFromNode,
   designFactToAttrs
 } from './design-fact'
-export { applyVariableCSS, cssVarName, variableCollectionsToCSS } from './design-tokens'
+export {
+  applyVariableCSS,
+  cssVarName,
+  cssVarNameForVariable,
+  variableCollectionsToCSS
+} from './design-tokens'
 export type { DesignFactOptions, OmittedGeometry } from './design-fact'
 export type { FactIssue, FactIssueSink } from './design-fact/schema'
 export type { TokenCSSOptions } from './design-tokens'

@@ -1,5 +1,10 @@
 import { colorToCSS } from '@open-pencil/core/color'
-import type { Color, SceneGraph } from '@open-pencil/scene-graph'
+import {
+  isTokenAbsentInMode,
+  tokenFloatCSS,
+  variableCSSName
+} from '@open-pencil/core/io/formats/dtcg'
+import type { SceneGraph, Variable, VariableValue } from '@open-pencil/scene-graph'
 
 import type { DesignFact, DesignStyleDeclaration } from './types'
 
@@ -15,6 +20,12 @@ import type { DesignFact, DesignStyleDeclaration } from './types'
 export interface TokenCSSOptions {
   /** Prefix for generated custom properties, e.g. 'al' produces `--al-color-primary`. */
   cssVarPrefix?: string
+  /**
+   * Emit one `:root` block for this mode per collection id instead of a block per mode.
+   * Collections not listed use their active mode. Used to reproduce one theme combination
+   * (for example one brand × mode stylesheet).
+   */
+  modes?: Readonly<Record<string, string>>
 }
 
 /**
@@ -29,6 +40,17 @@ export function cssVarName(variableName: string, prefix = ''): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
   return `--${prefix ? `${prefix}-` : ''}${slug}`
+}
+
+/**
+ * The custom property a variable is read through: its `codeSyntax.WEB` name when it has
+ * one (imported tokens record the exact name code uses), otherwise the slug of its name.
+ */
+export function cssVarNameForVariable(
+  variable: Pick<Variable, 'name' | 'codeSyntax'>,
+  prefix = ''
+): string {
+  return variableCSSName(variable) ?? cssVarName(variable.name, prefix)
 }
 
 /**
@@ -114,20 +136,22 @@ export function applyVariableCSS(
 /**
  * Emit a node's variable collections as a CSS custom-property block. Without this the
  * `var()` references above resolve to their fallbacks only — correct, but not linked.
+ *
+ * Values are resolved literals. Imported design tokens keep their authored unit
+ * (`1rem`, `0.2s`, `400`) and are left out of modes their source did not define.
  */
 export function variableCollectionsToCSS(graph: SceneGraph, options: TokenCSSOptions = {}): string {
+  if (options.modes) return selectedModesToCSS(graph, options.modes, options.cssVarPrefix)
   const lines: string[] = []
   for (const collection of graph.variableCollections.values()) {
-    for (const modeIndex of collection.modes.keys()) {
-      const mode = collection.modes[modeIndex]
+    for (const mode of collection.modes) {
       const declarations: string[] = []
       for (const variableId of collection.variableIds) {
         const variable = graph.variables.get(variableId)
-        if (!variable) continue
-        const value = graph.resolveVariable(variableId, mode.modeId)
-        const css = variableValueToCSS(value)
+        if (!variable || isTokenAbsentInMode(variable, mode.name)) continue
+        const css = variableValueToCSS(variable, graph.resolveVariable(variableId, mode.modeId))
         if (css === undefined) continue
-        declarations.push(`  ${cssVarName(variable.name, options.cssVarPrefix)}: ${css};`)
+        declarations.push(`  ${cssVarNameForVariable(variable, options.cssVarPrefix)}: ${css};`)
       }
       if (!declarations.length) continue
       const selector =
@@ -141,13 +165,36 @@ export function variableCollectionsToCSS(graph: SceneGraph, options: TokenCSSOpt
   return lines.join('\n')
 }
 
-function variableValueToCSS(value: unknown): string | undefined {
-  if (typeof value === 'number') return `${value}px`
+function selectedModesToCSS(
+  graph: SceneGraph,
+  modes: Readonly<Record<string, string>>,
+  prefix: string | undefined
+): string {
+  const declarations: string[] = []
+  for (const collection of graph.variableCollections.values()) {
+    const modeId = modes[collection.id] ?? graph.getActiveModeId(collection.id)
+    const modeName = collection.modes.find((mode) => mode.modeId === modeId)?.name ?? ''
+    for (const variableId of collection.variableIds) {
+      const variable = graph.variables.get(variableId)
+      if (!variable || isTokenAbsentInMode(variable, modeName)) continue
+      const css = variableValueToCSS(variable, graph.resolveVariableInModes(variableId, modes))
+      if (css === undefined) continue
+      declarations.push(`  ${cssVarNameForVariable(variable, prefix)}: ${css};`)
+    }
+  }
+  return declarations.length ? [':root {', ...declarations, '}'].join('\n') : ''
+}
+
+function variableValueToCSS(
+  variable: Variable,
+  value: VariableValue | undefined
+): string | undefined {
+  if (typeof value === 'number') return tokenFloatCSS(variable, value) ?? `${value}px`
   if (typeof value === 'string') return value
   if (typeof value === 'boolean') return value ? '1' : '0'
   if (value && typeof value === 'object' && 'r' in value) {
     // colorToCSS owns the colour-space handling; a hand-rolled rgb() string drifts from it.
-    return colorToCSS(value as Color)
+    return colorToCSS(value)
   }
   return undefined
 }

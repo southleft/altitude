@@ -67,6 +67,7 @@ export const programmableSidebar = (
       { text: 'Native JavaScript APIs', link: '/programmable/native-api' },
       { text: 'Design authoring reference', link: '/reference/design-authoring' },
       { text: labels.mcpServer, link: '/programmable/mcp-server' },
+      { text: 'Design tokens', link: '/programmable/design-tokens' },
       { text: labels.aiChat, link: `${prefix}/programmable/ai-chat` },
       ...(!prefix
         ? [

@@ -1,0 +1,268 @@
+{
+  "name": "altitude",
+  "description": "Altitude DTCG tokens (libs/al-web-components/styles/tokens-dtcg) as the collection layout of scripts/build-figma-payload.mjs, with the brand layer as a Brand x Mode collection and each theme axis (tier-2/axis/<axis>/<mode>.json: density, contrast, motion, shape) as a collection whose modes are the axis values. Variable names follow scripts/figma-atoms/token-map.mjs; codeSyntax.WEB is the emitted --al-* custom property.",
+  "layers": [
+    {
+      "files": ["tier-1/*.json", "tier-2/*.json"]
+    },
+    {
+      "files": ["tier-2/theme/{mode}/*.json", "tier-3/theme/{mode}/*.json"]
+    },
+    {
+      "files": ["tier-2/axis/density/{density}.json"],
+      "when": {
+        "density": "comfortable"
+      }
+    },
+    {
+      "files": ["tier-2/axis/contrast/{contrast}.json"],
+      "when": {
+        "contrast": "normal"
+      }
+    },
+    {
+      "files": ["tier-2/axis/motion/{motion}.json"],
+      "when": {
+        "motion": "full"
+      }
+    },
+    {
+      "files": ["tier-2/axis/shape/{shape}.json"],
+      "when": {
+        "shape": "default"
+      }
+    },
+    {
+      "files": ["tier-2/brand/{brand}/*.json"]
+    },
+    {
+      "files": ["tier-2/brand/{brand}/mode/{mode}/*.json"]
+    },
+    {
+      "files": ["tier-2/axis/density/{density}.json"],
+      "when": {
+        "density": ["compact", "cozy"]
+      }
+    },
+    {
+      "files": ["tier-2/axis/contrast/{contrast}.json"],
+      "when": {
+        "contrast": ["more"]
+      }
+    },
+    {
+      "files": ["tier-2/axis/motion/{motion}.json"],
+      "when": {
+        "motion": ["reduced", "expressive"]
+      }
+    },
+    {
+      "files": ["tier-2/axis/shape/{shape}.json"],
+      "when": {
+        "shape": ["sharp", "pill"]
+      }
+    }
+  ],
+  "axes": [
+    {
+      "name": "mode",
+      "label": "Mode",
+      "modes": [
+        {
+          "name": "light",
+          "label": "Light"
+        },
+        {
+          "name": "dark",
+          "label": "Dark"
+        }
+      ]
+    },
+    {
+      "name": "brand",
+      "label": "Brand",
+      "modes": [
+        {
+          "name": "altitude",
+          "label": "Altitude"
+        },
+        {
+          "name": "southleft",
+          "label": "Southleft"
+        }
+      ]
+    },
+    {
+      "name": "density",
+      "label": "Density",
+      "modes": [
+        {
+          "name": "comfortable",
+          "label": "Comfortable"
+        },
+        {
+          "name": "compact",
+          "label": "Compact"
+        },
+        {
+          "name": "cozy",
+          "label": "Cozy"
+        }
+      ],
+      "default": "comfortable"
+    },
+    {
+      "name": "contrast",
+      "label": "Contrast",
+      "modes": [
+        {
+          "name": "normal",
+          "label": "Normal"
+        },
+        {
+          "name": "more",
+          "label": "More"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "name": "motion",
+      "label": "Motion",
+      "modes": [
+        {
+          "name": "full",
+          "label": "Full"
+        },
+        {
+          "name": "reduced",
+          "label": "Reduced"
+        },
+        {
+          "name": "expressive",
+          "label": "Expressive"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "name": "shape",
+      "label": "Shape",
+      "modes": [
+        {
+          "name": "default",
+          "label": "Default"
+        },
+        {
+          "name": "sharp",
+          "label": "Sharp"
+        },
+        {
+          "name": "pill",
+          "label": "Pill"
+        }
+      ],
+      "default": "default"
+    }
+  ],
+  "collections": [
+    {
+      "name": "Tier 1 | Primitive",
+      "files": ["tier-1/**"],
+      "hiddenFromPublishing": true
+    },
+    {
+      "name": "Tier 2 | Semantic",
+      "files": ["tier-2/*.json"]
+    },
+    {
+      "name": "Tier 3 | Component",
+      "axes": ["mode"],
+      "tokens": [
+        "theme.color.header.background",
+        "theme.color.header.background.**",
+        "theme.color.body.background",
+        "theme.color.body.background.**"
+      ]
+    },
+    {
+      "name": "Tier 2 | Theme",
+      "axes": ["mode"]
+    },
+    {
+      "name": "Tier 2 | Brand",
+      "axes": ["brand", "mode"]
+    },
+    {
+      "name": "Tier 2 | Density",
+      "axes": ["density"]
+    },
+    {
+      "name": "Tier 2 | Contrast",
+      "axes": ["contrast"]
+    },
+    {
+      "name": "Tier 2 | Motion",
+      "axes": ["motion"]
+    },
+    {
+      "name": "Tier 2 | Shape",
+      "axes": ["shape"]
+    }
+  ],
+  "naming": {
+    "dropSegments": [],
+    "rename": [
+      {
+        "from": "font-size.",
+        "to": "typography/font-size/"
+      },
+      {
+        "from": "line-height.",
+        "to": "typography/line-height/"
+      },
+      {
+        "from": "font-family.",
+        "to": "typography/font-family/"
+      },
+      {
+        "from": "font-weight.",
+        "to": "typography/font-weight/"
+      },
+      {
+        "from": "letter-spacing.",
+        "to": "typography/letter-spacing/"
+      },
+      {
+        "from": "text-decoration.",
+        "to": "typography/text-decoration/"
+      },
+      {
+        "from": "animation.distance.",
+        "to": "animation/distance/"
+      },
+      {
+        "from": "color.brand.paper.",
+        "to": "color/neutral/paper/"
+      },
+      {
+        "from": "color.brand.ink.",
+        "to": "color/neutral/ink/"
+      },
+      {
+        "from": "theme.border.radius.role-",
+        "to": "theme/border/radius/role/"
+      }
+    ]
+  },
+  "cssVar": {
+    "prefix": "al",
+    "dropSegments": ["@", "$root"]
+  },
+  "keepExtensions": ["org.altitude.token"],
+  "omitFromCSSWhen": {
+    "extension": "org.altitude.axis",
+    "property": "css",
+    "values": ["initial", "omit"]
+  }
+}

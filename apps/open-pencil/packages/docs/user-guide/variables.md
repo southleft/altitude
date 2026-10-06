@@ -47,6 +47,10 @@ In the Fill section of the properties panel, use the variable picker to bind a c
 
 When the variable's value changes (or when switching modes), all bound fills update automatically.
 
+## Importing Design Tokens
+
+Click **Import tokens…** in the Variables panel to import DTCG token files (a folder, JSON files, or a ZIP archive) as collections and modes. Choose a mapping preset to split a multi-file token tree into collections such as Theme (Light/Dark) or Brand. Importing the same tokens again updates the variables in place and keeps their bindings; tokens that no longer exist are listed, and deleted only when you choose to. See [Design tokens](/programmable/design-tokens) for mappings and type handling.
+
 ## Tips
 
 - Use collections to group related tokens (e.g., "Primitives" for raw colors, "Semantic" for role-based aliases, "Spacing" for layout values).

@@ -60,3 +60,13 @@ export type {
   IOFormatExportOptions,
   IOFormatAdapter
 } from './types'
+export {
+  importDesignTokens,
+  planTokenImport,
+  resolveTokenImportConfig,
+  tokenModeSelection,
+  type TokenFiles,
+  type TokenImportConfig,
+  type TokenImportResult,
+  type TokenIssue
+} from './formats/dtcg'

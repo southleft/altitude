@@ -8,3 +8,6 @@ export {
 } from './variables/collections'
 export { findVariables, getVariable, listVariables } from './variables/read'
 export { createVariable, deleteVariable, setVariable } from './variables/values'
+export { setVariableAlias } from './variables/aliases'
+export { importDesignTokensTool } from './variables/import'
+export { addMode, removeMode, renameMode, setActiveMode } from './variables/modes'

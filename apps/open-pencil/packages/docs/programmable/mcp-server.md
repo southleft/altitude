@@ -291,12 +291,18 @@ OpenPencil currently registers 100+ shared design tools, plus MCP-only document 
 | `get_variable` | Get a variable by ID or name |
 | `find_variables` | Find variables by name pattern or type |
 | `create_variable` | Create a new variable in a collection |
-| `set_variable` | Set a variable value in a mode |
+| `set_variable` | Set a variable value in a mode (mode ID or name) |
+| `set_variable_alias` | Make a variable reference another variable, in one mode or all |
 | `delete_variable` | Delete a variable |
 | `bind_variable` | Bind a variable to a node property |
 | `get_collection` | Get a variable collection by ID or name |
 | `create_collection` | Create a new variable collection |
 | `delete_collection` | Delete a variable collection |
+| `add_mode` | Add a mode to a collection, copying values from another mode |
+| `rename_mode` | Rename a collection mode |
+| `remove_mode` | Remove a collection mode and its values |
+| `set_active_mode` | Switch a collection's document-wide active mode |
+| `import_design_tokens` | Import or update DTCG design tokens as collections, modes and variables ([guide](./design-tokens.md)) |
 
 ### Analyze
 

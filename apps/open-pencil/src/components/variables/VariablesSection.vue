@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { useI18n, useSceneComputed } from '@open-pencil/vue'
+import { useI18n, useSceneComputed, useVariableMessages } from '@open-pencil/vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -9,7 +9,7 @@ import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
 
-const emit = defineEmits<{ openDialog: [] }>()
+const emit = defineEmits<{ openDialog: []; importTokens: [] }>()
 
 const editor = useEditorStore()
 const collectionCount = useSceneComputed(() => {
@@ -48,6 +48,7 @@ const switchable = useSceneComputed(() => {
 
 const hasVariables = computed(() => variableCount.value > 0)
 const { panels } = useI18n()
+const variableMessages = useVariableMessages()
 
 function selectMode(collectionId: string, modeId: string): void {
   editor.setActiveMode(collectionId, modeId)
@@ -57,6 +58,9 @@ function selectMode(collectionId: string, modeId: string): void {
 <template>
   <PanelSection :label="panels.variables" :empty="!hasVariables">
     <template #actions>
+      <IconButton :label="variableMessages.importTokens" @click="emit('importTokens')">
+        <icon-lucide-file-down class="size-3.5" />
+      </IconButton>
       <IconButton :label="panels.openVariables" @click="emit('openDialog')">
         <icon-lucide-settings-2 class="size-3.5" />
       </IconButton>

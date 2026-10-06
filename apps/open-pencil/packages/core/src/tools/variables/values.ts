@@ -5,6 +5,8 @@ import type { VariableType, VariableValue } from '@open-pencil/scene-graph'
 import { parseColor } from '#core/color'
 import { defineTool } from '#core/tools/schema'
 
+import { findMode } from './modes'
+
 function parseVariableValue(type: VariableType, value: string): VariableValue {
   if (type === 'COLOR') return parseColor(value)
   if (type === 'FLOAT') return Number(value)
@@ -42,15 +44,17 @@ export const setVariable = defineTool({
   execution: { kind: 'sync', mutation: 'properties' },
   input: v.object({
     id: v.pipe(v.string(), v.description('Variable ID')),
-    mode: v.pipe(v.string(), v.description('Mode ID')),
+    mode: v.pipe(v.string(), v.description('Mode ID or name')),
     value: v.pipe(v.string(), v.description('Value (hex for COLOR, number for FLOAT, etc.)'))
   }),
   execute: (figma, args) => {
     const variable = figma.getVariableById(args.id)
     if (!variable) return { error: `Variable "${args.id}" not found` }
+    const collection = figma.getVariableCollectionById(variable.collectionId)
+    const modeId = (collection && findMode(collection, args.mode)?.modeId) ?? args.mode
     const parsedValue = parseVariableValue(variable.type, args.value)
-    figma.setVariableValue(args.id, args.mode, parsedValue)
-    return { id: args.id, mode: args.mode, value: parsedValue }
+    figma.setVariableValue(args.id, modeId, parsedValue)
+    return { id: args.id, mode: modeId, value: parsedValue }
   }
 })
 
