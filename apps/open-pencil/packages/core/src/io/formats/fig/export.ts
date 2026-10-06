@@ -7,7 +7,8 @@ import {
   buildComponentPropIndex,
   exportCanvasGuides,
   importCanvasGuides,
-  stringToGuid
+  stringToGuid,
+  variableMetadataToKiwi
 } from '@open-pencil/fig/node-change'
 import { initCodec, getCompiledSchema, getSchemaBytes } from '@open-pencil/kiwi/fig/codec'
 import type { NodeChange } from '@open-pencil/kiwi/fig/codec'
@@ -231,7 +232,8 @@ function appendVariableNodeChanges(
       variableSetModes: col.modes.map((m, i) => {
         const mGuid = modeIdToGuid.get(m.modeId) ?? stringToGuid(m.modeId)
         return { id: mGuid, name: m.name, sortPosition: fractionalPosition(i) }
-      })
+      }),
+      ...variableMetadataToKiwi(col)
     })
 
     appendVariablesForCollection(
@@ -284,7 +286,8 @@ function appendVariablesForCollection(
       variableSetID: { guid: colGuid },
       variableResolvedType: resolvedType,
       variableDataValues: { entries },
-      variableScopes: ['ALL_SCOPES']
+      variableScopes: ['ALL_SCOPES'],
+      ...variableMetadataToKiwi(variable)
     }
     // Preserve library key/version on VARIABLE NodeChanges so that
     // buildAssetRefMap can resolve assetRef to guid on reimport.

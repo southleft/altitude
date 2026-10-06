@@ -13,7 +13,8 @@ import {
   shouldImportTextAsAutoSize,
   sortChildren,
   resolveVariableConsumptionEntry,
-  setVariableColorResolver
+  setVariableColorResolver,
+  variableMetadataFromKiwi
 } from '@open-pencil/fig/node-change'
 import type { NodeChange, VariableDataValuesEntry, Color, GUID } from '@open-pencil/kiwi/fig/codec'
 import { SceneGraph } from '@open-pencil/scene-graph'
@@ -250,7 +251,8 @@ function importCollections(changeMap: Map<string, NodeChange>, graph: SceneGraph
       name: nc.name ?? 'Variables',
       modes,
       defaultModeId: modes[0].modeId,
-      variableIds: []
+      variableIds: [],
+      ...variableMetadataFromKiwi(nc)
     })
   }
 }
@@ -322,7 +324,8 @@ function importVariableEntries(
       description: '',
       hiddenFromPublishing: false,
       key: typeof nc.key === 'string' ? nc.key : undefined,
-      version: typeof nc.version === 'string' ? nc.version : undefined
+      version: typeof nc.version === 'string' ? nc.version : undefined,
+      ...variableMetadataFromKiwi(nc)
     })
   }
 }
