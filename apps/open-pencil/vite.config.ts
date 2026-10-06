@@ -25,9 +25,14 @@ import { createDevServerOptions } from './vite/server'
 const host = process.env.TAURI_DEV_HOST
 const automationRoute = localAutomationRoute(host)
 
+// Serve from a sub-path when hosted inside another site (Altitude publishes at /open-pencil/).
+const basePath = (process.env.OPENPENCIL_BASE ?? '').replace(/^\/+|\/+$/g, '')
+const base = basePath ? `/${basePath}/` : '/'
+
 export default defineConfig(async ({ command }) => {
   await ensureBrandAssets(['web'])
   return {
+    base,
     resolve: {
       alias: createOpenPencilAliases(__dirname)
     },
@@ -47,7 +52,7 @@ export default defineConfig(async ({ command }) => {
       Components({ resolvers: [IconsResolver({ prefix: 'icon' })] }),
       openPencilAutomationPlugin(command, host),
       vue(),
-      openPencilPwaPlugin()
+      openPencilPwaPlugin(base)
     ],
     clearScreen: false,
     build: {

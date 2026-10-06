@@ -3,6 +3,7 @@ import CanvasKitInit, { type CanvasKit } from 'canvaskit-wasm'
 
 import { IS_BROWSER } from './constants'
 import { filePathFromURL } from './io/file-url'
+import { publicAssetURL } from './public-asset'
 
 let instance: CanvasKit | null = null
 
@@ -18,9 +19,7 @@ export async function getCanvasKit(options?: CanvasKitOptions): Promise<CanvasKi
       const ckPath = import.meta.resolve('canvaskit-wasm')
       return filePathFromURL(new URL(file, ckPath))
     }
-    const base = 'env' in import.meta ? import.meta.env.BASE_URL : '/'
-    const prefix = base === '/' ? '' : base.replace(/\/$/, '')
-    return `${prefix}/${file}`
+    return publicAssetURL(file)
   }
 
   instance = await CanvasKitInit({

@@ -31,7 +31,7 @@ function collectStartupChunks(startupChunks: Set<string>): Plugin {
   }
 }
 
-export function openPencilPwaPlugin() {
+export function openPencilPwaPlugin(base = '/') {
   const startupChunks = new Set<string>()
   return [
     collectStartupChunks(startupChunks),
@@ -61,7 +61,7 @@ export function openPencilPwaPlugin() {
             }
           }
         ],
-        navigateFallback: '/index.html'
+        navigateFallback: `${base}index.html`
       },
       manifest: {
         name: 'OpenPencil',
@@ -69,16 +69,16 @@ export function openPencilPwaPlugin() {
         description: 'Open-source design editor',
         display: 'standalone',
         orientation: 'any',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         theme_color: '#1e1e1e',
         background_color: '#1e1e1e',
         categories: ['design', 'productivity'],
         icons: [
-          { src: '/brand/pwa-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-          { src: '/brand/pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: `${base}brand/pwa-192.png`, sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: `${base}brand/pwa-512.png`, sizes: '512x512', type: 'image/png', purpose: 'any' },
           {
-            src: '/brand/pwa-maskable-512.png',
+            src: `${base}brand/pwa-maskable-512.png`,
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'

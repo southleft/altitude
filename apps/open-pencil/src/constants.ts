@@ -72,8 +72,8 @@ export const ROOM_ID_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789'
 export const WEB_APP_ORIGIN = 'https://app.openpencil.dev'
 
 export function getShareURL(roomId: string): string {
-  const base = IS_TAURI || !IS_BROWSER ? WEB_APP_ORIGIN : window.location.origin
-  return `${base}/share/${roomId}`
+  if (IS_TAURI || !IS_BROWSER) return `${WEB_APP_ORIGIN}/share/${roomId}`
+  return `${window.location.origin}${import.meta.env.BASE_URL}share/${roomId}`
 }
 
 export const PEER_COLORS: Color[] = [

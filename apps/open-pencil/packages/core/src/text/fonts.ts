@@ -28,6 +28,7 @@ import type {
 import { collectGraphFontKeys } from '#core/text/requirements'
 import { normalizedCoverageText, WebFontResolver } from '#core/text/web-fonts'
 import type { WebFontFetch, WebFontProviderId } from '#core/text/web-fonts'
+import { publicAssetURL } from '#core/public-asset'
 
 type FindLocalFontOptions = { allowVariable?: boolean }
 
@@ -217,7 +218,7 @@ export class FontManager {
 
   async fetchBundledFont(url: string): Promise<ArrayBuffer | null> {
     if (IS_BROWSER) {
-      const response = await fetch(url)
+      const response = await fetch(publicAssetURL(url))
       return response.arrayBuffer()
     }
     const { readFile } = await import(/* @vite-ignore */ 'node:fs/promises')
