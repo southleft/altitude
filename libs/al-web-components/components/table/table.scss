@@ -68,6 +68,9 @@
   /**
    * Header cells
    * 1. Sticks to the top of the scroll container while scrolling vertically
+   * 2. Header cells keep the shared cell padding so their labels line up with
+   *    the body cells beneath them. Only a sortable header drops it, because
+   *    its sort button fills the cell and carries the same padding itself.
    */
   .al-c-table__cell--header {
     @include al-theme-typography-body-sm-semibold;
@@ -83,12 +86,15 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
 
-    padding: 0;
     color: var(--al-theme-color-content-neutral-faint);
     background-color: var(--al-theme-color-background-neutral-weak);
     position: sticky; /* 1 */
     inset-block-start: 0;
     z-index: var(--al-z-index-100);
+  }
+
+  .al-c-table__cell--sortable {
+    padding: 0; /* 2 */
   }
 
   /**

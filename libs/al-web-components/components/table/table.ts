@@ -72,6 +72,9 @@ export class ALTable extends ALElement {
 
   /**
    * Row data for data-driven rendering. Must be paired with `columns`.
+   * Each cell value (`row[column.key]`) may be a string (or number) or a DOM
+   * `Node` — e.g. an `<al-badge>` element — which is rendered into the cell
+   * as-is, so rich cell content does not require the slotted mode.
    * When either `columns` or `data` is not provided, the default slot is
    * rendered instead so a consumer may supply their own `<thead>`/`<tbody>`.
    */
@@ -203,7 +206,7 @@ export class ALTable extends ALElement {
     const iconName = direction === 'ascending' ? 'caret-up' : direction === 'descending' ? 'caret-down' : 'caret-up-down';
 
     return html`
-      <th scope="col" class="al-c-table__cell al-c-table__cell--header" style=${style} aria-sort=${direction}>
+      <th scope="col" class="al-c-table__cell al-c-table__cell--header al-c-table__cell--sortable" style=${style} aria-sort=${direction}>
         <button type="button" class="al-c-table__sort-button" @click=${() => this.handleSort(column.key)}>
           <span>${column.label}</span>
           <${this.iconEl} class="al-c-table__sort-icon" name=${iconName} size="sm"></${this.iconEl}>
