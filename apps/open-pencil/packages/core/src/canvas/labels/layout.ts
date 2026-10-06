@@ -28,6 +28,9 @@ export interface LabelLayout {
   maxTextWidth: number
 }
 
+/** Screen-space text offset after the component icon; no label fits in a narrower node. */
+export const COMPONENT_LABEL_TEXT_X = COMPONENT_LABEL_ICON_SIZE + COMPONENT_LABEL_ICON_GAP
+
 export function hasFrameTitle(node: SceneNode, parent?: SceneNode | null): boolean {
   return node.type === 'FRAME' && (!parent || parent.type === 'CANVAS' || parent.type === 'SECTION')
 }
@@ -72,7 +75,7 @@ export function labelLayout(
   const textWidth = metrics?.width ?? screenWidth
   const component = kind === 'component'
   const fontSize = component ? COMPONENT_LABEL_FONT_SIZE : LABEL_FONT_SIZE
-  const textX = component ? COMPONENT_LABEL_ICON_SIZE + COMPONENT_LABEL_ICON_GAP : 0
+  const textX = component ? COMPONENT_LABEL_TEXT_X : 0
   const maxTextWidth = screenWidth - textX
   if (maxTextWidth <= 0) return null
   const outsideY = component ? -COMPONENT_LABEL_GAP - fontSize : -LABEL_OFFSET_Y - fontSize

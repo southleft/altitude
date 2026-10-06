@@ -222,4 +222,55 @@ describe('LabelCache', () => {
     expect(buttonSet?.absX).toBe(300)
     expect(buttonSet?.absY).toBe(0)
   })
+
+  it('returns spatially culled labels in tree order', () => {
+    const { g, pageId } = buildGraph()
+    const cache = new LabelCache()
+
+    cache.update(g, pageId, 1)
+    const all = cache.getComponents(g, { x: -1000, y: -1000, w: 3000, h: 3000 })
+    expect(all.map((c) => c.node.name)).toEqual(['Button Set', 'Button', 'Standalone'])
+
+    const right = cache.getComponents(g, { x: 550, y: -10, w: 200, h: 100 })
+    expect(right.map((c) => c.node.name)).toEqual(['Standalone'])
+    expect(right[0]?.absX).toBe(600)
+  })
+
+  it('skips labels narrower than the requested world width', () => {
+    const { g, pageId } = buildGraph()
+    const cache = new LabelCache()
+
+    cache.update(g, pageId, 1)
+    const viewport = { x: -1000, y: -1000, w: 3000, h: 3000 }
+    const wide = cache.getComponents(g, viewport, null, { minWorldWidth: 90 })
+    expect(wide.map((c) => c.node.name)).toEqual(['Button Set', 'Standalone'])
+    expect(cache.getComponents(g, viewport, null, { minWorldWidth: 200 })).toEqual([])
+  })
+
+  it('keeps cached positions until the scene version changes', () => {
+    const { g, pageId, standaloneCompId } = buildGraph()
+    const cache = new LabelCache()
+    const viewport = { x: 550, y: -10, w: 200, h: 100 }
+
+    cache.update(g, pageId, 1)
+    g.updateNode(standaloneCompId, { x: 2000 })
+    expect(cache.getComponents(g, viewport)).toHaveLength(1)
+
+    cache.update(g, pageId, 2)
+    expect(cache.getComponents(g, viewport)).toEqual([])
+    const moved = cache.getComponents(g, { x: 1900, y: -10, w: 300, h: 100 })
+    expect(moved.map((c) => c.absX)).toEqual([2000])
+  })
+
+  it('reads live geometry while a rotation preview is active', () => {
+    const { g, pageId, compSetId } = buildGraph()
+    const cache = new LabelCache()
+
+    cache.update(g, pageId, 1)
+    const preview = { nodeId: compSetId, angle: 180 }
+    const rotated = cache.getComponents(g, { x: -1000, y: -1000, w: 3000, h: 3000 }, preview)
+    const set = rotated.find((c) => c.node.id === compSetId)
+    expect(set?.absX).toBeCloseTo(500)
+    expect(set?.absY).toBeCloseTo(200)
+  })
 })

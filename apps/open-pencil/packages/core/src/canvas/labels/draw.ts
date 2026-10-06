@@ -5,7 +5,7 @@ import type { SceneNode, SceneGraph } from '@open-pencil/scene-graph'
 import type { RenderOverlays, SkiaRenderer } from '#core/canvas/renderer'
 import { SECTION_TITLE_RADIUS } from '#core/constants'
 
-import { labelLayout } from './layout'
+import { COMPONENT_LABEL_TEXT_X, labelLayout } from './layout'
 import { sectionLabelColors } from './style'
 import { labelScreenMatrix, labelTransform } from './transform'
 
@@ -18,7 +18,9 @@ export function drawSectionTitles(
   const provider = r.fontProvider
   if (!r.sectionTitleFont || !provider) return
 
-  const sections = r.labelCache.getSections(graph, r.worldViewport, overlays?.rotationPreview)
+  const sections = r.labelCache.getSections(graph, r.worldViewport, overlays?.rotationPreview, {
+    minWorldWidth: 0
+  })
   if (sections.length === 0) return
 
   for (const { node, nested } of sections) {
@@ -86,7 +88,10 @@ export function drawComponentLabels(
 ): void {
   if (!r.componentLabelFont || !r.fontProvider) return
 
-  const components = r.labelCache.getComponents(graph, r.worldViewport, overlays?.rotationPreview)
+  // Labels need room for the icon and some text; narrower components never draw one.
+  const components = r.labelCache.getComponents(graph, r.worldViewport, overlays?.rotationPreview, {
+    minWorldWidth: COMPONENT_LABEL_TEXT_X / r.zoom
+  })
   if (components.length === 0) return
 
   const provider = r.fontProvider
