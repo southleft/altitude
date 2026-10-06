@@ -21,7 +21,7 @@ Component: al-pagination
 | `nextButtonText` | string | — | `'Next'` | _not expressed in Figma (by design)_ |
 | `pageSize` | number | — | `10` | _not expressed in Figma (by design)_ |
 | `pageSizeLabel` | string | — | `'Show'` | _not expressed in Figma (by design)_ |
-| `pageSizeOptions` | string | `Array<number>` | `[20, 40, 60, 80, 100]` | _not expressed in Figma (by design)_ |
+| `pageSizeOptions` | string | `Array<number>` | `[10, 20, 40, 60, 80, 100]` | _not expressed in Figma (by design)_ |
 | `prevButtonText` | string | — | `'Previous'` | _not expressed in Figma (by design)_ |
 | `totalRecords` | number | — | — | _not expressed in Figma (by design)_ |
 | `variant` | string | `'small'` | — | **Variant** (VARIANT): `Default`, `Small` |
@@ -49,7 +49,10 @@ Label text for the page size dropdown
 
 #### `pageSizeOptions`
 
-Dropdown options for choosing the number of items displayed per page
+Dropdown options for choosing the number of items displayed per page.
+Include the `pageSize` value in this list, or the page-size select renders
+a value that matches none of its options. The default list includes the
+default `pageSize` of 10.
 
 #### `prevButtonText`
 

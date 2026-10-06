@@ -51,6 +51,9 @@ markup — got an empty table with no way to fill it.
 #### `data`
 
 Row data for data-driven rendering. Must be paired with `columns`.
+Each cell value (`row[column.key]`) may be a string (or number) or a DOM
+`Node` — e.g. an `al-badge` element — which is rendered into the cell
+as-is, so rich cell content does not require the slotted mode.
 When either `columns` or `data` is not provided, the default slot is
 rendered instead so a consumer may supply their own `<thead>`/`<tbody>`.
 

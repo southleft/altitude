@@ -3226,7 +3226,7 @@
       {
         "name": "isCurrent",
         "type": "boolean",
-        "description": "Current state"
+        "description": "Current state. Fills the item with the primary background and the matching\non-primary text colour; when the item renders a link (`href`) the link also\ngets `aria-current=\"page\"`."
       },
       {
         "name": "onClick",
@@ -3554,7 +3554,7 @@
       {
         "name": "pageSizeOptions",
         "type": "Array<number>",
-        "description": "Dropdown options for choosing the number of items displayed per page"
+        "description": "Dropdown options for choosing the number of items displayed per page.\nInclude the `pageSize` value in this list, or the page-size select renders\na value that matches none of its options. The default list includes the\ndefault `pageSize` of 10."
       },
       {
         "name": "variant",
@@ -4567,7 +4567,7 @@
       {
         "name": "data",
         "type": "Array<ALTableRow>",
-        "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`."
+        "description": "Row data for data-driven rendering. Must be paired with `columns`.\nEach cell value (`row[column.key]`) may be a string (or number) or a DOM\n`Node` — e.g. an `al-badge` element — which is rendered into the cell\nas-is, so rich cell content does not require the slotted mode.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`."
       },
       {
         "name": "rowKey",
