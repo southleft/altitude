@@ -3,20 +3,44 @@ import type { SceneGraph } from '@open-pencil/scene-graph'
 
 import { importNodeChanges } from '#core/kiwi/fig/import'
 import { getLazyFigImportContext, populateLazyFigImportRoots } from '#core/kiwi/fig/lazy-import'
-import { serializeSceneGraph } from '#core/kiwi/fig/parse/transfer'
+import {
+  lazyFigImportSourceChunks,
+  serializeSceneGraph,
+  serializedSceneGraphTransferList
+} from '#core/kiwi/fig/parse/transfer'
 import { buildFigPopulationDelta, installFigMutationJournal } from '#core/kiwi/fig/population/delta'
-import type {
-  FigSessionOpenRequest,
-  FigSessionRequest,
-  FigSessionResponse
+import {
+  MAX_FIG_POPULATION_WORKER_NODES,
+  type FigSessionOpenRequest,
+  type FigSessionRequest,
+  type FigSessionResponse
 } from '#core/kiwi/fig/session/protocol'
+
+/**
+ * Entries per lazy-source message. Each message is deserialized as its own main-thread task,
+ * so this keeps every task well under the 50 ms long-task threshold on a large document.
+ */
+const LAZY_SOURCE_CHUNK_ENTRIES = 2_000
 
 let graph: SceneGraph | undefined
 let originalArchive: Uint8Array | undefined
 let port: MessagePort | undefined
 
-function respond(message: FigSessionResponse): void {
-  port?.postMessage(message)
+function respond(message: FigSessionResponse, transfer: Transferable[] = []): void {
+  port?.postMessage(message, transfer)
+}
+
+function sendLazySource(requestId: string): void {
+  const context = graph ? getLazyFigImportContext(graph) : undefined
+  if (!context) {
+    respond({ type: 'lazy-source-result', requestId, error: 'FIG session has no lazy source' })
+    return
+  }
+  for (const chunk of lazyFigImportSourceChunks(context, LAZY_SOURCE_CHUNK_ENTRIES)) {
+    respond({ type: 'lazy-source-chunk', requestId, chunk })
+  }
+  // Copied, not transferred: the worker keeps populating pages from the same blobs.
+  respond({ type: 'lazy-source-result', requestId, blobs: context.blobs })
 }
 
 function populate(request: Extract<FigSessionRequest, { type: 'populate' }>): void {
@@ -57,6 +81,10 @@ function handleRequest(request: FigSessionRequest): void {
       self.close()
       return
     }
+    if (request.type === 'lazy-source') {
+      sendLazySource(request.requestId)
+      return
+    }
     if (request.type === 'cancel') return
     populate(request)
   } catch (error) {
@@ -83,7 +111,12 @@ self.onmessage = (event: MessageEvent<FigSessionOpenRequest>) => {
     parsedGraph.figKiwiVersion = figKiwiVersion
     parsedGraph.figSchemaDeflated = figSchemaDeflated
     graph = request.options?.populate === 'first-page' ? parsedGraph : undefined
-    respond({ type: 'graph', graph: serializeSceneGraph(parsedGraph) })
+    // A retained graph populates later pages here, so its change map stays here too; the
+    // main thread asks for it only if it has to populate by itself.
+    const retainLazySource =
+      graph !== undefined && parsedGraph.nodes.size <= MAX_FIG_POPULATION_WORKER_NODES
+    const serialized = serializeSceneGraph(parsedGraph, { retainLazySource })
+    respond({ type: 'graph', graph: serialized }, serializedSceneGraphTransferList(serialized))
   } catch (error) {
     respond({ type: 'graph', error: error instanceof Error ? error.message : String(error) })
   }

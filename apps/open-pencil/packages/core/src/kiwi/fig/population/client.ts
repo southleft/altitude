@@ -1,7 +1,18 @@
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
-import { getLazyFigImportContext } from '#core/kiwi/fig/lazy-import'
-import type { FigSessionResponse } from '#core/kiwi/fig/session/protocol'
+import {
+  ensureLazyFigImportContext,
+  hasLazyFigImport,
+  isLazyFigImportDeferred,
+  populateLazyFigImportRoots,
+  setDeferredLazyFigImportContext,
+  setLazyFigImportPopulatedRoots,
+  type LazyFigImportSource
+} from '#core/kiwi/fig/lazy-import'
+import {
+  MAX_FIG_POPULATION_WORKER_NODES,
+  type FigSessionResponse
+} from '#core/kiwi/fig/session/protocol'
 import { randomHex } from '#core/random'
 
 import { applyFigPopulationDelta, type FigPopulationDelta } from './delta'
@@ -15,7 +26,6 @@ interface PopulationResult {
 }
 type WorkerResult = PopulationResult | { type: 'population-error'; error: string }
 
-const MAX_FIG_POPULATION_WORKER_NODES = 200_000
 const FIG_POPULATION_WORKER_TIMEOUT_MS = 30_000
 const populationWorkers = new WeakMap<SceneGraph, FigPopulationWorker>()
 interface OriginalArchiveRequest {
@@ -40,11 +50,23 @@ function emitTelemetry(detail: FigPopulationWorkerTelemetry): void {
   globalThis.dispatchEvent(new CustomEvent('openpencil:fig-population-worker', { detail }))
 }
 
+export interface RegisterFigPopulationWorkerOptions {
+  /**
+   * The worker kept the lazy-import source (see `lazyFigImportRetained`); these pages are
+   * already populated. The source is fetched through the worker's port on demand.
+   */
+  retainedPopulatedRootIds?: readonly string[]
+}
+
 export function registerFigPopulationWorker(
   graph: SceneGraph,
   worker: Worker,
-  port?: MessagePort
+  port?: MessagePort,
+  options: RegisterFigPopulationWorkerOptions = {}
 ): void {
+  if (options.retainedPopulatedRootIds && !port) {
+    throw new Error('A retained FIG lazy source needs a session port')
+  }
   if (graph.nodes.size > MAX_FIG_POPULATION_WORKER_NODES) {
     emitTelemetry({ event: 'fallback', reason: 'oversized' })
     if (!port) {
@@ -56,19 +78,35 @@ export function registerFigPopulationWorker(
   }
   const client = createPopulationWorkerClient(graph, worker, port)
   populationWorkers.set(graph, client)
+  if (options.retainedPopulatedRootIds) {
+    setDeferredLazyFigImportContext(graph, options.retainedPopulatedRootIds, client.requestSource)
+    scheduleLazySourcePrefetch(graph, client)
+  }
   emitTelemetry({ event: 'registered' })
 }
 
-function isDevelopmentBuild(env?: { DEV?: boolean }): boolean {
-  return env?.DEV ?? false
+const LAZY_SOURCE_PREFETCH_TIMEOUT_MS = 10_000
+
+/**
+ * Bring a retained source over once the main thread is idle. The worker populates pages
+ * only until the first main-thread edit (component sync after a population counts), and
+ * fetching the source at that moment would stall a page switch; arriving early, in small
+ * chunks, it costs no long task and leaves the open path untouched.
+ */
+function scheduleLazySourcePrefetch(graph: SceneGraph, client: FigPopulationWorker): void {
+  const prefetch = () => {
+    if (populationWorkers.get(graph) !== client || !isLazyFigImportDeferred(graph)) return
+    void ensureLazyFigImportContext(graph)
+  }
+  if (typeof globalThis.requestIdleCallback === 'function') {
+    globalThis.requestIdleCallback(prefetch, { timeout: LAZY_SOURCE_PREFETCH_TIMEOUT_MS })
+  } else {
+    setTimeout(prefetch, 0)
+  }
 }
 
 export function canUseFigPopulationWorker(graph: SceneGraph): boolean {
-  return (
-    isDevelopmentBuild(import.meta.env) &&
-    populationWorkers.has(graph) &&
-    getLazyFigImportContext(graph) !== undefined
-  )
+  return populationWorkers.has(graph) && hasLazyFigImport(graph)
 }
 
 export function registerOriginalArchiveRequest(
@@ -111,6 +149,14 @@ export interface FigPopulationWorker {
   terminate: () => void
 }
 
+interface FigPopulationWorkerClient extends FigPopulationWorker {
+  /** Fetch the lazy-import source the worker retained. */
+  requestSource: () => Promise<LazyFigImportSource>
+}
+
+/** How long a failing worker may take to hand over a retained source before it is killed. */
+const FIG_SOURCE_HANDOVER_TIMEOUT_MS = 30_000
+
 function createDisposalOnlyWorker(worker: Worker, port: MessagePort): FigPopulationWorker {
   let disposed = false
   return {
@@ -131,11 +177,23 @@ export function createFigPopulationWorker(graph: SceneGraph): FigPopulationWorke
   return populationWorkers.get(graph) ?? null
 }
 
+/**
+ * Populate one lazy page outside an editor's page switch: in the population worker when it
+ * is usable, otherwise on this thread once the source is here.
+ */
+export async function populateFigPage(graph: SceneGraph, pageId: string): Promise<boolean> {
+  const worker = createFigPopulationWorker(graph)
+  const result = worker ? await worker.populate(pageId) : null
+  if (result !== null) return result
+  if (isLazyFigImportDeferred(graph)) await ensureLazyFigImportContext(graph)
+  return populateLazyFigImportRoots(graph, [pageId])
+}
+
 function createPopulationWorkerClient(
   graph: SceneGraph,
   worker: Worker,
   port?: MessagePort
-): FigPopulationWorker {
+): FigPopulationWorkerClient {
   const pending = new Map<
     string,
     {
@@ -146,10 +204,59 @@ function createPopulationWorkerClient(
       timeout: ReturnType<typeof setTimeout>
     }
   >()
+  const sourceRequests = new Map<
+    string,
+    {
+      changeMap: LazyFigImportSource['changeMap']
+      guidToNodeId: LazyFigImportSource['guidToNodeId']
+      resolve: (source: LazyFigImportSource) => void
+      reject: (error: Error) => void
+    }
+  >()
   let revision = 0
   let stale = false
   let disposed = false
+  let workerAlive = true
   let applyingDelta = false
+  const rejectSourceRequests = (reason: string) => {
+    for (const request of sourceRequests.values()) request.reject(new Error(reason))
+    sourceRequests.clear()
+  }
+  const terminateWorker = () => {
+    workerAlive = false
+    rejectSourceRequests('FIG session worker was terminated')
+    worker.terminate()
+  }
+  /**
+   * Stop the worker, but first take back a source it still holds: once it is gone, the
+   * main thread can no longer populate pages without it.
+   */
+  const retireWorker = (crashed: boolean) => {
+    if (crashed || !workerAlive || !port || !isLazyFigImportDeferred(graph)) {
+      terminateWorker()
+      return
+    }
+    const deadline = setTimeout(terminateWorker, FIG_SOURCE_HANDOVER_TIMEOUT_MS)
+    void ensureLazyFigImportContext(graph).finally(() => {
+      clearTimeout(deadline)
+      terminateWorker()
+    })
+  }
+  const requestSource = (): Promise<LazyFigImportSource> => {
+    if (!port || !workerAlive) {
+      return Promise.reject(new Error('FIG session worker is not available'))
+    }
+    const requestId = randomHex()
+    return new Promise((resolve, reject) => {
+      sourceRequests.set(requestId, {
+        changeMap: new Map(),
+        guidToNodeId: new Map(),
+        resolve,
+        reject
+      })
+      port.postMessage({ type: 'lazy-source', requestId })
+    })
+  }
   const invalidate = () => {
     // Layout recomputation (import-time or after a switch) is derived from the
     // same scene graph the worker deltas were built from; it must not count as
@@ -164,7 +271,7 @@ function createPopulationWorkerClient(
     unbind?.()
     unbind = undefined
   }
-  const fail = (emit = true) => {
+  const fail = (emit = true, crashed = false) => {
     stale = true
     if (emit) emitTelemetry({ event: 'fallback', reason: 'worker-error' })
     for (const request of pending.values()) {
@@ -174,7 +281,7 @@ function createPopulationWorkerClient(
     }
     pending.clear()
     releaseSubscription()
-    worker.terminate()
+    retireWorker(crashed)
     populationWorkers.delete(graph)
   }
   unbind = graph.onNodeEvents({
@@ -184,6 +291,28 @@ function createPopulationWorkerClient(
     reparented: invalidate,
     reordered: invalidate
   })
+  const receiveSource = (
+    message: Extract<FigSessionResponse, { type: 'lazy-source-chunk' | 'lazy-source-result' }>
+  ) => {
+    const request = sourceRequests.get(message.requestId)
+    if (!request) return
+    if (message.type === 'lazy-source-chunk') {
+      for (const [id, change] of message.chunk.changeMap) request.changeMap.set(id, change)
+      for (const [guid, nodeId] of message.chunk.guidToNodeId)
+        request.guidToNodeId.set(guid, nodeId)
+      return
+    }
+    sourceRequests.delete(message.requestId)
+    if (!message.blobs) {
+      request.reject(new Error(message.error ?? 'FIG session worker sent no lazy source'))
+      return
+    }
+    request.resolve({
+      changeMap: request.changeMap,
+      guidToNodeId: request.guidToNodeId,
+      blobs: message.blobs
+    })
+  }
   const receive = (result: WorkerResult) => {
     if (result.type === 'population-error') return fail()
     const request = pending.get(result.requestId)
@@ -199,8 +328,7 @@ function createPopulationWorkerClient(
     const applyStartedAt = performance.now()
     try {
       applyFigPopulationDelta(graph, result.delta)
-      const context = getLazyFigImportContext(graph)
-      if (context) context.populatedRootIds = new Set(result.delta.populatedRootIds)
+      setLazyFigImportPopulatedRoots(graph, result.delta.populatedRootIds)
     } catch {
       applyingDelta = false
       fail()
@@ -219,14 +347,23 @@ function createPopulationWorkerClient(
     })
   }
   if (port) {
-    port.onmessage = (event: MessageEvent<FigSessionResponse>) =>
-      receive(event.data as WorkerResult)
+    // The session reader keeps handling its own replies (original archive bytes).
+    const forward = port.onmessage
+    port.onmessage = (event: MessageEvent<FigSessionResponse>) => {
+      const message = event.data
+      if (message.type === 'lazy-source-chunk' || message.type === 'lazy-source-result') {
+        receiveSource(message)
+      } else if (message.type === 'population-result' || message.type === 'population-error') {
+        receive(message)
+      } else forward?.call(port, event)
+    }
     port.start()
   } else {
     worker.onmessage = (event: MessageEvent<WorkerResult>) => receive(event.data)
   }
-  worker.onerror = () => fail()
+  worker.onerror = () => fail(true, true)
   return {
+    requestSource,
     populate(pageId, signal) {
       signal?.throwIfAborted()
       if (stale) return Promise.resolve(null)
@@ -258,6 +395,10 @@ function createPopulationWorkerClient(
       if (disposed) return
       disposed = true
       emitTelemetry({ event: 'terminated' })
+      // Explicit termination does not hand over the source: a caller that still needs it
+      // (page population falling back to the main thread) fetches it first.
+      workerAlive = false
+      rejectSourceRequests('FIG session worker was terminated')
       port?.postMessage({ type: 'dispose' })
       port?.close()
       fail(false)

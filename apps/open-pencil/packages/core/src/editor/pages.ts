@@ -2,7 +2,11 @@ import { limitAsync } from 'es-toolkit/promise'
 
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
-import { populateLazyFigImportRoots } from '#core/kiwi/fig/lazy-import'
+import {
+  ensureLazyFigImportContext,
+  isLazyFigImportDeferred,
+  populateLazyFigImportRoots
+} from '#core/kiwi/fig/lazy-import'
 import {
   canUseFigPopulationWorker,
   createFigPopulationWorker
@@ -68,6 +72,17 @@ export function createPageActions(ctx: EditorContext) {
       return null
     }
     if (workerResult !== null) return workerResult
+    if (isLazyFigImportDeferred(ctx.graph)) {
+      // The worker still holds the page source; take it back before stopping the worker.
+      await ensureLazyFigImportContext(ctx.graph)
+      throwIfAborted(signal)
+      if (
+        workerGeneration !== populationWorkerGeneration ||
+        switchGeneration !== pageSwitchGeneration
+      ) {
+        return null
+      }
+    }
     worker?.terminate()
     populationWorkerInstance = undefined
     return populateLazyFigImportRoots(ctx.graph, [pageId])
