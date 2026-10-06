@@ -22,6 +22,10 @@
 - Show what to update instead of a blank window when the browser or system WebView is too old, naming the detected macOS, Safari, Chrome, Edge, Firefox, WebKitGTK, or WebView2 version and linking a prefilled bug report, and explain a failed start the same way (#744).
 - Start on macOS 13 with WebKit older than Safari 17.4, which previously failed with `Promise.withResolvers is not a function` (#744).
 
+### Performance
+
+- Open and browse large `.fig` files with shorter main-thread pauses, load the web app with less JavaScript, and generate HTML/CSS faster. On a 98,000-node design system the longest freeze while opening drops from about 6.3 s to 4.9 s and switching to a not-yet-loaded page from about 2.8 s to 2.0 s; the startup bundle shrinks from 1.59 MB to 1.28 MB (gzip) and the offline precache from 16.9 MB to 12.9 MB, with the renderer download starting alongside the page; and the Code panel's HTML for a 3,000-node icon set takes 0.25 s instead of 0.7 s, recomputed only after edits settle.
+
 ## 0.15.1 — 2026-09-18
 
 ### Added
