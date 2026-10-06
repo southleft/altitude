@@ -43,29 +43,49 @@ reference only. GitHub never runs workflows from a nested folder.
 
 ## Hosting (Cloudflare Pages + Access)
 
-The editor deploys to its **own** Pages project, `altitude-open-pencil`, separate from the
-public docs site (`altitude.pages.dev`), so it can be restricted to the team.
+The editor is a **second Pages project** in the same Cloudflare account as the docs site
+(`altitude.pages.dev`), connected to the same GitHub repo the same way. It is not part of
+the docs build: `build:all` is a strict `&&` chain, and a heavy Bun build failing there
+would take the docs down with it. It also lets the editor be locked to the team while the
+docs stay public.
 
-One-time setup, done by someone with Cloudflare admin rights:
+One-time setup, done by someone with access to the Southleft Cloudflare account:
 
-1. **Create the Pages project.** Cloudflare dashboard → Workers & Pages → Create → Pages →
-   *Direct Upload*, named `altitude-open-pencil`. Do not connect Git; CI uploads the build.
-2. **Add GitHub secrets** to `southleft/altitude`: `CLOUDFLARE_API_TOKEN` (a token with
-   *Cloudflare Pages: Edit*) and `CLOUDFLARE_ACCOUNT_ID`. Until both exist, the deploy job
-   skips with a notice and the checks still run.
-3. **Lock it down with Access.** Zero Trust → Access → Applications → Add → Self-hosted:
-   - domains `altitude-open-pencil.pages.dev` **and** `*.altitude-open-pencil.pages.dev`
-     (preview deploys);
-   - policy *Allow*, rule *Emails ending in* `@southleft.com` (or a Southleft IdP group).
+1. **Create the project.** Workers & Pages → Create → Pages → *Connect to Git* → choose
+   `southleft/altitude` (the same repo the docs project uses).
+2. **Build settings:**
 
-   Alternatively: Pages project → Settings → *Enable access policy*, which sets up the same
-   for previews.
+   | Setting | Value |
+   |---|---|
+   | Project name | `altitude-open-pencil` |
+   | Production branch | `main` |
+   | Framework preset | None |
+   | Root directory (advanced) | `apps/open-pencil` |
+   | Build command | `bun install --frozen-lockfile && bun run build:packages && bunx vite build` |
+   | Build output directory | `dist` |
+   | Environment variable | `BUN_VERSION` = `1.4.2` |
 
-Pushes to `main` publish production. Same-repo PRs publish a preview at
-`<branch>.altitude-open-pencil.pages.dev`.
+3. **Build watch paths** (project → Settings → Builds → Build watch paths): include
+   `apps/open-pencil/*`. Docs-only commits then don't rebuild the editor. Do the reverse
+   on the docs project, excluding `apps/open-pencil/*`, so editor commits don't rebuild the
+   docs.
+4. **Lock it to Southleft.** Project → Settings → General → *Access policy* → Enable. That
+   creates a Cloudflare Access app for preview URLs. For production, Zero Trust → Access →
+   Applications → the created app → add `altitude-open-pencil.pages.dev` as a second
+   domain. Policy: *Allow*, *Emails ending in* `@southleft.com` (or your IdP group).
+
+Result:
+
+- Production (from `main`): `https://altitude-open-pencil.pages.dev`
+- Every other branch and PR: `https://<branch>.altitude-open-pencil.pages.dev`
+
+`public/_headers` and `public/_redirects` already ship in `dist/` (wasm content type and
+the SPA fallback). Checks run separately in `.github/workflows/open-pencil.yml`; no
+Cloudflare secrets are needed in GitHub.
 
 Documents stay in each person's browser (IndexedDB) unless saved to a file. Hosting does
-not create shared storage.
+not create shared storage. Connecting an AI agent works from the desktop app or a local
+`bun run dev`, not from the hosted site (see the Connect AI popover).
 
 ## Pulling upstream OpenPencil updates
 

@@ -4,8 +4,9 @@ name: OpenPencil canvas
 # apps/open-pencil/ALTITUDE.md). Its own .github/ workflows never run from a
 # nested folder, so this file is the only CI it gets inside Altitude.
 #
-# Deploys go to a SEPARATE Cloudflare Pages project from the public docs site,
-# because the editor is team-only and sits behind Cloudflare Access.
+# Deploys are NOT done here: a second Cloudflare Pages project connected to this
+# repo through Cloudflare's Git integration (like the docs site) builds
+# apps/open-pencil itself. See apps/open-pencil/ALTITUDE.md#hosting.
 
 on:
   push:
@@ -27,9 +28,6 @@ concurrency:
 defaults:
   run:
     working-directory: apps/open-pencil
-
-env:
-  CF_PAGES_PROJECT: altitude-open-pencil
 
 jobs:
   check:
@@ -56,50 +54,3 @@ jobs:
         run: bun test packages/dom-css/tests
       - name: Round-trip fidelity gate
         run: bun run conformance:gate
-
-  deploy:
-    name: Deploy to Cloudflare Pages
-    needs: check
-    # Same-repo PRs get a preview URL; forks never see the secrets.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-    steps:
-      - name: Skip when Cloudflare secrets are not configured
-        id: secrets
-        working-directory: .
-        run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set; skipping deploy."
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - uses: actions/checkout@v4
-        if: steps.secrets.outputs.enabled == 'true'
-
-      - uses: oven-sh/setup-bun@v2
-        if: steps.secrets.outputs.enabled == 'true'
-        with:
-          bun-version-file: apps/open-pencil/package.json
-
-      - if: steps.secrets.outputs.enabled == 'true'
-        run: bun install --frozen-lockfile
-
-      - if: steps.secrets.outputs.enabled == 'true'
-        run: bun run build
-
-      - name: Publish
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: apps/open-pencil
-          command: pages deploy dist --project-name=${{ env.CF_PAGES_PROJECT }} --branch=${{ github.head_ref || github.ref_name }}
