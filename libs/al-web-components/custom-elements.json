@@ -1531,7 +1531,28 @@
             {
               "kind": "method",
               "name": "handleOnClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
               "description": "Handle click events\n1. When we click on button which has type=submit trigger requestSubmit on closest form element in order to invoke submit event on form element"
+            },
+            {
+              "kind": "method",
+              "name": "handleOnLinkClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Link-mode disabled guard. An `<a>` has no native `disabled`, so an\n`href` button marked `isDisabled` or `isAriaDisabled` rendered\n`aria-disabled` and still navigated. Cancel the navigation instead."
             }
           ],
           "attributes": [
@@ -8242,6 +8263,15 @@
             },
             {
               "kind": "field",
+              "name": "_missingCheckPending",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "_weight",
               "type": {
                 "text": "ALIconWeight"
@@ -8283,6 +8313,17 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "_scheduleMissingCheck",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Deferred missing-glyph diagnostic. Logs only if, once startup has settled,\nthis element still has a name that is neither registered nor resolvable."
             },
             {
               "kind": "field",
@@ -15993,7 +16034,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Current state",
+              "description": "Current state. Fills the item with the primary background and the matching\non-primary text colour; when the item renders a link (`href`) the link also\ngets `aria-current=\"page\"`.",
               "attribute": "isCurrent"
             },
             {
@@ -16230,7 +16271,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Current state",
+              "description": "Current state. Fills the item with the primary background and the matching\non-primary text colour; when the item renders a link (`href`) the link also\ngets `aria-current=\"page\"`.",
               "fieldName": "isCurrent"
             },
             {
@@ -17676,8 +17717,8 @@
               "type": {
                 "text": "Array<number>"
               },
-              "default": "[20, 40, 60, 80, 100]",
-              "description": "Dropdown options for choosing the number of items displayed per page",
+              "default": "[10, 20, 40, 60, 80, 100]",
+              "description": "Dropdown options for choosing the number of items displayed per page.\nInclude the `pageSize` value in this list, or the page-size select renders\na value that matches none of its options. The default list includes the\ndefault `pageSize` of 10.",
               "attribute": "pageSizeOptions"
             },
             {
@@ -17931,8 +17972,8 @@
               "type": {
                 "text": "Array<number>"
               },
-              "default": "[20, 40, 60, 80, 100]",
-              "description": "Dropdown options for choosing the number of items displayed per page",
+              "default": "[10, 20, 40, 60, 80, 100]",
+              "description": "Dropdown options for choosing the number of items displayed per page.\nInclude the `pageSize` value in this list, or the page-size select renders\na value that matches none of its options. The default list includes the\ndefault `pageSize` of 10.",
               "fieldName": "pageSizeOptions"
             },
             {
@@ -18440,26 +18481,6 @@
             },
             {
               "kind": "field",
-              "name": "currentPercentage",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0",
-              "description": "The percentage value of the current progress\n- Default is 0"
-            },
-            {
-              "kind": "field",
-              "name": "strokeDashOffset",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0",
-              "description": "Stroke dash offset\n- Controls the fill for the circular progress indicator\n- Dynamically sets stroke-dashoffset on the circle svg"
-            },
-            {
-              "kind": "field",
               "name": "startTimestamp",
               "type": {
                 "text": "any"
@@ -18491,6 +18512,36 @@
             },
             {
               "kind": "field",
+              "name": "_fraction",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "description": "The fraction (0–1) of the range covered by `currentProgress`.\n- **default** progress counts up from 0 to `endProgress`\n- **reversed** progress counts down from its initial value to `endProgress`\n\nDerived from `currentProgress` on every read, so the fill reflects the\nproperty (or attribute) on first render and on every later update, not\nonly after `change()` or the duration animation has run.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "currentPercentage",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "description": "The percentage value of the current progress, rounded down",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "strokeDashOffset",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "description": "Stroke dash offset\n- Controls the fill for the circular progress indicator\n- Find the change in pixels from the current progress, scale it, and\n  subtract it from the circumference",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "_label",
               "description": "The progress label, displayed as a percentage or ratio of units",
               "return": {
@@ -18503,12 +18554,13 @@
             {
               "kind": "method",
               "name": "updateCircle",
-              "description": "Updates the circular progress indicator's stroke-dashoffset to reflect the current progress\n1. Find the change in pixels based on the current change in progress\n2. Scale the change value, and subtract it from circumference to find the new value"
+              "description": "Updates the circular progress indicator's stroke-dashoffset to reflect the current progress",
+              "deprecated": "The circle is now derived from `currentProgress` on every render; calling this\nonly requests an update. Kept so existing callers do not break."
             },
             {
               "kind": "method",
               "name": "animateFillDuration",
-              "description": "Animates the progress indicator fill when a duration is provided\n1. Calculate the elapsed time\n2. Calculate the new progress value based on the elapsed time\n3. Set the current progress after checking that:\n- **default** it is not more than the progress end value of 100\n- **reversed** it is not less that the progress end value of 0\n4. Round down to the nearest integer to set the current progress percentage\n5. If the indicator is circular, update the circle\n6. Continue the animation until progress reaches its end value"
+              "description": "Animates the progress indicator fill when a duration is provided\n1. Calculate the elapsed time\n2. Calculate the new progress value based on the elapsed time\n3. Set the current progress after checking that:\n- **default** it is not more than the progress end value of 100\n- **reversed** it is not less that the progress end value of 0\n4. Continue the animation until progress reaches its end value\n   (the fill and label are derived from currentProgress at render time)"
             },
             {
               "kind": "method",
@@ -18521,7 +18573,7 @@
                   "type": {
                     "text": "number"
                   },
-                  "description": "The positive or negative number by which to change the progress\n- Dynamically updates the progress indicator\n1. Check whether or not the progress has reached its end\n2. If not, update the current progress value\n3. Calculate the percent change and set the progress percentage\n4. If the indicator is circular, update the circle\n5. Dispatch the custom event\n- The label is dispatched with the custom event so that it can be displayed in other components as needed"
+                  "description": "The positive or negative number by which to change the progress\n- Dynamically updates the progress indicator\n1. Check whether or not the progress has reached its end\n2. If not, update the current progress value\n3. Dispatch the custom event (the fill, label and percentage derive from currentProgress)\n- The label is dispatched with the custom event so that it can be displayed in other components as needed"
                 }
               ],
               "description": "Change"
@@ -22342,7 +22394,7 @@
               "type": {
                 "text": "Array<ALTableRow>"
               },
-              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
+              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nEach cell value (`row[column.key]`) may be a string (or number) or a DOM\n`Node` — e.g. an `al-badge` element — which is rendered into the cell\nas-is, so rich cell content does not require the slotted mode.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
               "attribute": "data"
             },
             {
@@ -22530,7 +22582,7 @@
               "type": {
                 "text": "Array<ALTableRow>"
               },
-              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
+              "description": "Row data for data-driven rendering. Must be paired with `columns`.\nEach cell value (`row[column.key]`) may be a string (or number) or a DOM\n`Node` — e.g. an `al-badge` element — which is rendered into the cell\nas-is, so rich cell content does not require the slotted mode.\nWhen either `columns` or `data` is not provided, the default slot is\nrendered instead so a consumer may supply their own `<thead>`/`<tbody>`.",
               "fieldName": "data"
             },
             {

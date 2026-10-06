@@ -86,10 +86,10 @@
     },
     {
       "name": "pageSizeOptions",
-      "description": "Dropdown options for choosing the number of items displayed per page",
+      "description": "Dropdown options for choosing the number of items displayed per page.\nInclude the `pageSize` value in this list, or the page-size select renders\na value that matches none of its options. The default list includes the\ndefault `pageSize` of 10.",
       "type": "string",
       "rawType": "Array<number>",
-      "default": "[20, 40, 60, 80, 100]",
+      "default": "[10, 20, 40, 60, 80, 100]",
       "bindings": {
         "code": {
           "attribute": "pageSizeOptions"

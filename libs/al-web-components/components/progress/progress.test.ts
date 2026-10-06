@@ -112,4 +112,57 @@ describe('al-progress', () => {
     expect(el.shadowRoot!.querySelector('.al-c-progress__fill--circle circle')).not.toBeNull();
     expect(fill(el), 'the linear bar must not also render').toBeNull();
   });
+
+  describe('reflects currentProgress without change()', () => {
+    // The fill was driven only by `change()` and the duration animation: a
+    // progress declared as `<al-progress currentProgress="40">`, or one whose
+    // property was assigned later, rendered an empty bar and a "0%" label.
+
+    it('draws the fill from the currentProgress attribute on first render', async () => {
+      const el = await fixture<ALProgress>(html`<al-progress showLabel currentProgress="40"></al-progress>`);
+      await el.updateComplete;
+      expect(fill(el).getAttribute('style')).toContain('width: 40%');
+      expect(label(el).textContent!.trim()).toBe('40%');
+    });
+
+    it('scales the first-render fill against endProgress', async () => {
+      const el = await fixture<ALProgress>(html`<al-progress .currentProgress=${50} .endProgress=${200}></al-progress>`);
+      await el.updateComplete;
+      expect(fill(el).getAttribute('style')).toContain('width: 25%');
+    });
+
+    it('follows later property assignments', async () => {
+      const el = await fixture<ALProgress>(html`<al-progress showLabel></al-progress>`);
+      await el.updateComplete;
+      expect(fill(el).getAttribute('style')).toContain('width: 0%');
+
+      el.currentProgress = 70;
+      await el.updateComplete;
+      expect(fill(el).getAttribute('style')).toContain('width: 70%');
+      expect(label(el).textContent!.trim()).toBe('70%');
+
+      el.setAttribute('currentprogress', '15');
+      await el.updateComplete;
+      expect(fill(el).getAttribute('style')).toContain('width: 15%');
+    });
+
+    it('draws the circular fill from currentProgress on first render and on update', async () => {
+      const el = await fixture<ALProgress>(html`<al-progress isCircle currentProgress="50"></al-progress>`);
+      await el.updateComplete;
+      const circle = () => el.shadowRoot!.querySelector('.al-c-progress__fill--circle circle') as SVGCircleElement;
+      const circumference = 2 * Math.PI * 8;
+      expect(parseFloat(circle().style.strokeDashoffset)).toBeCloseTo(circumference / 2, 3);
+
+      el.currentProgress = 100;
+      await el.updateComplete;
+      expect(parseFloat(circle().style.strokeDashoffset)).toBeCloseTo(0, 3);
+    });
+
+    it('starts a reversed bar full', async () => {
+      const el = await fixture<ALProgress>(html`<al-progress showLabel .currentProgress=${100} .endProgress=${0}></al-progress>`);
+      await el.updateComplete;
+      expect(fill(el).getAttribute('style')).toContain('width: 100%');
+      expect(label(el).textContent!.trim()).toBe('100%');
+    });
+  });
 });

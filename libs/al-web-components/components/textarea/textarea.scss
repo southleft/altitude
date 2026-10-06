@@ -35,8 +35,16 @@
    */
   .al-c-textarea__input {
     @include al-input;
-    padding-inline-start: var(--al-textarea-padding-start, var(--al-theme-space));
-    padding-inline-end: var(--al-textarea-padding-end, var(--al-theme-space));
+    /*
+     * al-input sizes a single-line field: line-height 1 and no block padding,
+     * with the 40px height coming from the control scale. A textarea wraps, so
+     * restore the body-sm line height and give the text block padding; the
+     * inline inset matches al-input (space-sm) so stacked fields line up.
+     */
+    line-height: var(--al-textarea-line-height, var(--al-line-height-20));
+    padding-block: var(--al-textarea-padding-block, var(--al-theme-space-xs));
+    padding-inline-start: var(--al-textarea-padding-start, var(--al-theme-space-sm));
+    padding-inline-end: var(--al-textarea-padding-end, var(--al-theme-space-sm));
 
     /**
      * v2: the placeholder is just a placeholder — see input.scss for why the

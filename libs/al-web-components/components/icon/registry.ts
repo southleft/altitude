@@ -60,6 +60,11 @@ export function registerIcons(defs: Record<string, AltitudeIconDef>, weight: ALI
  */
 export function setIconResolver(fn: IconResolver | undefined): void {
   resolver = fn;
+  // Icons that rendered before the resolver existed (e.g. the package root was
+  // imported before ./lazy.ts) re-sync and resolve their glyph now.
+  if (fn) {
+    for (const sub of subscribers) sub();
+  }
 }
 
 export function hasIconResolver(): boolean {
@@ -94,11 +99,11 @@ export function resolveIcon(name: string, weight: ALIconWeight = 'regular'): Pro
 }
 
 /**
- * Subscribe to registrations.
+ * Subscribe to registrations and to resolver installation.
  *
  * Load-bearing: an `<al-icon name="x">` that renders *before* the module
- * registering `x` is imported would otherwise stay permanently blank. Any
- * registration race repaints instead.
+ * registering `x` (or the module installing a resolver) is imported would
+ * otherwise stay permanently blank. Any registration race repaints instead.
  */
 export function subscribeToIconRegistry(fn: () => void): () => void {
   subscribers.add(fn);

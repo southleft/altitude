@@ -1,4 +1,4 @@
-import { html, unsafeCSS } from 'lit';
+import { html, PropertyValues, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { ALElement } from '../ALElement';
 import styles from './progress.scss';
@@ -95,21 +95,6 @@ export class ALProgress extends ALElement {
   private accessor isReversed: boolean = false;
 
   /**
-   * The percentage value of the current progress
-   * - Default is 0
-   */
-  @state()
-  private accessor currentPercentage: number = 0;
-
-  /**
-   * Stroke dash offset
-   * - Controls the fill for the circular progress indicator
-   * - Dynamically sets stroke-dashoffset on the circle svg
-   */
-  @state()
-  private accessor strokeDashOffset: number = 0;
-
-  /**
    * Start timestamp
    * - Used to animate progress when a duration has been set
    */
@@ -166,6 +151,40 @@ export class ALProgress extends ALElement {
   }
 
   /**
+   * The fraction (0–1) of the range covered by `currentProgress`.
+   * - **default** progress counts up from 0 to `endProgress`
+   * - **reversed** progress counts down from its initial value to `endProgress`
+   *
+   * Derived from `currentProgress` on every read, so the fill reflects the
+   * property (or attribute) on first render and on every later update, not
+   * only after `change()` or the duration animation has run.
+   */
+  private get _fraction(): number {
+    const denominator = this.isReversed ? this.initialProgress : this.endProgress;
+    if (!denominator) {
+      return 0;
+    }
+    return Math.min(Math.max((this.currentProgress ?? 0) / denominator, 0), 1);
+  }
+
+  /**
+   * The percentage value of the current progress, rounded down
+   */
+  private get currentPercentage(): number {
+    return Math.floor(this._fraction * 100);
+  }
+
+  /**
+   * Stroke dash offset
+   * - Controls the fill for the circular progress indicator
+   * - Find the change in pixels from the current progress, scale it, and
+   *   subtract it from the circumference
+   */
+  private get strokeDashOffset(): number {
+    return this._circumference - this._circumference * this._fraction * this._circleScale;
+  }
+
+  /**
    * The progress label, displayed as a percentage or ratio of units
    * @returns {string} The progress label
    */
@@ -193,16 +212,11 @@ export class ALProgress extends ALElement {
 
   /**
    * Updates the circular progress indicator's stroke-dashoffset to reflect the current progress
-   * 1. Find the change in pixels based on the current change in progress
-   * 2. Scale the change value, and subtract it from circumference to find the new value
+   * @deprecated The circle is now derived from `currentProgress` on every render; calling this
+   * only requests an update. Kept so existing callers do not break.
    */
   updateCircle() {
-    /* 1 */
-    const changePx = this.isReversed
-      ? this._circumference * (this.currentProgress / this.initialProgress)
-      : this._circumference * (this.currentProgress / this.endProgress);
-    /* 2 */
-    this.strokeDashOffset = this._circumference - changePx * this._circleScale;
+    this.requestUpdate();
   }
 
   /**
@@ -212,9 +226,8 @@ export class ALProgress extends ALElement {
    * 3. Set the current progress after checking that:
    * - **default** it is not more than the progress end value of 100
    * - **reversed** it is not less that the progress end value of 0
-   * 4. Round down to the nearest integer to set the current progress percentage
-   * 5. If the indicator is circular, update the circle
-   * 6. Continue the animation until progress reaches its end value
+   * 4. Continue the animation until progress reaches its end value
+   *    (the fill and label are derived from currentProgress at render time)
    */
   animateFillDuration() {
     /* 1 */
@@ -227,12 +240,7 @@ export class ALProgress extends ALElement {
       : (elapsed / durationMs) * this.endProgress;
     /* 3 */
     this.currentProgress = this.isReversed ? Math.max(newProgress, this.endProgress) : Math.min(newProgress, this.endProgress);
-    this.currentPercentage = Math.floor(this.currentProgress); /* 4 */
-    /* 5 */
-    if (this.isCircle) {
-      this.updateCircle();
-    }
-    /* 6 */
+    /* 4 */
     const stopAnimation = this.isReversed ? this.currentProgress <= this.endProgress : this.currentProgress >= this.endProgress;
     if (!stopAnimation) {
       requestAnimationFrame(this.animateFillDuration);
@@ -240,25 +248,25 @@ export class ALProgress extends ALElement {
   }
 
   /**
-   * First updated lifecycle method
+   * Will update lifecycle method
+   * - Before the first render, capture the starting value and whether the
+   *   progress counts down, so the first render already draws the right fill
    * 1. Set initial progress to the current progress value
-   * 2. Determine if the progress is reversed, and if so, set the current percentage to 100
-   * 3. If the indicator is circular and not reversed, set the intial stroke-dashoffset to equal the circle circumference
-   * 4. If the progress is based on duration, start the fill animation
+   * 2. Determine if the progress is reversed
+   */
+  willUpdate(changed: PropertyValues<this>) {
+    super.willUpdate(changed);
+    if (!this.hasUpdated) {
+      this.initialProgress = this.currentProgress; /* 1 */
+      this.isReversed = this.endProgress < this.initialProgress; /* 2 */
+    }
+  }
+
+  /**
+   * First updated lifecycle method
+   * - If the progress is based on duration, start the fill animation
    */
   firstUpdated() {
-    /* 1 */
-    this.initialProgress = this.currentProgress;
-    /* 2 */
-    this.isReversed = this.endProgress < this.initialProgress;
-    if (this.isReversed) {
-      this.currentPercentage = 100;
-    }
-    /* 3 */
-    if (this.isCircle && !this.isReversed) {
-      this.strokeDashOffset = this._circumference;
-    }
-    /* 4 */
     if (this.duration) {
       requestAnimationFrame(this.animateFillDuration);
     }
@@ -270,9 +278,7 @@ export class ALProgress extends ALElement {
    * - Dynamically updates the progress indicator
    * 1. Check whether or not the progress has reached its end
    * 2. If not, update the current progress value
-   * 3. Calculate the percent change and set the progress percentage
-   * 4. If the indicator is circular, update the circle
-   * 5. Dispatch the custom event
+   * 3. Dispatch the custom event (the fill, label and percentage derive from currentProgress)
    * - The label is dispatched with the custom event so that it can be displayed in other components as needed
    */
   public change(changeValue: number = 1) {
@@ -281,16 +287,9 @@ export class ALProgress extends ALElement {
 
     if (continueProgress) {
       this.currentProgress += changeValue; /* 2 */
-      /* 3 */
-      const percentChange = this.isReversed ? (this.currentProgress / this.initialProgress) * 100 : (this.currentProgress / this.endProgress) * 100;
-      this.currentPercentage = Math.floor(percentChange);
-      /* 4 */
-      if (this.isCircle) {
-        this.updateCircle();
-      }
     }
 
-    /* 5 */
+    /* 3 */
     this.dispatch({
       eventName: 'onProgressChange',
       detailObj: {

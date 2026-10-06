@@ -84,9 +84,18 @@
 
     /**
      * Current styling of the list item link
+     * 1) Pair the primary fill with its on-primary content colour, the same
+     *    pairing al-button primary uses. Without it the text inherited the
+     *    surface colour and sat dark-on-primary (low contrast).
+     * 2) An active (expanded) item switches back to the neutral fill below, so
+     *    it keeps the inherited text colour.
      */
     .al-is-current & {
       background-color: var(--al-list-item-link-hover-background, var(--al-theme-color-background-primary-default));
+    }
+
+    .al-is-current:not(.al-is-active) & {
+      color: var(--al-theme-color-content-primary-weak); /* 1, 2 */
     }
 
     /**

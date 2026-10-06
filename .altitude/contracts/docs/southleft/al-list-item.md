@@ -49,7 +49,9 @@ Active state
 
 #### `isCurrent`
 
-Current state
+Current state. Fills the item with the primary background and the matching
+on-primary text colour; when the item renders a link (`href`) the link also
+gets `aria-current="page"`.
 
 #### `isDisabled`
 

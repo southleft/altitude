@@ -27,6 +27,17 @@ html {
   font-size: 16px;
 }
 
+/**
+ * Remove the user agent's default 8px body margin, which otherwise insets
+ * full-width bars (al-header, al-footer) from the viewport edges. Lives in the
+ * lowest layer so any consumer rule — layered or not — can restore a margin.
+ */
+@layer al.reset {
+  body {
+    margin: 0;
+  }
+}
+
 body {
   display: flex;
   flex-direction: column;

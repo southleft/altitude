@@ -41,3 +41,10 @@ An unset property now removes the mirror instead, so the host falls through to w
 mode its ancestor or `:root` carries — "no opinion" rather than a selector that matches
 nothing. Setting `mode` again re-mirrors as before; the nested-reset contract for an
 explicit or defaulted value is unchanged and still covered by `test:scoped-theming`.
+
+`al-button` now honours its disabled flags on every path. `isAriaDisabled` (which keeps
+the button focusable) cancels the click and no longer submits or resets the owning form,
+and an `href` button marked `isDisabled` or `isAriaDisabled` cancels the navigation
+instead of following the link. `isDisabled` on a `<button>` still sets the native
+`disabled` attribute. Unit tests cover all four cases. No markup changes are needed;
+code that guarded these clicks in its own handler can drop the guard.
