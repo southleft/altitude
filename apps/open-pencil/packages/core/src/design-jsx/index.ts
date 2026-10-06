@@ -74,5 +74,10 @@ export {
 } from './schema'
 export { transformDesignJSXExpression } from './transform'
 
-export { countSelectionNodes, sceneNodeToJSX, selectionToJSX, type JSXFormat } from '#core/io/formats/jsx'
+export {
+  countSelectionNodes,
+  sceneNodeToJSX,
+  selectionToJSX,
+  type JSXFormat
+} from '#core/io/formats/jsx'
 export { JSX_REFERENCE, AUTHORING_EXAMPLES, type AuthoringExample } from './reference'

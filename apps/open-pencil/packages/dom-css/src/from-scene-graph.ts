@@ -1,6 +1,7 @@
 import { encodeBase64 } from '@open-pencil/core/bytes'
 import { colorToCSS } from '@open-pencil/core/color'
 import { renderNodesToSVG } from '@open-pencil/core/io/formats/svg'
+import { motionSpecTransitionCSS, resolveMotionContext } from '@open-pencil/core/motion'
 import {
   codeBindingOwner,
   resolveInstanceCodeElement,
@@ -18,7 +19,7 @@ import {
 } from './css-values'
 import { designFactWithAttrsFromNode, type OmittedGeometry } from './design-fact'
 import { applyVariableCSS } from './design-tokens'
-import type { DesignDocument, DesignNode, DesignStyleDeclaration } from './types'
+import type { DesignDocument, DesignFact, DesignNode, DesignStyleDeclaration } from './types'
 
 const DOM_CSS_PLUGIN_ID = 'open-pencil-dom-css'
 const IMAGE_SOURCE_URL_KEY = 'image-source-url'
@@ -351,6 +352,18 @@ function styleFromTextNode(node: SceneNode): DesignStyleDeclaration {
   return style
 }
 
+/**
+ * `transition` from the motion spec that governs the node: its own, or for a variant or an
+ * instance, its component set's. Expanded per use case with the role-token fallbacks, the
+ * way Altitude's `al-motion-transition()` mixin writes it — never as a composite token.
+ */
+function addMotionTransition(style: DesignStyleDeclaration, graph: SceneGraph, node: SceneNode) {
+  if (node.type === 'COMPONENT_SET') return
+  const context = resolveMotionContext(graph, node.id)
+  const css = context ? motionSpecTransitionCSS(graph, context.spec) : null
+  if (css) style.transition = css
+}
+
 function imageSourceURL(node: SceneNode): string | undefined {
   return node.pluginData.find(
     (entry) => entry.pluginId === DOM_CSS_PLUGIN_ID && entry.key === IMAGE_SOURCE_URL_KEY
@@ -407,12 +420,13 @@ function codeBoundInstanceNode(
   graph: SceneGraph,
   node: SceneNode,
   options: ResolvedDesignOptions,
-  fact: DesignFact | undefined
+  fact: DesignFact | undefined,
+  factAttrs: Record<string, string>
 ): DesignNode | null {
   const element = resolveInstanceCodeElement(graph, node)
   if (!element) return null
   const attrs: Record<string, string> = Object.fromEntries(element.attributes)
-  Object.assign(attrs, attrsForNode(graph, node, options.includeSourceIds, fact))
+  Object.assign(attrs, attrsForNode(graph, node, options.includeSourceIds, factAttrs))
   const children: DesignNode[] = []
   for (const slot of element.slots) {
     if (slot.text !== undefined) {
@@ -457,7 +471,7 @@ function sceneNodeToDesignNode(
     : { fact: undefined, attrs: {} }
 
   if (node.type === 'INSTANCE') {
-    const element = codeBoundInstanceNode(graph, node, options, fact)
+    const element = codeBoundInstanceNode(graph, node, options, fact, factAttrs)
     if (element) return element
   }
 
@@ -502,6 +516,7 @@ function sceneNodeToDesignNode(
   if (options.markupOnly && emitsSVG && rawHTML === undefined) children = buildChildren()
 
   const inlineStyle = styleFromSceneNode(node)
+  addMotionTransition(inlineStyle, graph, node)
   applyVariableCSS(inlineStyle, fact)
 
   return {

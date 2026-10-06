@@ -1,4 +1,10 @@
-import type { Effect, Fill, SceneNode } from '@open-pencil/scene-graph'
+import type {
+  Effect,
+  Fill,
+  MotionSpec,
+  MotionTransition,
+  SceneNode
+} from '@open-pencil/scene-graph'
 import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import type { DesignVariable } from './vars'
@@ -177,6 +183,8 @@ export type TextProps = BaseProps
 
 export type ComponentProps = NodeProps & {
   properties?: SceneNode['componentPropertyDefinitions']
+  /** Transitions between variants; see `set_motion`. */
+  motion?: MotionTransition[] | Pick<MotionSpec, 'transitions'>
 }
 
 export type InstanceProps = NodeProps & {

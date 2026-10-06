@@ -246,6 +246,12 @@ export type {
   ComponentPropertyOption,
   VariantDefinitionControl
 } from '#vue/controls/component-props'
+export { useMotionSpec } from '#vue/controls/motion'
+export type {
+  MotionModeControl,
+  MotionTransitionControl,
+  MotionVariableOption
+} from '#vue/controls/motion'
 export type { CornerGeometryKey, CornerRadiusKey } from '#vue/controls/appearance/types'
 export { PageListRoot } from '#vue/primitives/PageList'
 export { PositionControlsRoot } from '#vue/primitives/PositionControls'

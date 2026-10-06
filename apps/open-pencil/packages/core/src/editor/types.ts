@@ -138,6 +138,7 @@ export interface EditorEvents extends SceneGraphEvents {
     previous: { panX: number; panY: number; zoom: number }
   ) => void
   'navigation:changed': (navigation: NavigationState, previous: NavigationState) => void
+  'motion:preview-changed': (enabled: boolean) => void
 }
 
 export type EditorEventName = keyof EditorEvents

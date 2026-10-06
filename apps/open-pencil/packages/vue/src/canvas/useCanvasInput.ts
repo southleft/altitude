@@ -6,6 +6,7 @@ import type { SceneNode } from '@open-pencil/scene-graph'
 
 import { createGuideInput, selectedTopLevelGuideFrameId } from '#vue/canvas/guides/input'
 import { createCanvasLabelEdit } from '#vue/canvas/labels/edit'
+import { useMotionPreviewInput } from '#vue/canvas/motion/input'
 import { handlePenDragMove, updatePenHover } from '#vue/canvas/pen/input'
 import { createCanvasPointer } from '#vue/canvas/pointer/use'
 import { createTextEditInput } from '#vue/canvas/text-edit/input'
@@ -121,6 +122,9 @@ export function useCanvasInput(
     editor.setMeasurementMode('off')
     drag.value = d
   }
+
+  // Registered before the editing listeners so its capture-phase handlers run first.
+  useMotionPreviewInput(canvasRef, editor, getCoords, isEnabled)
 
   const guideInput = createGuideInput({
     canvasRef,

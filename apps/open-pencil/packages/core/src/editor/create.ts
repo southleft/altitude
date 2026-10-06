@@ -30,6 +30,7 @@ import { createGraphEventSubscription } from './graph-events'
 import { createGraphReadActions } from './graph-reads'
 import { createGuideActions } from './guides'
 import { createLayoutRunner } from './layout-runner'
+import { createMotionActions } from './motion'
 import { createNodeActions } from './nodes'
 import { createPageActions } from './pages'
 import { createSelectionActions } from './selection'
@@ -232,6 +233,7 @@ export function createEditor(options?: EditorOptions) {
   const tokenImport = createTokenImportActions(ctx)
   const vectorize = createVectorizeActions(ctx)
   const alignment = createAlignmentActions(ctx)
+  const motion = createMotionActions(ctx)
   const clipboardBridge = createClipboardBridge(clipboard, selection)
   const componentBridge = createComponentBridge(components, selection, structure, pages)
   const structureBridge = createStructureBridge(structure, selection)
@@ -281,6 +283,7 @@ export function createEditor(options?: EditorOptions) {
 
   function dispose() {
     nodes.cancelNodePreviews()
+    motion.disposeMotion()
     interactiveEdits.clear()
     stopFontResolutionEvents()
     unsubscribeFromGraph()
@@ -350,6 +353,9 @@ export function createEditor(options?: EditorOptions) {
 
     // Bitmap-to-vector replacement
     ...vectorize,
+
+    // Component motion specs and the Motion preview mode
+    ...motion,
 
     // Variables
     ...variables,

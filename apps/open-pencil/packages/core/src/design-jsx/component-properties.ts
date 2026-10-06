@@ -1,6 +1,11 @@
 import * as v from 'valibot'
 
-import { applyComponentPropertyValue, componentPropertyDefinitions } from '@open-pencil/scene-graph'
+import {
+  applyComponentPropertyValue,
+  componentPropertyDefinitions,
+  motionPluginData,
+  parseMotionSpec
+} from '@open-pencil/scene-graph'
 import type {
   ComponentPropertyDefinition,
   ComponentPropertyReference,
@@ -59,7 +64,21 @@ export function componentMetadata(
     }
     result.componentPropertyReferences = references
   }
+  if (props.motion !== undefined) Object.assign(result, motionMetadata(props.motion, type))
   return result
+}
+
+/**
+ * `motion={[{ trigger: 'hover', use: 'hover', properties: ['background-color'] }]}` on a
+ * component set, component or frame: the same transitions `set_motion` accepts, stored as
+ * the node's motion spec. Accepts the transition list or a `{ transitions }` spec.
+ */
+function motionMetadata(input: unknown, type: SceneNode['type']): Partial<SceneNode> {
+  if (type !== 'COMPONENT_SET' && type !== 'COMPONENT' && type !== 'FRAME')
+    throw new Error('Only component sets, components, and frames accept motion')
+  const spec = parseMotionSpec(Array.isArray(input) ? { transitions: input } : input)
+  if (!spec) throw new Error('motion needs at least one transition with a valid trigger')
+  return { pluginData: motionPluginData({ pluginData: [] }, spec) }
 }
 
 /** Match the nearest component scope, including definitions inherited from its set. */

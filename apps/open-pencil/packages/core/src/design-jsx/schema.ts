@@ -139,6 +139,7 @@ export const DESIGN_JSX_SUPPORTED_PROPERTY_NAMES = [
   'componentId',
   'properties',
   'propertyRefs',
+  'motion',
   'of'
 ] as const
 

@@ -1,6 +1,6 @@
 import type { GenericSchema } from 'valibot'
 
-import { parseCodeBinding, type CodeBinding } from '@open-pencil/scene-graph'
+import { parseCodeBinding, parseMotionSpec, type CodeBinding } from '@open-pencil/scene-graph'
 
 import type { DesignFact } from '../types'
 import { DESIGN_ATTRS, RESIDUAL_FIELD_SET, RESTORABLE_NODE_TYPES, defaultsForType } from './fields'
@@ -47,6 +47,7 @@ export function factToAttrs(fact: DesignFact, encodedResidual?: string): Record<
   if (fact.residual) {
     attrs[DESIGN_ATTRS.residual] = encodedResidual ?? encodeFactJSON(fact.residual)
   }
+  if (fact.motion) attrs[DESIGN_ATTRS.motion] = encodeFactJSON(fact.motion)
   return attrs
 }
 
@@ -133,18 +134,18 @@ function validateResidual(
   return Object.keys(residual).length ? residual : undefined
 }
 
-/**
- * Recover a design fact from `data-op-*` attributes after an HTML round trip.
- *
- * Markup is untrusted: invalid values are dropped and passed to `report` as named issues,
- * never thrown and never cast into the graph.
- */
-export function designFactFromAttrs(
-  attrs: Record<string, string>,
-  report: FactIssueSink = ignoreIssue
-): DesignFact | undefined {
-  const fact: DesignFact = {}
+/** The motion spec in `data-op-motion`, validated; invalid transitions are dropped. */
+function motionFromAttrs(attrs: Record<string, string>, report: FactIssueSink) {
+  const raw = parseJSONAttr(attrs[DESIGN_ATTRS.motion], DESIGN_ATTRS.motion, report)
+  if (raw === undefined) return undefined
+  const motion = parseMotionSpec(raw)
+  if (!motion) report({ fact: DESIGN_ATTRS.motion, reason: 'no valid transitions' })
+  return motion ?? undefined
+}
 
+/** Node type, layer name, component identity and code binding: plain-string facts. */
+function identityFromAttrs(attrs: Record<string, string>, report: FactIssueSink): DesignFact {
+  const fact: DesignFact = {}
   const nodeType = attrs[DESIGN_ATTRS.nodeType]
   if (nodeType) fact.nodeType = nodeType
   const name = attrs[DESIGN_ATTRS.name]
@@ -155,6 +156,21 @@ export function designFactFromAttrs(
   if (componentKey) fact.componentKey = componentKey
   const codeBinding = codeBindingAttr(attrs, report)
   if (codeBinding) fact.codeBinding = codeBinding
+  return fact
+}
+
+/**
+ * Recover a design fact from `data-op-*` attributes after an HTML round trip.
+ *
+ * Markup is untrusted: invalid values are dropped and passed to `report` as named issues,
+ * never thrown and never cast into the graph.
+ */
+export function designFactFromAttrs(
+  attrs: Record<string, string>,
+  report: FactIssueSink = ignoreIssue
+): DesignFact | undefined {
+  const fact = identityFromAttrs(attrs, report)
+  const nodeType = fact.nodeType
 
   const objectAttr = <TSchema extends GenericSchema>(attr: string, schema: TSchema) => {
     const parsed = parseJSONAttr(attrs[attr], attr, report)
@@ -190,6 +206,9 @@ export function designFactFromAttrs(
   const residual = objectAttr(DESIGN_ATTRS.residual, ResidualSchema)
   const validResidual = residual ? validateResidual(residual, nodeType, report) : undefined
   if (validResidual) fact.residual = validResidual
+
+  const motion = motionFromAttrs(attrs, report)
+  if (motion) fact.motion = motion
 
   return Object.keys(fact).length ? fact : undefined
 }

@@ -15,6 +15,7 @@
 - Record which code element renders a component: a component or component set can carry a code binding (tag, React wrapper, property-to-attribute and slot mapping) that survives copies, undo, library revisions, `.fig` files, and HTML round trips. Instances of a bound component export as that element in HTML (`<al-button size="sm">Send</al-button>`, design facts kept) and as its React wrapper in React JSX (`<ALButton size="sm">`), and as a re-renderable `<Instance component="Button" Size="Sm" />` in design JSX.
 - Library revisions carry the variables their components are bound to, and adding a library component to a document brings along the variables it does not have yet.
 - Add workspace commands to the CLI through `OPENPENCIL_CLI_EXTENSIONS`, a list of modules that each export `{ name, command }`.
+- Give component sets token-driven motion: transitions between variants (hover, press, focus, expand, enter, exit) name a use case whose duration and easing role tokens follow the Motion variable mode, with reduced resolving to instant. Edit them in the Design panel's Motion section, play them on instances with the toolbar's **Motion preview**, export them as role-token `transition` declarations with their fallbacks, and author them with a design JSX `motion` prop or the `set_motion`, `get_motion`, and `preview_motion` MCP tools.
 
 ### Changed
 

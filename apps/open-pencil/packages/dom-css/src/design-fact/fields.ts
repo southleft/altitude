@@ -16,7 +16,8 @@ export const DESIGN_ATTRS = {
   strokes: 'data-op-strokes',
   effects: 'data-op-effects',
   position: 'data-op-pos',
-  residual: 'data-op-props'
+  residual: 'data-op-props',
+  motion: 'data-op-motion'
 } as const
 
 /**

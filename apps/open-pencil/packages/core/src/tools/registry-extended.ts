@@ -37,6 +37,7 @@ import {
   setTextResize,
   setVisible
 } from './modify'
+import { getMotion, previewMotion, setMotion } from './motion'
 import {
   diffJSX,
   getComponents,
@@ -188,6 +189,10 @@ export const EXTENDED_TOOLS: ToolDef[] = [
   setActiveMode,
   setVariableAlias,
   importDesignTokensTool,
+  // Motion
+  getMotion,
+  setMotion,
+  previewMotion,
   // Vector & export
   booleanUnion,
   booleanSubtract,
