@@ -147,8 +147,18 @@ function moveVariable(graph: SceneGraph, variable: Variable, collection: Variabl
   if (!collection.variableIds.includes(variable.id)) collection.variableIds.push(variable.id)
 }
 
+/** Kiwi stores floats in 32 bits; compare at that precision so a .fig round trip is not a change. */
+function roundNumbers(value: unknown): unknown {
+  if (typeof value === 'number') return Math.round(value * 1e5) / 1e5
+  if (Array.isArray(value)) return value.map(roundNumbers)
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, roundNumbers(v)]))
+  }
+  return value
+}
+
 function variableSnapshot(variable: Variable) {
-  return structuredClone({
+  return roundNumbers({
     name: variable.name,
     type: variable.type,
     values: variable.valuesByMode,

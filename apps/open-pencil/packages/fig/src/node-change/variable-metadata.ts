@@ -12,6 +12,7 @@ import { getOpenPencilPluginValue, OPEN_PENCIL_PLUGIN_ID } from './plugin-data'
 /**
  * Variable and collection metadata in `.fig` files.
  *
+ * `description` is the native NodeChange description Figma shows for a variable.
  * `codeSyntax` is a native Figma field (VARIABLE `codeSyntax`, platforms WEB/ANDROID/iOS),
  * so Figma shows and keeps it. `extensions` has no Figma field; it travels as OpenPencil
  * plugin data, which Figma preserves without interpreting.
@@ -22,12 +23,14 @@ export const VARIABLE_EXTENSIONS_PLUGIN_KEY = 'variableExtensions'
 const PLATFORMS: readonly VariableCodeSyntaxPlatform[] = ['WEB', 'ANDROID', 'iOS']
 
 interface VariableMetadataOwner {
+  description?: string
   codeSyntax?: VariableCodeSyntax
   extensions?: VariableExtensions
 }
 
 export function variableMetadataToKiwi(owner: VariableMetadataOwner): Partial<NodeChange> {
   const fields: Partial<NodeChange> = {}
+  if (owner.description) fields.description = owner.description
   const entries = PLATFORMS.flatMap((platform) => {
     const value = owner.codeSyntax?.[platform]
     return value ? [{ platform, value }] : []
@@ -71,6 +74,7 @@ function readExtensions(nc: NodeChange): VariableExtensions | undefined {
 
 export function variableMetadataFromKiwi(nc: NodeChange): VariableMetadataOwner {
   const metadata: VariableMetadataOwner = {}
+  if (typeof nc.description === 'string' && nc.description) metadata.description = nc.description
   const codeSyntax = readCodeSyntax(nc)
   const extensions = readExtensions(nc)
   if (codeSyntax) metadata.codeSyntax = codeSyntax
