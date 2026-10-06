@@ -9,10 +9,11 @@
  *
  *   Tier 1  raw durations, easings and travel distances
  *           `--al-animation-{duration,timing,distance}-*`
- *           (`styles/tokens/tier-1/animations.json`)
+ *           (`styles/tokens-dtcg/tier-1/animations.json`)
  *   Tier 2  the theme's role tokens, driven by the `<al-theme motion>` axis
  *           `--al-theme-animation-{duration,timing}-role-*`
- *           (`components/theme/theme.scss`)
+ *           (`styles/tokens-dtcg/tier-2/axis/motion/<mode>.json`; see
+ *           `.altitude/MOTION.md` for which role each use case reads)
  *   Tier 3  THIS MODULE — multi-element, multi-phase sequences
  *
  * Tiers 1 and 2 are pure CSS; reach for them (or the `al-motion-transition()`

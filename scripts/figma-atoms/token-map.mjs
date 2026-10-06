@@ -62,9 +62,13 @@ const walkJson = (dir) => {
   }
   return out;
 };
-// tier-2/brand is added per-BRAND below, never wholesale
+// tier-2/brand is added per-BRAND below, never wholesale. tier-2/axis (the
+// <al-theme> density/contrast/motion/shape mode files) is left out entirely:
+// several modes restate the same path with different values, and the Figma
+// file has no axis collections yet (build-figma-payload.mjs does not push
+// them), so a binding to one would name a variable that does not exist.
 const FILES = [...walkJson('tier-1'), ...walkJson('tier-2'), ...walkJson('tier-3')]
-  .filter((f) => !f.startsWith('tier-2/brand/'))
+  .filter((f) => !f.startsWith('tier-2/brand/') && !f.startsWith('tier-2/axis/'))
   .sort();
 
 // A BRAND may introduce tokens the base tiers never declare (southleft's

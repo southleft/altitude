@@ -196,9 +196,9 @@ colour token.
 | `theme.space.xxs` (50) | **brand** | |
 | `theme.space.xs` (88) | **brand** | |
 | `theme.space.@` (84) | **brand** | |
-| `theme.space.sm` (22) | **density** | hardcoded in `components/theme/theme.scss:21,26,31` |
-| `theme.space.md` (5) | **density** | hardcoded in `components/theme/theme.scss:22,27,32` |
-| `theme.space.lg` (11) | **density** | hardcoded in `components/theme/theme.scss:23,28,33` |
+| `theme.space.sm` (22) | **density** | `tokens-dtcg/tier-2/axis/density/*.json` |
+| `theme.space.md` (5) | **density** | `tokens-dtcg/tier-2/axis/density/*.json` |
+| `theme.space.lg` (11) | **density** | `tokens-dtcg/tier-2/axis/density/*.json` |
 
 A `:host([density=…])` declaration on `<al-theme>` outranks the brand bundle's
 `:root` block, so brand overrides of `sm`/`md`/`lg` are dead the moment the
@@ -214,10 +214,10 @@ least-used spacing tokens; the four highest-traffic ones are free.
 | Axis | Owns | Where |
 |---|---|---|
 | `mode` | `theme.color.background.neutral-default`, `theme.color.content.neutral-default` | `components/theme/theme.scss:11-17` |
-| `density` | `theme.space.{sm,md,lg}` | `components/theme/theme.scss:20-34` |
-| `contrast` | `theme.color.border.neutral-default` | `components/theme/theme.scss:37-39` |
-| `motion` | legacy `theme.animation.duration.{2,4,6,8}` + the `-role-{fast,base,slow}` / `-timing-role-{standard,emphasized}` tokens (spec 2026-08-20-token-axes-expansion) | `components/theme/theme.scss` "motion axis" |
-| `shape` | `theme.border.radius.role.{action,control,surface,indicator}` (spec 2026-08-20-token-axes-expansion) | `components/theme/theme.scss` "shape axis" |
+| `density` | `theme.space.{sm,md,lg}` | `tokens-dtcg/tier-2/axis/density/` |
+| `contrast` | `theme.color.border.neutral-default`, `theme.opacity.disabled` | `tokens-dtcg/tier-2/axis/contrast/` |
+| `motion` | legacy `theme.animation.duration.{@,long}` + the `-role-{fast,base,slow}` / `-timing-role-{standard,emphasized}` tokens (spec 2026-08-20-token-axes-expansion) | `tokens-dtcg/tier-2/axis/motion/` |
+| `shape` | `theme.border.radius.role.{action,control,surface,indicator}` (spec 2026-08-20-token-axes-expansion) | `tokens-dtcg/tier-2/axis/shape/` |
 | `brand` | everything else in §1.1 | `styles/tokens-dtcg/tier-2/brand/<brand>/*.json` |
 
 `shape` and the `motion` role tokens are documented in full in
@@ -498,8 +498,8 @@ byte-identical to base from the `include` chain alone. Overriding nothing is the
 only form of "mirror the base" that cannot drift.
 
 **No `motion.json`, no `shape.json` — and no gate will stop you.** The file
-list above is exhaustive: `shape` and `motion` are hand-written host rules in
-`theme.scss`, never per-brand files ([`AXES.md`](./AXES.md) §2). Writing
+list above is exhaustive: `shape` and `motion` are brand-agnostic axis mode
+files (`tier-2/axis/<axis>/`), never per-brand files ([`AXES.md`](./AXES.md) §2). Writing
 `theme.animation.*` into a brand set makes the axes multiply instead of
 compose — 2 brands × 3 shapes × 3 motions — which is the exact thing the
 six-independent-dials model exists to prevent.
@@ -530,7 +530,7 @@ brand setting shape role radii is shipped, working precedent — do not read the
 motion rule as forbidding it.
 
 **But it contradicts a stated invariant, and someone should decide which one
-is right.** `theme.scss:196-207` says the shape role tokens have no tier-2
+is right.** `AXES.md` §2.1/§2.3 (a theme.scss comment until 2026-10) says the shape role tokens have no tier-2
 `:root` default and "exist ONLY as the direct `:host` declarations below",
 concluding that with no `shape` attribute the fallback wins "so `default` shape
 is byte-identical in EVERY brand, not just altitude." That conclusion does not

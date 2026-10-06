@@ -70,6 +70,33 @@ if (!existsSync(TOKENS_JSON)) {
 
 const emitted = Object.keys(JSON.parse(readFileSync(TOKENS_JSON, 'utf8')));
 
+/**
+ * The <al-theme> AXIS declarations (density / contrast / motion / shape).
+ *
+ * The axis host rules are generated from `tokens-dtcg/tier-2/axis/**` into
+ * `styles/dist-v5/scss/host/axis/` — a directory this scan skips, like every
+ * build output — and `axes.json` records every custom property those rules
+ * declare. Only `rules[].declarations` count: the manifest also lists the
+ * motion `transition` composites, which are design-tool data and are never
+ * declared, so reading one through var() IS a phantom.
+ */
+const AXES_JSON = [
+  'libs/al-web-components/dist/css/axes.json',
+  'libs/al-web-components/styles/dist/axes.json',
+]
+  .map((p) => join(REPO_ROOT, p))
+  .find((p) => existsSync(p));
+if (!AXES_JSON) {
+  console.error('check-token-usage: axes.json not found — run `pnpm --filter @southleft/al-web-components build:tokens` first.');
+  process.exit(1);
+}
+const axisDeclared = new Set();
+for (const axis of Object.values(JSON.parse(readFileSync(AXES_JSON, 'utf8')).axes ?? {})) {
+  for (const rule of axis.rules ?? []) {
+    for (const name of Object.keys(rule.declarations ?? {})) axisDeclared.add(name.slice(2));
+  }
+}
+
 // ------------------------------------------------------------ scan sources
 function* walk(dir) {
   let entries;
@@ -100,13 +127,13 @@ const referenced = new Set();
  * tokens.json alone is not the emitted set. It is the DEFAULT `:root` build
  * (altitude brand, light mode). The scoped `<al-theme>` host and the per-brand
  * partials declare more: the shape axis (--al-theme-border-radius-role-*) and
- * the motion axis (--al-theme-animation-*-role-*) live in components/theme/
- * theme.scss and styles/dist/**\/brand/*.css, never in the :root bundle.
+ * the motion axis (--al-theme-animation-*-role-*) are generated <al-theme>
+ * host rules (seeded from axes.json above), never in the :root bundle.
  * Judging "emitted" by tokens.json membership alone reported all nine of those
  * as phantom when they are simply scoped — which would have sent a reader
  * chasing a bug that does not exist.
  */
-const declared = new Set();
+const declared = new Set(axisDeclared);
 
 const VAR_RE = /var\(\s*(--al-[a-zA-Z0-9-]+)/g;
 const DECL_RE = /(--al-[a-zA-Z0-9-]+)\s*:/g;
@@ -127,8 +154,8 @@ for (const root of SOURCE_ROOTS) {
     }
     // Only the TOKEN layer counts as declaring a token. `styles/**` is the
     // token pipeline's output (including the per-brand partials) and
-    // `components/theme/theme.scss` is the scoped <al-theme> host that owns the
-    // density/contrast/motion/shape axes.
+    // `components/theme/theme.scss` is the scoped <al-theme> host (its axis
+    // rules are generated, and arrive through axes.json above).
     //
     // An arbitrary component declaring the same custom property is an OVERRIDE,
     // not an emission, and must not count. Concretely:

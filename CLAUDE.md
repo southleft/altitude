@@ -134,10 +134,11 @@ from inside the sandbox (`figma.root.name` + `figma.fileKey` against
   for the consumer-facing view — all three must keep naming `tokens-dtcg/` as the source.
 
 ### Theming
-- Scoped `<al-theme brand mode density contrast motion>` host (Phase 4) — sets tokens on `:host`, not `:root`
+- Scoped `<al-theme brand mode density contrast motion shape>` host (Phase 4) — sets tokens on `:host`, not `:root`
 - `brand` and `mode` come from generated `:host([brand])` / `:host([mode])` partials
-  (`styles/dist-v5/scss/host/`, emitted by `tokens-config.v5.mjs`, pulled into `theme.scss`);
-  `density`, `contrast` and `motion` are hand-written rules in `theme.scss`
+  (`styles/dist-v5/scss/host/`, emitted by `tokens-config.v5.mjs`);
+  `density`, `contrast`, `motion`, `shape` are DTCG mode files
+  (`tokens-dtcg/tier-2/axis/<axis>/<mode>.json`, `.altitude/AXES.md`)
 - Those partials are **deltas** over the base `:root` bundle — `<al-theme>` composes on top of
   `dist/css/main.css`, it does not replace it
 - Multiple brands can coexist in the same page. Proof: `pnpm test:scoped-theming` +

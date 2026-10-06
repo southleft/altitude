@@ -1,4 +1,13 @@
 {
+  "$description": "The default contrast, also asserted on every <al-theme> that is not contrast=\"more\" so a nested theme does not inherit a raised value. Sparse by design: theme.color.border.neutral-default has no safe reset (it varies by brand and mode), so it keeps its base value in this mode.",
+  "$extensions": {
+    "org.altitude.axis": {
+      "axis": "contrast",
+      "attribute": "contrast",
+      "mode": "normal",
+      "default": true
+    }
+  },
   "theme": {
     "opacity": {
       "disabled": {
@@ -16,11 +25,8 @@
               "opacity"
             ]
           },
-          "com.atlassian.token": {
-            "introduced": "2024-03-05"
-          },
           "com.adobe.id": {
-            "uuid": "408e4ba4-e128-4c83-8f24-34f2bd6bd0d1"
+            "uuid": "527f40c4-a2af-4de7-9e53-36fd27bd75d6"
           }
         }
       }

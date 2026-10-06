@@ -15,13 +15,20 @@
 > `scripts/ingest-tokens-from-studio.js`, the `build:tokens:v5` alias, and the
 > `$metadata.json` / `$themes.json` plugin manifests are all deleted.
 > `styles/tokens-dtcg/` is now tracked, hand-authored and editable.
+>
+> **Status (2026-10-06):** All six `<al-theme>` axes are token-driven.
+> `density`, `contrast`, `motion` and `shape` used to be literal declarations
+> hand-written in `components/theme/theme.scss`; they are now DTCG mode files
+> under `styles/tokens-dtcg/tier-2/axis/<axis>/<mode>.json`, emitted by the same
+> config. See §"Axis mode files" and [`AXES.md`](./AXES.md) §2.
 
 ## Overview
 
 | Stage | Path | Notes |
 |---|---|---|
 | Editable source | `libs/al-web-components/styles/tokens-dtcg/**.json` | DTCG `$value`/`$type`. Tracked, hand-authored. **This is what you edit** — there is no other token source. Also published as the package's `./tokens-dtcg/*` subpath export, so it is public API. |
-| Build config | `libs/al-web-components/styles/tokens-config.v5.mjs` | The sole config. Its `themes` and `brands` arrays decide which files are emitted. |
+| Build config | `libs/al-web-components/styles/tokens-config.v5.mjs` | The sole config. Its `themes` and `brands` arrays decide which files are emitted; its `AXES` table decides which selector each axis mode is written under. |
+| Axis mode files | `libs/al-web-components/styles/tokens-dtcg/tier-2/axis/<axis>/<mode>.json` | `density`, `contrast`, `motion`, `shape` — one file per `<al-theme>` attribute value. Outside every `:root` build; emitted as `dist-v5/scss/host/axis/<axis>.scss` (loaded by `theme.scss`) and recorded in `dist-v5/axes.json`. |
 | Primary output | `libs/al-web-components/styles/dist-v5/` | What Style Dictionary actually writes. Wiped and rebuilt on every run. |
 | Legacy mirror | `libs/al-web-components/styles/dist/` | A **byte-copy** of `dist-v5/` made by `scripts/copy-tokens-to-legacy-dist.js`, so pre-T6.1 `styles/dist/...` import paths keep resolving. Gitignored. |
 
@@ -69,15 +76,24 @@ Every new token needs a `cssType` (`pull_request_template.md:25`).
 
 ## DTCG `$type` conformance
 
-**539 of 555 tokens** carry a spec-conformant `$type`. The remaining 16 are
-authored on a non-DTCG type rather than mislabelled, because DTCG cannot
-express them:
+**904 of 910 tokens** carry a spec-conformant `$type` (counted 2026-10-06,
+axis mode files included). The remaining 6 are authored on a non-DTCG type
+rather than mislabelled, because DTCG cannot express them:
 
 | Tokens | `$type` | Why it cannot be mapped |
 |---|---|---|
-| 12 | `other` (`animation.timing.*`) | DTCG `cubicBezier` is a 4-number array; these are CSS easing strings (`ease`, `linear`, `cubic-bezier(...)`). |
+| 2 | `other` (`animation.timing.ease` / `.linear`) | CSS keywords. DTCG `cubicBezier` could spell them as arrays, but the emitted value would change from `ease` to `cubic-bezier(...)`. |
 | 2 | `letterSpacing` | DTCG `dimension` admits only `px`/`rem`; these are percentages of the font size (`1%`), which is what Figma exports and what the typography composite means. |
 | 2 | `textDecoration` | DTCG has no equivalent type. |
+
+Every other easing curve is DTCG `cubicBezier` (`[0.2, 0, 0, 1]`) since
+2026-10-06. The trimmed transform groups (below) mean SD's `cubicBezier/css`
+transform still does not fire; `formatCubicBezierValue()` in the config emits
+`cubic-bezier(0.2,0,0,1)` — no spaces, byte-identical to the strings the
+tokens used to be authored as. The tier-2 duration aliases moved from `other`
+to `duration` in the same change. Both were verified value-neutral by diffing
+the full `dist-v5/` emission. One value is outside DTCG syntax: the contrast
+axis's `currentColor` (`$type: color`).
 
 ### Why the conformance pass was value-neutral, and the trap it avoided
 
@@ -148,9 +164,42 @@ token surface, not a formatter fix.
 Read the script's header comment before trusting any number from it. Three
 classifications are non-obvious and a naive version gets all three wrong:
 component theming hooks (`--al-button-padding`) are unemitted *by design*; the
-shape and motion role tokens are declared by the scoped `<al-theme>` host and
-the per-brand partials rather than the `:root` bundle; and a component
+shape and motion role tokens are declared by the generated `<al-theme>` axis
+rules (read from `axes.json`) rather than the `:root` bundle; and a component
 *overriding* a custom property is not the pipeline *emitting* it.
+
+## Axis mode files
+
+`tokens-dtcg/tier-2/axis/<axis>/<mode>.json` — 11 files, 57 tokens. Each file
+names the token paths of the custom properties its axis sets, so the same name
+(`--al-theme-space-sm`) gets one value per mode; the file root carries
+`$extensions["org.altitude.axis"] = { axis, attribute, mode, default }`. A token
+may carry `$extensions["org.altitude.axis"].css` (`"initial"` or `"omit"`) to
+emit something other than its `$value`; `generate:token-metadata` preserves it.
+
+| Axis | Modes (default first) | Tokens |
+|---|---|---|
+| density | comfortable, compact, cozy | `theme.space.{sm,md,lg}` |
+| contrast | normal, more | `theme.opacity.disabled`, `theme.color.border.neutral-default` (`more` only) |
+| motion | full, reduced, expressive | `theme.animation.duration.{@,long}`, `.duration.role.{fast,base,slow}`, `.timing.role.{standard,emphasized}`, `.transition.{hover,expand,overlay,emphasis}` |
+| shape | default, sharp, pill | `theme.border.radius.role.{action,control,surface,indicator}` |
+
+The build resolves each file against the dark `:root` sources and fails on any
+drift between a default mode and `:root`, on an unreachable mode, and on motion
+use cases that disagree with `styles/core/mixins/motion.scss`. Outputs:
+
+- `dist-v5/scss/host/axis/<axis>.scss` — unlayered `:host([…])` rules, loaded
+  by `components/theme/theme.scss` inside its `@layer al.theme` block. Not
+  mirrored to `styles/dist/` (same rule as `scss/host/`).
+- `dist-v5/axes.json` — mirrored to `styles/dist/axes.json`, published as
+  `dist/css/axes.json` (`@southleft/al-web-components/axes.json`). Per axis:
+  `attribute`, `default`, `modes`, `tokens` (CSS name → `{ path, type, emitted,
+  values: { <mode>: resolved value | null } }`) and the emitted `rules`. It is
+  in the token snapshot, so every axis value is baselined.
+
+`tokens.json` is unchanged by design: it is the flat `:root` map, and the role
+tokens must not have a `:root` value. An importer reads the axis tree or
+`axes.json`. Full model, selectors and the importer contract: `AXES.md` §2.
 
 ## Rebaselining after a token change
 

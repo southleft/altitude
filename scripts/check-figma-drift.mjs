@@ -164,6 +164,11 @@ function loadCodeEntries(tokensDir) {
   const out = [];
   for (const file of jsonFiles(tokensDir)) {
     const rel = relative(tokensDir, file).split(sep).join('/');
+    // <al-theme> axis mode files restate semantic paths per mode
+    // (compact/cozy/comfortable all name theme.space.sm). Figma has no axis
+    // collections yet, so reading them as `semantic` would report the
+    // non-default modes as drift. Code-only until they are pushed.
+    if (rel.startsWith('tier-2/axis/')) continue;
     const ctx = contextFor(rel);
     const json = JSON.parse(readFileSync(file, 'utf8'));
     flattenTokenTree(json, '', ctx, rel, out);

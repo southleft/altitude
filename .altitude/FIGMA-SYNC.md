@@ -62,7 +62,7 @@ live before matching on them; never trust a doc's spelling.**
 | Theme | Light, Dark | `tokens-dtcg/tier-2/theme/{light,dark}/` |
 | Brand | Altitude, Southleft | `tokens-dtcg/tier-2/brand/<brand>/` (sparse overrides) |
 | Composed (tier 3) | Light, Dark | `tokens-dtcg/tier-3/theme/{light,dark}/` |
-| Density / Shape / Motion / Contrast | per axis | hand-written `:host([attr])` rules in `components/theme/theme.scss` (see `.altitude/AXES.md` / `REGISTRATION.md` era docs) — **not** token-file axes today; model in Figma only once they become token roles |
+| Density / Shape / Motion / Contrast | one collection per axis, one mode per value | `tokens-dtcg/tier-2/axis/<axis>/<mode>.json` (token files since 2026-10-06; resolved per mode in `styles/dist-v5/axes.json`, see `.altitude/AXES.md` §2). Not yet pushed to Figma by `build-figma-payload.mjs` |
 
 Axes are **orthogonal** — a variant combination (Southleft + Dark + Compact)
 is a runtime composition, never a duplicated token file, in either tool.
