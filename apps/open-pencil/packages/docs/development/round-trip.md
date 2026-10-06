@@ -29,12 +29,15 @@ Facts travel in two forms:
 
 For category 3, editing only the CSS does not change the design, because the fact overrides it. Edit the matching `data-op-*` attribute as well, or remove it to make the CSS authoritative.
 
+Motion is derived output. A component set's [motion spec](/user-guide/motion) travels in `data-op-motion`; variants and instances get a `transition` declaration generated from it with role-token fallbacks. The declaration is never read back, because it has lost the triggers, target variants, and token bindings, so edit `data-op-motion` (or the design) to change motion.
+
 ## Untrusted markup
 
 Exported markup is meant to be edited by people and agents, so `data-op-*` values are validated with Valibot before they reach the graph:
 
 - Fills, strokes, and effects are validated entry by entry against the scene-graph `Fill`, `Stroke`, and `Effect` shapes. Invalid entries are dropped; valid siblings are kept. If every entry is invalid, the CSS-derived paint stands.
 - Residual fields must be on the carried allow-list and have the same kind as the field's default for the node type. Identity and tree structure (`id`, `parentId`, `childIds`) are never written from markup.
+- `data-op-motion` is validated transition by transition; unknown triggers, properties, and use cases are dropped, and a spec with no valid transition is reported.
 - Malformed JSON is ignored.
 
 Each rejection is reported as a degradation that names the element and attribute.

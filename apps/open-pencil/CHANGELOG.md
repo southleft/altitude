@@ -12,6 +12,7 @@
 - Show the selected layers in the Code panel's HTML/CSS mode, and apply edits only to those layers as one undoable step.
 - Reach variables and modes from a Variables tab in the right panel, whatever is selected.
 - Import DTCG design tokens as variable collections and modes from the Variables panel (**Import tokens…**), `open-pencil tokens import`, or the `import_design_tokens` MCP tool. A JSON mapping turns axes such as mode, brand, density, contrast, shape, and motion into collections with modes; aliases stay live across collections; units, code syntax (`var(--…)`), and token paths are kept and survive `.fig` files; re-importing updates variables in place and keeps bindings; and every token that does not import exactly is reported by name. New `add_mode`, `rename_mode`, `remove_mode`, `set_active_mode`, and `set_variable_alias` tools let agents manage modes and aliases.
+- Give component sets token-driven motion: transitions between variants (hover, press, focus, expand, enter, exit) name a use case whose duration and easing role tokens follow the Motion variable mode, with reduced resolving to instant. Edit them in the Design panel's Motion section, play them on instances with the toolbar's **Motion preview**, export them as role-token `transition` declarations with their fallbacks, and manage them with the `set_motion`, `get_motion`, and `preview_motion` MCP tools.
 
 ### Changed
 

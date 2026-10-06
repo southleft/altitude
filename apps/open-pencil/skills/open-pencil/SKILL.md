@@ -86,6 +86,18 @@ openpencil tokens import ./tokens --preset acme --into design.fig --prune --json
 
 A mapping preset declares layers, axes (mode, brand, density, …) and collections; see the [design tokens guide](https://openpencil.dev/programmable/design-tokens). Re-importing updates variables by token path and keeps bindings. Over MCP, use `import_design_tokens` (`tokens` or `files`, optional `mapping`), then `add_mode`, `rename_mode`, `remove_mode`, `set_active_mode`, and `set_variable_alias` to adjust modes and aliases.
 
+### Component motion
+
+Motion lives on component sets as transitions between variants. Prefer a use case so timing follows the motion role tokens (`animation/duration/role/*`, `animation/timing/role/*`) and their Motion mode; reduced resolves to 0 ms:
+
+```json
+{ "id": "<component set id>", "transitions": [
+  { "trigger": "hover", "to": { "State": "Hover" }, "use": "hover", "properties": ["background-color", "color"] }
+] }
+```
+
+Send that to `set_motion` (`mode: "merge"` keeps other transitions; `[]` with the default `replace` removes motion). Pass a transition composite token such as `theme/animation/transition/hover` as `use`, never as a duration. Read it back with `get_motion` (resolved timing and the exported CSS) and check playback headlessly with `preview_motion { id, trigger, motion_mode? }`. See the [motion guide](https://openpencil.dev/user-guide/motion).
+
 ### Search and XPath query
 
 ```bash

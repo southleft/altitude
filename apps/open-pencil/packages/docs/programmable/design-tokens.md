@@ -97,6 +97,10 @@ Tokens that disappear are reported as removed and kept. Pass `--prune` (`prune: 
 
 `variableCollectionsToCSS()` from `@open-pencil/dom-css` names imported variables by their `codeSyntax.WEB` property, writes authored units, skips modes a token does not define, and accepts `modes` (collection id → mode id) to emit one theme combination as a single `:root` block. `tokenModeSelection(graph, { brand: 'acme', mode: 'dark' })` from `@open-pencil/core/io/formats/dtcg` builds that selection from axis values.
 
+## Motion tokens
+
+Duration roles (`animation/duration/role/{fast,base,slow}`) and easing roles (`animation/timing/role/{standard,emphasized}`) drive [component motion](/user-guide/motion): a transition that names a use case reads its role tokens, so switching the Motion collection's mode re-times it, and the reduced mode makes it instant. Transition composites import as CSS strings for reference, but motion never reads or exports them as one value; it expands the use case into its roles at each element, as Altitude's `al-motion-transition()` mixin does.
+
 ## Agent tools
 
 Alongside `import_design_tokens`, agents manage variables with `add_mode`, `rename_mode`, `remove_mode`, `set_active_mode`, `set_variable` (mode id or name), and `set_variable_alias`. See the [MCP server](./mcp-server.md) tool list.

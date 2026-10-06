@@ -46,6 +46,8 @@ export const userGuideSidebar = (
       { text: labels.autoLayout, link: `${prefix}/user-guide/auto-layout` },
       { text: labels.components, link: `${prefix}/user-guide/components` },
       { text: labels.variables, link: `${prefix}/user-guide/variables` },
+      // English-only page: localized navigation links to the canonical English guide.
+      { text: labels.motion, link: '/user-guide/motion' },
     ],
   },
 ]

@@ -15,6 +15,7 @@ export interface SidebarLabels {
   autoLayout: string
   components: string
   variables: string
+  motion: string
   overview: string
   gettingStarted: string
   features: string
@@ -149,6 +150,7 @@ export const EN: SidebarLabels = {
   autoLayout: 'Auto Layout',
   components: 'Components',
   variables: 'Variables',
+  motion: 'Motion',
   overview: 'Overview',
   gettingStarted: 'Getting Started',
   features: 'Features',
@@ -174,6 +176,7 @@ export const DE: SidebarLabels = {
   autoLayout: 'Auto-Layout',
   components: 'Komponenten',
   variables: 'Variablen',
+  motion: 'Bewegung',
   overview: 'Überblick',
   gettingStarted: 'Erste Schritte',
   features: 'Funktionen',
@@ -199,6 +202,7 @@ export const IT: SidebarLabels = {
   autoLayout: 'Auto-layout',
   components: 'Componenti',
   variables: 'Variabili',
+  motion: 'Movimento',
   overview: 'Panoramica',
   gettingStarted: 'Per iniziare',
   features: 'Funzionalità',
@@ -224,6 +228,7 @@ export const FR: SidebarLabels = {
   autoLayout: 'Mise en page auto',
   components: 'Composants',
   variables: 'Variables',
+  motion: 'Mouvement',
   overview: 'Vue d’ensemble',
   gettingStarted: 'Premiers pas',
   features: 'Fonctionnalités',
@@ -249,6 +254,7 @@ export const ES: SidebarLabels = {
   autoLayout: 'Auto-layout',
   components: 'Componentes',
   variables: 'Variables',
+  motion: 'Movimiento',
   overview: 'Resumen',
   gettingStarted: 'Primeros pasos',
   features: 'Características',
@@ -274,6 +280,7 @@ export const PL: SidebarLabels = {
   autoLayout: 'Auto-layout',
   components: 'Komponenty',
   variables: 'Zmienne',
+  motion: 'Ruch',
   overview: 'Przegląd',
   gettingStarted: 'Rozpoczęcie pracy',
   features: 'Funkcje',
@@ -299,6 +306,7 @@ export const RU: SidebarLabels = {
   autoLayout: 'Авто-раскладка',
   components: 'Компоненты',
   variables: 'Переменные',
+  motion: 'Анимация',
   overview: 'Обзор',
   gettingStarted: 'Начало работы',
   features: 'Возможности',

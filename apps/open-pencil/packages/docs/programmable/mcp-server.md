@@ -304,6 +304,14 @@ OpenPencil currently registers 100+ shared design tools, plus MCP-only document 
 | `set_active_mode` | Switch a collection's document-wide active mode |
 | `import_design_tokens` | Import or update DTCG design tokens as collections, modes and variables ([guide](./design-tokens.md)) |
 
+### Motion
+
+| Tool | Description |
+|------|-------------|
+| `get_motion` | Read the motion spec governing a component set, variant or instance: transitions, the timing they resolve to in the current Motion mode, and the CSS `transition` they export as |
+| `set_motion` | Set transitions on a component set (or variant/frame) by trigger, target variant, animated properties and use case; `mode: "merge"` keeps other transitions ([guide](/user-guide/motion)) |
+| `preview_motion` | Sample a trigger's frames without changing the document; `motion_mode` evaluates another mode, and `reduced` resolves to 0 ms |
+
 ### Analyze
 
 | Tool | Description |
