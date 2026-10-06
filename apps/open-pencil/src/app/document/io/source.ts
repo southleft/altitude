@@ -58,12 +58,20 @@ export function createDocumentSourceActions({
     return saved
   }
 
+  // A motion preview patches live node values; restore them so a save never captures a
+  // half-played transition.
+  function settleMotionPreview() {
+    editor.stopMotion()
+  }
+
   function buildFigFile() {
+    settleMotionPreview()
     const renderer = getRenderer()
     return exportFigFile(editor.graph, renderer?.ck, renderer ?? undefined, state.currentPageId)
   }
 
   function buildRecoveryFigFile() {
+    settleMotionPreview()
     return exportFigFile(editor.graph, undefined, undefined, state.currentPageId)
   }
 
