@@ -1,0 +1,249 @@
+import { isEqual } from 'es-toolkit'
+import { pick } from 'es-toolkit/object'
+
+import type { SceneNode } from '@open-pencil/scene-graph'
+import type { Rect, Vector } from '@open-pencil/scene-graph/primitives'
+import { createResizeSnapshot, type ResizeSnapshot } from '@open-pencil/scene-graph/resize'
+import type { UndoEntry } from '@open-pencil/scene-graph/undo'
+
+import { assertNodeEditable } from './capabilities'
+import { restoreSubtree, snapshotSubtree } from './clipboard/subtree-history'
+import { collectNodePositions, pushPositionUndo } from './history/position'
+import {
+  restorePageFromSnapshot as restorePageSnapshot,
+  snapshotPage as createPageSnapshot,
+  type PageSnapshot
+} from './history/snapshot'
+import { textAutoResizeChanges } from './text/auto-resize'
+import type { EditorContext } from './types'
+
+type ResizeOriginal = Rect &
+  Partial<
+    Pick<
+      SceneNode,
+      | 'vectorNetwork'
+      | 'fillGeometry'
+      | 'strokeGeometry'
+      | 'derivedTextGlyphs'
+      | 'strokes'
+      | 'textPathData'
+      | 'textPathBox'
+    >
+  >
+
+export function createUndoActions(ctx: EditorContext) {
+  function commitMove(originals: Map<string, Vector>) {
+    for (const id of originals.keys()) assertNodeEditable(ctx.graph, id)
+    pushPositionUndo(ctx, 'Move', originals, collectNodePositions(ctx, originals.keys()))
+  }
+
+  function commitMoveWithReparent(
+    originals: Map<string, { x: number; y: number; parentId: string }>
+  ) {
+    for (const id of originals.keys()) assertNodeEditable(ctx.graph, id)
+    const finals = new Map<string, { x: number; y: number; parentId: string }>()
+    for (const [id] of originals) {
+      const n = ctx.graph.getNode(id)
+      if (n) finals.set(id, { x: n.x, y: n.y, parentId: n.parentId ?? ctx.state.currentPageId })
+    }
+    ctx.undo.push({
+      label: 'Move',
+      forward: () => {
+        for (const [id, pos] of finals) {
+          ctx.graph.reparentNode(id, pos.parentId)
+          ctx.graph.updateNode(id, { x: pos.x, y: pos.y })
+          ctx.runLayoutForNode(id)
+        }
+      },
+      inverse: () => {
+        for (const [id, pos] of originals) {
+          ctx.graph.reparentNode(id, pos.parentId)
+          ctx.graph.updateNode(id, { x: pos.x, y: pos.y })
+          ctx.runLayoutForNode(id)
+        }
+      }
+    })
+  }
+
+  function commitDuplicateMove(rootIds: string[], previousSelection: Set<string>) {
+    const snapshots = new Map<string, SceneNode>()
+    for (const id of rootIds) {
+      const subtree = snapshotSubtree(ctx.graph, id)
+      for (const [nodeId, snapshot] of subtree) snapshots.set(nodeId, snapshot)
+    }
+    const nextSelection = new Set(rootIds)
+
+    ctx.undo.push({
+      label: 'Duplicate',
+      forward: () => {
+        for (const id of rootIds) {
+          if (ctx.graph.getNode(id)) continue
+          const snapshot = snapshots.get(id)
+          if (!snapshot) continue
+          restoreSubtree(
+            ctx.graph,
+            snapshot,
+            snapshot.parentId ?? ctx.state.currentPageId,
+            snapshots
+          )
+          ctx.runLayoutForNode(id)
+        }
+        ctx.setSelectedIds(new Set(nextSelection))
+      },
+      inverse: () => {
+        for (const id of rootIds.toReversed()) ctx.graph.deleteNode(id)
+        ctx.setSelectedIds(new Set(previousSelection))
+      }
+    })
+  }
+
+  function commitResize(nodeId: string, original: ResizeOriginal) {
+    assertNodeEditable(ctx.graph, nodeId)
+    const node = ctx.graph.getNode(nodeId)
+    if (!node) return
+    // Snapshot full geometry when the inverse payload carries any of it
+    // (vector/path-text resize); plain rect-only resize stays lightweight.
+    const hasGeometry =
+      'vectorNetwork' in original ||
+      'fillGeometry' in original ||
+      'strokeGeometry' in original ||
+      'derivedTextGlyphs' in original ||
+      'strokes' in original ||
+      'textPathData' in original ||
+      'textPathBox' in original
+    const final: ResizeOriginal = hasGeometry
+      ? createResizeSnapshot(node)
+      : { x: node.x, y: node.y, width: node.width, height: node.height }
+    ctx.undo.push({
+      label: 'Resize',
+      forward: () => {
+        assertNodeEditable(ctx.graph, nodeId)
+        // Geometric replay — keep the raw Figma payload (see commitResizePreview).
+        ctx.graph.preserveSourceMetadataDuring(() => ctx.graph.updateNode(nodeId, final))
+        ctx.runLayoutForNode(nodeId)
+      },
+      inverse: () => {
+        assertNodeEditable(ctx.graph, nodeId)
+        ctx.graph.preserveSourceMetadataDuring(() => ctx.graph.updateNode(nodeId, original))
+        ctx.runLayoutForNode(nodeId)
+      }
+    })
+  }
+
+  function commitGroupResize(
+    nodeId: string,
+    origRect: Rect,
+    origChildren: Map<string, ResizeSnapshot>
+  ) {
+    assertNodeEditable(ctx.graph, nodeId)
+    for (const childId of origChildren.keys()) assertNodeEditable(ctx.graph, childId)
+    const node = ctx.graph.getNode(nodeId)
+    if (!node) return
+    const finalRect = { x: node.x, y: node.y, width: node.width, height: node.height }
+    const finalChildren = new Map<string, ResizeSnapshot>()
+    for (const [childId] of origChildren) {
+      const child = ctx.graph.getNode(childId)
+      if (child) finalChildren.set(childId, createResizeSnapshot(child))
+    }
+    ctx.undo.push({
+      label: 'Resize',
+      forward: () => {
+        assertNodeEditable(ctx.graph, nodeId)
+        for (const childId of finalChildren.keys()) assertNodeEditable(ctx.graph, childId)
+        // Geometric replay — keep the raw Figma payload (see commitResizePreview).
+        ctx.graph.preserveSourceMetadataDuring(() => {
+          ctx.graph.updateNode(nodeId, finalRect)
+          for (const [childId, final] of finalChildren) ctx.graph.updateNode(childId, final)
+        })
+        ctx.runLayoutForNode(nodeId)
+      },
+      inverse: () => {
+        assertNodeEditable(ctx.graph, nodeId)
+        for (const childId of origChildren.keys()) assertNodeEditable(ctx.graph, childId)
+        ctx.graph.preserveSourceMetadataDuring(() => {
+          ctx.graph.updateNode(nodeId, origRect)
+          for (const [childId, orig] of origChildren) ctx.graph.updateNode(childId, orig)
+        })
+        ctx.runLayoutForNode(nodeId)
+      }
+    })
+  }
+
+  function commitRotation(nodeId: string, origRotation: number) {
+    assertNodeEditable(ctx.graph, nodeId)
+    const node = ctx.graph.getNode(nodeId)
+    if (!node) return
+    const finalRotation = node.rotation
+    ctx.undo.push({
+      label: 'Rotate',
+      forward: () => {
+        ctx.graph.updateNode(nodeId, { rotation: finalRotation })
+      },
+      inverse: () => {
+        ctx.graph.updateNode(nodeId, { rotation: origRotation })
+      }
+    })
+  }
+
+  function commitNodeUpdate(nodeId: string, previous: Partial<SceneNode>, label = 'Update') {
+    assertNodeEditable(ctx.graph, nodeId)
+    const node = ctx.graph.getNode(nodeId)
+    if (!node) return
+    const restoredPrevious = { ...previous, ...textAutoResizeChanges(node, previous) }
+    const current = pick(
+      node,
+      Object.keys(restoredPrevious) as (keyof SceneNode)[]
+    ) as Partial<SceneNode>
+    if (isEqual(current, restoredPrevious)) return
+    ctx.undo.push({
+      label,
+      forward: () => {
+        ctx.graph.updateNode(nodeId, current)
+        ctx.runLayoutForNode(nodeId)
+      },
+      inverse: () => {
+        ctx.graph.updateNode(nodeId, restoredPrevious)
+        ctx.runLayoutForNode(nodeId)
+      }
+    })
+  }
+
+  function undoAction(validateEnteredContainer: () => void) {
+    ctx.undo.undo()
+    validateEnteredContainer()
+    ctx.requestRender()
+  }
+
+  function redoAction(validateEnteredContainer: () => void) {
+    ctx.undo.redo()
+    validateEnteredContainer()
+    ctx.requestRender()
+  }
+
+  function snapshotPage(): PageSnapshot {
+    return createPageSnapshot(ctx.graph, ctx.state.currentPageId)
+  }
+
+  function restorePageFromSnapshot(snapshot: PageSnapshot) {
+    restorePageSnapshot(ctx, snapshot)
+  }
+
+  function pushUndoEntry(entry: UndoEntry) {
+    ctx.undo.push(entry)
+  }
+
+  return {
+    commitMove,
+    commitMoveWithReparent,
+    commitDuplicateMove,
+    commitResize,
+    commitGroupResize,
+    commitRotation,
+    commitNodeUpdate,
+    undoAction,
+    redoAction,
+    snapshotPage,
+    restorePageFromSnapshot,
+    pushUndoEntry
+  }
+}

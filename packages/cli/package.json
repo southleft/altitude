@@ -1,0 +1,50 @@
+{
+  "name": "@open-pencil/cli",
+  "version": "0.15.1",
+  "license": "MIT",
+  "type": "module",
+  "imports": {
+    "#cli/*": "./src/*"
+  },
+  "bin": {
+    "openpencil": "./bin/openpencil.js"
+  },
+  "exports": {
+    "./library": {
+      "types": "./dist/library/index.d.mts",
+      "bun": "./src/library/index.ts",
+      "import": "./dist/library/index.mjs",
+      "default": "./dist/library/index.mjs"
+    }
+  },
+  "files": [
+    "bin",
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "bunx tsdown --config tsdown.config.ts",
+    "prepublishOnly": "bun run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-pencil/open-pencil.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "@open-pencil/core": "workspace:*",
+    "@open-pencil/dom-css": "workspace:*",
+    "@open-pencil/mcp": "workspace:*",
+    "@open-pencil/scene-graph": "workspace:*",
+    "agentfmt": "^0.1.3",
+    "canvaskit-wasm": "^0.41.1",
+    "citty": "^0.1.6"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14"
+  }
+}

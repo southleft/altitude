@@ -1,0 +1,57 @@
+<style>
+  :root {
+    --color-primary: rgb(37, 99, 235);
+    --space-md: 12px;
+    --radius-md: 8px;
+  }
+  .toolbar {
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    column-gap: 16px;
+    row-gap: 8px;
+    padding: 20px;
+    background: rgb(248, 250, 252);
+  }
+  .btn {
+    display: flex;
+    gap: var(--space-md, 12px);
+    padding: 10px 16px;
+    background: var(--color-primary, rgb(37, 99, 235));
+    border-radius: var(--radius-md, 8px);
+    border: 2px solid rgb(30, 64, 175);
+  }
+  .label {
+    color: rgb(255, 255, 255);
+    font-family: Inter;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+  }
+  .badge {
+    width: 72px;
+    height: 72px;
+    background: rgb(244, 63, 94);
+    transform: rotate(12deg);
+    mix-blend-mode: multiply;
+  }
+</style>
+
+<div class="toolbar" data-op-type="FRAME" data-op-name="Toolbar">
+  <div
+    class="btn"
+    data-op-type="INSTANCE"
+    data-op-name="Save button"
+    data-op-component-id="component-42"
+    data-op-component-key="published-key-1"
+    data-op-vars='{"fills/0/color":{"id":"var-primary","name":"color/primary","cssVar":"--color-primary"},"itemSpacing":{"id":"var-space","name":"space/md","cssVar":"--space-md"}}'
+    data-op-props='{"horizontalConstraint":"STRETCH","counterAxisSizing":"AUTO","textAutoResize":"WIDTH_AND_HEIGHT","locked":true}'
+  >
+    <span class="label" data-op-type="TEXT" data-op-name="Label">Save changes</span>
+  </div>
+
+  <div class="badge" data-op-type="ELLIPSE" data-op-name="Badge"></div>
+
+  <div data-op-type="NOT_A_REAL_TYPE" data-op-name="Hostile" data-op-props='{"id":"hijacked","childIds":["bogus"],"locked":true}'>
+    Degrades safely
+  </div>
+</div>

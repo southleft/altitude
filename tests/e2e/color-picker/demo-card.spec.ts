@@ -1,0 +1,132 @@
+import { expect, test } from '@playwright/test'
+
+import { CanvasHelper } from '#tests/helpers/canvas'
+import { waitForDemo } from '#tests/helpers/demo'
+
+async function dragSlider(
+  page: Parameters<typeof test>[0]['page'],
+  canvas: CanvasHelper,
+  testId: string,
+  ratio: number
+) {
+  const slider = page.getByTestId(testId).getByRole('slider')
+  const box = await slider.boundingBox()
+  if (!box) throw new Error(`Missing slider: ${testId}`)
+  const y = box.y + box.height / 2
+  await page.mouse.move(box.x + 2, y)
+  await page.mouse.down()
+  await page.mouse.move(box.x + Math.max(2, Math.min(box.width - 2, box.width * ratio)), y, {
+    steps: 8
+  })
+  await page.mouse.up()
+  await canvas.waitForRender()
+}
+
+async function selectDemoCard(page: Parameters<typeof test>[0]['page'], canvas: CanvasHelper) {
+  await page.goto('/demo')
+  await canvas.waitForInit()
+  await waitForDemo(page)
+
+  await page.evaluate(async () => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    const nodes = Array.from(store.graph.nodes.values())
+    const card =
+      nodes.find((node) => node.name === 'Card' && node.type === 'COMPONENT') ??
+      nodes.find((node) => node.name === 'Card')
+    // The card lives on whichever page the demo keeps its component library on.
+    let owner = card
+    while (owner && owner.type !== 'CANVAS') {
+      owner = owner.parentId ? store.graph.getNode(owner.parentId) : undefined
+    }
+    if (owner && owner.id !== store.state.currentPageId) await store.switchPage(owner.id)
+    if (!card)
+      throw new Error(
+        `Card not found. Available: ${nodes
+          .slice(0, 20)
+          .map((n) => `${n.name}:${n.type}`)
+          .join(', ')}`
+      )
+    store.select([card.id])
+  })
+  await canvas.waitForRender()
+
+  const designPanel = page.getByTestId('design-panel-single')
+  await expect(designPanel).toBeVisible()
+  await expect(designPanel.getByRole('heading', { name: 'Card' })).toBeVisible()
+}
+
+async function getSelectedFill(page: Parameters<typeof test>[0]['page']) {
+  return page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    const id = [...store.state.selectedIds][0]
+    const node = store.graph.getNode(id)
+    return node
+      ? {
+          id: node.id,
+          name: node.name,
+          type: node.type,
+          fill: node.fills?.[0] ?? null
+        }
+      : null
+  })
+}
+
+async function getSelectedFillOrThrow(page: Parameters<typeof test>[0]['page']) {
+  const selectedFill = await getSelectedFill(page)
+  if (!selectedFill?.fill?.color) throw new Error('Selected node has no color fill')
+  return selectedFill
+}
+
+function expectFillColorChanged(
+  before: Awaited<ReturnType<typeof getSelectedFillOrThrow>>,
+  after: Awaited<ReturnType<typeof getSelectedFillOrThrow>>
+) {
+  expect([
+    before.fill.color.r !== after.fill.color.r,
+    before.fill.color.g !== after.fill.color.g,
+    before.fill.color.b !== after.fill.color.b
+  ]).toContain(true)
+}
+
+test('demo card fill changes through color picker', async ({ page }) => {
+  const canvas = new CanvasHelper(page)
+  await selectDemoCard(page, canvas)
+
+  const before = await getSelectedFillOrThrow(page)
+
+  await page.getByTestId('fill-picker-swatch').first().click()
+  await expect(page.getByTestId('fill-picker-tab-solid')).toBeVisible()
+
+  await dragSlider(page, canvas, 'color-slider-hue', 0.7)
+
+  const after = await getSelectedFillOrThrow(page)
+
+  expectFillColorChanged(before, after)
+})
+
+test('demo card fill changes from hsb saturation and brightness sliders', async ({ page }) => {
+  test.setTimeout(30_000)
+  const canvas = new CanvasHelper(page)
+  await selectDemoCard(page, canvas)
+
+  await page.getByTestId('fill-picker-swatch').first().click()
+  await expect(page.getByTestId('fill-picker-tab-solid')).toBeVisible()
+  await canvas.waitForRender()
+  await page.getByTestId('color-format-select').click()
+  await page.getByRole('option', { name: 'HSB', exact: true }).click()
+  await canvas.waitForRender()
+
+  const beforeS = await getSelectedFillOrThrow(page)
+  await dragSlider(page, canvas, 'color-slider-hsb-s', 0.5)
+  const afterS = await getSelectedFillOrThrow(page)
+
+  expectFillColorChanged(beforeS, afterS)
+
+  const beforeB = await getSelectedFillOrThrow(page)
+  await dragSlider(page, canvas, 'color-slider-hsb-b', 0.25)
+  const afterB = await getSelectedFillOrThrow(page)
+
+  expectFillColorChanged(beforeB, afterB)
+})

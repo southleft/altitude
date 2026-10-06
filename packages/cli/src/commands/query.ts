@@ -1,0 +1,56 @@
+import { defineCommand } from 'citty'
+
+import type { QueryNodeResult } from '@open-pencil/core/rpc'
+
+import { appTargetOptions } from '#cli/app-target'
+import { printNodeResults, printError } from '#cli/format'
+import { loadRPCData } from '#cli/rpc-data'
+
+export default defineCommand({
+  meta: {
+    description: 'Query nodes using XPath selectors'
+  },
+  args: {
+    file: {
+      type: 'positional',
+      description: 'Document file path (omit to connect to running app)',
+      required: false
+    },
+    selector: {
+      type: 'positional',
+      description: 'XPath selector (e.g., //FRAME[@width < 300], //TEXT[contains(@name, "Label")])',
+      required: true
+    },
+    page: { type: 'string', description: 'Page name (default: all pages)' },
+    limit: { type: 'string', description: 'Max results (default: 1000)', default: '1000' },
+    ...appTargetOptions,
+    json: { type: 'boolean', description: 'Output as JSON' }
+  },
+  async run({ args }) {
+    const results = await loadRPCData<QueryNodeResult[] | { error: string }>(
+      args.file,
+      'query',
+      {
+        selector: args.selector,
+        page: args.page,
+        limit: args.limit ? Number(args.limit) : undefined
+      },
+      args
+    )
+
+    if ('error' in results) {
+      printError(results.error)
+      process.exit(1)
+    }
+
+    if (args.json) {
+      console.log(JSON.stringify(results, null, 2))
+      return
+    }
+
+    printNodeResults(results, (n) => {
+      const q = n as { width?: number; height?: number; name: string }
+      return `${q.name}  ${q.width}×${q.height}`
+    })
+  }
+})

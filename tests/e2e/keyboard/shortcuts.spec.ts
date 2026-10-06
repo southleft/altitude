@@ -1,0 +1,560 @@
+import { expect, test, useEditorSetup } from '#tests/e2e/fixtures'
+import { expectDefined } from '#tests/helpers/assert'
+
+const editor = useEditorSetup()
+
+function getActiveTool() {
+  return editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    return store.state.activeTool
+  })
+}
+
+function getSelectedCount() {
+  return editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    return store.state.selectedIds.size
+  })
+}
+
+function getPageChildren() {
+  return editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    return store.graph.getChildren(store.state.currentPageId).map((n) => ({
+      id: n.id,
+      type: n.type,
+      name: n.name,
+      childIds: n.childIds
+    }))
+  })
+}
+
+function getUIVisible() {
+  return editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    return store.state.showUI
+  })
+}
+
+function getZoom() {
+  return editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    return store.state.zoom
+  })
+}
+
+function getSelectedOpacity() {
+  return editor.page.evaluate(() => {
+    const store = window.openPencil?.getStore?.()
+    if (!store) throw new Error('OpenPencil store not initialized')
+    const id = [...store.state.selectedIds][0]
+    return id ? store.graph.getNode(id)?.opacity : undefined
+  })
+}
+
+test.describe('tool switching', () => {
+  test('V → SELECT', async () => {
+    await editor.page.keyboard.press('v')
+    expect(await getActiveTool()).toBe('SELECT')
+  })
+
+  test('R → RECTANGLE', async () => {
+    await editor.page.keyboard.press('r')
+    expect(await getActiveTool()).toBe('RECTANGLE')
+  })
+
+  test('O → ELLIPSE', async () => {
+    await editor.page.keyboard.press('o')
+    expect(await getActiveTool()).toBe('ELLIPSE')
+  })
+
+  test('F → FRAME', async () => {
+    await editor.page.keyboard.press('f')
+    expect(await getActiveTool()).toBe('FRAME')
+  })
+
+  test('T → TEXT', async () => {
+    await editor.page.keyboard.press('t')
+    expect(await getActiveTool()).toBe('TEXT')
+  })
+
+  test('L → LINE', async () => {
+    await editor.page.keyboard.press('l')
+    expect(await getActiveTool()).toBe('LINE')
+  })
+
+  test('P → PEN', async () => {
+    await editor.page.keyboard.press('p')
+    expect(await getActiveTool()).toBe('PEN')
+  })
+
+  test('H → HAND', async () => {
+    await editor.page.keyboard.press('h')
+    expect(await getActiveTool()).toBe('HAND')
+  })
+
+  test('S → SECTION', async () => {
+    await editor.page.keyboard.press('s')
+    expect(await getActiveTool()).toBe('SECTION')
+  })
+})
+
+test.describe('selection shortcuts', () => {
+  test('⌘A selects all', async () => {
+    await editor.page.keyboard.press('v')
+    await editor.canvas.drawRect(100, 100, 60, 60)
+    await editor.canvas.drawRect(200, 100, 60, 60)
+
+    await editor.page.keyboard.press('Meta+a')
+    expect(await getSelectedCount()).toBe(2)
+  })
+
+  test('⌘R starts inline rename for one layer', async () => {
+    const id = await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const node = store.graph.createNode('RECTANGLE', store.state.currentPageId)
+      store.select([node.id])
+      return node.id
+    })
+
+    await editor.page.keyboard.press('Meta+r')
+
+    const input = editor.page.getByTestId('layers-item-input')
+    await expect(input).toBeFocused()
+    await input.fill('Renamed rectangle')
+    await input.press('Enter')
+    const child = (await getPageChildren()).find((node) => node.id === id)
+    expect(child?.name).toBe('Renamed rectangle')
+  })
+
+  test('⌘R opens bulk rename for multiple layers', async () => {
+    const ids = await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const first = store.graph.createNode('RECTANGLE', store.state.currentPageId)
+      const second = store.graph.createNode('RECTANGLE', store.state.currentPageId)
+      store.select([first.id, second.id])
+      return [first.id, second.id]
+    })
+
+    await editor.page.keyboard.press('Meta+r')
+
+    const dialog = editor.page.getByRole('dialog', { name: 'Rename 2 layers' })
+    await expect(dialog).toBeVisible()
+    await dialog.getByLabel('Rename to').fill('Layer $n')
+    await dialog.getByRole('button', { name: 'Rename', exact: true }).click()
+    const renamed = (await getPageChildren()).filter((node) => ids.includes(node.id))
+    expect(renamed.map((node) => node.name)).toEqual(['Layer 1', 'Layer 2'])
+  })
+
+  test('Escape clears selection and resets to SELECT tool', async () => {
+    await editor.page.keyboard.press('Escape')
+    expect(await getSelectedCount()).toBe(0)
+    expect(await getActiveTool()).toBe('SELECT')
+  })
+
+  test('Backspace deletes selected', async () => {
+    await editor.canvas.selectAll()
+    const beforeCount = await getSelectedCount()
+    expect(beforeCount).toBeGreaterThan(0)
+
+    await editor.page.keyboard.press('Backspace')
+    await editor.canvas.waitForRender()
+
+    const children = await getPageChildren()
+    expect(children).toHaveLength(0)
+  })
+})
+
+test.describe('z-order shortcuts', () => {
+  test('] brings to front', async () => {
+    await editor.canvas.drawRect(100, 100, 60, 60)
+    await editor.canvas.drawRect(100, 100, 60, 60)
+
+    const childrenBefore = await getPageChildren()
+    const firstId = expectDefined(childrenBefore[0], 'first page child').id
+
+    // Select the first (bottom) node
+    await editor.page.evaluate((id) => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      store.select([id])
+    }, firstId)
+    await editor.canvas.waitForRender()
+
+    await editor.page.keyboard.press(']')
+    await editor.canvas.waitForRender()
+
+    const childrenAfter = await getPageChildren()
+    expect(childrenAfter[childrenAfter.length - 1].id).toBe(firstId)
+  })
+
+  test('[ sends to back', async () => {
+    const children = await getPageChildren()
+    const lastId = expectDefined(children.at(-1), 'last page child').id
+
+    // Select the last (top) node
+    await editor.page.evaluate((id) => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      store.select([id])
+    }, lastId)
+    await editor.canvas.waitForRender()
+
+    await editor.page.keyboard.press('[')
+    await editor.canvas.waitForRender()
+
+    const after = await getPageChildren()
+    expect(after[0].id).toBe(lastId)
+  })
+})
+
+test.describe('group/ungroup shortcuts', () => {
+  test('⌘G groups selection', async () => {
+    await editor.canvas.selectAll()
+    expect(await getSelectedCount()).toBeGreaterThanOrEqual(2)
+
+    await editor.page.keyboard.press('Meta+g')
+    await editor.canvas.waitForRender()
+
+    const children = await getPageChildren()
+    const group = children.find((c) => c.type === 'GROUP')
+    expect(group).toBeTruthy()
+    expect(group?.childIds.length).toBeGreaterThanOrEqual(2)
+  })
+
+  test('⌘⇧G ungroups', async () => {
+    await editor.page.keyboard.press('Meta+Shift+g')
+    await editor.canvas.waitForRender()
+
+    const children = await getPageChildren()
+    expect(children.every((c) => c.type !== 'GROUP')).toBe(true)
+  })
+})
+
+test.describe('UI toggles', () => {
+  test('⌘\\ toggles UI visibility', async () => {
+    const before = await getUIVisible()
+
+    await editor.page.keyboard.press('Meta+\\')
+    await editor.canvas.waitForRender()
+
+    const after = await getUIVisible()
+    expect(after).toBe(!before)
+
+    // Restore
+    await editor.page.keyboard.press('Meta+\\')
+    await editor.canvas.waitForRender()
+    expect(await getUIVisible()).toBe(before)
+  })
+})
+
+test.describe('duplicate', () => {
+  test('⌘D duplicates selection', async () => {
+    await editor.canvas.clearCanvas()
+    await editor.canvas.drawRect(100, 100, 60, 60)
+    await editor.canvas.selectAll()
+    expect(await getSelectedCount()).toBe(1)
+
+    await editor.page.keyboard.press('Meta+d')
+    await editor.canvas.waitForRender()
+
+    const children = await getPageChildren()
+    expect(children).toHaveLength(2)
+  })
+})
+
+test.describe('opacity shortcuts', () => {
+  test.beforeEach(async () => {
+    await editor.canvas.clearCanvas()
+    await editor.canvas.drawRect(100, 100, 60, 60)
+  })
+
+  test('combines digits and undoes them as one interaction', async () => {
+    await editor.page.keyboard.press('2')
+    await editor.page.keyboard.press('8')
+    expect(await getSelectedOpacity()).toBe(0.28)
+
+    await editor.page.keyboard.press('Meta+z')
+    expect(await getSelectedOpacity()).toBe(1)
+
+    await editor.page.keyboard.press('Meta+Shift+z')
+    expect(await getSelectedOpacity()).toBe(0.28)
+  })
+
+  test('maps 0 to 100% and 00 to 0%', async () => {
+    await editor.page.keyboard.press('5')
+    expect(await getSelectedOpacity()).toBe(0.5)
+
+    await editor.canvas.clearCanvas()
+    await editor.canvas.drawRect(100, 100, 60, 60)
+    await editor.page.keyboard.press('0')
+    expect(await getSelectedOpacity()).toBe(1)
+    await editor.page.keyboard.press('0')
+    expect(await getSelectedOpacity()).toBe(0)
+  })
+
+  test('does not consume shifted digits or NumLock-off navigation keys', async () => {
+    await editor.page.keyboard.press('5')
+    await editor.page.keyboard.press('Shift+1')
+    expect(await getSelectedOpacity()).toBe(0.5)
+
+    const prevented = await editor.page.evaluate(() => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'End',
+        code: 'Numpad1',
+        bubbles: true,
+        cancelable: true
+      })
+      window.dispatchEvent(event)
+      return event.defaultPrevented
+    })
+    expect(prevented).toBe(false)
+    expect(await getSelectedOpacity()).toBe(0.5)
+  })
+})
+
+test.describe('zoom shortcuts', () => {
+  test('⌘=, ⌘+ and ⌘- zoom the canvas and prevent browser defaults', async () => {
+    await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      store.zoomTo100()
+    })
+
+    const pressShortcut = async (shortcut: string, code: 'Equal' | 'Minus') => {
+      await editor.page.evaluate((expectedCode) => {
+        delete document.documentElement.dataset.observedShortcut
+        const handleKeydown = (event: KeyboardEvent) => {
+          if (event.code !== expectedCode) return
+          window.removeEventListener('keydown', handleKeydown)
+          document.documentElement.dataset.observedShortcut = JSON.stringify({
+            defaultPrevented: event.defaultPrevented,
+            shiftKey: event.shiftKey
+          })
+        }
+        window.addEventListener('keydown', handleKeydown)
+      }, code)
+
+      await editor.page.keyboard.press(shortcut)
+      await editor.canvas.waitForRender()
+      const event = await editor.page.evaluate(() => {
+        const observed = document.documentElement.dataset.observedShortcut
+        if (!observed) throw new Error('Expected shortcut keydown event')
+        return JSON.parse(observed) as { defaultPrevented: boolean; shiftKey: boolean }
+      })
+      return { event, zoom: await getZoom() }
+    }
+
+    const zoomedIn = await pressShortcut('ControlOrMeta+Equal', 'Equal')
+    const zoomedInWithShift = await pressShortcut('ControlOrMeta+Shift+Equal', 'Equal')
+    const zoomedOut = await pressShortcut('ControlOrMeta+Minus', 'Minus')
+
+    expect(zoomedIn.event).toEqual({ defaultPrevented: true, shiftKey: false })
+    expect(zoomedInWithShift.event).toEqual({ defaultPrevented: true, shiftKey: true })
+    expect(zoomedOut.event).toEqual({ defaultPrevented: true, shiftKey: false })
+    expect(zoomedIn.zoom).toBeGreaterThan(1)
+    expect(zoomedInWithShift.zoom).toBeGreaterThan(zoomedIn.zoom)
+    expect(zoomedOut.zoom).toBeLessThan(zoomedInWithShift.zoom)
+  })
+
+  test('Figma plus and minus shortcuts zoom around the active canvas center', async () => {
+    await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      store.zoomTo100()
+      store.splitPane(store.activePaneId.value, 'horizontal')
+    })
+    await expect(editor.page.locator('[data-active-pane]')).toHaveCount(2)
+    const splitHandle = editor.page.locator('[data-split-id]').first()
+    const splitHandleBounds = await splitHandle.boundingBox()
+    if (!splitHandleBounds) throw new Error('Expected canvas split handle')
+    await editor.page.mouse.move(
+      splitHandleBounds.x,
+      splitHandleBounds.y + splitHandleBounds.height / 2
+    )
+    await editor.page.mouse.down()
+    await editor.page.mouse.move(
+      splitHandleBounds.x + 100,
+      splitHandleBounds.y + splitHandleBounds.height / 2
+    )
+    await editor.page.mouse.up()
+    const activeCanvas = editor.page.locator('[data-active-pane="true"]')
+    const inactiveCanvas = editor.page.locator('[data-active-pane="false"]')
+    const activeBounds = await activeCanvas.boundingBox()
+    const inactiveBounds = await inactiveCanvas.boundingBox()
+    if (!activeBounds || !inactiveBounds) throw new Error('Expected canvas pane bounds')
+    expect(activeBounds.width).toBeLessThan(inactiveBounds.width)
+
+    const centerBefore = await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const center = store.viewportCanvasCenter()
+      return { center, canvasPoint: store.screenToCanvas(center.x, center.y) }
+    })
+
+    expect(centerBefore.center.x).toBeCloseTo(activeBounds.width / 2)
+    expect(centerBefore.center.y).toBeCloseTo(activeBounds.height / 2)
+
+    await editor.page.keyboard.press('Shift+Equal')
+    await editor.canvas.waitForRender()
+    const zoomedIn = await getZoom()
+    const centerAfter = await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const center = store.viewportCanvasCenter()
+      return { center, canvasPoint: store.screenToCanvas(center.x, center.y) }
+    })
+
+    await editor.page.keyboard.press('Minus')
+    await editor.canvas.waitForRender()
+
+    const inactivePaneId = await inactiveCanvas.getAttribute('data-pane-id')
+    if (!inactivePaneId) throw new Error('Expected inactive canvas pane')
+    await editor.page.evaluate((paneId) => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      store.closePane(paneId)
+    }, inactivePaneId)
+    await expect(editor.page.locator('[data-active-pane]')).toHaveCount(1)
+
+    expect(centerAfter.center).toEqual(centerBefore.center)
+    expect(centerAfter.canvasPoint.x).toBeCloseTo(centerBefore.canvasPoint.x)
+    expect(centerAfter.canvasPoint.y).toBeCloseTo(centerBefore.canvasPoint.y)
+    expect(zoomedIn).toBeGreaterThan(1)
+    expect(await getZoom()).toBeLessThan(zoomedIn)
+  })
+
+  test('⌘0 zooms to 100%', async () => {
+    await editor.canvas.clearCanvas()
+    await editor.canvas.drawRect(100, 100, 60, 60)
+
+    // Set zoom to something other than 100%
+    await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      store.state.zoom = 2
+    })
+    await editor.canvas.waitForRender()
+
+    await editor.page.keyboard.press('Meta+0')
+    await editor.canvas.waitForRender()
+
+    const zoomAfter = await getZoom()
+    expect(zoomAfter).toBe(1)
+  })
+
+  test('⌘1 zooms to fit', async () => {
+    await editor.page.keyboard.press('Meta+1')
+    await editor.canvas.waitForRender()
+
+    const zoom = await getZoom()
+    expect(zoom).toBeGreaterThan(0)
+    expect(zoom).toBeLessThanOrEqual(1)
+  })
+
+  test('⌘2 zooms to selection', async () => {
+    await editor.canvas.selectAll()
+
+    await editor.page.keyboard.press('Meta+2')
+    await editor.canvas.waitForRender()
+
+    const zoom = await getZoom()
+    expect(zoom).toBeGreaterThan(0)
+    expect(zoom).toBeLessThanOrEqual(1)
+  })
+
+  test('⇧1 zooms to fit (same as ⌘1)', async () => {
+    await editor.page.keyboard.press('Shift+1')
+    await editor.canvas.waitForRender()
+
+    const zoom = await getZoom()
+    expect(zoom).toBeGreaterThan(0)
+    expect(zoom).toBeLessThanOrEqual(1)
+  })
+
+  test('⇧2 zooms to selection (same as ⌘2)', async () => {
+    await editor.canvas.selectAll()
+
+    await editor.page.keyboard.press('Shift+2')
+    await editor.canvas.waitForRender()
+
+    const zoom = await getZoom()
+    expect(zoom).toBeGreaterThan(0)
+    expect(zoom).toBeLessThanOrEqual(1)
+  })
+})
+
+test.describe('undo/redo', () => {
+  test('⌘Z undoes last action', async () => {
+    await editor.canvas.clearCanvas()
+    await editor.canvas.drawRect(100, 100, 60, 60)
+    expect((await getPageChildren()).length).toBe(1)
+
+    await editor.page.keyboard.press('Meta+z')
+    await editor.canvas.waitForRender()
+
+    expect((await getPageChildren()).length).toBe(0)
+  })
+
+  test('⌘⇧Z redoes undone action', async () => {
+    await editor.page.keyboard.press('Meta+Shift+z')
+    await editor.canvas.waitForRender()
+
+    expect((await getPageChildren()).length).toBe(1)
+  })
+})
+
+test.describe('auto-layout shortcut', () => {
+  test('⇧A toggles auto-layout on frame', async () => {
+    await editor.canvas.clearCanvas()
+    await editor.canvas.drawRect(100, 100, 200, 200)
+    await editor.canvas.selectAll()
+
+    // Change to frame type for auto-layout
+    await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const nodes = [...store.state.selectedIds]
+      if (nodes[0]) store.updateNode(nodes[0], { type: 'FRAME' })
+    })
+    await editor.canvas.waitForRender()
+
+    const layoutBefore = await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const nodes = [...store.state.selectedIds]
+      return store.graph.getNode(nodes[0])?.layoutMode
+    })
+    expect(layoutBefore).toBe('NONE')
+
+    await editor.page.keyboard.press('Shift+a')
+    await editor.canvas.waitForRender()
+
+    const layoutAfter = await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const nodes = [...store.state.selectedIds]
+      return store.graph.getNode(nodes[0])?.layoutMode
+    })
+    expect(layoutAfter).toBe('VERTICAL')
+
+    // Toggle off
+    await editor.page.keyboard.press('Shift+a')
+    await editor.canvas.waitForRender()
+
+    const layoutFinal = await editor.page.evaluate(() => {
+      const store = window.openPencil?.getStore?.()
+      if (!store) throw new Error('OpenPencil store not initialized')
+      const nodes = [...store.state.selectedIds]
+      return store.graph.getNode(nodes[0])?.layoutMode
+    })
+    expect(layoutFinal).toBe('NONE')
+  })
+})

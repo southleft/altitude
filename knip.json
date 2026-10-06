@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": [
+    "desktop/target/**",
+    "**/dist/**",
+    "**/node_modules/**"
+  ],
+  "ignoreWorkspaces": ["packages/acp", "packages/demos"],
+  "ignoreUnresolved": [
+    "~icons/*",
+    "/src/app/editor/fonts/index.ts",
+    "/packages/core/src/text/index.ts",
+    "/src/app/tabs/index.ts",
+    "#core/*"
+  ],
+  "ignoreBinaries": ["figma-use", "identify", "magick", "open", "osascript"]
+}

@@ -1,0 +1,77 @@
+import { withThemeByDataAttribute } from '@storybook/addon-themes'
+import type { Preview, Renderer } from '@storybook/vue3-vite'
+import { watch } from 'vue'
+
+import { useAppTheme } from '../src/app/shell/theme'
+
+import '../src/app.css'
+
+const preview: Preview = {
+  decorators: [
+    withThemeByDataAttribute<Renderer>({
+      themes: {
+        dark: 'dark',
+        light: 'light'
+      },
+      defaultTheme: 'dark',
+      attributeName: 'data-theme'
+    }),
+    (story, context) => ({
+      components: { story },
+      setup() {
+        const { setTheme } = useAppTheme()
+        watch(
+          () => context.globals.theme,
+          (theme) => setTheme(theme === 'light' ? 'light' : 'dark'),
+          { immediate: true }
+        )
+      },
+      template:
+        '<div class="min-h-screen bg-canvas p-8 text-surface [--vp-c-bg-alt:var(--color-panel-field)] [--vp-c-bg-soft:var(--color-panel)] [--vp-c-brand-1:var(--color-component)] [--vp-c-divider:var(--color-border)] [--vp-c-text-1:var(--color-surface)] [--vp-c-text-2:var(--color-muted)]"><story /></div>'
+    })
+  ],
+  parameters: {
+    layout: 'fullscreen',
+    options: {
+      storySort: {
+        order: [
+          'Design System',
+          [
+            'Actions',
+            ['Button', 'Icon Button'],
+            'Inputs',
+            ['Combobox', 'Segmented Control'],
+            'Navigation',
+            ['Tabs'],
+            'Lists',
+            ['Action Row'],
+            'Paint',
+            ['Fill Swatch'],
+            'Overlays',
+            ['Dialog'],
+            'Feedback',
+            ['Placeholder'],
+            'Layout',
+            ['Panel Foundation']
+          ],
+          'Editor',
+          ['Navigation', 'Layer Tree', 'Properties'],
+          'Chat',
+          ['Markdown', 'Message', 'Attachments'],
+          '*'
+        ]
+      }
+    },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i
+      }
+    },
+    a11y: {
+      test: 'error'
+    }
+  }
+}
+
+export default preview
