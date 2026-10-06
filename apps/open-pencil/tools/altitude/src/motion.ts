@@ -113,9 +113,13 @@ export async function readAltitudeContracts(altitudeRoot: string): Promise<Altit
   for (const entry of (await readdir(dir)).sort()) {
     if (!entry.endsWith('.contract.json')) continue
     const parsed: unknown = JSON.parse(await readFile(join(dir, entry), 'utf8'))
-    if (isRecord(parsed) && typeof parsed.id === 'string') {
-      contracts.push(parsed as unknown as AltitudeContract)
-    }
+    if (!isRecord(parsed) || typeof parsed.id !== 'string') continue
+    contracts.push({
+      id: parsed.id,
+      name: typeof parsed.name === 'string' ? parsed.name : undefined,
+      states: Array.isArray(parsed.states) ? parsed.states : undefined,
+      conditionalBindings: parsed.conditionalBindings
+    })
   }
   return contracts
 }

@@ -16,6 +16,7 @@ import { useActionToast } from '@/app/shell/toast/action'
 import { useToolbarActions } from '@/components/Toolbar/actions'
 import DesktopToolbar from '@/components/Toolbar/DesktopToolbar.vue'
 import MobileToolbar from '@/components/Toolbar/MobileToolbar.vue'
+import MotionPreviewToggle from '@/components/Toolbar/MotionPreviewToggle.vue'
 import type { ToolbarActionItem } from '@/components/Toolbar/types'
 import { useMenuUI } from '@/components/ui/menu/menu'
 
@@ -77,7 +78,11 @@ function onActionTap(item: ToolbarActionItem) {
       :tool-shortcuts="toolShortcuts"
       :ui="toolbarUI"
       @set-tool="actions.setTool"
-    />
+    >
+      <template #end>
+        <MotionPreviewToggle :ui="toolbarUI" />
+      </template>
+    </DesktopToolbar>
 
     <MobileToolbar
       v-else

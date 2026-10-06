@@ -29,6 +29,7 @@ import {
 import { createInitialAppEditorState, type AppEditorState } from '@/app/editor/session/types'
 import { notificationMessages } from '@/app/i18n/notifications'
 import { createDeferred } from '@/app/runtime/deferred'
+import { animationsEnabled } from '@/app/shell/motion'
 import { toast } from '@/app/shell/ui'
 import { IS_BROWSER, IS_TAURI } from '@/constants'
 
@@ -58,6 +59,8 @@ export function createEditorStore(initialGraph?: SceneGraph) {
   const canvasReadiness = createDeferred<undefined>()
   const io = new IORegistry(BUILTIN_IO_FORMATS)
   bindClipboardNotifications(editor)
+  // Motion previews follow the app's effective motion policy (OS reduce or animations off).
+  editor.setMotionReducedMotionSource(() => !animationsEnabled.value)
 
   if (initialGraph) {
     editor.subscribeToGraph()

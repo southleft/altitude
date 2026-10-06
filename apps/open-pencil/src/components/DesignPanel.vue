@@ -22,6 +22,7 @@ import FramePresetsSection from './properties/frame-presets/FramePresetsSection.
 import LayoutGridSection from './properties/layout/guides/LayoutGridSection.vue'
 import LayoutSection from './properties/layout/LayoutSection.vue'
 import MaskSection from './properties/MaskSection.vue'
+import MotionSection from './properties/motion/MotionSection.vue'
 import PageSection from './properties/PageSection.vue'
 import RetainedPanel from './properties/panel/RetainedPanel.vue'
 import PositionSection from './properties/PositionSection.vue'
@@ -169,6 +170,11 @@ const { panels } = useI18n()
       <StrokeSection />
       <LayoutGridSection v-if="supportsLayoutGuides" />
       <EffectsSection />
+      <MotionSection
+        v-if="
+          node.type === 'COMPONENT_SET' || node.type === 'COMPONENT' || node.type === 'INSTANCE'
+        "
+      />
 
       <ExportSection />
     </div>

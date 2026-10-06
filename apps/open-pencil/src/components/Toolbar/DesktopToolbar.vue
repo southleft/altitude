@@ -67,6 +67,7 @@ const emit = defineEmits<{
           </Tip>
         </ToolbarItem>
       </template>
+      <slot name="end" />
     </ToolbarRoot>
   </div>
 </template>
