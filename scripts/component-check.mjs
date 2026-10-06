@@ -453,6 +453,7 @@ function checkComponent(name) {
 const EVIDENCE_DIR = join(REPO, '.altitude/verification');
 const A11Y_REPORT = join(REPO, '.altitude/a11y/report.json');
 const PARITY_RECEIPT = join(REPO, '.altitude/figma-sync/verify/check-parity.json');
+const CANVAS_PARITY_RECEIPT = join(REPO, '.altitude/canvas-parity/altitude/receipt.json');
 const DIST_COMPONENTS = join(REPO, 'libs/al-web-components/dist/components');
 
 /** The three statuses a claim row may carry. There is no fourth, and there is
@@ -516,11 +517,12 @@ export function sourceFingerprint(name) {
 
 /**
  * The claims that are NOT answerable from the tracked source tree alone: an
- * axe measurement, a build output, and a Figma parity receipt. They live here
+ * axe measurement, a build output, a Figma parity receipt and a canvas parity
+ * receipt. They live here
  * rather than in `checkComponent()` on purpose — that function is the CI gate's
  * checklist and its item set is asserted by
- * scripts/__tests__/component-check.test.mjs; these three are evidence rows,
- * and two of the three read gitignored artifacts that simply do not exist on a
+ * scripts/__tests__/component-check.test.mjs; these four are evidence rows,
+ * and three of the four read gitignored artifacts that simply do not exist on a
  * clean clone. Folding them into the gate would turn "nobody has built this
  * checkout yet" into a red build.
  */
@@ -636,6 +638,43 @@ function observationClaims(name, tag, fingerprint) {
       reads: `${rel(PARITY_RECEIPT)} -> components["${tag}"]`,
       evidence,
       fix: 'Run the parity check for this project (see .altitude/PARITY.md) — it writes the receipt scripts/lib/parity-receipt.mjs reads.',
+    });
+  }
+
+  // --- Canvas parity: a canvas GENERATED from code by OpenPencil, ---------
+  // --- therefore absent-or-stale means unobserved -------------------------
+  {
+    let status = CLAIM_STATUS.UNOBSERVED;
+    let detail = `${rel(CANVAS_PARITY_RECEIPT)} not present — canvas:parity has not been run here (the receipt is gitignored)`;
+    let evidence = null;
+    if (existsSync(CANVAS_PARITY_RECEIPT)) {
+      try {
+        const receipt = readJson(CANVAS_PARITY_RECEIPT);
+        const entry = receipt.components?.[tag];
+        if (!entry) {
+          detail = `receipt from ${receipt.checkedAt} carries no "${tag}" entry — the component was not built (see the receipt's skipped list)`;
+        } else if (newest !== null && receipt.checkedAt && Date.parse(receipt.checkedAt) < newest) {
+          detail = `receipt checked ${receipt.checkedAt}, component last edited ${fingerprint.newestMtime} — the observation predates the source`;
+          evidence = `checkedAt ${receipt.checkedAt} < source ${fingerprint.newestMtime}`;
+        } else {
+          status = entry.ok === true ? CLAIM_STATUS.PASS : CLAIM_STATUS.FAIL;
+          detail = `OpenPencil canvas generated from code, checked ${receipt.checkedAt}`;
+          evidence = `API ${entry.api?.matched ?? 0}/${entry.api?.total ?? 0}, token ${entry.token?.matched ?? 0}/${entry.token?.total ?? 0}, disagreements ${(entry.disagreements ?? []).length}`;
+        }
+      } catch (e) {
+        detail = `could not parse the canvas-parity receipt: ${e.message}`;
+      }
+    }
+    claims.push({
+      key: 'canvas-parity',
+      severity: 'warning',
+      requires: 'open-pencil',
+      label: 'the canvas generated from code agrees with the contract (API and token parity)',
+      status,
+      detail,
+      reads: `${rel(CANVAS_PARITY_RECEIPT)} -> components["${tag}"]`,
+      evidence,
+      fix: 'Run: pnpm run canvas:parity (needs Bun and apps/open-pencil installed and built)',
     });
   }
 
