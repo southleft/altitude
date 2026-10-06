@@ -40,7 +40,9 @@ export function renderSupportNotice(notice: SupportNotice, doc: Document = docum
   container.setAttribute('role', 'alert')
 
   const icon = doc.createElement('img')
-  icon.src = '/brand/app-icon.svg'
+  // BASE_URL is the deployment sub-path (`/open-pencil/` on the Altitude site); absent in tests.
+  const env = import.meta.env as Partial<ImportMetaEnv> | undefined
+  icon.src = `${env?.BASE_URL ?? '/'}brand/app-icon.svg`
   icon.alt = ''
   icon.width = 40
   icon.height = 40

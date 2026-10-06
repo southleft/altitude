@@ -75,47 +75,35 @@ CI: `.github/workflows/open-pencil.yml` at the Altitude root runs on any change 
 `apps/open-pencil/**`. The upstream workflows in `apps/open-pencil/.github/` are kept for
 reference only. GitHub never runs workflows from a nested folder.
 
-## Hosting (Cloudflare Pages + Access)
+## Hosting: `altitude.pages.dev/open-pencil/` (password-protected)
 
-The editor is a **second Pages project** in the same Cloudflare account as the docs site
-(`altitude.pages.dev`), connected to the same GitHub repo the same way. It is not part of
-the docs build: `build:all` is a strict `&&` chain, and a heavy Bun build failing there
-would take the docs down with it. It also lets the editor be locked to the team while the
-docs stay public.
+The editor ships with the docs site's existing Cloudflare Pages project. There's no
+separate project and no GitHub secrets.
 
-One-time setup, done by someone with access to the Southleft Cloudflare account:
+- **Build.** `pnpm run build:app-open-pencil` (`scripts/build-open-pencil.mjs`) is the last
+  step of `build:all`. It runs `build:packages` and `vite build` with
+  `OPENPENCIL_BASE=/open-pencil/` into `dist/open-pencil/`, using `bun` from PATH or `npx
+  bun@<pinned>` (the Pages image has no Bun). It is **soft**: if the editor fails to build,
+  it warns, ships nothing under `/open-pencil/`, and the docs still deploy. CI's strict
+  "Build for /open-pencil/" step is what catches that before merge.
+- **Password.** `functions/open-pencil/_middleware.js` puts HTTP Basic auth on every
+  request under `/open-pencil/` (any username). It also provides the SPA fallback for
+  client routes such as `/open-pencil/share/<id>`, and the wasm content type, because
+  Cloudflare does not apply `_redirects` or `_headers` to Function-served requests. It
+  fails closed: without a password configured, the editor returns 503.
 
-1. **Create the project.** Workers & Pages → Create → Pages → *Connect to Git* → choose
-   `southleft/altitude` (the same repo the docs project uses).
-2. **Build settings:**
+**One-time setup (Cloudflare dashboard):** the docs Pages project → Settings → Variables and
+Secrets → add `OPEN_PENCIL_PASSWORD` as a **Secret** for **Production and Preview** → redeploy.
+Share the password with the team, not in the repo.
 
-   | Setting | Value |
-   |---|---|
-   | Project name | `altitude-open-pencil` |
-   | Production branch | `main` |
-   | Framework preset | None |
-   | Root directory (advanced) | `apps/open-pencil` |
-   | Build command | `bun install --frozen-lockfile && bun run build:packages && bunx vite build` |
-   | Build output directory | `dist` |
-   | Environment variable | `BUN_VERSION` = `1.4.2` |
+URLs:
 
-3. **Build watch paths** (project → Settings → Builds → Build watch paths): include
-   `apps/open-pencil/*`. Docs-only commits then don't rebuild the editor. Do the reverse
-   on the docs project, excluding `apps/open-pencil/*`, so editor commits don't rebuild the
-   docs.
-4. **Lock it to Southleft.** Project → Settings → General → *Access policy* → Enable. That
-   creates a Cloudflare Access app for preview URLs. For production, Zero Trust → Access →
-   Applications → the created app → add `altitude-open-pencil.pages.dev` as a second
-   domain. Policy: *Allow*, *Emails ending in* `@southleft.com` (or your IdP group).
+- Production (from `main`): `https://altitude.pages.dev/open-pencil/`
+- This branch / PR previews: `https://<branch>.altitude.pages.dev/open-pencil/`
 
-Result:
-
-- Production (from `main`): `https://altitude-open-pencil.pages.dev`
-- Every other branch and PR: `https://<branch>.altitude-open-pencil.pages.dev`
-
-`public/_headers` and `public/_redirects` already ship in `dist/` (wasm content type and
-the SPA fallback). Checks run separately in `.github/workflows/open-pencil.yml`; no
-Cloudflare secrets are needed in GitHub.
+The build adds roughly 4–5 minutes to the Pages build. The editor's own
+`public/_headers`/`_redirects` land in `dist/open-pencil/` but are ignored by Cloudflare,
+which reads them only from the site root. The root rules live in `pages-root/`.
 
 Documents stay in each person's browser (IndexedDB) unless saved to a file. Hosting does
 not create shared storage. Connecting an AI agent works from the desktop app or a local

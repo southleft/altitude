@@ -4,9 +4,9 @@ name: OpenPencil canvas
 # apps/open-pencil/ALTITUDE.md). Its own .github/ workflows never run from a
 # nested folder, so this file is the only CI it gets inside Altitude.
 #
-# Deploys are NOT done here: a second Cloudflare Pages project connected to this
-# repo through Cloudflare's Git integration (like the docs site) builds
-# apps/open-pencil itself. See apps/open-pencil/ALTITUDE.md#hosting.
+# Deploys are NOT done here: the docs site's Cloudflare Pages build publishes the
+# editor at /open-pencil/ (build:app-open-pencil in build:all), password-gated by
+# functions/open-pencil/_middleware.js. See apps/open-pencil/ALTITUDE.md#hosting.
 
 on:
   push:
@@ -60,6 +60,12 @@ jobs:
         run: bun test packages/dom-css/tests
       - name: Round-trip fidelity gate
         run: bun run conformance:gate
+      # The site build (build:app-open-pencil) is soft so the docs always deploy; this
+      # strict build is what catches an editor that would silently drop off /open-pencil/.
+      - name: Build for /open-pencil/
+        run: bunx vite build --outDir "$RUNNER_TEMP/open-pencil"
+        env:
+          OPENPENCIL_BASE: /open-pencil/
 
   canvas-parity:
     name: Code ↔ canvas parity (non-blocking)

@@ -21,7 +21,7 @@ const sources = {
 const source = computed(() => {
   // The ivory tile owns its background and always uses the light palette.
   const suffix = variant !== 'app-icon' && appearance === 'dark' ? '-dark' : ''
-  return `/brand/${sources[variant]}${suffix}.svg`
+  return `${import.meta.env.BASE_URL}brand/${sources[variant]}${suffix}.svg`
 })
 </script>
 
