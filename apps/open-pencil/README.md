@@ -204,6 +204,8 @@ For other MCP clients:
 }
 ```
 
+**Hosted web editor:** builds with a relay URL connect agents through a hosted MCP relay; **Connect AI** generates the `claude mcp add --transport http` command and connection key. [Remote relay →](https://openpencil.dev/programmable/mcp-server#remote-relay)
+
 **HTTP** (scripts, CI):
 
 ```sh

@@ -12,6 +12,10 @@
  * Bun: uses `bun` from PATH when present, otherwise `npx bun@<pinned>` (the Cloudflare
  * Pages image has Node but not Bun). The pin is apps/open-pencil/package.json
  * `packageManager`.
+ *
+ * Environment: the child build inherits process.env, so a Pages variable such as
+ * VITE_OPENPENCIL_RELAY_URL (the hosted MCP relay, see apps/open-pencil/ALTITUDE.md)
+ * reaches Vite, which exposes VITE_* variables to the editor.
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, rmSync } from 'node:fs';

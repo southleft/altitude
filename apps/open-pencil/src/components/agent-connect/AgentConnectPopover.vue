@@ -1,22 +1,61 @@
 <script setup lang="ts">
+import { useClipboard } from '@vueuse/core'
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { tv } from 'tailwind-variants'
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
-import { useAutomationMessages } from '@open-pencil/vue'
+import { useAutomationMessages, useCommonMessages } from '@open-pencil/vue'
 
+import type { RelayConnectionView, RelaySetupCommands } from '@/app/automation/mcp/agent/setup'
 import { useAgentConnection } from '@/app/automation/mcp/agent/use'
+import { toast } from '@/app/shell/ui'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
 import agentConnectTheme from '@/theme/agent-connect'
 
 import AgentConnectPanel from './AgentConnectPanel.vue'
 
 const automation = useAutomationMessages()
+const common = useCommonMessages()
 const connection = useAgentConnection()
-const { status, failure, restarting, externallyManaged, developmentCommand } = connection
+const { status, failure, restarting, externallyManaged, developmentCommand, relay } = connection
 const open = ref(false)
+const { copy } = useClipboard()
+
+const relayView = computed<RelayConnectionView | null>(() =>
+  relay
+    ? {
+        mcpURL: relay.mcpURL,
+        keyConfigured: relay.keyConfigured.value,
+        revealedKey: relay.revealedKey.value,
+        busy: relay.busy.value,
+        keyError: relay.keyError.value,
+        lastRequestAt: relay.lastRequestAt.value
+      }
+    : null
+)
+
+// A revealed key does not outlive the popover.
+watch(open, (isOpen) => {
+  if (!isOpen) relay?.hide()
+})
+
+function toggleRelayKey(): void {
+  if (!relay) return
+  if (relay.revealedKey.value === null) void relay.reveal()
+  else relay.hide()
+}
+
+async function copyRelay(kind: keyof RelaySetupCommands): Promise<void> {
+  const command = await relay?.commandFor(kind)
+  if (!command) return
+  await copy(command)
+  toast.info(common.value.copied)
+}
 const styles = tv(agentConnectTheme)()
-const cls = usePopoverUI({ content: 'z-50 w-80 p-3' })
+const cls = usePopoverUI({
+  // Relay setup is taller than the local steps; scroll inside short windows.
+  content: 'z-50 max-h-(--reka-popover-content-available-height) w-80 overflow-y-auto p-3'
+})
 
 function openSettings(): void {
   open.value = false
@@ -58,8 +97,13 @@ function openSettings(): void {
           :failure="failure"
           :restarting="restarting"
           :externally-managed="externallyManaged"
+          :relay="relayView"
           @restart="connection.restart"
           @open-settings="openSettings"
+          @create-relay-key="relay?.issueKey()"
+          @regenerate-relay-key="relay?.issueKey()"
+          @toggle-relay-key="toggleRelayKey"
+          @copy-relay="copyRelay"
         />
       </PopoverContent>
     </PopoverPortal>

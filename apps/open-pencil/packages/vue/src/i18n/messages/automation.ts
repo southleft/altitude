@@ -131,7 +131,35 @@ export const automationMessageDefaults = {
   agentDevelopmentNote:
     'This development server keeps its MCP discovery file private, so the stdio bridge cannot find it. Turn off Require authentication in MCP settings, then connect over HTTP:',
   agentSetupGuide: 'Setup guide',
-  agentOpenSettings: 'MCP settings'
+  agentOpenSettings: 'MCP settings',
+  agentRelayStatusConnectedHint:
+    'An agent used this tab in the last few minutes. Keep the tab open while it works.',
+  agentRelayStatusWaitingHint:
+    'This tab is linked to the hosted relay. Add OpenPencil to your agent with the command below, then ask it to look at this document.',
+  agentRelayStatusStarting: 'Connecting to the relay',
+  agentRelayStatusOffline: 'Relay not reachable',
+  agentRelayStatusOfflineHint:
+    'OpenPencil keeps retrying. Check your network connection and that browser storage is available.',
+  agentRelayStatusSetup: 'Not set up',
+  agentRelayStatusSetupHint:
+    'Create a connection key to let an agent work on this browser tab through the hosted relay.',
+  agentRelayCreateKey: 'Create connection key',
+  agentRelayKey: 'Connection key',
+  agentRelayKeyHint:
+    'Anyone with this key can edit the documents open in this tab. Keep it private, and regenerate it to revoke access.',
+  agentRelayShowKey: 'Show key',
+  agentRelayHideKey: 'Hide key',
+  agentRelayRegenerate: 'Regenerate key',
+  agentRelayRegenerateHeading: 'Regenerate the connection key?',
+  agentRelayRegenerateDescription:
+    'Agents configured with the current key stop working. Copy the new command into each agent afterwards.',
+  agentRelayKeyFailed: 'The connection key could not be saved',
+  agentRelayKeyFailedHint: 'Check that browser storage is available, then try again.',
+  agentRelayOtherClientsHint: params(
+    'For {clients} and other clients that support remote MCP servers with headers, add this to the MCP configuration.'
+  ),
+  agentRelayLastRequest: params('Last agent request at {time}'),
+  agentToolAccess: 'Tool access'
 } as const
 
 export const automationMessages = i18n('automation', automationMessageDefaults)

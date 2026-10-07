@@ -21,6 +21,8 @@ The **Connect AI** button at the top of the right panel, next to the collaborati
 - **MCP server not running** — use **Restart MCP server** to start it.
 - **Not available on the web** — the static web build cannot reach an MCP server on your computer. Use the desktop app.
 
+On a hosted build with a relay URL, the popover sets up the [remote relay](#remote-relay) instead: **Not set up** offers **Create connection key**, **Connecting to the relay** and **Relay not reachable** describe the tab's link, and the status shows the time of the last agent request.
+
 Each setup step has a copy button:
 
 1. **Install the MCP bridge** — `npm install -g @open-pencil/mcp@<version>`, pinned to the running app's version.
@@ -161,6 +163,73 @@ Endpoints are available over both active transports:
 - `GET /health` — server and app connection status; never returns the auth token.
 - `POST /rpc` — authenticated live-app automation.
 - `POST /mcp` — MCP Streamable HTTP. Sessions use the `mcp-session-id` header.
+
+## Hosted editor (remote relay) {#remote-relay}
+
+The hosted web editor keeps its document in the browser tab, and a statically hosted page cannot reach an MCP server on your computer. A build given a relay URL (`VITE_OPENPENCIL_RELAY_URL`) connects agents through a small hosted relay instead:
+
+```text
+agent ──Streamable HTTP MCP──▶ relay Worker ──▶ Durable Object (one per key) ◀──WebSocket── editor tab
+```
+
+The relay holds no tools and no document. It forwards `tools/list` and `tools/call` to the connected tab, which answers from its own tool registry and runs each call through the same handlers, targeting, undo, atomic edits, and font loading as the local MCP bridge. Results, including exported images, come back in the local server's format and size limits.
+
+### Connect an agent
+
+1. Open **Connect AI** in the hosted editor and choose **Create connection key**. The tab links to the relay and the status reads **Not connected** until an agent calls it.
+2. Copy the Claude Code command. It is a single line, so it also works in PowerShell:
+
+   ```sh
+   claude mcp add --scope user --transport http open-pencil https://<relay>/mcp --header "Authorization: Bearer <key>"
+   ```
+
+3. For Cursor and other clients that support remote MCP servers with headers, copy the JSON configuration instead:
+
+   ```json
+   {
+     "mcpServers": {
+       "open-pencil": {
+         "type": "http",
+         "url": "https://<relay>/mcp",
+         "headers": { "Authorization": "Bearer <key>" }
+       }
+     }
+   }
+   ```
+
+   Claude Desktop's own configuration file runs local commands only; bridge it with `npx mcp-remote https://<relay>/mcp --header "Authorization: Bearer <key>"`.
+
+The key is masked in the popover; **Show key** reveals it for a minute or until the popover closes, and the copy buttons copy the full command. Keep the editor tab open while the agent works. **Regenerate key** replaces the key: agents configured with the old key stop working until you paste the new command.
+
+### Behaviour
+
+- **Tools** — the Core tools exposed to MCP, plus `list_documents` and `get_codegen_prompt`. Script tools (`eval`) and file tools (`open_file`, `save_file`, `new_document`) are never offered over the relay. **Settings → Tool access** applies to the relay too and is checked again on every call.
+- **No tab** — calls fail with an actionable "No OpenPencil tab is connected" message. The relay remembers the tab's last tool list so an agent that starts before the tab still sees the tools.
+- **Several tabs with one key** — the focused tab answers; otherwise the tab that was focused or active most recently, then the newest connection. Tabs report focus and visibility changes to the relay.
+- **Limits** — 60 s per request (configurable), 8 MB per request or WebSocket frame, a per-key token bucket (60 burst, 10 requests per second by default). Tool results keep the local server's 900 KB limit and its narrowing hints.
+- **Transport** — stateless Streamable HTTP: `POST /mcp` with JSON responses, no SSE stream and no `Mcp-Session-Id`. `GET` and `DELETE` return 405. The server advertises `tools.listChanged: false`; reconnect the agent (`/mcp` in Claude Code) after changing Tool access to refresh its list.
+- **Reconnects** — the tab reconnects with exponential backoff (1–30 s, jittered) and sends keep-alives every 25 s, which the relay answers without waking its Durable Object.
+
+### Security
+
+The connection key is a bearer secret: anyone who has it can read and edit the documents open in that browser tab while it is connected. Regenerate it to revoke access.
+
+- Keys are 32 random bytes from `crypto.getRandomValues`, stored in the app's credential store (encrypted IndexedDB in browsers), never in plain `localStorage` or URLs.
+- The tab sends the key as a `Sec-WebSocket-Protocol` token; agents send `Authorization: Bearer`. The relay addresses each key's Durable Object by its SHA-256 digest, compares digests in constant time, never forwards the key past the Worker, and never logs it (per-request invocation logs are off).
+- The WebSocket accepts only allowlisted origins (`ALLOWED_ORIGINS`); browser requests to `/mcp` from other origins are rejected.
+- Oversized frames close the socket; malformed frames are rejected.
+
+A later version will bind keys to a signed-in GitHub identity instead of a shared bearer secret.
+
+### Run the relay locally
+
+```sh
+cd packages/relay
+bun run dev          # wrangler dev on http://127.0.0.1:8787
+bun test tests
+```
+
+Build the editor with `VITE_OPENPENCIL_RELAY_URL=http://127.0.0.1:8787` to point it at the local relay. Deployment for the hosted Altitude editor is described in `ALTITUDE.md`.
 
 ## Workflow
 

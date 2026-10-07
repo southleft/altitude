@@ -5,6 +5,7 @@ import { onMounted, onUnmounted, provide, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { startMCPRuntime, stopMCPRuntime } from '@/app/automation/mcp/runtime'
+import { isRelayMode } from '@/app/automation/relay/config'
 import { exposeCollaborationActions } from '@/app/browser-bridge'
 import { COLLAB_KEY, useCollab } from '@/app/collab/use'
 import { createDemoShapes } from '@/app/demo/document'
@@ -155,6 +156,21 @@ const cancelWebMCPStart = runWhenIdle(() => {
   })
 })
 
+let stopRelay: (() => void) | undefined
+
+/** The hosted relay link is for agents too; hosted builds start it once the editor is idle. */
+const cancelRelayStart = isRelayMode()
+  ? runWhenIdle(() => {
+      void import('@/app/automation/relay/runtime')
+        .then(({ startRelayRuntime, stopRelayRuntime }) => {
+          if (workspaceUnmounted) return undefined
+          stopRelay = stopRelayRuntime
+          return startRelayRuntime(getActiveStore)
+        })
+        .catch((error: unknown) => console.warn('[Relay]', error))
+    })
+  : undefined
+
 onMounted(async () => {
   await startMCPRuntime(getActiveStore)
 
@@ -182,6 +198,8 @@ onUnmounted(() => {
   workspaceUnmounted = true
   cancelWebMCPStart()
   stopWebMCP?.()
+  cancelRelayStart?.()
+  stopRelay?.()
   void stopMCPRuntime()
   fileAssociationCleanup.value?.()
 })
