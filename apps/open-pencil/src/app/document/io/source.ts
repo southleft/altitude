@@ -90,8 +90,8 @@ export function createDocumentSourceActions({
   const recovery = createDocumentRecovery({
     state,
     isEnabled: () => recoveryEnabled.value,
-    buildFigFile: buildRecoveryFigFile,
-    hasWritableSource: () => !!getFileHandle() || !!getFilePath() || !!getStorageBinding()
+    isInteractiveEditing: () => editor.isInteractiveEditing(),
+    buildFigFile: buildRecoveryFigFile
   })
 
   const { saveFigFile, saveFigFileAs, writeFile, canWriteWithoutPrompt } = createSaveActions({
