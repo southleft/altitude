@@ -48,6 +48,8 @@ export const userGuideSidebar = (
       { text: labels.variables, link: `${prefix}/user-guide/variables` },
       // English-only page: localized navigation links to the canonical English guide.
       { text: labels.motion, link: '/user-guide/motion' },
+      // English-only page: localized navigation links to the canonical English guide.
+      { text: labels.versionControl, link: '/user-guide/version-control' },
     ],
   },
 ]

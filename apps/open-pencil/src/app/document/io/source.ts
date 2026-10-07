@@ -180,6 +180,13 @@ export function createDocumentSourceActions({
     saveFigFileAs: () => saveAndTrack(saveFigFileAs),
     hasUnsavedChanges: changes.hasUnsavedChanges,
     markDocumentSaved: changes.markSaved,
+    // External version control (GitHub): capture before snapshotting, then mark the
+    // revision saved and release its recovery snapshot only once the commit succeeded.
+    captureRevision: changes.capture,
+    markExternallyPersisted: async (revision: number, version: number) => {
+      changes.markSaved(revision)
+      await recovery.markProtectedVersion(version)
+    },
     getStorageBinding,
     getRecoveryId: () => recovery.getRecoveryId(),
     adoptRecoverySnapshot: (id: string, version: number) => {

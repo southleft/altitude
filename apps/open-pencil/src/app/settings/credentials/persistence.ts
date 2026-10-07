@@ -4,6 +4,7 @@ import { aiModelSettings, modelConnectionCredentialRef } from '@/app/ai/models'
 import { VECTORIZE_CREDENTIAL_REFS } from '@/app/editor/vectorize/credentials'
 import { mcpConnectionSettings, mcpConnectionCredentialRef } from '@/app/integrations/mcp'
 import { storageCredentialRefs, storageProviderRegistry } from '@/app/integrations/storage'
+import { GITHUB_CREDENTIAL_REFS } from '@/app/integrations/storage/github/provider'
 import {
   PEXELS_CREDENTIAL,
   UNSPLASH_CREDENTIAL,
@@ -37,7 +38,8 @@ export function appCredentialRefs(): CredentialRef[] {
     ...mcpConnectionSettings.value.connections.map((connection) =>
       mcpConnectionCredentialRef(connection.id)
     ),
-    ...storageCredentials
+    ...storageCredentials,
+    ...GITHUB_CREDENTIAL_REFS
   ])
 }
 

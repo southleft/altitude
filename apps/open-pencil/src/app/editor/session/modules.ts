@@ -14,6 +14,7 @@ import type { EditorPreparationController } from '@/app/editor/preparation/contr
 import { createProfilerActions } from '@/app/editor/profiler'
 import type { AppEditorState } from '@/app/editor/session/types'
 import { createVectorEditActions } from '@/app/editor/vector'
+import { createGitHubDocumentSession } from '@/app/integrations/storage/github/document/session'
 
 export function defineEditorStoreAccessors(store: object, editor: Editor) {
   Object.defineProperties(store, {
@@ -65,6 +66,14 @@ export function createEditorStoreModules(
   const documentExport = createDocumentExportActions(editor, state, io, documentIO.downloadBlob)
   const mobileClipboard = createMobileClipboardActions(editor)
   const profiler = createProfilerActions(editor)
+  const github = createGitHubDocumentSession({
+    editor,
+    state,
+    captureRevision: documentIO.captureRevision,
+    markPersisted: documentIO.markExternallyPersisted
+  })
+  // Save in a GitHub-bound document commits; every other document saves as before.
+  const saveDocument = () => (github.binding.value ? github.commit() : documentIO.saveFigFile())
 
   return {
     ...flash,
@@ -76,7 +85,8 @@ export function createEditorStoreModules(
     setViewportSize: documentIO.setViewportSize,
     fitCurrentPageToViewport: documentIO.fitCurrentPageToViewport,
     hasUnsavedChanges: documentIO.hasUnsavedChanges,
-    saveFigFile: documentIO.saveFigFile,
+    saveFigFile: saveDocument,
+    github,
     saveFigFileAs: documentIO.saveFigFileAs,
     getDocumentFilePath: documentIO.getDocumentFilePath,
     getSourceIdentity: documentIO.getSourceIdentity,
@@ -94,6 +104,7 @@ export function createEditorStoreModules(
       editor.dispose()
       editor.clearPageViewports()
       documentIO.disposeDocumentIO()
+      github.dispose()
       preparationController.dispose()
     },
     ...documentExport,

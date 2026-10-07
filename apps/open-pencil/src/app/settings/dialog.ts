@@ -9,6 +9,7 @@ export type SettingsSection =
   | 'tools'
   | 'media'
   | 'storage'
+  | 'github'
 
 export const settingsDialogOpen = ref(false)
 export const settingsDialogSection = ref<SettingsSection>('general')

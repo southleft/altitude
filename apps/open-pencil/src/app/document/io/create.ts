@@ -90,6 +90,8 @@ export function createDocumentIOActions(
     openDOMFile,
     importDOMText,
     hasUnsavedChanges: sourceActions.hasUnsavedChanges,
+    captureRevision: sourceActions.captureRevision,
+    markExternallyPersisted: sourceActions.markExternallyPersisted,
     saveFigFile: sourceActions.saveFigFile,
     saveFigFileAs: sourceActions.saveFigFileAs
   }
