@@ -21,6 +21,7 @@ const agentConnectTheme = {
     stepLabel: 'text-[11px] font-medium',
     command: 'flex items-start gap-1 rounded-md bg-canvas py-1 pr-1 pl-2',
     code: 'min-w-0 flex-1 py-0.5 font-mono text-[10px] leading-relaxed break-all whitespace-pre-wrap select-all',
+    keyActions: 'flex flex-wrap items-center gap-1.5',
     footer: 'flex items-center justify-between gap-2'
   }
 }

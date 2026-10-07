@@ -5,7 +5,12 @@ import { computed } from 'vue'
 
 import { useAutomationMessages, useCommonMessages } from '@open-pencil/vue'
 
-import { AGENT_CLIENT_NAMES, type AgentSetupCommands } from '@/app/automation/mcp/agent/setup'
+import {
+  AGENT_CLIENT_NAMES,
+  type AgentSetupCommands,
+  type RelayConnectionView,
+  type RelaySetupCommands
+} from '@/app/automation/mcp/agent/setup'
 import type { AgentConnectionStatus } from '@/app/automation/mcp/agent/status'
 import type { MCPFailure } from '@/app/automation/mcp/failure'
 import { toast } from '@/app/shell/ui'
@@ -15,6 +20,8 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import agentConnectTheme from '@/theme/agent-connect'
 
+import AgentRelaySetup from './AgentRelaySetup.vue'
+
 const {
   status,
   commands,
@@ -22,7 +29,8 @@ const {
   developmentCommand = null,
   failure = null,
   restarting = false,
-  externallyManaged = false
+  externallyManaged = false,
+  relay = null
 } = defineProps<{
   status: AgentConnectionStatus
   commands: AgentSetupCommands
@@ -32,8 +40,17 @@ const {
   failure?: MCPFailure | null
   restarting?: boolean
   externallyManaged?: boolean
+  /** Set on hosted builds, where agents connect through the hosted relay. */
+  relay?: RelayConnectionView | null
 }>()
-const emit = defineEmits<{ restart: []; openSettings: [] }>()
+const emit = defineEmits<{
+  restart: []
+  openSettings: []
+  createRelayKey: []
+  regenerateRelayKey: []
+  toggleRelayKey: []
+  copyRelay: [kind: keyof RelaySetupCommands]
+}>()
 
 const automation = useAutomationMessages()
 const common = useCommonMessages()
@@ -42,6 +59,26 @@ const styles = tv(agentConnectTheme)()
 
 const statusCopy = computed(() => {
   const messages = automation.value
+  if (relay) {
+    const relayMap: Record<AgentConnectionStatus, { label: string; hint: string | null }> = {
+      connected: {
+        label: messages.agentStatusConnected,
+        hint: messages.agentRelayStatusConnectedHint
+      },
+      waiting: { label: messages.agentStatusWaiting, hint: messages.agentRelayStatusWaitingHint },
+      starting: { label: messages.agentRelayStatusStarting, hint: null },
+      offline: {
+        label: messages.agentRelayStatusOffline,
+        hint: messages.agentRelayStatusOfflineHint
+      },
+      unavailable: {
+        label: messages.agentStatusUnavailable,
+        hint: messages.agentStatusUnavailableHint
+      },
+      setup: { label: messages.agentRelayStatusSetup, hint: messages.agentRelayStatusSetupHint }
+    }
+    return relayMap[status]
+  }
   const map: Record<AgentConnectionStatus, { label: string; hint: string | null }> = {
     connected: {
       label: messages.agentStatusConnected,
@@ -57,7 +94,8 @@ const statusCopy = computed(() => {
     unavailable: {
       label: messages.agentStatusUnavailable,
       hint: messages.agentStatusUnavailableHint
-    }
+    },
+    setup: { label: messages.agentRelayStatusSetup, hint: messages.agentRelayStatusSetupHint }
   }
   return map[status]
 })
@@ -69,8 +107,19 @@ interface SetupStep {
   command: string
 }
 
+const lastRequest = computed(() =>
+  relay?.lastRequestAt
+    ? automation.value.agentRelayLastRequest({
+        time: new Date(relay.lastRequestAt).toLocaleTimeString([], {
+          hour: 'numeric',
+          minute: '2-digit'
+        })
+      })
+    : null
+)
+
 const steps = computed<SetupStep[]>(() => {
-  if (status === 'unavailable' || status === 'connected') return []
+  if (relay || status === 'unavailable' || status === 'connected') return []
   const messages = automation.value
   if (developmentCommand) {
     return [
@@ -122,7 +171,10 @@ async function copyCommand(command: string): Promise<void> {
       <div :class="styles.statusBody()">
         <span :class="styles.statusLabel()">{{ statusCopy.label }}</span>
         <span v-if="statusCopy.hint" :class="styles.hint()">{{ statusCopy.hint }}</span>
-        <div v-if="status === 'offline' && !failure">
+        <span v-if="lastRequest" :class="styles.hint()" data-slot="agent-connect-last-request">{{
+          lastRequest
+        }}</span>
+        <div v-if="status === 'offline' && !failure && !relay">
           <AppButton
             size="xs"
             variant="outline"
@@ -143,6 +195,15 @@ async function copyCommand(command: string): Promise<void> {
       @restart="emit('restart')"
     />
 
+    <AgentRelaySetup
+      v-if="relay"
+      :relay="relay"
+      @create-key="emit('createRelayKey')"
+      @regenerate-key="emit('regenerateRelayKey')"
+      @toggle-reveal="emit('toggleRelayKey')"
+      @copy="(kind) => emit('copyRelay', kind)"
+    />
+
     <div v-for="step in steps" :key="step.id" :class="styles.step()" :data-step="step.id">
       <span :class="styles.stepLabel()">{{ step.label }}</span>
       <span v-if="step.hint" :class="styles.hint()">{{ step.hint }}</span>
@@ -157,7 +218,7 @@ async function copyCommand(command: string): Promise<void> {
     <div :class="styles.footer()">
       <SettingsLink :href="docsURL">{{ automation.agentSetupGuide }}</SettingsLink>
       <AppButton size="xs" variant="link" @click="emit('openSettings')">{{
-        automation.agentOpenSettings
+        relay ? automation.agentToolAccess : automation.agentOpenSettings
       }}</AppButton>
     </div>
   </div>
