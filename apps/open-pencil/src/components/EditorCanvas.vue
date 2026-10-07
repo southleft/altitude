@@ -31,6 +31,7 @@ import { useEditorStore } from '@/app/editor/active-store'
 import { useCanvasCollaborationAwareness } from '@/app/editor/canvas/collaboration-awareness'
 import { createCanvasContextSelection } from '@/app/editor/canvas/context-selection'
 import { appRuntimeConfig } from '@/app/runtime/config'
+import CommentLayer from '@/components/comments/CommentLayer.vue'
 import PreparationOverlay from '@/components/preparation/canvas/Overlay.vue'
 
 import CanvasMenu from './canvas/CanvasMenu.vue'
@@ -211,6 +212,7 @@ const cursor = computed(() => toolCursor(store.state.activeTool, cursorOverride.
             class="pointer-events-none absolute inset-0 z-40 border-2 border-dashed border-accent/60 bg-accent/5"
           />
         </Transition>
+        <CommentLayer v-if="isActivePane" :canvas="canvasRef" />
         <CanvasLabelEditor
           :edit="canvasLabelEdit"
           :presentation="canvasLabelEditPresentation"

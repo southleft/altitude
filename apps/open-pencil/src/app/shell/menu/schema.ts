@@ -189,6 +189,8 @@ export const APP_MENU_SCHEMA = [
       { type: 'separator' },
       { id: 'view-rulers', label: 'Rulers', checkbox: true },
       { id: 'view-multiplayer-cursors', label: 'Multiplayer Cursors', checkbox: true },
+      // Browser menubar only: a single-letter native accelerator would capture typing.
+      { id: 'view-comments', label: 'Comments', shortcut: 'C', checkbox: true, target: 'browser' },
       { type: 'separator' },
       {
         id: 'theme',
