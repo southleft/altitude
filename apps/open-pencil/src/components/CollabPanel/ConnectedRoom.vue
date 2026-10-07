@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { selectTarget } from '@open-pencil/vue'
 
+import CollabIdentityNote from '@/components/CollabPanel/CollabIdentityNote.vue'
 import { useCollabPanelContext } from '@/components/CollabPanel/context'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
@@ -35,6 +36,8 @@ const collab = useCollabPanelContext()
   <div class="mb-2 text-xs font-medium text-surface">
     {{ collab.peers.length + 1 }} {{ collab.peers.length === 0 ? 'person' : 'people' }} in this room
   </div>
+
+  <CollabIdentityNote v-if="collab.signedInWithGitHub" />
 
   <AppButton
     variant="outline"

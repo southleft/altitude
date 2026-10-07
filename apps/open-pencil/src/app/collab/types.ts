@@ -4,6 +4,10 @@ export interface RemotePeer {
   clientId: number
   name: string
   color: Color
+  /** GitHub login the peer claims; display-only, not verified. */
+  login?: string
+  /** A validated avatars.githubusercontent.com URL. */
+  avatarURL?: string
   cursor?: { x: number; y: number; pageId: string }
   selection?: string[]
 }

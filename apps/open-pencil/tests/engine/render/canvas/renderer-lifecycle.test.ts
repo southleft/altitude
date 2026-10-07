@@ -1,7 +1,8 @@
 import { expect, mock, test } from 'bun:test'
 
-import type { Font, Paint, Surface } from 'canvaskit-wasm'
+import type { Font, Image, Paint, Surface } from 'canvaskit-wasm'
 
+import { createCursorAvatarCache } from '#core/canvas/cursor-avatars'
 import type { SkiaRenderer } from '#core/canvas/renderer'
 import { EffectRasterCache } from '#core/canvas/renderer/effect-raster-cache'
 import { destroyRenderer } from '#core/canvas/renderer/lifecycle'
@@ -17,6 +18,7 @@ function createRenderer() {
     destroyed: false,
     textPreparationCache: new TextPreparationCache(),
     imageCache: new Map(),
+    cursorAvatarCache: createCursorAvatarCache(),
     vectorPathCache: new Map(),
     vectorStrokePathCache: new Map(),
     vectorStrokeOutlineCache: new Map(),
@@ -96,4 +98,16 @@ test('destroyRenderer deletes all renderer-owned paints and label fonts', () => 
   expect(parentOutlinePaint.delete).toHaveBeenCalled()
   expect(sectionTitleFont?.delete).toHaveBeenCalled()
   expect(componentLabelFont?.delete).toHaveBeenCalled()
+})
+
+test('destroyRenderer deletes decoded remote-cursor avatars', () => {
+  const renderer = createRenderer()
+  const avatar = deletable<Image>()
+  renderer.cursorAvatarCache.set('https://avatars.githubusercontent.com/u/1?s=64', avatar)
+  renderer.cursorAvatarCache.set('broken', null)
+
+  destroyRenderer(renderer)
+
+  expect(avatar.delete).toHaveBeenCalledTimes(1)
+  expect(renderer.cursorAvatarCache.size).toBe(0)
 })

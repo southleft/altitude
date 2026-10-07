@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CollabIdentityNote from '@/components/CollabPanel/CollabIdentityNote.vue'
 import { useCollabPanelContext } from '@/components/CollabPanel/context'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
@@ -7,7 +8,8 @@ const collab = useCollabPanelContext()
 </script>
 
 <template>
-  <div class="mb-3">
+  <CollabIdentityNote v-if="collab.signedInWithGitHub" />
+  <div v-else class="mb-3">
     <label class="mb-1 block text-xs text-muted">{{ collab.messages.yourName }}</label>
     <AppInput
       v-model="collab.nameDraft"
@@ -23,7 +25,7 @@ const collab = useCollabPanelContext()
     variant="solid"
     class="mb-3 w-full"
     data-test-id="collab-share-file"
-    :disabled="!collab.nameDraft.trim()"
+    :disabled="!collab.canStart"
     @click="collab.share"
   >
     <template #leading><icon-lucide-share-2 class="size-3.5" /></template>
@@ -48,7 +50,7 @@ const collab = useCollabPanelContext()
       color="primary"
       variant="solid"
       data-test-id="collab-join-room-button"
-      :disabled="!collab.joinInput.trim() || !collab.nameDraft.trim()"
+      :disabled="!collab.joinInput.trim() || !collab.canStart"
       @click="collab.join"
     >
       Join
