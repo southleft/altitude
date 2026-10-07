@@ -2,17 +2,35 @@ import * as v from 'valibot'
 
 import { decodeBase64, encodeBase64 } from '@open-pencil/core/bytes'
 
+import {
+  BranchSchema,
+  CompareSchema,
+  IssueCommentSchema,
+  IssueSchema,
+  IssueSearchSchema,
+  PullRequestSchema,
+  RepositoryLabelSchema,
+  ReviewSchema,
+  type GitHubBranch,
+  type GitHubIssue
+} from './schemas'
+
 /**
  * Typed GitHub REST client: the one place that talks to api.github.com.
  *
  * Every response is validated with Valibot before use. Callers pass a token resolved at
- * operation time; the client never stores it beyond its own lifetime. Branch, pull request
- * and issue endpoints can be added here next to the Git Data calls.
+ * operation time; the client never stores it beyond its own lifetime. Git Data calls back
+ * the commit flow; branch, pull request, issue and label calls back branches, pull requests
+ * and comments.
  */
 
 export const GITHUB_API_URL = 'https://api.github.com'
 const API_VERSION = '2022-11-28'
 const REQUEST_TIMEOUT_MS = 60_000
+/** Listing endpoints return at most this many items per request. */
+const PAGE_SIZE = 100
+/** Stop following `Link: rel="next"` after this many pages. */
+const MAX_PAGES = 10
 
 export type GitHubErrorKind =
   | 'unauthorized'
@@ -111,11 +129,38 @@ export type GitHubTreeWrite = {
 
 export type GitHubFetch = (input: string, init: RequestInit) => Promise<Response>
 
+/** Conditional-request cache: a 304 costs no rate limit and returns the stored body. */
+export type GitHubETagCache = Map<string, { etag: string; body: unknown }>
+
 export interface GitHubClientOptions {
   token: string
   fetch?: GitHubFetch
   baseURL?: string
   signal?: AbortSignal
+  /** Reuse GET responses through ETags; owned by the caller and shared across clients. */
+  etags?: GitHubETagCache
+}
+
+export type GitHubIssueState = 'open' | 'closed' | 'all'
+
+export type GitHubPullRequestInput = {
+  title: string
+  body: string
+  head: string
+  base: string
+  draft: boolean
+}
+
+export type GitHubLabelInput = { name: string; color: string; description?: string }
+
+/** The `rel="next"` URL of a `Link` header, if any. */
+export function nextPageURL(link: string | null): string | null {
+  if (!link) return null
+  for (const part of link.split(',')) {
+    const match = /<([^>]+)>\s*;\s*rel="next"/.exec(part)
+    if (match) return match[1]
+  }
+  return null
 }
 
 function encodePath(path: string): string {
@@ -169,22 +214,23 @@ export function createGitHubClient(options: GitHubClientOptions) {
   const baseURL = options.baseURL ?? GITHUB_API_URL
   const fetcher: GitHubFetch = options.fetch ?? ((input, init) => fetch(input, init))
 
-  async function request<T extends v.GenericSchema>(
+  async function send(
     method: string,
-    path: string,
-    schema: T,
-    body?: unknown
-  ): Promise<v.InferOutput<T>> {
+    url: string,
+    body?: unknown,
+    extraHeaders: Record<string, string> = {}
+  ): Promise<Response> {
     const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS)
     let response: Response
     try {
-      response = await fetcher(`${baseURL}${path}`, {
+      response = await fetcher(url, {
         method,
         headers: {
           Accept: 'application/vnd.github+json',
           Authorization: `Bearer ${options.token}`,
           'X-GitHub-Api-Version': API_VERSION,
-          ...(body === undefined ? {} : { 'Content-Type': 'application/json' })
+          ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+          ...extraHeaders
         },
         body: body === undefined ? undefined : JSON.stringify(body),
         signal: options.signal ? AbortSignal.any([options.signal, timeout]) : timeout,
@@ -198,16 +244,69 @@ export function createGitHubClient(options: GitHubClientOptions) {
         timeout.aborted ? 'GitHub did not respond in time.' : detail
       )
     }
-    if (!response.ok) throw await toError(response)
-    const parsed = v.safeParse(schema, await response.json().catch(() => null))
+    if (!response.ok && response.status !== 304) throw await toError(response)
+    return response
+  }
+
+  function validate<T extends v.GenericSchema>(
+    schema: T,
+    data: unknown,
+    label: string,
+    status: number
+  ): v.InferOutput<T> {
+    const parsed = v.safeParse(schema, data)
     if (!parsed.success) {
       throw new GitHubAPIError(
         'invalid-response',
-        `Unexpected response from GitHub for ${method} ${path}`,
-        response.status
+        `Unexpected response from GitHub for ${label}`,
+        status
       )
     }
     return parsed.output
+  }
+
+  async function request<T extends v.GenericSchema>(
+    method: string,
+    path: string,
+    schema: T,
+    body?: unknown
+  ): Promise<v.InferOutput<T>> {
+    const url = `${baseURL}${path}`
+    const cached = method === 'GET' ? options.etags?.get(url) : undefined
+    const response = await send(method, url, body, cached ? { 'If-None-Match': cached.etag } : {})
+    if (response.status === 304) {
+      if (!cached) throw new GitHubAPIError('invalid-response', `Unexpected 304 for ${path}`, 304)
+      return validate(schema, cached.body, `${method} ${path}`, 304)
+    }
+    const data: unknown = await response.json().catch(() => null)
+    const output = validate(schema, data, `${method} ${path}`, response.status)
+    const etag = response.headers.get('etag')
+    if (method === 'GET' && etag && options.etags) options.etags.set(url, { etag, body: data })
+    return output
+  }
+
+  /** A request whose success has no body (204), such as deleting a ref. */
+  async function requestEmpty(method: string, path: string, body?: unknown): Promise<void> {
+    await send(method, `${baseURL}${path}`, body)
+  }
+
+  /** Every item of a paged listing, following `Link` headers up to `MAX_PAGES`. */
+  async function paginate<T extends v.GenericSchema>(
+    path: string,
+    schema: T
+  ): Promise<Array<v.InferOutput<T>>> {
+    const items: Array<v.InferOutput<T>> = []
+    const separator = path.includes('?') ? '&' : '?'
+    let url: string | null = `${baseURL}${path}${separator}per_page=${PAGE_SIZE}`
+    for (let page = 0; url && page < MAX_PAGES; page++) {
+      // Follow links only back to the same API origin; the token goes with every request.
+      if (!url.startsWith(`${baseURL}/`)) break
+      const response = await send('GET', url)
+      const data: unknown = await response.json().catch(() => null)
+      items.push(...validate(v.array(schema), data, `GET ${path}`, response.status))
+      url = nextPageURL(response.headers.get('link'))
+    }
+    return items
   }
 
   return {
@@ -285,7 +384,115 @@ export function createGitHubClient(options: GitHubClientOptions) {
         RefSchema,
         { sha, force: false }
       )
-    }
+    },
+
+    /** Every branch, following pagination (up to 1,000). */
+    listBranches: (owner: string, repo: string): Promise<GitHubBranch[]> =>
+      paginate(`${repoPath(owner, repo)}/branches`, BranchSchema),
+
+    /** A new branch at `sha`; an existing name fails as a `conflict`. */
+    async createBranch(owner: string, repo: string, branch: string, sha: string): Promise<void> {
+      await request('POST', `${repoPath(owner, repo)}/git/refs`, RefSchema, {
+        ref: `refs/heads/${branch}`,
+        sha
+      })
+    },
+
+    deleteBranch: (owner: string, repo: string, branch: string) =>
+      requestEmpty('DELETE', `${repoPath(owner, repo)}/git/refs/heads/${encodePath(branch)}`),
+
+    /** Files changed between two refs (`base...head`). */
+    compare: (owner: string, repo: string, base: string, head: string) =>
+      request(
+        'GET',
+        `${repoPath(owner, repo)}/compare/${encodePath(base)}...${encodePath(head)}`,
+        CompareSchema
+      ),
+
+    /** Pull requests whose head is `branch` in this repository, newest first. */
+    listPullRequestsForBranch: (owner: string, repo: string, branch: string) =>
+      request(
+        'GET',
+        `${repoPath(owner, repo)}/pulls?state=all&sort=created&direction=desc&per_page=10&head=${encodeURIComponent(`${owner}:${branch}`)}`,
+        v.array(PullRequestSchema)
+      ),
+
+    createPullRequest: (owner: string, repo: string, input: GitHubPullRequestInput) =>
+      request('POST', `${repoPath(owner, repo)}/pulls`, PullRequestSchema, input),
+
+    listPullRequestReviews: (owner: string, repo: string, number: number) =>
+      request(
+        'GET',
+        `${repoPath(owner, repo)}/pulls/${number}/reviews?per_page=${PAGE_SIZE}`,
+        v.array(ReviewSchema)
+      ),
+
+    /**
+     * Issues carrying every label in `labels`, without pull requests. Uses the issue listing
+     * rather than search: no indexing delay, and the core rate limit instead of 30 a minute.
+     */
+    async listIssues(
+      owner: string,
+      repo: string,
+      query: { labels: readonly string[]; state: GitHubIssueState }
+    ): Promise<GitHubIssue[]> {
+      const labels = encodeURIComponent(query.labels.join(','))
+      const issues = await request(
+        'GET',
+        `${repoPath(owner, repo)}/issues?labels=${labels}&state=${query.state}&per_page=${PAGE_SIZE}&sort=created&direction=desc`,
+        v.array(IssueSchema)
+      )
+      return issues.filter((issue) => issue.pull_request === undefined)
+    },
+
+    /** Issue search (30 requests a minute); prefer `listIssues` for label queries. */
+    searchIssues: (query: string) =>
+      request(
+        'GET',
+        `/search/issues?q=${encodeURIComponent(query)}&per_page=${PAGE_SIZE}`,
+        IssueSearchSchema
+      ),
+
+    createIssue: (
+      owner: string,
+      repo: string,
+      input: { title: string; body: string; labels: readonly string[] }
+    ) => request('POST', `${repoPath(owner, repo)}/issues`, IssueSchema, input),
+
+    setIssueState: (owner: string, repo: string, number: number, state: 'open' | 'closed') =>
+      request('PATCH', `${repoPath(owner, repo)}/issues/${number}`, IssueSchema, {
+        state,
+        ...(state === 'closed' ? { state_reason: 'completed' } : {})
+      }),
+
+    listIssueComments: (owner: string, repo: string, number: number) =>
+      request(
+        'GET',
+        `${repoPath(owner, repo)}/issues/${number}/comments?per_page=${PAGE_SIZE}`,
+        v.array(IssueCommentSchema)
+      ),
+
+    createIssueComment: (owner: string, repo: string, number: number, body: string) =>
+      request('POST', `${repoPath(owner, repo)}/issues/${number}/comments`, IssueCommentSchema, {
+        body
+      }),
+
+    /** A label by name, or null when the repository does not have it. */
+    async getLabel(owner: string, repo: string, name: string) {
+      try {
+        return await request(
+          'GET',
+          `${repoPath(owner, repo)}/labels/${encodeURIComponent(name)}`,
+          RepositoryLabelSchema
+        )
+      } catch (error) {
+        if (error instanceof GitHubAPIError && error.kind === 'not-found') return null
+        throw error
+      }
+    },
+
+    createLabel: (owner: string, repo: string, label: GitHubLabelInput) =>
+      request('POST', `${repoPath(owner, repo)}/labels`, RepositoryLabelSchema, label)
   }
 }
 
