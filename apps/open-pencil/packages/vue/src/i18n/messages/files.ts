@@ -35,6 +35,15 @@ export const filesMessageDefaults = {
   newDesign: 'New design',
   noMatchingFiles: params('No files match “{query}”.'),
   saveAsPrompt: 'Save as:',
+  savePermissionDeniedSavedCopy: params(
+    'The browser did not allow saving to “{name}”. A copy was saved to the location you chose.'
+  ),
+  savePermissionDeniedDownloaded: params(
+    'The browser did not allow saving to “{name}”. A copy was downloaded instead.'
+  ),
+  savePermissionDeniedNotSaved: params(
+    'The browser did not allow saving to “{name}”. Your changes have not been saved.'
+  ),
   browserFileAPINotSupported:
     "Your browser doesn't support the local file API. Files will be downloaded instead of saved in place."
 } as const
