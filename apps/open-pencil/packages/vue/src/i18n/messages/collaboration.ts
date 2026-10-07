@@ -17,7 +17,10 @@ export const collaborationMessageDefaults = {
   pasteRoomLinkOrId: 'Paste room link or ID',
   connected: 'Connected',
   disconnect: 'Disconnect',
-  share: 'Share'
+  share: 'Share',
+  githubIdentityNote:
+    'People in this room see your GitHub name and avatar. Names are not verified: anyone with the link can join and pick any name.',
+  signedInAs: params('Shown as {name}')
 } as const
 
 export const collaborationMessages = i18n('collaboration', collaborationMessageDefaults)
