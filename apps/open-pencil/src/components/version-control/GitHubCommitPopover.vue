@@ -132,8 +132,8 @@ function openSettings() {
       >
         <span :class="styles.dot()" :data-state="state" aria-hidden="true" />
         <icon-lucide-git-commit-horizontal :class="styles.triggerIcon()" aria-hidden="true" />
-        <span :class="styles.triggerLabel()">{{
-          binding ? binding.commitSHA.slice(0, 7) : storage.githubCommit
+        <span v-if="binding" :class="styles.triggerLabel()">{{
+          binding.commitSHA.slice(0, 7)
         }}</span>
       </button>
     </PopoverTrigger>
