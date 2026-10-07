@@ -211,6 +211,30 @@ export function createGitHubDocumentSession(
     },
     commit,
     publish,
+    /**
+     * Point the binding at another branch without reloading: after creating the branch
+     * from this one, the document and its merge base are unchanged.
+     */
+    moveToBranch(branch: string) {
+      const current = binding.value
+      if (!current || busy()) return
+      generation++
+      binding.value = { ...current, branch }
+      status.value = { phase: 'idle' }
+      notice.value = null
+    },
+    /**
+     * Keep this document but commit it to `branch`, where it does not exist yet: the next
+     * commit writes every file on top of `head`.
+     */
+    retarget(branch: string, head: string) {
+      const current = binding.value
+      if (!current || busy()) return
+      generation++
+      binding.value = { ...current, branch, commitSHA: head, committedAt: null, files: {} }
+      status.value = { phase: 'idle' }
+      notice.value = null
+    },
     dismiss() {
       if (!busy()) status.value = { phase: 'idle' }
       notice.value = null

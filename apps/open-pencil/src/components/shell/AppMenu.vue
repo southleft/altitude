@@ -41,6 +41,7 @@ import BrandMark from '@/components/brand/BrandMark.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import AppShortcutText from '@/components/ui/menu/AppShortcutText.vue'
 import { useMenuUI } from '@/components/ui/menu/menu'
+import GitHubBranchPicker from '@/components/version-control/GitHubBranchPicker.vue'
 import { IS_TAURI } from '@/constants'
 
 const store = useEditorStore()
@@ -84,10 +85,11 @@ const subMenuCls = useMenuUI({ content: 'min-w-44' })
       <span
         v-else
         data-test-id="app-document-name"
-        class="min-w-0 flex-1 cursor-default truncate rounded px-1 py-0.5 text-xs text-surface hover:bg-hover"
+        class="min-w-12 flex-1 cursor-default truncate rounded px-1 py-0.5 text-xs text-surface hover:bg-hover"
         @dblclick="startRename"
         >{{ store.state.documentName }}</span
       >
+      <GitHubBranchPicker />
       <IconButton
         :label="settings.title"
         data-test-id="app-settings-trigger"

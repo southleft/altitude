@@ -7,6 +7,7 @@ import type { SettingsSaveResult } from '@/app/settings/save-result'
 import { requiredSetting } from '@/app/settings/validation/schema'
 import { useSettingsValidation } from '@/app/settings/validation/use'
 
+import { validBranchName } from '../branches/name'
 import type { GitHubErrorKind } from '../client'
 import { describeGitHubFailure } from '../document/session'
 import {
@@ -24,20 +25,6 @@ export interface GitHubRepositoryMessages {
 }
 
 const NAME_PATTERN = /^[A-Za-z0-9._-]+$/
-
-/** `git check-ref-format`, reduced to what a branch name typed here can get wrong. */
-export function validBranchName(name: string): boolean {
-  const branch = name.trim()
-  if (!branch || branch.startsWith('/') || branch.endsWith('/') || branch.endsWith('.lock')) {
-    return false
-  }
-  if (branch.includes('//') || branch.includes('..') || branch.includes('@{')) return false
-  for (let index = 0; index < branch.length; index++) {
-    const code = branch.charCodeAt(index)
-    if (code <= 0x20 || code === 0x7f || '~^:?*[\\'.includes(branch[index])) return false
-  }
-  return true
-}
 
 export function githubRepositorySchema(messages: GitHubRepositoryMessages) {
   return v.object({
