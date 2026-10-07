@@ -631,6 +631,16 @@ export interface Variable {
   codeSyntax?: VariableCodeSyntax
   /** Source metadata such as the design token path, authored type, and unit. */
   extensions?: VariableExtensions
+  /**
+   * Subscribed library the variable was copied from (Figma `sourceLibraryKey`). Library
+   * variables resolve for bindings but are not local variables of this document.
+   */
+  libraryKey?: string
+  /**
+   * Soft-deleted in the source document (Figma `isSoftDeleted`). Kept for round-trip, hidden
+   * from variable lists, and never resolved: bound nodes keep their stored values.
+   */
+  deleted?: boolean
 }
 
 /** Scalar numeric node fields accepted by numeric property controls. */
@@ -651,4 +661,11 @@ export interface VariableCollection {
   variableIds: string[]
   /** Source metadata such as which design-token axes a mode stands for. */
   extensions?: VariableExtensions
+  /** Published library key/version of a library collection (Figma `key`/`version`). */
+  key?: string
+  version?: string
+  /** Subscribed library the collection was copied from (Figma `sourceLibraryKey`). */
+  libraryKey?: string
+  /** Soft-deleted in the source document (Figma `isSoftDeleted`); see {@link Variable.deleted}. */
+  deleted?: boolean
 }

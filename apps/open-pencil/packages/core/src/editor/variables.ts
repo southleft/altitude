@@ -1,3 +1,8 @@
+import {
+  isLibraryVariableCollection,
+  isLocalVariableCollection,
+  isVariableDeleted
+} from '@open-pencil/scene-graph'
 import type {
   Variable,
   VariableCollection,
@@ -10,8 +15,11 @@ import { randomHex } from '#core/random'
 import type { EditorContext } from './types'
 
 export function createVariableActions(ctx: EditorContext) {
+  /** Variables a binding picker may offer: local and library variables that are not deleted. */
   function getVariablesByType(type: VariableType) {
-    return ctx.graph.getVariablesByType(type)
+    return ctx.graph
+      .getVariablesByType(type)
+      .filter((variable) => !isVariableDeleted(ctx.graph, variable))
   }
 
   function getVariable(id: string) {
@@ -26,24 +34,39 @@ export function createVariableActions(ctx: EditorContext) {
     return ctx.graph.resolveNumberVariable(id)
   }
 
+  /** Variables of a collection in Figma's sort order, without soft-deleted ones. */
   function getVariablesForCollection(collectionId: string) {
-    return ctx.graph.getVariablesForCollection(collectionId)
+    return ctx.graph
+      .getVariablesForCollection(collectionId)
+      .filter((variable) => !isVariableDeleted(ctx.graph, variable))
   }
 
   function getCollection(id: string) {
     return ctx.graph.variableCollections.get(id)
   }
 
+  /**
+   * Local collections, as Figma's Variables panel lists them. Library copies and
+   * soft-deleted collections stay in the graph for resolution and round-trip.
+   */
   function getCollections() {
-    return [...ctx.graph.variableCollections.values()]
+    return [...ctx.graph.variableCollections.values()].filter(isLocalVariableCollection)
+  }
+
+  /** Live collections copied from subscribed libraries, for read-only presentation. */
+  function getLibraryCollections() {
+    return [...ctx.graph.variableCollections.values()].filter(isLibraryVariableCollection)
   }
 
   function getCollectionCount() {
-    return ctx.graph.variableCollections.size
+    return getCollections().length
   }
 
   function getVariableCount() {
-    return ctx.graph.variables.size
+    return getCollections().reduce(
+      (count, collection) => count + getVariablesForCollection(collection.id).length,
+      0
+    )
   }
 
   function renameCollection(id: string, newName: string) {
@@ -320,6 +343,7 @@ export function createVariableActions(ctx: EditorContext) {
     getVariablesForCollection,
     getCollection,
     getCollections,
+    getLibraryCollections,
     getCollectionCount,
     getVariableCount,
     renameCollection,

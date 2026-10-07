@@ -1,3 +1,4 @@
+import { isLocalVariableCollection, isVariableDeleted } from '@open-pencil/scene-graph'
 import type {
   SceneGraph,
   SceneNode as CoreSceneNode,
@@ -309,14 +310,19 @@ export class FigmaAPI implements NodeProxyHost {
     return this.graph.variables.get(id) ?? null
   }
 
+  /** Like Figma, excludes library copies and soft-deleted variables. */
   getLocalVariables(type?: string): Variable[] {
-    const vars = [...this.graph.variables.values()]
+    const vars = [...this.graph.variables.values()].filter((v) => {
+      const collection = this.graph.variableCollections.get(v.collectionId)
+      if (v.libraryKey || isVariableDeleted(this.graph, v)) return false
+      return !collection || isLocalVariableCollection(collection)
+    })
     if (type) return vars.filter((v) => v.type === type)
     return vars
   }
 
   getLocalVariableCollections(): VariableCollection[] {
-    return [...this.graph.variableCollections.values()]
+    return [...this.graph.variableCollections.values()].filter(isLocalVariableCollection)
   }
 
   getVariableCollectionById(id: string): VariableCollection | null {

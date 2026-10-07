@@ -379,4 +379,21 @@ describe('Variables', () => {
     const frame = graph.createNode('FRAME', pageId(graph), { variableModes: { brand: 's' } })
     expect(graph.resolveNumberVariableForNode(frame.id, 'role')).toBe(2)
   })
+
+  test('soft-deleted variables and collections do not resolve', () => {
+    const graph = new SceneGraph()
+    const live = graph.createCollection('Live')
+    const gone = graph.createCollection('Gone')
+    gone.deleted = true
+    const kept = graph.createVariable('kept', 'FLOAT', live.id, 4)
+    const removed = graph.createVariable('removed', 'FLOAT', live.id, 8)
+    removed.deleted = true
+    const orphan = graph.createVariable('orphan', 'FLOAT', gone.id, 12)
+    const alias = graph.createVariable('alias', 'FLOAT', live.id, { aliasId: removed.id })
+
+    expect(graph.resolveNumberVariable(kept.id)).toBe(4)
+    expect(graph.resolveNumberVariable(removed.id)).toBeUndefined()
+    expect(graph.resolveNumberVariable(orphan.id)).toBeUndefined()
+    expect(graph.resolveNumberVariable(alias.id)).toBeUndefined()
+  })
 })
