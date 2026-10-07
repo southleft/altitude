@@ -4,6 +4,8 @@ import type { Color } from '@open-pencil/scene-graph/primitives'
 
 import {
   ensureLazyFigImportContext,
+  getLazyFigImportContext,
+  hasLazyFigImport,
   isLazyFigImportDeferred,
   populateLazyFigImportRoots
 } from '#core/kiwi/fig/lazy-import'
@@ -199,6 +201,29 @@ export function createPageActions(ctx: EditorContext) {
     if (prepared) commitPageSwitch(prepared)
   }
 
+  /**
+   * Populate every lazily imported page on this thread, for writers that need the whole
+   * document (such as the JSON document format). Node IDs created here then stay stable,
+   * because later page switches find the pages already populated.
+   */
+  async function populateAllPages(): Promise<boolean> {
+    if (!hasLazyFigImport(ctx.graph)) return false
+    // Take the source back from the worker before stopping it; its in-flight result is stale.
+    await ensureLazyFigImportContext(ctx.graph)
+    populationWorkerGeneration++
+    populationWorkerInstance?.terminate()
+    populationWorkerInstance = undefined
+    const populated = getLazyFigImportContext(ctx.graph)?.populatedRootIds
+    if (!populated) return false
+    const pending = ctx.graph
+      .getPages(true)
+      .map((page) => page.id)
+      .filter((id) => !populated.has(id))
+    if (pending.length === 0) return false
+    populateLazyFigImportRoots(ctx.graph, pending)
+    return true
+  }
+
   function clearPageViewports() {
     populationWorkerGeneration++
     pageSwitchGeneration++
@@ -257,6 +282,7 @@ export function createPageActions(ctx: EditorContext) {
     movePage,
     renamePage,
     setPageColor,
+    populateAllPages,
     clearPageViewports
   }
 }
