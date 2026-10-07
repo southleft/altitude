@@ -14,6 +14,16 @@ declare global {
     suggestedName?: string
   }
 
+  interface FileSystemHandlePermissionDescriptor {
+    mode?: 'read' | 'readwrite'
+  }
+
+  /** Chromium-only permission methods; optional so callers must feature-detect them. */
+  interface FileSystemHandle {
+    queryPermission?(descriptor?: FileSystemHandlePermissionDescriptor): Promise<PermissionState>
+    requestPermission?(descriptor?: FileSystemHandlePermissionDescriptor): Promise<PermissionState>
+  }
+
   interface DirectoryPickerOptions {
     id?: string
     mode?: 'read' | 'readwrite'

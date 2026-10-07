@@ -17,6 +17,27 @@ type DocumentWriterOptions = {
   onWriteSuccess?: (version: number) => void | Promise<void>
 }
 
+type WriteTargetSources = {
+  getFilePath: () => string | null
+  getFileHandle: () => FileSystemFileHandle | null
+  getStorageBinding: () => StorageDocumentBinding | null
+}
+
+/**
+ * The File System Access handle a write will go to, or null when a storage binding or a native
+ * path takes precedence. Mirrors the writer's branch order so permission checks target the same
+ * destination the writer uses.
+ */
+export function resolveBrowserWriteHandle({
+  getFilePath,
+  getFileHandle,
+  getStorageBinding
+}: WriteTargetSources): FileSystemFileHandle | null {
+  if (getStorageBinding()) return null
+  if (getFilePath() && isTauri()) return null
+  return getFileHandle()
+}
+
 export function createDocumentWriter({
   state,
   getFilePath,

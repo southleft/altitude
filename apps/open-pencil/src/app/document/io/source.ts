@@ -1,5 +1,6 @@
 import type { Editor, EditorState } from '@open-pencil/core/editor'
 import { exportFigFile } from '@open-pencil/core/io/formats/fig'
+import { filesMessages } from '@open-pencil/vue'
 
 import { createAutosave } from '@/app/document/autosave'
 import { createDocumentChanges } from '@/app/document/io/changes'
@@ -8,12 +9,13 @@ import {
   downloadNameFromPath,
   figDownloadName
 } from '@/app/document/io/names'
-import { createSaveActions } from '@/app/document/io/save'
+import { createSaveActions, type WritePermissionFallback } from '@/app/document/io/save'
 import { createDocumentSourceState } from '@/app/document/io/source-state'
 import type { DocumentSourceAccess } from '@/app/document/io/types'
 import { createDocumentRecovery } from '@/app/document/recovery'
 import { recoveryEnabled } from '@/app/document/recovery/preferences'
 import type { StorageDocumentBinding } from '@/app/integrations/storage/types'
+import { toast } from '@/app/shell/ui'
 
 type DocumentSourceState = EditorState & {
   documentName: string
@@ -21,6 +23,16 @@ type DocumentSourceState = EditorState & {
 }
 
 export { createDocumentSourceState }
+
+function notifyWritePermissionDenied(name: string, fallback: WritePermissionFallback) {
+  const messages = filesMessages.get()
+  const message = {
+    'saved-copy': messages.savePermissionDeniedSavedCopy,
+    downloaded: messages.savePermissionDeniedDownloaded,
+    'not-saved': messages.savePermissionDeniedNotSaved
+  }[fallback]
+  toast.warning(message({ name }))
+}
 
 type DocumentSourceOptions = DocumentSourceAccess & {
   editor: Editor
@@ -82,7 +94,7 @@ export function createDocumentSourceActions({
     hasWritableSource: () => !!getFileHandle() || !!getFilePath() || !!getStorageBinding()
   })
 
-  const { saveFigFile, saveFigFileAs, writeFile } = createSaveActions({
+  const { saveFigFile, saveFigFileAs, writeFile, canWriteWithoutPrompt } = createSaveActions({
     state,
     buildFigFile,
     getFilePath,
@@ -100,7 +112,8 @@ export function createDocumentSourceActions({
       void startWatchingFile()
     },
     onWriteSuccess: (version) => recovery.markProtectedVersion(version),
-    onDownloadSuccess: (version) => recovery.markProtectedVersion(version)
+    onDownloadSuccess: (version) => recovery.markProtectedVersion(version),
+    onWritePermissionDenied: notifyWritePermissionDenied
   })
 
   const autosave = createAutosave({
@@ -108,6 +121,9 @@ export function createDocumentSourceActions({
     getSavedVersion,
     hasWritableSource: () => !!getFileHandle() || !!getFilePath() || !!getStorageBinding(),
     saveCurrentDocument: async (version) => {
+      // Autosave runs outside any gesture: never prompt for write access, and leave the
+      // document dirty until a user-initiated save obtains it.
+      if (!(await canWriteWithoutPrompt())) return
       const revision = changes.capture()
       const data = await buildFigFile()
       if (await writeFile(data, version)) changes.markSaved(revision)
