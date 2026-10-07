@@ -6,14 +6,40 @@ import type { EditorState } from '@open-pencil/core/editor'
 import { getRecoveryStore } from '@/app/document/recovery/store'
 import type { RecoveryStore } from '@/app/document/recovery/types'
 import { createCanvasId } from '@/app/storage/id'
+import { IS_BROWSER } from '@/constants'
 
 type RecoveryState = EditorState & { documentName: string }
+
+/** How long a deferred snapshot waits before checking again whether an interactive edit ended. */
+const INTERACTIVE_RETRY_MS = 1000
+
+/** Subscribes to the page being hidden or unloaded; returns the unsubscribe function. */
+export type PageHiddenSubscription = (onHidden: () => void) => () => void
+
+/**
+ * Best-effort flush trigger. The IndexedDB write may not finish before the page goes away, so the
+ * debounced snapshot remains the main guarantee; this only narrows the window.
+ */
+const subscribeToPageHidden: PageHiddenSubscription = (onHidden) => {
+  if (!IS_BROWSER) return () => undefined
+  const onVisibilityChange = () => {
+    if (document.visibilityState === 'hidden') onHidden()
+  }
+  window.addEventListener('pagehide', onHidden)
+  document.addEventListener('visibilitychange', onVisibilityChange)
+  return () => {
+    window.removeEventListener('pagehide', onHidden)
+    document.removeEventListener('visibilitychange', onVisibilityChange)
+  }
+}
 
 interface DocumentRecoveryOptions {
   state: RecoveryState
   buildFigFile: () => Promise<Uint8Array> | Uint8Array
-  hasWritableSource: () => boolean
   isEnabled?: () => boolean
+  /** Background snapshots wait while a gesture is live; encoding a large file would stall it. */
+  isInteractiveEditing?: () => boolean
+  subscribePageHidden?: PageHiddenSubscription
   store?: RecoveryStore
   recoveryId?: string
 }
@@ -30,8 +56,9 @@ export interface DocumentRecoveryController {
 export function createDocumentRecovery({
   state,
   buildFigFile,
-  hasWritableSource,
   isEnabled = () => true,
+  isInteractiveEditing = () => false,
+  subscribePageHidden = subscribeToPageHidden,
   store = getRecoveryStore(),
   recoveryId = createCanvasId()
 }: DocumentRecoveryOptions): DocumentRecoveryController {
@@ -43,13 +70,35 @@ export function createDocumentRecovery({
   let writing: Promise<void> | null = null
   let cleanup: Promise<void> = Promise.resolve()
   let disposed = false
+  let retryTimer: ReturnType<typeof setTimeout> | null = null
 
-  async function runWrites(generation: number): Promise<void> {
+  function reportSnapshotFailure(error: unknown) {
+    console.warn('[Recovery] Snapshot failed:', error)
+  }
+
+  function scheduleRetry() {
+    if (retryTimer !== null || disposed) return
+    retryTimer = setTimeout(() => {
+      retryTimer = null
+      snapshotInBackground()
+    }, INTERACTIVE_RETRY_MS)
+  }
+
+  /**
+   * Snapshots every dirty document, including file- and storage-backed ones, until a save of that
+   * revision lands: a save can fail (for example, when the browser withholds write access), and a
+   * reload must not lose the edits. Only one encode runs at a time; later versions coalesce.
+   */
+  async function runWrites(generation: number, force: boolean): Promise<void> {
     if (disposed || generation !== lifecycleGeneration || !isEnabled()) return
-    if (hasWritableSource() || requestedVersion === protectedVersion) return
+    if (requestedVersion === protectedVersion) return
+    if (!force && isInteractiveEditing()) {
+      scheduleRetry()
+      return
+    }
     const version = requestedVersion
     const bytes = await buildFigFile()
-    if (generation !== lifecycleGeneration || hasWritableSource() || !isEnabled()) return
+    if (generation !== lifecycleGeneration || !isEnabled()) return
     await store.write({
       id,
       documentName: state.documentName,
@@ -59,30 +108,42 @@ export function createDocumentRecovery({
     persistedVersion = version
     if (generation !== lifecycleGeneration) return
     protectedVersion = version
-    if (requestedVersion !== version) await runWrites(generation)
+    if (requestedVersion !== version) await runWrites(generation, force)
   }
 
-  async function persistNow(): Promise<void> {
+  async function persist(force: boolean): Promise<void> {
     await cleanup
-    if (disposed || hasWritableSource() || !isEnabled()) return
+    if (disposed || !isEnabled()) return
     requestedVersion = state.sceneVersion
     if (requestedVersion === protectedVersion) return
+    const joined = writing !== null
     if (!writing) {
       const generation = lifecycleGeneration
-      writing = runWrites(generation).finally(() => {
+      writing = runWrites(generation, force).finally(() => {
         writing = null
       })
     }
     await writing
+    // A forced flush that joined a background encode must not stop where that encode deferred.
+    if (force && joined && state.sceneVersion !== protectedVersion) await persist(true)
+  }
+
+  /** Close/reload flush: runs even during an interactive edit. */
+  function persistNow(): Promise<void> {
+    return persist(true)
+  }
+
+  function snapshotInBackground() {
+    void persist(false).catch(reportSnapshotFailure)
   }
 
   const stopVersionWatch: WatchHandle = watchDebounced(
     () => state.sceneVersion,
-    () => {
-      void persistNow().catch((error) => console.warn('[Recovery] Snapshot failed:', error))
-    },
+    snapshotInBackground,
     { debounce: 3000, maxWait: 10000 }
   )
+
+  const stopPageHidden = subscribePageHidden(snapshotInBackground)
 
   const stopEnabledWatch: WatchHandle = watch(
     isEnabled,
@@ -147,6 +208,9 @@ export function createDocumentRecovery({
     disposeRecovery() {
       disposed = true
       lifecycleGeneration++
+      if (retryTimer !== null) clearTimeout(retryTimer)
+      retryTimer = null
+      stopPageHidden()
       stopVersionWatch()
       stopEnabledWatch()
     }
