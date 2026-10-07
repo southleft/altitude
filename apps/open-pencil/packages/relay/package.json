@@ -1,0 +1,25 @@
+{
+  "name": "@open-pencil/relay",
+  "version": "0.15.1",
+  "private": true,
+  "description": "Hosted MCP relay between AI agents and an OpenPencil browser tab (Cloudflare Worker)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./protocol": "./src/protocol.ts"
+  },
+  "scripts": {
+    "dev": "bunx wrangler@4 dev",
+    "deploy": "bunx wrangler@4 deploy",
+    "test": "bun test tests",
+    "typecheck": "bunx tsc --noEmit -p tsconfig.json && bunx tsc --noEmit -p tsconfig.test.json"
+  },
+  "dependencies": {
+    "valibot": "^1.4.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251001.0",
+    "@types/bun": "^1.3.14",
+    "typescript": "~5.8.3"
+  }
+}

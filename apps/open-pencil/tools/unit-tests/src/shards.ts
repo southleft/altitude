@@ -51,6 +51,7 @@ export const UNIT_TEST_GROUPS = {
     'tests/engine/kiwi'
   ],
   mcp: ['packages/mcp/tests', 'tests/engine/mcp'],
+  relay: ['packages/relay/tests'],
   render: ['tests/engine/render'],
   'scene-graph': [
     'packages/scene-graph/tests',
