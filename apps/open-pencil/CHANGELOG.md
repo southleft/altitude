@@ -31,6 +31,8 @@
 - List only a `.fig` file's local variable collections in the Variables panel, in Figma's collection, mode, and variable order. Soft-deleted collections and variables and copies of subscribed-library collections no longer appear as extra tabs, and they survive export with their deleted and library flags instead of becoming local collections.
 - Render variable-bound colors, spacing, sizes, and radii from `.fig` files as Figma does: a collection's default mode is its first mode in Figma's order, and layers bound to a deleted variable keep their stored value instead of the deleted variable's.
 - Keep `.fig` bindings to subscribed-library variables, including padding, gap, size, radius, and colors as well as text-style font family, style, size, and line height, so the Design panel shows them as linked; explicit library-collection modes on pages now apply.
+- Save a large `.fig` file opened in the browser back to its file: Chrome's write-permission prompt now appears as soon as you save instead of failing with "User activation is required" after the export. If permission is denied, the save offers a new location or downloads a copy and says so, and autosave waits for permission instead of failing.
+- Keep unsaved changes to documents opened from a file or storage provider recoverable until they are saved, so a failed save or a reload no longer loses them.
 
 ### Performance
 
