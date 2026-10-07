@@ -180,6 +180,15 @@ function annotate(node, segs, ctx) {
     const cssType = existing['org.altitude.token']?.cssType;
     if (cssType) ext['org.altitude.token'] = { cssType };
 
+    // AXIS EMISSION INTENT — identity data too, carried verbatim. Only tokens
+    // under `tier-2/axis/<axis>/<mode>.json` carry it: `{ "css": "initial" }`
+    // or `{ "css": "omit" }` tells the axis emitter in tokens-config.v5.mjs to
+    // write the guaranteed-invalid value, or nothing, instead of `$value`
+    // (`.altitude/AXES.md` §2). It cannot be derived from anything else, so a
+    // regenerate that dropped it would silently change the emitted CSS.
+    const axis = existing['org.altitude.axis'];
+    if (axis) ext['org.altitude.axis'] = axis;
+
     const usage = FAMILY_USAGE_RULES[family];
     // A family with no rule gets NO usage string and used to be dropped without
     // a word. That silence is what let the 2026-08 token rename leave 19

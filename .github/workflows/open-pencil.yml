@@ -1,0 +1,96 @@
+name: OpenPencil canvas
+
+# apps/open-pencil is a Bun workspace imported as a git subtree (see
+# apps/open-pencil/ALTITUDE.md). Its own .github/ workflows never run from a
+# nested folder, so this file is the only CI it gets inside Altitude.
+#
+# Deploys are NOT done here: the docs site's Cloudflare Pages build publishes the
+# editor at /open-pencil/ (build:app-open-pencil in build:all), password-gated by
+# functions/open-pencil/_middleware.js. See apps/open-pencil/ALTITUDE.md#hosting.
+
+on:
+  push:
+    branches: [main, 'feature/**']
+    paths:
+      - 'apps/open-pencil/**'
+      - 'libs/al-web-components/**'
+      - '.altitude/contracts/**'
+      - 'scripts/contracts/**'
+      - '.github/workflows/open-pencil.yml'
+  pull_request:
+    branches: [main, 'feature/**']
+    paths:
+      - 'apps/open-pencil/**'
+      - 'libs/al-web-components/**'
+      - '.altitude/contracts/**'
+      - 'scripts/contracts/**'
+      - '.github/workflows/open-pencil.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: open-pencil-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+defaults:
+  run:
+    working-directory: apps/open-pencil
+
+jobs:
+  check:
+    name: OpenPencil checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: apps/open-pencil/package.json
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-open-pencil-${{ runner.os }}-${{ hashFiles('apps/open-pencil/bun.lock') }}
+          restore-keys: bun-open-pencil-${{ runner.os }}-
+
+      - run: bun install --frozen-lockfile
+      - run: bun run build:packages
+      - run: bun run lint
+      - run: bunx tsgo --noEmit
+      - name: Design↔code bridge tests
+        run: bun test packages/dom-css/tests
+      - name: Round-trip fidelity gate
+        run: bun run conformance:gate
+      # The site build (build:app-open-pencil) is soft so the docs always deploy; this
+      # strict build is what catches an editor that would silently drop off /open-pencil/.
+      - name: Build for /open-pencil/
+        run: bunx vite build --outDir "$RUNNER_TEMP/open-pencil"
+        env:
+          OPENPENCIL_BASE: /open-pencil/
+
+  canvas-parity:
+    name: Code ↔ canvas parity (non-blocking)
+    runs-on: ubuntu-latest
+    # Reports API and token parity between Altitude's code contracts and the
+    # library OpenPencil generates from them (scripts/contracts/canvas-parity.mjs).
+    # Non-blocking until component owners triage the remaining disagreements;
+    # see .altitude/gates.json `canvas:parity`.
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: apps/open-pencil/package.json
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @southleft/al-web-components build:tokens
+      - name: Install and build OpenPencil
+        working-directory: apps/open-pencil
+        run: bun install --frozen-lockfile && bun run build:packages
+      - run: pnpm run canvas:parity

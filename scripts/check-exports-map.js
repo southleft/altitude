@@ -23,6 +23,9 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PKGS = ['libs/al-web-components', 'libs/al-react'];
 const APPS = join(ROOT, 'apps');
 const SKIP_APP_DIRS = new Set(['node_modules', 'dist', '.angular', 'storybook-static', '.svelte-kit', '.astro']);
+// apps/open-pencil is a separate Bun workspace (excluded from pnpm-workspace.yaml). It does
+// not consume the published packages, and its fixtures quote contract importPath strings.
+const SKIP_APP_PATHS = new Set([join(APPS, 'open-pencil')]);
 const EXTS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.svelte', '.html', '.astro'];
 
 let problems = 0;
@@ -104,6 +107,7 @@ function walkApps(dir, out = []) {
   for (const name of entries) {
     if (SKIP_APP_DIRS.has(name)) continue;
     const p = join(dir, name);
+    if (SKIP_APP_PATHS.has(p)) continue;
     let st;
     try { st = statSync(p); } catch { continue; }
     if (st.isDirectory()) walkApps(p, out);

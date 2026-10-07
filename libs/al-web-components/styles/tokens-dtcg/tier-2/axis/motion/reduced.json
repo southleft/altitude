@@ -1,0 +1,286 @@
+{
+  "$description": "<al-theme motion=\"reduced\">, and the durations of the prefers-reduced-motion rule that every theme without motion=\"full\" receives. Every duration is zero; easing is moot at 0s and resets so a reduced theme nested in an expressive one does not carry its spring curves.",
+  "$extensions": {
+    "org.altitude.axis": {
+      "axis": "motion",
+      "attribute": "motion",
+      "mode": "reduced",
+      "default": false
+    }
+  },
+  "theme": {
+    "animation": {
+      "duration": {
+        "@": {
+          "$value": "0s",
+          "$type": "duration",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "other"
+            },
+            "org.primer.llm": {
+              "usage": "Semantic motion-duration roles, wired into 22 component stylesheets this session via var(--role, var(--legacy)) (R3, full legacy call-site coverage). Legal CSS surface: animation-duration, transition-duration."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "animation-duration",
+                "transition-duration"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "2803f8fc-0147-4f94-86a4-7e6672ccc4e9"
+            }
+          }
+        },
+        "long": {
+          "$value": "0s",
+          "$type": "duration",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "other"
+            },
+            "org.primer.llm": {
+              "usage": "Semantic motion-duration roles, wired into 22 component stylesheets this session via var(--role, var(--legacy)) (R3, full legacy call-site coverage). Legal CSS surface: animation-duration, transition-duration."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "animation-duration",
+                "transition-duration"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "e8ceedcf-b246-427a-a336-80fd10268ed6"
+            }
+          }
+        },
+        "role": {
+          "fast": {
+            "$value": "0s",
+            "$type": "duration",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "other"
+              },
+              "org.primer.llm": {
+                "usage": "Motion-axis duration ROLES (fast: micro-interactions such as hover and press; base: disclosure and in-place change; slow: overlays entering or leaving). Defined only in the motion axis modes, tier-2/axis/motion/<mode>.json, and emitted as <al-theme> host rules — never on :root (.altitude/AXES.md §2.3). Always read with the legacy fallback: var(--al-theme-animation-duration-role-<role>, var(--al-theme-animation-duration)), or -long for slow. See .altitude/MOTION.md. Legal CSS surface: animation-duration, transition-duration."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "animation-duration",
+                  "transition-duration"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "fa2481ac-2557-470a-ac67-61673cc174d0"
+              }
+            }
+          },
+          "base": {
+            "$value": "0s",
+            "$type": "duration",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "other"
+              },
+              "org.primer.llm": {
+                "usage": "Motion-axis duration ROLES (fast: micro-interactions such as hover and press; base: disclosure and in-place change; slow: overlays entering or leaving). Defined only in the motion axis modes, tier-2/axis/motion/<mode>.json, and emitted as <al-theme> host rules — never on :root (.altitude/AXES.md §2.3). Always read with the legacy fallback: var(--al-theme-animation-duration-role-<role>, var(--al-theme-animation-duration)), or -long for slow. See .altitude/MOTION.md. Legal CSS surface: animation-duration, transition-duration."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "animation-duration",
+                  "transition-duration"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "8fbdc6cd-c074-4639-907c-887b1ab26be2"
+              }
+            }
+          },
+          "slow": {
+            "$value": "0s",
+            "$type": "duration",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "other"
+              },
+              "org.primer.llm": {
+                "usage": "Motion-axis duration ROLES (fast: micro-interactions such as hover and press; base: disclosure and in-place change; slow: overlays entering or leaving). Defined only in the motion axis modes, tier-2/axis/motion/<mode>.json, and emitted as <al-theme> host rules — never on :root (.altitude/AXES.md §2.3). Always read with the legacy fallback: var(--al-theme-animation-duration-role-<role>, var(--al-theme-animation-duration)), or -long for slow. See .altitude/MOTION.md. Legal CSS surface: animation-duration, transition-duration."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "animation-duration",
+                  "transition-duration"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "23537b3e-e148-4c82-926c-94b38a86970f"
+              }
+            }
+          }
+        }
+      },
+      "timing": {
+        "role": {
+          "standard": {
+            "$value": "{theme.animation.timing.@}",
+            "$type": "cubicBezier",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "other"
+              },
+              "org.altitude.axis": {
+                "css": "initial"
+              },
+              "org.primer.llm": {
+                "usage": "Motion-axis easing ROLES (standard: every ordinary transition; emphasized: a change that should draw the eye). Defined only in tier-2/axis/motion/<mode>.json, emitted as <al-theme> host rules, never on :root. Read as var(--al-theme-animation-timing-role-<role>, var(--al-theme-animation-timing)). See .altitude/MOTION.md. Legal CSS surface: animation-timing-function, transition-timing-function."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "animation-timing-function",
+                  "transition-timing-function"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "1024faa3-d801-4669-8735-a661b3f7a9d4"
+              }
+            }
+          },
+          "emphasized": {
+            "$value": "{theme.animation.timing.@}",
+            "$type": "cubicBezier",
+            "$extensions": {
+              "org.altitude.token": {
+                "cssType": "other"
+              },
+              "org.altitude.axis": {
+                "css": "initial"
+              },
+              "org.primer.llm": {
+                "usage": "Motion-axis easing ROLES (standard: every ordinary transition; emphasized: a change that should draw the eye). Defined only in tier-2/axis/motion/<mode>.json, emitted as <al-theme> host rules, never on :root. Read as var(--al-theme-animation-timing-role-<role>, var(--al-theme-animation-timing)). See .altitude/MOTION.md. Legal CSS surface: animation-timing-function, transition-timing-function."
+              },
+              "com.salesforce.styling": {
+                "cssProperties": [
+                  "animation-timing-function",
+                  "transition-timing-function"
+                ]
+              },
+              "com.adobe.id": {
+                "uuid": "fac418e4-055a-4c80-9fef-cd6d15e8b1f0"
+              }
+            }
+          }
+        }
+      },
+      "transition": {
+        "hover": {
+          "$value": {
+            "duration": "{theme.animation.duration.role.fast}",
+            "delay": "0s",
+            "timingFunction": "{theme.animation.timing.role.standard}"
+          },
+          "$type": "transition",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "other"
+            },
+            "org.altitude.axis": {
+              "css": "omit"
+            },
+            "org.primer.llm": {
+              "usage": "Motion USE CASES as DTCG transition composites (hover, expand, overlay, emphasis): which duration role pairs with which easing role. Design-tool and importer data only — never emitted as a custom property, because a :root composite would freeze its var() references (.altitude/AXES.md §2.3). Components get the same pairing from the al-motion-transition() Sass mixin. See .altitude/MOTION.md."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "transition"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "0ccfe05a-78e5-4597-9e12-395af89c3b2e"
+            }
+          }
+        },
+        "expand": {
+          "$value": {
+            "duration": "{theme.animation.duration.role.base}",
+            "delay": "0s",
+            "timingFunction": "{theme.animation.timing.role.standard}"
+          },
+          "$type": "transition",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "other"
+            },
+            "org.altitude.axis": {
+              "css": "omit"
+            },
+            "org.primer.llm": {
+              "usage": "Motion USE CASES as DTCG transition composites (hover, expand, overlay, emphasis): which duration role pairs with which easing role. Design-tool and importer data only — never emitted as a custom property, because a :root composite would freeze its var() references (.altitude/AXES.md §2.3). Components get the same pairing from the al-motion-transition() Sass mixin. See .altitude/MOTION.md."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "transition"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "4fbdf122-023b-47b2-b40e-c2a6fa196c2f"
+            }
+          }
+        },
+        "overlay": {
+          "$value": {
+            "duration": "{theme.animation.duration.role.slow}",
+            "delay": "0s",
+            "timingFunction": "{theme.animation.timing.role.standard}"
+          },
+          "$type": "transition",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "other"
+            },
+            "org.altitude.axis": {
+              "css": "omit"
+            },
+            "org.primer.llm": {
+              "usage": "Motion USE CASES as DTCG transition composites (hover, expand, overlay, emphasis): which duration role pairs with which easing role. Design-tool and importer data only — never emitted as a custom property, because a :root composite would freeze its var() references (.altitude/AXES.md §2.3). Components get the same pairing from the al-motion-transition() Sass mixin. See .altitude/MOTION.md."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "transition"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "240f3b47-4f80-462b-8cbd-d59dc42c3f63"
+            }
+          }
+        },
+        "emphasis": {
+          "$value": {
+            "duration": "{theme.animation.duration.role.base}",
+            "delay": "0s",
+            "timingFunction": "{theme.animation.timing.role.emphasized}"
+          },
+          "$type": "transition",
+          "$extensions": {
+            "org.altitude.token": {
+              "cssType": "other"
+            },
+            "org.altitude.axis": {
+              "css": "omit"
+            },
+            "org.primer.llm": {
+              "usage": "Motion USE CASES as DTCG transition composites (hover, expand, overlay, emphasis): which duration role pairs with which easing role. Design-tool and importer data only — never emitted as a custom property, because a :root composite would freeze its var() references (.altitude/AXES.md §2.3). Components get the same pairing from the al-motion-transition() Sass mixin. See .altitude/MOTION.md."
+            },
+            "com.salesforce.styling": {
+              "cssProperties": [
+                "transition"
+              ]
+            },
+            "com.adobe.id": {
+              "uuid": "122cf199-bf1c-45ab-8bd3-7111053adb3e"
+            }
+          }
+        }
+      }
+    }
+  }
+}

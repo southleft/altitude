@@ -29,15 +29,6 @@ import { TOKENS, brandOverrides, group, resolve } from './tokens.mjs';
 
 const REPO_ROOT = repoRoot();
 
-const THEME_SCSS = path.join(
-  REPO_ROOT,
-  'libs',
-  'al-web-components',
-  'components',
-  'theme',
-  'theme.scss'
-);
-
 /* ----------------------------------------------------------------- tier 1 */
 
 /** CSS time string → milliseconds. `0.2s` → 200, `100ms` → 100. */
@@ -100,53 +91,24 @@ export function travelDistances() {
 
 /* ----------------------------------------------------------------- tier 2 */
 
-/** Index of the `}` matching the `{` at `open`; -1 when unbalanced. */
-function matchBrace(source, open) {
-  let depth = 0;
-  for (let i = open; i < source.length; i++) {
-    if (source[i] === '{') depth++;
-    else if (source[i] === '}') {
-      depth--;
-      if (depth === 0) return i;
-    }
-  }
-  return -1;
-}
-
-/** Every `--al-*: value;` declaration in a rule body, in source order. */
-function declarationsIn(body) {
-  const out = new Map();
-  for (const match of body.matchAll(/(--al-[a-z0-9-]+)\s*:\s*([^;}]+);/g)) {
-    const property = match[1];
-    if (out.has(property)) continue;
-    const raw = match[2].trim();
-    out.set(property, { raw, value: raw === 'initial' ? 'initial' : resolve(raw) });
-  }
-  return out;
-}
-
 /**
- * The four rules the `motion` axis is made of, in the order a reader meets
- * them in the stylesheet. `os-reduce` is the accessibility-first media-query
- * rule, which is why its selector is `:not([motion='full'])` rather than a
- * value of its own.
+ * The generated axis manifest (`styles/tokens-config.v5.mjs` writes it from
+ * `styles/tokens-dtcg/tier-2/axis/<axis>/<mode>.json`; the library build copies
+ * it beside `tokens.json`). It records the exact host rules `<al-theme>` emits
+ * for every axis, which is what this page tabulates.
  */
-const AXIS_RULES = [
-  { id: 'reduced', label: 'reduced', selector: ":host([motion='reduced'])" },
-  { id: 'expressive', label: 'expressive', selector: ":host([motion='expressive'])" },
-  { id: 'os-reduce', label: 'OS reduce', selector: ":host(:not([motion='full']))" },
-  { id: 'full', label: 'full', selector: ":host([motion='full'])" },
-];
+const AXES_JSON = path.join(REPO_ROOT, 'libs', 'al-web-components', 'dist', 'css', 'axes.json');
 
 /**
  * The `<al-theme motion>` axis as a MATRIX: every animation property the axis
- * governs, against every value of the axis.
+ * governs, against every rule the axis emits.
  *
- * Read from the stylesheet rather than restated. theme.scss's own comment
- * explains why each block asserts the COMPLETE token set (a partial block
- * silently inherits from an outer `<al-theme>`, which broke three nesting
- * cases), and a hand-written table here would be the first thing to fall out of
- * step with that rule.
+ * Read from the generated manifest rather than restated. Each motion mode file
+ * names the COMPLETE token set (a partial block silently inherits from an outer
+ * `<al-theme>`, which broke three nesting cases), and a hand-written table here
+ * would be the first thing to fall out of step with that rule. `os-reduce` is
+ * the accessibility-first media-query rule, which is why its selector is
+ * `:not([motion='full'])` rather than a value of its own.
  *
  * The `default` column is the UNSET axis: the legacy tier-2 pair resolves to its
  * `:root` value, while the role tokens are genuinely absent, so a component's
@@ -154,27 +116,30 @@ const AXIS_RULES = [
  * (`.altitude/AXES.md` §2.3), not a gap, so it is reported as such.
  */
 export function motionAxis() {
-  if (!fs.existsSync(THEME_SCSS)) {
-    return { available: false, values: [], properties: [], reason: `Not found: ${THEME_SCSS}` };
+  if (!fs.existsSync(AXES_JSON)) {
+    return { available: false, values: [], properties: [], reason: `Not found: ${AXES_JSON}` };
   }
-  const source = fs.readFileSync(THEME_SCSS, 'utf8');
+  const motion = JSON.parse(fs.readFileSync(AXES_JSON, 'utf8')).axes?.motion;
+  if (!motion) {
+    return { available: false, values: [], properties: [], reason: `No motion axis in ${AXES_JSON}` };
+  }
 
-  const values = [];
-  for (const rule of AXIS_RULES) {
-    const at = source.indexOf(rule.selector);
-    if (at === -1) continue;
-    const open = source.indexOf('{', at);
-    const close = open === -1 ? -1 : matchBrace(source, open);
-    if (close === -1) continue;
-    values.push({
-      ...rule,
-      declarations: declarationsIn(source.slice(open + 1, close)),
+  const values = motion.rules.map((rule) => {
+    const declarations = new Map();
+    for (const [property, raw] of Object.entries(rule.declarations)) {
+      declarations.set(property, { raw, value: raw === 'initial' ? 'initial' : resolve(raw) });
+    }
+    return {
+      id: rule.media ? 'os-reduce' : rule.mode,
+      label: rule.media ? 'OS reduce' : rule.mode,
+      selector: rule.selector,
+      declarations,
       /** True when the rule sits inside `@media (prefers-reduced-motion: reduce)`. */
-      media: rule.id === 'os-reduce',
-    });
-  }
+      media: Boolean(rule.media),
+    };
+  });
 
-  // Property order comes from the first block that declares each — the
+  // Property order comes from the first rule that declares each — the
   // `reduced` rule, which asserts the complete set the axis governs.
   const properties = [];
   const seen = new Set();

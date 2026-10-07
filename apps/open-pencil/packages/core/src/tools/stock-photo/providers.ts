@@ -1,0 +1,162 @@
+import { ofetch } from 'ofetch'
+
+export interface StockPhotoResult {
+  url: string
+  width: number
+  height: number
+  photographer: string
+  sourceId: string
+}
+
+export interface StockPhotoProvider {
+  name: string
+  search(
+    query: string,
+    options: {
+      perPage: number
+      orientation: 'landscape' | 'portrait' | 'square'
+      targetDim: number
+    }
+  ): Promise<StockPhotoResult[]>
+}
+
+const providers = new Map<string, StockPhotoProvider>()
+let activeProviderId: string | null = null
+
+export function registerStockPhotoProvider(provider: StockPhotoProvider): void {
+  providers.set(provider.name, provider)
+  if (!activeProviderId) activeProviderId = provider.name
+}
+
+export function setActiveStockPhotoProvider(name: string | null): void {
+  activeProviderId = name
+}
+
+export function getStockPhotoProviders(): string[] {
+  return [...providers.keys()]
+}
+
+export function getActiveProvider(): StockPhotoProvider | null {
+  if (!activeProviderId) return null
+  return providers.get(activeProviderId) ?? null
+}
+
+interface PexelsPhoto {
+  id: number
+  width: number
+  height: number
+  photographer: string
+  src: {
+    original: string
+    large2x: string
+    large: string
+    medium: string
+    small: string
+    landscape: string
+  }
+}
+
+function pickPexelsSize(src: PexelsPhoto['src'], targetDim: number): string {
+  if (targetDim <= 200) return src.small
+  if (targetDim <= 400) return src.medium
+  if (targetDim <= 800) return src.large
+  if (targetDim <= 1600) return src.large2x
+  return src.original
+}
+
+type CredentialSource = string | null | (() => Promise<string | null>)
+
+async function resolveCredential(source: CredentialSource): Promise<string | null> {
+  return typeof source === 'function' ? source() : source
+}
+
+let pexelsAPIKey: CredentialSource = null
+
+export function setPexelsAPIKey(key: CredentialSource): void {
+  pexelsAPIKey = key
+  if (key) {
+    registerStockPhotoProvider(pexelsProvider)
+    setActiveStockPhotoProvider('pexels')
+  }
+}
+
+const pexelsProvider: StockPhotoProvider = {
+  name: 'pexels',
+  async search(query, { perPage, orientation, targetDim }) {
+    const key = await resolveCredential(pexelsAPIKey)
+    if (!key) throw new Error('Pexels API key not configured')
+    const response = await ofetch.raw<{ photos: PexelsPhoto[] }>(
+      'https://api.pexels.com/v1/search',
+      {
+        headers: { Authorization: key },
+        ignoreResponseError: true,
+        query: { query, per_page: perPage, orientation },
+        retry: 0
+      }
+    )
+    if (!response.ok) throw new Error(`Pexels ${response.status}`)
+    const data = response._data as { photos: PexelsPhoto[] }
+    return data.photos.map((photo) => ({
+      url: pickPexelsSize(photo.src, targetDim),
+      width: photo.width,
+      height: photo.height,
+      photographer: photo.photographer,
+      sourceId: String(photo.id)
+    }))
+  }
+}
+
+let unsplashAccessKey: CredentialSource = null
+
+export function setUnsplashAccessKey(key: CredentialSource): void {
+  unsplashAccessKey = key
+  if (key) {
+    registerStockPhotoProvider(unsplashProvider)
+  }
+}
+
+interface UnsplashPhoto {
+  id: string
+  width: number
+  height: number
+  urls: { raw: string; full: string; regular: string; small: string; thumb: string }
+  user: { name: string }
+  links: { download_location: string }
+}
+
+function pickUnsplashSize(urls: UnsplashPhoto['urls'], targetDim: number): string {
+  if (targetDim <= 200) return urls.thumb
+  if (targetDim <= 400) return urls.small
+  if (targetDim <= 1080) return urls.regular
+  return urls.full
+}
+
+const unsplashProvider: StockPhotoProvider = {
+  name: 'unsplash',
+  async search(query, { perPage, orientation }) {
+    const key = await resolveCredential(unsplashAccessKey)
+    if (!key) throw new Error('Unsplash access key not configured')
+    const orient = orientation === 'square' ? 'squarish' : orientation
+    const response = await ofetch.raw<{ results: UnsplashPhoto[] }>(
+      'https://api.unsplash.com/search/photos',
+      {
+        headers: {
+          Authorization: `Client-ID ${key}`,
+          'Accept-Version': 'v1'
+        },
+        ignoreResponseError: true,
+        query: { query, per_page: perPage, orientation: orient },
+        retry: 0
+      }
+    )
+    if (!response.ok) throw new Error(`Unsplash ${response.status}`)
+    const data = response._data as { results: UnsplashPhoto[] }
+    return data.results.map((photo) => ({
+      url: pickUnsplashSize(photo.urls, 1080),
+      width: photo.width,
+      height: photo.height,
+      photographer: photo.user.name,
+      sourceId: photo.id
+    }))
+  }
+}

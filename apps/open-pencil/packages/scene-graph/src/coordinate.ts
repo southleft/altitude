@@ -1,0 +1,226 @@
+import type { SceneGraph, SceneNode } from './index'
+import Matrix, { type Mat3 } from './matrix'
+import type { Rect, Vector } from './primitives'
+
+export function getWorldMatrix(node: SceneNode, graph: Pick<SceneGraph, 'getNode'>): Mat3 {
+  const chain: SceneNode[] = []
+  let current: SceneNode | undefined = node
+
+  while (current) {
+    chain.unshift(current)
+    if (!current.parentId) break
+    current = graph.getNode(current.parentId)
+  }
+
+  let matrix = Matrix.identity()
+
+  for (const n of chain) {
+    const local = getNodeLocalMatrix(n)
+    matrix = Matrix.multiply(matrix, local)
+  }
+
+  return matrix
+}
+
+export function getAxisAlignedWorldBounds(node: SceneNode, graph: Pick<SceneGraph, 'getNode'>) {
+  const matrix = getWorldMatrix(node, graph)
+  const points = Matrix.mapPoints(matrix, [
+    0,
+    0,
+    node.width,
+    0,
+    node.width,
+    node.height,
+    0,
+    node.height
+  ])
+  const xs = [points[0], points[2], points[4], points[6]]
+  const ys = [points[1], points[3], points[5], points[7]]
+  const minX = Math.min(...xs)
+  const maxX = Math.max(...xs)
+  const minY = Math.min(...ys)
+  const maxY = Math.max(...ys)
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
+}
+
+export function getAbsolutePosition(node: SceneNode, graph: SceneGraph): Vector {
+  const matrix = getWorldMatrix(node, graph)
+  const p = Matrix.mapPoints(matrix, [0, 0])
+
+  return {
+    x: p[0],
+    y: p[1]
+  }
+}
+export function getAbsoluteRotation(node: SceneNode, graph: SceneGraph): number {
+  const matrix = getWorldMatrix(node, graph)
+  const a = matrix[0]
+  const b = matrix[1]
+  const angle = Math.atan2(b, a)
+  let deg = (angle * 180) / Math.PI
+  deg = (deg + 360) % 360
+
+  return deg
+}
+
+export function getAbsolutePositionFull(node: SceneNode, graph: SceneGraph) {
+  const matrix = getWorldMatrix(node, graph)
+
+  const origin = Matrix.mapPoints(matrix, [0, 0])
+  const x = origin[0]
+  const y = origin[1]
+
+  const pts = Matrix.mapPoints(matrix, [
+    0,
+    0,
+    node.width,
+    0,
+    node.width,
+    node.height,
+    0,
+    node.height
+  ])
+
+  const [x1, y1, x2, y2, x3, y3, x4, y4] = pts
+
+  const minX = Math.min(x1, x2, x3, x4)
+  const maxX = Math.max(x1, x2, x3, x4)
+  const minY = Math.min(y1, y2, y3, y4)
+  const maxY = Math.max(y1, y2, y3, y4)
+
+  const width = maxX - minX
+  const height = maxY - minY
+
+  let angle = Math.atan2(matrix[3], matrix[0])
+
+  const det = matrix[0] * matrix[4] - matrix[1] * matrix[3]
+  if (det < 0) {
+    angle = -angle
+  }
+
+  const rotation = angle * (180 / Math.PI)
+
+  const center = Matrix.mapPoints(matrix, [node.width / 2, node.height / 2])
+
+  const centerX = center[0]
+  const centerY = center[1]
+
+  return {
+    x,
+    y,
+
+    // AABB
+    boundX: minX,
+    boundY: minY,
+    width,
+    height,
+
+    rotation,
+
+    centerX,
+    centerY
+  }
+}
+/** Lines retain their origin pivot; other shapes rotate around their center. */
+export function getNodeRotationOrigin(node: SceneNode): Vector {
+  return node.type === 'LINE' ? { x: 0, y: 0 } : { x: node.width / 2, y: node.height / 2 }
+}
+
+/** Position can be applied separately by renderers before setting up local opacity layers. */
+export function getNodeLocalMatrix(n: SceneNode, position: Vector = n) {
+  let matrix = Matrix.translated(position.x, position.y)
+  if (n.flipX || n.flipY) {
+    matrix = Matrix.multiply(
+      matrix,
+      Matrix.scaled(n.flipX ? -1 : 1, n.flipY ? -1 : 1, n.width / 2, n.height / 2)
+    )
+  }
+  if (n.rotation) {
+    const pivot = getNodeRotationOrigin(n)
+    matrix = Matrix.multiply(matrix, Matrix.rotated((n.rotation * Math.PI) / 180, pivot.x, pivot.y))
+  }
+  return matrix
+}
+export function getNodeWorldBounds(node: SceneNode) {
+  const m = getNodeLocalMatrix(node)
+
+  const points = Matrix.mapPoints(m, [0, 0, node.width, 0, node.width, node.height, 0, node.height])
+
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+
+  for (let i = 0; i < points.length; i += 2) {
+    const x = points[i]
+    const y = points[i + 1]
+
+    minX = Math.min(minX, x)
+    minY = Math.min(minY, y)
+    maxX = Math.max(maxX, x)
+    maxY = Math.max(maxY, y)
+  }
+
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY
+  }
+}
+
+/**
+ * World-space positions of the 8 selection handles. `localRect` overrides the
+ * node-local box the handles sit on — text-on-path draws its handles on the
+ * glyph-fitted path box, not node bounds, so its hit-test must pass that box
+ * or the visible handles are ~25px off and unclickable. Defaults to full node
+ * bounds.
+ */
+export function getWorldHandles(
+  node: SceneNode,
+  graph: Pick<SceneGraph, 'getNode'>,
+  localRect?: Rect
+) {
+  const matrix = getWorldMatrix(node, graph)
+
+  const x0 = localRect?.x ?? 0
+  const y0 = localRect?.y ?? 0
+  const w = localRect?.width ?? node.width
+  const h = localRect?.height ?? node.height
+  const mx = x0 + w / 2
+  const my = y0 + h / 2
+  const x1 = x0 + w
+  const y1 = y0 + h
+
+  const localPts = [
+    x0,
+    y0, // nw
+    mx,
+    y0, // n
+    x1,
+    y0, // ne
+    x1,
+    my, // e
+    x1,
+    y1, // se
+    mx,
+    y1, // s
+    x0,
+    y1, // sw
+    x0,
+    my // w
+  ]
+
+  const pts = Matrix.mapPoints(matrix, localPts)
+
+  return {
+    nw: { x: pts[0], y: pts[1] },
+    n: { x: pts[2], y: pts[3] },
+    ne: { x: pts[4], y: pts[5] },
+    e: { x: pts[6], y: pts[7] },
+    se: { x: pts[8], y: pts[9] },
+    s: { x: pts[10], y: pts[11] },
+    sw: { x: pts[12], y: pts[13] },
+    w: { x: pts[14], y: pts[15] }
+  }
+}

@@ -183,6 +183,21 @@ function formatSpaceValue(value) {
   return `${parseFloat(value) / themeSpaceBaseSize}rem`;
 }
 
+/**
+ * DTCG `cubicBezier` -> CSS. The tree authors easing curves as the standard
+ * 4-number array (`[0.2, 0, 0, 1]`); CSS wants `cubic-bezier(0.2,0,0,1)`.
+ * Comma-joined with no spaces because that is exactly what the CSS strings
+ * these tokens were authored as before the conversion read, so the emission is
+ * byte-identical. The keyword curves (`ease`, `linear`) stay strings of `$type`
+ * `other` — an array would emit `cubic-bezier(...)` where `ease` is emitted
+ * today. The SD `cubicBezier/css` transform is deliberately NOT used: it only
+ * fires inside the transform groups, which are trimmed (see below), and its
+ * spacing differs.
+ */
+function formatCubicBezierValue(value) {
+  return Array.isArray(value) ? `cubic-bezier(${value.join(',')})` : value;
+}
+
 // SD v5 stores DTCG values under `$value` when `usesDtcg: true`. Wrap the
 // token access so the rest of the format code can stay structurally close
 // to the v3 implementation.
@@ -222,9 +237,11 @@ function tokenOriginalValue(token) {
 // Dropping them is a no-op TODAY (they match nothing today, by construction)
 // and is what made the `$type` conformance pass value-neutral. Verified by
 // diffing the full `dist-v5/` emission before and after: byte-identical.
-// NOTE: these are inert only while the affected `$type` values stay
-// non-conformant — relabelling e.g. animation.timing to DTCG `cubicBezier`
-// switches `cubicBezier/css` back on. See the DTCG-conformance idea in .mm/ideas/.
+// 2026-10-06: animation.timing IS now DTCG `cubicBezier` (arrays) and the
+// tier-2 durations are `duration`. That stays value-neutral only because the
+// list below omits `cubicBezier/css` and `time/seconds`; the arrays are turned
+// into CSS by `formatCubicBezierValue()` instead. Do not add those transforms
+// back without diffing `dist-v5/`.
 const V3_SHAPE_TRANSFORMS = ['attribute/cti', 'name/kebab', 'color/css'];
 
 StyleDictionary.registerTransformGroup({ name: 'css-v3-shape', transforms: V3_SHAPE_TRANSFORMS });
@@ -277,7 +294,7 @@ StyleDictionary.registerFormat({
           value = formatSpaceValue(tokenValue(token));
         } else {
           name = token.name;
-          value = tokenValue(token);
+          value = formatCubicBezierValue(tokenValue(token));
         }
 
         // Captured so the composite companions below can be emitted as
@@ -361,7 +378,7 @@ StyleDictionary.registerFormat({
           value = formatBoxShadowValue(tokenValue(token));
         } else {
           name = token.name;
-          value = tokenValue(token);
+          value = formatCubicBezierValue(tokenValue(token));
         }
 
         // Captured so the composite companions below can be emitted as
@@ -578,8 +595,9 @@ const brandConfig = (themeName, brandName) => ({
 // SPECIFICITY. `:host([brand][mode])` is exactly 0,3,0 and `:host([brand])` /
 // `:host([mode])` are 0,2,0 — the budget `scripts/check-css-layers.js` enforces
 // is 0,3,0, so the brand x mode form sits on the ceiling with zero headroom. A
-// third attribute is not available; that is why density/contrast stay
-// hand-written in theme.scss. The checker lints these generated files directly
+// third attribute is not available; that is why the other four axes are
+// emitted as their own single-attribute rules (see "<al-theme> axes" below)
+// rather than combined with brand/mode. The checker lints these generated files directly
 // (it used to only read `components/<name>/<name>.scss`, which `@use` hides).
 
 const HOST_DIR = 'dist-v5/scss/host';
@@ -609,6 +627,360 @@ function hostPlatform(destination, selector, { onlyNames = null, omitEqualTo = n
       ],
     },
   };
+}
+
+// ---------- <al-theme> axes: density / contrast / motion / shape ----------
+//
+// `brand` and `mode` are token bundles; these four axes used to be literal
+// declarations hand-written in `components/theme/theme.scss`. Each is now a
+// set of DTCG MODE FILES — `tokens-dtcg/tier-2/axis/<axis>/<mode>.json`, one
+// file per attribute value, every file of an axis naming the same token paths
+// — and this section turns them into the `:host([…])` rules theme.scss loads.
+// The tree is the importer contract too: a canvas tool reads one collection per
+// axis directory and one mode per file (`.altitude/AXES.md` §2).
+//
+// The mode files are NOT in any `:root` build — `tier-2/*.json` is a
+// non-recursive glob — because an axis is a scoped override, and because two
+// of them (motion, shape) carry role tokens that must never get a `:root`
+// default (`.altitude/AXES.md` §2.3).
+//
+// WHAT A MODE FILE CANNOT SAY, AND THIS TABLE DOES: which attribute selector a
+// mode is written under, and in what order. The order is load-bearing — the
+// motion rules rely on source order at equal specificity (`full` must follow
+// the reduce media query so it can opt back out of it) — so it is stated here
+// once rather than inferred from file names.
+//
+//   rules[].types  limit a rule to tokens of these `$type`s. The OS
+//                  reduced-motion rule reuses `reduced`'s durations and nothing
+//                  else, exactly as the hand-written block did.
+//   (no rule)      a DEFAULT mode with no rule emits nothing: `comfortable`
+//                  density and `default` shape are the base bundle / the
+//                  component fallbacks, so asserting them would change nesting
+//                  behaviour. `normal` contrast and `full` motion DO have rules
+//                  because the hand-written CSS did — a nested theme resets to
+//                  them rather than inheriting its ancestor's choice.
+//
+// Per-token `$extensions["org.altitude.axis"].css` overrides `$value` in the
+// emitted CSS:
+//   "initial"  emit the guaranteed-invalid value, so a component's
+//              `var(--role, var(--legacy))` fallback resolves. `$value` records
+//              what that fallback resolves to, for importers.
+//   "omit"     emit nothing (the property inherits / falls back). Used for the
+//              default shape mode, pill's untouched `indicator`, and the motion
+//              `transition` composites, which are design-tool data only.
+const AXIS_DIR = `${SD_ROOT}/tokens-dtcg/tier-2/axis`;
+/** Under the host dir so the legacy mirror skips it, like the brand/mode partials. */
+const AXIS_HOST_DIR = 'dist-v5/scss/host/axis';
+const AXES = [
+  {
+    axis: 'density',
+    modes: ['compact', 'cozy', 'comfortable'],
+    rules: [
+      { mode: 'compact', selector: ":host([density='compact'])" },
+      { mode: 'cozy', selector: ":host([density='cozy'])" },
+    ],
+  },
+  {
+    axis: 'contrast',
+    modes: ['normal', 'more'],
+    rules: [
+      { mode: 'more', selector: ":host([contrast='more'])" },
+      // Not `[contrast='normal']`: <al-theme> never reflects its default, so
+      // that selector would miss every theme that left the attribute unset.
+      { mode: 'normal', selector: ":host(:not([contrast='more']))" },
+    ],
+  },
+  {
+    axis: 'motion',
+    modes: ['full', 'reduced', 'expressive'],
+    rules: [
+      { mode: 'reduced', selector: ":host([motion='reduced'])" },
+      { mode: 'expressive', selector: ":host([motion='expressive'])" },
+      // Accessibility-first: the OS preference beats everything but an
+      // explicit `full`, including `expressive` above (same specificity, later).
+      {
+        mode: 'reduced',
+        selector: ":host(:not([motion='full']))",
+        media: '(prefers-reduced-motion: reduce)',
+        types: ['duration'],
+      },
+      // Must come after the media rule: both are 0,2,0, so order lets `full` win.
+      { mode: 'full', selector: ":host([motion='full'])" },
+    ],
+  },
+  {
+    axis: 'shape',
+    modes: ['default', 'sharp', 'pill'],
+    rules: [
+      { mode: 'sharp', selector: ":host([shape='sharp'])" },
+      { mode: 'pill', selector: ":host([shape='pill'])" },
+    ],
+  },
+];
+
+/** Dot-paths of every token leaf in a DTCG document, in authored order. */
+function leafPaths(node, segs = [], out = []) {
+  if (!node || typeof node !== 'object' || Array.isArray(node)) return out;
+  if ('$value' in node) {
+    out.push(segs.join('.'));
+    return out;
+  }
+  for (const [k, v] of Object.entries(node)) {
+    if (!k.startsWith('$')) leafPaths(v, [...segs, k], out);
+  }
+  return out;
+}
+
+/** A resolved token value as one CSS string (composites included). */
+function cssLiteral(value) {
+  if (Array.isArray(value)) return formatCubicBezierValue(value);
+  if (value && typeof value === 'object') {
+    // DTCG transition: duration, timingFunction, delay.
+    if ('duration' in value || 'timingFunction' in value) {
+      return [value.duration, formatCubicBezierValue(value.timingFunction), value.delay].filter(Boolean).join(' ');
+    }
+    return JSON.stringify(value);
+  }
+  return String(value);
+}
+
+/**
+ * Emit the axis partials and the `axes.json` manifest. Returns the partial
+ * file names, in the order theme.scss loads them.
+ */
+async function buildAxes({ baseSources }) {
+  const manifest = {
+    $comment:
+      'Generated by styles/tokens-config.v5.mjs from styles/tokens-dtcg/tier-2/axis/<axis>/<mode>.json. ' +
+      'One entry per <al-theme> attribute: its modes, the resolved value of every token in every mode, ' +
+      'and the exact host rules emitted for it. See .altitude/AXES.md.',
+    axes: {},
+  };
+
+  // The base `:root` build, to prove each DEFAULT mode says what :root says.
+  const baseSd = new StyleDictionary({
+    usesDtcg: true,
+    log: { verbosity: 'silent', warnings: 'disabled' },
+    source: baseSources,
+    platforms: { axis: { transformGroup: 'css-v3-shape' } },
+  });
+  const base = await baseSd.getPlatformTokens('axis');
+  const baseValue = new Map(base.allTokens.map((t) => [t.path.join('.'), t.$value]));
+
+  const partials = [];
+  for (const spec of AXES) {
+    const dir = path.join(AXIS_DIR, spec.axis);
+    const onDisk = (await fs.readdir(dir)).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+    const missing = spec.modes.filter((m) => !onDisk.includes(m));
+    const unknown = onDisk.filter((m) => !spec.modes.includes(m));
+    if (missing.length || unknown.length) {
+      throw new Error(
+        `[tokens:v5] axis "${spec.axis}": mode files and the AXES table disagree ` +
+          `(missing: ${missing.join(', ') || 'none'}; not in table: ${unknown.join(', ') || 'none'})`
+      );
+    }
+
+    const modes = {};
+    let defaultMode = null;
+    const tokenOrder = []; // union of every mode's paths: a mode may be sparse
+    for (const mode of spec.modes) {
+      const file = path.join(dir, `${mode}.json`);
+      const doc = JSON.parse(await fs.readFile(file, 'utf8'));
+      const meta = doc.$extensions?.['org.altitude.axis'] ?? {};
+      if (meta.axis !== spec.axis || meta.mode !== mode) {
+        throw new Error(`[tokens:v5] ${spec.axis}/${mode}.json: $extensions["org.altitude.axis"] must name axis "${spec.axis}" and mode "${mode}"`);
+      }
+      if (meta.default === true) {
+        if (defaultMode) throw new Error(`[tokens:v5] axis "${spec.axis}" declares two default modes (${defaultMode}, ${mode})`);
+        defaultMode = mode;
+      }
+      const order = leafPaths(doc);
+      for (const p of order) if (!tokenOrder.includes(p)) tokenOrder.push(p);
+
+      const sd = new StyleDictionary({
+        usesDtcg: true,
+        log: { verbosity: 'silent', warnings: 'disabled' },
+        include: baseSources,
+        source: [file],
+        platforms: { axis: { transformGroup: 'css-v3-shape' } },
+      });
+      const dict = await sd.getPlatformTokens('axis');
+      const own = dict.allTokens
+        .filter((t) => path.resolve(t.filePath) === path.resolve(file))
+        .sort((a, b) => order.indexOf(a.path.join('.')) - order.indexOf(b.path.join('.')));
+
+      const tokens = own.map((t) => {
+        const css = t.$extensions?.['org.altitude.axis']?.css ?? null;
+        if (css !== null && css !== 'initial' && css !== 'omit') {
+          throw new Error(`[tokens:v5] ${spec.axis}/${mode}.json#${t.path.join('.')}: unknown org.altitude.axis.css "${css}"`);
+        }
+        const original = tokenOriginalValue(t);
+        let declared = null;
+        if (css === 'initial') declared = 'initial';
+        else if (css === null) {
+          if (typeof original === 'string' && usesReferences(original)) {
+            if (!/^\{[^{}]+\}$/.test(original)) {
+              throw new Error(`[tokens:v5] ${spec.axis}/${mode}.json#${t.path.join('.')}: an axis value is a literal or ONE whole alias`);
+            }
+            const [ref] = getReferences(original, dict.tokens, { usesDtcg: true });
+            declared = `var(--${themePrefix}-${ref.name})`;
+          } else if (original && typeof original === 'object' && !Array.isArray(original)) {
+            throw new Error(`[tokens:v5] ${spec.axis}/${mode}.json#${t.path.join('.')}: composite values must be css:"omit"`);
+          } else {
+            // The AUTHORED literal, not the transformed one: `currentColor` is
+            // a CSS keyword `color/css` would otherwise rewrite.
+            declared = cssLiteral(original);
+          }
+        }
+        return {
+          path: t.path.join('.'),
+          name: `--${themePrefix}-${t.name}`,
+          type: t.$type,
+          css,
+          declared,
+          value: t.$value && typeof t.$value === 'object' && !Array.isArray(t.$value)
+            ? Object.fromEntries(Object.entries(t.$value).map(([k, v]) => [k, cssLiteral(v)]))
+            : cssLiteral(t.$value),
+        };
+      });
+      modes[mode] = { file: path.relative(SD_ROOT, file).split(path.sep).join('/'), tokens };
+    }
+    if (!defaultMode) throw new Error(`[tokens:v5] axis "${spec.axis}" has no default mode`);
+
+    // A default mode with a plain value must agree with :root, or the axis
+    // would describe a default the page does not render. This replaces the
+    // "these values MUST track tier-2" comments theme.scss used to carry.
+    for (const tok of modes[defaultMode].tokens) {
+      if (tok.css !== null || !baseValue.has(tok.path)) continue;
+      const expected = cssLiteral(baseValue.get(tok.path));
+      if (tok.value !== expected) {
+        throw new Error(
+          `[tokens:v5] axis "${spec.axis}": default mode "${defaultMode}" says ${tok.path} = ${tok.value}, ` +
+            `but the :root build says ${expected}. Change both together.`
+        );
+      }
+    }
+
+    // Every non-default mode must be reachable, or its file is inert.
+    for (const mode of spec.modes) {
+      if (mode !== defaultMode && !spec.rules.some((r) => r.mode === mode)) {
+        throw new Error(`[tokens:v5] axis "${spec.axis}": mode "${mode}" has no rule in AXES, so it would never apply`);
+      }
+    }
+
+    const rules = spec.rules.map((rule) => {
+      const decls = modes[rule.mode].tokens.filter(
+        (t) => t.declared !== null && (!rule.types || rule.types.includes(t.type))
+      );
+      return {
+        mode: rule.mode,
+        selector: rule.selector,
+        media: rule.media ?? null,
+        declarations: Object.fromEntries(decls.map((t) => [t.name, t.declared])),
+      };
+    });
+
+    // UNLAYERED on purpose. theme.scss loads these with `meta.load-css()`
+    // INSIDE its own `@layer al.theme { … }` block, so the compiled component
+    // CSS is byte-identical to the hand-written rules this replaced (one layer
+    // block, same rules, same order). Wrapping each file in its own
+    // `@layer al.theme` would be semantically equal but would repeat the
+    // wrapper four times. `check-css-layers.js` lints these files separately
+    // and asserts they stay unlayered and are loaded inside theme.scss's layer.
+    const body = rules
+      .map((r) => {
+        const pad = r.media ? '    ' : '  ';
+        const decls = Object.entries(r.declarations).map(([n, v]) => `${pad}${n}: ${v};`).join('\n');
+        const block = `${r.media ? '  ' : ''}${r.selector} {\n${decls}\n${r.media ? '  ' : ''}}`;
+        return r.media ? `@media ${r.media} {\n${block}\n}` : block;
+      })
+      .join('\n');
+    const destination = `${spec.axis}.scss`;
+    await fs.writeFile(
+      `${AXIS_HOST_DIR}/${destination}`,
+      `${comment}// <al-theme ${spec.axis}> — from tokens-dtcg/tier-2/axis/${spec.axis}/*.json.\n` +
+        `// Loaded by components/theme/theme.scss INSIDE its \`@layer al.theme\` block.\n` +
+        `${body}\n`
+    );
+    partials.push(destination);
+
+    // Manifest: tokens keyed by CSS name, value per mode — the shape an
+    // importer building one variable collection per axis wants.
+    const byName = {};
+    for (const p of tokenOrder) {
+      const sample = spec.modes.map((m) => modes[m].tokens.find((t) => t.path === p)).find(Boolean);
+      if (!sample) continue;
+      byName[sample.name] = {
+        path: p,
+        type: sample.type,
+        // false for design-tool-only tokens (the motion `transition`
+        // composites): no rule ever declares the custom property.
+        emitted: rules.some((r) => sample.name in r.declarations),
+        values: Object.fromEntries(
+          // null = the mode does not name the token, so the base value applies.
+          spec.modes.map((m) => [m, modes[m].tokens.find((t) => t.path === p)?.value ?? null])
+        ),
+      };
+    }
+    manifest.axes[spec.axis] = {
+      attribute: spec.axis,
+      default: defaultMode,
+      modes: spec.modes,
+      source: `tokens-dtcg/tier-2/axis/${spec.axis}/`,
+      tokens: byName,
+      rules,
+    };
+  }
+
+  await checkMotionUses();
+  await fs.writeFile('dist-v5/axes.json', JSON.stringify(manifest, null, 2) + '\n');
+  return partials;
+}
+
+/**
+ * The motion USE CASES live in two places by necessity: as DTCG `transition`
+ * composites (`theme.animation.transition.<use>` in every motion mode file),
+ * which is what a design tool imports, and as the `$al-motion-uses` map in
+ * `styles/core/mixins/motion.scss`, which is what components compile against
+ * (a composite custom property would freeze its var() references — see that
+ * file's header). Fail the build if they disagree, so neither can drift.
+ */
+async function checkMotionUses() {
+  const pairs = (doc, where) => {
+    const uses = doc.theme?.animation?.transition ?? {};
+    return Object.fromEntries(
+      Object.entries(uses).map(([use, tok]) => {
+        const d = /^\{theme\.animation\.duration\.role\.(\w+)\}$/.exec(tok.$value?.duration ?? '');
+        const e = /^\{theme\.animation\.timing\.role\.(\w+)\}$/.exec(tok.$value?.timingFunction ?? '');
+        if (!d || !e) {
+          throw new Error(`[tokens:v5] ${where}#theme.animation.transition.${use}: must alias a duration role and an easing role`);
+        }
+        return [use, `${d[1]},${e[1]}`];
+      })
+    );
+  };
+  const spec = AXES.find((a) => a.axis === 'motion');
+  let reference = null;
+  for (const mode of spec.modes) {
+    const where = `tier-2/axis/motion/${mode}.json`;
+    const got = pairs(JSON.parse(await fs.readFile(path.join(AXIS_DIR, 'motion', `${mode}.json`), 'utf8')), where);
+    if (reference && JSON.stringify(got) !== JSON.stringify(reference)) {
+      throw new Error(`[tokens:v5] ${where}: motion use cases differ from ${spec.modes[0]}.json — every mode must pair them the same way`);
+    }
+    reference ??= got;
+  }
+  const scss = await fs.readFile(path.join(SD_ROOT, 'core', 'mixins', 'motion.scss'), 'utf8');
+  const map = /\$al-motion-uses:\s*\(([\s\S]*?)\n\);/.exec(scss);
+  if (!map) throw new Error('[tokens:v5] styles/core/mixins/motion.scss: $al-motion-uses map not found');
+  const mixin = Object.fromEntries(
+    [...map[1].matchAll(/([\w-]+):\s*\((\w+),\s*(\w+)\)/g)].map((m) => [m[1], `${m[2]},${m[3]}`])
+  );
+  if (JSON.stringify(mixin) !== JSON.stringify(reference)) {
+    throw new Error(
+      `[tokens:v5] motion use cases disagree: tokens say ${JSON.stringify(reference)}, ` +
+        `styles/core/mixins/motion.scss $al-motion-uses says ${JSON.stringify(mixin)}. Change both together.`
+    );
+  }
 }
 
 // ---------- main ----------
@@ -857,6 +1229,13 @@ async function build() {
       '\n'
   );
 
+  // 3b. The four non-palette axes (density / contrast / motion / shape) —
+  //     see "<al-theme> axes" above. Under the host dir so the legacy mirror
+  //     skips the partials like the brand/mode ones; `axes.json` IS mirrored,
+  //     so it ships in `dist/css/`.
+  await fs.mkdir(AXIS_HOST_DIR, { recursive: true });
+  const axisPartials = await buildAxes({ baseSources: themeSources(DEFAULT_MODE) });
+
   // ---- 4. PER-PROJECT BUNDLES ----
   //
   //     One design system, one stylesheet, both modes — which is exactly how
@@ -926,7 +1305,8 @@ async function build() {
 
   console.log(
     `[tokens:v5] build complete → libs/al-web-components/styles/dist-v5/ ` +
-      `(${order.length} scoped host partial(s), ${projectBundles.length} project bundle(s): ${projectBundles.join(', ')})`
+      `(${order.length} scoped host partial(s), ${axisPartials.length} axis partial(s), ` +
+      `${projectBundles.length} project bundle(s): ${projectBundles.join(', ')})`
   );
 }
 

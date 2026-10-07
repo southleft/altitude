@@ -319,7 +319,7 @@ export function foundationsMarkdown(context = DEFAULT_CONTEXT) {
  * The Motion page, as Markdown.
  *
  * Same three sources as the HTML page (`lib/motion.mjs`): the built token layer
- * for tier 1, `components/theme/theme.scss` for the axis matrix, and the
+ * for tier 1, the generated axis manifest (`dist/css/axes.json`) for the axis matrix, and the
  * published motion runtime for the choreography tokens and keyframe presets.
  * The two renderings cannot drift because neither holds any motion data of its
  * own.
@@ -476,7 +476,7 @@ export function motionMarkdown(context = DEFAULT_CONTEXT) {
     'OS query alone would ignore an explicit `motion="full"` opt-in.',
     '',
     '`isReducedMotion(el, cache)` therefore reads the TOKENS at the element first — which encodes',
-    'the whole `theme.scss` cascade without duplicating a selector in JS — and falls back to the raw',
+    'the whole `<al-theme>` axis cascade without duplicating a selector in JS — and falls back to the raw',
     'OS query only for content no theme governs. A zeroed token is authoritative; a non-zero token is',
     'not read as "motion is fine", because an unthemed element resolves to the un-zeroed `:root`',
     'default whatever the reader asked their OS for.',

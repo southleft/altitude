@@ -3,7 +3,8 @@
  *
  * Altitude has TWO authorities for reduced motion and they do not always agree:
  *
- *   a. the `<al-theme motion>` axis — `components/theme/theme.scss:94-121`,
+ *   a. the `<al-theme motion>` axis — the host rules generated from
+ *      `styles/tokens-dtcg/tier-2/axis/motion/*.json` (`.altitude/AXES.md`),
  *      which zeroes the role duration tokens for `motion="reduced"` and, via
  *      its own `@media (prefers-reduced-motion: reduce)` block, for any theme
  *      that has not explicitly opted back in with `motion="full"`;

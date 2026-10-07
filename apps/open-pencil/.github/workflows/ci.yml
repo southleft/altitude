@@ -1,0 +1,266 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Classify changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      scope: ${{ steps.classify.outputs.scope }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+
+      - name: Fetch comparison base
+        env:
+          CI_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: git fetch --no-tags --depth=1 origin "$CI_BASE_SHA"
+
+      - name: Select validation scope
+        id: classify
+        env:
+          CI_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: bun tools/ci/src/classify.ts
+
+  commit-messages:
+    name: Commit messages
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Validate PR commit messages
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if ! bun run check:commits --from "$BASE_SHA" --to "$HEAD_SHA" --verbose; then
+            echo '::error title=Commit messages::Check the messages listed above. Use type(scope): description, for example fix: preserve selection. See CONTRIBUTING.md#commit-messages.'
+            exit 1
+          fi
+
+  documentation:
+    name: Documentation
+    needs: changes
+    if: needs.changes.outputs.scope == 'docs'
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-bun
+      - name: Build documentation type dependencies
+        run: bun run build:packages
+      - name: Validate documentation and generated references
+        run: bun run check:docs
+      - name: Build documentation and check examples
+        run: bun run docs:build
+
+  source-quality:
+    name: Code quality
+    needs: changes
+    if: needs.changes.outputs.scope == 'code'
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-bun
+
+      - name: Generate package declarations
+        run: bun run build:packages
+
+      - name: Verify formatting
+        run: bun run format:check
+
+      - name: Lint TypeScript and Vue
+        run: bun run lint
+
+      - name: Typecheck application and SDKs
+        run: bun run typecheck
+
+      - name: Enforce architecture and type-shape boundaries
+        run: bun run check:arch && bun run test:type-shapes
+
+  package-quality:
+    name: Package integrity
+    needs: changes
+    if: needs.changes.outputs.scope == 'code'
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-bun
+
+      - name: Cache npm consumer downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.npm
+          key: npm-consumers-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: npm-consumers-${{ runner.os }}-
+
+      - name: Build publishable packages
+        run: bun run build:packages
+
+      - name: Validate installed package artifacts with Node and Bun
+        run: bun run test:packages
+
+      - name: Detect unused dependencies and files
+        run: bun run check:deps
+
+      - name: Validate workspace dependency policy
+        run: bun run check:monorepo
+
+  repository-quality:
+    name: Repository hygiene
+    needs: changes
+    if: needs.changes.outputs.scope == 'code'
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-bun
+
+      - name: Validate generated brand assets
+        run: bun run check:icons
+
+      - name: Validate translations
+        run: bun run check:i18n
+
+      - name: Validate documentation links and structure
+        run: bun run check:docs
+
+      - name: Audit critical dependency vulnerabilities
+        run: bun run check:audit
+
+      - name: Scan for committed secrets
+        run: bun run check:secrets
+
+      - name: Test repository tooling
+        run: bun run test:tools
+
+      - name: Detect duplicated product code
+        run: bun run test:dupes
+
+  storybook:
+    name: Component workshop
+    needs: changes
+    if: needs.changes.outputs.scope == 'code'
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-bun
+
+      - name: Build component dependencies
+        run: bun run build:packages
+
+      - name: Build static Storybook
+        run: bun run build-storybook
+
+  native-test-contracts:
+    name: Native app contracts
+    needs: changes
+    if: needs.changes.outputs.scope == 'code'
+    timeout-minutes: 8
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/open-pencil/native-contracts-ci@sha256:64e6b1b50a988c1cefe2b69ac9d58076fd743b18391fa2dbd1d153eba2be9521
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop -> target
+          key: native-test
+
+      - uses: ./.github/actions/setup-bun
+
+      - name: Typecheck native interaction tests
+        run: bun run check:native-test
+
+      - name: Generate native brand assets
+        run: bun run generate:icons --target desktop
+
+      - name: Compile native-test Tauri feature
+        run: cargo check --manifest-path desktop/Cargo.toml --features native-test
+
+  unit-tests:
+    needs: changes
+    if: needs.changes.outputs.scope == 'code'
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        group: [app, cli, core, dom, fig, mcp, render, scene-graph, vue]
+    name: Unit tests — ${{ matrix.group }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-bun
+        with:
+          lfs: 'true'
+          # Quick shards read only the small fixtures; heavy-tests.yml pulls the large .fig corpora.
+          lfs-include: tests/fixtures/gold-preview.fig,tests/fixtures/circle-text.fig,tests/fixtures/fonts/*
+
+      - name: Build shared Core test dependency
+        run: bun --filter @open-pencil/core build
+
+      - name: Run ${{ matrix.group }} unit tests
+        run: bun tools/unit-tests/src/run.ts "${{ matrix.group }}"
+
+  result:
+    name: CI result
+    needs: [changes, commit-messages, documentation, source-quality, package-quality, repository-quality, storybook, native-test-contracts, unit-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      - name: Require successful checks for the selected scope
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: bun tools/ci/src/gate.ts

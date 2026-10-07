@@ -44,3 +44,10 @@
 # as _headers beside it. See pages-root/README.md.
 
 /    /docs/    302
+
+# OpenPencil canvas editor (apps/open-pencil), built into dist/open-pencil/ by
+# build:app-open-pencil. Everything UNDER /open-pencil/ is served through the password
+# gate in functions/open-pencil/_middleware.js, and Cloudflare does not apply this file
+# to Function-served requests — so the SPA fallback lives in that middleware, not here.
+# A rewrite rule here would also shadow the real JS/wasm files (redirects win over assets).
+/open-pencil    /open-pencil/    301

@@ -5,9 +5,9 @@
  * Foundations documents the token layer that DESCRIBES the system; this
  * documents the layer that MOVES it. Same rule applies: nothing here is typed.
  * The durations, curves and travel distances are read from the built token
- * layer, the `<al-theme motion>` matrix is parsed out of `theme.scss` (the role
- * tokens have no `:root` default, so the stylesheet is the only place the
- * matrix exists), and the choreography tokens and keyframe presets are imported
+ * layer, the `<al-theme motion>` matrix is read from the generated axis manifest
+ * (`dist/css/axes.json`, built from `tokens-dtcg/tier-2/axis/motion/` — the role
+ * tokens have no `:root` default, so tokens.json cannot carry them), and the choreography tokens and keyframe presets are imported
  * from the published runtime. See `src/lib/motion.mjs`.
  *
  * WHY EVERY DEMO SITS INSIDE ONE NESTED `<al-theme>`
@@ -55,8 +55,8 @@ const distances = travelDistances();
 const axis = motionAxis();
 
 /**
- * Does THIS brand move any of it? The matrix is parsed from the brand-agnostic
- * `theme.scss`; this reads the brand's own partial, so the page reports
+ * Does THIS brand move any of it? The matrix comes from the brand-agnostic
+ * motion axis tokens; this reads the brand's own partial, so the page reports
  * brand-independence from a reading rather than asserting it.
  */
 const brandMotion = brandMotionOverrides(project.brand);
@@ -164,8 +164,8 @@ await animatePreset(cardEl, 'blur-up', { delay: '80ms' });`;
 
 const REDUCED_SAMPLE = `import { createCache, isReducedMotion } from '@southleft/al-web-components/motion';
 
-// Reads the TOKENS at \`el\` first, which encodes theme.scss's
-// whole cascade including the accessibility-first
+// Reads the TOKENS at \`el\` first, which encodes the <al-theme>
+// axis's whole cascade including the accessibility-first
 // \`:not([motion='full'])\` rule, and only falls back to the raw
 // OS query for content no <al-theme> governs.
 if (isReducedMotion(el, createCache())) {
@@ -333,7 +333,8 @@ const TIERS = [
               <span>{axis.properties.length} PROPERTIES</span>
             </div>
             <p class="t-body-md motion-lede">
-              Read from <code>components/theme/theme.scss</code>. Every block asserts the complete
+              Read from the motion axis tokens, <code>tokens-dtcg/tier-2/axis/motion/</code>, as
+              the token build emits them. Every block asserts the complete
               set even where a value is unchanged — custom properties inherit, so a partial block
               would mean "adopt whatever an outer <code>&lt;al-theme&gt;</code> decided" rather than
               "leave those alone". <code>initial</code> is not a value: it computes to the

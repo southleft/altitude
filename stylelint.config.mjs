@@ -93,6 +93,8 @@ const COLOR_PROPERTIES = ['/color$/', 'fill', 'stroke'];
 export default {
   customSyntax: 'postcss-scss',
   ignoreFiles: [
+    // OpenPencil uses Tailwind and its own lint gate.
+    'apps/open-pencil/**',
     '**/node_modules/**',
     '**/dist/**',
     '**/dist-v5/**',
@@ -154,11 +156,48 @@ export default {
     'csstools/value-no-unknown-custom-properties': [
       true,
       {
-        importFrom: [knownCustomProperties(), componentLocalCustomProperties()],
+        importFrom: [knownCustomProperties(), componentLocalCustomProperties(), axisCustomProperties()],
       },
     ],
   },
 };
+
+/**
+ * <al-theme> AXIS custom properties — what the density / contrast / motion /
+ * shape host rules declare (the shape and motion ROLE tokens among them).
+ *
+ * They have no `:root` value by design (`.altitude/AXES.md` §2.3), so the
+ * digest above never lists them, and the rules are generated into
+ * `styles/dist-v5/`, which is gitignored and skipped. Read the TRACKED source
+ * instead — `styles/tokens-dtcg/tier-2/axis/<axis>/<mode>.json` — so a bare
+ * clone lints the same as a built one. A token every mode marks
+ * `css: "omit"` (the motion `transition` composites) is never declared, so it
+ * stays unknown: reading it through var() is a real mistake.
+ */
+function axisCustomProperties() {
+  const root = path.join(REPO_ROOT, 'libs', 'al-web-components', 'styles', 'tokens-dtcg', 'tier-2', 'axis');
+  const declared = {};
+  const walk = (node, segs) => {
+    if (!node || typeof node !== 'object' || Array.isArray(node)) return;
+    if ('$value' in node) {
+      if (node.$extensions?.['org.altitude.axis']?.css === 'omit') return;
+      const name = `--al-${segs.filter((s) => s !== '@').join('-')}`;
+      declared[name] ??= typeof node.$value === 'string' ? node.$value : JSON.stringify(node.$value);
+      return;
+    }
+    for (const [key, child] of Object.entries(node)) if (!key.startsWith('$')) walk(child, [...segs, key]);
+  };
+  if (fs.existsSync(root)) {
+    for (const axis of fs.readdirSync(root)) {
+      const dir = path.join(root, axis);
+      if (!fs.statSync(dir).isDirectory()) continue;
+      for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.json'))) {
+        walk(JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')), []);
+      }
+    }
+  }
+  return { 'custom-properties': declared };
+}
 
 /**
  * COMPONENT-LOCAL custom properties — the ones a component declares on its own

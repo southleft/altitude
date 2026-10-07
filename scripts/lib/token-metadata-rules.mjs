@@ -146,6 +146,7 @@ export function otherTypeCssProperties(pathStr) {
   if (pathStr.includes('animation.duration')) return ['animation-duration', 'transition-duration'];
   if (pathStr.includes('animation.distance')) return ['transform'];
   if (pathStr.includes('animation.timing')) return ['animation-timing-function', 'transition-timing-function'];
+  if (pathStr.includes('animation.transition')) return ['transition'];
   if (pathStr.startsWith('z-index')) return ['z-index'];
   return [];
 }
@@ -153,6 +154,7 @@ export function otherTypeCssPropertyRoots(pathStr) {
   if (pathStr.includes('animation.duration')) return ['animation-duration', 'transition-duration'];
   if (pathStr.includes('animation.distance')) return ['transform'];
   if (pathStr.includes('animation.timing')) return ['animation-timing-function', 'transition-timing-function', 'animation', 'transition'];
+  if (pathStr.includes('animation.transition')) return ['transition'];
   if (pathStr.startsWith('z-index')) return ['z-index'];
   return [];
 }
@@ -299,7 +301,7 @@ export const FAMILY_USAGE_RULES = {
   'theme.icon': 'Icon sizing role scale (xs…lg), aliasing tier-1 icon.*. Legal CSS surface: width, height (both set together on <al-icon>).',
   'theme.layout.height': 'Single member (header) — a hand-authored 80px, not aliased to any tier-1 primitive. Legal CSS surface: height, min-height.',
   'theme.layout.max-width': 'Content-measure scale (xs…xxl), aliasing tier-1 layout.max-width.*. Legal CSS surface: max-width. layout.scss reads this tier directly as of this session (previously bypassed it — see spec Findings "tier bypass").',
-  'theme.opacity': 'Single member (disabled): 0.40 at contrast="normal", raised to 0.80 (tier-1 opacity.80) at contrast="more" via a dedicated :host([contrast="more"]) reset — the R3 contrast-axis fix this session. Legal CSS surface: opacity, on any component signalling a disabled state.',
+  'theme.opacity': 'Single member (disabled): 0.40 at contrast="normal", raised to 1.00 (tier-1 opacity.100) at contrast="more". Both values are the modes of the contrast axis, tier-2/axis/contrast/normal.json and more.json, emitted as <al-theme> host rules. Legal CSS surface: opacity, on any component signalling a disabled state.',
   'theme.size': 'Control heights for interactive form controls (button, input, select, search, stepper) — control-sm 32px / control 40px / control-lg 48px, aliasing tier-1 space.32/40/48. The v2 canvas sizes every control from this scale rather than from padding plus line-height, so a type-scale change cannot silently move a control height. Legal CSS surface: height, min-height, block-size.',
   'theme.space': 'Semantic spacing roles (not a 1:1 alias of the tier-1 space scale — has its own role names). Legal CSS surface: margin, padding, gap.',
 
@@ -321,6 +323,10 @@ export const FAMILY_USAGE_RULES = {
   'theme.box-shadow': 'Semantic elevation roles (xs…xl), aliasing tier-1 box-shadow.*. Legal CSS surface: box-shadow.',
   'theme.animation.duration': 'Semantic motion-duration roles, wired into 22 component stylesheets this session via var(--role, var(--legacy)) (R3, full legacy call-site coverage). Legal CSS surface: animation-duration, transition-duration.',
   'theme.animation.timing': 'Single semantic easing-curve role, same var(--role, var(--legacy)) wiring as duration. Legal CSS surface: animation-timing-function, transition-timing-function.',
+  'theme.animation.duration.role': 'Motion-axis duration ROLES (fast: micro-interactions such as hover and press; base: disclosure and in-place change; slow: overlays entering or leaving). Defined only in the motion axis modes, tier-2/axis/motion/<mode>.json, and emitted as <al-theme> host rules — never on :root (.altitude/AXES.md §2.3). Always read with the legacy fallback: var(--al-theme-animation-duration-role-<role>, var(--al-theme-animation-duration)), or -long for slow. See .altitude/MOTION.md. Legal CSS surface: animation-duration, transition-duration.',
+  'theme.animation.timing.role': 'Motion-axis easing ROLES (standard: every ordinary transition; emphasized: a change that should draw the eye). Defined only in tier-2/axis/motion/<mode>.json, emitted as <al-theme> host rules, never on :root. Read as var(--al-theme-animation-timing-role-<role>, var(--al-theme-animation-timing)). See .altitude/MOTION.md. Legal CSS surface: animation-timing-function, transition-timing-function.',
+  'theme.animation.transition': 'Motion USE CASES as DTCG transition composites (hover, expand, overlay, emphasis): which duration role pairs with which easing role. Design-tool and importer data only — never emitted as a custom property, because a :root composite would freeze its var() references (.altitude/AXES.md §2.3). Components get the same pairing from the al-motion-transition() Sass mixin. See .altitude/MOTION.md.',
+  'theme.border.radius.role': 'Shape-axis corner-radius ROLES (action: buttons and interactive controls; control: form-control boxes; surface: containers; indicator: avatars and badge dots). Defined only in tier-2/axis/shape/<mode>.json and emitted as <al-theme> host rules, never on :root, so the brand-aware fallback each component writes wins when shape is unset: var(--al-theme-border-radius-role-<role>, var(--al-theme-border-radius<-step>)). Legal CSS surface: border-radius.',
 
   // ---- tier-3 ----
   'theme.color': 'Tier-3 theme-level alias layer. Its one member today, focus-ring, is the brand/mode-restatable focus indicator colour (R4, this session) — consumed by the al-focus()/al-focus-inset() mixins as `outline: <width> solid var(--al-theme-color-focus-ring)`. Legal CSS surface: outline, outline-color, border-color.',

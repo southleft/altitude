@@ -1,0 +1,93 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+coverage/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+*.local
+Caddyfile.dev
+
+# Editors, IDEs, and OS metadata
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.ruby-lsp/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test and dev-server artifacts
+test-results/
+playwright-report/
+blob-report/
+storybook-static/
+.publish/
+.npm-packages/
+.vite/
+.turbo/
+
+# Tauri updater private signing keys
+/desktop/*.key
+!/desktop/*.key.pub
+
+# Generated from assets/brand by tools/brand (never hand-edit these outputs)
+/.cache/brand/
+/.cache/brand.lock/
+/public/brand/
+/public/favicon.ico
+/public/apple-touch-icon.png
+/packages/docs/public/brand/
+/packages/docs/public/favicon.ico
+/packages/docs/public/apple-touch-icon.png
+/desktop/icons/
+
+# Copied from node_modules at build time
+public/canvaskit.wasm
+public/canvaskit-webgpu/
+
+# Documentation build/cache output
+packages/docs/.vitepress/cache/
+packages/docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+
+# Cloudflare/Wrangler local state
+.wrangler/
+packages/collab/.wrangler/
+
+# External/generated dependency checkouts
+packages/core/vendor/canvaskit-webgpu/
+patches/skia-webgpu/
+vue-stream-markdown/
+
+# Generated type/component declarations
+components.d.ts
+
+# Git worktrees for parallel agent work
+.worktrees/
+
+# Agent scratch space (reviews, plans, test artifacts)
+scratch/
+
+# OpenCode
+.opencode/
+
