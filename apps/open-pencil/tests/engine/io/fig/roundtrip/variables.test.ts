@@ -117,6 +117,45 @@ describe('variable roundtrip', () => {
     expect(Object.keys(reimportedRect.boundVariables)).toContain('strokes/0/color')
   })
 
+  test('library and soft-deleted variable sources survive export → re-import', async () => {
+    await initCodec()
+
+    const graph = new SceneGraph()
+    const local = graph.createCollection('Local')
+    const fontSize = graph.createVariable('font/size', 'FLOAT', local.id, 16)
+    const library = graph.createCollection('text semantic')
+    Object.assign(library, { key: 'set-key', libraryKey: 'lk-1' })
+    const fontStyle = graph.createVariable('font/style', 'STRING', library.id, 'Semi Bold')
+    Object.assign(fontStyle, { key: 'style-key', version: '1:2', libraryKey: 'lk-1' })
+    const deleted = graph.createCollection('Old')
+    deleted.deleted = true
+    graph.createVariable('old/space', 'FLOAT', deleted.id, 4)
+
+    const page = graph.getPages()[0]
+    const text = graph.createNode('TEXT', page.id, { name: 'Label', text: 'Label', fontSize: 16 })
+    graph.bindVariable(text.id, 'fontSize', fontSize.id)
+    graph.bindVariable(text.id, 'fontStyle', fontStyle.id)
+
+    const exported = await exportFigFile(graph)
+    const reimported = await parseFigFile(exported.buffer as ArrayBuffer)
+
+    const byName = new Map([...reimported.variableCollections.values()].map((c) => [c.name, c]))
+    expect(byName.get('Local')?.libraryKey).toBeUndefined()
+    expect(byName.get('text semantic')).toMatchObject({ key: 'set-key', libraryKey: 'lk-1' })
+    expect(byName.get('Old')?.deleted).toBe(true)
+
+    const label = expectDefined(
+      [...reimported.getAllNodes()].find((n) => n.name === 'Label'),
+      'Label'
+    )
+    const boundStyle = expectDefined(
+      reimported.variables.get(label.boundVariables.fontStyle),
+      'font style binding'
+    )
+    expect(boundStyle).toMatchObject({ name: 'font/style', key: 'style-key', libraryKey: 'lk-1' })
+    expect(reimported.variables.get(label.boundVariables.fontSize)?.name).toBe('font/size')
+  })
+
   test('node-scoped variable modes survive export → re-import', async () => {
     await initCodec()
 

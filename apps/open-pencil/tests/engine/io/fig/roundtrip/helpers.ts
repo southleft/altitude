@@ -250,13 +250,15 @@ function verifyAEntries(
       }
     }
     if (aliasA?.assetRef) {
-      const found = bEntries.find((entryB) => {
+      // One library variable may bind several fields (all four corner radii, say).
+      const sameRef = bEntries.filter((entryB) => {
         const aliasB = entryB.variableData?.value?.alias
         return (
           aliasB?.assetRef && JSON.stringify(aliasB.assetRef) === JSON.stringify(aliasA.assetRef)
         )
       })
-      if (found && found.variableField !== entryA.variableField) {
+      const found = sameRef[0]
+      if (found && !sameRef.some((entryB) => entryB.variableField === entryA.variableField)) {
         ctx.errors.push({
           path: ctx.path,
           key: ctx.key,

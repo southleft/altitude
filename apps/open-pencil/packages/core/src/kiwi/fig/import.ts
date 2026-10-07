@@ -23,6 +23,7 @@ import {
   buildAssetRefMap,
   buildVariableColorResolver,
   importCollections,
+  importLibraryVariableModes,
   importVariableBindings,
   importVariableEntries
 } from '#core/kiwi/fig/variables'
@@ -335,7 +336,13 @@ export function importNodeChanges(
 
   importCollections(changeMap, graph)
   importVariableEntries(changeMap, parentMap, graph, assetRefs)
-  importVariableBindings(changeMap, guidToNodeId, graph)
+  importVariableBindings(changeMap, guidToNodeId, graph, assetRefs)
+  importLibraryVariableModes(
+    changeMap,
+    new Map([...guidToNodeId, ...canvasIdToPageId]),
+    graph,
+    assetRefs
+  )
   remapComponentIds(graph, guidToNodeId)
   remapInstanceSwapPropertyValues(graph, guidToNodeId)
   applyVariantPropSpecs(graph)
