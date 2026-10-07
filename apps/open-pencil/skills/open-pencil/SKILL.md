@@ -219,6 +219,16 @@ Authentication is enabled by default with an automatically generated token. `OPE
 
 The CLI defaults the filesystem root to the home directory on Windows and the current working directory elsewhere. Set `OPENPENCIL_MCP_ROOT` to an explicit narrow directory rather than relying on that default.
 
+### Hosted web editor (remote relay)
+
+A hosted browser build with a relay URL connects agents through a remote Streamable HTTP server instead of a local process. The user creates a connection key in **Connect AI** and copies the generated one-line command:
+
+```bash
+claude mcp add --scope user --transport http open-pencil https://<relay>/mcp --header "Authorization: Bearer <key>"
+```
+
+Tools act on the browser tab that holds the key. If a call reports that no OpenPencil tab is connected, ask the user to open the editor and keep the tab open; do not retry in a loop. `eval` and file tools (`open_file`, `save_file`, `new_document`) are not available through the relay.
+
 ### MCP workflow
 
 1. **Open/create a document** — `open_file { path }` within the effective filesystem root, or `new_document {}`.

@@ -106,8 +106,68 @@ The build adds roughly 4–5 minutes to the Pages build. The editor's own
 which reads them only from the site root. The root rules live in `pages-root/`.
 
 Documents stay in each person's browser (IndexedDB) unless saved to a file. Hosting does
-not create shared storage. Connecting an AI agent works from the desktop app or a local
-`bun run dev`, not from the hosted site (see the Connect AI popover).
+not create shared storage. AI agents reach the hosted editor through the hosted MCP relay
+below; without it, Connect AI says agents need the desktop app or a local `bun run dev`.
+
+## Hosted MCP relay
+
+`packages/relay` is a Cloudflare Worker (`altitude-open-pencil-mcp`) that lets Claude Code,
+Cursor and other MCP clients drive the hosted editor:
+
+```text
+agent ──Streamable HTTP MCP──▶ Worker ──▶ Durable Object (one per connection key) ◀──WebSocket── editor tab
+```
+
+The relay stores no document and no tool definitions. Each person creates a connection key
+in Connect AI; the tab connects to the relay with it, and agents send it as
+`Authorization: Bearer <key>`. Tool calls run in the tab through the same path as local
+MCP. Behaviour, limits and the threat model: `packages/docs/programmable/mcp-server.md`
+("Hosted editor (remote relay)"). In short: a key lets its holder edit whatever is open in
+that person's tab, so treat it like a password and use **Regenerate key** to revoke it.
+A later version will bind keys to the GitHub sign-in instead.
+
+It lives inside the Bun workspace (shared TypeScript, oxlint and test runner, and the
+protocol module the editor imports), so it is excluded from Altitude's pnpm workspace,
+ESLint, Stylelint and export scans along with the rest of `apps/open-pencil`.
+
+**One-time setup (Cloudflare dashboard, Workers Builds):**
+
+1. Workers & Pages → **Create** → Workers → **Import a repository** → `southleft/altitude`.
+2. Project name: `altitude-open-pencil-mcp` (must match `name` in `wrangler.toml`).
+3. Build configuration:
+   - Root directory: `apps/open-pencil/packages/relay`
+   - Build command: `cd ../.. && bun install --frozen-lockfile --filter @open-pencil/relay`
+   - Deploy command: `bunx wrangler@4 deploy`
+   - Non-production branch deploy command: `bunx wrangler@4 versions upload`
+4. Build variables: `BUN_VERSION` = `1.4.2` and `SKIP_DEPENDENCY_INSTALL` = `1` (the
+   lockfile is two levels up, so the build command installs instead). Use `bunx`, not
+   `npx`: npm reads the parent Bun workspace's `overrides` and refuses to run.
+5. Deploy. `wrangler deploy` creates the `OpenPencilRelay` Durable Object class from the
+   `v1` migration (`new_sqlite_classes`); nothing else to provision. Check
+   `https://altitude-open-pencil-mcp.<account-subdomain>.workers.dev/health` returns `ok`.
+6. Allowed tab origins are `ALLOWED_ORIGINS` in `wrangler.toml` (production, branch
+   previews, localhost). Change them there: each deploy replaces dashboard values.
+   `RELAY_TIMEOUT_MS`, `RELAY_RATE_BURST` and `RELAY_RATE_PER_SECOND` are optional overrides.
+7. Docs Pages project → Settings → Variables and Secrets → add
+   `VITE_OPENPENCIL_RELAY_URL` = `https://altitude-open-pencil-mcp.<account-subdomain>.workers.dev`
+   (plain text, Production and Preview) → redeploy. `scripts/build-open-pencil.mjs` passes
+   it to the editor build. Without it, the hosted Connect AI popover keeps its "not
+   available on the web" message.
+
+Then in the editor: Connect AI → **Create connection key** → copy the one-line command,
+for example
+`claude mcp add --scope user --transport http open-pencil https://altitude-open-pencil-mcp.<account-subdomain>.workers.dev/mcp --header "Authorization: Bearer <key>"`.
+
+Local development:
+
+```sh
+cd apps/open-pencil/packages/relay
+bun run dev                     # wrangler dev, http://127.0.0.1:8787
+bun test tests && bun run typecheck
+bunx wrangler@4 deploy --dry-run   # proves it bundles
+```
+
+Build or run the editor with `VITE_OPENPENCIL_RELAY_URL=http://127.0.0.1:8787` to use it.
 
 ## Pulling upstream OpenPencil updates
 
