@@ -39,3 +39,43 @@ export const agentSetupCommands: AgentSetupCommands = {
 export function developmentHTTPCommand(endpoint: string): string {
   return `claude mcp add --transport http ${MCP_CLIENT_SERVER_NAME} ${endpoint}`
 }
+
+/** The hosted relay needs no local install step. */
+export type RelaySetupCommands = Pick<AgentSetupCommands, 'claudeCode' | 'clientConfig'>
+
+/** Shown in place of the connection key until the user reveals it. */
+export const RELAY_KEY_MASK = '•'.repeat(16)
+
+/**
+ * Setup commands for the hosted relay. The Claude Code command stays on one
+ * line because PowerShell does not accept `\` continuations.
+ */
+export function relaySetupCommands(mcpURL: string, key: string): RelaySetupCommands {
+  const authorization = `Authorization: Bearer ${key}`
+  return {
+    claudeCode: `claude mcp add --scope user --transport http ${MCP_CLIENT_SERVER_NAME} ${mcpURL} --header "${authorization}"`,
+    clientConfig: JSON.stringify(
+      {
+        mcpServers: {
+          [MCP_CLIENT_SERVER_NAME]: {
+            type: 'http',
+            url: mcpURL,
+            headers: { Authorization: `Bearer ${key}` }
+          }
+        }
+      },
+      null,
+      2
+    )
+  }
+}
+
+/** What Connect AI renders for the hosted relay. Holds a key only while revealed. */
+export interface RelayConnectionView {
+  mcpURL: string
+  keyConfigured: boolean
+  revealedKey: string | null
+  busy: boolean
+  keyError: boolean
+  lastRequestAt: number | null
+}

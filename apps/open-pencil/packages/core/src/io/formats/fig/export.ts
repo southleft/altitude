@@ -13,7 +13,12 @@ import {
 import { initCodec, getCompiledSchema, getSchemaBytes } from '@open-pencil/kiwi/fig/codec'
 import type { NodeChange } from '@open-pencil/kiwi/fig/codec'
 import { decodeBinarySchema, compileSchema, ByteBuffer } from '@open-pencil/kiwi/schema-runtime'
-import type { SceneGraph, VariableValue } from '@open-pencil/scene-graph'
+import type {
+  SceneGraph,
+  Variable,
+  VariableCollection,
+  VariableValue
+} from '@open-pencil/scene-graph'
 import type { GUID } from '@open-pencil/scene-graph/primitives'
 
 import { decodeBase64 } from '#core/bytes'
@@ -215,6 +220,21 @@ function assignComponentPropertyGuids(
   }
 }
 
+/**
+ * Library copies and soft-deleted entries keep their Figma source flags, so a round trip
+ * does not promote them to live local collections.
+ */
+function variableSourceToKiwi(owner: Variable | VariableCollection): Partial<KiwiNodeChange> {
+  const fields: Partial<KiwiNodeChange> = {}
+  if ('modes' in owner) {
+    if (owner.key) fields.key = owner.key
+    if (owner.version) fields.version = owner.version
+  }
+  if (owner.libraryKey) fields.sourceLibraryKey = owner.libraryKey
+  if (owner.deleted) fields.isSoftDeleted = true
+  return fields
+}
+
 function appendVariableNodeChanges(
   graph: SceneGraph,
   nodeChanges: KiwiNodeChange[],
@@ -237,7 +257,8 @@ function appendVariableNodeChanges(
         const mGuid = modeIdToGuid.get(m.modeId) ?? stringToGuid(m.modeId)
         return { id: mGuid, name: m.name, sortPosition: fractionalPosition(i) }
       }),
-      ...variableMetadataToKiwi(col)
+      ...variableMetadataToKiwi(col),
+      ...variableSourceToKiwi(col)
     })
 
     appendVariablesForCollection(
@@ -297,6 +318,7 @@ function appendVariablesForCollection(
     // buildAssetRefMap can resolve assetRef to guid on reimport.
     if (variable.key) nc.key = variable.key
     if (variable.version) nc.version = variable.version
+    Object.assign(nc, variableSourceToKiwi(variable))
     nodeChanges.push(nc)
   }
 }

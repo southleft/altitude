@@ -45,7 +45,7 @@ Each page has its own canvas and viewport state.
 
 The Home workspace lists recent local documents and documents from configured storage providers. Use grid or list view, or open multiple selected files into separate editor tabs.
 
-In **Settings → General → Recovery**, **Automatically preserve unsaved work** controls local recovery copies. With recovery enabled, unsaved documents without a file path remain recoverable even after their tabs close. When OpenPencil offers **Recover unsaved work**, choose **Restore** to reopen a document or **Discard** to remove its recovery copy.
+In **Settings → General → Recovery**, **Automatically preserve unsaved work** controls local recovery copies. With recovery enabled, unsaved changes remain recoverable until they are saved, including changes to documents opened from a file or a storage provider, and even after their tabs close. A restored document opens as an unsaved copy; use **Save As** to replace the original file. When OpenPencil offers **Recover unsaved work**, choose **Restore** to reopen a document or **Discard** to remove its recovery copy.
 
 Disabling recovery stops automatic preservation and removes recovery copies owned by currently open documents. It does not bulk-delete snapshots from previously closed documents. Recovery is local to this installation/browser profile; it is not a replacement for saving a file, cloud synchronization, or a backup.
 

@@ -45,21 +45,19 @@ function setup(
 ) {
   const state = reactive({ ...createDefaultEditorState('page-1'), documentName: 'Agent draft' })
   const store = injectedStore ?? createMemoryRecoveryStore()
-  let writable = false
   const enabled = ref(initialEnabled)
   const recovery = createDocumentRecovery({
     state,
     store,
     recoveryId: 'recovery-1',
-    hasWritableSource: () => writable,
     isEnabled: () => enabled.value,
+    subscribePageHidden: () => () => undefined,
     buildFigFile
   })
   return {
     state,
     store,
     recovery,
-    setWritable: (value: boolean) => (writable = value),
     setEnabled: (value: boolean) => (enabled.value = value)
   }
 }
@@ -130,15 +128,6 @@ describe('document recovery controller', () => {
     recovery.disposeRecovery()
   })
 
-  test('does not persist documents with writable sources', async () => {
-    const { state, store, recovery, setWritable } = setup()
-    setWritable(true)
-    state.sceneVersion = 1
-    await recovery.persistNow()
-    expect(await store.list()).toEqual([])
-    recovery.disposeRecovery()
-  })
-
   test('recovery coalesces 100 changes during encoding to the latest scene version', async () => {
     let release: (() => void) | null = null
     let calls = 0
@@ -183,7 +172,6 @@ describe('document recovery controller', () => {
       state,
       store,
       recoveryId: 'recovery-1',
-      hasWritableSource: () => false,
       buildFigFile: () => new Uint8Array([1])
     })
     state.sceneVersion = 1
@@ -213,7 +201,6 @@ describe('document recovery controller', () => {
       state,
       store: deferred.store,
       recoveryId: 'recovery-1',
-      hasWritableSource: () => false,
       buildFigFile: () => new Uint8Array([1])
     })
     state.sceneVersion = 1
@@ -234,7 +221,6 @@ describe('document recovery controller', () => {
       state,
       store: deferred.store,
       recoveryId: 'recovery-1',
-      hasWritableSource: () => false,
       buildFigFile: () => new Uint8Array([1])
     })
     state.sceneVersion = 1
@@ -255,7 +241,6 @@ describe('document recovery controller', () => {
       state,
       store: deferred.store,
       recoveryId: 'previous',
-      hasWritableSource: () => false,
       buildFigFile: () => new Uint8Array([1])
     })
     state.sceneVersion = 1
@@ -278,6 +263,79 @@ describe('document recovery controller', () => {
     await recovery.markProtectedVersion(1)
 
     expect((await store.read('recovery-1'))?.sceneVersion).toBe(2)
+    recovery.disposeRecovery()
+  })
+
+  test('background snapshots wait for interactive edits; close and reload flushes do not', async () => {
+    let builds = 0
+    let interactive = true
+    let hide: (() => void) | null = null
+    const state = reactive({ ...createDefaultEditorState('page-1'), documentName: 'Draft' })
+    const store = createMemoryRecoveryStore()
+    const recovery = createDocumentRecovery({
+      state,
+      store,
+      recoveryId: 'recovery-1',
+      isInteractiveEditing: () => interactive,
+      subscribePageHidden: (onHidden) => {
+        hide = onHidden
+        return () => (hide = null)
+      },
+      buildFigFile: () => {
+        builds++
+        return new Uint8Array([1])
+      }
+    })
+    state.sceneVersion = 1
+
+    hide?.()
+    await Promise.resolve()
+    expect(builds).toBe(0)
+
+    await recovery.persistNow()
+    expect(builds).toBe(1)
+    expect((await store.read('recovery-1'))?.sceneVersion).toBe(1)
+
+    interactive = false
+    state.sceneVersion = 2
+    hide?.()
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 0)
+    })
+    expect(builds).toBe(2)
+    expect((await store.read('recovery-1'))?.sceneVersion).toBe(2)
+    recovery.disposeRecovery()
+    expect(hide).toBeNull()
+  })
+
+  test('never runs two snapshot encodes at once', async () => {
+    let active = 0
+    let maxActive = 0
+    let release: (() => void) | null = null
+    const { state, store, recovery } = setup(async () => {
+      active++
+      maxActive = Math.max(maxActive, active)
+      if (!release) {
+        await new Promise<void>((resolve) => {
+          release = resolve
+        })
+      }
+      active--
+      return new Uint8Array([1])
+    })
+    state.sceneVersion = 1
+    const first = recovery.persistNow()
+    await Promise.resolve()
+    state.sceneVersion = 2
+    const second = recovery.persistNow()
+    state.sceneVersion = 3
+    const third = recovery.persistNow()
+    const releaseFirst = () => release?.()
+    releaseFirst()
+    await Promise.all([first, second, third])
+
+    expect(maxActive).toBe(1)
+    expect((await store.read('recovery-1'))?.sceneVersion).toBe(3)
     recovery.disposeRecovery()
   })
 })

@@ -1,0 +1,26 @@
+# Hosted MCP relay for the OpenPencil web editor. Setup: apps/open-pencil/ALTITUDE.md
+# ("Hosted MCP relay") and packages/docs/programmable/mcp-server.md.
+name = "altitude-open-pencil-mcp"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "RELAY"
+class_name = "OpenPencilRelay"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["OpenPencilRelay"]
+
+[vars]
+# Comma-separated; `scheme://*.host` wildcards and `:*` ports are allowed.
+ALLOWED_ORIGINS = "https://altitude.pages.dev,https://*.altitude.pages.dev,http://localhost:*,http://127.0.0.1:*,https://*.localhost"
+RELAY_TIMEOUT_MS = "60000"
+
+[observability]
+enabled = true
+
+# Request headers carry bearer keys; keep per-request invocation logs off.
+[observability.logs]
+invocation_logs = false

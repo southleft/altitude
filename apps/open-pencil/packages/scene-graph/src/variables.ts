@@ -198,7 +198,7 @@ function resolveVariableWith(
 ): VariableValue | undefined {
   if (visited.has(variableId)) return undefined
   const variable = graph.variables.get(variableId)
-  if (!variable) return undefined
+  if (!variable || isVariableDeleted(graph, variable)) return undefined
   const collection = graph.variableCollections.get(variable.collectionId)
   const preferredModeId =
     modeFor(variable.collectionId) ?? getActiveModeId(graph, variable.collectionId)
@@ -318,6 +318,27 @@ export function getVariablesByType(graph: SceneGraph, type: VariableType): Varia
   return [...graph.variables.values()].filter((v) => v.type === type)
 }
 
+/**
+ * Soft-deleted variables, and variables of a soft-deleted collection, stay in the graph for
+ * round-trip but behave as Figma treats them: not listed and not resolved.
+ */
+export function isVariableDeleted(graph: SceneGraph, variable: Variable): boolean {
+  return (
+    variable.deleted === true ||
+    graph.variableCollections.get(variable.collectionId)?.deleted === true
+  )
+}
+
+/** A collection authored in this document: neither copied from a library nor soft-deleted. */
+export function isLocalVariableCollection(collection: VariableCollection): boolean {
+  return !collection.libraryKey && collection.deleted !== true
+}
+
+/** Collections copied from subscribed libraries that are still live. */
+export function isLibraryVariableCollection(collection: VariableCollection): boolean {
+  return !!collection.libraryKey && collection.deleted !== true
+}
+
 const SCALAR_BINDING_FIELDS: ReadonlySet<string> = new Set([
   'opacity',
   'width',
@@ -352,7 +373,7 @@ const SCALAR_BINDING_FIELDS: ReadonlySet<string> = new Set([
   'gridColumnGap'
 ])
 
-const STRING_BINDING_FIELDS: ReadonlySet<string> = new Set(['fontFamily'])
+const STRING_BINDING_FIELDS: ReadonlySet<string> = new Set(['fontFamily', 'fontStyle'])
 
 const BOOLEAN_BINDING_FIELDS: ReadonlySet<string> = new Set(['visible'])
 

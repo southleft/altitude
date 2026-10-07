@@ -33,6 +33,7 @@
         "@open-pencil/harness": "workspace:*",
         "@open-pencil/kiwi": "workspace:*",
         "@open-pencil/pen": "workspace:*",
+        "@open-pencil/relay": "workspace:*",
         "@open-pencil/scene-graph": "workspace:*",
         "@open-pencil/vue": "workspace:*",
         "@openrouter/ai-sdk-provider": "^3.0.0",
@@ -346,6 +347,18 @@
       },
       "peerDependencies": {
         "@open-pencil/scene-graph": "workspace:*",
+      },
+    },
+    "packages/relay": {
+      "name": "@open-pencil/relay",
+      "version": "0.15.1",
+      "dependencies": {
+        "valibot": "^1.4.2",
+      },
+      "devDependencies": {
+        "@cloudflare/workers-types": "^4.20251001.0",
+        "@types/bun": "^1.3.14",
+        "typescript": "~5.8.3",
       },
     },
     "packages/scene-graph": {
@@ -790,6 +803,8 @@
     "@clack/core": ["@clack/core@0.4.1", "", { "dependencies": { "picocolors": "^1.0.0", "sisteransi": "^1.0.5" } }, "sha512-Pxhij4UXg8KSr7rPek6Zowm+5M22rbd2g1nfojHJkxp5YkFqiZ2+YLEM/XGVIzvGOcM0nqjIFxrpDwWRZYWYjA=="],
 
     "@clack/prompts": ["@clack/prompts@0.9.1", "", { "dependencies": { "@clack/core": "0.4.1", "picocolors": "^1.0.0", "sisteransi": "^1.0.5" } }, "sha512-JIpyaboYZeWYlyP0H+OoPPxd6nqueG/CmN6ixBiNFsIDHREevjIf0n0Ohh5gr5C8pEDknzgvz+pIJ8dMhzWIeg=="],
+
+    "@cloudflare/workers-types": ["@cloudflare/workers-types@4.20260702.1", "", {}, "sha512-mOhf5TUEB1m2vPrxtqoIGfz0fUC9xyxRDx5gWHy5s+OCo6dcV+g7wI1R7gYCMFohhqF/2y2xeKVwMwCJjfn/WA=="],
 
     "@codemirror/autocomplete": ["@codemirror/autocomplete@6.20.3", "", { "dependencies": { "@codemirror/language": "^6.0.0", "@codemirror/state": "^6.0.0", "@codemirror/view": "^6.17.0", "@lezer/common": "^1.0.0" } }, "sha512-tlosUqb+3BbxCxZdu4tKeRghPFC+QM7q4X5YhKV2eCmPG+1r2F3f4AaSz5sCrFqUtX4Jh20VFTKecl16MgiV9g=="],
 
@@ -1370,6 +1385,8 @@
     "@open-pencil/package-quality-tools": ["@open-pencil/package-quality-tools@workspace:tools/package-quality"],
 
     "@open-pencil/pen": ["@open-pencil/pen@workspace:packages/pen"],
+
+    "@open-pencil/relay": ["@open-pencil/relay@workspace:packages/relay"],
 
     "@open-pencil/release-packages": ["@open-pencil/release-packages@workspace:tools/release-packages"],
 

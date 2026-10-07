@@ -16,6 +16,7 @@ import {
   TEXT_DIRECTION_PLUGIN_KEY,
   upsertPluginData
 } from './plugin-data'
+import { inSourceBindingOrder, rawLibraryBindingEntries } from './variable-bindings'
 import {
   buildStyleOverrideTable,
   encodeVectorNetworkBlob,
@@ -30,7 +31,7 @@ export {
 } from '@open-pencil/kiwi/fig/container'
 import type { NodeChange, VariableConsumptionEntry } from '@open-pencil/kiwi/fig/codec'
 import { guidToString, stringToGuid } from '@open-pencil/kiwi/fig/guid'
-import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import type { SceneGraph, SceneNode, Variable } from '@open-pencil/scene-graph'
 import type { GUID, JSONObject } from '@open-pencil/scene-graph/primitives'
 
 import {
@@ -447,14 +448,26 @@ function serializeGeometry(node: SceneNode, nc: KiwiNodeChange, blobs: Uint8Arra
   }
 }
 
+/** A library variable is referenced by its asset key, as Figma stores it; others by GUID. */
+function variableAliasForExport(
+  variable: Variable,
+  varGuid: GUID
+): { guid: GUID } | { assetRef: { key: string; version?: string } } {
+  if (!variable.libraryKey || !variable.key) return { guid: varGuid }
+  const assetRef: { key: string; version?: string } = { key: variable.key }
+  if (variable.version) assetRef.version = variable.version
+  return { assetRef }
+}
+
 function serializeVariableBindings(
   node: SceneNode,
   nc: KiwiNodeChange,
   graph: SceneGraph,
   varIdToGuid?: Map<string, GUID>
 ): void {
-  if (Object.keys(node.boundVariables).length === 0) return
-  const entries: VariableConsumptionEntry[] = []
+  const libraryEntries = rawLibraryBindingEntries(node, graph)
+  if (Object.keys(node.boundVariables).length === 0 && libraryEntries.size === 0) return
+  const entries: VariableConsumptionEntry[] = [...libraryEntries.values()]
   const roundtripBindings: Record<string, string> = {}
   const typeMap: Record<string, string> = { COLOR: 'COLOR', BOOLEAN: 'BOOLEAN', STRING: 'STRING' }
   for (const [field, varId] of Object.entries(node.boundVariables)) {
@@ -464,21 +477,28 @@ function serializeVariableBindings(
     roundtripBindings[field] = guidToString(varGuid)
 
     const kiwiField = VARIABLE_BINDING_FIELDS[field]
-    if (!kiwiField) continue
+    if (!kiwiField || libraryEntries.has(kiwiField)) continue
     const resolvedType = typeMap[variable.type] ?? 'FLOAT'
+    const alias = variableAliasForExport(variable, varGuid)
+    const aliasData = { value: { alias }, dataType: 'ALIAS', resolvedDataType: resolvedType }
     entries.push({
-      variableData: {
-        value: { alias: { guid: varGuid } },
-        dataType: 'ALIAS',
-        resolvedDataType: resolvedType
-      },
+      // Figma nests a font-style binding inside a FONT_STYLE value.
+      variableData:
+        kiwiField === 'FONT_STYLE'
+          ? ({
+              value: { fontStyleValue: { asString: aliasData } },
+              dataType: 'FONT_STYLE',
+              resolvedDataType: 'FONT_STYLE'
+            } as VariableConsumptionEntry['variableData'])
+          : aliasData,
       variableField: kiwiField
     })
   }
   if (Object.keys(roundtripBindings).length > 0) {
     upsertPluginData(node, BOUND_VARIABLES_PLUGIN_KEY, JSON.stringify(roundtripBindings))
   }
-  if (entries.length > 0) nc.variableConsumptionMap = { entries }
+  if (entries.length > 0)
+    nc.variableConsumptionMap = { entries: inSourceBindingOrder(node, entries) }
 }
 
 export function sceneNodeToKiwi(

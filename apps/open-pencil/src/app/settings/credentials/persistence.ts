@@ -1,6 +1,7 @@
 import { AI_PROVIDERS } from '@open-pencil/core/constants'
 
 import { aiModelSettings, modelConnectionCredentialRef } from '@/app/ai/models'
+import { RELAY_KEY_CREDENTIAL } from '@/app/automation/relay/key'
 import { VECTORIZE_CREDENTIAL_REFS } from '@/app/editor/vectorize/credentials'
 import { mcpConnectionSettings, mcpConnectionCredentialRef } from '@/app/integrations/mcp'
 import { storageCredentialRefs, storageProviderRegistry } from '@/app/integrations/storage'
@@ -39,7 +40,8 @@ export function appCredentialRefs(): CredentialRef[] {
       mcpConnectionCredentialRef(connection.id)
     ),
     ...storageCredentials,
-    ...GITHUB_CREDENTIAL_REFS
+    ...GITHUB_CREDENTIAL_REFS,
+    RELAY_KEY_CREDENTIAL
   ])
 }
 

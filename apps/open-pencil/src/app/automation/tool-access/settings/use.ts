@@ -1,8 +1,12 @@
 import { computed, ref } from 'vue'
 
+import { ALL_TOOLS } from '@open-pencil/core/tools'
+
 import { configurableAITools } from '@/app/ai/tools/catalog'
 import { aiToolOverrides, disabledAITools } from '@/app/ai/tools/preferences'
 import { configurableMCPTools, disabledMCPTools } from '@/app/automation/mcp/preferences'
+import { relayToolDescriptors } from '@/app/automation/relay/catalog'
+import { isRelayMode } from '@/app/automation/relay/config'
 import { openSettingsDialog } from '@/app/settings/dialog'
 
 import type { ToolAccessTarget } from '../types'
@@ -16,8 +20,10 @@ export function openToolAccessSettings(value: ToolAccessTarget) {
 }
 
 export function useToolAccessSettings() {
+  // Hosted builds have no local server to discover tools from; list what the relay offers.
+  const mcpTools = isRelayMode() ? relayToolDescriptors(ALL_TOOLS) : null
   const tools = computed(() =>
-    target.value === 'ai' ? configurableAITools : configurableMCPTools.value
+    target.value === 'ai' ? configurableAITools : (mcpTools ?? configurableMCPTools.value)
   )
   const disabled = computed({
     get: () => (target.value === 'ai' ? disabledAITools.value : disabledMCPTools.value),

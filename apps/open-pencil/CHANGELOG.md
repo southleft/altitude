@@ -18,6 +18,7 @@
 - Give component sets token-driven motion: transitions between variants (hover, press, focus, expand, enter, exit) name a use case whose duration and easing role tokens follow the Motion variable mode, with reduced resolving to instant. Edit them in the Design panel's Motion section, play them on instances with the toolbar's **Motion preview**, export them as role-token `transition` declarations with their fallbacks, and author them with a design JSX `motion` prop or the `set_motion`, `get_motion`, and `preview_motion` MCP tools.
 - Host the web app under a sub-path by building with `OPENPENCIL_BASE` (for example `/open-pencil/`); the renderer, bundled fonts, icons, share links, routes and offline cache follow it.
 - Keep documents in a GitHub repository: sign in with GitHub (or a fine-grained personal access token on desktop and in local development), choose a repository, branch, and folder in **Settings → Version control**, and commit with **Save**. Documents are stored as deterministic, reviewable JSON folders (one file per page, content-addressed images), only changed files are uploaded, commits replay on top of other changes to different files, and edits to the same file stop with options to reload, save as new, or overwrite. The home screen lists and opens documents from the repository.
+- Connect Claude Code, Cursor, and other MCP clients to the hosted web editor through a hosted MCP relay: build with `VITE_OPENPENCIL_RELAY_URL`, create a connection key in **Connect AI**, and paste the one-line `claude mcp add --transport http` command. Tool calls run in the open tab with the same tools, Tool access settings, and undo as the local server; script and file tools are not offered, and **Regenerate key** revokes access.
 
 ### Changed
 
@@ -29,6 +30,11 @@
 - Resolve a variable that aliases a variable in another collection in that collection's active mode (or the layer's explicit mode for it), instead of always its default mode.
 - Show what to update instead of a blank window when the browser or system WebView is too old, naming the detected macOS, Safari, Chrome, Edge, Firefox, WebKitGTK, or WebView2 version and linking a prefilled bug report, and explain a failed start the same way (#744).
 - Start on macOS 13 with WebKit older than Safari 17.4, which previously failed with `Promise.withResolvers is not a function` (#744).
+- List only a `.fig` file's local variable collections in the Variables panel, in Figma's collection, mode, and variable order. Soft-deleted collections and variables and copies of subscribed-library collections no longer appear as extra tabs, and they survive export with their deleted and library flags instead of becoming local collections.
+- Render variable-bound colors, spacing, sizes, and radii from `.fig` files as Figma does: a collection's default mode is its first mode in Figma's order, and layers bound to a deleted variable keep their stored value instead of the deleted variable's.
+- Keep `.fig` bindings to subscribed-library variables, including padding, gap, size, radius, and colors as well as text-style font family, style, size, and line height, so the Design panel shows them as linked; explicit library-collection modes on pages now apply.
+- Save a large `.fig` file opened in the browser back to its file: Chrome's write-permission prompt now appears as soon as you save instead of failing with "User activation is required" after the export. If permission is denied, the save offers a new location or downloads a copy and says so, and autosave waits for permission instead of failing.
+- Keep unsaved changes to documents opened from a file or storage provider recoverable until they are saved, so a failed save or a reload no longer loses them.
 
 ### Performance
 
