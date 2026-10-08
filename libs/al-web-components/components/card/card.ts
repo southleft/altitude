@@ -74,20 +74,6 @@ export class ALCard extends ALElement {
 
     return html`
       <div class="${componentClassNames}">
-        ${this.slotNotEmpty('actions-start') || this.slotNotEmpty('actions-end') ? html`
-          <div class="al-c-card__actions">
-            ${this.slotNotEmpty('actions-start') && html`
-              <div class="al-c-card__actions-start">
-                <slot name="actions-start"></slot>
-              </div>
-            `}
-            ${this.slotNotEmpty('actions-end') && html`
-              <div class="al-c-card__actions-end">
-                <slot name="actions-end"></slot>
-              </div>
-            `}
-          </div>
-        `: html``}
         ${this.slotNotEmpty('image') &&
         html`
           <div class="al-c-card__image">
@@ -106,6 +92,20 @@ export class ALCard extends ALElement {
         <div class="al-c-card__body">
           <slot></slot>
         </div>
+        ${this.slotNotEmpty('actions-start') || this.slotNotEmpty('actions-end') ? html`
+          <div class="al-c-card__actions">
+            ${this.slotNotEmpty('actions-start') && html`
+              <div class="al-c-card__actions-start">
+                <slot name="actions-start"></slot>
+              </div>
+            `}
+            ${this.slotNotEmpty('actions-end') && html`
+              <div class="al-c-card__actions-end">
+                <slot name="actions-end"></slot>
+              </div>
+            `}
+          </div>
+        `: html``}
         ${this.slotNotEmpty('footer') &&
         html`
           <div class="al-c-card__footer">
