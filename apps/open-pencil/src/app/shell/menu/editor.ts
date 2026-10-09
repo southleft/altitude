@@ -2,6 +2,7 @@ import { useEditorCommands } from '@open-pencil/vue'
 import type { EditorCommandId } from '@open-pencil/vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
+import { saveDocument, saveToGitHub } from '@/app/integrations/storage/github/document/entry'
 import { clearRecentFiles, forgetRecentFile, recentLocalFileAt } from '@/app/recent-files'
 import { createSharedEditorMenuActions } from '@/app/shell/menu/editor-actions'
 import { openFileDialog, openFileFromPath } from '@/app/shell/menu/files'
@@ -40,8 +41,9 @@ export function useEditorMenu() {
     close: () => {
       if (activeTab.value) void closeTab(activeTab.value.id)
     },
-    save: () => void store.saveFigFile(),
+    save: () => void saveDocument(store),
     'save-as': () => void store.saveFigFileAs(),
+    'save-to-github': () => saveToGitHub(store),
     'export-selection': () => {
       if (store.state.selectedIds.size > 0) void store.exportSelection(1, 'png')
     },

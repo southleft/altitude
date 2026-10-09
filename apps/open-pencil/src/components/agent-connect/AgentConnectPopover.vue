@@ -2,11 +2,11 @@
 import { useClipboard } from '@vueuse/core'
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { tv } from 'tailwind-variants'
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 import { useAutomationMessages, useCommonMessages } from '@open-pencil/vue'
 
-import type { RelayConnectionView, RelaySetupCommands } from '@/app/automation/mcp/agent/setup'
+import type { RelaySetupCommands } from '@/app/automation/mcp/agent/setup'
 import { useAgentConnection } from '@/app/automation/mcp/agent/use'
 import { toast } from '@/app/shell/ui'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
@@ -21,29 +21,10 @@ const { status, failure, restarting, externallyManaged, developmentCommand, rela
 const open = ref(false)
 const { copy } = useClipboard()
 
-const relayView = computed<RelayConnectionView | null>(() =>
-  relay
-    ? {
-        mcpURL: relay.mcpURL,
-        keyConfigured: relay.keyConfigured.value,
-        revealedKey: relay.revealedKey.value,
-        busy: relay.busy.value,
-        keyError: relay.keyError.value,
-        lastRequestAt: relay.lastRequestAt.value
-      }
-    : null
-)
-
 // A revealed key does not outlive the popover.
 watch(open, (isOpen) => {
   if (!isOpen) relay?.hide()
 })
-
-function toggleRelayKey(): void {
-  if (!relay) return
-  if (relay.revealedKey.value === null) void relay.reveal()
-  else relay.hide()
-}
 
 async function copyRelay(kind: keyof RelaySetupCommands): Promise<void> {
   const command = await relay?.commandFor(kind)
@@ -73,11 +54,14 @@ function openSettings(): void {
         :class="styles.trigger()"
       >
         <span :class="styles.dot()" :data-status="status" aria-hidden="true" />
-        <template v-if="status === 'connected'">{{ automation.agentConnected }}</template>
-        <template v-else>
-          <icon-lucide-sparkles :class="styles.triggerIcon()" />
-          {{ automation.agentConnect }}
-        </template>
+        <icon-lucide-sparkles
+          :class="styles.triggerIcon({ class: styles.triggerStatusIcon() })"
+          :data-status="status"
+          aria-hidden="true"
+        />
+        <span :class="styles.triggerLabel()">{{
+          status === 'connected' ? automation.agentConnected : automation.agentConnect
+        }}</span>
       </button>
     </PopoverTrigger>
 
@@ -97,12 +81,12 @@ function openSettings(): void {
           :failure="failure"
           :restarting="restarting"
           :externally-managed="externallyManaged"
-          :relay="relayView"
+          :relay="relay?.view.value ?? null"
           @restart="connection.restart"
           @open-settings="openSettings"
           @create-relay-key="relay?.issueKey()"
           @regenerate-relay-key="relay?.issueKey()"
-          @toggle-relay-key="toggleRelayKey"
+          @toggle-relay-key="relay?.toggleReveal()"
           @copy-relay="copyRelay"
         />
       </PopoverContent>

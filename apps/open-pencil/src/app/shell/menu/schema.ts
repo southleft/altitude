@@ -83,6 +83,11 @@ export const APP_MENU_SCHEMA = [
       { type: 'separator' },
       { id: 'save', label: 'Save', shortcut: 'MOD+S' },
       { id: 'save-as', label: 'Save As…', shortcut: 'MOD+SHIFT+S' },
+      {
+        id: 'save-to-github',
+        label: 'Save to GitHub…',
+        palette: { keywords: ['commit', 'git', 'github', 'repository', 'version control'] }
+      },
       { type: 'separator' },
       {
         id: 'export-selection',

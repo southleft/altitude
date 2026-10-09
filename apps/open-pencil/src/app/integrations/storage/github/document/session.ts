@@ -8,8 +8,11 @@ import { readGitHubPreferences, type GitHubPreferences } from '../preferences'
 import {
   allocateGitHubDocumentPath,
   commitGitHubDocument,
+  GitHubOversizeError,
+  oversizeGitHubFiles,
   type GitHubDocumentBinding,
-  type GitHubFileSizeWarning
+  type GitHubFileSizeWarning,
+  type GitHubOversizeFile
 } from '../repository'
 import { resolveGitHubClient } from '../runtime'
 import { commitMessage, defaultCommitMessage } from './message'
@@ -18,6 +21,8 @@ export type GitHubDocumentFailure = {
   kind: GitHubErrorKind | 'unknown'
   message: string
   resetAt: Date | null
+  /** Files GitHub would refuse, when that is why the commit failed. */
+  oversize?: readonly GitHubOversizeFile[]
 }
 
 export type GitHubDocumentStatus =
@@ -57,6 +62,9 @@ const defaultServices: GitHubDocumentServices = {
 }
 
 export function describeGitHubFailure(error: unknown): GitHubDocumentFailure {
+  if (error instanceof GitHubOversizeError) {
+    return { kind: error.kind, message: error.message, resetAt: null, oversize: error.files }
+  }
   if (error instanceof GitHubAPIError) {
     return { kind: error.kind, message: error.message, resetAt: error.resetAt }
   }
@@ -79,6 +87,8 @@ export function createGitHubDocumentSession(
   const binding = shallowRef<GitHubDocumentBinding | null>(null)
   const status = shallowRef<GitHubDocumentStatus>({ phase: 'idle' })
   const notice = shallowRef<GitHubCommitNotice | null>(null)
+  // The "save to GitHub" hint after a file save is shown once per document.
+  let saveHintShown = false
   // Bumped whenever the document changes identity, so late results cannot land on it.
   let generation = 0
 
@@ -88,6 +98,7 @@ export function createGitHubDocumentSession(
     binding.value = null
     status.value = { phase: 'idle' }
     notice.value = null
+    saveHintShown = false
   })
 
   function busy(): boolean {
@@ -108,8 +119,11 @@ export function createGitHubDocumentSession(
     options: { message?: string; overwrite?: boolean },
     token: number
   ): Promise<boolean> {
-    const client = await services.resolveClient()
     const { revision, version, name, files } = await snapshot()
+    // Refuse before writing anything: GitHub rejects the whole commit for one oversized blob.
+    const oversize = oversizeGitHubFiles(files)
+    if (oversize.length > 0) throw new GitHubOversizeError(oversize)
+    const client = await services.resolveClient()
     const created = Object.keys(current.files).length === 0
     const outcome = await commitGitHubDocument(client, current, files, {
       overwrite: options.overwrite,
@@ -234,6 +248,12 @@ export function createGitHubDocumentSession(
       binding.value = { ...current, branch, commitSHA: head, committedAt: null, files: {} }
       status.value = { phase: 'idle' }
       notice.value = null
+    },
+    /** True the first time it is called for the current document, then false. */
+    claimSaveHint() {
+      if (saveHintShown) return false
+      saveHintShown = true
+      return true
     },
     dismiss() {
       if (!busy()) status.value = { phase: 'idle' }

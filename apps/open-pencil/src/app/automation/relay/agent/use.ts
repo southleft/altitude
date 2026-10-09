@@ -1,7 +1,11 @@
 import { useTimeoutFn } from '@vueuse/core'
 import { computed, onScopeDispose, readonly, shallowRef } from 'vue'
 
-import { relaySetupCommands, type RelaySetupCommands } from '@/app/automation/mcp/agent/setup'
+import {
+  relaySetupCommands,
+  type RelayConnectionView,
+  type RelaySetupCommands
+} from '@/app/automation/mcp/agent/setup'
 
 import { relayKeyService } from '../key'
 import { relayRuntime } from '../state'
@@ -49,17 +53,37 @@ export function useRelayAgentControls(mcpURL: string) {
     return issueRelayKey()
   }
 
+  function toggleReveal(): void {
+    if (revealedKey.value === null) void reveal()
+    else hide()
+  }
+
   onScopeDispose(hide)
+
+  const keyConfigured = computed(() => relayRuntime.key === 'configured')
+  const busy = computed(() => relayRuntime.busy)
+  const keyError = computed(() => relayRuntime.keyError)
+  const lastRequestAt = computed(() => relayRuntime.lastRequestAt)
 
   return {
     mcpURL,
     revealedKey: readonly(revealedKey),
-    keyConfigured: computed(() => relayRuntime.key === 'configured'),
-    busy: computed(() => relayRuntime.busy),
-    keyError: computed(() => relayRuntime.keyError),
-    lastRequestAt: computed(() => relayRuntime.lastRequestAt),
+    keyConfigured,
+    busy,
+    keyError,
+    lastRequestAt,
+    /** Plain snapshot for the Connect AI and Settings panels. */
+    view: computed<RelayConnectionView>(() => ({
+      mcpURL,
+      keyConfigured: keyConfigured.value,
+      revealedKey: revealedKey.value,
+      busy: busy.value,
+      keyError: keyError.value,
+      lastRequestAt: lastRequestAt.value
+    })),
     reveal,
     hide,
+    toggleReveal,
     commandFor,
     issueKey
   }

@@ -113,3 +113,11 @@ test('opening another document in the tab drops the binding', async () => {
   replaceGraph()
   expect(session.binding.value).toBeNull()
 })
+
+test('the save hint is offered once per document', () => {
+  const { session, replaceGraph } = fixture()
+  expect(session.claimSaveHint()).toBe(true)
+  expect(session.claimSaveHint()).toBe(false)
+  replaceGraph()
+  expect(session.claimSaveHint()).toBe(true)
+})

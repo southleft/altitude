@@ -72,13 +72,17 @@ const horizontalSplitterStyles = tv(splitterTheme)({ direction: 'horizontal' })
       class="flex flex-col"
     >
       <div
-        class="flex shrink-0 items-center justify-between gap-2 border-b border-border px-1.5 py-1.5"
+        class="@container flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border px-1.5 py-1.5"
       >
-        <div class="flex min-w-0 items-center gap-1.5">
+        <!-- In a narrow panel the Connect AI and Share labels yield first, then sharing wraps
+             to its own row so "Save to GitHub" stays readable. -->
+        <div class="flex min-w-0 flex-auto items-center gap-1.5">
           <AgentConnectPopover />
           <GitHubCommitPopover />
         </div>
-        <CollabPanel />
+        <div class="ml-auto flex shrink-0">
+          <CollabPanel />
+        </div>
       </div>
       <PropertiesPanel />
     </SplitterPanel>

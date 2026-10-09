@@ -18,10 +18,17 @@ Signing out forgets the token on this device; in a hosted editor behind GitHub s
 
 ## Save and commit
 
-Use the commit button in the editor header (next to **Connect agent**):
+Save to GitHub from any of these:
+
+- The **Save to GitHub** button in the right panel header, next to **Connect AI**. Once the document is on GitHub, the button shows the short commit SHA instead.
+- **File → Save to GitHub…** in the menu bar (and the desktop menu).
+- **Save to GitHub…** in the command palette.
+
+Until you sign in and choose a repository, the menu and palette commands open **Settings → Version control**, and the button offers **Set up GitHub**.
 
 - **Save to GitHub** commits an open document to a new folder in the repository.
 - Once a document is on GitHub, **Save** (<kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>S</kbd>) commits it. The default message names the changed pages, such as `Update Landing page` / `Pages: Cover, Components`; write your own in the commit popover.
+- **Save** on a document that is not on GitHub yet writes its file as before. While GitHub is set up, the first such save of each document shows a hint with a **Save to GitHub** button.
 - The header shows the commit the document matches, for example `Committed 3f2a9c1 · 2 minutes ago`, with a link to the commit on GitHub.
 
 Only files that changed are uploaded: OpenPencil compares Git blob hashes computed locally with the branch before creating blobs. Unsaved work stays protected by crash recovery until a commit of that revision succeeds.
@@ -107,6 +114,6 @@ The renderer's cached text pictures are not saved; they are rebuilt when fonts l
 
 ## Limits
 
-- GitHub accepts files up to 100 MB; OpenPencil warns above 50 MB. Large imported files mostly grow the `.source.json` sidecars.
+- GitHub accepts files up to 100 MB; OpenPencil warns above 50 MB. Large imported files mostly grow the `.source.json` sidecars. Before uploading anything, a commit checks every file and names the page that is too large; split that page into smaller pages, or commit a copy of the document without it.
 - Saving serializes the whole document on the main thread, which can pause the editor for a few seconds on very large documents.
 - A recovered crash snapshot reopens as a local document, without its GitHub link; save it to GitHub again or reload the remote copy.

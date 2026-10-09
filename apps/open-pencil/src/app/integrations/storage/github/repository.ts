@@ -3,6 +3,7 @@ import {
   parseDocumentJSONManifest,
   readDocumentJSON,
   slugify,
+  sourceSidecarPath,
   type DocumentJSONSnapshot
 } from '@open-pencil/core/io/formats/document-json'
 import type { SceneGraph } from '@open-pencil/scene-graph'
@@ -256,22 +257,65 @@ function mergeBase(
   return files
 }
 
+/** A file GitHub would refuse, with the page it holds when it is page content. */
+export type GitHubOversizeFile = {
+  path: string
+  megabytes: number
+  /** Page name for a page file or its provenance sidecar; null for shared files and images. */
+  page: string | null
+}
+
+/** A commit was refused before anything was written because files exceed GitHub's limit. */
+export class GitHubOversizeError extends GitHubAPIError {
+  constructor(readonly files: readonly GitHubOversizeFile[]) {
+    super(
+      'too-large',
+      files
+        .map((file) => `${file.path} is ${file.megabytes} MB; GitHub accepts files up to 100 MB.`)
+        .join(' ')
+    )
+    this.name = 'GitHubOversizeError'
+  }
+}
+
+function megabytesOf(bytes: Uint8Array): number {
+  return Math.ceil(bytes.byteLength / (1024 * 1024))
+}
+
+/**
+ * Files of a snapshot that GitHub would reject, each attributed to its page when it is
+ * page content, so the user learns which page to split or leave out.
+ */
+export function oversizeGitHubFiles(
+  snapshot: DocumentJSONSnapshot,
+  paths?: ReadonlySet<string>
+): GitHubOversizeFile[] {
+  const pages = new Map<string, string>()
+  for (const page of snapshot.pages) {
+    pages.set(page.path, page.name)
+    pages.set(sourceSidecarPath(page.path), page.name)
+  }
+  return snapshot.files
+    .filter(
+      (file) => (!paths || paths.has(file.path)) && file.bytes.byteLength > GITHUB_MAX_FILE_BYTES
+    )
+    .map((file) => ({
+      path: file.path,
+      megabytes: megabytesOf(file.bytes),
+      page: pages.get(file.path) ?? null
+    }))
+}
+
 function checkSizes(
   snapshot: DocumentJSONSnapshot,
   paths: ReadonlySet<string>
 ): GitHubFileSizeWarning[] {
+  const oversize = oversizeGitHubFiles(snapshot, paths)
+  if (oversize.length > 0) throw new GitHubOversizeError(oversize)
   const warnings: GitHubFileSizeWarning[] = []
   for (const file of snapshot.files) {
-    if (!paths.has(file.path)) continue
-    const megabytes = Math.ceil(file.bytes.byteLength / (1024 * 1024))
-    if (file.bytes.byteLength > GITHUB_MAX_FILE_BYTES) {
-      throw new GitHubAPIError(
-        'too-large',
-        `${file.path} is ${megabytes} MB; GitHub accepts files up to 100 MB.`
-      )
-    }
-    if (file.bytes.byteLength > GITHUB_WARN_FILE_BYTES) {
-      warnings.push({ path: file.path, megabytes })
+    if (paths.has(file.path) && file.bytes.byteLength > GITHUB_WARN_FILE_BYTES) {
+      warnings.push({ path: file.path, megabytes: megabytesOf(file.bytes) })
     }
   }
   return warnings
