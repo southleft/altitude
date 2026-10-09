@@ -79,6 +79,7 @@ export function createSharedEditorMenuActions(
       store.state.showRemoteCursors = !store.state.showRemoteCursors
       store.requestRepaint()
     },
+    'view-comments': () => store.comments.toggle(),
     'snap-geometry': () =>
       setSnappingPreference('geometry', !store.state.snappingPreferences.geometry),
     'snap-objects': () =>

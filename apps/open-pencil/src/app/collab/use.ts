@@ -1,12 +1,14 @@
 import { tryOnScopeDispose, useLocalStorage } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { createFollowActions, generateRoomId } from '@/app/collab/awareness'
 import type { CollabEngine } from '@/app/collab/engine'
+import { localCollabUser } from '@/app/collab/identity'
 import { createLocalAwarenessActions } from '@/app/collab/local-awareness'
 import { createCollabRuntime, createInitialCollabState } from '@/app/collab/state'
 import { DEFAULT_COLLAB_STATE, type CollabState, type RemotePeer } from '@/app/collab/types'
 import type { EditorStore } from '@/app/editor/active-store'
+import { githubIdentity } from '@/app/integrations/storage/github/identity'
 
 export { COLLAB_KEY, useCollabInjected } from '@/app/collab/context'
 export { DEFAULT_COLLAB_STATE }
@@ -32,6 +34,13 @@ export function useCollab(storeOrGetter: EditorStore | (() => EditorStore)) {
       getStore: getActiveStore,
       getAwareness: () => runtime.awareness
     })
+
+  // Signing in or out of GitHub changes the name and avatar peers see.
+  watch(githubIdentity, broadcastAwareness)
+  /** What peers see for this tab: the GitHub identity when signed in. */
+  const localUser = computed(() =>
+    localCollabUser(state.value.localName, state.value.localColor, githubIdentity.value)
+  )
 
   let engine: CollabEngine | undefined
   let engineLoad: Promise<CollabEngine> | undefined
@@ -106,6 +115,7 @@ export function useCollab(storeOrGetter: EditorStore | (() => EditorStore)) {
 
   return {
     state,
+    localUser,
     /** Start loading the engine ahead of a session, e.g. on a `/share/:roomId` link. */
     preload: () => void loadEngine().catch(() => undefined),
     remotePeers,

@@ -43,6 +43,8 @@ export interface EditorSharedState {
     x: number
     y: number
     selection?: string[]
+    /** Encoded avatar image (PNG/JPEG), keyed by its source URL for decode caching. */
+    avatar?: { key: string; bytes: Uint8Array }
   }>
   documentName: string
   rulerTheme?: RulerTheme

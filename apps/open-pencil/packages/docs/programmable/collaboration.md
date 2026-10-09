@@ -18,7 +18,7 @@ Anyone with the link can join. The room stays active as long as at least one par
 ## What Syncs
 
 - **Document changes** — every edit (shapes, text, properties, layout) syncs instantly
-- **Cursors** — see where each collaborator is pointing, with their name and color
+- **Cursors** — see where each collaborator is pointing, with their name and color. People signed in with GitHub show their GitHub name and avatar ([display-only](/user-guide/version-control#github-identity-in-shared-rooms): the room link is still the only access control)
 - **Selections** — highlighted selections are visible to everyone
 
 ## Follow Mode

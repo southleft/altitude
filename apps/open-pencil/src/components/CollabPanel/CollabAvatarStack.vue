@@ -21,13 +21,20 @@ function peerAvatarClass(following: boolean) {
 
 <template>
   <div class="flex -space-x-1.5">
-    <Tip :label="`${collab.state.localName || common.you} (${common.youSuffix})`">
+    <Tip :label="`${collab.localUser.name || common.you} (${common.youSuffix})`">
       <div
         data-test-id="collab-local-avatar"
         :class="avatar.avatar()"
         :style="{ background: colorToCSS(collab.state.localColor) }"
       >
-        {{ initials(collab.state.localName || common.you) }}
+        <img
+          v-if="collab.localUser.avatar"
+          :src="collab.localUser.avatar"
+          alt=""
+          referrerpolicy="no-referrer"
+          class="size-full rounded-full object-cover"
+        />
+        <template v-else>{{ initials(collab.localUser.name || common.you) }}</template>
       </div>
     </Tip>
 
@@ -47,7 +54,14 @@ function peerAvatarClass(following: boolean) {
         :style="{ background: colorToCSS(peer.color) }"
         @click="collab.toggleFollowPeer(peer.clientId)"
       >
-        {{ initials(peer.name) }}
+        <img
+          v-if="peer.avatarURL"
+          :src="peer.avatarURL"
+          alt=""
+          referrerpolicy="no-referrer"
+          class="size-full rounded-full object-cover"
+        />
+        <template v-else>{{ initials(peer.name) }}</template>
       </div>
     </Tip>
   </div>

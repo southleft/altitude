@@ -63,6 +63,14 @@ export function createKeyboardActions({
       store.penCancel()
       return
     }
+    if (store.comments.draft.value) {
+      store.comments.cancelDraft()
+      return
+    }
+    if (store.comments.active.value) {
+      store.comments.setActive(false)
+      return
+    }
     if (store.state.enteredContainerId) {
       store.exitContainer()
       return

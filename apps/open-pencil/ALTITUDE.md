@@ -174,8 +174,10 @@ Build or run the editor with `VITE_OPENPENCIL_RELAY_URL=http://127.0.0.1:8787` t
 
 Documents can be committed to a GitHub repository, by default the private
 **southleft/altitude-designs** (branch `main`, folder `documents`), configurable in
-**Settings → Version control**. Each save is one commit straight to the branch. The user
-guide (`packages/docs/user-guide/version-control.md`) covers the flow and the JSON format.
+**Settings → Version control**. Each save is one commit to the document's bound branch
+(the configured branch until you switch). The user guide
+(`packages/docs/user-guide/version-control.md`) covers the flow, branches and pull requests,
+comments and the JSON format.
 
 - Format: `packages/core/src/io/formats/document-json/` (`@open-pencil/core/io/formats/document-json`).
 - App: `src/app/integrations/storage/github/` (client, repository/commit flow, OAuth,
@@ -183,6 +185,25 @@ guide (`packages/docs/user-guide/version-control.md`) covers the flow and the JS
   `github:default:token`; the signed-in login, id and avatar are non-secret settings.
 - OAuth: `functions/open-pencil/auth/github/{start,callback}.js` at the Altitude root, behind
   the same password middleware. Tested by `node scripts/__tests__/open-pencil-github-oauth.test.mjs`.
+- Branches and pull requests: `src/app/integrations/storage/github/branches/` (names, pull
+  request lookup and body, the `useGitHubBranches` workflow); UI in
+  `src/components/version-control/GitHubBranchPicker.vue`. A branch belongs to the document's
+  binding, not to the settings; switching loads that branch's copy through
+  `src/app/tabs/open/github.ts`. Pull request bodies list changed pages; preview images are not
+  generated yet.
+- Comments: `src/app/integrations/storage/github/comments/` (anchor block, issue mapping, pin
+  placement, per-document session created next to the GitHub session). Each comment is an
+  issue labelled `design-comment` and `doc:<slug>`; the body ends with
+  `<!-- openpencil:anchor {...} -->` (document path, page and node ids, offsets, branch,
+  commit), parsed defensively. Pins are a DOM overlay (`src/components/comments/CommentLayer.vue`)
+  positioned from the viewport, like the canvas label editor. Comment mode needs a committed
+  document because `.fig` imports get new node ids on each open.
+- Multiplayer identity: `src/app/collab/identity.ts` maps the signed-in GitHub account into
+  the awareness `user` (name, login, avatar). Peers' values are validated and avatars load only
+  from `https://avatars.githubusercontent.com`; cursor pills draw them in CanvasKit
+  (`packages/core/src/canvas/cursor-avatars.ts`). **Display-only:** P2P rooms are still
+  protected by the link secret alone, so anyone with the link can claim any name until rooms
+  are relay-gated.
 
 **One-time setup: the OAuth app** (GitHub → southleft organization → Settings → Developer
 settings → OAuth Apps → New OAuth App):
@@ -194,8 +215,8 @@ settings → OAuth Apps → New OAuth App):
 | Authorization callback URL | `https://altitude.pages.dev/open-pencil/auth/github/callback` |
 | Enable Device Flow | off |
 
-The app requests the `repo` scope (private repository contents; also covers the pull
-requests and issues planned next). Then generate a client secret, and in Cloudflare → the docs
+The app requests the `repo` scope (private repository contents, branches, pull requests,
+issues and labels). Then generate a client secret, and in Cloudflare → the docs
 Pages project → Settings → Variables and Secrets, for **Production** (and Preview if you
 register a preview callback):
 
@@ -214,7 +235,9 @@ Register a second OAuth app for a fixed preview host if needed, or use the token
 access token instead** in the same settings section: a
 [fine-grained token](https://github.com/settings/personal-access-tokens/new) with resource
 owner `southleft`, repository access limited to `altitude-designs`, and **Contents: Read and
-write**. It is stored the same way as the OAuth token.
+write**. For branches, pull requests and comments also grant **Pull requests: Read and write**
+and **Issues: Read and write** (labels are created through the issues permission). It is stored
+the same way as the OAuth token.
 
 ## Pulling upstream OpenPencil updates
 
