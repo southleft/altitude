@@ -1,0 +1,41 @@
+# Dependabot for a mixed pnpm + Bun + Cargo repo.
+#
+# Only SECURITY updates run (open-pull-requests-limit: 0 turns off routine version
+# PRs, which is how the repo behaved before this file existed). The file exists to
+# route each part of the tree to the updater that understands its lockfile:
+#
+# - Altitude (pnpm-lock.yaml) stays on the npm updater.
+# - apps/open-pencil is a Bun workspace with ONE bun.lock at its root. The npm updater
+#   edits its nested package.json files without touching bun.lock, so every PR it opens
+#   there fails `bun install --frozen-lockfile`. It is ignored there and the bun updater
+#   owns the folder instead.
+# - The OpenPencil desktop shell is Rust (Cargo.lock).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: npm
+    directories:
+      - /apps/open-pencil
+      - /apps/open-pencil/**
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    ignore:
+      - dependency-name: '*'
+
+  - package-ecosystem: bun
+    directory: /apps/open-pencil
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: cargo
+    directory: /apps/open-pencil/desktop
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
