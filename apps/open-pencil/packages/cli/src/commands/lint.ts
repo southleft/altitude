@@ -31,7 +31,7 @@ export default defineCommand({
     file: {
       type: 'positional',
       required: true,
-      description: 'Design document to lint (.fig, .pen)'
+      description: 'Design document to lint (.fig, .pen, or a document-json folder)'
     },
     preset: {
       type: 'string',

@@ -11,7 +11,7 @@ export default defineCommand({
   args: {
     file: {
       type: 'positional',
-      description: '.fig file path (omit to connect to running app)',
+      description: '.fig file or document folder (omit to connect to running app)',
       required: false
     },
     grid: { type: 'string', description: 'Base grid size to check against', default: '8' },
