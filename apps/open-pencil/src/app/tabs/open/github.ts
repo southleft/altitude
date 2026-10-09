@@ -1,4 +1,8 @@
 import type { EditorStore } from '@/app/editor/session'
+import {
+  currentDraftPolicy,
+  preferredDocumentLocation
+} from '@/app/integrations/storage/github/document/draft'
 import { readGitHubPreferences } from '@/app/integrations/storage/github/preferences'
 import {
   loadGitHubDocument,
@@ -10,17 +14,13 @@ import { resolveGitHubClient } from '@/app/integrations/storage/github/runtime'
 import { getTabsSnapshot, switchTab } from '@/app/tabs'
 import { openExternalDocumentInTab } from '@/app/tabs/open/external'
 
+/** The same document in the same repository, on whichever branch the tab has it. */
 function sameDocument(
   binding: GitHubDocumentBinding,
   location: GitHubRepositoryLocation,
   path: string
 ) {
-  return (
-    binding.owner === location.owner &&
-    binding.repo === location.repo &&
-    binding.branch === location.branch &&
-    binding.path === path
-  )
+  return binding.owner === location.owner && binding.repo === location.repo && binding.path === path
 }
 
 async function loadInto(
@@ -50,18 +50,27 @@ async function loadInto(
   })
 }
 
-/** Open a document from the configured repository, or focus the tab that has it open. */
+/**
+ * Open a document from the configured repository, or focus the tab that has it open. With
+ * autosave on, the signed-in person's draft branch wins when it already has the document.
+ */
 export async function openGitHubDocumentInNewTab(document: GitHubDocumentSummary): Promise<void> {
   const preferences = readGitHubPreferences()
-  const location = { owner: preferences.owner, repo: preferences.repo, branch: preferences.branch }
+  const listed = { owner: preferences.owner, repo: preferences.repo, branch: preferences.branch }
   const existing = getTabsSnapshot().find((tab) => {
     const binding = tab.store.github.binding.value
-    return binding !== null && sameDocument(binding, location, document.path)
+    return binding !== null && sameDocument(binding, listed, document.path)
   })
   if (existing) {
     switchTab(existing.id)
     return
   }
+  const location = await preferredDocumentLocation(
+    await resolveGitHubClient(),
+    listed,
+    document.path,
+    currentDraftPolicy()
+  )
   await loadInto(location, document.path, document.name)
 }
 

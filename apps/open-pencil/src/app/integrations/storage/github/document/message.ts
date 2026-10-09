@@ -44,3 +44,25 @@ export function commitMessage(custom: string | undefined, generated: string): st
   const trimmed = custom?.trim()
   return trimmed ? trimmed : generated
 }
+
+/**
+ * Git trailer ending every autosave commit, so workflows can skip autosave pushes:
+ * `git log --format=%(trailers:key=OpenPencil-Autosave)` or a message search.
+ */
+export const AUTOSAVE_TRAILER_KEY = 'OpenPencil-Autosave'
+export const AUTOSAVE_TRAILER = `${AUTOSAVE_TRAILER_KEY}: true`
+
+/**
+ * Autosave commit message: `Autosave <name>`, the changed pages and areas, and the
+ * autosave trailer as the final paragraph.
+ */
+export function autosaveCommitMessage(
+  documentName: string,
+  pages: readonly DocumentJSONPage[],
+  changedPaths: readonly string[]
+): string {
+  const generated = defaultCommitMessage(documentName, pages, changedPaths, false)
+  const body = generated.split('\n').slice(1).join('\n').trim()
+  const subject = `Autosave ${documentName.trim() || 'Untitled'}`
+  return [subject, body, AUTOSAVE_TRAILER].filter(Boolean).join('\n\n')
+}

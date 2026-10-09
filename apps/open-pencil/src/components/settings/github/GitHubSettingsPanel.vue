@@ -8,6 +8,8 @@ import {
   useStorageMessages
 } from '@open-pencil/vue'
 
+import { githubAutosaveEnabled } from '@/app/integrations/storage/github/autosave/preferences'
+import { DESIGN_BRANCH_PREFIX } from '@/app/integrations/storage/github/branches/name'
 import { githubFailureMessage } from '@/app/integrations/storage/github/failure-message'
 import {
   GITHUB_APPLICATIONS_URL,
@@ -18,6 +20,7 @@ import { useGitHubRepositorySettings } from '@/app/integrations/storage/github/s
 import { useSettingsFormGuard } from '@/app/settings/navigation/use'
 import { focusInvalidField } from '@/components/settings/layout/focus'
 import SettingsDisclosure from '@/components/settings/layout/SettingsDisclosure.vue'
+import SettingsGroup from '@/components/settings/layout/SettingsGroup.vue'
 import SettingsLink from '@/components/settings/layout/SettingsLink.vue'
 import SettingsPage from '@/components/settings/layout/SettingsPage.vue'
 import SettingsSaveFeedback from '@/components/settings/layout/SettingsSaveFeedback.vue'
@@ -27,6 +30,7 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
 import AppActionRow from '@/components/ui/list/AppActionRow.vue'
+import AppSwitch from '@/components/ui/toggle/AppSwitch.vue'
 
 const storage = useStorageMessages()
 const settings = useSettingsMessages()
@@ -49,6 +53,13 @@ const { drafts, dirty, busy, errors, saveResult, accessResult, error } = reposit
 const editing = ref(false)
 const formElement = useTemplateRef<HTMLFormElement>('formElement')
 useSettingsFormGuard({ dirty, busy, cancel }, editing)
+
+const autosaveEnabled = githubAutosaveEnabled
+
+/** `design/<document>/<login>`, the shape of every draft branch this account autosaves to. */
+const draftBranchPattern = computed(() =>
+  identity.value ? `${DESIGN_BRANCH_PREFIX}<document>/${identity.value.login.toLowerCase()}` : null
+)
 
 const accountFailureText = computed(() => {
   const failure = accountFailure.value
@@ -186,6 +197,28 @@ async function testAccess() {
             storage.githubAuthorizedApps
           }}</SettingsLink>
         </p>
+      </SettingsSection>
+
+      <SettingsSection>
+        <template #title>{{ storage.githubAutosave }}</template>
+        <template #description>{{ storage.githubAutosaveDescription }}</template>
+        <SettingsGroup>
+          <label class="flex items-center justify-between gap-4 px-3 py-2.5">
+            <span class="min-w-0">
+              <span class="block text-xs text-surface">{{ storage.githubAutosave }}</span>
+              <span class="block text-[10px] break-words text-muted">{{
+                draftBranchPattern
+                  ? storage.githubAutosaveBranches({ pattern: draftBranchPattern })
+                  : storage.githubAutosaveSignedOut
+              }}</span>
+            </span>
+            <AppSwitch
+              v-model="autosaveEnabled"
+              :label="storage.githubAutosave"
+              data-test-id="settings-github-autosave"
+            />
+          </label>
+        </SettingsGroup>
       </SettingsSection>
 
       <SettingsSection v-if="!editing">

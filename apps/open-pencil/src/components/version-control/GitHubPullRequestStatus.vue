@@ -13,15 +13,25 @@ const {
   pullRequest,
   branch,
   defaultBranch,
-  disabled = false
+  disabled = false,
+  readyAction = false,
+  readyPending = false
 } = defineProps<{
   pullRequest: GitHubPullRequestSummary | null
   branch: string
   defaultBranch: string
   disabled?: boolean
+  /** Offer Ready for review on a draft (the document's own draft pull request). */
+  readyAction?: boolean
+  readyPending?: boolean
 }>()
 
-const emit = defineEmits<{ open: []; switchToDefault: []; deleteBranch: [] }>()
+const emit = defineEmits<{
+  open: []
+  switchToDefault: []
+  deleteBranch: []
+  readyForReview: []
+}>()
 const storage = useStorageMessages()
 const styles = tv(versionControlTheme)()
 
@@ -63,6 +73,21 @@ const reviewLabel = computed(() => {
       <ExternalLink :href="pullRequest.url" class="text-[11px]">{{
         storage.githubViewPullRequest({ number: String(pullRequest.number) })
       }}</ExternalLink>
+      <template v-if="pullRequest.state === 'draft' && readyAction">
+        <p :class="styles.hint()">{{ storage.githubReadyForReviewHint }}</p>
+        <AppButton
+          size="xs"
+          variant="outline"
+          class="self-start"
+          :loading="readyPending"
+          :disabled="disabled || readyPending"
+          data-test-id="github-ready-for-review"
+          @click="emit('readyForReview')"
+        >
+          <template #leading><icon-lucide-eye class="size-3" /></template>
+          {{ readyPending ? storage.githubMarkingReady : storage.githubReadyForReview }}
+        </AppButton>
+      </template>
       <template v-if="pullRequest.state === 'merged'">
         <p :class="styles.hint()">
           {{ storage.githubPullRequestMergedHint({ base: pullRequest.base }) }}
