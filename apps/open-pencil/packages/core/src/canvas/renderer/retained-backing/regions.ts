@@ -7,7 +7,7 @@ import type { SkiaRenderer } from '#core/canvas/renderer'
 
 import { computeRetainedSubtreeBounds, renderBackingChild } from './children'
 import { ensureSubtreePictureCacheScope } from './invalidation'
-import type { SceneBackingGeometry } from './types'
+import type { SceneBacking, SceneBackingGeometry } from './types'
 
 /** A rectangle in backing device pixels: left, top, right, bottom. */
 type DeviceRect = [number, number, number, number]
@@ -22,6 +22,9 @@ const REGION_MARGIN_DEVICE_PX = 4
  * partial one; drawing those children's pictures is the cost either way.
  */
 const MAX_REDRAWN_CHILDREN = 0.5
+/** A shift keeps at least this share of the old backing's pixels. */
+const MIN_KEPT_AREA = 0.25
+
 function deviceRect(bounds: VisualBounds, backing: SceneBackingGeometry): DeviceRect {
   const scale = backing.zoom * backing.dpr
   const originX = backing.panX * backing.dpr
@@ -46,6 +49,10 @@ function clampRect(rect: DeviceRect, width: number, height: number): DeviceRect 
 
 function intersects(a: DeviceRect, b: DeviceRect): boolean {
   return a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3]
+}
+
+function area(rect: DeviceRect): number {
+  return (rect[2] - rect[0]) * (rect[3] - rect[1])
 }
 
 function deviceSize(backing: SceneBackingGeometry): { width: number; height: number } {
@@ -136,6 +143,12 @@ function repaintRegions(
   }
 }
 
+/** A device offset as whole pixels, tolerating floating-point drift from repeated pans. */
+function wholeDevicePixels(offset: number): number | null {
+  const rounded = Math.round(offset)
+  return Math.abs(offset - rounded) < 1e-6 ? rounded : null
+}
+
 function snapshot(surface: Surface): CKImage {
   surface.flush()
   return surface.makeImageSnapshot()
@@ -145,6 +158,29 @@ function sameChildOrder(a: readonly string[], b: readonly string[]): boolean {
   if (a.length !== b.length) return false
   for (let index = 0; index < a.length; index++) if (a[index] !== b[index]) return false
   return true
+}
+
+/**
+ * Whether `backing` was drawn for this page, preview state, and page child list at the given
+ * zoom and pixel density, so its pixels can be partly reused.
+ */
+function reusableBacking(
+  r: SkiaRenderer,
+  graph: SceneGraph,
+  backing: SceneBacking,
+  zoom: number,
+  dpr: number
+): boolean {
+  if (
+    backing.pageId !== r.pageId ||
+    backing.positionPreviewVersion !== graph.positionPreviewVersion ||
+    backing.zoom !== zoom ||
+    backing.dpr !== dpr
+  ) {
+    return false
+  }
+  const page = graph.getNode(r.pageId ?? graph.rootId)
+  return !!page && sameChildOrder(page.childIds, backing.childIds)
 }
 
 /**
@@ -164,21 +200,15 @@ export function repaintSceneBackingRegions(
   if (
     !backing?.surface ||
     backing.sceneVersion === sceneVersion ||
-    backing.pageId !== r.pageId ||
-    backing.fontGeneration !== r.fontGeneration ||
-    backing.positionPreviewVersion !== graph.positionPreviewVersion ||
-    backing.zoom !== r.zoom ||
-    backing.dpr !== r.dpr
+    backing.fontGeneration !== r.fontGeneration
   ) {
     return false
   }
   ensureSubtreePictureCacheScope(r, graph, sceneVersion)
-  const page = graph.getNode(r.pageId ?? graph.rootId)
   if (
     r.sceneBackingDirtyUnknown ||
     r.sceneBackingDirtyVersion !== backing.sceneVersion ||
-    !page ||
-    !sameChildOrder(page.childIds, backing.childIds)
+    !reusableBacking(r, graph, backing, r.zoom, r.dpr)
   ) {
     return false
   }
@@ -222,4 +252,83 @@ export function repaintSceneBackingRegions(
   r.sceneBackingDirtyIds.clear()
   r.sceneBackingDirtyVersion = sceneVersion
   return true
+}
+
+/**
+ * Lay out a backing for `geometry` from the current one when only the viewport moved by whole
+ * device pixels at the same zoom: the overlapping pixels are copied and only the newly exposed
+ * strips are drawn. Returns the new backing parts, or null when a full rebuild is needed.
+ *
+ * Used while navigating: the result keeps the old backing's font generation and is marked
+ * inexact (see `SceneBacking.exact`), so it is rebuilt once navigation settles.
+ */
+export function shiftSceneBacking(
+  r: SkiaRenderer,
+  graph: SceneGraph,
+  sceneVersion: number,
+  geometry: SceneBackingGeometry,
+  surface: Surface,
+  createSurface: () => Surface | null
+): Pick<SceneBacking, 'image' | 'childIds' | 'childBounds' | 'fontGeneration' | 'exact'> | null {
+  const backing = r.sceneBacking
+  if (
+    !backing ||
+    backing.sceneVersion !== sceneVersion ||
+    backing.width !== geometry.width ||
+    backing.height !== geometry.height ||
+    !reusableBacking(r, graph, backing, geometry.zoom, geometry.dpr)
+  ) {
+    return null
+  }
+  const dx = wholeDevicePixels((geometry.panX - backing.panX) * geometry.dpr)
+  const dy = wholeDevicePixels((geometry.panY - backing.panY) * geometry.dpr)
+  if (dx === null || dy === null) return null
+
+  const { width, height } = deviceSize(geometry)
+  const kept = clampRect([dx, dy, dx + width, dy + height], width, height)
+  if (!kept || area(kept) < width * height * MIN_KEPT_AREA) return null
+
+  const canvas = surface.getCanvas()
+  canvas.clear(r.ck.Color4f(r.pageColor.r, r.pageColor.g, r.pageColor.b, 1))
+  canvas.drawImageRectOptions(
+    backing.image,
+    r.ck.LTRBRect(kept[0] - dx, kept[1] - dy, kept[2] - dx, kept[3] - dy),
+    r.ck.LTRBRect(kept[0], kept[1], kept[2], kept[3]),
+    r.ck.FilterMode.Nearest,
+    r.ck.MipmapMode.None,
+    null
+  )
+  // The exposed area is the backing minus the kept rectangle: up to four strips.
+  const exposed: DeviceRect[] = []
+  if (kept[1] > 0) exposed.push([0, 0, width, kept[1]])
+  if (kept[3] < height) exposed.push([0, kept[3], width, height])
+  if (kept[0] > 0) exposed.push([0, kept[1], kept[0], kept[3]])
+  if (kept[2] < width) exposed.push([kept[2], kept[1], width, kept[3]])
+
+  const childBounds = new Map(backing.childBounds)
+  const childRects = childDeviceRects(backing.childIds, childBounds, geometry)
+  if (!worthRepainting(exposed, childRects)) return null
+  if (
+    !repaintRegions(
+      r,
+      graph,
+      surface,
+      createSurface,
+      geometry,
+      backing.childIds,
+      childRects,
+      childBounds,
+      exposed,
+      sceneVersion
+    )
+  ) {
+    return null
+  }
+  return {
+    image: snapshot(surface),
+    childIds: backing.childIds,
+    childBounds,
+    fontGeneration: backing.fontGeneration,
+    exact: false
+  }
 }

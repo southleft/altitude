@@ -4,6 +4,7 @@ import { SceneGraph } from '@open-pencil/scene-graph'
 
 import { initCanvasKit } from '#cli/headless'
 import { SkiaRenderer } from '#core/canvas'
+import { subscribeNavigationTrace } from '#core/profiler'
 
 import { expectDefined } from '#tests/helpers/assert'
 
@@ -140,6 +141,37 @@ test('edits repaint only their regions and match a full rebuild pixel for pixel'
   }
 })
 
+test('panning past the backing shifts its pixels, then settles to an exact rebuild', () => {
+  const { graph, pageId } = createFixture()
+  const renderer = createRenderer(pageId, 180.5, 140.25)
+  try {
+    const backing = settle(renderer, graph, 1)
+    const fullDraws = spyOn(renderer, 'renderNode')
+    try {
+      renderer.navigationPhase = 'pan'
+      renderer.panX += 700
+      renderer.panY -= 200
+      renderer.render(graph, new Set(), {}, 1, 'scene')
+      expect(renderer.profiler.stats.scenePictureMissReason).toBe('backing')
+      const shifted = expectDefined(renderer.sceneBacking, 'shifted backing')
+      expect(shifted).not.toBe(backing)
+      expect(shifted.exact).toBe(false)
+      expect(shifted.anchorPanX).toBe(880.5)
+      // Exposed strips draw retained pictures; nothing renders the page node by node.
+      expect(fullDraws).not.toHaveBeenCalled()
+    } finally {
+      fullDraws.mockRestore()
+    }
+    renderer.navigationPhase = 'idle'
+    expect(settle(renderer, graph, 1).exact).toBe(true)
+    expect(
+      differingChannels(backingPixels(renderer), freshBackingPixels(graph, pageId, 880.5, -59.75))
+    ).toBe(0)
+  } finally {
+    renderer.destroy()
+  }
+})
+
 test('unattributed changes and structural edits rebuild the whole backing', () => {
   const { graph, pageId, ids } = createFixture()
   const renderer = createRenderer(pageId, 180.5, 140.25)
@@ -156,6 +188,40 @@ test('unattributed changes and structural edits rebuild the whole backing', () =
       differingChannels(backingPixels(renderer), freshBackingPixels(graph, pageId, 180.5, 140.25))
     ).toBe(0)
   } finally {
+    renderer.destroy()
+  }
+})
+
+test('a font load rebuilds the backing over frames while presenting the previous one', () => {
+  const { graph, pageId } = createFixture()
+  const renderer = createRenderer(pageId, 180.5, 140.25)
+  const fonts = spyOn(renderer, 'syncFontGeneration')
+  try {
+    fonts.mockImplementation(() => undefined)
+    const backing = settle(renderer, graph, 1)
+    renderer.fontGeneration++
+    renderer.navigationPhase = 'pan'
+    renderer.render(graph, new Set(), {}, 1, 'scene')
+    expect(renderer.profiler.stats.scenePictureMissReason).toBe('backing')
+    expect(renderer.sceneBacking).toBe(backing)
+    renderer.navigationPhase = 'idle'
+    const builds: string[] = []
+    const unsubscribe = subscribeNavigationTrace((event) => {
+      if (event.name === 'backing:build') builds.push(String(event.detail.phase))
+    })
+    let rebuilt: ReturnType<typeof settle> | undefined
+    try {
+      rebuilt = settle(renderer, graph, 1)
+    } finally {
+      unsubscribe()
+    }
+    // Rebuilt by the time-sliced build, not by one synchronous whole-page pass.
+    expect(builds).toEqual(['start'])
+    rebuilt = expectDefined(rebuilt, 'rebuilt backing')
+    expect(rebuilt).not.toBe(backing)
+    expect(rebuilt.fontGeneration).toBe(renderer.fontGeneration)
+  } finally {
+    fonts.mockRestore()
     renderer.destroy()
   }
 })

@@ -8,7 +8,7 @@ import type { SkiaRenderer } from '#core/canvas/renderer'
 import { emitNavigationTrace } from '#core/profiler'
 
 import { drawRetainedChild, renderBackingChild } from './retained-backing/children'
-import { repaintSceneBackingRegions } from './retained-backing/regions'
+import { repaintSceneBackingRegions, shiftSceneBacking } from './retained-backing/regions'
 import { clamp, smoothAverage } from './retained-backing/timing'
 import type { SceneBacking, SceneBackingGeometry } from './retained-backing/types'
 
@@ -20,10 +20,16 @@ const SCENE_BACKING_SCALE = 3
 const MAX_SCENE_BACKING_DEVICE_PIXELS = 16_000_000
 const SCENE_BACKING_BUILD_BUDGET_MS = 6
 
+/**
+ * Whether the backing shows the current content. `allowStaleFonts` also accepts one recorded
+ * before the latest font load or assembled from shifted pixels: navigation and in-progress
+ * rebuilds keep presenting it rather than rasterizing the whole page inside a single frame.
+ */
 function backingMetadataMatches(
   r: SkiaRenderer,
   sceneVersion: number,
-  positionPreviewVersion: number
+  positionPreviewVersion: number,
+  allowStaleFonts = false
 ): boolean {
   const backing = r.sceneBacking
   return !!(
@@ -31,7 +37,7 @@ function backingMetadataMatches(
     backing.pageId === r.pageId &&
     backing.sceneVersion === sceneVersion &&
     backing.positionPreviewVersion === positionPreviewVersion &&
-    backing.fontGeneration === r.fontGeneration
+    (allowStaleFonts || (backing.exact && backing.fontGeneration === r.fontGeneration))
   )
 }
 
@@ -82,7 +88,7 @@ function backingCoverageContainsLiveViewport(
   allowStaleZoom: boolean,
   positionPreviewVersion: number
 ): boolean {
-  if (!backingMetadataMatches(r, sceneVersion, positionPreviewVersion)) return false
+  if (!backingMetadataMatches(r, sceneVersion, positionPreviewVersion, allowStaleZoom)) return false
   if (allowStaleZoom && backingScreenCoverageContainsViewport(r)) return true
   return backingPixelGridMatchesLiveViewport(r) && backingWorldCoverageContainsLiveViewport(r)
 }
@@ -226,7 +232,8 @@ function sceneBackingMetrics(backing: SceneBackingGeometry): SceneBackingGeometr
 
 function installSceneBackingImage(
   r: SkiaRenderer,
-  content: Pick<SceneBacking, 'image' | 'surface' | 'childIds' | 'childBounds'>,
+  content: Pick<SceneBacking, 'image' | 'surface' | 'childIds' | 'childBounds'> &
+    Partial<Pick<SceneBacking, 'fontGeneration' | 'exact'>>,
   sceneVersion: number,
   positionPreviewVersion: number,
   backing: SceneBackingGeometry
@@ -234,11 +241,12 @@ function installSceneBackingImage(
   r.sceneBacking?.image.delete()
   if (r.sceneBacking?.surface !== content.surface) r.sceneBacking?.surface?.delete()
   r.sceneBacking = {
+    fontGeneration: r.fontGeneration,
+    exact: true,
     ...content,
     pageId: r.pageId,
     sceneVersion,
     positionPreviewVersion,
-    fontGeneration: r.fontGeneration,
     ...sceneBackingMetrics(backing)
   }
   r.sceneBackingDirtyIds.clear()
@@ -335,7 +343,12 @@ function stepSceneBackingBuild(r: SkiaRenderer, sceneVersion: number): boolean {
     build.index++
   } while (build.index < build.childIds.length && now() - startedAt < SCENE_BACKING_BUILD_BUDGET_MS)
 
-  if (build.index < build.childIds.length) return true
+  if (build.index < build.childIds.length) {
+    // Submit this step's draws now: deferred to the final snapshot, a large page's GPU work
+    // lands in one long task at the end of an otherwise time-sliced build.
+    build.surface.flush()
+    return true
+  }
 
   let image: CKImage
   try {
@@ -383,13 +396,32 @@ function drawFullSceneBacking(
   return { image: surface.makeImageSnapshot(), childIds, childBounds }
 }
 
-function recordSceneBacking(r: SkiaRenderer, graph: SceneGraph, sceneVersion: number): void {
+/**
+ * Rasterize a backing for the live viewport. With `shiftOnly` (while navigating), reuse the
+ * current backing's pixels when the viewport only moved by whole device pixels, or draw
+ * nothing; the result is presented until navigation settles and is then rebuilt exactly.
+ */
+function recordSceneBacking(
+  r: SkiaRenderer,
+  graph: SceneGraph,
+  sceneVersion: number,
+  shiftOnly = false
+): boolean {
   const startedAt = now()
   const backing = sceneBackingGeometry(r)
   const surface = createSceneBackingSurface(r, backing.width, backing.height)
-  if (!surface) return
+  if (!surface) return false
   try {
-    const content = drawFullSceneBacking(r, graph, sceneVersion, backing, surface)
+    const shifted = shiftOnly
+      ? shiftSceneBacking(r, graph, sceneVersion, backing, surface, () =>
+          createSceneBackingSurface(r, backing.width, backing.height)
+        )
+      : null
+    if (!shifted && shiftOnly) {
+      surface.delete()
+      return false
+    }
+    const content = shifted ?? drawFullSceneBacking(r, graph, sceneVersion, backing, surface)
     installSceneBackingImage(
       r,
       { ...content, surface },
@@ -401,16 +433,47 @@ function recordSceneBacking(r: SkiaRenderer, graph: SceneGraph, sceneVersion: nu
     emitNavigationTrace('backing:crisp', {
       buildMs: recordMs,
       childCount: content.childIds.length,
-      zoom: backing.zoom
+      zoom: backing.zoom,
+      shifted: shifted !== null
     })
     r.sceneBackingAverageRecordMs = smoothAverage(
       r.sceneBackingAverageRecordMs,
       clamp(recordMs, 1, 1_000)
     )
+    return true
   } catch (error) {
     surface.delete()
     throw error
   }
+}
+
+/** While navigating, present the backing, shifting it if the viewport moved past it. */
+function presentNavigationBacking(
+  r: SkiaRenderer,
+  canvas: Canvas,
+  graph: SceneGraph,
+  sceneVersion: number
+): false | 'backing' {
+  r.sceneBackingBuild?.surface.delete()
+  r.sceneBackingBuild = null
+  r.sceneBackingNeedsCrispRender = true
+  if (drawSceneBacking(r, canvas, sceneVersion, true, graph.positionPreviewVersion)) {
+    return 'backing'
+  }
+  // Panned past the overscan: draw only the newly exposed strips rather than the whole page.
+  return recordSceneBacking(r, graph, sceneVersion, true) &&
+    drawSceneBacking(r, canvas, sceneVersion, true, graph.positionPreviewVersion)
+    ? 'backing'
+    : false
+}
+
+/** Bring an older backing up to date by repainting the edited regions, when that is exact. */
+function repaintEditedRegions(r: SkiaRenderer, graph: SceneGraph, sceneVersion: number): void {
+  const backing = r.sceneBacking
+  if (!backing || backing.sceneVersion === sceneVersion || r.sceneBackingBuild) return
+  repaintSceneBackingRegions(r, graph, sceneVersion, () =>
+    createSceneBackingSurface(r, backing.width, backing.height)
+  )
 }
 
 export function renderSceneBacking(
@@ -420,23 +483,12 @@ export function renderSceneBacking(
   sceneVersion: number
 ): false | 'backing' | 'retained-pictures' {
   if (r.sceneBackingAllocationFailed) return false
-  const navigationActive = r.navigationPhase !== 'idle'
-  if (navigationActive && r.sceneBacking) {
-    r.sceneBackingBuild?.surface.delete()
-    r.sceneBackingBuild = null
-    r.sceneBackingNeedsCrispRender = true
-    return drawSceneBacking(r, canvas, sceneVersion, true, graph.positionPreviewVersion)
-      ? 'backing'
-      : false
+  if (r.navigationPhase !== 'idle' && r.sceneBacking) {
+    return presentNavigationBacking(r, canvas, graph, sceneVersion)
   }
   const positionPreviewVersion = graph.positionPreviewVersion
   const allowStaleZoom = now() < r.sceneBackingPreviewUntil
-  if (r.sceneBacking && r.sceneBacking.sceneVersion !== sceneVersion && !r.sceneBackingBuild) {
-    const backing = r.sceneBacking
-    repaintSceneBackingRegions(r, graph, sceneVersion, () =>
-      createSceneBackingSurface(r, backing.width, backing.height)
-    )
-  }
+  repaintEditedRegions(r, graph, sceneVersion)
   const hasCoverage = backingCoverageContainsLiveViewport(
     r,
     sceneVersion,
@@ -446,7 +498,7 @@ export function renderSceneBacking(
   if (!hasCoverage) {
     if (
       !r.sceneBacking ||
-      !backingMetadataMatches(r, sceneVersion, positionPreviewVersion) ||
+      !backingMetadataMatches(r, sceneVersion, positionPreviewVersion, true) ||
       !backingScreenCoverageContainsViewport(r)
     ) {
       cancelSceneBackingBuild(r)

@@ -36,6 +36,12 @@ export interface SceneBacking extends RenderContentVersion, SceneBackingGeometry
   childIds: string[]
   /** World bounds each child painted into this backing; null when it painted nothing. */
   childBounds: Map<string, VisualBounds | null>
+  /**
+   * False for a backing assembled from shifted pixels while navigating. Rasterization is not
+   * exactly translation invariant, so such a backing is presented only while navigating and
+   * rebuilt before the scene settles.
+   */
+  exact: boolean
 }
 
 export interface SceneBackingBuild extends RenderContentVersion, SceneBackingGeometry {
