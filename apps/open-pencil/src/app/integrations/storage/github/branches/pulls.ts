@@ -1,6 +1,11 @@
-import { PAGES_DIRECTORY, uniqueSlugs } from '@open-pencil/core/io/formats/document-json'
+import {
+  PAGES_DIRECTORY,
+  pageFilePath,
+  uniqueSlugs
+} from '@open-pencil/core/io/formats/document-json'
 
-import type { GitHubClient } from '../client'
+import { GitHubAPIError, type GitHubClient } from '../client'
+import { AUTOSAVE_TRAILER } from '../document/message'
 import type { GitHubRepositoryLocation } from '../repository'
 import type { GitHubPullRequest, GitHubReview } from '../schemas'
 
@@ -14,6 +19,8 @@ export type GitHubPullRequestSummary = {
   state: GitHubPullRequestState
   review: GitHubReviewDecision
   base: string
+  /** GraphQL id, when GitHub returned one; needed to mark a draft ready for review. */
+  nodeId: string | null
 }
 
 export function pullRequestState(pull: GitHubPullRequest): GitHubPullRequestState {
@@ -50,7 +57,8 @@ function summarize(
     title: pull.title,
     state: pullRequestState(pull),
     review,
-    base: pull.base.ref
+    base: pull.base.ref,
+    nodeId: pull.node_id ?? null
   }
 }
 
@@ -117,7 +125,7 @@ export async function changedPages(
   let otherFiles = 0
   for (const file of comparison.files ?? []) {
     if (!file.filename.startsWith(prefix)) continue
-    const relative = file.filename.slice(prefix.length).replace(/\.source\.json$/, '.json')
+    const relative = pageFilePath(file.filename.slice(prefix.length))
     const page = pagesByPath.get(relative)
     if (page !== undefined) pages.add(page)
     else otherFiles++
@@ -154,4 +162,118 @@ export function pullRequestBody(input: {
 /** Default pull request title for a document branch. */
 export function pullRequestTitle(documentName: string): string {
   return `Update ${documentName.trim() || 'Untitled'}`
+}
+
+/** Marks a draft pull request opened for a document, so it can be recognized again. */
+export const DRAFT_PULL_REQUEST_MARKER = 'openpencil:draft-pr'
+
+/** Title of the draft pull request opened for a document's draft branch. */
+export function draftPullRequestTitle(documentName: string): string {
+  return `Design: ${documentName.trim() || 'Untitled'}`
+}
+
+/**
+ * Body of a document's draft pull request: the document, its pages, how autosave and
+ * review work, and a hidden marker naming the document folder. Repository content, so
+ * English like commit messages.
+ */
+export function draftPullRequestBody(input: {
+  documentName: string
+  documentPath: string
+  pages: readonly string[]
+}): string {
+  const lines = [`**Document:** ${input.documentName} (\`${input.documentPath}\`)`, '']
+  if (input.pages.length > 0) {
+    lines.push('**Pages**', '', ...input.pages.map((page) => `- ${page}`), '')
+  }
+  lines.push(
+    'OpenPencil autosaves to this branch while the pull request is a draft. Autosave',
+    `commits end with an \`${AUTOSAVE_TRAILER}\` trailer. Mark the pull request ready for`,
+    'review to run the design checks.',
+    '',
+    '_Opened from OpenPencil._',
+    '',
+    `<!-- ${DRAFT_PULL_REQUEST_MARKER} ${JSON.stringify({ document: input.documentPath })} -->`
+  )
+  return lines.join('\n')
+}
+
+const MARKER_PATTERN = new RegExp(`<!-- ${DRAFT_PULL_REQUEST_MARKER} (\\{.*?\\}) -->`)
+
+/** The document folder named by a draft pull request's marker, or null. */
+export function draftPullRequestDocument(body: string | null | undefined): string | null {
+  const match = MARKER_PATTERN.exec(body ?? '')
+  if (!match) return null
+  try {
+    const parsed: unknown = JSON.parse(match[1])
+    if (parsed && typeof parsed === 'object' && 'document' in parsed) {
+      return typeof parsed.document === 'string' ? parsed.document : null
+    }
+  } catch {
+    // A hand-edited marker that is not JSON names no document.
+    return null
+  }
+  return null
+}
+
+export type DraftPullRequestOutcome = {
+  pullRequest: GitHubPullRequestSummary
+  /** False when an open pull request from the branch already existed and was reused. */
+  created: boolean
+}
+
+async function findOpenPullRequest(
+  client: GitHubClient,
+  location: GitHubRepositoryLocation
+): Promise<GitHubPullRequestSummary | null> {
+  const pulls = await client.listPullRequestsForBranch(
+    location.owner,
+    location.repo,
+    location.branch
+  )
+  const open = pulls.find((pull) => pull.state === 'open')
+  return open ? summarize(open, null) : null
+}
+
+/**
+ * The open pull request from `location.branch`, or a new draft one into `base`. Merged or
+ * closed pull requests are not reused: later commits need a new one to be reviewed.
+ */
+export async function ensureDraftPullRequest(
+  client: GitHubClient,
+  location: GitHubRepositoryLocation,
+  input: { base: string; documentName: string; documentPath: string; pages: readonly string[] }
+): Promise<DraftPullRequestOutcome> {
+  const existing = await findOpenPullRequest(client, location)
+  if (existing) return { pullRequest: existing, created: false }
+  try {
+    const pull = await openPullRequest(client, location, {
+      title: draftPullRequestTitle(input.documentName),
+      body: draftPullRequestBody(input),
+      base: input.base,
+      draft: true
+    })
+    return { pullRequest: pull, created: true }
+  } catch (error) {
+    // Opened by another tab meanwhile: GitHub refuses a second one for the same head.
+    if (error instanceof GitHubAPIError && error.kind === 'validation') {
+      const raced = await findOpenPullRequest(client, location)
+      if (raced) return { pullRequest: raced, created: false }
+    }
+    throw error
+  }
+}
+
+/** Take a draft pull request out of draft; returns it as open. */
+export async function markReadyForReview(
+  client: GitHubClient,
+  location: GitHubRepositoryLocation,
+  pull: GitHubPullRequestSummary
+): Promise<GitHubPullRequestSummary> {
+  const nodeId = pull.nodeId ?? (await findOpenPullRequest(client, location))?.nodeId ?? null
+  if (!nodeId) {
+    throw new GitHubAPIError('not-found', `Pull request #${pull.number} has no GraphQL id.`)
+  }
+  await client.markPullRequestReadyForReview(nodeId)
+  return { ...pull, nodeId, state: 'open' }
 }

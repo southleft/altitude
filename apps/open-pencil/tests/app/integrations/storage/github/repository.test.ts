@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, test } from 'bun:test'
 
-import { writeDocumentJSON } from '@open-pencil/core/io/formats/document-json'
+import { gitBlobSHA, writeDocumentJSON } from '@open-pencil/core/io/formats/document-json'
 import { SceneGraph } from '@open-pencil/scene-graph'
 
-import { gitBlobSHA } from '@/app/integrations/storage/github/blob-sha'
 import { createGitHubClient, GitHubAPIError } from '@/app/integrations/storage/github/client'
 import { defaultCommitMessage } from '@/app/integrations/storage/github/document/message'
 import {
@@ -254,4 +253,22 @@ test('oversized files are attributed to the page they hold', () => {
     { path: 'variables.json', megabytes: 101, page: null }
   ])
   expect(oversizeGitHubFiles(snapshot)).toEqual([])
+})
+
+test('parts of a split page and their sidecars are attributed to the page', () => {
+  const { graph } = graphWithPages()
+  const snapshot = writeDocumentJSON(graph, { name: 'Huge' })
+  const oversized = new Uint8Array(GITHUB_MAX_FILE_BYTES + 1)
+  const files = [
+    ...snapshot.files,
+    { path: 'pages/components.part-2.json', bytes: oversized },
+    { path: 'pages/components.part-2.source.json', bytes: oversized }
+  ]
+  expect(oversizeGitHubFiles({ ...snapshot, files }).map((file) => file.page)).toEqual([
+    'Components',
+    'Components'
+  ])
+  expect(
+    defaultCommitMessage('Huge', snapshot.pages, ['pages/components.part-2.source.json'], false)
+  ).toBe('Update Huge\n\nPages: Components')
 })

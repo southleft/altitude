@@ -32,7 +32,9 @@ const ManifestSchema = v.object({
       id: v.string(),
       name: v.string(),
       path: relativePath,
-      source: v.nullable(relativePath)
+      source: v.nullable(relativePath),
+      /** Parts 2 and up of a page split because it was too large for one file. */
+      parts: v.optional(v.array(v.object({ path: relativePath, source: relativePath })))
     })
   ),
   styles: relativePath,
@@ -125,7 +127,13 @@ export async function readDocumentJSON(
   }
 
   const [pageFiles, styles, variables, images, figSchema] = await Promise.all([
-    mapLimited(manifest.pages, (page) => readNodeFile(source, page.path, page.source)),
+    mapLimited(manifest.pages, async (page) => {
+      const parts = await Promise.all([
+        readNodeFile(source, page.path, page.source),
+        ...(page.parts ?? []).map((part) => readNodeFile(source, part.path, part.source))
+      ])
+      return parts.flat()
+    }),
     readNodeFile(source, manifest.styles, manifest.stylesSource),
     readJSON(source, manifest.variables).then((value) => v.parse(VariablesFileSchema, value)),
     mapLimited(

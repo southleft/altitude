@@ -230,12 +230,58 @@ Build or run the editor with `VITE_OPENPENCIL_RELAY_URL=http://127.0.0.1:8787` t
 
 Documents can be committed to a GitHub repository, by default the private
 **southleft/altitude-designs** (branch `main`, folder `documents`), configurable in
-**Settings → Version control**. Each save is one commit to the document's bound branch
-(the configured branch until you switch). The user guide
-(`packages/docs/user-guide/version-control.md`) covers the flow, branches and pull requests,
-comments and the JSON format.
+**Settings → Version control**. With **Autosave to GitHub** on (default when signed in),
+GitHub-bound documents commit to a per-document, per-person draft branch
+`design/<doc-slug>/<github-login>` and the first commit there opens a draft pull request into
+the configured branch; an explicit Save commits to the same branch. The user guide
+(`packages/docs/user-guide/version-control.md`) covers the flow, autosave, branches and pull
+requests, comments and the JSON format.
+
+- Autosave: `src/app/integrations/storage/github/autosave/` (`scheduler.ts` is the
+  framework-free timing policy: 30 s idle debounce, at least 60 s between commits, never during
+  interactive edits, one run at a time, exponential backoff or the rate-limit reset on failure;
+  `session.ts` wires it to an editor session; `indicator.ts` maps state to the saving chip).
+  Draft branch targeting and the open-from-draft lookup live in `document/draft.ts`; draft
+  pull request create-or-reuse and Ready for review (GraphQL `markPullRequestReadyForReview`,
+  which REST lacks) in `branches/pulls.ts`.
+- Commit snapshots are written and hashed off the main thread by
+  `writeDocumentJSONOffThread` (`packages/core/src/io/formats/document-json/worker/`): the graph
+  is copied and posted to a worker in ~8 ms slices, the worker writes byte-identical
+  document-json and git blob SHAs, and an edit during an autosave copy abandons it. On
+  `tests/fixtures/gold-preview.fig` (38k nodes, 72 MB of JSON) the longest main-thread task
+  drops from ~7.5 s to well under 0.5 s.
+
+**Workflows and autosave.** Autosave pushes to draft branches often (up to once a minute per
+person and document). Every autosave commit message ends with the Git trailer
+`OpenPencil-Autosave: true`, and draft pull request bodies carry
+`<!-- openpencil:draft-pr {"document":"<folder>"} -->`. Audit or render workflows in
+`altitude-designs` should run only on reviewable pull requests and skip autosave pushes:
+
+```yaml
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+jobs:
+  audit:
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      # Skip a synchronize whose head commit is an autosave:
+      - id: autosave
+        run: |
+          if git log -1 --format='%(trailers:key=OpenPencil-Autosave,valueonly)' | grep -q true; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+```
+
+`ready_for_review` fires when someone presses **Ready for review** in the editor or on GitHub.
+Once a pull request is ready, later autosaves still push to it; the trailer lets a workflow
+decide whether to re-run on them.
 
 - Format: `packages/core/src/io/formats/document-json/` (`@open-pencil/core/io/formats/document-json`).
+  Pages over 50 MB are written as parts (`pages/<page>.part-N.json` plus sidecars) listed in the
+  manifest, which then records format version 2; smaller documents stay version 1.
 - App: `src/app/integrations/storage/github/` (client, repository/commit flow, OAuth,
   settings workflows, per-document session). The token lives in the credential store under
   `github:default:token`; the signed-in login, id and avatar are non-secret settings.

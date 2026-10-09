@@ -113,6 +113,24 @@ const CreatedSchema = v.object({ sha: v.string() })
 
 const ErrorBodySchema = v.object({ message: v.optional(v.string()) })
 
+const GraphQLResponseSchema = v.object({
+  data: v.nullish(v.unknown()),
+  errors: v.optional(v.array(v.object({ message: v.string(), type: v.optional(v.string()) })))
+})
+
+/** GraphQL error types that match a REST failure kind; anything else is a validation error. */
+const GRAPHQL_ERROR_KINDS: Readonly<Record<string, GitHubErrorKind>> = {
+  FORBIDDEN: 'forbidden',
+  NOT_FOUND: 'not-found',
+  RATE_LIMITED: 'rate-limited'
+}
+
+const ReadyForReviewSchema = v.object({
+  markPullRequestReadyForReview: v.object({
+    pullRequest: v.object({ number: v.number(), isDraft: v.boolean() })
+  })
+})
+
 export type GitHubUser = v.InferOutput<typeof UserSchema>
 export type GitHubRepository = v.InferOutput<typeof RepositorySchema>
 export type GitHubCommit = v.InferOutput<typeof CommitSchema>
@@ -290,6 +308,26 @@ export function createGitHubClient(options: GitHubClientOptions) {
     await send(method, `${baseURL}${path}`, body)
   }
 
+  /**
+   * A GraphQL query or mutation. GraphQL reports most failures in a 200 response's
+   * `errors`; they map to the same error kinds as REST failures.
+   */
+  async function graphql<T extends v.GenericSchema>(
+    query: string,
+    variables: Record<string, unknown>,
+    schema: T
+  ): Promise<v.InferOutput<T>> {
+    const response = await send('POST', `${baseURL}/graphql`, { query, variables })
+    const body: unknown = await response.json().catch(() => null)
+    const parsed = validate(GraphQLResponseSchema, body, 'POST /graphql', response.status)
+    const error = parsed.errors?.at(0)
+    if (error) {
+      const kind = (error.type && GRAPHQL_ERROR_KINDS[error.type]) || 'validation'
+      throw new GitHubAPIError(kind, error.message, response.status)
+    }
+    return validate(schema, parsed.data, 'POST /graphql', response.status)
+  }
+
   /** Every item of a paged listing, following `Link` headers up to `MAX_PAGES`. */
   async function paginate<T extends v.GenericSchema>(
     path: string,
@@ -419,6 +457,19 @@ export function createGitHubClient(options: GitHubClientOptions) {
 
     createPullRequest: (owner: string, repo: string, input: GitHubPullRequestInput) =>
       request('POST', `${repoPath(owner, repo)}/pulls`, PullRequestSchema, input),
+
+    /**
+     * Take a draft pull request out of draft. REST cannot do this; GraphQL can, with the
+     * pull request's `node_id`.
+     */
+    async markPullRequestReadyForReview(nodeId: string): Promise<{ number: number }> {
+      const data = await graphql(
+        'mutation($id: ID!) { markPullRequestReadyForReview(input: { pullRequestId: $id }) { pullRequest { number isDraft } } }',
+        { id: nodeId },
+        ReadyForReviewSchema
+      )
+      return { number: data.markPullRequestReadyForReview.pullRequest.number }
+    },
 
     listPullRequestReviews: (owner: string, repo: string, number: number) =>
       request(

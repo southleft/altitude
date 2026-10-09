@@ -38,3 +38,20 @@ export function suggestedBranchName(documentPath: string): string {
   }
   return `design/${slugify(documentSlug(documentPath), 'document').slice(0, 60)}-${suffix}`
 }
+
+/** Prefix of every design branch the editor creates. */
+export const DESIGN_BRANCH_PREFIX = 'design/'
+
+/**
+ * `design/<doc-slug>/<login>`: the per-document, per-person draft branch that autosave and
+ * Save commit to instead of the base branch.
+ */
+export function draftBranchName(documentPath: string, login: string): string {
+  const slug = slugify(documentSlug(documentPath), 'document')
+  return `${DESIGN_BRANCH_PREFIX}${slug}/${slugify(login, 'me').slice(0, 39)}`
+}
+
+/** Whether `branch` is `login`'s draft branch for the document at `documentPath`. */
+export function isDraftBranch(branch: string, documentPath: string, login: string): boolean {
+  return branch === draftBranchName(documentPath, login)
+}

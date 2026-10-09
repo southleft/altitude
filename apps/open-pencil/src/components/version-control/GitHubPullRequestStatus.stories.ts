@@ -8,6 +8,8 @@ interface Args {
   pullRequest: GitHubPullRequestSummary | null
   branch: string
   defaultBranch: string
+  readyAction?: boolean
+  readyPending?: boolean
 }
 
 const open: GitHubPullRequestSummary = {
@@ -16,7 +18,8 @@ const open: GitHubPullRequestSummary = {
   title: 'Update Landing page',
   state: 'open',
   review: 'changes-requested',
-  base: 'main'
+  base: 'main',
+  nodeId: 'PR_kwDOexample'
 }
 
 const meta = {
@@ -40,6 +43,17 @@ type Story = StoryObj<typeof meta>
 export const NoPullRequest: Story = {}
 export const Open: Story = { args: { pullRequest: open } }
 export const Draft: Story = { args: { pullRequest: { ...open, state: 'draft', review: null } } }
+/** A document's draft pull request in the commit popover, with Ready for review. */
+export const DraftReadyForReview: Story = {
+  args: {
+    pullRequest: { ...open, title: 'Design: Landing page', state: 'draft', review: null },
+    branch: 'design/landing-page/octo',
+    readyAction: true
+  }
+}
+export const MarkingReady: Story = {
+  args: { ...DraftReadyForReview.args, readyPending: true }
+}
 export const Approved: Story = { args: { pullRequest: { ...open, review: 'approved' } } }
 export const Merged: Story = { args: { pullRequest: { ...open, state: 'merged', review: null } } }
 export const Closed: Story = { args: { pullRequest: { ...open, state: 'closed', review: null } } }

@@ -158,6 +158,26 @@ export const storageMessageDefaults = {
   githubDeleteBranchDescription:
     'The branch is removed from GitHub. Its commits stay in the merged pull request.',
   githubBranchDeleted: params('Deleted {branch}.'),
+  githubAutosave: 'Autosave to GitHub',
+  githubAutosaveDescription:
+    'Commits your edits to a draft branch about a minute after you stop editing and opens a draft pull request. The base branch changes only when the pull request is merged.',
+  githubAutosaveBranches: params('Each document saves to its own draft branch: {pattern}.'),
+  githubAutosaveSignedOut: 'Sign in to GitHub to autosave.',
+  githubDraftBranch: params('Draft branch: {branch}'),
+  githubSaveUnsaved: 'Unsaved changes',
+  githubSaveCommitted: params('Committed · {time}'),
+  githubSaveOffline: 'Saved locally (offline)',
+  githubSaveOfflineDetail:
+    'Your changes are kept in this browser and committed when GitHub is reachable again.',
+  githubSaveFailed: 'Couldn’t save',
+  githubSaveRetry: 'Retry',
+  githubSaveNextAttempt: params('Trying again {time}.'),
+  githubPullRequest: 'Pull request',
+  githubReadyForReview: 'Ready for review',
+  githubMarkingReady: 'Marking ready…',
+  githubReadyForReviewHint:
+    'Autosaves stay in this draft. Mark it ready for review to request reviews and run the design checks.',
+  githubMarkedReady: params('Pull request #{number} is ready for review.'),
   githubComments: 'Comments',
   githubCommentsHint: 'Pin comments to the canvas as GitHub issues',
   githubCommentsSignedOut: 'Sign in to GitHub to comment.',

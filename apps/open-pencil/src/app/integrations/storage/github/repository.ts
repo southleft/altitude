@@ -1,14 +1,14 @@
 import {
+  gitBlobSHA,
   MANIFEST_PATH,
   parseDocumentJSONManifest,
   readDocumentJSON,
   slugify,
-  sourceSidecarPath,
+  pageFilePath,
   type DocumentJSONSnapshot
 } from '@open-pencil/core/io/formats/document-json'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
-import { gitBlobSHA } from './blob-sha'
 import { GitHubAPIError, type GitHubClient, type GitHubTreeWrite } from './client'
 
 export type GitHubRepositoryLocation = {
@@ -293,7 +293,6 @@ export function oversizeGitHubFiles(
   const pages = new Map<string, string>()
   for (const page of snapshot.pages) {
     pages.set(page.path, page.name)
-    pages.set(sourceSidecarPath(page.path), page.name)
   }
   return snapshot.files
     .filter(
@@ -302,7 +301,7 @@ export function oversizeGitHubFiles(
     .map((file) => ({
       path: file.path,
       megabytes: megabytesOf(file.bytes),
-      page: pages.get(file.path) ?? null
+      page: pages.get(pageFilePath(file.path)) ?? null
     }))
 }
 
@@ -321,6 +320,34 @@ function checkSizes(
   return warnings
 }
 
+/** A snapshot, optionally with its files' blob SHAs already computed (by the writer worker). */
+export type GitHubCommitSnapshot = DocumentJSONSnapshot & {
+  blobSHAs?: Readonly<Record<string, string>>
+}
+
+/** Blob SHA of every file of a snapshot, by path, reusing precomputed ones. */
+export async function localBlobSHAs(
+  snapshot: GitHubCommitSnapshot
+): Promise<Record<string, string>> {
+  const local: Record<string, string> = {}
+  for (const file of snapshot.files) {
+    local[file.path] = snapshot.blobSHAs?.[file.path] ?? (await gitBlobSHA(file.bytes))
+  }
+  return local
+}
+
+/** True when a snapshot's files are exactly the files of `binding` (nothing to commit). */
+export function sameDocumentFiles(
+  binding: Readonly<Record<string, string>>,
+  local: Readonly<Record<string, string>>
+): boolean {
+  const paths = Object.keys(local)
+  return (
+    paths.length === Object.keys(binding).length &&
+    paths.every((path) => binding[path] === local[path])
+  )
+}
+
 /**
  * Commit a document snapshot as one atomic commit: blobs for changed files, one tree on
  * the branch head, one commit, and a non-forced ref update.
@@ -332,12 +359,11 @@ function checkSizes(
 export async function commitGitHubDocument(
   client: GitHubClient,
   binding: GitHubDocumentBinding,
-  snapshot: DocumentJSONSnapshot,
+  snapshot: GitHubCommitSnapshot,
   options: CommitGitHubDocumentOptions
 ): Promise<GitHubCommitOutcome> {
   const { owner, repo } = binding
-  const local: Record<string, string> = {}
-  for (const file of snapshot.files) local[file.path] = await gitBlobSHA(file.bytes)
+  const local = await localBlobSHAs(snapshot)
   const bytesByPath = new Map(snapshot.files.map((file) => [file.path, file.bytes]))
   const localChanges = changedPaths(binding.files, local)
   const uploaded = new Map<string, string>()

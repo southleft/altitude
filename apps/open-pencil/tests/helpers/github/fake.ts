@@ -1,6 +1,6 @@
 import { decodeBase64, encodeBase64 } from '@open-pencil/core/bytes'
+import { gitBlobSHA } from '@open-pencil/core/io/formats/document-json'
 
-import { gitBlobSHA } from '@/app/integrations/storage/github/blob-sha'
 import type { GitHubFetch } from '@/app/integrations/storage/github/client'
 
 type TreeView = { files: ReadonlyMap<string, string>; prefix: string }

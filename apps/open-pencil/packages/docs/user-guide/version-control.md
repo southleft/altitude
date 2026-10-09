@@ -1,11 +1,11 @@
 ---
 title: Version Control
-description: Commit OpenPencil documents to a GitHub repository as reviewable JSON, work on branches with pull requests, comment on the canvas through GitHub issues, and resolve concurrent edits.
+description: Commit OpenPencil documents to a GitHub repository as reviewable JSON, autosave to a draft branch with a draft pull request, work on branches with pull requests, comment on the canvas through GitHub issues, and resolve concurrent edits.
 ---
 
 # Version Control
 
-OpenPencil can keep a document in a GitHub repository. Each save is one commit on the configured branch, and the repository holds a folder of plain JSON files that review and diff like code.
+OpenPencil can keep a document in a GitHub repository. Your edits are committed to your own draft branch as you work, and the repository holds a folder of plain JSON files that review and diff like code. The configured branch changes only when the draft pull request is merged.
 
 ## Set up
 
@@ -20,22 +20,54 @@ Signing out forgets the token on this device; in a hosted editor behind GitHub s
 
 Save to GitHub from any of these:
 
-- The **Save to GitHub** button in the right panel header, next to **Connect AI**. Once the document is on GitHub, the button shows the short commit SHA instead.
+- The **Save to GitHub** button in the right panel header, next to **Connect AI**. Once the document is on GitHub, the button shows its saving status instead (see [Saving status](#saving-status)).
 - **File → Save to GitHub…** in the menu bar (and the desktop menu).
 - **Save to GitHub…** in the command palette.
 
 Until you sign in and choose a repository, the menu and palette commands open **Settings → Version control**, and the button offers **Set up GitHub**.
 
-- **Save to GitHub** commits an open document to a new folder in the repository.
-- Once a document is on GitHub, **Save** (<kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>S</kbd>) commits it. The default message names the changed pages, such as `Update Landing page` / `Pages: Cover, Components`; write your own in the commit popover.
+- **Save to GitHub** commits an open document to a new folder in the repository. With autosave on (the default), the folder is created on your draft branch and a draft pull request opens; see [Autosave and draft branches](#autosave-and-draft-branches).
+- Once a document is on GitHub, **Save** (<kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>S</kbd>) commits it right away, to the same branch autosave uses. The default message names the changed pages, such as `Update Landing page` / `Pages: Cover, Components`; write your own in the commit popover.
 - **Save** on a document that is not on GitHub yet writes its file as before. While GitHub is set up, the first such save of each document shows a hint with a **Save to GitHub** button.
-- The header shows the commit the document matches, for example `Committed 3f2a9c1 · 2 minutes ago`, with a link to the commit on GitHub.
+- The commit popover shows the commit the document matches, for example `Committed 3f2a9c1 · 2 minutes ago`, with a link to the commit on GitHub.
 
 Only files that changed are uploaded: OpenPencil compares Git blob hashes computed locally with the branch before creating blobs. Unsaved work stays protected by crash recovery until a commit of that revision succeeds.
 
+## Autosave and draft branches
+
+With **Settings → Version control → Autosave to GitHub** on (the default while you are signed in), a document on GitHub commits itself:
+
+- **Where.** A document opened from the configured branch (for example `main`) commits to your draft branch for it, `design/<document>/<your-login>`, for example `design/landing-page/octocat`. The first autosave creates the branch from the commit the document was opened at. The configured branch never receives autosaves. A document you switched to another branch yourself keeps committing to that branch.
+- **When.** About 30 seconds after you stop editing, and at most once a minute. Nothing is committed while you drag or scrub a value, or when the document matches its last commit.
+- **Message.** `Autosave Landing page`, the changed pages, and a final `OpenPencil-Autosave: true` line (a Git trailer), so repository workflows can skip autosave commits.
+- **Opening again.** When you open a document from the home screen and your draft branch already has it, OpenPencil opens your draft so you continue where you left off.
+- **Offline or failing.** When GitHub cannot be reached, is rate limited, or rejects the sign-in, autosave keeps the changes, waits (longer after each failure, or until the rate limit resets), and tries again. Crash recovery keeps protecting the changes until a commit succeeds.
+
+**Save** still commits immediately, with your message if you write one, to the same draft branch. Turn autosave off to commit only when you choose; commits then go to the branch the document is bound to.
+
+## Saving status
+
+The button in the right panel header shows where the document stands:
+
+| Status | Meaning |
+| --- | --- |
+| **Unsaved changes** | Edits not committed yet. Autosave commits them once you pause. |
+| **Saving…** | A commit is in progress. |
+| **Committed · 2 minutes ago** | The document matches its last commit. The popover links to it. |
+| **Saved locally (offline)** | GitHub is unreachable. The changes are kept in this browser and committed when it is reachable again. |
+| **Couldn’t save** | The commit failed or the branch has conflicting changes. Open the popover for the reason and **Retry**. |
+
+Status changes are announced to screen readers without moving focus. Autosave failures never open the popover by themselves; a failed **Save** or **Save to GitHub** does.
+
+## Draft pull requests
+
+The first commit to a draft branch, from autosave or from **Save to GitHub**, opens a draft pull request into the configured branch, titled `Design: <document>`. Its description lists the document's pages and ends with a hidden `<!-- openpencil:draft-pr {"document":"documents/landing-page"} -->` marker. If the branch already has an open pull request, OpenPencil uses it.
+
+The commit popover shows the pull request with **View pull request #N**. While it is a draft, **Ready for review** takes it out of draft so reviewers and design checks pick it up; autosaves after that keep updating the same pull request.
+
 ## Open from GitHub
 
-The home screen lists **GitHub documents** from the configured folder. Opening one loads its latest commit on the branch into a tab.
+The home screen lists **GitHub documents** from the configured folder. Opening one loads its latest commit into a tab: from your draft branch when it has the document and autosave is on, otherwise from the configured branch.
 
 ## Concurrent edits
 
@@ -95,6 +127,8 @@ documents/landing-page/
   fig-schema.bin             original .fig schema (imported documents only)
 ```
 
+A page whose file or provenance sidecar would exceed 50 MB is split, in tree order, into parts: `pages/cover.json` holds the first part and `pages/cover.part-2.json` (with `pages/cover.part-2.source.json`) and on hold the rest. The manifest lists them under the page's `parts` and records format version 2, so an older OpenPencil refuses the document instead of loading part of a page. Documents without split pages keep version 1 and are unchanged.
+
 The files are deterministic: the same document always produces the same bytes. Object keys are sorted, nodes follow tree order, short values stay on one line, and nothing time-dependent is written. Node IDs are preserved across save and load.
 
 Each node record stores only what differs from a new node of its type, or, for an instance layer, from the component layer it was cloned from (named by `$base`). Values plain JSON cannot hold use tagged objects such as `{ "$bytes": "…" }` or `{ "$number": "-0" }`. A change to one rectangle produces a diff like this:
@@ -114,6 +148,7 @@ The renderer's cached text pictures are not saved; they are rebuilt when fonts l
 
 ## Limits
 
-- GitHub accepts files up to 100 MB; OpenPencil warns above 50 MB. Large imported files mostly grow the `.source.json` sidecars. Before uploading anything, a commit checks every file and names the page that is too large; split that page into smaller pages, or commit a copy of the document without it.
-- Saving serializes the whole document on the main thread, which can pause the editor for a few seconds on very large documents.
+- GitHub accepts files up to 100 MB and warns above 50 MB. OpenPencil splits pages over 50 MB into parts (see [File format](#file-format)), so only a single layer larger than that can still exceed the limit. Before uploading anything, a commit checks every file and names the page that is too large.
+- Saving writes and hashes the document in a background worker, so the editor stays responsive on large documents; it falls back to the main thread where workers are unavailable. Uploading a large changed page still encodes it on the main thread.
+- After a draft pull request is merged and its branch deleted, the next commit creates the draft branch again from the configured branch and opens a new draft pull request.
 - A recovered crash snapshot reopens as a local document, without its GitHub link; save it to GitHub again or reload the remote copy.

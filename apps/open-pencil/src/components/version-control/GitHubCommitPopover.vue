@@ -7,6 +7,7 @@ import { computed, ref, useId, watch } from 'vue'
 import { useCommonMessages, useI18n, useStorageMessages } from '@open-pencil/vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
+import { isDraftBranch } from '@/app/integrations/storage/github/branches/name'
 import { githubCommitPromptPending } from '@/app/integrations/storage/github/document/entry'
 import {
   githubFailureMessage,
@@ -15,6 +16,7 @@ import {
 import { githubIdentity } from '@/app/integrations/storage/github/identity'
 import { githubPreferences } from '@/app/integrations/storage/github/preferences'
 import { openSettingsDialog } from '@/app/settings/dialog'
+import { useActionToast } from '@/app/shell/toast/action'
 import { reloadGitHubDocument } from '@/app/tabs/open/github'
 import ExternalLink from '@/components/links/ExternalLink.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
@@ -23,9 +25,12 @@ import AppAlert from '@/components/ui/feedback/AppAlert.vue'
 import AppInput from '@/components/ui/input/AppInput.vue'
 import AppTextarea from '@/components/ui/input/AppTextarea.vue'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
+import GitHubPullRequestStatus from '@/components/version-control/GitHubPullRequestStatus.vue'
+import GitHubSaveIndicator from '@/components/version-control/GitHubSaveIndicator.vue'
 import versionControlTheme from '@/theme/version-control'
 
 const store = useEditorStore()
+const { showActionToast } = useActionToast()
 const storage = useStorageMessages()
 const common = useCommonMessages()
 const { locale } = useI18n()
@@ -41,7 +46,11 @@ const reloadOpen = ref(false)
 const reloadError = ref<string | null>(null)
 
 const session = computed(() => store.github)
+const autosave = computed(() => store.githubAutosave)
+const indicator = computed(() => autosave.value.indicator.value)
 const binding = computed(() => session.value.binding.value)
+const pullRequest = computed(() => session.value.pullRequest.value)
+const pullRequestActivity = computed(() => session.value.pullRequestActivity.value)
 const status = computed(() => session.value.status.value)
 const notice = computed(() => session.value.notice.value)
 const working = computed(() => status.value.phase === 'working')
@@ -51,9 +60,43 @@ const dirty = computed(() => {
 })
 
 const state = computed(() => {
-  if (working.value) return 'working'
-  if (status.value.phase === 'conflict' || status.value.phase === 'failed') return 'attention'
-  return dirty.value || !binding.value ? 'dirty' : 'clean'
+  switch (indicator.value.kind) {
+    case 'saving':
+      return 'working'
+    case 'failed':
+      return 'attention'
+    case 'committed':
+      return 'clean'
+    default:
+      return 'dirty'
+  }
+})
+
+/** The draft branch this document autosaves to, when it is bound to one. */
+const draftBranch = computed(() => {
+  const current = binding.value
+  const login = githubIdentity.value?.login
+  if (!current || !login || !isDraftBranch(current.branch, current.path, login)) return null
+  return current.branch
+})
+
+const nextAttempt = computed(() => {
+  const autosaveState = autosave.value.state.value
+  if (autosaveState.phase !== 'backoff') return null
+  return storage.value.githubSaveNextAttempt({
+    time: relativeTime(new Date(autosaveState.retryAt), locale.value, now.value.getTime())
+  })
+})
+
+const pullRequestFailure = computed(() => {
+  const activity = pullRequestActivity.value
+  if (activity.phase !== 'failed') return null
+  return githubFailureMessage(
+    activity.failure.kind,
+    activity.failure.resetAt,
+    storage.value,
+    locale.value
+  )
 })
 
 const committedLabel = computed(() => {
@@ -95,15 +138,19 @@ const failureText = computed(() => {
   )
 })
 
-// Conflicts and failures need a decision; show them instead of leaving a quiet dot.
+// A failed Commit or Publish needs a decision; show it instead of leaving a quiet dot.
+// Background autosave failures only change the chip: they must not take focus.
 watch(
-  () => status.value.phase,
-  (phase) => {
-    if (phase === 'conflict' || phase === 'failed') open.value = true
+  () => status.value,
+  (current) => {
+    if (current.phase !== 'conflict' && current.phase !== 'failed') return
+    if (current.origin === 'user') open.value = true
   }
 )
 watch(open, (isOpen) => {
-  if (isOpen) documentName.value = store.state.documentName
+  if (!isOpen) return
+  documentName.value = store.state.documentName
+  if (binding.value && !pullRequest.value) void session.value.refreshPullRequest()
 })
 // File › Save to GitHub… and the save hint ask for the popover; consume the request.
 watch(
@@ -137,6 +184,15 @@ async function reload() {
     reloadError.value = error instanceof Error ? error.message : String(error)
   }
 }
+function retry() {
+  void autosave.value.retry()
+}
+async function readyForReview() {
+  const number = pullRequest.value?.number
+  if ((await session.value.readyForReview()) && number !== undefined) {
+    showActionToast(storage.value.githubMarkedReady({ number: String(number) }))
+  }
+}
 function openSettings() {
   open.value = false
   openSettingsDialog('github')
@@ -151,13 +207,10 @@ function openSettings() {
         data-test-id="github-commit-button"
         :data-state="state"
         :class="styles.trigger()"
-        :aria-label="binding ? storage.githubVersionControl : undefined"
+        :aria-label="binding ? storage.githubVersionControl : storage.githubSaveToRepository"
       >
-        <span :class="styles.dot()" :data-state="state" aria-hidden="true" />
         <icon-lucide-git-commit-horizontal :class="styles.triggerIcon()" aria-hidden="true" />
-        <span :class="styles.triggerLabel()">{{
-          binding ? binding.commitSHA.slice(0, 7) : storage.githubSaveToRepository
-        }}</span>
+        <GitHubSaveIndicator :indicator="indicator" />
       </button>
     </PopoverTrigger>
 
@@ -190,6 +243,25 @@ function openSettings() {
                 storage.githubViewCommit
               }}</ExternalLink>
             </div>
+            <p v-if="draftBranch" :class="styles.hint()" data-test-id="github-draft-branch">
+              {{ storage.githubDraftBranch({ branch: draftBranch }) }}
+            </p>
+
+            <AppAlert
+              v-if="indicator.kind === 'offline'"
+              :heading="storage.githubSaveOffline"
+              :description="
+                nextAttempt
+                  ? `${storage.githubSaveOfflineDetail} ${nextAttempt}`
+                  : storage.githubSaveOfflineDetail
+              "
+            >
+              <template #actions>
+                <AppButton size="xs" variant="outline" @click="retry">{{
+                  storage.githubSaveRetry
+                }}</AppButton>
+              </template>
+            </AppAlert>
             <div :class="styles.field()">
               <label :for="messageID" :class="styles.label()">{{
                 storage.githubCommitMessage
@@ -226,18 +298,32 @@ function openSettings() {
                 }}</AppButton>
               </template>
             </AppAlert>
-            <AppAlert v-if="failureText" tone="error" :heading="failureText">
+            <AppAlert
+              v-if="failureText && indicator.kind !== 'offline'"
+              tone="error"
+              :heading="failureText"
+              :description="nextAttempt ?? undefined"
+            >
               <template v-if="oversizeMessages.length" #default>
                 <p v-for="item in oversizeMessages" :key="item.key">{{ item.text }}</p>
                 <p>{{ storage.githubTooLargeHint }}</p>
               </template>
-              <template
-                v-if="status.phase === 'failed' && status.failure.kind === 'unauthorized'"
-                #actions
-              >
-                <AppButton size="xs" variant="outline" @click="openSettings">{{
-                  storage.githubSetUp
-                }}</AppButton>
+              <template v-if="status.phase === 'failed'" #actions>
+                <AppButton
+                  v-if="status.failure.kind === 'unauthorized'"
+                  size="xs"
+                  variant="outline"
+                  @click="openSettings"
+                  >{{ storage.githubSetUp }}</AppButton
+                >
+                <AppButton
+                  v-else-if="!oversizeMessages.length"
+                  size="xs"
+                  variant="outline"
+                  data-test-id="github-save-retry"
+                  @click="retry"
+                  >{{ storage.githubSaveRetry }}</AppButton
+                >
               </template>
             </AppAlert>
             <AppAlert v-if="notice?.rebased" :heading="storage.githubRebased">
@@ -256,6 +342,20 @@ function openSettings() {
               "
             />
             <AppAlert v-if="reloadError" tone="error" :heading="reloadError" />
+
+            <GitHubPullRequestStatus
+              v-if="pullRequest"
+              :pull-request="pullRequest"
+              :branch="binding.branch"
+              :default-branch="pullRequest.base"
+              :disabled="working"
+              ready-action
+              :ready-pending="
+                pullRequestActivity.phase === 'working' && pullRequestActivity.operation === 'ready'
+              "
+              @ready-for-review="readyForReview"
+            />
+            <AppAlert v-if="pullRequestFailure" tone="error" :heading="pullRequestFailure" />
 
             <div :class="styles.footer()">
               <AppButton

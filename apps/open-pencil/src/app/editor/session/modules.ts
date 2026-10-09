@@ -14,6 +14,7 @@ import type { EditorPreparationController } from '@/app/editor/preparation/contr
 import { createProfilerActions } from '@/app/editor/profiler'
 import type { AppEditorState } from '@/app/editor/session/types'
 import { createVectorEditActions } from '@/app/editor/vector'
+import { createGitHubAutosave } from '@/app/integrations/storage/github/autosave/session'
 import { createGitHubCommentsSession } from '@/app/integrations/storage/github/comments/session'
 import { createGitHubDocumentSession } from '@/app/integrations/storage/github/document/session'
 
@@ -73,6 +74,12 @@ export function createEditorStoreModules(
     captureRevision: documentIO.captureRevision,
     markPersisted: documentIO.markExternallyPersisted
   })
+  const githubAutosave = createGitHubAutosave({
+    github,
+    editor,
+    state,
+    hasUnsavedChanges: documentIO.hasUnsavedChanges
+  })
   const comments = createGitHubCommentsSession({ github, editor, state })
   // Save in a GitHub-bound document commits; every other document saves as before.
   const saveDocument = () => (github.binding.value ? github.commit() : documentIO.saveFigFile())
@@ -89,6 +96,7 @@ export function createEditorStoreModules(
     hasUnsavedChanges: documentIO.hasUnsavedChanges,
     saveFigFile: saveDocument,
     github,
+    githubAutosave,
     comments,
     saveFigFileAs: documentIO.saveFigFileAs,
     getDocumentFilePath: documentIO.getDocumentFilePath,
@@ -108,6 +116,7 @@ export function createEditorStoreModules(
       editor.clearPageViewports()
       documentIO.disposeDocumentIO()
       comments.dispose()
+      githubAutosave.dispose()
       github.dispose()
       preparationController.dispose()
     },

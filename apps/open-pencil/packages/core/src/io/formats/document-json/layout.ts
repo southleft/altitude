@@ -1,7 +1,20 @@
 /** File layout of an OpenPencil JSON document folder. Paths are relative to that folder. */
 
 export const DOCUMENT_JSON_FORMAT = 'openpencil.document'
-export const DOCUMENT_JSON_VERSION = 1
+/** The newest format version this build reads. */
+export const DOCUMENT_JSON_VERSION = 2
+/** Written unless a page is split into parts. */
+export const DOCUMENT_JSON_BASE_VERSION = 1
+/**
+ * Written when a page is split into parts, so that readers which do not know parts refuse
+ * the document instead of loading part of a page.
+ */
+export const DOCUMENT_JSON_PARTS_VERSION = 2
+/**
+ * Page files (and their provenance sidecars) above this size are split into parts. GitHub
+ * warns above 50 MB per file and refuses files above 100 MB.
+ */
+export const DOCUMENT_JSON_MAX_FILE_BYTES = 50 * 1024 * 1024
 
 export const MANIFEST_PATH = 'document.json'
 export const VARIABLES_PATH = 'variables.json'
@@ -35,6 +48,19 @@ export function uniqueSlugs(names: readonly string[], fallback: string): string[
     used.add(slug)
     return slug
   })
+}
+
+/** The file of part `part` (2 and up) of a page: `pages/cover.json` → `pages/cover.part-2.json`. */
+export function pagePartPath(path: string, part: number): string {
+  return path.replace(/\.json$/, `.part-${part}.json`)
+}
+
+/**
+ * The page file a document file belongs to: its provenance sidecar and its parts map back to
+ * `pages/cover.json`. Other paths are returned unchanged.
+ */
+export function pageFilePath(path: string): string {
+  return path.replace(/(?:\.part-\d+)?(?:\.source)?\.json$/, '.json')
 }
 
 function startsWith(bytes: Uint8Array, signature: readonly number[], offset = 0): boolean {

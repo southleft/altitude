@@ -19,6 +19,8 @@ export const BranchSchema = v.object({
 
 export const PullRequestSchema = v.object({
   number: v.number(),
+  /** GraphQL id, needed for mutations REST does not offer (ready for review). */
+  node_id: v.optional(v.string()),
   html_url: v.string(),
   state: v.picklist(['open', 'closed']),
   title: v.string(),

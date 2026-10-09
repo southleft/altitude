@@ -19,7 +19,10 @@ export {
   type PageDiff
 } from './diff'
 export {
+  DOCUMENT_JSON_BASE_VERSION,
   DOCUMENT_JSON_FORMAT,
+  DOCUMENT_JSON_MAX_FILE_BYTES,
+  DOCUMENT_JSON_PARTS_VERSION,
   DOCUMENT_JSON_VERSION,
   FIG_SCHEMA_PATH,
   IMAGES_DIRECTORY,
@@ -28,6 +31,8 @@ export {
   STYLES_PATH,
   VARIABLES_PATH,
   imageExtension,
+  pageFilePath,
+  pagePartPath,
   slugify,
   uniqueSlugs
 } from './layout'
@@ -44,6 +49,22 @@ export {
   writeDocumentJSON,
   type DocumentJSONFile,
   type DocumentJSONPage,
+  type DocumentJSONPagePart,
   type DocumentJSONSnapshot,
   type WriteDocumentJSONOptions
 } from './write'
+export { gitBlobSHA } from './blob-sha'
+export {
+  DOCUMENT_JSON_NODE_CHUNK,
+  DOCUMENT_JSON_SLICE_MS,
+  DocumentJSONSnapshotStaleError,
+  writeDocumentJSONOffThread,
+  type DocumentJSONWorkerMode,
+  type WriteDocumentJSONOffThreadOptions
+} from './worker/client'
+export { writeHashedDocumentJSON, type HashedDocumentJSONSnapshot } from './worker/hashed'
+export {
+  graphFromDocumentJSONSnapshot,
+  snapshotDocumentJSONGraph,
+  type DocumentJSONGraphSnapshot
+} from './worker/transfer'

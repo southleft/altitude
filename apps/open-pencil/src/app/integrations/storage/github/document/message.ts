@@ -1,6 +1,7 @@
 import {
   IMAGES_DIRECTORY,
   MANIFEST_PATH,
+  pageFilePath,
   STYLES_PATH,
   VARIABLES_PATH,
   type DocumentJSONPage
@@ -8,7 +9,7 @@ import {
 
 /** What a changed file stands for, in a commit summary. */
 function areaOf(path: string, pageNames: ReadonlyMap<string, string>): string {
-  const page = pageNames.get(path.replace(/\.source\.json$/, '.json'))
+  const page = pageNames.get(pageFilePath(path))
   if (page !== undefined) return `page:${page}`
   if (path === VARIABLES_PATH) return 'Variables'
   if (path.startsWith(STYLES_PATH.replace(/\.json$/, ''))) return 'Styles'
@@ -43,4 +44,26 @@ export function defaultCommitMessage(
 export function commitMessage(custom: string | undefined, generated: string): string {
   const trimmed = custom?.trim()
   return trimmed ? trimmed : generated
+}
+
+/**
+ * Git trailer ending every autosave commit, so workflows can skip autosave pushes:
+ * `git log --format=%(trailers:key=OpenPencil-Autosave)` or a message search.
+ */
+export const AUTOSAVE_TRAILER_KEY = 'OpenPencil-Autosave'
+export const AUTOSAVE_TRAILER = `${AUTOSAVE_TRAILER_KEY}: true`
+
+/**
+ * Autosave commit message: `Autosave <name>`, the changed pages and areas, and the
+ * autosave trailer as the final paragraph.
+ */
+export function autosaveCommitMessage(
+  documentName: string,
+  pages: readonly DocumentJSONPage[],
+  changedPaths: readonly string[]
+): string {
+  const generated = defaultCommitMessage(documentName, pages, changedPaths, false)
+  const body = generated.split('\n').slice(1).join('\n').trim()
+  const subject = `Autosave ${documentName.trim() || 'Untitled'}`
+  return [subject, body, AUTOSAVE_TRAILER].filter(Boolean).join('\n\n')
 }
