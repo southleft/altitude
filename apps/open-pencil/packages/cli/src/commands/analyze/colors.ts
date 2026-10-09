@@ -11,7 +11,7 @@ export default defineCommand({
   args: {
     file: {
       type: 'positional',
-      description: '.fig file path (omit to connect to running app)',
+      description: '.fig file or document folder (omit to connect to running app)',
       required: false
     },
     limit: { type: 'string', description: 'Max colors to show', default: '30' },
