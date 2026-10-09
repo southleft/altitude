@@ -1,3 +1,5 @@
+import { params } from '@nanostores/i18n'
+
 import { i18n } from '#vue/i18n/create'
 
 export const storageMessageDefaults = {
@@ -17,7 +19,84 @@ export const storageMessageDefaults = {
   bucket: 'Bucket',
   region: 'Region',
   accessKeyID: 'Access key ID',
-  secretAccessKey: 'Secret access key'
+  secretAccessKey: 'Secret access key',
+  githubSettings: 'Version control',
+  githubDescription: 'Keep documents in a GitHub repository. Each save is one commit.',
+  githubAccount: 'GitHub account',
+  githubSignedInAs: params('Signed in as @{login}'),
+  githubNotSignedIn: 'Not signed in to GitHub.',
+  githubSignIn: 'Sign in with GitHub',
+  githubSigningIn: 'Waiting for GitHub…',
+  githubSignOut: 'Sign out',
+  githubSignOutHint:
+    'Signing out forgets the token on this device. To revoke access, use your GitHub settings.',
+  githubAuthorizedApps: 'Authorized apps on GitHub',
+  githubOAuthUnavailable:
+    'Sign in with GitHub works in the hosted app. Here, connect a personal access token instead.',
+  githubUseToken: 'Use a personal access token instead',
+  githubToken: 'Personal access token',
+  githubTokenHint: 'A fine-grained token for the repository with Contents: read and write.',
+  githubCreateToken: 'Create a token on GitHub',
+  githubConnectToken: 'Connect token',
+  githubSignInBlocked: 'Allow pop-up windows for this site to sign in with GitHub.',
+  githubSignInFailed: 'GitHub sign-in did not finish. Try again.',
+  githubRepository: 'Repository',
+  githubRepositoryDescription: 'Documents are saved as folders of JSON files at this location.',
+  githubOwner: 'Owner',
+  githubRepositoryName: 'Repository name',
+  githubBranch: 'Branch',
+  githubFolder: 'Folder',
+  githubFolderHint: 'Leave empty to use the repository root.',
+  githubInvalidName: 'Use letters, digits, hyphens, periods, or underscores.',
+  githubInvalidBranch: 'Enter a valid branch name.',
+  githubInvalidFolder: 'Enter a relative folder path without “..”.',
+  githubTestAccess: 'Test access',
+  githubTestingAccess: 'Checking…',
+  githubAccessGranted: params('This account can commit to {repository}.'),
+  githubAccessReadOnly: 'This account can read the repository but cannot commit to it.',
+  githubErrorUnauthorized: 'GitHub rejected the saved token. Sign in again.',
+  githubErrorForbidden: 'This account cannot access the repository. Check its permissions.',
+  githubErrorNotFound: 'The repository or branch was not found, or this account cannot see it.',
+  githubErrorRateLimited: 'GitHub’s rate limit was reached. Try again later.',
+  githubErrorRateLimitedUntil: params('GitHub’s rate limit was reached. Try again after {time}.'),
+  githubErrorTooLarge: 'A file is larger than GitHub accepts (100 MB per file).',
+  githubErrorNetwork: 'Could not reach GitHub. Check the connection and try again.',
+  githubErrorFailed: 'The GitHub request failed. Try again.',
+  githubVersionControl: 'Commit to GitHub',
+  githubCommit: 'Commit',
+  githubCommitting: 'Committing…',
+  githubCommitMessage: 'Commit message',
+  githubCommitMessageHint: 'Optional. Leave empty to describe the changed pages automatically.',
+  githubCommitted: params('Committed {sha} · {time}'),
+  githubNoChanges: 'No changes since the last commit.',
+  githubUnsavedChanges: 'Uncommitted changes',
+  githubLocation: params('{repository} · {branch}'),
+  githubViewCommit: 'View commit on GitHub',
+  githubSaveToRepository: 'Save to GitHub',
+  githubSaveToRepositoryDescription: params(
+    'Creates a document folder in {repository} on {branch}.'
+  ),
+  githubDocumentName: 'Document name',
+  githubSaving: 'Saving…',
+  githubSetUp: 'Set up GitHub',
+  githubSetUpDescription: 'Sign in and choose a repository in Settings to commit documents.',
+  githubConflict: 'This document also changed on GitHub',
+  githubConflictDescription: params(
+    '{count} files changed both here and on GitHub. Nothing was committed.'
+  ),
+  githubReloadRemote: 'Reload from GitHub',
+  githubReloadConfirm: 'Reload from GitHub?',
+  githubReloadConfirmDescription: 'Your uncommitted changes in this tab will be discarded.',
+  githubSaveAsNew: 'Save as new document',
+  githubOverwrite: 'Overwrite GitHub',
+  githubRebased: 'Committed on top of newer changes from GitHub. Reload to see them.',
+  githubLargeFile: params('{path} is {size} MB. GitHub recommends files under 50 MB.'),
+  githubDocuments: 'GitHub documents',
+  githubWorkspaceDescription: params('{repository} · {branch} · {folder}'),
+  githubEmpty: 'No documents in this folder yet.',
+  githubLoading: 'Loading GitHub documents…',
+  githubWorkspaceNotConfigured:
+    'Sign in to GitHub in Settings to see documents from the repository.'
 } as const
 
 export const storageMessages = i18n('storage', storageMessageDefaults)

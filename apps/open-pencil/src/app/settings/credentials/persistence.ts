@@ -5,6 +5,7 @@ import { RELAY_KEY_CREDENTIAL } from '@/app/automation/relay/key'
 import { VECTORIZE_CREDENTIAL_REFS } from '@/app/editor/vectorize/credentials'
 import { mcpConnectionSettings, mcpConnectionCredentialRef } from '@/app/integrations/mcp'
 import { storageCredentialRefs, storageProviderRegistry } from '@/app/integrations/storage'
+import { GITHUB_CREDENTIAL_REFS } from '@/app/integrations/storage/github/provider'
 import {
   PEXELS_CREDENTIAL,
   UNSPLASH_CREDENTIAL,
@@ -39,6 +40,7 @@ export function appCredentialRefs(): CredentialRef[] {
       mcpConnectionCredentialRef(connection.id)
     ),
     ...storageCredentials,
+    ...GITHUB_CREDENTIAL_REFS,
     RELAY_KEY_CREDENTIAL
   ])
 }

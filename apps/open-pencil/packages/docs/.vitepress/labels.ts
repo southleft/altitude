@@ -16,6 +16,7 @@ export interface SidebarLabels {
   components: string
   variables: string
   motion: string
+  versionControl: string
   overview: string
   gettingStarted: string
   features: string
@@ -151,6 +152,7 @@ export const EN: SidebarLabels = {
   components: 'Components',
   variables: 'Variables',
   motion: 'Motion',
+  versionControl: 'Version Control',
   overview: 'Overview',
   gettingStarted: 'Getting Started',
   features: 'Features',
@@ -177,6 +179,7 @@ export const DE: SidebarLabels = {
   components: 'Komponenten',
   variables: 'Variablen',
   motion: 'Bewegung',
+  versionControl: 'Versionsverwaltung',
   overview: 'Überblick',
   gettingStarted: 'Erste Schritte',
   features: 'Funktionen',
@@ -203,6 +206,7 @@ export const IT: SidebarLabels = {
   components: 'Componenti',
   variables: 'Variabili',
   motion: 'Movimento',
+  versionControl: 'Controllo delle versioni',
   overview: 'Panoramica',
   gettingStarted: 'Per iniziare',
   features: 'Funzionalità',
@@ -229,6 +233,7 @@ export const FR: SidebarLabels = {
   components: 'Composants',
   variables: 'Variables',
   motion: 'Mouvement',
+  versionControl: 'Gestion de versions',
   overview: 'Vue d’ensemble',
   gettingStarted: 'Premiers pas',
   features: 'Fonctionnalités',
@@ -255,6 +260,7 @@ export const ES: SidebarLabels = {
   components: 'Componentes',
   variables: 'Variables',
   motion: 'Movimiento',
+  versionControl: 'Control de versiones',
   overview: 'Resumen',
   gettingStarted: 'Primeros pasos',
   features: 'Características',
@@ -281,6 +287,7 @@ export const PL: SidebarLabels = {
   components: 'Komponenty',
   variables: 'Zmienne',
   motion: 'Ruch',
+  versionControl: 'Kontrola wersji',
   overview: 'Przegląd',
   gettingStarted: 'Rozpoczęcie pracy',
   features: 'Funkcje',
@@ -307,6 +314,7 @@ export const RU: SidebarLabels = {
   components: 'Компоненты',
   variables: 'Переменные',
   motion: 'Анимация',
+  versionControl: 'Контроль версий',
   overview: 'Обзор',
   gettingStarted: 'Начало работы',
   features: 'Возможности',

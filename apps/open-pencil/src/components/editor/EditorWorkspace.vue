@@ -21,6 +21,7 @@ import MobileHud from '@/components/MobileHud/MobileHud.vue'
 import PropertiesPanel from '@/components/PropertiesPanel.vue'
 import Toolbar from '@/components/Toolbar/Toolbar.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
+import GitHubCommitPopover from '@/components/version-control/GitHubCommitPopover.vue'
 import splitterTheme from '@/theme/splitter'
 
 const showChrome = appRuntimeConfig.showChrome
@@ -73,7 +74,10 @@ const horizontalSplitterStyles = tv(splitterTheme)({ direction: 'horizontal' })
       <div
         class="flex shrink-0 items-center justify-between gap-2 border-b border-border px-1.5 py-1.5"
       >
-        <AgentConnectPopover />
+        <div class="flex min-w-0 items-center gap-1.5">
+          <AgentConnectPopover />
+          <GitHubCommitPopover />
+        </div>
         <CollabPanel />
       </div>
       <PropertiesPanel />

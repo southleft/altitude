@@ -23,6 +23,7 @@ import { openFileFromPath } from '@/app/shell/menu/use'
 import { createStorageWorkspaceSource } from '@/app/storage/workspace/source'
 import { openStorageDocumentInNewTab } from '@/app/tabs'
 import DocumentEntry from '@/components/home/document/DocumentEntry.vue'
+import HomeGitHubSection from '@/components/home/github/HomeGitHubSection.vue'
 import HomeSearchActions from '@/components/home/search/HomeSearchActions.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -345,6 +346,8 @@ function formattedDate(updatedAt: string): string {
           {{ storage.emptyStorageWorkspace }}
         </div>
       </section>
+
+      <HomeGitHubSection :query="query" :view="view" />
     </section>
   </main>
 </template>

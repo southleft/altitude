@@ -105,9 +105,10 @@ The build adds roughly 4–5 minutes to the Pages build. The editor's own
 `public/_headers`/`_redirects` land in `dist/open-pencil/` but are ignored by Cloudflare,
 which reads them only from the site root. The root rules live in `pages-root/`.
 
-Documents stay in each person's browser (IndexedDB) unless saved to a file. Hosting does
-not create shared storage. AI agents reach the hosted editor through the hosted MCP relay
-below; without it, Connect AI says agents need the desktop app or a local `bun run dev`.
+Documents stay in each person's browser (IndexedDB) unless saved to a file or committed to
+GitHub (see "Version control (GitHub)"). AI agents reach the hosted editor through the hosted
+MCP relay below; without it, Connect AI says agents need the desktop app or a local
+`bun run dev`.
 
 ## Hosted MCP relay
 
@@ -168,6 +169,52 @@ bunx wrangler@4 deploy --dry-run   # proves it bundles
 ```
 
 Build or run the editor with `VITE_OPENPENCIL_RELAY_URL=http://127.0.0.1:8787` to use it.
+
+## Version control (GitHub)
+
+Documents can be committed to a GitHub repository, by default the private
+**southleft/altitude-designs** (branch `main`, folder `documents`), configurable in
+**Settings → Version control**. Each save is one commit straight to the branch. The user
+guide (`packages/docs/user-guide/version-control.md`) covers the flow and the JSON format.
+
+- Format: `packages/core/src/io/formats/document-json/` (`@open-pencil/core/io/formats/document-json`).
+- App: `src/app/integrations/storage/github/` (client, repository/commit flow, OAuth,
+  settings workflows, per-document session). The token lives in the credential store under
+  `github:default:token`; the signed-in login, id and avatar are non-secret settings.
+- OAuth: `functions/open-pencil/auth/github/{start,callback}.js` at the Altitude root, behind
+  the same password middleware. Tested by `node scripts/__tests__/open-pencil-github-oauth.test.mjs`.
+
+**One-time setup: the OAuth app** (GitHub → southleft organization → Settings → Developer
+settings → OAuth Apps → New OAuth App):
+
+| Field | Value |
+| --- | --- |
+| Application name | OpenPencil (Southleft) |
+| Homepage URL | `https://altitude.pages.dev/open-pencil/` |
+| Authorization callback URL | `https://altitude.pages.dev/open-pencil/auth/github/callback` |
+| Enable Device Flow | off |
+
+The app requests the `repo` scope (private repository contents; also covers the pull
+requests and issues planned next). Then generate a client secret, and in Cloudflare → the docs
+Pages project → Settings → Variables and Secrets, for **Production** (and Preview if you
+register a preview callback):
+
+- `GITHUB_OAUTH_CLIENT_ID`: the client ID, as plain text.
+- `GITHUB_OAUTH_CLIENT_SECRET`: the client secret, as a **Secret**.
+
+Redeploy. Without both variables the auth routes return 503 and sign-in fails closed; the
+rest of the editor is unaffected. If the organization restricts OAuth app access, an owner
+must approve the app for southleft (GitHub → organization settings → Third-party access).
+
+An OAuth app has a single callback URL, so **preview deployments**
+(`<branch>.altitude.pages.dev`) cannot finish the web flow against the production app.
+Register a second OAuth app for a fixed preview host if needed, or use the token fallback.
+
+**Desktop and local `bun run dev`:** Pages Functions do not run there. Use **Use a personal
+access token instead** in the same settings section: a
+[fine-grained token](https://github.com/settings/personal-access-tokens/new) with resource
+owner `southleft`, repository access limited to `altitude-designs`, and **Contents: Read and
+write**. It is stored the same way as the OAuth token.
 
 ## Pulling upstream OpenPencil updates
 

@@ -69,12 +69,15 @@ function withAppHeaders(response, pathname) {
   // Authenticated content stays out of shared caches. The browser may keep hashed build
   // assets (content-addressed, so never stale) but revalidates everything else.
   const headers = new Headers(response.headers)
-  headers.set(
-    'Cache-Control',
-    response.ok && pathname.startsWith('/open-pencil/assets/')
-      ? 'private, max-age=31536000, immutable'
-      : 'private, no-cache'
-  )
+  // A response that must never be stored (the GitHub sign-in hand-off) keeps `no-store`.
+  if (!/\bno-store\b/.test(headers.get('Cache-Control') || '')) {
+    headers.set(
+      'Cache-Control',
+      response.ok && pathname.startsWith('/open-pencil/assets/')
+        ? 'private, max-age=31536000, immutable'
+        : 'private, no-cache'
+    )
+  }
   // WebAssembly.instantiateStreaming refuses the renderer without its real type.
   if (pathname.endsWith('.wasm')) headers.set('Content-Type', 'application/wasm')
   return new Response(response.body, {

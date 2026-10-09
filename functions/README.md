@@ -44,3 +44,5 @@ diagnosis and what restoring it requires.
 | File | Purpose |
 | --- | --- |
 | `api/theme.js` | `POST /api/theme` — deterministic theme generation. Self-contained; 503 without its secret. |
+| `open-pencil/_middleware.js` | Password gate, SPA fallback and headers for the OpenPencil editor at `/open-pencil/`. 503 without `OPEN_PENCIL_PASSWORD`. |
+| `open-pencil/auth/github/start.js`, `callback.js` | GitHub OAuth for the editor's "Sign in with GitHub". Self-contained; 503 without `GITHUB_OAUTH_CLIENT_ID` and `GITHUB_OAUTH_CLIENT_SECRET`. Tested by `scripts/__tests__/open-pencil-github-oauth.test.mjs`. |

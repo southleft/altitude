@@ -14,6 +14,7 @@ import {
 import { provideSettingsNavigation } from '@/app/settings/navigation/use'
 import DiagnosticsSettingsPanel from '@/components/settings/diagnostics/DiagnosticsSettingsPanel.vue'
 import GeneralSettingsPanel from '@/components/settings/general/GeneralSettingsPanel.vue'
+import GitHubSettingsPanel from '@/components/settings/github/GitHubSettingsPanel.vue'
 import SettingsPage from '@/components/settings/layout/SettingsPage.vue'
 import MCPWorkspacePanel from '@/components/settings/mcp/MCPWorkspacePanel.vue'
 import MediaSettingsPanel from '@/components/settings/media/MediaSettingsPanel.vue'
@@ -33,7 +34,7 @@ import AppTabsRoot from '@/components/ui/tabs/AppTabsRoot.vue'
 import AppTabsTrigger from '@/components/ui/tabs/AppTabsTrigger.vue'
 
 const { isMobile } = useViewportKind()
-const { settings, common } = useI18n()
+const { settings, common, storage } = useI18n()
 const navigation = provideSettingsNavigation()
 tryOnScopeDispose(registerSettingsNavigation(navigation.request))
 const { editing, confirming } = navigation
@@ -46,7 +47,8 @@ const sections = computed(
       { value: 'mcp', label: settings.value.mcp },
       { value: 'tools', label: settings.value.toolAccess },
       { value: 'media', label: settings.value.media },
-      { value: 'storage', label: settings.value.storage }
+      { value: 'storage', label: settings.value.storage },
+      { value: 'github', label: storage.value.githubSettings }
     ] satisfies { value: SettingsSection; label: string }[]
 )
 function onSectionChange(section: string | number): void {
@@ -119,6 +121,10 @@ function onOpenChange(open: boolean): void {
           <template #leading><icon-lucide-cloud class="size-3.5" /></template>
           {{ settings.storage }}
         </AppTabsTrigger>
+        <AppTabsTrigger value="github" data-test-id="settings-section-github">
+          <template #leading><icon-lucide-git-branch class="size-3.5" /></template>
+          {{ storage.githubSettings }}
+        </AppTabsTrigger>
       </AppTabsList>
 
       <AppTabsContent value="general" as-child>
@@ -138,6 +144,9 @@ function onOpenChange(open: boolean): void {
       </AppTabsContent>
       <AppTabsContent value="storage" as-child>
         <StorageSettingsPanel />
+      </AppTabsContent>
+      <AppTabsContent value="github" as-child>
+        <GitHubSettingsPanel />
       </AppTabsContent>
     </AppTabsRoot>
 

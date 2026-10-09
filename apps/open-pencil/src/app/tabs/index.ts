@@ -194,7 +194,7 @@ function isDOMImportFile(file: File): boolean {
   return /\.(html?|xhtml)$/i.test(file.name)
 }
 
-function reusableTabStore(): { store: EditorStore; created: boolean } {
+export function reusableTabStore(): { store: EditorStore; created: boolean } {
   const current = activeTab.value
   if (current?.kind === 'home') {
     leaveHome(current.id)
@@ -221,7 +221,7 @@ async function readFigForTab(file: File, signal?: AbortSignal): Promise<SceneGra
   return imported
 }
 
-async function showImportedGraph(
+export async function showImportedGraph(
   store: EditorStore,
   graph: SceneGraph,
   prepare?: () => void | Promise<void>,
@@ -289,7 +289,7 @@ function findStorageTab(providerId: string, documentId: string): Tab | undefined
   })
 }
 
-function failPreparation(
+export function failPreparation(
   load: DocumentLoadSession,
   code: 'read-failed' | 'decode-failed',
   error: unknown
