@@ -292,6 +292,47 @@ write**. For branches, pull requests and comments also grant **Pull requests: Re
 and **Issues: Read and write** (labels are created through the issues permission). It is stored
 the same way as the OAuth token.
 
+## Team fonts
+
+The Altitude Design System `.fig` uses Public Sans, Source Sans Pro, Inter, IBM Plex Sans and
+Mono, Roboto, Roboto Mono and Manrope, which load from the bundle or online providers, and
+**Agrandir**, a commercial font that does not. Team fonts fill that gap: font files committed
+to `fonts/` in the version-control repository load for everyone signed in to GitHub.
+
+**To add a font:** commit `.woff2`, `.woff`, `.ttf` or `.otf` files (static instances, at most
+20 MB each) to `southleft/altitude-designs/fonts/` on the configured branch. Optionally add
+`fonts/fonts.json` to name faces or record licence notes:
+
+```json
+{ "fonts": [{ "family": "Agrandir", "weight": 700, "file": "Agrandir-Bold.otf", "license": "Commercial: licence terms and seats" }] }
+```
+
+Without a manifest entry, family and style come from each file's name table (or its file name
+for WOFF2). Reload the editor, or use **Refresh team fonts** in the fonts report.
+
+**Licensing:** the repository is private, but every collaborator can download the files.
+Commit a commercial font such as Agrandir only when Southleft's licence covers every person
+with read access, and record the licence in `fonts.json`. Otherwise designers install it
+locally and the fonts report keeps flagging it for everyone else.
+
+- Core: `packages/core/src/text/team-font/` (library contract, magic-byte and size checks,
+  manifest and name-table parsing, catalog). `FontManager.setTeamFontLibrary()` adds the
+  provider after installed and bundled fonts and before cached and web fonts; faces register
+  with CanvasKit and `FontFace` like other providers, with the `team` source.
+- App: `src/app/editor/fonts/team/` lists `fonts/` through the GitHub client (contents API with
+  ETags), fetches bytes from the Git blob API as raw media, verifies the blob SHA, and caches
+  bytes and the last listing in IndexedDB (`open-pencil-team-fonts`) by blob SHA. The token is
+  resolved per operation and sent only in the `Authorization` header to `api.github.com`; it
+  does not go through the web-font fetch allowlist (`src/app/editor/fonts/browser-fetch.ts`),
+  which stays limited to font CDNs. Signed out, 401 and 403 offer no team fonts; 404 means no
+  `fonts/` folder; rate limits and network failures fall back to the cached listing.
+- Fonts report and replacement: `buildDocumentFontReport()` and `suggestFontReplacements()` in
+  `packages/core/src/text/font/`, the undoable `editor.replaceFontFace()` in
+  `packages/core/src/editor/text/replace-font.ts`, UI in `src/components/font-status/`.
+  Altitude knowledge stays in the app adapter `src/app/editor/fonts/policy.ts`: sanctioned
+  families come from imported `font-family` variables, else from a list mirroring
+  `libs/al-web-components/styles/tokens-dtcg/tier-1/typography.json`.
+
 ## Pulling upstream OpenPencil updates
 
 The import was squashed (`git-subtree-dir: apps/open-pencil`), so upstream history is not in

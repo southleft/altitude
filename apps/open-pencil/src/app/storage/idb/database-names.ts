@@ -6,5 +6,6 @@ export const APP_DATABASE_NAMES = {
   localCanvas: 'open-pencil-cloud-local',
   outbox: 'open-pencil-cloud-outbox',
   recovery: 'open-pencil-recovery',
-  diagnostics: 'open-pencil-diagnostics'
+  diagnostics: 'open-pencil-diagnostics',
+  teamFonts: 'open-pencil-team-fonts'
 } as const

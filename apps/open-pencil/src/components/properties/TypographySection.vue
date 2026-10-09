@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { TypographyControlsRoot, useI18n } from '@open-pencil/vue'
 
 import { loadFont } from '@/app/editor/fonts'
+import { openFontReport } from '@/app/editor/fonts/report/open'
 import { appMenuShortcutLabel } from '@/app/shell/menu/shortcut'
 import FontPicker from '@/components/font-picker/FontPicker.vue'
 import FontSettingsPopover from '@/components/font-settings/FontSettingsPopover.vue'
@@ -12,7 +13,6 @@ import SharedStyleField from '@/components/properties/shared-style/SharedStyleFi
 import LineHeightField from '@/components/properties/typography/LineHeightField.vue'
 import VariableNumberField from '@/components/properties/VariableNumberField.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
-import Tip from '@/components/ui/overlay/Tip.vue'
 import PanelFieldGroup from '@/components/ui/panel/PanelFieldGroup.vue'
 import PanelGrid from '@/components/ui/panel/PanelGrid.vue'
 import PanelSection from '@/components/ui/panel/PanelSection.vue'
@@ -20,7 +20,7 @@ import AppSelect from '@/components/ui/select/AppSelect.vue'
 import SegmentedControl from '@/components/ui/select/SegmentedControl.vue'
 import AppSwitch from '@/components/ui/toggle/AppSwitch.vue'
 
-const { panels, menu } = useI18n()
+const { panels, menu, fonts } = useI18n()
 const fontLoader = { load: loadFont }
 const alignmentOptions = computed(() => [
   { value: 'LEFT', label: panels.value.alignLeft },
@@ -67,26 +67,24 @@ function featureEnabled(features: Array<{ tag: string; enabled: boolean }>, tag:
           @select="ctx.actions.setFamily"
         />
         <FontSettingsPopover />
-        <Tip
+        <IconButton
           v-if="ctx.hasMissingFonts.value"
+          data-test-id="typography-missing-fonts"
           :label="
             'Missing font' +
             (ctx.missingFonts.value.length > 1 ? 's' : '') +
             ': ' +
-            ctx.missingFonts.value.join(', ')
+            ctx.missingFonts.value.join(', ') +
+            ' — ' +
+            fonts.reviewFonts
           "
+          size="xs"
+          @click="openFontReport"
         >
           <icon-lucide-alert-triangle
-            role="img"
-            :aria-label="
-              'Missing font' +
-              (ctx.missingFonts.value.length > 1 ? 's' : '') +
-              ': ' +
-              ctx.missingFonts.value.join(', ')
-            "
             class="size-3.5 shrink-0 text-[var(--color-warning-action)]"
           />
-        </Tip>
+        </IconButton>
       </div>
 
       <PanelGrid :columns="2" class="mb-3">

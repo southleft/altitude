@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { WEB_FONT_PROVIDER_IDS } from '@open-pencil/core/text'
+import { fontManager, WEB_FONT_PROVIDER_IDS } from '@open-pencil/core/text'
 import { FontPickerRoot, useI18n } from '@open-pencil/vue'
-import type { FontPickerUI } from '@open-pencil/vue'
+import type { FontPickerSection, FontPickerUI } from '@open-pencil/vue'
 
 import {
   listFamilies,
@@ -11,10 +11,11 @@ import {
   localFontAccessState,
   requestLocalFontAccess
 } from '@/app/editor/fonts'
+import { teamFontStatus } from '@/app/editor/fonts/team'
 import { usePopoverUI } from '@/components/ui/overlay/popover'
 import { useSelectUI } from '@/components/ui/select/select'
 
-const { panels } = useI18n()
+const { panels, fonts } = useI18n()
 const { label: labelProp } = defineProps<{ label?: string }>()
 const label = computed(() => labelProp ?? panels.value.fontFamily)
 const modelValue = defineModel<string>({ required: true })
@@ -38,6 +39,13 @@ const ui = computed<FontPickerUI>(() => ({
   emptyAction: 'mt-2 rounded bg-accent px-2 py-1 text-xs font-medium text-white disabled:opacity-50'
 }))
 
+/** Team fonts are pinned above the rest under the library's name. */
+const sections = computed<FontPickerSection[]>(() => {
+  void teamFontStatus.value
+  const library = fontManager.teamFontLibraryLabel()
+  return library ? [{ source: 'team', label: fonts.value.teamFontsSection({ library }) }] : []
+})
+
 const previewFontLoads = new Set<string>()
 
 const localFontAccess = {
@@ -46,7 +54,10 @@ const localFontAccess = {
 }
 
 function loadPreviewFont(family: string, source: string) {
-  if (!WEB_FONT_PROVIDER_IDS.includes(source as (typeof WEB_FONT_PROVIDER_IDS)[number])) return
+  const remote =
+    source === 'team' ||
+    WEB_FONT_PROVIDER_IDS.includes(source as (typeof WEB_FONT_PROVIDER_IDS)[number])
+  if (!remote) return
   if (previewFontLoads.has(family)) return
   previewFontLoads.add(family)
   void loadFont(family)
@@ -64,6 +75,8 @@ function loadPreviewFont(family: string, source: string) {
     :empty-search-text="panels.noFontsFound"
     :empty-fonts-text="panels.noLocalFontsAvailable"
     :empty-fonts-hint="panels.localFontsAccessHint"
+    :sections="sections"
+    :other-section-label="fonts.allFontsSection"
     @select="emit('select', $event)"
   >
     <template #trigger>
@@ -78,22 +91,32 @@ function loadPreviewFont(family: string, source: string) {
       </button>
     </template>
 
-    <template #item="{ family, selected, source }">
+    <template #item="{ family, selected, source, sectionLabel }">
       <div
         data-test-id="font-picker-item"
-        class="flex min-w-0 flex-1 items-center gap-2"
+        :data-source="source"
+        class="flex min-w-0 flex-1 flex-col justify-end self-stretch"
         @vue:mounted="loadPreviewFont(family, source)"
       >
-        <icon-lucide-check v-if="selected" class="size-3 shrink-0 text-accent" />
-        <span v-else class="size-3 shrink-0" />
-        <span class="truncate" :style="{ fontFamily: `'${family}', sans-serif` }">{{
-          family
-        }}</span>
         <span
-          class="font-sans ml-auto shrink-0 rounded bg-input px-1.5 py-0.5 text-[9px] uppercase text-muted"
+          v-if="sectionLabel"
+          data-slot="font-picker-section"
+          class="font-sans mb-1.5 truncate text-[10px] font-medium tracking-wide text-muted uppercase"
         >
-          {{ source }}
+          {{ sectionLabel }}
         </span>
+        <div class="flex min-w-0 items-center gap-2">
+          <icon-lucide-check v-if="selected" class="size-3 shrink-0 text-accent" />
+          <span v-else class="size-3 shrink-0" />
+          <span class="truncate" :style="{ fontFamily: `'${family}', sans-serif` }">{{
+            family
+          }}</span>
+          <span
+            class="font-sans ml-auto shrink-0 rounded bg-input px-1.5 py-0.5 text-[9px] uppercase text-muted"
+          >
+            {{ source }}
+          </span>
+        </div>
       </div>
     </template>
   </FontPickerRoot>

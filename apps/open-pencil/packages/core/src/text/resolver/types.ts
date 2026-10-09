@@ -7,7 +7,7 @@ export type FontResolutionListener = (
   snapshot: FontResolutionSnapshot
 ) => void
 
-export type FontCandidateSource = 'registered' | 'local' | 'cache' | 'remote' | 'fallback'
+export type FontCandidateSource = 'registered' | 'local' | 'team' | 'cache' | 'remote' | 'fallback'
 
 export interface FontResolutionCandidate {
   id: string

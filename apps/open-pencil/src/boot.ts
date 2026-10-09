@@ -5,6 +5,7 @@ import { createRetainedScopePlugin } from '@open-pencil/vue'
 
 import './app.css'
 import { preloadFonts } from '@/app/editor/fonts'
+import { installTeamFontLibrary } from '@/app/editor/fonts/team'
 import { observeBootErrors } from '@/app/shell/support/boot'
 import { reportBootFailure } from '@/app/shell/support/gate'
 import { IS_TAURI } from '@/constants'
@@ -19,6 +20,7 @@ import router from './router'
  */
 export async function boot(): Promise<void> {
   preloadFonts()
+  installTeamFontLibrary()
   const head = createHead()
   const app = createApp(App)
   const bootErrors = observeBootErrors(app)

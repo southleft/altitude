@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { computeAllLayouts } from '@open-pencil/core/layout'
 import { documentFontStatus, fontManager, fontResolver } from '@open-pencil/core/text'
@@ -6,6 +6,7 @@ import { useEditorEvent } from '@open-pencil/vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
 import { loadFont, requestLocalFontAccess } from '@/app/editor/fonts'
+import { teamFontStatus } from '@/app/editor/fonts/team'
 
 export function useDocumentFontStatus() {
   const editor = useEditorStore()
@@ -72,6 +73,15 @@ export function useDocumentFontStatus() {
       retrying.value = false
     }
   }
+
+  // Team fonts often arrive after the document (sign-in finishes, the listing loads):
+  // retry the unavailable faces once the library has something to offer.
+  watch(
+    () => teamFontStatus.value.state === 'ready' && teamFontStatus.value.faceCount,
+    (ready) => {
+      if (ready && status.value.issues.length > 0) void retry()
+    }
+  )
 
   function selectAffectedNodes() {
     editor.select(status.value.issues.flatMap((issue) => issue.nodeIds))

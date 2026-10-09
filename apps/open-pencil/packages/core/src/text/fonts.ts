@@ -15,6 +15,7 @@ import {
 
 export * from '#core/text/font/sources'
 export * from '#core/text/font/style'
+import { publicAssetURL } from '#core/public-asset'
 import { fontFallbackEntry } from '#core/text/fallbacks'
 import type { FontFallbackScript } from '#core/text/fallbacks'
 import type {
@@ -26,9 +27,10 @@ import type {
   LocalFontAccessState
 } from '#core/text/font/sources'
 import { collectGraphFontKeys } from '#core/text/requirements'
+import type { TeamFontFace, TeamFontLibrary } from '#core/text/team-font/types'
+import { checkFontBytes } from '#core/text/team-font/validate'
 import { normalizedCoverageText, WebFontResolver } from '#core/text/web-fonts'
 import type { WebFontFetch, WebFontProviderId } from '#core/text/web-fonts'
-import { publicAssetURL } from '#core/public-asset'
 
 type FindLocalFontOptions = { allowVariable?: boolean }
 
@@ -57,6 +59,8 @@ export class FontManager {
   private fallbackUserAgent: string | undefined
   private hostFontLoader: HostFontLoader | null = null
   private webFonts = new WebFontResolver()
+  private teamFontLibrary: TeamFontLibrary | null = null
+  private teamFontGeneration = 0
   private cjkFallbackFamilies: string[] = []
   private cjkFallbackPromise: Promise<string[]> | null = null
   private arabicFallbackFamilies: string[] = []
@@ -125,6 +129,56 @@ export class FontManager {
 
   setHostFontLoader(loader: HostFontLoader | null): void {
     this.hostFontLoader = loader
+  }
+
+  /**
+   * A shared team font library, consulted after host and local fonts and before bundled,
+   * cached and web fonts. Replacing it forgets which faces came from the previous one.
+   */
+  setTeamFontLibrary(library: TeamFontLibrary | null): void {
+    this.teamFontLibrary = library
+    this.teamFontGeneration++
+  }
+
+  teamFontLibraryLabel(): string | null {
+    return this.teamFontLibrary?.label ?? null
+  }
+
+  async listTeamFontFaces(signal?: AbortSignal): Promise<TeamFontFace[]> {
+    if (!this.teamFontLibrary) return []
+    try {
+      return await this.teamFontLibrary.listFaces(signal)
+    } catch (e) {
+      if (signal?.aborted) throw e
+      console.warn('Team font library listing failed:', e)
+      return []
+    }
+  }
+
+  async loadTeamFont(
+    family: string,
+    style = 'Regular',
+    signal?: AbortSignal
+  ): Promise<ArrayBuffer | null> {
+    const library = this.teamFontLibrary
+    if (!library) return null
+    const generation = this.teamFontGeneration
+    const faces = await this.listTeamFontFaces(signal)
+    const match = chooseLocalFontMatch(faces, family, style)
+    if (!match) return null
+    try {
+      const buffer = await library.loadFace(match, signal)
+      if (!buffer || generation !== this.teamFontGeneration) return null
+      if (!checkFontBytes(buffer).ok || isVariableFont(buffer)) {
+        console.warn(`Team font "${match.file.path}" is not a usable static font file`)
+        return null
+      }
+      return this.registerAndCache(family, style, buffer, 'team')
+    } catch (e) {
+      if (signal?.aborted) throw e
+      console.warn(`Team font load failed for "${family}" ${style}:`, e)
+      return null
+    }
   }
 
   setOnlineFontProviders(settings: Partial<Record<WebFontProviderId, boolean>>): void {
@@ -201,6 +255,7 @@ export class FontManager {
         families: await this.webFonts.listFamilies(provider)
       }))
     )
+    const teamFaces = await this.listTeamFontFaces()
     const byFamily = new Map<string, FontFamilyOption>()
     byFamily.set(DEFAULT_FONT_FAMILY, { family: DEFAULT_FONT_FAMILY, source: 'bundled' })
     for (const { provider, families } of webFontFamilies) {
@@ -209,6 +264,9 @@ export class FontManager {
       }
     }
     for (const font of fonts) byFamily.set(font.family, { family: font.family, source: 'local' })
+    // Team fonts are listed as team fonts even when also installed: the team copy is the
+    // shared one, and pickers group them.
+    for (const face of teamFaces) byFamily.set(face.family, { family: face.family, source: 'team' })
     return [...byFamily.values()].sort((a, b) => a.family.localeCompare(b.family))
   }
 
@@ -321,6 +379,7 @@ export class FontManager {
 
     return (
       (await this.loadLocalFont(family, style)) ??
+      (await this.loadTeamFont(family, style, signal)) ??
       (await this.loadCachedFont(family, style, characters)) ??
       (await this.loadRemoteFont(family, style, characters, signal))
     )
