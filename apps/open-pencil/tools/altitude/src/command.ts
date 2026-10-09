@@ -10,6 +10,7 @@ import { computeAllLayouts } from '@open-pencil/core/layout'
 import { createLibraryRevision, diffLibraryManifests } from '@open-pencil/core/library'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
+import { auditCommand, lintCommand } from './audit/command'
 import {
   arrangeLibraryPage,
   buildAltitudeLibrary,
@@ -199,7 +200,15 @@ const canvasContracts = defineCommand({
 export default {
   name: 'altitude',
   command: defineCommand({
-    meta: { description: 'Altitude design system: build the canvas library from code' },
-    subCommands: { 'build-library': buildLibrary, 'canvas-contracts': canvasContracts }
+    meta: {
+      description:
+        'Altitude design system: build the canvas library from code, audit design changes'
+    },
+    subCommands: {
+      'build-library': buildLibrary,
+      'canvas-contracts': canvasContracts,
+      lint: lintCommand,
+      audit: auditCommand
+    }
   })
 }

@@ -3,6 +3,7 @@ import { defineCommand, runMain } from 'citty'
 
 import analyze from './commands/analyze'
 import convert from './commands/convert'
+import design from './commands/design'
 import documents from './commands/documents'
 import evalCmd from './commands/eval'
 import exportCmd from './commands/export'
@@ -27,6 +28,7 @@ const { version } = await import('../package.json')
 const builtIns = {
   analyze,
   convert,
+  design,
   documents,
   eval: evalCmd,
   export: exportCmd,

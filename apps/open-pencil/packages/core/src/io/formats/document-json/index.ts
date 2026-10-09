@@ -6,6 +6,19 @@ export {
   type JSONValue
 } from './codec'
 export {
+  DIFF_IGNORED_FIELDS,
+  diffDocuments,
+  type DiffChangedNode,
+  type DiffInstance,
+  type DiffNodeRef,
+  type DiffPropertyChange,
+  type DiffStatus,
+  type DiffTokenBinding,
+  type DocumentDiff,
+  type DocumentDiffSummary,
+  type PageDiff
+} from './diff'
+export {
   DOCUMENT_JSON_FORMAT,
   DOCUMENT_JSON_VERSION,
   FIG_SCHEMA_PATH,
