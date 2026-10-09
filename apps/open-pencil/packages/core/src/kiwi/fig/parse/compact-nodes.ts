@@ -1,10 +1,13 @@
 import { isEqual } from 'es-toolkit/predicate'
 
+import { decodePreservedVectorNetwork } from '@open-pencil/fig/node-change'
 import type { NodeType, SceneNode, SourceMetadata } from '@open-pencil/scene-graph'
 import {
   createDefaultNode,
   createDefaultSourceMetadata
 } from '@open-pencil/scene-graph/node-defaults'
+
+type FigSourceMetadata = SourceMetadata['fig']
 
 /**
  * A scene node as the fields that differ from `createDefaultNode` for its type.
@@ -26,6 +29,8 @@ export interface CompactSceneNode {
   s?: Record<string, unknown>
   /** Non-default `source.fig` fields. */
   f?: Record<string, unknown>
+  /** Set when `vectorNetwork` is decoded on first read from the preserved `.fig` vector data. */
+  v?: 1
 }
 
 type DefaultKind = 'value' | 'empty-array' | 'empty-object' | 'empty-maps' | 'deep'
@@ -126,27 +131,64 @@ function diffFields(
 }
 
 const NODE_SKIP = ['id', 'type', 'source']
+const NODE_SKIP_LAZY_VECTOR = [...NODE_SKIP, 'vectorNetwork']
 const defaultSource = createDefaultSourceMetadata()
 const SOURCE_PLAN = planDefaults(defaultSource, ['fig'])
 const FIG_PLAN = planDefaults(defaultSource.fig, [])
 const nodePlans = new Map<string, DefaultPlan>()
 
-function nodePlan(type: NodeType): DefaultPlan {
-  let plan = nodePlans.get(type)
+function nodePlan(type: NodeType, lazyVector: boolean): DefaultPlan {
+  const key = lazyVector ? `${type}:lazy` : type
+  let plan = nodePlans.get(key)
   if (!plan) {
     plan = planDefaults(
       createDefaultNode(() => '', type),
-      NODE_SKIP
+      lazyVector ? NODE_SKIP_LAZY_VECTOR : NODE_SKIP
     )
-    nodePlans.set(type, plan)
+    nodePlans.set(key, plan)
   }
   return plan
 }
 
+/**
+ * Exact equality for plain data (primitives, arrays, plain objects), as decoded vector
+ * networks are. Much cheaper than a general deep equality over ~50k networks.
+ */
+function plainDataEqual(a: unknown, b: unknown): boolean {
+  if (Object.is(a, b)) return true
+  if (!a || !b || typeof a !== 'object' || typeof b !== 'object') return false
+  if (Array.isArray(a)) {
+    if (!Array.isArray(b) || a.length !== b.length) return false
+    for (let index = 0; index < a.length; index++) {
+      if (!plainDataEqual(a[index], b[index])) return false
+    }
+    return true
+  }
+  if (Array.isArray(b) || !isPlainObject(a) || !isPlainObject(b)) return false
+  const keys = Object.keys(a)
+  if (keys.length !== Object.keys(b).length) return false
+  for (const key of keys) {
+    if (!Object.hasOwn(b, key) || !plainDataEqual(a[key], b[key])) return false
+  }
+  return true
+}
+
+/** Whether the node's vector network is exactly what its preserved `.fig` vector data decodes to. */
+function hasPristineVectorNetwork(node: SceneNode): boolean {
+  if (!node.vectorNetwork) return false
+  const fig = node.source.fig as FigSourceMetadata | undefined
+  const vectorData = fig?.rawNodeFields.vectorData
+  if (!vectorData) return false
+  const decoded = decodePreservedVectorNetwork(vectorData, fig.rawSize)
+  return decoded !== null && plainDataEqual(decoded, node.vectorNetwork)
+}
+
 export function encodeCompactSceneNode(node: SceneNode): CompactSceneNode {
-  const { changed, absent } = diffFields(node, nodePlan(node.type))
+  const lazyVector = hasPristineVectorNetwork(node)
+  const { changed, absent } = diffFields(node, nodePlan(node.type, lazyVector))
   const compact: CompactSceneNode = { i: node.id, t: node.type, d: changed }
   if (absent.length > 0) compact.x = absent
+  if (lazyVector) compact.v = 1
 
   const source = node.source as SourceMetadata | undefined
   const sourceDiff = source && isPlainObject(source.fig) ? diffFields(source, SOURCE_PLAN) : null
@@ -169,9 +211,18 @@ function storedOverrides(compact: CompactSceneNode): Partial<SceneNode> {
   return { ...(compact.d as Partial<SceneNode>), source }
 }
 
-/** Every field that differs from `createDefaultNode`, for creating the node through the graph. */
+/**
+ * Every field that differs from `createDefaultNode`, for creating the node through the graph.
+ * A lazily sent vector network is decoded here, so the node is complete when it is created.
+ */
 export function compactSceneNodeOverrides(compact: CompactSceneNode): Partial<SceneNode> {
-  return storedOverrides(compact)
+  const overrides = storedOverrides(compact)
+  if (!compact.v) return overrides
+  const fig = overrides.source?.fig
+  return {
+    ...overrides,
+    vectorNetwork: decodePreservedVectorNetwork(fig?.rawNodeFields.vectorData, fig?.rawSize)
+  }
 }
 
 /** Remove the fields a compact node lacks although its defaults have them. */
@@ -180,9 +231,45 @@ export function removeAbsentCompactFields(node: SceneNode, compact: CompactScene
   for (const key of compact.x) Reflect.deleteProperty(node, key)
 }
 
-/** Rebuild a node that is not in any graph yet. */
+function setVectorNetwork(node: SceneNode, value: SceneNode['vectorNetwork']): void {
+  Object.defineProperty(node, 'vectorNetwork', {
+    value,
+    writable: true,
+    enumerable: true,
+    configurable: true
+  })
+}
+
+/**
+ * Make `vectorNetwork` decode from the node's preserved `.fig` vector data on first read.
+ *
+ * Imported vector networks are about a third of a large document's node data, and most are
+ * never read outside rendering of the page that holds them. The encoded bytes already travel
+ * in `source.fig.rawNodeFields.vectorData`, so the decoded copy is not sent at all. The
+ * source references are captured now: later in-place source edits must not change the result.
+ */
+function defineLazyVectorNetwork(node: SceneNode): void {
+  const fig = node.source.fig
+  const vectorData = fig.rawNodeFields.vectorData
+  const size = fig.rawSize
+  Object.defineProperty(node, 'vectorNetwork', {
+    get(): SceneNode['vectorNetwork'] {
+      const value = decodePreservedVectorNetwork(vectorData, size)
+      setVectorNetwork(node, value)
+      return value
+    },
+    set(value: SceneNode['vectorNetwork']) {
+      setVectorNetwork(node, value)
+    },
+    enumerable: true,
+    configurable: true
+  })
+}
+
+/** Rebuild a node that is not in any graph yet, leaving its vector network to decode lazily. */
 export function decodeCompactSceneNode(compact: CompactSceneNode): SceneNode {
   const node = createDefaultNode(() => compact.i, compact.t, storedOverrides(compact))
   removeAbsentCompactFields(node, compact)
+  if (compact.v) defineLazyVectorNetwork(node)
   return node
 }

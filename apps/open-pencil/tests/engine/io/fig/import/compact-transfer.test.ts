@@ -68,6 +68,26 @@ describe('compact .fig graph transfer', () => {
     if (!fixture) throw new Error('circle-text.fig fixture unavailable')
     const { nodeChanges, blobs, images } = parseFigBuffer(fixture)
     const graph = importNodeChanges(nodeChanges, blobs, new Map(images), { populate: 'first-page' })
-    expectSameNodes(streamGraph(graph, 3), cloneGraph(graph))
+    const streamed = streamGraph(graph, 3)
+    const vector = [...graph.nodes.values()].find((node) => node.vectorNetwork)
+    if (!vector) throw new Error('circle-text.fig has no vector network')
+    const pending = Object.getOwnPropertyDescriptor(streamed.nodes.get(vector.id), 'vectorNetwork')
+    expect(typeof pending?.get).toBe('function')
+    expectSameNodes(streamed, cloneGraph(graph))
+    const decoded = Object.getOwnPropertyDescriptor(streamed.nodes.get(vector.id), 'vectorNetwork')
+    expect(decoded?.value).toEqual(vector.vectorNetwork)
+  })
+
+  test('keeps a vector network edited after import instead of decoding the source', () => {
+    if (!fixture) return
+    const { nodeChanges, blobs, images } = parseFigBuffer(fixture)
+    const graph = importNodeChanges(nodeChanges, blobs, new Map(images), { populate: 'first-page' })
+    const vector = [...graph.nodes.values()].find((node) => node.vectorNetwork)
+    if (!vector?.vectorNetwork) throw new Error('circle-text.fig has no vector network')
+    const edited = structuredClone(vector.vectorNetwork)
+    edited.vertices[0].x += 10
+    graph.updateNode(vector.id, { vectorNetwork: edited })
+    const streamed = streamGraph(graph, 5).nodes.get(vector.id)
+    expect(Object.getOwnPropertyDescriptor(streamed, 'vectorNetwork')?.value).toEqual(edited)
   })
 })
