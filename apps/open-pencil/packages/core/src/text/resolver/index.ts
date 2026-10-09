@@ -30,6 +30,7 @@ export function fontFaceDemand(
     candidates: [
       faceCandidate(family, style, 'registered'),
       faceCandidate(family, style, 'local'),
+      faceCandidate(family, style, 'team'),
       faceCandidate(family, style, 'cache'),
       faceCandidate(family, style, 'remote')
     ]
@@ -71,6 +72,8 @@ const productionFontLoader: FontResolutionLoader = async (candidate, demand) => 
       return fontManager.isStyleLoaded(candidate.family, candidate.style)
     case 'local':
       return (await fontManager.loadLocalFont(candidate.family, candidate.style)) !== null
+    case 'team':
+      return (await fontManager.loadTeamFont(candidate.family, candidate.style)) !== null
     case 'cache':
       return (await fontManager.loadCachedFont(candidate.family, candidate.style)) !== null
     case 'remote':

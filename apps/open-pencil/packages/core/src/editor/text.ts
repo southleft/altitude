@@ -10,6 +10,7 @@ import { weightToStyle } from '#core/text/fonts'
 import { hasGlyphOutlines } from '#core/text/opentype'
 
 import { pathTextEditChanges } from './text/path-edit'
+import { createFontReplacementActions } from './text/replace-font'
 import {
   createTextEditSession,
   resizeTextNodeForEdit,
@@ -201,5 +202,10 @@ export function createTextActions(ctx: EditorContext) {
     })
   }
 
-  return { startTextEditing, updateTextEditNode, commitTextEdit }
+  return {
+    startTextEditing,
+    updateTextEditNode,
+    commitTextEdit,
+    ...createFontReplacementActions(ctx)
+  }
 }

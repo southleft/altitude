@@ -111,6 +111,14 @@ const BlobSchema = v.object({
 
 const CreatedSchema = v.object({ sha: v.string() })
 
+const ContentEntrySchema = v.object({
+  type: v.string(),
+  name: v.string(),
+  path: v.string(),
+  sha: v.string(),
+  size: v.number()
+})
+
 const ErrorBodySchema = v.object({ message: v.optional(v.string()) })
 
 const GraphQLResponseSchema = v.object({
@@ -136,6 +144,7 @@ export type GitHubRepository = v.InferOutput<typeof RepositorySchema>
 export type GitHubCommit = v.InferOutput<typeof CommitSchema>
 export type GitHubTreeEntry = v.InferOutput<typeof TreeEntrySchema>
 export type GitHubTree = v.InferOutput<typeof TreeSchema>
+export type GitHubContentEntry = v.InferOutput<typeof ContentEntrySchema>
 
 export type GitHubTreeWrite = {
   path: string
@@ -387,6 +396,39 @@ export function createGitHubClient(options: GitHubClientOptions) {
       }
       return decodeBase64(blob.content.replace(/\s/g, ''))
     },
+
+    /**
+     * A blob's raw bytes (`application/vnd.github.raw+json`), without base64 inflation.
+     * Larger than `maxBytes` fails as `too-large` before or while reading the body.
+     */
+    async getBlobRaw(
+      owner: string,
+      repo: string,
+      sha: string,
+      maxBytes: number
+    ): Promise<ArrayBuffer> {
+      const response = await send(
+        'GET',
+        `${baseURL}${repoPath(owner, repo)}/git/blobs/${encodeURIComponent(sha)}`,
+        undefined,
+        { Accept: 'application/vnd.github.raw+json' }
+      )
+      const declared = Number(response.headers.get('content-length') ?? 0)
+      if (declared > maxBytes) throw new GitHubAPIError('too-large', 'File is too large', 413)
+      const bytes = await response.arrayBuffer()
+      if (bytes.byteLength > maxBytes) {
+        throw new GitHubAPIError('too-large', 'File is too large', 413)
+      }
+      return bytes
+    },
+
+    /** Entries of one repository folder at `ref`; a missing folder fails as `not-found`. */
+    listDirectory: (owner: string, repo: string, path: string, ref: string) =>
+      request(
+        'GET',
+        `${repoPath(owner, repo)}/contents/${encodePath(path)}?ref=${encodeURIComponent(ref)}`,
+        v.array(ContentEntrySchema)
+      ),
 
     async createBlob(owner: string, repo: string, bytes: Uint8Array): Promise<string> {
       const created = await request('POST', `${repoPath(owner, repo)}/git/blobs`, CreatedSchema, {

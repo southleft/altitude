@@ -13,25 +13,40 @@ import {
   ComboboxViewport,
   type AcceptableValue
 } from 'reka-ui'
-import { nextTick } from 'vue'
+import { computed, nextTick } from 'vue'
 
 import { useRetainedPopup } from '#vue/lifecycle/retention/popup'
-import type { FontPickerUI } from '#vue/primitives/FontPicker/types'
+import type { FontPickerSection, FontPickerUI } from '#vue/primitives/FontPicker/types'
 import {
   useFontPicker,
   type FontAccessController,
   type FontFamilyOption
 } from '#vue/primitives/FontPicker/useFontPicker'
 
-const { listFamilies, localFontAccess, ui, emptySearchText, emptyFontsText, emptyFontsHint } =
-  defineProps<{
-    listFamilies: () => Promise<string[] | FontFamilyOption[]>
-    localFontAccess?: FontAccessController
-    ui?: FontPickerUI
-    emptySearchText?: string
-    emptyFontsText?: string
-    emptyFontsHint?: string
-  }>()
+const ITEM_SIZE = 36
+const HEADING_SIZE = 24
+
+const {
+  listFamilies,
+  localFontAccess,
+  ui,
+  emptySearchText,
+  emptyFontsText,
+  emptyFontsHint,
+  sections,
+  otherSectionLabel
+} = defineProps<{
+  listFamilies: () => Promise<string[] | FontFamilyOption[]>
+  localFontAccess?: FontAccessController
+  ui?: FontPickerUI
+  emptySearchText?: string
+  emptyFontsText?: string
+  emptyFontsHint?: string
+  /** Families pinned above the rest under a heading, such as team fonts. */
+  sections?: FontPickerSection[]
+  /** Heading above the remaining families when a section is shown. */
+  otherSectionLabel?: string
+}>()
 
 const modelValue = defineModel<string>({ required: true })
 const emit = defineEmits<{ select: [family: string] }>()
@@ -46,12 +61,23 @@ function focusSearchInput() {
   })
 }
 
-const { searchTerm, open, filtered, loading, accessState, requestAccess, select } = useFontPicker({
-  modelValue,
-  listFamilies,
-  localFontAccess,
-  onSelect: (family) => emit('select', family)
-})
+const { searchTerm, open, filtered, headings, loading, accessState, requestAccess, select } =
+  useFontPicker({
+    modelValue,
+    listFamilies,
+    localFontAccess,
+    onSelect: (family) => emit('select', family),
+    sections: () => sections ?? [],
+    otherSectionLabel: () => otherSectionLabel
+  })
+
+/** Row sizes are estimated once per layout; remount the virtualizer when headings move. */
+const layoutKey = computed(() => `${filtered.value.length}:${[...headings.value.keys()].join(',')}`)
+
+/** Rows that start a section are taller: the heading renders inside them. */
+function itemSize(index: number): number {
+  return headings.value.has(index) ? ITEM_SIZE + HEADING_SIZE : ITEM_SIZE
+}
 const { portalActive } = useRetainedPopup(open)
 </script>
 
@@ -101,22 +127,33 @@ const { portalActive } = useRetainedPopup(open)
 
         <ComboboxViewport :class="ui?.viewport ?? 'max-h-72 overflow-y-auto'">
           <ComboboxVirtualizer
-            v-slot="{ option }"
+            v-slot="{ option, virtualItem }"
+            :key="layoutKey"
             :options="filtered"
             :text-content="(option: FontFamilyOption) => option.family"
-            :estimate-size="36"
+            :estimate-size="itemSize"
           >
             <ComboboxItem
               :value="option.family"
               :class="ui?.item"
-              :style="{ fontFamily: `'${option.family}', sans-serif` }"
+              :data-section-start="headings.has(virtualItem.index) ? '' : undefined"
+              :style="{
+                fontFamily: `'${option.family}', sans-serif`,
+                ...(headings.has(virtualItem.index)
+                  ? { height: `${itemSize(virtualItem.index)}px` }
+                  : {})
+              }"
             >
               <slot
                 name="item"
                 :family="option.family"
                 :source="option.source"
                 :selected="option.family === modelValue"
+                :section-label="headings.get(virtualItem.index)"
               >
+                <span v-if="headings.has(virtualItem.index)" :class="ui?.sectionLabel">
+                  {{ headings.get(virtualItem.index) }}
+                </span>
                 <ComboboxItemIndicator>
                   <slot name="indicator" :selected="option.family === modelValue" />
                 </ComboboxItemIndicator>

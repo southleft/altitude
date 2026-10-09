@@ -5,6 +5,7 @@ import { computed, ref, watch } from 'vue'
 import type { FontFamilyOption } from '@open-pencil/core/text'
 
 import { useRetainedActivity } from '#vue/lifecycle/retention/context'
+import type { FontPickerSection } from '#vue/primitives/FontPicker/types'
 
 export type FontAccessState = 'unsupported' | 'prompt' | 'granted' | 'denied'
 export type { FontFamilyOption, FontFamilySource } from '@open-pencil/core/text'
@@ -26,6 +27,41 @@ export interface UseFontPickerOptions {
   localFontAccess?: FontAccessController
   /** Optional callback fired after a family is selected. */
   onSelect?: (family: string) => void
+  /** Families pinned above the rest under a heading, such as team fonts. */
+  sections?: () => readonly FontPickerSection[]
+  /** Heading above the remaining families when a section is shown. */
+  otherSectionLabel?: () => string | undefined
+}
+
+export interface GroupedFontOptions {
+  options: FontFamilyOption[]
+  /** Section heading shown above the option at each index. */
+  headings: Map<number, string>
+}
+
+/**
+ * Families of each section first, in section order, then every other family. Headings
+ * mark where each section starts; `otherLabel` marks the rest once any section is shown.
+ */
+export function groupFontOptions(
+  options: readonly FontFamilyOption[],
+  sections: readonly FontPickerSection[] = [],
+  otherLabel?: string
+): GroupedFontOptions {
+  const headings = new Map<number, string>()
+  if (sections.length === 0) return { options: [...options], headings }
+  const ordered: FontFamilyOption[] = []
+  for (const section of sections) {
+    const members = options.filter((option) => option.source === section.source)
+    if (members.length === 0) continue
+    headings.set(ordered.length, section.label)
+    ordered.push(...members)
+  }
+  const pinned = new Set(sections.map((section) => section.source))
+  const rest = options.filter((option) => !pinned.has(option.source))
+  if (ordered.length > 0 && rest.length > 0 && otherLabel) headings.set(ordered.length, otherLabel)
+  ordered.push(...rest)
+  return { options: ordered, headings }
 }
 
 function normalizeOptions(items: string[] | FontFamilyOption[]): FontFamilyOption[] {
@@ -59,10 +95,14 @@ export function useFontPicker(options: UseFontPickerOptions) {
   tryOnScopeDispose(cancelLoad)
 
   const { contains } = useFilter({ sensitivity: 'base' })
-  const filtered = computed(() => {
-    if (!searchTerm.value) return families.value
-    return families.value.filter((option) => contains(option.family, searchTerm.value))
+  const grouped = computed(() => {
+    const matching = searchTerm.value
+      ? families.value.filter((option) => contains(option.family, searchTerm.value))
+      : families.value
+    return groupFontOptions(matching, options.sections?.(), options.otherSectionLabel?.())
   })
+  const filtered = computed(() => grouped.value.options)
+  const headings = computed(() => grouped.value.headings)
 
   async function loadFamilies() {
     if (families.value.length > 0 || loading.value) return
@@ -114,6 +154,7 @@ export function useFontPicker(options: UseFontPickerOptions) {
     searchTerm,
     open,
     filtered,
+    headings,
     loading,
     accessState,
     requestAccess,

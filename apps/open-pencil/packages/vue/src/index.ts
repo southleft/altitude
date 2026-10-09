@@ -152,7 +152,7 @@ export {
 } from '#vue/primitives/Fill'
 export type { FillActions, FillCategory } from '#vue/primitives/Fill'
 export { useGradientStops } from '#vue/primitives/GradientEditor/useGradientStops'
-export { useFontPicker } from '#vue/primitives/FontPicker/useFontPicker'
+export { groupFontOptions, useFontPicker } from '#vue/primitives/FontPicker/useFontPicker'
 
 /** Headless structural primitives and their local contexts. */
 export { CanvasRoot, CanvasSurface, useCanvasContext } from '#vue/canvas'
@@ -179,7 +179,7 @@ export type {
   FillSwatchSlots
 } from '#vue/primitives/Fill'
 export { FontPickerRoot } from '#vue/primitives/FontPicker'
-export type { FontFamilyOption, FontPickerUI } from '#vue/primitives/FontPicker'
+export type { FontFamilyOption, FontPickerSection, FontPickerUI } from '#vue/primitives/FontPicker'
 export {
   GradientEditorRoot,
   GradientEditorBar,

@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 
 import { useI18n } from '@open-pencil/vue'
 
+import { openFontReport } from '@/app/editor/fonts/report/open'
 import { useDocumentFontStatus } from '@/app/editor/fonts/status'
 
 const { fonts } = useI18n()
@@ -34,6 +35,14 @@ const issues = computed(() => status.value.issues)
         @click="selectAffectedNodes"
       >
         {{ fonts.selectAffectedLayers }}
+      </button>
+      <button
+        type="button"
+        data-test-id="font-status-review"
+        class="shrink-0 rounded px-1.5 py-0.5 font-medium text-[var(--color-warning-action)] transition-colors hover:bg-amber-500/20"
+        @click="openFontReport"
+      >
+        {{ fonts.reviewFonts }}
       </button>
       <button
         type="button"

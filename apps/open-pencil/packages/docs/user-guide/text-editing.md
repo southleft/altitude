@@ -83,12 +83,45 @@ Change the font weight in the Typography section of the properties panel. Availa
 - **Desktop app** — system fonts plus enabled Google Fonts, Fontsource, Bunny Fonts, and Fontshare catalogs
 - **Browser** — system fonts are available in Chrome and Edge with local-font permission. Enabled Fontsource, Bunny Fonts, and Fontshare providers can load online fonts, subject to network access and browser CORS rules; Google Fonts is disabled in the OpenPencil browser app
 - **Downloaded fonts** — the desktop app caches downloaded faces for reuse on the same machine
+- **Team fonts** — font files committed to `fonts/` in the version-control repository, available to everyone signed in to GitHub (see [Team fonts](#team-fonts))
+
+Fonts resolve in this order: installed (system or local) fonts, the bundled Inter, team fonts, downloaded fonts, then online providers.
+
+## Team Fonts
+
+Commit `.woff2`, `.woff`, `.ttf` or `.otf` files to `fonts/` in the repository configured under **Settings → Version control** (for example `southleft/altitude-designs`). When you are signed in to GitHub, the font picker lists them first under **Team fonts · altitude-designs** (the repository name) and text using them renders without anyone installing the font.
+
+- OpenPencil reads family and style from each file's name table. To name faces explicitly, or to record licence notes, add `fonts/fonts.json`:
+
+  ```json
+  {
+    "fonts": [
+      { "family": "Agrandir", "weight": 700, "file": "Agrandir-Bold.otf", "license": "Desktop + web licence" },
+      { "family": "Agrandir", "style": "Medium Italic", "file": "Agrandir-MediumItalic.otf" }
+    ]
+  }
+  ```
+
+  `style` defaults from `weight` and `italic`; `weight` defaults from `style`. WOFF2 files without a manifest entry are named from their file name (`Agrandir-Bold.woff2` → Agrandir Bold).
+- Files are downloaded through the GitHub API with your sign-in, checked (20 MB limit, font signature, Git blob hash) and cached in the browser by content hash, so reopening a document is offline-fast. A new commit of a file is fetched once.
+- Variable fonts and font collections (`.ttc`) are not used; commit static instances.
+- Only commit fonts whose licence allows sharing them with everyone who can read the repository.
 
 ## Missing Fonts and Substitutions
 
 When a requested family or style cannot be loaded, OpenPencil displays a warning above the editor instead of silently treating fallback rendering as faithful typography.
 
 Expand the warning to see every affected face and its active substitute. Use **Select layers** to locate all affected text nodes or **Retry fonts** after changing network access, local-font permission, or provider settings. A style may be synthesized from another loaded face in the same family; a missing family falls back to Inter when available.
+
+### Fonts report
+
+Choose **Review fonts** in the warning, or the warning icon next to the font picker, to open the document's font report. It lists every family and style the document uses, where each one resolved from (Bundled, Local, Team, Web, Fallback, Substituted or Missing), how many layers use it, and whether it belongs to the design system's typography. For Altitude, sanctioned families come from the document's imported `font-family` variables, or from Altitude's built-in typography list when none are imported.
+
+- **Show layers** selects the layers using a family or style and zooms to them, switching pages when needed.
+- **Replace…** swaps a family for another in every editable text layer, including style runs and text style definitions, as one undoable action. Suggestions list sanctioned families first, then similar names in the same category (sans, serif, mono, display). Choose a style, or keep each layer's weight and slant.
+- A missing family shows where to add it: commit the files to the repository's `fonts/` folder, licence permitting, and everyone gets it on the next load.
+
+The report covers the pages loaded in this session; very large imported files load pages as you open them.
 
 ## Tips
 
