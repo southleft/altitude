@@ -127,6 +127,8 @@ documents/landing-page/
   fig-schema.bin             original .fig schema (imported documents only)
 ```
 
+A page whose file or provenance sidecar would exceed 50 MB is split, in tree order, into parts: `pages/cover.json` holds the first part and `pages/cover.part-2.json` (with `pages/cover.part-2.source.json`) and on hold the rest. The manifest lists them under the page's `parts` and records format version 2, so an older OpenPencil refuses the document instead of loading part of a page. Documents without split pages keep version 1 and are unchanged.
+
 The files are deterministic: the same document always produces the same bytes. Object keys are sorted, nodes follow tree order, short values stay on one line, and nothing time-dependent is written. Node IDs are preserved across save and load.
 
 Each node record stores only what differs from a new node of its type, or, for an instance layer, from the component layer it was cloned from (named by `$base`). Values plain JSON cannot hold use tagged objects such as `{ "$bytes": "…" }` or `{ "$number": "-0" }`. A change to one rectangle produces a diff like this:
@@ -146,7 +148,7 @@ The renderer's cached text pictures are not saved; they are rebuilt when fonts l
 
 ## Limits
 
-- GitHub accepts files up to 100 MB; OpenPencil warns above 50 MB. Large imported files mostly grow the `.source.json` sidecars. Before uploading anything, a commit checks every file and names the page that is too large; split that page into smaller pages, or commit a copy of the document without it.
+- GitHub accepts files up to 100 MB and warns above 50 MB. OpenPencil splits pages over 50 MB into parts (see [File format](#file-format)), so only a single layer larger than that can still exceed the limit. Before uploading anything, a commit checks every file and names the page that is too large.
 - Saving writes and hashes the document in a background worker, so the editor stays responsive on large documents; it falls back to the main thread where workers are unavailable. Uploading a large changed page still encodes it on the main thread.
 - After a draft pull request is merged and its branch deleted, the next commit creates the draft branch again from the configured branch and opens a new draft pull request.
 - A recovered crash snapshot reopens as a local document, without its GitHub link; save it to GitHub again or reload the remote copy.

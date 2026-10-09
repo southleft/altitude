@@ -1,4 +1,8 @@
-import { PAGES_DIRECTORY, uniqueSlugs } from '@open-pencil/core/io/formats/document-json'
+import {
+  PAGES_DIRECTORY,
+  pageFilePath,
+  uniqueSlugs
+} from '@open-pencil/core/io/formats/document-json'
 
 import { GitHubAPIError, type GitHubClient } from '../client'
 import { AUTOSAVE_TRAILER } from '../document/message'
@@ -121,7 +125,7 @@ export async function changedPages(
   let otherFiles = 0
   for (const file of comparison.files ?? []) {
     if (!file.filename.startsWith(prefix)) continue
-    const relative = file.filename.slice(prefix.length).replace(/\.source\.json$/, '.json')
+    const relative = pageFilePath(file.filename.slice(prefix.length))
     const page = pagesByPath.get(relative)
     if (page !== undefined) pages.add(page)
     else otherFiles++

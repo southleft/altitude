@@ -126,7 +126,11 @@ async function writeInWorker(
     sliceStart = performance.now()
   }
   try {
-    send({ type: 'begin', header, options: { name: options.name } })
+    send({
+      type: 'begin',
+      header,
+      options: { name: options.name, maxFileBytes: options.maxFileBytes }
+    })
     for (let start = 0; start < nodes.count; start += DOCUMENT_JSON_NODE_CHUNK) {
       if (state.failed) break
       await maybeYield()

@@ -1,6 +1,7 @@
 import {
   IMAGES_DIRECTORY,
   MANIFEST_PATH,
+  pageFilePath,
   STYLES_PATH,
   VARIABLES_PATH,
   type DocumentJSONPage
@@ -8,7 +9,7 @@ import {
 
 /** What a changed file stands for, in a commit summary. */
 function areaOf(path: string, pageNames: ReadonlyMap<string, string>): string {
-  const page = pageNames.get(path.replace(/\.source\.json$/, '.json'))
+  const page = pageNames.get(pageFilePath(path))
   if (page !== undefined) return `page:${page}`
   if (path === VARIABLES_PATH) return 'Variables'
   if (path.startsWith(STYLES_PATH.replace(/\.json$/, ''))) return 'Styles'

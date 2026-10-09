@@ -280,6 +280,8 @@ Once a pull request is ready, later autosaves still push to it; the trailer lets
 decide whether to re-run on them.
 
 - Format: `packages/core/src/io/formats/document-json/` (`@open-pencil/core/io/formats/document-json`).
+  Pages over 50 MB are written as parts (`pages/<page>.part-N.json` plus sidecars) listed in the
+  manifest, which then records format version 2; smaller documents stay version 1.
 - App: `src/app/integrations/storage/github/` (client, repository/commit flow, OAuth,
   settings workflows, per-document session). The token lives in the credential store under
   `github:default:token`; the signed-in login, id and avatar are non-secret settings.

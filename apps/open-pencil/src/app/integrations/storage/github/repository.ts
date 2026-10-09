@@ -4,7 +4,7 @@ import {
   parseDocumentJSONManifest,
   readDocumentJSON,
   slugify,
-  sourceSidecarPath,
+  pageFilePath,
   type DocumentJSONSnapshot
 } from '@open-pencil/core/io/formats/document-json'
 import type { SceneGraph } from '@open-pencil/scene-graph'
@@ -293,7 +293,6 @@ export function oversizeGitHubFiles(
   const pages = new Map<string, string>()
   for (const page of snapshot.pages) {
     pages.set(page.path, page.name)
-    pages.set(sourceSidecarPath(page.path), page.name)
   }
   return snapshot.files
     .filter(
@@ -302,7 +301,7 @@ export function oversizeGitHubFiles(
     .map((file) => ({
       path: file.path,
       megabytes: megabytesOf(file.bytes),
-      page: pages.get(file.path) ?? null
+      page: pages.get(pageFilePath(file.path)) ?? null
     }))
 }
 
