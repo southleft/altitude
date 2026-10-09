@@ -16,7 +16,12 @@ import { isAppMode, requireFile, rpc } from '#cli/app-client'
 import { appTargetOptions, appTargetRPCArgs } from '#cli/app-target'
 import { applyExportFontPolicy, exportFontRoots, FONT_POLICIES } from '#cli/export-font-policy'
 import { ok, printError } from '#cli/format'
-import { loadDocument, populateDocumentPage, populateWholeDocument } from '#cli/headless'
+import {
+  isDocumentFolder,
+  loadDocument,
+  populateDocumentPage,
+  populateWholeDocument
+} from '#cli/headless'
 
 const io = new IORegistry(BUILTIN_IO_FORMATS)
 const RASTER_FORMATS = ['PNG', 'JPG', 'WEBP']
@@ -184,6 +189,12 @@ async function executeFileExport(
   return io.exportContent(formatId, { graph, target }, options)
 }
 
+/** `card.fig` → `card`; a document folder keeps its whole name. */
+async function defaultExportName(file: string): Promise<string> {
+  if (await isDocumentFolder(file)) return basename(resolve(file))
+  return basename(file, extname(file))
+}
+
 async function exportFromFile(format: string, args: ExportArgs) {
   const file = requireFile(args.file)
   const graph = await loadDocument(file)
@@ -200,7 +211,7 @@ async function exportFromFile(format: string, args: ExportArgs) {
     process.exit(1)
   }
 
-  const defaultName = basename(file, extname(file))
+  const defaultName = await defaultExportName(file)
 
   if (args.page && args.node) {
     printError('--page and --node cannot be used together.')
@@ -268,7 +279,7 @@ export default defineCommand({
   args: {
     file: {
       type: 'positional',
-      description: 'Document file path (omit to connect to running app)',
+      description: 'Document file or document-json folder (omit to connect to running app)',
       required: false
     },
     output: {

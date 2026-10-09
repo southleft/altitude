@@ -181,6 +181,25 @@ openpencil lint design.fig --list-rules
 
 Use `--json` for machine-readable output.
 
+## Document Folders and Design Diffs
+
+Documents saved to GitHub are folders of JSON files (`document.json`, one file per page under `pages/`, `variables.json`, `styles.json`, `images/`). Every command that reads a document file also reads such a folder:
+
+```sh
+openpencil lint documents/checkout
+openpencil export documents/checkout --page Checkout --scale 0.5
+openpencil analyze colors documents/checkout
+```
+
+`design diff` compares two folders, for example the base and head of a pull request. Node ids are stable in the format, so it reports per page which layers were added, removed, or edited (with each changed property), which token bindings were added or removed, and which component instances were placed, removed, or detached:
+
+```sh
+openpencil design diff base/documents/checkout head/documents/checkout
+openpencil design diff base/documents/checkout head/documents/checkout --json
+```
+
+The output is deterministic: pages follow the head document, layers follow tree order, and renderer caches are ignored.
+
 ## JSON Output
 
 All commands support `--json` for machine-readable output — pipe into `jq`, feed to CI scripts, or process with other tools:

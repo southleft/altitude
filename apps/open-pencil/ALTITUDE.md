@@ -338,6 +338,66 @@ write**. For branches, pull requests and comments also grant **Pull requests: Re
 and **Issues: Read and write** (labels are created through the issues permission). It is stored
 the same way as the OAuth token.
 
+## Design PR audit
+
+Pull requests in `southleft/altitude-designs` that change `documents/**` get one comment,
+updated in place (`<!-- openpencil-design-audit -->`), from
+`.github/workflows/design-audit.yml` in that repository. Its README holds the user-facing
+details; this is the code side.
+
+- **Triggers.** `opened`, `synchronize`, `reopened` and `ready_for_review`, only for
+  non-draft pull requests. A draft push whose head commit has the `OpenPencil-Autosave: true`
+  trailer is skipped explicitly; **Ready for review** always runs. Concurrency cancels an
+  older run of the same pull request.
+- **Target Altitude version.** `altitude.json` at the documents-repo root
+  (`{ "ref": "main" }`, overridable with the repo variable `ALTITUDE_REF`). The workflow
+  sparse-checks-out `southleft/altitude` at that ref: `apps/open-pencil` (the tooling),
+  `.altitude/contracts`, the DTCG tokens, `custom-elements.json`, the React wrappers,
+  `libs/altitude-mcp/src/lib` and `scripts/lib`. Nothing is built on the Altitude side: the
+  tokens come from the DTCG source and the CEM is committed. OpenPencil installs with Bun
+  and builds only `scene-graph`, `kiwi`, `pen`, `fig`, `core`, `dom-css` and `mcp`. **The
+  workflow needs this tooling on the target ref, so it works once this branch is merged to
+  `main`.**
+- **The command.** `bun run open-pencil altitude audit <base> <head> --altitude <root>
+  --out <dir>` (`tools/altitude/src/audit/`). `<base>`/`<head>` are documents-repo checkouts
+  (the merge base and the head) or two document folders. For each document folder whose
+  bytes differ it writes `report.json`, `comment.md` and PNGs:
+  - **Diff** (`diffDocuments()` in `@open-pencil/core/io/formats/document-json`, also
+    `open-pencil design diff`): per page, layers added, removed and changed (with fields),
+    token bindings added and removed, instances placed, removed and detached. Node ids are
+    stable in the format.
+  - **Lint** (`lint.ts`, rules `altitude/*`): hard-coded colour, spacing, radius, font size
+    and line height where an Altitude token has the value (suggesting the semantic token
+    first), off-palette colours (info), layers named like an Altitude component that are not
+    instances, instances of non-Altitude components, fonts outside the typography tokens,
+    text with neither a text style nor typography variables, and code-bound attribute values
+    absent from the CEM (error). Internal library pages and layers inside instances are not
+    linted. Findings absent on the base are **new**; links point at the layer's line in the
+    head commit's page file. `.openpencil-lint.json` changes severities, allowlists findings
+    and sets `failOn` (default `error`); only new findings can fail.
+  - **Parity** (`parity.ts`): a document carries copies of the library components it places,
+    so one canvas contract per placed code-bound set is emitted from the document itself
+    (`canvasContractForSet`) and scored with Altitude's own `scoreComponent()`
+    (`scripts/lib/canvas-parity.mjs` → `diffContracts()`) against the target ref's code
+    contract. Base vs head separates introduced, resolved and inherited disagreements.
+  - **Renders** (`render.ts`): headless CanvasKit PNGs of changed pages and changed
+    components, both sides at one scale over the union of their bounds (longest side ≤ 1600
+    px), plus a red-on-grey pixel diff.
+- **Images.** Committed to the orphan branch `audit-assets` (`pr-<n>/<run>/`) and embedded as
+  `github.com/…/blob/audit-assets/…?raw=true`, which renders in a private repository for
+  signed-in members; also uploaded as the run's `design-audit-pr-<n>` artifact.
+- **Status.** The job fails only on new findings at or above `failOn`; a **Design audit
+  report** check run is `neutral` for new warnings or parity disagreements, else `success`.
+- **Secrets.** None while `southleft/altitude` is public. If it goes private, add
+  `ALTITUDE_READ_TOKEN` (fine-grained PAT, Contents: Read on `southleft/altitude`). The
+  workflow token needs `contents: write`, `pull-requests: write` and `checks: write`.
+- **Locally.** `bun run design:audit:dry-run` writes a synthetic change (the code-built
+  Button placed in a "Checkout" document, then recoloured, re-spaced, detached and tampered
+  with) and prints the comment; `--base`/`--head` run it on real checkouts. `bun run
+  open-pencil altitude lint <folder> --altitude ../..` lints one document. Tests:
+  `tools/altitude/tests/audit/`, `packages/core/tests/io/formats/document-json/diff.test.ts`,
+  `tests/engine/cli/document-folder.test.ts`.
+
 ## Pulling upstream OpenPencil updates
 
 The import was squashed (`git-subtree-dir: apps/open-pencil`), so upstream history is not in
