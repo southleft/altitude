@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, test } from 'bun:test'
 
-import { writeDocumentJSON } from '@open-pencil/core/io/formats/document-json'
+import { gitBlobSHA, writeDocumentJSON } from '@open-pencil/core/io/formats/document-json'
 import { SceneGraph } from '@open-pencil/scene-graph'
 
-import { gitBlobSHA } from '@/app/integrations/storage/github/blob-sha'
 import { createGitHubClient, GitHubAPIError } from '@/app/integrations/storage/github/client'
 import { defaultCommitMessage } from '@/app/integrations/storage/github/document/message'
 import {

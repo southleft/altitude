@@ -34,3 +34,18 @@ export {
   type DocumentJSONSnapshot,
   type WriteDocumentJSONOptions
 } from './write'
+export { gitBlobSHA } from './blob-sha'
+export {
+  DOCUMENT_JSON_NODE_CHUNK,
+  DOCUMENT_JSON_SLICE_MS,
+  DocumentJSONSnapshotStaleError,
+  writeDocumentJSONOffThread,
+  type DocumentJSONWorkerMode,
+  type WriteDocumentJSONOffThreadOptions
+} from './worker/client'
+export { writeHashedDocumentJSON, type HashedDocumentJSONSnapshot } from './worker/hashed'
+export {
+  graphFromDocumentJSONSnapshot,
+  snapshotDocumentJSONGraph,
+  type DocumentJSONGraphSnapshot
+} from './worker/transfer'
