@@ -6,6 +6,72 @@ vectors). Production build, headless Chromium on a hardware GPU (RTX 3080 Ti), p
 headless timings and CPU profiles. Unmarked numbers are measured; anything *inferred* comes
 from reading code.
 
+## Round 2 (G18 faster open, G19 region redraw) — measured 2026-10-09
+
+Same file and method: production build served locally, headless Chromium on the RTX 3080 Ti,
+1440×900, `?navigation-benchmark&renderer=retained`; scripts in
+`scratchpad/perf-g/` (`bench.ts`, `dump.ts`, `equiv-transfer.ts`). "Before" is `main` at
+`2866486df` (round 1 already merged).
+
+| Metric (Altitude `.fig`) | Before | After |
+|---|---|---|
+| `openFile` → first page shown | 17.2 s | **9.2 s** |
+| Longest main-thread task while opening | 3,770 ms | **118 ms** |
+| All long tasks while opening | 3,990 ms | 743 ms |
+| JS heap after open | 896 MB | 729 MB |
+| Switch to FOUNDATIONS / ATOMS (first visit) | 2.3 s / 0.95 s | 0.14 s / 0.10 s |
+| Switch to internal canvas + fit (first visit) | 19.1 s, longest task 8.7 s | 22.3 s, longest task 8.2 s |
+| Opacity edit at fit, to two frames | 330–400 ms | **190–210 ms** |
+| Pan at fit (40 wheel steps), p95 / worst frame | 28 ms / 1,147 ms | 14 ms / 1,029 ms¹ |
+| Pan right after an edit, worst frame | 4,560 ms | **14 ms** |
+
+¹ The remaining ~1 s task during that pan is the document-recovery snapshot writing to
+IndexedDB (CPU profile: `write` in the recovery store), not rendering; renderer frames
+during the gesture stay under 50 ms in the navigation trace.
+
+Per change (open, longest main-thread task): on-demand component population 14.9 s / 4.2 s;
+plus compact streamed transfer 9.5 s / 124 ms; plus lazy vector networks 9.3 s / 120 ms and
+heap 884 → 731 MB.
+
+What changed:
+
+- **On-demand component population (1E).** First-page mode no longer populates every page
+  that holds a component (45 of 55). Each population pass is planned from the requested page:
+  pages holding components its instances can clone (component, symbol-override swaps,
+  instance-swap props) join transitively, in document order. The Altitude cover has no
+  instances, so open populates one 17-node page. Worker import 9.2 → 4.9 s (Bun). The opened
+  page is identical to the eager pass on the fixtures and Altitude (`dump.ts`). After visiting
+  every page, 0.4 % (material3) / 1.5 % (Altitude) of nodes differ from the eager order,
+  because the override engine is order-dependent: the eager pass itself differs from
+  `populate: 'all'` on 3.9 % of Altitude nodes, and the on-demand result is as close to it.
+  The cost moves to the first visit of a page that needs the internal canvas.
+- **Compact streamed transfer (1D).** The session worker sends nodes as the fields that differ
+  from `createDefaultNode` (source and source.fig diffed too), 2,000 nodes per message, before
+  the rest of the graph; population deltas use the same encoding. Field-for-field and key-order
+  equal to the old full clone on all 98,411 nodes (`equiv-transfer.ts`).
+- **Lazy vector networks (1C).** A network equal to what `source.fig.rawNodeFields.vectorData`
+  decodes to is not sent; the node gets an accessor that decodes on first read (52,246 nodes).
+- **Region repaint (2D/G19).** The retained backing keeps its surface and each top-level
+  child's painted bounds. Attributable edits repaint only the children's old and new bounds,
+  from a same-size scratch surface drawn unclipped and copied back, so the result equals a full
+  rebuild pixel for pixel (engine test; drawing into a clip is not exact on the CPU raster).
+  Panning past the overscan shifts the old pixels and draws only the exposed strips (3.5 ms
+  instead of a 1.2–1.4 s full render); that backing and one recorded before a font load are
+  presented only while navigating and rebuilt by the time-sliced build. Guide owners are cached
+  per scene version (the overlay walked 82k nodes per frame).
+- **Tiled renderer measured, not adopted.** `?renderer=tiled` on the same build pans as
+  smoothly once settled, but the internal canvas took 32 s more to settle after the switch
+  (55 s of long tasks) and edits cost ~395 ms; retained stays the default.
+
+Still slow (next steps):
+
+- **Internal canvas first visit, 22 s:** first-time recording of 6,083 subtree pictures
+  synchronously (8.6 s), the recovery snapshot exporting the whole document on the main thread
+  (7.6 s, triggered by the switch's population/layout scene versions), layout 1.5 s, and the
+  page's population in the worker. Recording the first backing time-sliced and keeping
+  recovery off non-user changes (or in a worker) are the two big levers.
+- Font loads still invalidate every retained picture; they are now rebuilt without a freeze.
+
 ## 1. Opening big files: ~27 s to first page
 
 | Stage | Time |
