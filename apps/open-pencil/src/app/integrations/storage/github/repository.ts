@@ -166,6 +166,25 @@ export async function loadGitHubDocument(
   }
 }
 
+/**
+ * Whether `path` holds a document on `location.branch`, with the branch head either way.
+ * A missing branch fails as `not-found`.
+ */
+export async function probeGitHubDocument(
+  client: GitHubClient,
+  location: GitHubRepositoryLocation,
+  path: string
+): Promise<{ exists: boolean; head: string }> {
+  const state = await branchState(client, location)
+  const tree = await folderTreeSHA(client, location, state.rootTree, path)
+  if (!tree) return { exists: false, head: state.head }
+  const listing = await client.getTree(location.owner, location.repo, tree)
+  return {
+    exists: listing.tree.some((entry) => entry.type === 'blob' && entry.path === MANIFEST_PATH),
+    head: state.head
+  }
+}
+
 /** A free document folder for `name` inside `folder`: `landing-page`, then `landing-page-2`. */
 export async function allocateGitHubDocumentPath(
   client: GitHubClient,

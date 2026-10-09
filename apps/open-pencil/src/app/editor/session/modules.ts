@@ -14,6 +14,7 @@ import type { EditorPreparationController } from '@/app/editor/preparation/contr
 import { createProfilerActions } from '@/app/editor/profiler'
 import type { AppEditorState } from '@/app/editor/session/types'
 import { createVectorEditActions } from '@/app/editor/vector'
+import { createGitHubCommentsSession } from '@/app/integrations/storage/github/comments/session'
 import { createGitHubDocumentSession } from '@/app/integrations/storage/github/document/session'
 
 export function defineEditorStoreAccessors(store: object, editor: Editor) {
@@ -72,6 +73,7 @@ export function createEditorStoreModules(
     captureRevision: documentIO.captureRevision,
     markPersisted: documentIO.markExternallyPersisted
   })
+  const comments = createGitHubCommentsSession({ github, editor, state })
   // Save in a GitHub-bound document commits; every other document saves as before.
   const saveDocument = () => (github.binding.value ? github.commit() : documentIO.saveFigFile())
 
@@ -87,6 +89,7 @@ export function createEditorStoreModules(
     hasUnsavedChanges: documentIO.hasUnsavedChanges,
     saveFigFile: saveDocument,
     github,
+    comments,
     saveFigFileAs: documentIO.saveFigFileAs,
     getDocumentFilePath: documentIO.getDocumentFilePath,
     getSourceIdentity: documentIO.getSourceIdentity,
@@ -104,6 +107,7 @@ export function createEditorStoreModules(
       editor.dispose()
       editor.clearPageViewports()
       documentIO.disposeDocumentIO()
+      comments.dispose()
       github.dispose()
       preparationController.dispose()
     },

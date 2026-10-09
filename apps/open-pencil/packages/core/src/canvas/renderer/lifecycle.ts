@@ -32,6 +32,7 @@ export function destroyRenderer(r: SkiaRenderer): void {
 
   for (const img of r.imageCache.values()) img.delete()
   r.imageCache.clear()
+  r.cursorAvatarCache.clear()
   disposePathCaches(r)
   r.fillPaint.delete()
   r.diamondGradientEffect?.delete()

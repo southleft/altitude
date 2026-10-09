@@ -2,8 +2,8 @@ import { ref } from 'vue'
 import type * as awarenessProtocol from 'y-protocols/awareness'
 
 import { randomIndex } from '@open-pencil/core/random'
-import type { Color } from '@open-pencil/scene-graph/primitives'
 
+import { parseCollabUser } from '@/app/collab/identity'
 import type { EditorStore } from '@/app/editor/active-store'
 import { PEER_COLORS, ROOM_ID_CHARS, ROOM_ID_LENGTH } from '@/constants'
 
@@ -26,32 +26,47 @@ export function buildRemotePeers(
 
   states.forEach((peerState, clientId) => {
     if (clientId === localClientId) return
-    const user = peerState.user as { name?: string; color?: Color } | undefined
+    const user = parseCollabUser(peerState.user)
     if (!user) return
-    peers.push({
+    const peer: RemotePeer = {
       clientId,
       name: user.name || 'Anonymous',
       color: user.color || PEER_COLORS[clientId % PEER_COLORS.length],
       cursor: peerState.cursor as RemotePeer['cursor'],
       selection: peerState.selection as string[]
-    })
+    }
+    if (user.login) peer.login = user.login
+    if (user.avatar) peer.avatarURL = user.avatar
+    peers.push(peer)
   })
 
   return peers
 }
 
-export function remotePeersToCursors(peers: RemotePeer[], currentPageId: string) {
+type RemoteCursor = EditorStore['state']['remoteCursors'][number]
+
+/** Avatar bytes for a URL once loaded; undefined while loading, failed or absent. */
+export type AvatarLookup = (url: string) => Uint8Array | undefined
+
+export function remotePeersToCursors(
+  peers: RemotePeer[],
+  currentPageId: string,
+  avatar: AvatarLookup = () => undefined
+) {
   return peers
     .filter((p) => p.cursor && p.cursor.pageId === currentPageId)
     .map((p) => {
       const cursor = p.cursor as NonNullable<RemotePeer['cursor']>
-      return {
+      const remote: RemoteCursor = {
         name: p.name,
         color: p.color,
         x: cursor.x,
         y: cursor.y,
         selection: p.selection
       }
+      const bytes = p.avatarURL ? avatar(p.avatarURL) : undefined
+      if (p.avatarURL && bytes) remote.avatar = { key: p.avatarURL, bytes }
+      return remote
     })
 }
 

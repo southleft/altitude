@@ -71,3 +71,12 @@ export async function reloadGitHubDocument(store: EditorStore): Promise<void> {
   if (!binding) return
   await loadInto(binding, binding.path, store.state.documentName, store)
 }
+
+/** Replace this tab's document with its version at `location` (another branch). */
+export async function loadGitHubDocumentAt(
+  store: EditorStore,
+  location: GitHubRepositoryLocation,
+  path: string
+): Promise<void> {
+  await loadInto(location, path, store.state.documentName, store)
+}

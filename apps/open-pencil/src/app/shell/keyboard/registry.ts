@@ -192,6 +192,12 @@ export function registerKeyboardShortcuts(options: KeyboardShortcutOptions) {
       keys: appMenuTinykeysShortcut('close') ?? '$mod+KeyW',
       run: ({ closeActiveTab }) => closeActiveTab()
     },
+    {
+      // Plain C by key position (the menu shows the portable token).
+      id: 'view-comments',
+      keys: 'KeyC',
+      run: ({ store }) => store.comments.toggle()
+    },
     { id: 'new-tab', keys: ['$mod+KeyN', '$mod+KeyT'], run: ({ createTab }) => createTab() },
     {
       id: 'rename-selection',

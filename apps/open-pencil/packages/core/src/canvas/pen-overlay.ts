@@ -7,6 +7,7 @@ import type { Vector } from '@open-pencil/scene-graph/primitives'
 
 import { PEN_HANDLE_RADIUS, PEN_VERTEX_RADIUS, PEN_CLOSE_RADIUS_BOOST } from '#core/constants'
 
+import { drawCursorAvatar, hasDrawableCursorAvatar } from './cursor-avatars'
 import type { SkiaRenderer, RenderOverlays } from './renderer'
 
 type ToScreenFn = (x: number, y: number) => Vector
@@ -207,6 +208,9 @@ export function drawRemoteCursors(
   const LABEL_FONT_SIZE = 10
   const LABEL_OFFSET_X = 12
   const LABEL_OFFSET_Y = 20
+  // The avatar sits inside the pill's left edge, inset by 1px, at a constant screen size.
+  const AVATAR_SIZE = LABEL_FONT_SIZE + LABEL_PADDING_Y * 2 - 2
+  const AVATAR_GAP = 3
 
   for (const cursor of cursors) {
     const screenX = cursor.x * r.zoom + r.panX
@@ -271,8 +275,11 @@ export function drawRemoteCursors(
       const font = r.labelFont
       if (font) {
         font.setSize(LABEL_FONT_SIZE)
-        const labelX = screenX + LABEL_OFFSET_X
+        const avatar = hasDrawableCursorAvatar(r, cursor.avatar) ? cursor.avatar : null
+        const pillX = screenX + LABEL_OFFSET_X - LABEL_PADDING_X
         const labelY = screenY + LABEL_OFFSET_Y
+        const pillY = labelY - LABEL_FONT_SIZE - LABEL_PADDING_Y + 2
+        const labelX = avatar ? pillX + 1 + AVATAR_SIZE + AVATAR_GAP : pillX + LABEL_PADDING_X
         const glyphIds = font.getGlyphIDs(cursor.name)
         const widths = font.getGlyphWidths(glyphIds)
         let textWidth = 0
@@ -281,15 +288,16 @@ export function drawRemoteCursors(
         r.auxFill.setColor(r.ck.Color4f(cr, g, b, 1))
         const bgRect = r.ck.RRectXY(
           r.ck.XYWHRect(
-            labelX - LABEL_PADDING_X,
-            labelY - LABEL_FONT_SIZE - LABEL_PADDING_Y + 2,
-            textWidth + LABEL_PADDING_X * 2,
+            pillX,
+            pillY,
+            labelX - pillX + textWidth + LABEL_PADDING_X,
             LABEL_FONT_SIZE + LABEL_PADDING_Y * 2
           ),
           4,
           4
         )
         canvas.drawRRect(bgRect, r.auxFill)
+        if (avatar) drawCursorAvatar(r, canvas, avatar, pillX + 1, pillY + 1, AVATAR_SIZE)
 
         r.auxFill.setColor(r.ck.Color4f(1, 1, 1, 1))
         canvas.drawText(cursor.name, labelX, labelY, r.auxFill, font)

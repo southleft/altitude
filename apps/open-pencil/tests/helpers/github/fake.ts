@@ -13,6 +13,7 @@ type RequestBody = {
   parents?: string[]
   sha?: string
   force?: boolean
+  ref?: string
 }
 type Handler = (match: RegExpExecArray, body: RequestBody, url: URL) => Response | Promise<Response>
 
@@ -36,7 +37,8 @@ export class FakeGitHub {
   readonly trees = new Map<string, TreeView>()
   readonly commits = new Map<string, Commit>()
   readonly requests: string[] = []
-  head = ''
+  /** Branch heads by name; `head` is the default branch's. */
+  readonly branches = new Map<string, string>()
   /** Respond with this status to the next request matching the pattern, once. */
   failures: Array<{ pattern: RegExp; status: number; headers?: Record<string, string> }> = []
   /** Runs before the next ref update, once (simulates a concurrent push). */
@@ -48,6 +50,19 @@ export class FakeGitHub {
     readonly repo = 'altitude-designs',
     readonly branch = 'main'
   ) {}
+
+  get head(): string {
+    return this.branches.get(this.branch) ?? ''
+  }
+
+  set head(sha: string) {
+    this.branches.set(this.branch, sha)
+  }
+
+  /** A new branch at `from` (the default branch head by default). */
+  createBranch(name: string, from = this.head) {
+    this.branches.set(name, from)
+  }
 
   async init(files: Record<string, string> = { 'README.md': '# Designs\n' }) {
     this.head = await this.commitFiles(files, 'Initial commit', [])
@@ -74,9 +89,11 @@ export class FakeGitHub {
   async commitFiles(
     changes: Record<string, string | null>,
     message: string,
-    parents = this.head ? [this.head] : []
+    parents?: string[],
+    branch = this.branch
   ): Promise<string> {
-    const files = this.head ? this.files() : new Map<string, string>()
+    const base = this.branches.get(branch) ?? ''
+    const files = base ? this.files(base) : new Map<string, string>()
     for (const [path, content] of Object.entries(changes)) {
       if (content === null) files.delete(path)
       else files.set(path, await this.putBlob(new TextEncoder().encode(content)))
@@ -84,11 +101,11 @@ export class FakeGitHub {
     const sha = this.#id('c')
     this.commits.set(sha, {
       tree: this.#tree(files),
-      parents,
+      parents: parents ?? (base ? [base] : []),
       message,
       date: '2026-10-07T12:00:00Z'
     })
-    this.head = sha
+    this.branches.set(branch, sha)
     return sha
   }
 
@@ -162,7 +179,10 @@ export class FakeGitHub {
     return [
       [/^GET \/user$/, () => Response.json(USER)],
       [new RegExp(`^GET ${repo}$`), () => Response.json(this.#repository())],
-      [new RegExp(`^GET ${repo}/git/ref/heads/${this.branch}$`), () => this.#ref(this.head)],
+      [new RegExp(`^GET ${repo}/git/ref/heads/(.+)$`), (match) => this.#getRef(match[1])],
+      [new RegExp(`^GET ${repo}/branches$`), () => this.#listBranches()],
+      [new RegExp(`^POST ${repo}/git/refs$`), (_match, body) => this.#createRef(body)],
+      [new RegExp(`^DELETE ${repo}/git/refs/heads/(.+)$`), (match) => this.#deleteRef(match[1])],
       [/^GET .*\/git\/commits\/([^/]+)$/, (match) => this.#getCommit(match[1])],
       [/^GET .*\/git\/trees\/([^/]+)$/, (match, _body, url) => this.#getTree(match[1], url)],
       [/^GET .*\/git\/blobs\/([^/]+)$/, (match) => this.#getBlob(match[1])],
@@ -170,8 +190,8 @@ export class FakeGitHub {
       [new RegExp(`^POST ${repo}/git/trees$`), (_match, body) => this.#createTree(body)],
       [new RegExp(`^POST ${repo}/git/commits$`), (_match, body) => this.#createCommit(body)],
       [
-        new RegExp(`^PATCH ${repo}/git/refs/heads/${this.branch}$`),
-        (_match, body) => this.#updateRef(body)
+        new RegExp(`^PATCH ${repo}/git/refs/heads/(.+)$`),
+        (match, body) => this.#updateRef(decodeURIComponent(match[1]), body)
       ]
     ]
   }
@@ -186,8 +206,35 @@ export class FakeGitHub {
     }
   }
 
-  #ref(sha: string) {
-    return Response.json({ ref: `refs/heads/${this.branch}`, object: { sha, type: 'commit' } })
+  #ref(sha: string, branch = this.branch) {
+    return Response.json({ ref: `refs/heads/${branch}`, object: { sha, type: 'commit' } })
+  }
+
+  #getRef(encoded: string) {
+    const branch = decodeURIComponent(encoded)
+    const sha = this.branches.get(branch)
+    return sha ? this.#ref(sha, branch) : NOT_FOUND()
+  }
+
+  #listBranches() {
+    return Response.json(
+      [...this.branches].map(([name, sha]) => ({ name, commit: { sha }, protected: false }))
+    )
+  }
+
+  #createRef(body: RequestBody) {
+    const branch = (body.ref ?? '').replace(/^refs\/heads\//, '')
+    if (this.branches.has(branch)) {
+      return Response.json({ message: 'Reference already exists' }, { status: 422 })
+    }
+    this.branches.set(branch, body.sha ?? '')
+    return this.#ref(body.sha ?? '', branch)
+  }
+
+  #deleteRef(encoded: string) {
+    const branch = decodeURIComponent(encoded)
+    if (!this.branches.delete(branch)) return NOT_FOUND()
+    return new Response(null, { status: 204 })
   }
 
   #getCommit(sha: string) {
@@ -253,15 +300,17 @@ export class FakeGitHub {
     )
   }
 
-  async #updateRef(body: RequestBody) {
+  async #updateRef(branch: string, body: RequestBody) {
     const hook = this.beforeRefUpdate
     this.beforeRefUpdate = null
     await hook?.()
     const sha = body.sha ?? ''
-    if (body.force !== false || !this.#isAncestor(this.head, sha)) {
+    const current = this.branches.get(branch)
+    if (current === undefined) return NOT_FOUND()
+    if (body.force !== false || !this.#isAncestor(current, sha)) {
       return Response.json({ message: 'Update is not a fast forward' }, { status: 422 })
     }
-    this.head = sha
-    return this.#ref(sha)
+    this.branches.set(branch, sha)
+    return this.#ref(sha, branch)
   }
 }

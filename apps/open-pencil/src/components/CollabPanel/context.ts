@@ -5,8 +5,10 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { useI18n } from '@open-pencil/vue'
 
+import { localCollabUser } from '@/app/collab/identity'
 import { DEFAULT_COLLAB_STATE, useCollabInjected } from '@/app/collab/use'
 import { useNotificationMessages } from '@/app/i18n/notifications'
+import { githubIdentity } from '@/app/integrations/storage/github/identity'
 import { toast } from '@/app/shell/ui'
 import { getShareURL } from '@/constants'
 
@@ -32,6 +34,18 @@ function createCollabPanelContext() {
     return getShareURL(state.value.roomId)
   })
   const isJoining = computed(() => !!pendingRoomId.value && !state.value.connected)
+  /** What peers see: the GitHub name and avatar when signed in (display-only). */
+  const localUser = computed(() =>
+    localCollabUser(state.value.localName, state.value.localColor, githubIdentity.value)
+  )
+  const signedInWithGitHub = computed(() => githubIdentity.value !== null)
+  /** Signed in with GitHub, the GitHub name is used and no local name is needed. */
+  const canStart = computed(() => signedInWithGitHub.value || !!nameDraft.value.trim())
+
+  function applyName() {
+    const name = nameDraft.value.trim()
+    if (name) collab?.setLocalName(name)
+  }
 
   watch(
     pendingRoomId,
@@ -48,8 +62,8 @@ function createCollabPanelContext() {
   }
 
   function share() {
-    if (!collab || !nameDraft.value.trim()) return
-    collab.setLocalName(nameDraft.value.trim())
+    if (!collab || !canStart.value) return
+    applyName()
     const roomId = collab.shareCurrentDoc()
     void router.push(`/share/${roomId}`)
     void copy(getShareURL(roomId))
@@ -60,8 +74,8 @@ function createCollabPanelContext() {
   function join() {
     if (!collab) return
     const roomId = pendingRoomId.value || joinInput.value.trim().replace(/.*\/share\//, '')
-    if (!roomId || !nameDraft.value.trim()) return
-    collab.setLocalName(nameDraft.value.trim())
+    if (!roomId || !canStart.value) return
+    applyName()
     collab.connect(roomId)
     void router.push(`/share/${roomId}`)
     popoverOpen.value = false
@@ -90,6 +104,9 @@ function createCollabPanelContext() {
     followingPeer,
     shareURL,
     isJoining,
+    localUser,
+    signedInWithGitHub,
+    canStart,
     copyLink,
     share,
     join,

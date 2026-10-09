@@ -67,6 +67,7 @@ export interface PendingFontNode {
   keys: Set<string>
 }
 
+import { createCursorAvatarCache } from './cursor-avatars'
 import { EffectRasterCache } from './renderer/effect-raster-cache'
 import { TiledSceneController } from './renderer/tiles'
 import type { RenderOverlays, RulerTheme } from './renderer/types'
@@ -103,6 +104,8 @@ export class SkiaRenderer {
   pendingFontNodes = new Map<string, PendingFontNode>()
   textPictureGenerations = new Map<string, { data: Uint8Array; generation: number }>()
   imageCache = new Map<string, CKImage>()
+  /** Decoded remote-cursor avatars (overlay only). */
+  cursorAvatarCache = createCursorAvatarCache()
   vectorPathCache = new Map<string, Path[]>()
   vectorStrokePathCache = new Map<string, Path[]>()
   vectorStrokeOutlineCache = new Map<string, Path[]>()

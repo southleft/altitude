@@ -13,6 +13,7 @@ import type { Tool } from '@open-pencil/vue'
 import { useEditorStore } from '@/app/editor/active-store'
 import { toolIcons } from '@/app/editor/icons'
 import { useActionToast } from '@/app/shell/toast/action'
+import CommentsToggle from '@/components/comments/CommentsToggle.vue'
 import { useToolbarActions } from '@/components/Toolbar/actions'
 import DesktopToolbar from '@/components/Toolbar/DesktopToolbar.vue'
 import MobileToolbar from '@/components/Toolbar/MobileToolbar.vue'
@@ -81,6 +82,7 @@ function onActionTap(item: ToolbarActionItem) {
     >
       <template #end>
         <MotionPreviewToggle :ui="toolbarUI" />
+        <CommentsToggle :ui="toolbarUI" />
       </template>
     </DesktopToolbar>
 
