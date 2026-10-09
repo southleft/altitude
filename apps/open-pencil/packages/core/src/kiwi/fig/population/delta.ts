@@ -2,8 +2,16 @@ import { isEqual } from 'es-toolkit/predicate'
 
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 
+import {
+  compactSceneNodeOverrides,
+  encodeCompactSceneNode,
+  removeAbsentCompactFields,
+  type CompactSceneNode
+} from '#core/kiwi/fig/parse/compact-nodes'
+
 export interface FigPopulationDelta {
-  created: Array<[string, SceneNode]>
+  /** Created nodes as their non-default fields; see `CompactSceneNode`. */
+  created: CompactSceneNode[]
   updated: Array<[string, Partial<SceneNode>]>
   deleted: string[]
   instanceIndex: Array<[string, string[]]>
@@ -111,7 +119,7 @@ export function buildFigPopulationDelta(
   const created = [...journal.created]
     .map((id) => graph.getNode(id))
     .filter((node) => node !== undefined)
-    .map((node) => [node.id, structuredClone(node)] as [string, SceneNode])
+    .map((node) => encodeCompactSceneNode(node))
   return {
     created,
     updated,
@@ -123,8 +131,15 @@ export function buildFigPopulationDelta(
 
 export function applyFigPopulationDelta(graph: SceneGraph, delta: FigPopulationDelta): void {
   graph.preserveSourceMetadataDuring(() => {
-    for (const [, node] of delta.created) {
-      graph.createNodeWithId(node.id, node.type, node.parentId, node)
+    for (const compact of delta.created) {
+      const overrides = compactSceneNodeOverrides(compact)
+      const node = graph.createNodeWithId(
+        compact.i,
+        compact.t,
+        overrides.parentId ?? null,
+        overrides
+      )
+      removeAbsentCompactFields(node, compact)
     }
     for (const [id, changes] of delta.updated) graph.updateNode(id, changes)
     for (const id of delta.deleted) graph.deleteNode(id)

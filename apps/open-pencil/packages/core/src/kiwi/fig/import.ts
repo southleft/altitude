@@ -19,6 +19,7 @@ import { SceneGraph } from '@open-pencil/scene-graph'
 import type { ComponentPropertyDefinition } from '@open-pencil/scene-graph'
 
 import { setLazyFigImportContext } from '#core/kiwi/fig/lazy-import'
+import { planLazyPopulationRoots } from '#core/kiwi/fig/population/roots'
 import {
   buildAssetRefMap,
   buildVariableColorResolver,
@@ -267,19 +268,6 @@ function rememberLazyFigImportContext(
   })
 }
 
-function componentPageIdsForLazyPopulation(graph: SceneGraph): Set<string> {
-  const pageIds = new Set<string>()
-  for (const node of graph.getAllNodes()) {
-    if (node.type !== 'COMPONENT' && node.type !== 'COMPONENT_SET') continue
-    let current = node.parentId ? graph.getNode(node.parentId) : undefined
-    while (current?.parentId && current.type !== 'CANVAS') {
-      current = graph.getNode(current.parentId)
-    }
-    if (current?.type === 'CANVAS') pageIds.add(current.id)
-  }
-  return pageIds
-}
-
 export function importNodeChanges(
   nodeChanges: NodeChange[],
   blobs: Uint8Array[] = [],
@@ -300,6 +288,7 @@ export function importNodeChanges(
   }
 
   const { changeMap, parentMap, childrenMap } = buildChangeMaps(nodeChanges)
+  const lazyChangeMap = changeMap as Map<string, InstanceNodeChange>
   const assetRefs = buildAssetRefMap(changeMap)
   applyStyleRefs(changeMap, assetRefs)
   setVariableColorResolver(buildVariableColorResolver(changeMap, assetRefs))
@@ -347,23 +336,21 @@ export function importNodeChanges(
   remapInstanceSwapPropertyValues(graph, guidToNodeId)
   applyVariantPropSpecs(graph)
 
+  // First-page mode populates that page plus only the pages holding components its instances
+  // can clone; every other page, component pages included, waits until it is viewed.
   const firstPageId = graph.getPages().find((page) => !page.internalOnly)?.id
-  const componentPageIds =
-    options.populate === 'first-page' ? componentPageIdsForLazyPopulation(graph) : new Set<string>()
   const activeRootIds =
     options.populate === 'first-page'
-      ? [firstPageId, ...componentPageIds].filter(isNotNil)
+      ? planLazyPopulationRoots(
+          graph,
+          { changeMap: lazyChangeMap, guidToNodeId, populatedRootIds: new Set() },
+          [firstPageId].filter(isNotNil)
+        )
       : undefined
 
   if (options.populate !== 'none') {
     graph.preserveSourceMetadataDuring(() => {
-      populateAndApplyOverrides(
-        graph,
-        changeMap as Map<string, InstanceNodeChange>,
-        guidToNodeId,
-        blobs,
-        activeRootIds
-      )
+      populateAndApplyOverrides(graph, lazyChangeMap, guidToNodeId, blobs, activeRootIds)
     })
   }
 

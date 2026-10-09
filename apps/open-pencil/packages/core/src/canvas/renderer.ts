@@ -1,4 +1,5 @@
 import type { SceneNode, SceneGraph, Fill, Stroke } from '@open-pencil/scene-graph'
+import type { VisualBounds } from '@open-pencil/scene-graph/geometry'
 import type { Color, Rect, Vector } from '@open-pencil/scene-graph/primitives'
 import type { SnapGuide } from '@open-pencil/scene-graph/snap'
 
@@ -56,6 +57,7 @@ import type {
 
 export interface SubtreePictureCacheEntry {
   picture: SkPicture
+  bounds: VisualBounds
   pageId: string | null
   sceneVersion: number
   positionPreviewVersion: number
@@ -152,6 +154,11 @@ export class SkiaRenderer {
   subtreePictureCacheFingerprint = ''
   /** Nodes touched since the subtree picture scope last advanced. */
   subtreePictureDirtyIds = new Set<string>()
+  /** Top-level children re-recorded since `sceneBackingDirtyVersion`, for regional repaint. */
+  sceneBackingDirtyIds = new Set<string>()
+  sceneBackingDirtyVersion = -1
+  /** Set when a change since `sceneBackingDirtyVersion` could not be attributed to children. */
+  sceneBackingDirtyUnknown = true
   readonly labelCache = new LabelCache()
   readonly labelParagraphCache = new LabelParagraphCache(undefined, undefined, {
     onMissingGlyphs: (missing) => RendererFonts.resolveLabelFontCoverage(this, missing)

@@ -1,10 +1,10 @@
 import { parseFigBuffer } from '@open-pencil/fig'
 import type { FigPageManifestEntry } from '@open-pencil/kiwi/fig'
-import type { SceneGraph } from '@open-pencil/scene-graph'
+import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 
 import { IS_BROWSER } from '#core/constants'
 import { importNodeChanges } from '#core/kiwi/fig/import'
-import { deserializeSceneGraph } from '#core/kiwi/fig/parse/transfer'
+import { deserializeSceneGraph, receiveCompactSceneNodes } from '#core/kiwi/fig/parse/transfer'
 import {
   registerFigPopulationWorker,
   registerOriginalArchiveRequest
@@ -39,6 +39,7 @@ function parseViaWorker(buffer: ArrayBuffer, options: ParseFigFileOptions): Prom
     const worker = createFigSessionWorker()
     const channel = new MessageChannel()
     const pendingArchives = new Map<string, (bytes: Uint8Array) => void>()
+    const streamedNodes = new Map<string, SceneNode>()
     const abort = () => {
       channel.port1.postMessage({ type: 'dispose' })
       channel.port1.close()
@@ -60,6 +61,10 @@ function parseViaWorker(buffer: ArrayBuffer, options: ParseFigFileOptions): Prom
         options.onPages?.(e.data.pages)
         return
       }
+      if (e.data.type === 'graph-nodes') {
+        receiveCompactSceneNodes(e.data.nodes, streamedNodes)
+        return
+      }
       if (e.data.type !== 'graph') return
       if (e.data.error || !e.data.graph) {
         cleanupAbort()
@@ -69,7 +74,15 @@ function parseViaWorker(buffer: ArrayBuffer, options: ParseFigFileOptions): Prom
         return
       }
       try {
-        const graph = deserializeSceneGraph(e.data.graph)
+        if (e.data.nodeCount !== undefined && e.data.nodeCount !== streamedNodes.size) {
+          throw new Error(
+            `Worker sent ${streamedNodes.size} of ${e.data.nodeCount} .fig nodes before the graph`
+          )
+        }
+        const graph = deserializeSceneGraph(
+          e.data.graph,
+          e.data.nodeCount === undefined ? undefined : streamedNodes
+        )
         if (options.populate === 'first-page') {
           cleanupAbort()
           registerFigPopulationWorker(graph, worker, channel.port1, {

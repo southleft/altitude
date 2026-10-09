@@ -5,6 +5,7 @@ import { fontManager } from '#core/text/fonts'
 function clearRetainedSceneState(r: SkiaRenderer): void {
   r.scenePicture?.delete()
   r.sceneBacking?.image.delete()
+  r.sceneBacking?.surface?.delete()
   r.sceneBacking = null
   r.sceneBackingBuild?.surface.delete()
   r.sceneBackingBuild = null
