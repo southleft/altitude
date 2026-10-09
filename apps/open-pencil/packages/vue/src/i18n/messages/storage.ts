@@ -92,6 +92,11 @@ export const storageMessageDefaults = {
   githubOverwrite: 'Overwrite GitHub',
   githubRebased: 'Committed on top of newer changes from GitHub. Reload to see them.',
   githubLargeFile: params('{path} is {size} MB. GitHub recommends files under 50 MB.'),
+  githubSaveHint: 'Saved to file. To keep it in GitHub, use Save to GitHub.',
+  githubPageTooLarge: params('The page “{page}” is {size} MB.'),
+  githubFileTooLarge: params('{path} is {size} MB.'),
+  githubTooLargeHint:
+    'Nothing was committed. GitHub accepts files up to 100 MB. Split the page into smaller pages, or commit a copy of the document without it.',
   githubDocuments: 'GitHub documents',
   githubWorkspaceDescription: params('{repository} · {branch} · {folder}'),
   githubEmpty: 'No documents in this folder yet.',

@@ -4,7 +4,7 @@ import { ToastProvider, ToastRoot, ToastDescription, ToastViewport, ToastClose }
 
 import { useI18n } from '@open-pencil/vue'
 
-import { toast } from '@/app/shell/ui'
+import { toast, type Toast } from '@/app/shell/ui'
 import { useToastUI } from '@/components/ui/feedback/toast'
 import type { ToastVariant } from '@/components/ui/feedback/toast'
 import Tip from '@/components/ui/overlay/Tip.vue'
@@ -14,6 +14,16 @@ const { common, settings } = useI18n()
 const defaultToastClass = useToastUI({ tone: 'default' }).base
 const warningToastClass = useToastUI({ tone: 'warning' }).base
 const errorToastClass = useToastUI({ tone: 'error' }).base
+
+function toastDuration(item: Toast) {
+  if (item.variant === 'error') return toast.ERROR_TOAST_DURATION
+  return item.action ? toast.ACTION_TOAST_DURATION : toast.TOAST_DURATION
+}
+
+function runAction(item: Toast) {
+  item.action?.run()
+  toast.remove(item.id)
+}
 
 function toastClass(tone: ToastVariant) {
   if (tone === 'error') return errorToastClass
@@ -28,7 +38,7 @@ function toastClass(tone: ToastVariant) {
       v-for="t in toast.toasts.value"
       :key="t.id"
       data-test-id="toast-item"
-      :duration="t.variant === 'error' ? toast.ERROR_TOAST_DURATION : toast.TOAST_DURATION"
+      :duration="toastDuration(t)"
       :class="toastClass(t.variant)"
       @update:open="
         (open) => {
@@ -45,7 +55,7 @@ function toastClass(tone: ToastVariant) {
         v-if="t.action"
         type="button"
         class="shrink-0 cursor-pointer rounded px-1.5 py-0.5 text-[10px] font-medium underline-offset-2 hover:underline"
-        @click="t.action.run()"
+        @click="runAction(t)"
       >
         {{ t.action.label }}
       </button>

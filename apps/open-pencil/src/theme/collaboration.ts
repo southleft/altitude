@@ -5,6 +5,8 @@ const collaborationTheme = {
     peerAvatar: 'cursor-pointer transition-all',
     shareButton:
       'flex h-7 cursor-pointer items-center gap-1.5 rounded border-none px-3 text-[11px] font-medium transition-colors outline-none focus-visible:ring-1 focus-visible:ring-accent',
+    // In a narrow right-panel header the label yields so GitHub saving stays readable.
+    shareLabel: '@max-[19.5rem]:sr-only',
     presenceDot: 'size-2 rounded-full bg-green-500',
     presenceContent: 'z-50 w-56 rounded-xl bg-panel p-3 shadow-[0_8px_30px_rgb(0_0_0/0.4)]',
     peerRow:

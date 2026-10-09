@@ -27,6 +27,7 @@ export {
   type ReadDocumentJSONResult
 } from './read'
 export {
+  sourceSidecarPath,
   writeDocumentJSON,
   type DocumentJSONFile,
   type DocumentJSONPage,

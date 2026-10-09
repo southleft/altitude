@@ -9,8 +9,10 @@ import { defaultCommitMessage } from '@/app/integrations/storage/github/document
 import {
   allocateGitHubDocumentPath,
   commitGitHubDocument,
+  GITHUB_MAX_FILE_BYTES,
   listGitHubDocuments,
   loadGitHubDocument,
+  oversizeGitHubFiles,
   type GitHubDocumentBinding
 } from '@/app/integrations/storage/github/repository'
 
@@ -236,4 +238,20 @@ describe('GitHub errors', () => {
     const error = (await client.getAuthenticatedUser().catch((e) => e)) as GitHubAPIError
     expect(error.kind).toBe('invalid-response')
   })
+})
+
+test('oversized files are attributed to the page they hold', () => {
+  const { graph } = graphWithPages()
+  const snapshot = writeDocumentJSON(graph, { name: 'Huge' })
+  const oversized = new Uint8Array(GITHUB_MAX_FILE_BYTES + 1)
+  const files = snapshot.files.map((file) =>
+    file.path === 'pages/components.json' || file.path === 'variables.json'
+      ? { ...file, bytes: oversized }
+      : file
+  )
+  expect(oversizeGitHubFiles({ ...snapshot, files })).toEqual([
+    { path: 'pages/components.json', megabytes: 101, page: 'Components' },
+    { path: 'variables.json', megabytes: 101, page: null }
+  ])
+  expect(oversizeGitHubFiles(snapshot)).toEqual([])
 })

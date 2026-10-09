@@ -7,6 +7,7 @@ import type { EditorCommandId } from '@open-pencil/vue'
 
 import { requestRenameSelection } from '@/app/editor/selection/rename-dialog'
 import { TOOL_SHORTCUTS } from '@/app/editor/session'
+import { saveDocument } from '@/app/integrations/storage/github/document/entry'
 import { openSettingsDialog } from '@/app/settings/dialog'
 import { isButtonActivation, isEditing } from '@/app/shell/keyboard/focus'
 import { bindSpaceHandTool } from '@/app/shell/keyboard/space-tool'
@@ -216,7 +217,7 @@ export function registerKeyboardShortcuts(options: KeyboardShortcutOptions) {
     {
       id: 'save',
       keys: appMenuTinykeysShortcut('save') ?? '$mod+KeyS',
-      run: ({ store }) => void store.saveFigFile()
+      run: ({ store }) => void saveDocument(store)
     },
     {
       id: 'open-file',

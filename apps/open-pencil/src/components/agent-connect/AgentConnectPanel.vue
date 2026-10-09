@@ -21,6 +21,7 @@ import IconButton from '@/components/ui/button/IconButton.vue'
 import agentConnectTheme from '@/theme/agent-connect'
 
 import AgentRelaySetup from './AgentRelaySetup.vue'
+import { relayStatusCopy } from './relay-status'
 
 const {
   status,
@@ -59,26 +60,7 @@ const styles = tv(agentConnectTheme)()
 
 const statusCopy = computed(() => {
   const messages = automation.value
-  if (relay) {
-    const relayMap: Record<AgentConnectionStatus, { label: string; hint: string | null }> = {
-      connected: {
-        label: messages.agentStatusConnected,
-        hint: messages.agentRelayStatusConnectedHint
-      },
-      waiting: { label: messages.agentStatusWaiting, hint: messages.agentRelayStatusWaitingHint },
-      starting: { label: messages.agentRelayStatusStarting, hint: null },
-      offline: {
-        label: messages.agentRelayStatusOffline,
-        hint: messages.agentRelayStatusOfflineHint
-      },
-      unavailable: {
-        label: messages.agentStatusUnavailable,
-        hint: messages.agentStatusUnavailableHint
-      },
-      setup: { label: messages.agentRelayStatusSetup, hint: messages.agentRelayStatusSetupHint }
-    }
-    return relayMap[status]
-  }
+  if (relay) return relayStatusCopy(status, messages)
   const map: Record<AgentConnectionStatus, { label: string; hint: string | null }> = {
     connected: {
       label: messages.agentStatusConnected,

@@ -19,6 +19,7 @@ import type { CommandPaletteGroup, CommandPaletteItem, MenuEntry } from '@open-p
 import { shortcutPlatform, useEditorCommands, useI18n } from '@open-pencil/vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
+import { saveDocument, saveToGitHub } from '@/app/integrations/storage/github/document/entry'
 import { openSettingsDialog } from '@/app/settings/dialog'
 import { setSnappingPreference } from '@/app/settings/preferences/apply'
 import { createSharedEditorMenuActions } from '@/app/shell/menu/editor-actions'
@@ -99,6 +100,7 @@ export function useAppMenu() {
     'open-storage-workspace': 'openStorageWorkspace',
     save: 'save',
     'save-as': 'saveAs',
+    'save-to-github': 'saveToGitHub',
     'export-selection': 'exportSelection',
     autosave: 'autosave',
     close: 'closeTab',
@@ -158,8 +160,9 @@ export function useAppMenu() {
     },
     open: () => void openFileDialog(),
     'open-storage-workspace': () => openStorageWorkspace(router),
-    save: () => void store.saveFigFile(),
+    save: () => void saveDocument(store),
     'save-as': () => void store.saveFigFileAs(),
+    'save-to-github': () => saveToGitHub(store),
     'export-selection': () => exportSelection('png'),
     ...createSelectionMenuActions(store),
     close: () => {

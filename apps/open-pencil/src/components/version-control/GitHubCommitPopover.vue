@@ -7,6 +7,7 @@ import { computed, ref, useId, watch } from 'vue'
 import { useCommonMessages, useI18n, useStorageMessages } from '@open-pencil/vue'
 
 import { useEditorStore } from '@/app/editor/active-store'
+import { githubCommitPromptPending } from '@/app/integrations/storage/github/document/entry'
 import {
   githubFailureMessage,
   relativeTime
@@ -71,6 +72,18 @@ const commitURL = computed(() => {
   return `https://github.com/${encodeURIComponent(current.owner)}/${encodeURIComponent(current.repo)}/commit/${current.commitSHA}`
 })
 
+/** Oversized files, worded per page so the user knows what to split or leave out. */
+const oversizeMessages = computed(() => {
+  const current = status.value
+  if (current.phase !== 'failed') return []
+  return (current.failure.oversize ?? []).map((file) => ({
+    key: file.path,
+    text: file.page
+      ? storage.value.githubPageTooLarge({ page: file.page, size: String(file.megabytes) })
+      : storage.value.githubFileTooLarge({ path: file.path, size: String(file.megabytes) })
+  }))
+})
+
 const failureText = computed(() => {
   const current = status.value
   if (current.phase !== 'failed') return null
@@ -92,6 +105,16 @@ watch(
 watch(open, (isOpen) => {
   if (isOpen) documentName.value = store.state.documentName
 })
+// File › Save to GitHub… and the save hint ask for the popover; consume the request.
+watch(
+  githubCommitPromptPending,
+  (pending) => {
+    if (!pending) return
+    githubCommitPromptPending.value = false
+    open.value = true
+  },
+  { immediate: true }
+)
 
 async function commit() {
   if (await session.value.commit({ message: message.value })) message.value = ''
@@ -128,12 +151,12 @@ function openSettings() {
         data-test-id="github-commit-button"
         :data-state="state"
         :class="styles.trigger()"
-        :aria-label="storage.githubVersionControl"
+        :aria-label="binding ? storage.githubVersionControl : undefined"
       >
         <span :class="styles.dot()" :data-state="state" aria-hidden="true" />
         <icon-lucide-git-commit-horizontal :class="styles.triggerIcon()" aria-hidden="true" />
-        <span v-if="binding" :class="styles.triggerLabel()">{{
-          binding.commitSHA.slice(0, 7)
+        <span :class="styles.triggerLabel()">{{
+          binding ? binding.commitSHA.slice(0, 7) : storage.githubSaveToRepository
         }}</span>
       </button>
     </PopoverTrigger>
@@ -204,6 +227,10 @@ function openSettings() {
               </template>
             </AppAlert>
             <AppAlert v-if="failureText" tone="error" :heading="failureText">
+              <template v-if="oversizeMessages.length" #default>
+                <p v-for="item in oversizeMessages" :key="item.key">{{ item.text }}</p>
+                <p>{{ storage.githubTooLargeHint }}</p>
+              </template>
               <template
                 v-if="status.phase === 'failed' && status.failure.kind === 'unauthorized'"
                 #actions
@@ -259,7 +286,12 @@ function openSettings() {
               <label :for="nameID" :class="styles.label()">{{ storage.githubDocumentName }}</label>
               <AppInput :id="nameID" v-model="documentName" tone="panel" :disabled="working" />
             </div>
-            <AppAlert v-if="failureText" tone="error" :heading="failureText" />
+            <AppAlert v-if="failureText" tone="error" :heading="failureText">
+              <template v-if="oversizeMessages.length" #default>
+                <p v-for="item in oversizeMessages" :key="item.key">{{ item.text }}</p>
+                <p>{{ storage.githubTooLargeHint }}</p>
+              </template>
+            </AppAlert>
             <div :class="styles.footer()">
               <AppButton
                 color="primary"

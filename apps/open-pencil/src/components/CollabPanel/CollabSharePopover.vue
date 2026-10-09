@@ -29,14 +29,14 @@ const styles = computed(() => collaboration({ connection: connection.value }))
         :data-connection="connection"
         :class="styles.shareButton()"
       >
-        <icon-lucide-share-2 class="size-3.5" />
-        {{
+        <icon-lucide-share-2 class="size-3.5" aria-hidden="true" />
+        <span :class="styles.shareLabel()">{{
           collab.state.connected
             ? collab.messages.connected
             : collab.isJoining
               ? collab.messages.joinRoom
               : collab.messages.share
-        }}
+        }}</span>
       </button>
     </PopoverTrigger>
 

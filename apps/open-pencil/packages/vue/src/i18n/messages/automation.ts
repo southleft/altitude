@@ -159,7 +159,19 @@ export const automationMessageDefaults = {
     'For {clients} and other clients that support remote MCP servers with headers, add this to the MCP configuration.'
   ),
   agentRelayLastRequest: params('Last agent request at {time}'),
-  agentToolAccess: 'Tool access'
+  agentToolAccess: 'Tool access',
+  relayServer: 'Hosted relay',
+  relayDescription:
+    'This hosted editor has no local MCP server. Agents connect to this browser tab through the hosted relay, so keep the tab open while an agent works.',
+  relayAddress: 'Relay address',
+  relayActivity: 'Activity',
+  relayToolAccessHint: 'Tool access controls which tools agents can call through the relay.',
+  relayLocalServerNote:
+    'Local server settings (port, authentication token, root directory, and restart) apply only to the desktop app and local development builds.',
+  relayToolAccessDescription:
+    'Choose tools the hosted relay offers to connected agents. Script and file tools are never offered through the relay.',
+  relayToolsNotice:
+    'Changes apply immediately: disabled tools are refused on the next call. Agents refresh their tool list when they reconnect.'
 } as const
 
 export const automationMessages = i18n('automation', automationMessageDefaults)

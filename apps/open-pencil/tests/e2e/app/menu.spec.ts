@@ -23,6 +23,7 @@ test('File menu opens and shows items', async () => {
   expect(items.some((t) => t.includes('Open storage workspace'))).toBe(true)
   expect(items.some((t) => t.includes('Save'))).toBe(true)
   expect(items.some((t) => t.includes('Save as'))).toBe(true)
+  expect(items.some((t) => t.includes('Save to GitHub…'))).toBe(true)
 
   await editor.page.keyboard.press('Escape')
 })
@@ -170,4 +171,12 @@ test('Open storage workspace navigates from the File menu', async () => {
   await expect(editor.page).toHaveURL(/\/$/)
   await expect(editor.page.getByTestId('recent-files-home')).toBeVisible()
   await expect(editor.page.getByRole('heading', { name: 'Storage workspace' })).toBeVisible()
+})
+
+test('Save to GitHub opens version control settings before GitHub is set up', async () => {
+  await editor.page.getByRole('menuitem', { name: 'File', exact: true }).click()
+  await editor.page.getByRole('menuitem', { name: 'Save to GitHub…' }).click()
+
+  await expect(editor.page.getByTestId('settings-github-panel')).toBeVisible()
+  await editor.page.keyboard.press('Escape')
 })

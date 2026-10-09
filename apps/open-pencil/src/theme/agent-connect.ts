@@ -7,6 +7,10 @@ const agentConnectTheme = {
     trigger:
       'flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded border border-border px-2 text-[11px] font-medium text-surface transition-colors outline-none hover:bg-hover focus-visible:ring-1 focus-visible:ring-accent data-[status=connected]:border-transparent data-[status=connected]:text-muted data-[status=connected]:hover:text-surface',
     triggerIcon: 'size-3.5 shrink-0',
+    // In a narrow panel header the label yields first so "Save to GitHub" stays readable.
+    triggerLabel: '@max-[23rem]:sr-only',
+    // "Connected" reads without the icon unless the label is hidden.
+    triggerStatusIcon: '@min-[23rem]:data-[status=connected]:hidden',
     dot: 'size-2 shrink-0 rounded-full bg-muted/60 data-[status=connected]:bg-[var(--color-success)] data-[status=offline]:bg-[var(--color-error)] data-[status=starting]:animate-pulse data-[status=starting]:motion-reduce:animate-none',
     content: 'flex flex-col gap-3 text-surface',
     header: 'flex flex-col gap-1',

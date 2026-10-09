@@ -21,6 +21,8 @@ export interface Toast {
 }
 
 const TOAST_DURATION = 3000
+// Toasts with an action stay long enough to reach the button.
+const ACTION_TOAST_DURATION = 8000
 // Errors stay long enough to read but always self-clean, so a
 // stuck/repeating error source can't pile up over the canvas.
 const ERROR_TOAST_DURATION = 10000
@@ -49,8 +51,8 @@ function push(message: string, variant: ToastVariant, action?: ToastAction) {
   }
 }
 
-function info(message: string) {
-  push(message, 'default')
+function info(message: string, action?: ToastAction) {
+  push(message, 'default', action)
 }
 
 function warning(message: string) {
@@ -86,6 +88,7 @@ export const toast = {
   toasts,
   setupGlobalErrorHandler,
   TOAST_DURATION,
+  ACTION_TOAST_DURATION,
   ERROR_TOAST_DURATION
 }
 

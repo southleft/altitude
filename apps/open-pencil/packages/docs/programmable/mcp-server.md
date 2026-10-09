@@ -199,7 +199,9 @@ The relay holds no tools and no document. It forwards `tools/list` and `tools/ca
 
    Claude Desktop's own configuration file runs local commands only; bridge it with `npx mcp-remote https://<relay>/mcp --header "Authorization: Bearer <key>"`.
 
-The key is masked in the popover; **Show key** reveals it for a minute or until the popover closes, and the copy buttons copy the full command. Keep the editor tab open while the agent works. **Regenerate key** replaces the key: agents configured with the old key stop working until you paste the new command.
+The key is masked in the popover; **Show key** reveals it for a minute or until the popover closes, and the copy buttons copy the full command.
+
+On a hosted build, **Settings → MCP** manages the same connection: it shows the relay status and last agent request, the relay address, the connection key (create, show, copy, or regenerate after confirmation), and both setup commands. Local-server controls such as restart, authentication, and root directory are not shown there because they apply only to the desktop app and local development builds. WebMCP keeps its own section. Keep the editor tab open while the agent works. **Regenerate key** replaces the key: agents configured with the old key stop working until you paste the new command.
 
 ### Behaviour
 
