@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, jest, test, vi } from 'bun:test'
 
 import { reactive } from 'vue'
 
@@ -127,4 +127,48 @@ describe('recovery for file-backed documents', () => {
       dispose()
     }
   })
+
+  test('page population and layout never schedule a snapshot; a user edit does', async () => {
+    const { handle } = makeGrantedHandle('Big.fig')
+    jest.useFakeTimers()
+    const { editor, actions, dispose } = openFileBackedDocument(handle)
+    try {
+      const graph = editor.graph
+      const page = graph.getPages()[0]
+      const sceneVersion = editor.state.sceneVersion
+      graph.withDerivedMutations(() => {
+        graph.createNode('FRAME', page.id, { name: 'Populated', width: 100, height: 100 })
+      })
+      graph.withLayoutMutations(() => {
+        graph.updateNode(graph.getChildren(page.id)[0].id, { width: 120 })
+      })
+      editor.requestRender()
+      await Promise.resolve()
+      jest.advanceTimersByTime(11_000)
+      await waitForIdle()
+      expect(editor.state.sceneVersion).toBeGreaterThan(sceneVersion)
+      expect(actions.hasUnsavedChanges()).toBe(false)
+      expect(await store.list()).toEqual([])
+
+      editor.createShape('RECTANGLE', 0, 0, 100, 100)
+      await Promise.resolve()
+      jest.advanceTimersByTime(3_100)
+      await waitForIdle()
+      expect(actions.hasUnsavedChanges()).toBe(true)
+      expect(await store.list()).toHaveLength(1)
+    } finally {
+      jest.useRealTimers()
+      dispose()
+    }
+  })
 })
+
+/** Let a background snapshot that fake timers released run to completion. */
+async function waitForIdle() {
+  for (let i = 0; i < 200; i++) {
+    jest.advanceTimersByTime(0)
+    await new Promise<void>((resolve) => {
+      queueMicrotask(resolve)
+    })
+  }
+}

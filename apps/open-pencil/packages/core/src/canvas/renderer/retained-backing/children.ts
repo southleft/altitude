@@ -1,13 +1,13 @@
 import type { Canvas, Surface } from 'canvaskit-wasm'
 
-import type { SceneGraph } from '@open-pencil/scene-graph'
+import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
 import {
   computeDescendantVisualBounds,
   unionVisualBounds,
   type VisualBounds
 } from '@open-pencil/scene-graph/geometry'
 
-import type { SkiaRenderer } from '#core/canvas/renderer'
+import type { SkiaRenderer, SubtreePictureCacheEntry } from '#core/canvas/renderer'
 import { worldNodeVisualBounds } from '#core/canvas/renderer/visual-bounds'
 
 import { ensureSubtreePictureCacheScope } from './invalidation'
@@ -44,24 +44,42 @@ export function computeRetainedSubtreeBounds(
   return unionVisualBounds(visualBounds, transformedBounds)
 }
 
-function cachedSubtreePicture(
+/** Shadowed children are drawn directly rather than from a retained picture. */
+export function hasCacheableEffects(child: SceneNode | undefined): boolean {
+  return !!child?.effects.some(
+    (effect) => effect.visible && (effect.type === 'DROP_SHADOW' || effect.type === 'INNER_SHADOW')
+  )
+}
+
+/** The child's retained picture when it is current; the cache scope must be current too. */
+export function currentSubtreePicture(
   r: SkiaRenderer,
   graph: SceneGraph,
   childId: string,
   sceneVersion: number
-) {
-  ensureSubtreePictureCacheScope(r, graph, sceneVersion)
+): SubtreePictureCacheEntry | undefined {
   const cached = r.subtreePictureCache.get(childId)
-  if (
-    cached &&
+  return cached &&
     cached.pageId === r.pageId &&
     cached.sceneVersion === sceneVersion &&
     cached.positionPreviewVersion === graph.positionPreviewVersion &&
     cached.fontGeneration === r.fontGeneration
-  ) {
-    return cached
-  }
+    ? cached
+    : undefined
+}
 
+/** The child's retained picture, recorded now unless it is current. */
+export function cachedSubtreePicture(
+  r: SkiaRenderer,
+  graph: SceneGraph,
+  childId: string,
+  sceneVersion: number
+): SubtreePictureCacheEntry | null {
+  ensureSubtreePictureCacheScope(r, graph, sceneVersion)
+  const current = currentSubtreePicture(r, graph, childId, sceneVersion)
+  if (current) return current
+
+  const cached = r.subtreePictureCache.get(childId)
   cached?.picture.delete()
   r.subtreePictureCache.delete(childId)
   const bounds = computeRetainedSubtreeBounds(graph, childId)
@@ -108,11 +126,7 @@ export function drawRetainedChild(
   sceneVersion: number,
   renderingSceneBacking: boolean
 ): VisualBounds | null {
-  const child = graph.getNode(childId)
-  const hasCacheableEffects = child?.effects.some(
-    (effect) => effect.visible && (effect.type === 'DROP_SHADOW' || effect.type === 'INNER_SHADOW')
-  )
-  if (hasCacheableEffects) {
+  if (hasCacheableEffects(graph.getNode(childId))) {
     const previous = r.renderingSceneBacking
     r.renderingSceneBacking = renderingSceneBacking
     try {

@@ -6,6 +6,53 @@ vectors). Production build, headless Chromium on a hardware GPU (RTX 3080 Ti), p
 headless timings and CPU profiles. Unmarked numbers are measured; anything *inferred* comes
 from reading code.
 
+## Round 3 (recovery off user edits and the main thread; time-sliced first recording) — measured 2026-10-09
+
+Same machine and method; `scratchpad/perf-g/bench-r.ts` (`MODE=switch|pan`). "Before" is
+`perf/large-docs` (round 2) merged on `main`; "after" is `perf/recovery-snapshot`. Two runs
+each; runs vary ±20 %, so ranges are shown.
+
+| Metric (Altitude `.fig`, internal canvas) | Before | After |
+|---|---|---|
+| Switch + fit → settled | 23.7–32.6 s | **14.8–21.5 s** |
+| Longest main-thread task during the switch | 8.5–10.6 s | **1.6–2.0 s** (population + layout) |
+| All long tasks during the switch | 21–28 s | 4.1–6.5 s |
+| Pan (40 wheel steps) right after the switch: worst frame / p95 | 13,048 ms / 7.5 ms¹ | **1,793 ms / 21 ms** |
+| Recovery snapshot after the switch with no edit | yes (whole document, main thread) | **none**; document stays clean |
+| Snapshot after an edit: longest main-thread task | 7.3–10.6 s | **≤ 60 ms** (later edits: none ≥ 50 ms)² |
+| JS heap after the run | 2.1–2.2 GB | 1.04–1.07 GB |
+
+¹ Before, the wheel events queue behind the 8–13 s recording task (p95 is low because only
+the frames after it count). ² First snapshot of a session sends the whole document to the
+worker in 8 ms slices (≈5 s of sliced main-thread work); later ones send only changed nodes.
+The 13.5 MB IndexedDB write itself cost 0.8 s (`Uint8Array.from`); it is now a `slice()`.
+
+What changed:
+
+- **Recovery follows user edits.** Population, the instance sync it triggers, and layout run
+  as derived mutations (`SceneGraph.withDerivedMutations`, `withLayoutMutations`); the change
+  tracker ignores them, recovery follows its content revision, and autosave skips clean
+  documents. A switch to the internal canvas emitted 6,233 created / 34,019 updated /
+  677 deleted node events, all derived now (`perf-r/events.ts`).
+- **Snapshot in a worker mirror** (`createFigExportMirror`). The worker keeps a copy of the
+  document; graph events mark dirty nodes, which are sent as compact nodes in slices, with the
+  lazy source once and the fonts text export needs; the last small batch and the export
+  request go in one synchronous step. The worker encodes with `encodeFigFile` (renderer-free
+  split of `exportFigFile`). Engine test: same decoded `.fig` as the main-thread export.
+- **First-time picture recording in slices.** Missing pictures are recorded and drawn into an
+  overscanned raster within 10 ms per frame, visible children first in paint order (exact in
+  the viewport once drawn), then nearest first; the raster is presented meanwhile, restarts
+  when the viewport leaves it, and is seeded from the page's previous backing after an edit.
+  When complete it becomes an inexact backing that the existing incremental build replaces;
+  a page whose pictures fit one frame's budget takes the old synchronous path. Engine test:
+  settled frame and backing pixel-identical to the synchronous path; canvas e2e suite with
+  base-generated Windows baselines: same 16 environmental failures on base and head, no
+  snapshot diffs.
+
+Still slow: the switch's population delta + derived instance sync + layout (~1–2 s tasks);
+the first-visit render takes ~10 s of sliced work (recording plus two playbacks); an edit on
+this page still spends ~0.9 s computing retained subtree bounds for region repaint.
+
 ## Round 2 (G18 faster open, G19 region redraw) — measured 2026-10-09
 
 Same file and method: production build served locally, headless Chromium on the RTX 3080 Ti,
@@ -65,7 +112,7 @@ What changed:
 
 Still slow (next steps):
 
-- **Internal canvas first visit, 22 s:** first-time recording of 6,083 subtree pictures
+- *(Addressed in round 3.)* **Internal canvas first visit, 22 s:** first-time recording of 6,083 subtree pictures
   synchronously (8.6 s), the recovery snapshot exporting the whole document on the main thread
   (7.6 s, triggered by the switch's population/layout scene versions), layout 1.5 s, and the
   page's population in the worker. Recording the first backing time-sliced and keeping

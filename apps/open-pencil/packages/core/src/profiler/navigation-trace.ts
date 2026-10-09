@@ -8,6 +8,7 @@ export type NavigationTraceEventName =
   | 'backing:preview'
   | 'backing:build'
   | 'backing:crisp'
+  | 'backing:warmup'
   | 'animation:frame'
   | 'main:long-task'
   | 'navigation:phase'

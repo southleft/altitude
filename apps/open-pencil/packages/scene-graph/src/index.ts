@@ -123,6 +123,7 @@ export class SceneGraph {
   private previewObservers: NodePreviewObserver[] = []
   private sourceMetadataPreservationDepth = 0
   private layoutMutationDepth = 0
+  private derivedMutationDepth = 0
   positionPreviewVersion = 0
   instanceIndex = new Map<string, Set<string>>()
 
@@ -431,6 +432,22 @@ export class SceneGraph {
   }
   get isApplyingLayout(): boolean {
     return this.layoutMutationDepth > 0
+  }
+  /**
+   * Mark mutations derived from content the document already holds: populating a lazily
+   * imported page, or syncing instances after population or layout. Like layout, they change
+   * the graph without changing the document.
+   */
+  withDerivedMutations(fn: () => void): void {
+    this.derivedMutationDepth++
+    try {
+      fn()
+    } finally {
+      this.derivedMutationDepth--
+    }
+  }
+  get isApplyingDerivedMutations(): boolean {
+    return this.derivedMutationDepth > 0
   }
   updateNodePositionPreview(id: string, x: number, y: number): void {
     this.updateNodePreview(id, { x, y })
