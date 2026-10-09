@@ -26,6 +26,10 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const APP = join(ROOT, 'apps', 'open-pencil');
 const OUT = join(ROOT, 'dist', 'open-pencil');
 const BASE = '/open-pencil/';
+// The hosted MCP relay (apps/open-pencil/packages/relay, Cloudflare Worker). Not a secret: it
+// is the URL agents connect to. Vite bakes it in at build time, so it lives here as the
+// default; the VITE_OPENPENCIL_RELAY_URL Pages variable still overrides it.
+const DEFAULT_RELAY_URL = 'https://altitude-open-pencil-mcp.southleft-llc.workers.dev';
 const strict = process.argv.includes('--strict') || process.env.OPEN_PENCIL_BUILD_STRICT === '1';
 
 const pkg = JSON.parse(readFileSync(join(APP, 'package.json'), 'utf8'));
@@ -54,7 +58,15 @@ try {
   rmSync(OUT, { recursive: true, force: true });
   run(['install', '--frozen-lockfile']);
   run(['run', 'build:packages']);
-  run(['x', 'vite', 'build', '--outDir', OUT, '--emptyOutDir'], { OPENPENCIL_BASE: BASE });
+  const relayURL = process.env.VITE_OPENPENCIL_RELAY_URL?.trim() || DEFAULT_RELAY_URL;
+  console.log(
+    `[open-pencil] MCP relay: ${relayURL}` +
+      (process.env.VITE_OPENPENCIL_RELAY_URL?.trim() ? ' (from VITE_OPENPENCIL_RELAY_URL)' : ' (default)')
+  );
+  run(['x', 'vite', 'build', '--outDir', OUT, '--emptyOutDir'], {
+    OPENPENCIL_BASE: BASE,
+    VITE_OPENPENCIL_RELAY_URL: relayURL,
+  });
   console.log(`[open-pencil] built ${BASE} -> ${OUT}`);
 } catch (error) {
   rmSync(OUT, { recursive: true, force: true });

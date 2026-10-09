@@ -205,11 +205,11 @@ ESLint, Stylelint and export scans along with the rest of `apps/open-pencil`.
 6. Allowed tab origins are `ALLOWED_ORIGINS` in `wrangler.toml` (production, branch
    previews, localhost). Change them there: each deploy replaces dashboard values.
    `RELAY_TIMEOUT_MS`, `RELAY_RATE_BURST` and `RELAY_RATE_PER_SECOND` are optional overrides.
-7. Docs Pages project → Settings → Variables and Secrets → add
-   `VITE_OPENPENCIL_RELAY_URL` = `https://altitude-open-pencil-mcp.<account-subdomain>.workers.dev`
-   (plain text, Production and Preview) → redeploy. `scripts/build-open-pencil.mjs` passes
-   it to the editor build. Without it, the hosted Connect AI popover keeps its "not
-   available on the web" message.
+7. The editor learns the relay URL at build time. `scripts/build-open-pencil.mjs` defaults it
+   to `https://altitude-open-pencil-mcp.southleft-llc.workers.dev` and logs which URL it used
+   (`[open-pencil] MCP relay: …`). Set `VITE_OPENPENCIL_RELAY_URL` (plain text) on the docs
+   Pages project only to point at a different relay. Without a valid URL, the hosted Connect
+   AI popover shows its "not available on the web" message.
 
 Then in the editor: Connect AI → **Create connection key** → copy the one-line command,
 for example
