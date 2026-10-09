@@ -20,7 +20,7 @@ describe('FIG population deltas', () => {
     const created = graph.createNode('TEXT', page.id, { text: 'Created' })
     journal.stop()
     const delta = buildFigPopulationDelta(graph, journal, [page.id])
-    expect(delta.created.map(([id]) => id)).toEqual([created.id])
+    expect(delta.created.map((node) => node.i)).toEqual([created.id])
     expect(delta.updated).toContainEqual([
       updated.id,
       expect.objectContaining({ name: 'After', x: 12 })

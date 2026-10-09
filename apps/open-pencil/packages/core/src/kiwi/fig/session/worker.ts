@@ -4,6 +4,7 @@ import type { SceneGraph } from '@open-pencil/scene-graph'
 import { importNodeChanges } from '#core/kiwi/fig/import'
 import { getLazyFigImportContext, populateLazyFigImportRoots } from '#core/kiwi/fig/lazy-import'
 import {
+  compactSceneNodeChunks,
   lazyFigImportSourceChunks,
   serializeSceneGraph,
   serializedSceneGraphTransferList
@@ -21,6 +22,12 @@ import {
  * so this keeps every task well under the 50 ms long-task threshold on a large document.
  */
 const LAZY_SOURCE_CHUNK_ENTRIES = 2_000
+
+/**
+ * Nodes per `graph-nodes` message. The main thread deserializes and rebuilds each message
+ * as its own task; a chunk this size stays far below a long task even for heavy nodes.
+ */
+const GRAPH_NODE_CHUNK_SIZE = 2_000
 
 let graph: SceneGraph | undefined
 let originalArchive: Uint8Array | undefined
@@ -115,8 +122,14 @@ self.onmessage = (event: MessageEvent<FigSessionOpenRequest>) => {
     // main thread asks for it only if it has to populate by itself.
     const retainLazySource =
       graph !== undefined && parsedGraph.nodes.size <= MAX_FIG_POPULATION_WORKER_NODES
-    const serialized = serializeSceneGraph(parsedGraph, { retainLazySource })
-    respond({ type: 'graph', graph: serialized }, serializedSceneGraphTransferList(serialized))
+    for (const nodes of compactSceneNodeChunks(parsedGraph, GRAPH_NODE_CHUNK_SIZE)) {
+      respond({ type: 'graph-nodes', nodes })
+    }
+    const serialized = serializeSceneGraph(parsedGraph, { retainLazySource, omitNodes: true })
+    respond(
+      { type: 'graph', graph: serialized, nodeCount: parsedGraph.nodes.size },
+      serializedSceneGraphTransferList(serialized)
+    )
   } catch (error) {
     respond({ type: 'graph', error: error instanceof Error ? error.message : String(error) })
   }
