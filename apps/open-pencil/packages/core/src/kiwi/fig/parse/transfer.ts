@@ -8,6 +8,11 @@ import {
   type LazyFigImportContext,
   type LazyFigImportSource
 } from '#core/kiwi/fig/lazy-import'
+import {
+  decodeCompactSceneNode,
+  encodeCompactSceneNode,
+  type CompactSceneNode
+} from '#core/kiwi/fig/parse/compact-nodes'
 import type { PortableSceneGraphData } from '#core/kiwi/fig/parse/portable-data'
 
 export interface SerializedLazyFigImportContext {
@@ -29,6 +34,12 @@ export interface SerializeSceneGraphOptions {
    * Only the populated page IDs travel, as `lazyFigImportRetained`.
    */
   retainLazySource?: boolean
+  /**
+   * Leave the nodes out: the sender streams them first as compact chunks
+   * (`compactSceneNodeChunks`), and the receiver passes the decoded map to
+   * `deserializeSceneGraph`.
+   */
+  omitNodes?: boolean
 }
 
 export interface SerializedSceneGraph extends PortableSceneGraphData {
@@ -79,7 +90,7 @@ export function serializeSceneGraph(
 ): SerializedSceneGraph {
   return {
     rootId: graph.rootId,
-    nodes: [...graph.nodes],
+    nodes: options.omitNodes ? [] : [...graph.nodes],
     images: [...graph.images],
     variables: [...graph.variables],
     variableCollections: [...graph.variableCollections],
@@ -90,6 +101,40 @@ export function serializeSceneGraph(
     documentColorSpace: graph.documentColorSpace,
     enabledLibraries: [...graph.enabledLibraries],
     ...serializeLazyFigImport(getLazyFigImportContext(graph), options.retainLazySource ?? false)
+  }
+}
+
+/**
+ * The graph's nodes, in order, as compact chunks of at most `size` nodes.
+ *
+ * Each chunk is its own message, so the receiving thread deserializes and rebuilds one
+ * chunk per task instead of blocking for the whole graph; see `CompactSceneNode`.
+ */
+export function* compactSceneNodeChunks(
+  graph: SceneGraph,
+  size: number
+): Generator<CompactSceneNode[]> {
+  let chunk: CompactSceneNode[] = []
+  for (const node of graph.nodes.values()) {
+    chunk.push(encodeCompactSceneNode(node))
+    if (chunk.length >= size) {
+      yield chunk
+      chunk = []
+    }
+  }
+  if (chunk.length > 0) yield chunk
+}
+
+/** Rebuild streamed compact nodes into `nodes`, in the order they were sent. */
+export function receiveCompactSceneNodes(
+  chunk: readonly CompactSceneNode[],
+  nodes: Map<string, SceneNode>
+): void {
+  for (const compact of chunk) {
+    // Freshly built, so guides are repaired in place; copying would read lazy fields.
+    const node = decodeCompactSceneNode(compact)
+    if (!Array.isArray(node.guides)) node.guides = []
+    nodes.set(compact.i, node)
   }
 }
 
@@ -159,10 +204,17 @@ function normalizeNodeGuides(node: SceneNode): SceneNode {
   return Array.isArray(node.guides) ? node : { ...node, guides: [] }
 }
 
-export function deserializeSceneGraph(data: SerializedSceneGraph): SceneGraph {
+/**
+ * Rebuild a graph sent by `serializeSceneGraph`. Pass `nodes` when they were streamed as
+ * compact chunks (`omitNodes`) instead of sent in `data.nodes`.
+ */
+export function deserializeSceneGraph(
+  data: SerializedSceneGraph,
+  nodes?: Map<string, SceneNode>
+): SceneGraph {
   const graph = new SceneGraph()
   graph.rootId = data.rootId
-  graph.nodes = new Map(data.nodes.map(([id, node]) => [id, normalizeNodeGuides(node)]))
+  graph.nodes = nodes ?? new Map(data.nodes.map(([id, node]) => [id, normalizeNodeGuides(node)]))
   graph.images = new Map(data.images)
   graph.variables = new Map(data.variables)
   graph.variableCollections = new Map(data.variableCollections)

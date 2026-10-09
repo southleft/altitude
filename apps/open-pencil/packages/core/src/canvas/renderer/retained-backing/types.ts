@@ -1,6 +1,7 @@
 import type { Image as CKImage, Surface } from 'canvaskit-wasm'
 
 import type { SceneGraph } from '@open-pencil/scene-graph'
+import type { VisualBounds } from '@open-pencil/scene-graph/geometry'
 
 export interface RenderContentVersion {
   pageId: string | null
@@ -29,12 +30,25 @@ export interface SceneBackingGeometry {
 
 export interface SceneBacking extends RenderContentVersion, SceneBackingGeometry {
   image: CKImage
+  /** The surface `image` was taken from, kept to repaint regions in place. */
+  surface: Surface | null
+  /** Page children in the order they were drawn. */
+  childIds: string[]
+  /** World bounds each child painted into this backing; null when it painted nothing. */
+  childBounds: Map<string, VisualBounds | null>
+  /**
+   * False for a backing assembled from shifted pixels while navigating. Rasterization is not
+   * exactly translation invariant, so such a backing is presented only while navigating and
+   * rebuilt before the scene settles.
+   */
+  exact: boolean
 }
 
 export interface SceneBackingBuild extends RenderContentVersion, SceneBackingGeometry {
   surface: Surface
   graph: SceneGraph
   childIds: string[]
+  childBounds: Map<string, VisualBounds | null>
   index: number
   startedAt: number
 }

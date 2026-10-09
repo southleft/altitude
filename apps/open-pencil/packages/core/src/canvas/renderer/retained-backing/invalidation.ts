@@ -119,6 +119,7 @@ export function ensureSubtreePictureCacheScope(
     for (const topLevelId of retainedTopLevelIds(graph, pageId, r.subtreePictureDirtyIds)) {
       r.subtreePictureCache.get(topLevelId)?.picture.delete()
       r.subtreePictureCache.delete(topLevelId)
+      r.sceneBackingDirtyIds.add(topLevelId)
     }
     for (const entry of r.subtreePictureCache.values()) {
       entry.sceneVersion = sceneVersion
@@ -127,6 +128,7 @@ export function ensureSubtreePictureCacheScope(
     r.subtreePictureDirtyIds.clear()
   } else {
     clearSubtreePictureCache(r)
+    r.sceneBackingDirtyUnknown = true
   }
   r.subtreePictureCachePageId = pageId
   r.subtreePictureCacheSceneVersion = sceneVersion

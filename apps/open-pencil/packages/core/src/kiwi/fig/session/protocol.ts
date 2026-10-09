@@ -1,6 +1,7 @@
 import type { FigPageManifestEntry } from '@open-pencil/kiwi/fig'
 
 import type { FigImportOptions } from '#core/kiwi/fig/import'
+import type { CompactSceneNode } from '#core/kiwi/fig/parse/compact-nodes'
 import type { LazyFigImportSourceChunk, SerializedSceneGraph } from '#core/kiwi/fig/parse/transfer'
 import type { FigPopulationDelta } from '#core/kiwi/fig/population/delta'
 
@@ -57,7 +58,10 @@ export type FigSessionRequest =
 
 export type FigSessionResponse =
   | { type: 'page-manifest'; pages: FigPageManifestEntry[] }
-  | { type: 'graph'; graph?: SerializedSceneGraph; error?: string }
+  /** One slice of the parsed graph's nodes, sent in order before `graph`. */
+  | { type: 'graph-nodes'; nodes: CompactSceneNode[] }
+  /** The rest of the parsed graph; its `nodes` are empty and arrived as `graph-nodes`. */
+  | { type: 'graph'; graph?: SerializedSceneGraph; nodeCount?: number; error?: string }
   | {
       type: 'population-result'
       requestId: string

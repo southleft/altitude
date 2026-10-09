@@ -27,25 +27,24 @@ export function alignGeometryWindingRules(
   return geometry
 }
 
-export function resolveVectorNetwork(nc: NodeChange, blobs: Uint8Array[]): VectorNetwork | null {
-  const vectorData = nc.vectorData as
-    | {
-        vectorNetworkBlob?: number
-        normalizedSize?: Vector
-        styleOverrideTable?: StyleOverride[]
-      }
-    | undefined
+interface VectorNetworkData<Blob> {
+  vectorNetworkBlob?: Blob
+  normalizedSize?: Vector
+  styleOverrideTable?: StyleOverride[]
+}
 
-  if (vectorData?.vectorNetworkBlob === undefined) return null
-  const idx = vectorData.vectorNetworkBlob
-  if (idx < 0 || idx >= blobs.length) return null
-
+/** Decode a vector network blob, scaled from its normalized size to the node size. */
+function decodeScaledVectorNetwork(
+  blob: Uint8Array,
+  vectorData: VectorNetworkData<unknown>,
+  size: Vector | null | undefined
+): VectorNetwork | null {
   try {
-    const network = decodeVectorNetworkBlob(blobs[idx], vectorData.styleOverrideTable)
+    const network = decodeVectorNetworkBlob(blob, vectorData.styleOverrideTable)
 
     const ns = vectorData.normalizedSize
-    const nodeW = nc.size?.x ?? 0
-    const nodeH = nc.size?.y ?? 0
+    const nodeW = size?.x ?? 0
+    const nodeH = size?.y ?? 0
     if (ns && nodeW > 0 && nodeH > 0 && (ns.x !== nodeW || ns.y !== nodeH)) {
       const sx = nodeW / ns.x
       const sy = nodeH / ns.y
@@ -63,6 +62,32 @@ export function resolveVectorNetwork(nc: NodeChange, blobs: Uint8Array[]): Vecto
   } catch {
     return null
   }
+}
+
+export function resolveVectorNetwork(nc: NodeChange, blobs: Uint8Array[]): VectorNetwork | null {
+  const vectorData = nc.vectorData as VectorNetworkData<number> | undefined
+
+  if (vectorData?.vectorNetworkBlob === undefined) return null
+  const idx = vectorData.vectorNetworkBlob
+  if (idx < 0 || idx >= blobs.length) return null
+  return decodeScaledVectorNetwork(blobs[idx], vectorData, nc.size)
+}
+
+/**
+ * The vector network import derives from vector data preserved in
+ * `source.fig.rawNodeFields.vectorData` (blob bytes kept inline) and the raw node size.
+ * Returns null when the preserved data holds no decodable network.
+ */
+export function decodePreservedVectorNetwork(
+  vectorData: unknown,
+  size: Vector | null | undefined
+): VectorNetwork | null {
+  if (!vectorData || typeof vectorData !== 'object') return null
+  const data = vectorData as VectorNetworkData<unknown>
+  const blob = data.vectorNetworkBlob
+  if (!blob || typeof blob !== 'object' || !('__openPencilFigmaBlob' in blob)) return null
+  const bytes = blob.__openPencilFigmaBlob
+  return bytes instanceof Uint8Array ? decodeScaledVectorNetwork(bytes, data, size) : null
 }
 
 interface KiwiPath {

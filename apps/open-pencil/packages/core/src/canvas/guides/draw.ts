@@ -74,6 +74,50 @@ function drawGuide(
   dash.delete()
 }
 
+interface GuideOwnerCache {
+  graph: SceneGraph
+  pageId: string
+  sceneVersion: number
+  ownerIds: string[]
+}
+
+const guideOwnerCaches = new WeakMap<SkiaRenderer, GuideOwnerCache>()
+
+/** Page nodes that own guides, in tree order. */
+function collectGuideOwnerIds(graph: SceneGraph, page: SceneNode): string[] {
+  const ownerIds: string[] = []
+  const visit = (owner: SceneNode) => {
+    if (owner.guides.length > 0) ownerIds.push(owner.id)
+    for (const childId of owner.childIds) {
+      const child = graph.getNode(childId)
+      if (child) visit(child)
+    }
+  }
+  visit(page)
+  return ownerIds
+}
+
+/**
+ * Guide owners for the current frame. Walking a large page costs tens of milliseconds, so the
+ * owners are kept until the scene version changes (any graph edit bumps it); frames without a
+ * scene version walk the page as before.
+ */
+function guideOwnerIds(r: SkiaRenderer, graph: SceneGraph, page: SceneNode): string[] {
+  const sceneVersion = r.absPosCacheGraph === graph ? r.absPosCacheSceneVersion : -1
+  if (sceneVersion < 0) return collectGuideOwnerIds(graph, page)
+  const cached = guideOwnerCaches.get(r)
+  if (
+    cached?.graph === graph &&
+    cached.pageId === page.id &&
+    cached.sceneVersion === sceneVersion
+  ) {
+    return cached.ownerIds
+  }
+  const ownerIds = collectGuideOwnerIds(graph, page)
+  guideOwnerCaches.set(r, { graph, pageId: page.id, sceneVersion, ownerIds })
+  return ownerIds
+}
+
 export function drawGuides(
   r: SkiaRenderer,
   canvas: Canvas,
@@ -87,7 +131,9 @@ export function drawGuides(
   const selected = guides?.selected
 
   r.auxStroke.setStrokeWidth(1)
-  const visit = (owner: SceneNode) => {
+  for (const ownerId of guideOwnerIds(r, graph, page)) {
+    const owner = graph.getNode(ownerId)
+    if (!owner) continue
     for (const guide of owner.guides) {
       if (preview?.source?.ownerId === owner.id && preview.source.guideId === guide.id) continue
       drawGuide(
@@ -104,12 +150,7 @@ export function drawGuides(
         )
       )
     }
-    for (const childId of owner.childIds) {
-      const child = graph.getNode(childId)
-      if (child) visit(child)
-    }
   }
-  visit(page)
 
   if (preview) {
     const owner = graph.getNode(preview.ownerId)
