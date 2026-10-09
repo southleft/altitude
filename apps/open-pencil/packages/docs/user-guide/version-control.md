@@ -11,10 +11,10 @@ OpenPencil can keep a document in a GitHub repository. Each save is one commit o
 
 Open **Settings → Version control**.
 
-1. **Sign in.** In the hosted web app, choose **Sign in with GitHub**. In the desktop app, in local development, or on a preview deployment without its own OAuth app, open **Use a personal access token instead** and paste a [fine-grained token](https://github.com/settings/personal-access-tokens/new) for the repository with **Contents: read and write**. Either is kept in the system credential store on desktop. In a browser it lasts for the session unless **Settings → General → Remember credentials on this browser** is on.
+1. **Sign in.** If the hosted editor itself asked you to sign in with GitHub, you are already signed in here. Otherwise, in the hosted web app choose **Sign in with GitHub**. In the desktop app or in local development, open **Use a personal access token instead** and paste a [fine-grained token](https://github.com/settings/personal-access-tokens/new) for the repository with **Contents: read and write**. Either is kept in the system credential store on desktop. In a browser it lasts for the session unless **Settings → General → Remember credentials on this browser** is on.
 2. **Choose a repository.** Owner, repository, branch, and folder. Documents are saved under `<folder>/<document-name>/`. **Test access** checks that the account can see the branch and commit to it.
 
-Signing out forgets the token on this device. To revoke the authorization itself, use **Authorized apps** in your GitHub settings.
+Signing out forgets the token on this device; in a hosted editor behind GitHub sign-in it also signs you out of the editor. To revoke the authorization itself, use **Authorized apps** in your GitHub settings.
 
 ## Save and commit
 

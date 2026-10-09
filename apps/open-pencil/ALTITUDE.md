@@ -75,10 +75,10 @@ CI: `.github/workflows/open-pencil.yml` at the Altitude root runs on any change 
 `apps/open-pencil/**`. The upstream workflows in `apps/open-pencil/.github/` are kept for
 reference only. GitHub never runs workflows from a nested folder.
 
-## Hosting: `altitude.pages.dev/open-pencil/` (password-protected)
+## Hosting: `altitude.pages.dev/open-pencil/` (GitHub sign-in)
 
 The editor ships with the docs site's existing Cloudflare Pages project. There's no
-separate project and no GitHub secrets.
+separate project and no GitHub Actions secrets.
 
 - **Build.** `pnpm run build:app-open-pencil` (`scripts/build-open-pencil.mjs`) is the last
   step of `build:all`. It runs `build:packages` and `vite build` with
@@ -86,15 +86,71 @@ separate project and no GitHub secrets.
   bun@<pinned>` (the Pages image has no Bun). It is **soft**: if the editor fails to build,
   it warns, ships nothing under `/open-pencil/`, and the docs still deploy. CI's strict
   "Build for /open-pencil/" step is what catches that before merge.
-- **Password.** `functions/open-pencil/_middleware.js` puts HTTP Basic auth on every
-  request under `/open-pencil/` (any username). It also provides the SPA fallback for
-  client routes such as `/open-pencil/share/<id>`, and the wasm content type, because
-  Cloudflare does not apply `_redirects` or `_headers` to Function-served requests. It
-  fails closed: without a password configured, the editor returns 503.
+- **Access = access to a private GitHub repository.** `functions/open-pencil/_middleware.js`
+  gates every request under `/open-pencil/`. A visitor signs in with GitHub and gets in only
+  if `GET /repos/southleft/altitude-designs` succeeds with their token, so anyone with at
+  least read access to that repository can use the editor, and removing someone from it
+  removes them here. The middleware also serves the sign-in routes under
+  `/open-pencil/auth/github/`, the SPA fallback for client routes such as
+  `/open-pencil/share/<id>`, and the wasm content type, because Cloudflare does not apply
+  `_redirects` or `_headers` to Function-served requests.
+- **Sessions.** After sign-in the browser holds `op_session`, an HttpOnly, Secure,
+  SameSite=Lax cookie scoped to `/open-pencil/`, AES-GCM-sealed with a key derived (HKDF)
+  from `OPEN_PENCIL_SESSION_SECRET`. It lasts 12 hours. After an hour, the next request
+  re-checks repository access with the stored token: lost access or a revoked token ends
+  the session; if GitHub is unreachable or rate limited, the session continues until it
+  expires. Page loads without a session go to sign-in and come back to the same URL; other
+  requests (scripts, wasm, fetches) get 401. Someone signed in without access sees a page
+  naming their account and the repository, with a sign-out button.
+- **Editor integration.** The hosted editor reads `/open-pencil/auth/github/session` on
+  startup and, if no GitHub credential is stored yet, stores the session's token through the
+  credential manager, so version control is signed in without a second popup ("Signed in as
+  @login"). The token is returned only to same-origin requests carrying
+  `X-OpenPencil-Request: 1`. **Sign out** in Settings → Version control also ends the site
+  session (`POST /open-pencil/auth/github/logout`, same guard) and shows a signed-out page.
 
-**One-time setup (Cloudflare dashboard):** the docs Pages project → Settings → Variables and
-Secrets → add `OPEN_PENCIL_PASSWORD` as a **Secret** for **Production and Preview** → redeploy.
-Share the password with the team, not in the repo.
+**Setup (Cloudflare dashboard → the docs Pages project → Settings → Variables and Secrets),
+then redeploy:**
+
+| Variable | Production | Preview | Notes |
+| --- | --- | --- | --- |
+| `GITHUB_OAUTH_CLIENT_ID` | plain text | plain text | The OAuth app (see "Version control" below). |
+| `GITHUB_OAUTH_CLIENT_SECRET` | **Secret** | not needed | Only production exchanges codes. |
+| `OPEN_PENCIL_SESSION_SECRET` | **Secret** | **Secret**, same value | At least 32 bytes: `openssl rand -base64 48`. Rotating it signs everyone out. |
+| `OPEN_PENCIL_ACCESS_REPO` | optional | optional | `owner/repo`, default `southleft/altitude-designs`. Must be **private**: on a public repository every GitHub account has read access. |
+| `OPEN_PENCIL_ACCESS_MIN_PERMISSION` | optional | optional | `pull` (default, read access) or `push` (write access). |
+| `OPEN_PENCIL_PREVIEW_ORIGINS` | optional | optional | Comma-separated preview origins; `*` is one DNS label. Default `https://*.altitude.pages.dev`. |
+| `OPEN_PENCIL_PASSWORD` | rollout only | rollout only | The old Basic-auth password; see below. |
+
+Also optional: `OPEN_PENCIL_SESSION_TTL_SECONDS` (default 43200),
+`OPEN_PENCIL_SESSION_REVERIFY_SECONDS` (default 3600) and `OPEN_PENCIL_PRODUCTION_ORIGIN`
+(default `https://altitude.pages.dev`).
+
+**Fallbacks, so the editor is never open or broken during rollout.** The GitHub gate is
+active only when `GITHUB_OAUTH_CLIENT_ID` and a valid `OPEN_PENCIL_SESSION_SECRET` are set
+(plus `GITHUB_OAUTH_CLIENT_SECRET` outside previews). Until then, if `OPEN_PENCIL_PASSWORD`
+is set, the previous HTTP Basic password gate applies (any username), with the app's
+popup sign-in still behind it. With neither, every request returns 503: an unconfigured
+gate fails closed. Configure production before previews (a preview in GitHub mode sends
+sign-in to production). Once GitHub sign-in works in production and previews, **delete
+`OPEN_PENCIL_PASSWORD`**; it is ignored while the GitHub gate is active.
+
+**Previews.** Cookies cannot be shared between `altitude.pages.dev` and
+`<branch>.altitude.pages.dev` (pages.dev is on the public suffix list), and the OAuth app
+has a single callback URL. A preview therefore sends sign-in to production with its own URL
+as `return_to` (accepted only for origins matching `OPEN_PENCIL_PREVIEW_ORIGINS`). After
+checking access, production redirects to `<preview>/open-pencil/auth/github/accept?ticket=…`:
+a ticket sealed with the shared session secret, valid for 60 seconds and bound to that
+preview origin, from which the preview sets its own `op_session` and redirects the ticket
+out of the address bar. Residual risks: tickets cannot be made single-use without storage,
+so a ticket copied from that URL within 60 seconds could be replayed on the same preview;
+the URL may appear in Cloudflare's own request logs (this code logs nothing); and anyone
+who can deploy a preview branch can read Preview variables, including the session secret
+shared with production. Only people with push access to this repository can do that.
+
+**Offline cache.** The editor's service worker can open the cached app shell without a
+network request. On startup the editor asks for its session, and sends the page to sign-in
+when the site says it has ended; uncached files are refused without a session anyway.
 
 URLs:
 
@@ -181,8 +237,11 @@ guide (`packages/docs/user-guide/version-control.md`) covers the flow and the JS
 - App: `src/app/integrations/storage/github/` (client, repository/commit flow, OAuth,
   settings workflows, per-document session). The token lives in the credential store under
   `github:default:token`; the signed-in login, id and avatar are non-secret settings.
-- OAuth: `functions/open-pencil/auth/github/{start,callback}.js` at the Altitude root, behind
-  the same password middleware. Tested by `node scripts/__tests__/open-pencil-github-oauth.test.mjs`.
+- OAuth: the sign-in routes in `functions/open-pencil/_middleware.js` at the Altitude root
+  (see "Hosting"). In the hosted editor, the site sign-in also signs in version control;
+  the Settings popup and the token remain for re-authorizing and for desktop and local
+  development. Tested by `node scripts/__tests__/open-pencil-github-oauth.test.mjs` and
+  `node scripts/__tests__/open-pencil-site-access.test.mjs`.
 
 **One-time setup: the OAuth app** (GitHub → southleft organization → Settings → Developer
 settings → OAuth Apps → New OAuth App):
@@ -195,20 +254,14 @@ settings → OAuth Apps → New OAuth App):
 | Enable Device Flow | off |
 
 The app requests the `repo` scope (private repository contents; also covers the pull
-requests and issues planned next). Then generate a client secret, and in Cloudflare → the docs
-Pages project → Settings → Variables and Secrets, for **Production** (and Preview if you
-register a preview callback):
+requests and issues planned next). Then generate a client secret and set the variables in
+the "Hosting" table above. If the organization restricts OAuth app access, an owner must
+approve the app for southleft (GitHub → organization settings → Third-party access);
+until then GitHub hides the private repository from the app's tokens and every member is
+shown the access-denied page.
 
-- `GITHUB_OAUTH_CLIENT_ID`: the client ID, as plain text.
-- `GITHUB_OAUTH_CLIENT_SECRET`: the client secret, as a **Secret**.
-
-Redeploy. Without both variables the auth routes return 503 and sign-in fails closed; the
-rest of the editor is unaffected. If the organization restricts OAuth app access, an owner
-must approve the app for southleft (GitHub → organization settings → Third-party access).
-
-An OAuth app has a single callback URL, so **preview deployments**
-(`<branch>.altitude.pages.dev`) cannot finish the web flow against the production app.
-Register a second OAuth app for a fixed preview host if needed, or use the token fallback.
+**Preview deployments** (`<branch>.altitude.pages.dev`) sign in through production and
+receive a short-lived ticket (see "Hosting"), so they need no OAuth app of their own.
 
 **Desktop and local `bun run dev`:** Pages Functions do not run there. Use **Use a personal
 access token instead** in the same settings section: a

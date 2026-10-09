@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Builds the OpenPencil canvas editor (apps/open-pencil, a Bun workspace) into
- * dist/open-pencil/, served at /open-pencil/ behind the password gate in
+ * dist/open-pencil/, served at /open-pencil/ behind the GitHub sign-in gate in
  * functions/open-pencil/_middleware.js.
  *
  * SOFT BY DEFAULT. build:all is a strict && chain and Cloudflare publishes nothing if

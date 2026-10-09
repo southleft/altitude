@@ -23,5 +23,13 @@ export const GITHUB_OAUTH_SCOPE = 'repo'
 export const GITHUB_OAUTH_START_PATH = 'auth/github/start'
 export const GITHUB_OAUTH_MESSAGE_TYPE = 'open-pencil:github-oauth'
 
+/** Hosted site session routes (the Pages middleware), relative to the app base. */
+export const GITHUB_SITE_START_PATH = GITHUB_OAUTH_START_PATH
+export const GITHUB_SITE_SESSION_PATH = 'auth/github/session'
+export const GITHUB_SITE_LOGOUT_PATH = 'auth/github/logout'
+export const GITHUB_SITE_SIGNED_OUT_PATH = 'auth/github/signed-out'
+/** CSRF guard the middleware requires before it returns the token or ends the session. */
+export const GITHUB_SITE_REQUEST_HEADER = 'X-OpenPencil-Request'
+
 export const GITHUB_TOKEN_SETTINGS_URL = 'https://github.com/settings/personal-access-tokens/new'
 export const GITHUB_APPLICATIONS_URL = 'https://github.com/settings/applications'
