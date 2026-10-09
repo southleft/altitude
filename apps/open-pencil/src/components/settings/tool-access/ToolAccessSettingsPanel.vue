@@ -5,6 +5,7 @@ import { useAutomationMessages } from '@open-pencil/vue'
 
 import { mcpRuntime } from '@/app/automation/mcp/runtime'
 import { useMCPSettings } from '@/app/automation/mcp/settings/use'
+import { isRelayMode } from '@/app/automation/relay/config'
 import { useToolAccess } from '@/app/automation/tool-access/settings/list'
 import { useToolAccessSettings } from '@/app/automation/tool-access/settings/use'
 import type { ToolAccessGroup } from '@/app/automation/tool-access/types'
@@ -21,6 +22,20 @@ const { target, tools, disabled, reset } = useToolAccessSettings()
 const { search, enabledCount, groups, expanded, setGroupEnabled, isEnabled, setToolEnabled } =
   useToolAccess(tools, disabled)
 const { restart } = useMCPSettings()
+// Hosted builds offer these tools through the relay, which reads them on every request.
+const relay = isRelayMode()
+
+const description = computed(() => {
+  const messages = automation.value
+  if (target.value === 'ai') return messages.aiToolAccessDescription
+  return relay ? messages.relayToolAccessDescription : messages.mcpToolAccessDescription
+})
+const notice = computed(() => {
+  const messages = automation.value
+  if (target.value === 'ai') return messages.aiToolsNotice
+  if (relay) return messages.relayToolsNotice
+  return mcpRuntime.externallyManaged ? messages.externalRestartNotice : messages.toolsRestartNotice
+})
 
 const labelledGroups = computed<ToolAccessGroup[]>(() =>
   groups.value.map((group) => ({
@@ -56,11 +71,7 @@ function setExpanded(effect: 'read' | 'write', open: boolean) {
       />
     </div>
     <AppDialogBody :ui="{ body: 'p-5 sm:p-6' }">
-      <p class="pb-3 text-xs leading-relaxed text-muted">
-        {{
-          target === 'ai' ? automation.aiToolAccessDescription : automation.mcpToolAccessDescription
-        }}
-      </p>
+      <p class="pb-3 text-xs leading-relaxed text-muted">{{ description }}</p>
       <AppPlaceholder v-if="!hasMatches" :label="automation.noMatchingTools" />
       <ToolAccessList
         v-else
@@ -71,16 +82,8 @@ function setExpanded(effect: 'read' | 'write', open: boolean) {
         @set-group="setGroupEnabled"
         @set-tool="setToolEnabled"
       />
-      <p class="border-t border-border pt-3 text-xs leading-relaxed text-muted">
-        {{
-          target === 'ai'
-            ? automation.aiToolsNotice
-            : mcpRuntime.externallyManaged
-              ? automation.externalRestartNotice
-              : automation.toolsRestartNotice
-        }}
-      </p>
-      <div v-if="target === 'mcp'" class="pt-2">
+      <p class="border-t border-border pt-3 text-xs leading-relaxed text-muted">{{ notice }}</p>
+      <div v-if="target === 'mcp' && !relay" class="pt-2">
         <AppButton
           color="primary"
           variant="solid"
