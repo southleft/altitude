@@ -5,10 +5,11 @@ import { MotionConfig } from 'motion-v'
 import { TooltipProvider } from 'reka-ui'
 import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 
-import { provideEditor, useI18n } from '@open-pencil/vue'
+import { provideEditor, useI18n, useStorageMessages } from '@open-pencil/vue'
 
 import { useDocumentCloseProtection } from '@/app/document/close/use'
 import { useEditorStore } from '@/app/editor/active-store'
+import { signInFromSiteSession } from '@/app/integrations/storage/github/site-session'
 import { settingsDialogOpen } from '@/app/settings/dialog'
 import { animationsEnabled } from '@/app/shell/motion'
 import { useAppTheme } from '@/app/shell/theme'
@@ -39,6 +40,7 @@ const LibraryUpdateReviewDialog = defineAsyncComponent(
 
 const store = useEditorStore()
 const { updates, locale } = useI18n()
+const storageMessages = useStorageMessages()
 
 useHead({
   titleTemplate: (title) => (title ? `${title} — OpenPencil` : 'OpenPencil'),
@@ -68,6 +70,13 @@ onMounted(() => {
   toast.setupGlobalErrorHandler()
   scheduleStartupUpdateCheck(updates)
   void kickSyncEngine()
+  // Hosted editor: reuse the site's GitHub sign-in for version control.
+  void signInFromSiteSession().then((result) => {
+    if (result.status === 'signed-in') {
+      toast.info(storageMessages.value.githubSignedInAs({ login: result.identity.login }))
+    }
+    return undefined
+  })
 })
 </script>
 

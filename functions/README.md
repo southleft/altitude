@@ -44,5 +44,4 @@ diagnosis and what restoring it requires.
 | File | Purpose |
 | --- | --- |
 | `api/theme.js` | `POST /api/theme` — deterministic theme generation. Self-contained; 503 without its secret. |
-| `open-pencil/_middleware.js` | Password gate, SPA fallback and headers for the OpenPencil editor at `/open-pencil/`. 503 without `OPEN_PENCIL_PASSWORD`. |
-| `open-pencil/auth/github/start.js`, `callback.js` | GitHub OAuth for the editor's "Sign in with GitHub". Self-contained; 503 without `GITHUB_OAUTH_CLIENT_ID` and `GITHUB_OAUTH_CLIENT_SECRET`. Tested by `scripts/__tests__/open-pencil-github-oauth.test.mjs`. |
+| `open-pencil/_middleware.js` | The OpenPencil editor at `/open-pencil/`: GitHub sign-in gate (access = access to a private repository), the sign-in routes under `/open-pencil/auth/github/` (`start`, `callback`, `accept`, `session`, `logout`, `signed-out`), SPA fallback and headers. Needs `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET` and `OPEN_PENCIL_SESSION_SECRET`; falls back to the old `OPEN_PENCIL_PASSWORD` Basic gate while those are missing, and 503 when nothing is set. The routes live in the middleware rather than separate files so the session crypto exists once without imports. Tested by `scripts/__tests__/open-pencil-site-access.test.mjs` and `open-pencil-github-oauth.test.mjs`; setup in `apps/open-pencil/ALTITUDE.md#hosting`. |

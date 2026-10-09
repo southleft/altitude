@@ -61,7 +61,9 @@ export function openPencilPwaPlugin(base = '/') {
             }
           }
         ],
-        navigateFallback: `${base}index.html`
+        navigateFallback: `${base}index.html`,
+        // Hosted sign-in routes are served by the site, never by the cached app shell.
+        navigateFallbackDenylist: [/\/auth\/github\//]
       },
       manifest: {
         name: 'OpenPencil',

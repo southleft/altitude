@@ -10,6 +10,7 @@ import { GitHubAPIError, type GitHubErrorKind } from '../client'
 import { githubIdentity } from '../identity'
 import { GitHubOAuthError } from '../oauth'
 import { GITHUB_TOKEN_REF } from '../provider'
+import { endSiteSession } from '../site-session'
 
 export type GitHubAccountFailure =
   | { source: 'oauth'; reason: GitHubOAuthError['reason'] }
@@ -27,7 +28,11 @@ const defaultServices = {
   status: () => appCredentialServices.manager.status(GITHUB_TOKEN_REF),
   signIn: signInWithGitHub,
   connectToken: (token: string) => connectGitHubToken(token, 'token'),
-  signOut: () => signOutOfGitHub()
+  /** In the hosted editor this also ends the site session and leaves for the signed-out page. */
+  signOut: async () => {
+    await signOutOfGitHub()
+    await endSiteSession()
+  }
 }
 
 /**

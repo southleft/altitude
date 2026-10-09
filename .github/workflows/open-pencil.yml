@@ -5,8 +5,8 @@ name: OpenPencil canvas
 # nested folder, so this file is the only CI it gets inside Altitude.
 #
 # Deploys are NOT done here: the docs site's Cloudflare Pages build publishes the
-# editor at /open-pencil/ (build:app-open-pencil in build:all), password-gated by
-# functions/open-pencil/_middleware.js. See apps/open-pencil/ALTITUDE.md#hosting.
+# editor at /open-pencil/ (build:app-open-pencil in build:all), gated by GitHub sign-in
+# in functions/open-pencil/_middleware.js. See apps/open-pencil/ALTITUDE.md#hosting.
 
 on:
   push:
@@ -17,6 +17,8 @@ on:
       - '.altitude/contracts/**'
       - 'scripts/contracts/**'
       - '.github/workflows/open-pencil.yml'
+      - 'functions/open-pencil/**'
+      - 'scripts/__tests__/open-pencil-*.test.mjs'
   pull_request:
     branches: [main, 'feature/**']
     paths:
@@ -25,6 +27,8 @@ on:
       - '.altitude/contracts/**'
       - 'scripts/contracts/**'
       - '.github/workflows/open-pencil.yml'
+      - 'functions/open-pencil/**'
+      - 'scripts/__tests__/open-pencil-*.test.mjs'
   workflow_dispatch:
 
 concurrency:
@@ -60,9 +64,11 @@ jobs:
         run: bun test packages/dom-css/tests
       - name: Round-trip fidelity gate
         run: bun run conformance:gate
-      - name: GitHub OAuth Pages Functions
+      - name: GitHub sign-in and site gate Pages Functions
         working-directory: .
-        run: node scripts/__tests__/open-pencil-github-oauth.test.mjs
+        run: |
+          node scripts/__tests__/open-pencil-github-oauth.test.mjs
+          node scripts/__tests__/open-pencil-site-access.test.mjs
       # The site build (build:app-open-pencil) is soft so the docs always deploy; this
       # strict build is what catches an editor that would silently drop off /open-pencil/.
       - name: Build for /open-pencil/
