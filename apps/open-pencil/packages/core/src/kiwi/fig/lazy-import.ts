@@ -2,10 +2,16 @@ import { populateAndApplyOverrides } from '@open-pencil/fig/instance-overrides'
 import type { InstanceNodeChange } from '@open-pencil/fig/instance-overrides'
 import type { SceneGraph } from '@open-pencil/scene-graph'
 
+import { planLazyPopulationRoots } from '#core/kiwi/fig/population/roots'
+
 export interface LazyFigImportContext {
   changeMap: Map<string, InstanceNodeChange>
   guidToNodeId: Map<string, string>
   blobs: Uint8Array[]
+  /**
+   * Pages populated in full, plus top-level subtrees of other pages that an earlier pass
+   * populated because a populated instance depends on them.
+   */
   populatedRootIds: Set<string>
 }
 
@@ -127,7 +133,9 @@ function populateRoots(
 ): boolean {
   const pending = [...rootIds].filter((id) => id && !context.populatedRootIds.has(id))
   if (pending.length === 0) return false
-  applyPopulation(graph, context, pending)
+  const planned = planLazyPopulationRoots(graph, context, pending)
+  if (planned.length > 0) applyPopulation(graph, context, planned)
+  for (const id of pending) context.populatedRootIds.add(id)
   return true
 }
 
