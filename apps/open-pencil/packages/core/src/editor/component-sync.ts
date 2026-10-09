@@ -44,14 +44,23 @@ export function createComponentSyncScheduler(
 ) {
   let pendingComponentSync: Set<string> | null = null
   let isFlushingComponentSync = false
+  /** Whether every pending ID came from a derived mutation (layout, page population). */
+  let pendingDerivedOnly = true
 
   function flushComponentSync() {
     const ids = pendingComponentSync
     if (!ids) return
+    const derived = pendingDerivedOnly
     pendingComponentSync = null
+    pendingDerivedOnly = true
+    const graph = getGraph()
+    if (derived) graph.withDerivedMutations(() => syncComponents(graph, ids))
+    else syncComponents(graph, ids)
+  }
+
+  function syncComponents(graph: SceneGraph, ids: Set<string>) {
     isFlushingComponentSync = true
     try {
-      const graph = getGraph()
       const componentIds = new Set<string>()
       for (const id of ids) {
         let current = graph.getNode(id)
@@ -84,6 +93,8 @@ export function createComponentSyncScheduler(
       queueMicrotask(flushComponentSync)
     }
     pendingComponentSync.add(nodeId)
+    const graph = getGraph()
+    if (!graph.isApplyingLayout && !graph.isApplyingDerivedMutations) pendingDerivedOnly = false
   }
 
   return { scheduleComponentSync }

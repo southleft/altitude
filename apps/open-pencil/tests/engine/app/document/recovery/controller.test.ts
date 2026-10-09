@@ -338,4 +338,28 @@ describe('document recovery controller', () => {
     expect((await store.read('recovery-1'))?.sceneVersion).toBe(3)
     recovery.disposeRecovery()
   })
+
+  test('follows the content revision rather than the scene version', async () => {
+    const state = reactive({ ...createDefaultEditorState('page-1'), documentName: 'Draft' })
+    const store = createMemoryRecoveryStore()
+    const revision = ref(0)
+    const recovery = createDocumentRecovery({
+      state,
+      store,
+      recoveryId: 'recovery-1',
+      getRevision: () => revision.value,
+      subscribePageHidden: () => () => undefined,
+      buildFigFile: () => new Uint8Array([1])
+    })
+    state.sceneVersion = 40
+    await recovery.persistNow()
+    expect(await store.list()).toEqual([])
+
+    revision.value = 1
+    await recovery.persistNow()
+    expect((await store.read('recovery-1'))?.sceneVersion).toBe(1)
+    await recovery.markProtectedVersion(1)
+    expect(await store.list()).toEqual([])
+    recovery.disposeRecovery()
+  })
 })
