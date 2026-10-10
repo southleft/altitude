@@ -1,13 +1,14 @@
 import { describe, expect, test } from 'bun:test'
 import { readFileSync } from 'node:fs'
 
+import { gitBlobSHA } from '@open-pencil/core/io/formats/document-json'
+
 import { createMemoryTeamFontCache, type TeamFontCache } from '@/app/editor/fonts/team/cache'
 import {
   createGitHubTeamFontLibrary,
   teamFontsFolderURL,
   type TeamFontLibraryStatus
 } from '@/app/editor/fonts/team/library'
-import { gitBlobSHA } from '@/app/integrations/storage/github/blob-sha'
 import { createGitHubClient, GitHubAPIError } from '@/app/integrations/storage/github/client'
 
 import { createGitHubRoutes } from '#tests/helpers/github/routes'

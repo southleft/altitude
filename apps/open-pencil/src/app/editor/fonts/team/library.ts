@@ -1,3 +1,4 @@
+import { gitBlobSHA } from '@open-pencil/core/io/formats/document-json'
 import {
   buildTeamFontCatalog,
   checkFontBytes,
@@ -13,7 +14,6 @@ import {
   type TeamFontSkippedFile
 } from '@open-pencil/core/text'
 
-import { gitBlobSHA } from '@/app/integrations/storage/github/blob-sha'
 import { GitHubAPIError, type GitHubClient } from '@/app/integrations/storage/github/client'
 import type { GitHubRepositoryLocation } from '@/app/integrations/storage/github/repository'
 
