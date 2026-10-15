@@ -32,7 +32,11 @@ import { installRendererDomainMethods } from './renderer/methods'
 import { initializeRendererPaints } from './renderer/paints'
 import * as RenderPipeline from './renderer/pipeline'
 import { markRetainedSubtreeDirty } from './renderer/retained-backing/invalidation'
-import type { SceneBacking, SceneBackingBuild } from './renderer/retained-backing/types'
+import type {
+  RetainedPictureWarmup,
+  SceneBacking,
+  SceneBackingBuild
+} from './renderer/retained-backing/types'
 import * as RendererState from './renderer/state'
 import * as RenderText from './text'
 import { createGlyphSilhouetteCache } from './text/derived'
@@ -129,6 +133,7 @@ export class SkiaRenderer {
   sceneBackingNeedsCrispRender = false
   sceneBackingAllocationFailed = false
   sceneBackingBuild: SceneBackingBuild | null = null
+  retainedPictureWarmup: RetainedPictureWarmup | null = null
   sceneBackingAverageRecordMs = 40
   sceneBackingAverageViewportIntervalMs = 80
   sceneBackingLastViewportEventAt = 0

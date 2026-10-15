@@ -49,7 +49,7 @@ export function createIdbRecoveryStore(): RecoveryStore {
       ])
       await transaction.done
       return metadata && figBytes
-        ? ({ ...metadata, figBytes: Uint8Array.from(figBytes) } satisfies RecoverySnapshot)
+        ? ({ ...metadata, figBytes: new Uint8Array(figBytes) } satisfies RecoverySnapshot)
         : null
     },
 
@@ -66,7 +66,9 @@ export function createIdbRecoveryStore(): RecoveryStore {
       }
       await Promise.all([
         transaction.objectStore('meta').put(metadata),
-        transaction.objectStore('fig').put(Uint8Array.from(input.figBytes), input.id),
+        // A compact copy (a view would store its whole buffer); `slice` copies in one step where
+        // `Uint8Array.from` iterates element by element (~0.8 s for a 13 MB snapshot).
+        transaction.objectStore('fig').put(input.figBytes.slice(), input.id),
         transaction.done
       ])
       return metadata

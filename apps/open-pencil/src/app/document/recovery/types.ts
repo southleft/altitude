@@ -2,6 +2,7 @@ export interface RecoverySnapshotMeta {
   id: string
   documentName: string
   updatedAt: string
+  /** The content revision the snapshot holds; the stored name predates revisions. */
   sceneVersion: number
   byteLength: number
   formatVersion: 1

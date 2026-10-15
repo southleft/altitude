@@ -10,6 +10,9 @@ export function invalidateScenePicture(r: SkiaRenderer): void {
   r.sceneBacking = null
   r.sceneBackingBuild?.surface.delete()
   r.sceneBackingBuild = null
+  r.retainedPictureWarmup?.image?.delete()
+  r.retainedPictureWarmup?.surface.delete()
+  r.retainedPictureWarmup = null
 }
 
 export function clearSubtreePictureCache(r: SkiaRenderer): void {

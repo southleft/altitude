@@ -113,14 +113,16 @@ function applyPopulation(
   context: LazyFigImportContext,
   rootIds?: string[]
 ): void {
-  graph.preserveSourceMetadataDuring(() => {
-    populateAndApplyOverrides(
-      graph,
-      context.changeMap,
-      context.guidToNodeId,
-      context.blobs,
-      rootIds
-    )
+  graph.withDerivedMutations(() => {
+    graph.preserveSourceMetadataDuring(() => {
+      populateAndApplyOverrides(
+        graph,
+        context.changeMap,
+        context.guidToNodeId,
+        context.blobs,
+        rootIds
+      )
+    })
   })
   const populatedRootIds = rootIds ?? graph.getPages(true).map((page) => page.id)
   for (const id of populatedRootIds) context.populatedRootIds.add(id)

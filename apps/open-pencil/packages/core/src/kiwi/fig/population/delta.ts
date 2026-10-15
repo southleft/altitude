@@ -130,6 +130,11 @@ export function buildFigPopulationDelta(
 }
 
 export function applyFigPopulationDelta(graph: SceneGraph, delta: FigPopulationDelta): void {
+  graph.withDerivedMutations(() => applyDelta(graph, delta))
+  graph.instanceIndex = new Map(delta.instanceIndex.map(([id, ids]) => [id, new Set(ids)]))
+}
+
+function applyDelta(graph: SceneGraph, delta: FigPopulationDelta): void {
   graph.preserveSourceMetadataDuring(() => {
     for (const compact of delta.created) {
       const overrides = compactSceneNodeOverrides(compact)
@@ -144,5 +149,4 @@ export function applyFigPopulationDelta(graph: SceneGraph, delta: FigPopulationD
     for (const [id, changes] of delta.updated) graph.updateNode(id, changes)
     for (const id of delta.deleted) graph.deleteNode(id)
   })
-  graph.instanceIndex = new Map(delta.instanceIndex.map(([id, ids]) => [id, new Set(ids)]))
 }

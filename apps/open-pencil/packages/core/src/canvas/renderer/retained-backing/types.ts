@@ -52,3 +52,20 @@ export interface SceneBackingBuild extends RenderContentVersion, SceneBackingGeo
   index: number
   startedAt: number
 }
+
+/**
+ * A page's first-time picture recording, drawn as it goes into an overscanned raster that is
+ * presented until every picture exists.
+ */
+export interface RetainedPictureWarmup extends RenderContentVersion, SceneBackingGeometry {
+  graph: SceneGraph
+  surface: Surface
+  /** The raster as of the last step. */
+  image: CKImage | null
+  /** Page children in paint order. */
+  childIds: string[]
+  /** Children still to draw: visible ones in paint order, then the rest, nearest first. */
+  pending: string[]
+  childBounds: Map<string, VisualBounds | null>
+  startedAt: number
+}

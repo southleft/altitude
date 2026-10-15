@@ -35,6 +35,12 @@ const subscribeToPageHidden: PageHiddenSubscription = (onHidden) => {
 
 interface DocumentRecoveryOptions {
   state: RecoveryState
+  /**
+   * The document's content revision; reactive. Snapshots follow it rather than the scene
+   * version, which also advances for page population, layout and font loads. Versions passed
+   * to the controller (protected, adopted) are values of this revision.
+   */
+  getRevision?: () => number
   buildFigFile: () => Promise<Uint8Array> | Uint8Array
   isEnabled?: () => boolean
   /** Background snapshots wait while a gesture is live; encoding a large file would stall it. */
@@ -46,7 +52,7 @@ interface DocumentRecoveryOptions {
 
 export interface DocumentRecoveryController {
   getRecoveryId(): string
-  adoptRecoverySnapshot(id: string, sceneVersion: number): Promise<void>
+  adoptRecoverySnapshot(id: string, version: number): Promise<void>
   persistNow(): Promise<void>
   markProtectedVersion(version: number): Promise<void>
   discardRecovery(): Promise<void>
@@ -55,6 +61,7 @@ export interface DocumentRecoveryController {
 
 export function createDocumentRecovery({
   state,
+  getRevision = () => state.sceneVersion,
   buildFigFile,
   isEnabled = () => true,
   isInteractiveEditing = () => false,
@@ -63,7 +70,7 @@ export function createDocumentRecovery({
   recoveryId = createCanvasId()
 }: DocumentRecoveryOptions): DocumentRecoveryController {
   let id = recoveryId
-  let protectedVersion = state.sceneVersion
+  let protectedVersion = getRevision()
   let persistedVersion: number | null = null
   let requestedVersion = protectedVersion
   let lifecycleGeneration = 0
@@ -114,7 +121,7 @@ export function createDocumentRecovery({
   async function persist(force: boolean): Promise<void> {
     await cleanup
     if (disposed || !isEnabled()) return
-    requestedVersion = state.sceneVersion
+    requestedVersion = getRevision()
     if (requestedVersion === protectedVersion) return
     const joined = writing !== null
     if (!writing) {
@@ -125,7 +132,7 @@ export function createDocumentRecovery({
     }
     await writing
     // A forced flush that joined a background encode must not stop where that encode deferred.
-    if (force && joined && state.sceneVersion !== protectedVersion) await persist(true)
+    if (force && joined && getRevision() !== protectedVersion) await persist(true)
   }
 
   /** Close/reload flush: runs even during an interactive edit. */
@@ -137,11 +144,10 @@ export function createDocumentRecovery({
     void persist(false).catch(reportSnapshotFailure)
   }
 
-  const stopVersionWatch: WatchHandle = watchDebounced(
-    () => state.sceneVersion,
-    snapshotInBackground,
-    { debounce: 3000, maxWait: 10000 }
-  )
+  const stopVersionWatch: WatchHandle = watchDebounced(getRevision, snapshotInBackground, {
+    debounce: 3000,
+    maxWait: 10000
+  })
 
   const stopPageHidden = subscribePageHidden(snapshotInBackground)
 
@@ -149,15 +155,15 @@ export function createDocumentRecovery({
     isEnabled,
     (enabled) => {
       if (enabled) {
-        protectedVersion = state.sceneVersion
-        requestedVersion = state.sceneVersion
+        protectedVersion = getRevision()
+        requestedVersion = getRevision()
         return
       }
       lifecycleGeneration++
       const cleanupGeneration = lifecycleGeneration
       const snapshotId = id
-      requestedVersion = state.sceneVersion
-      protectedVersion = state.sceneVersion
+      requestedVersion = getRevision()
+      protectedVersion = getRevision()
       const activeWrite = writing
       cleanup = cleanup
         .then(async () => {
@@ -178,13 +184,13 @@ export function createDocumentRecovery({
 
   return {
     getRecoveryId: () => id,
-    async adoptRecoverySnapshot(nextId, sceneVersion) {
+    async adoptRecoverySnapshot(nextId, version) {
       const previousId = id
       await invalidateActiveWrite()
       id = nextId
-      protectedVersion = sceneVersion
-      persistedVersion = sceneVersion
-      requestedVersion = sceneVersion
+      protectedVersion = version
+      persistedVersion = version
+      requestedVersion = version
       disposed = false
       if (previousId !== nextId) await store.remove(previousId)
     },
@@ -192,7 +198,7 @@ export function createDocumentRecovery({
     async markProtectedVersion(version) {
       await invalidateActiveWrite()
       protectedVersion = version
-      requestedVersion = state.sceneVersion
+      requestedVersion = getRevision()
       if (persistedVersion == null || persistedVersion <= version) {
         await store.remove(id)
         persistedVersion = null
@@ -200,9 +206,9 @@ export function createDocumentRecovery({
     },
     async discardRecovery() {
       await invalidateActiveWrite()
-      protectedVersion = state.sceneVersion
+      protectedVersion = getRevision()
       persistedVersion = null
-      requestedVersion = state.sceneVersion
+      requestedVersion = getRevision()
       await store.remove(id)
     },
     disposeRecovery() {

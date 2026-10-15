@@ -11,6 +11,12 @@ import { drawRetainedChild, renderBackingChild } from './retained-backing/childr
 import { repaintSceneBackingRegions, shiftSceneBacking } from './retained-backing/regions'
 import { clamp, smoothAverage } from './retained-backing/timing'
 import type { SceneBacking, SceneBackingGeometry } from './retained-backing/types'
+import {
+  advanceRetainedPictureWarmup,
+  disposeRetainedPictureWarmup,
+  drawRetainedPictureWarmup,
+  type RetainedPictureWarmupHost
+} from './retained-backing/warmup'
 
 export { computeRetainedSubtreeBounds } from './retained-backing/children'
 export { updateSceneBackingPreviewState } from './retained-backing/preview'
@@ -240,6 +246,8 @@ function installSceneBackingImage(
 ): void {
   r.sceneBacking?.image.delete()
   if (r.sceneBacking?.surface !== content.surface) r.sceneBacking?.surface?.delete()
+  // A backing built another way supersedes an unfinished warmup.
+  disposeRetainedPictureWarmup(r)
   r.sceneBacking = {
     fontGeneration: r.fontGeneration,
     exact: true,
@@ -476,6 +484,72 @@ function repaintEditedRegions(r: SkiaRenderer, graph: SceneGraph, sceneVersion: 
   )
 }
 
+function pictureWarmupHost(r: SkiaRenderer): RetainedPictureWarmupHost {
+  return {
+    geometry: () => sceneBackingGeometry(r),
+    createSurface: (width, height) => createSceneBackingSurface(r, width, height),
+    install: (content, warmup) =>
+      installSceneBackingImage(
+        r,
+        content,
+        warmup.sceneVersion,
+        warmup.positionPreviewVersion,
+        sceneBackingMetrics(warmup)
+      )
+  }
+}
+
+/** The page has no backing to reuse: building one would draw every child in this frame. */
+function needsFullSceneBacking(
+  r: SkiaRenderer,
+  sceneVersion: number,
+  positionPreviewVersion: number
+): boolean {
+  return (
+    !r.sceneBacking ||
+    !backingMetadataMatches(r, sceneVersion, positionPreviewVersion, true) ||
+    !backingScreenCoverageContainsViewport(r)
+  )
+}
+
+/**
+ * Bring the page to a backing without recording all of its pictures in one frame: record a
+ * budgeted slice and return 'drawing' while pictures remain, or leave a backing in place.
+ */
+function prepareFullSceneBacking(
+  r: SkiaRenderer,
+  graph: SceneGraph,
+  sceneVersion: number
+): 'drawing' | 'ready' {
+  cancelSceneBackingBuild(r)
+  const warmup = advanceRetainedPictureWarmup(r, graph, sceneVersion, pictureWarmupHost(r))
+  if (warmup === 'drawing') {
+    r.sceneBackingNeedsCrispRender = true
+    return 'drawing'
+  }
+  if (warmup === 'none') recordSceneBacking(r, graph, sceneVersion)
+  return 'ready'
+}
+
+function presentNavigationFrame(
+  r: SkiaRenderer,
+  canvas: Canvas,
+  graph: SceneGraph,
+  sceneVersion: number
+): false | 'backing' {
+  const presented = presentNavigationBacking(r, canvas, graph, sceneVersion)
+  if (presented) return presented
+  // No backing for this page yet (a first visit): keep recording its pictures in slices.
+  if (prepareFullSceneBacking(r, graph, sceneVersion) === 'drawing') {
+    drawRetainedPictureWarmup(r, canvas)
+    return 'backing'
+  }
+  r.sceneBackingNeedsCrispRender = true
+  return drawSceneBacking(r, canvas, sceneVersion, true, graph.positionPreviewVersion)
+    ? 'backing'
+    : false
+}
+
 export function renderSceneBacking(
   r: SkiaRenderer,
   canvas: Canvas,
@@ -484,7 +558,7 @@ export function renderSceneBacking(
 ): false | 'backing' | 'retained-pictures' {
   if (r.sceneBackingAllocationFailed) return false
   if (r.navigationPhase !== 'idle' && r.sceneBacking) {
-    return presentNavigationBacking(r, canvas, graph, sceneVersion)
+    return presentNavigationFrame(r, canvas, graph, sceneVersion)
   }
   const positionPreviewVersion = graph.positionPreviewVersion
   const allowStaleZoom = now() < r.sceneBackingPreviewUntil
@@ -496,14 +570,22 @@ export function renderSceneBacking(
     positionPreviewVersion
   )
   if (!hasCoverage) {
+    if (needsFullSceneBacking(r, sceneVersion, positionPreviewVersion)) {
+      if (prepareFullSceneBacking(r, graph, sceneVersion) === 'drawing') {
+        drawRetainedPictureWarmup(r, canvas)
+        return 'backing'
+      }
+    }
+    // A backing recorded just now covers the viewport; an inexact one is rebuilt in steps.
     if (
-      !r.sceneBacking ||
-      !backingMetadataMatches(r, sceneVersion, positionPreviewVersion, true) ||
-      !backingScreenCoverageContainsViewport(r)
+      !backingCoverageContainsLiveViewport(
+        r,
+        sceneVersion,
+        allowStaleZoom,
+        positionPreviewVersion
+      ) &&
+      !needsFullSceneBacking(r, sceneVersion, positionPreviewVersion)
     ) {
-      cancelSceneBackingBuild(r)
-      recordSceneBacking(r, graph, sceneVersion)
-    } else {
       if (!sceneBackingBuildMatches(r, sceneVersion)) startSceneBackingBuild(r, graph, sceneVersion)
       stepSceneBackingBuild(r, sceneVersion)
     }

@@ -1,5 +1,5 @@
 import type { Editor, EditorState } from '@open-pencil/core/editor'
-import { exportFigFile } from '@open-pencil/core/io/formats/fig'
+import { createFigExportMirror, exportFigFile } from '@open-pencil/core/io/formats/fig'
 import { filesMessages } from '@open-pencil/vue'
 
 import { createAutosave } from '@/app/document/autosave'
@@ -63,10 +63,20 @@ export function createDocumentSourceActions({
 }: DocumentSourceOptions) {
   const changes = createDocumentChanges(editor)
 
+  /** A save of `revision` landed: the document is clean up to it and its snapshot can go. */
+  async function markRevisionSaved(revision: number) {
+    changes.markSaved(revision)
+    try {
+      await recovery.markProtectedVersion(revision)
+    } catch (error) {
+      console.warn('[Recovery] Cleanup after document write failed:', error)
+    }
+  }
+
   async function saveAndTrack(save: () => Promise<boolean>) {
     const revision = changes.capture()
     const saved = await save()
-    if (saved) changes.markSaved(revision)
+    if (saved) await markRevisionSaved(revision)
     return saved
   }
 
@@ -82,13 +92,20 @@ export function createDocumentSourceActions({
     return exportFigFile(editor.graph, renderer?.ck, renderer ?? undefined, state.currentPageId)
   }
 
+  // Recovery snapshots are encoded in a worker that mirrors the document, so a large file
+  // does not block the main thread for the whole export on every snapshot.
+  const recoveryExporter = createFigExportMirror()
+
   function buildRecoveryFigFile() {
     settleMotionPreview()
-    return exportFigFile(editor.graph, undefined, undefined, state.currentPageId)
+    return recoveryExporter.exportFigFile(editor.graph, state.currentPageId)
   }
 
+  // Recovery follows content revisions: page population, layout and font loads advance the
+  // scene version without changing the document and must not trigger a snapshot.
   const recovery = createDocumentRecovery({
     state,
+    getRevision: changes.capture,
     isEnabled: () => recoveryEnabled.value,
     isInteractiveEditing: () => editor.isInteractiveEditing(),
     buildFigFile: buildRecoveryFigFile
@@ -111,8 +128,6 @@ export function createDocumentSourceActions({
     startWatchingFile: () => {
       void startWatchingFile()
     },
-    onWriteSuccess: (version) => recovery.markProtectedVersion(version),
-    onDownloadSuccess: (version) => recovery.markProtectedVersion(version),
     onWritePermissionDenied: notifyWritePermissionDenied
   })
 
@@ -121,12 +136,14 @@ export function createDocumentSourceActions({
     getSavedVersion,
     hasWritableSource: () => !!getFileHandle() || !!getFilePath() || !!getStorageBinding(),
     saveCurrentDocument: async (version) => {
+      // The scene version also advances for page population and layout; only edits need a save.
+      if (!changes.hasUnsavedChanges()) return
       // Autosave runs outside any gesture: never prompt for write access, and leave the
       // document dirty until a user-initiated save obtains it.
       if (!(await canWriteWithoutPrompt())) return
       const revision = changes.capture()
       const data = await buildFigFile()
-      if (await writeFile(data, version)) changes.markSaved(revision)
+      if (await writeFile(data, version)) await markRevisionSaved(revision)
     }
   })
 
@@ -145,7 +162,7 @@ export function createDocumentSourceActions({
     setSourceIdentity({ handle: handle ?? null, path: path ?? null })
     setSavedVersion(state.sceneVersion)
     changes.markSaved()
-    void recovery.markProtectedVersion(state.sceneVersion)
+    void recovery.markProtectedVersion(changes.capture())
     if (isFig && (handle || path)) {
       void startWatchingFile()
     }
@@ -162,7 +179,7 @@ export function createDocumentSourceActions({
     state.autosaveEnabled = true
     setSavedVersion(state.sceneVersion)
     changes.markSaved()
-    void recovery.markProtectedVersion(state.sceneVersion)
+    void recovery.markProtectedVersion(changes.capture())
   }
 
   function setPlannedFilePath(path: string) {
@@ -184,6 +201,7 @@ export function createDocumentSourceActions({
     stopWatchingFile()
     autosave.disposeAutosave()
     recovery.disposeRecovery()
+    recoveryExporter.dispose()
   }
 
   return {
@@ -199,15 +217,16 @@ export function createDocumentSourceActions({
     // External version control (GitHub): capture before snapshotting, then mark the
     // revision saved and release its recovery snapshot only once the commit succeeded.
     captureRevision: changes.capture,
-    markExternallyPersisted: async (revision: number, version: number) => {
+    markExternallyPersisted: async (revision: number, _version: number) => {
       changes.markSaved(revision)
-      await recovery.markProtectedVersion(version)
+      await recovery.markProtectedVersion(revision)
     },
     getStorageBinding,
     getRecoveryId: () => recovery.getRecoveryId(),
-    adoptRecoverySnapshot: (id: string, version: number) => {
+    // The restored content is what the adopted snapshot holds: protect the current revision.
+    adoptRecoverySnapshot: (id: string) => {
       changes.markChanged()
-      return recovery.adoptRecoverySnapshot(id, version)
+      return recovery.adoptRecoverySnapshot(id, changes.capture())
     },
     persistRecoveryNow: () => recovery.persistNow(),
     discardRecovery: () => recovery.discardRecovery()

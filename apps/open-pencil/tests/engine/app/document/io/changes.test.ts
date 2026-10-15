@@ -46,3 +46,31 @@ test('saving an earlier revision cannot clear edits made while exporting or pick
     editor.dispose()
   }
 })
+
+test('layout, page population and the instance sync they cause do not dirty a document', async () => {
+  const editor = createEditor()
+  const changes = createDocumentChanges(editor)
+  try {
+    const graph = editor.graph
+    const page = graph.getPages()[0]
+    const component = graph.createNode('COMPONENT', page.id, { name: 'Button', width: 100 })
+    graph.createInstance(component.id, page.id, { name: 'Instance' })
+    await Promise.resolve()
+    changes.markSaved()
+
+    // Population materializes imported content; layout resizes it. Both reach instances.
+    graph.withDerivedMutations(() => {
+      graph.createNode('RECTANGLE', component.id, { name: 'Populated' })
+    })
+    graph.withLayoutMutations(() => graph.updateNode(component.id, { width: 120 }))
+    await Promise.resolve()
+    expect(graph.getChildren(graph.getInstances(component.id)[0].id)).toHaveLength(1)
+    expect(changes.hasUnsavedChanges()).toBe(false)
+
+    graph.updateNode(component.id, { name: 'Primary button' })
+    expect(changes.hasUnsavedChanges()).toBe(true)
+  } finally {
+    changes.dispose()
+    editor.dispose()
+  }
+})
