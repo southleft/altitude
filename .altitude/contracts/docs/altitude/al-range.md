@@ -24,9 +24,9 @@ Component: al-range
 | `handleLabelUnit` | string | — | — | _not expressed in Figma (by design)_ |
 | `hasOutput` | boolean | — | — | **Output** (VARIANT): `No`, `Yes` |
 | `hasTooltip` | boolean | — | — | — |
-| `hideLabel` | boolean | — | — | — |
-| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Focus`, `Hover` |
-| `isError` | boolean | — | — | — |
+| `hideLabel` | boolean | — | — | **Show Label** (BOOLEAN) |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover` |
 | `label` | string | — | — | _not expressed in Figma (by design)_ |
 | `lowerRangeValue` | number | — | — | _not expressed in Figma (by design)_ |
 | `max` | number | — | `100` | _not expressed in Figma (by design)_ |
@@ -143,7 +143,12 @@ Input value
 ### `isDisabled` (Figma property "State")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Focus`, `Hover`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Active`, `Default`, `Disabled`, `Error`, `Focus`, `Hover`
 
 ## States
 
