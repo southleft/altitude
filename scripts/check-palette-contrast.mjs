@@ -37,7 +37,8 @@
  * of the hue. Re-point it as a foreground for its own fill, never as body text.
  *
  * Thresholds are WCAG 2.1 AA: 4.5:1 for normal text, 3:1 for large text and for
- * non-text elements that carry meaning (focus rings, status dots). Structural
+ * non-text elements that carry meaning (focus rings, status dots, form-control
+ * boundaries). Structural
  * hairlines are held to a floor that only proves they did not vanish into their
  * ground — a 1px divider is decorative and WCAG exempts it.
  *
@@ -146,11 +147,18 @@ const PAIRS = [
   // --- meaningful non-text -------------------------------------------------
   ['border-primary-default', 'background-neutral-default', LARGE, 'focus ring (al-focus mixin)'],
   ['border-danger-default', 'background-neutral-default', LARGE, 'error field border'],
+  // Form-control boundaries (input/textarea/range via al-input, checkbox, radio,
+  // input-stepper, file-upload drop zone). WCAG 1.4.11: the field fill sits ~1.1:1
+  // on the page, so the border is the visual information that identifies the
+  // control — it needs 3:1, not the hairline floor. (2026-11-25: these were held
+  // to VISIBLE and shipped at 1.31–1.67:1 in both modes.)
+  ['border-neutral-strong', 'background-neutral-default', LARGE, 'control border (al-input, checkbox, radio, input-stepper, file-upload)'],
+  ['border-neutral-strong', 'background-neutral-weak', LARGE, 'control border on the page'],
+  ['border-neutral-bold', 'background-neutral-default', LARGE, 'control border, hover'],
 
   // --- structure -----------------------------------------------------------
-  ['border-neutral-default', 'background-neutral-default', VISIBLE, 'control border'],
+  ['border-neutral-default', 'background-neutral-default', VISIBLE, 'decorative edge (divider, table, accordion, drawer…)'],
   ['border-neutral-weak', 'background-neutral-default', VISIBLE, 'hairline divider'],
-  ['border-neutral-default', 'background-neutral-weak', VISIBLE, 'control border on the page'],
 ];
 
 /* -------------------------------------------------------------------- run */
