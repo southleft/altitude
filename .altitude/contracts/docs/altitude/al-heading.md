@@ -16,7 +16,7 @@ Component: al-heading
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `isBold` | boolean | — | — | **Weight** (VARIANT): `Default` |
+| `isBold` | boolean | — | — | **Weight** (VARIANT): `Bold`, `Default` |
 | `tagName` | enum | `h1`, `h2`, `h3`, `h4`, `h5`, `h6` | `'h2'` | _not expressed in Figma (by design)_ |
 | `variant` | enum | `display-lg`, `display-md`, `display-sm`, `lg`, `md`, `sm` | — | **Variant** (VARIANT): `Display Lg`, `Display Md`, `Display Sm`, `Lg`, `Md`, `Sm` |
 
@@ -54,7 +54,7 @@ Heading variants
 ### `isBold` (Figma property "Weight")
 
 - Code values: —
-- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Bold`, `Default`
 
 ### `variant` (Figma property "Variant")
 

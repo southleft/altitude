@@ -6,9 +6,7 @@
  * Figma Code Connect — React wrapper surface for the "Heading"
  * component set (node 3543:47001).
  *
- * Mapped variant axes: Variant.
- * Props the contract binds to an axis this generator could not map: isBold
- * (reasons in skipped.json — they are drift, not omissions).
+ * Mapped variant axes: Weight, Variant.
  * Props the contract marks `omit` (no Figma axis): tagName.
  */
 import figma from '@figma/code-connect';
@@ -16,6 +14,9 @@ import { ALHeading } from '@southleft/al-react';
 
 figma.connect(ALHeading, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3543-47001', {
   props: {
+    isBold: figma.enum('Weight', {
+      Bold: true,
+    }),
     variant: figma.enum('Variant', {
       'Display Lg': 'display-lg',
       'Display Md': 'display-md',
@@ -27,6 +28,7 @@ figma.connect(ALHeading, 'https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?n
   },
   example: (props) => (
     <ALHeading
+      isBold={props.isBold}
       variant={props.variant}
     >
       Heading

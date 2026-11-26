@@ -36,8 +36,8 @@ API call).
 | `filterMode` | enum | `auto`, `manual` | `'auto'` | _not expressed in Figma (by design)_ |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActiveDropdown` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
 | `isOptional` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isRequired` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `label` | string | — | `'Label'` | _not expressed in Figma (by design)_ |
@@ -129,6 +129,16 @@ an option has been chosen.
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
 
 ## States
 

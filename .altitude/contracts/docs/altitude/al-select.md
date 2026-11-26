@@ -16,17 +16,17 @@ A choice from a known list, rendered as a field the user opens rather than types
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `align` | enum | `bottom`, `top` | `'bottom'` | — |
+| `align` | enum | `bottom`, `top` | `'bottom'` | _not expressed in Figma (by design)_ |
 | `ariaDescribedBy` | string | — | — | _not expressed in Figma (by design)_ |
 | `errorNote` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldId` | string | — | — | _not expressed in Figma (by design)_ |
 | `fieldNote` | string | — | — | _not expressed in Figma (by design)_ |
-| `hasSearch` | boolean | — | `false` | — |
+| `hasSearch` | boolean | — | `false` | _not expressed in Figma (by design)_ |
 | `hideLabel` | boolean | — | — | **Label** (VARIANT): `Hidden`, `Shown` |
 | `isActive` | boolean | — | — | — |
 | `isActiveDropdown` | boolean | — | — | _not expressed in Figma (by design)_ |
-| `isDisabled` | boolean | — | — | — |
-| `isError` | boolean | — | — | — |
+| `isDisabled` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
+| `isError` | boolean | — | — | **State** (VARIANT): `Default`, `Disabled`, `Error` |
 | `isOptional` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `isReadonly` | boolean | — | `true` | _not expressed in Figma (by design)_ |
 | `isRequired` | boolean | — | `false` | _not expressed in Figma (by design)_ |
@@ -119,7 +119,7 @@ The select's title
 
 The select's value attribute
 
-**Figma-expression opt-out (T27):** `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `isActiveDropdown`, `isOptional`, `isReadonly`, `isRequired`, `name`, `placeholder`, `title`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
+**Figma-expression opt-out (T27):** `align`, `ariaDescribedBy`, `errorNote`, `fieldId`, `fieldNote`, `hasSearch`, `isActiveDropdown`, `isOptional`, `isReadonly`, `isRequired`, `name`, `placeholder`, `title`, `value` are curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 
@@ -127,6 +127,16 @@ The select's value attribute
 
 - Code values: —
 - Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Hidden`, `Shown`
+
+### `isDisabled` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
+
+### `isError` (Figma property "State")
+
+- Code values: —
+- Figma options (unmapped 1:1 by design — labels differ on purpose, see `.altitude/contracts/README.md` § Deviations): `Default`, `Disabled`, `Error`
 
 ### `label` (Figma property "Label")
 

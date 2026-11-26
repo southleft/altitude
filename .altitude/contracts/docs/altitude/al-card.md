@@ -16,7 +16,7 @@ A bounded surface that groups one subject — its media, its heading, its body a
 
 | Name | Type | Values | Default | Figma |
 | --- | --- | --- | --- | --- |
-| `fill` | boolean | — | — | — |
+| `fill` | boolean | — | — | _not expressed in Figma (by design)_ |
 | `layout` | string | `'inline'` | — | — |
 | `variant` | string | `'bare'` | — | **Variant** (VARIANT): `Bare`, `Default` |
 
@@ -46,6 +46,8 @@ Layout
 Variant
 - **default** Renders a card with a background color, box shadow, or border radius
 - **bare** Renders a card without a background color, box shadow, or border radius
+
+**Figma-expression opt-out (T27):** `fill` is curated `bindings.figma.omit: true` — a deliberate decision to keep this prop out of the generated Figma set entirely (no axis, no component property, no instance), independent of whether the real set happens to expose one today. See `.altitude/contracts/README.md` § Figma-expression opt-out.
 
 ## Variant axes
 

@@ -117,7 +117,9 @@
     overflow: hidden;
     background-color: var(--al-theme-color-background-transparent-default);
     border-radius: var(--al-theme-border-radius-role-control, var(--al-theme-border-radius-xs));
-    border: var(--al-theme-border-width) solid var(--al-theme-color-border-neutral-default);
+    /* Control boundary: border-neutral-strong meets 3:1 (WCAG 1.4.11); 2px (border-width-md)
+     * matches the Figma library and keeps an 18px control legible for low-vision users. */
+    border: var(--al-theme-border-width-md) solid var(--al-theme-color-border-neutral-strong);
     transition: all var(--al-theme-animation-duration-role-base, var(--al-theme-animation-duration)) var(--al-theme-animation-timing-role-standard, var(--al-theme-animation-timing));
 
     /**

@@ -3,7 +3,7 @@
   "figmaFileId": "y83n4o9LOGs74oAoguFcGS",
   "figmaObservedFileId": "y83n4o9LOGs74oAoguFcGS",
   "created": "2026-08-22T03:30:29.826Z",
-  "figmaLastRefreshed": "2026-09-08T20:41:38.855Z",
+  "figmaLastRefreshed": "2026-11-26T02:26:26.776Z",
   "components": {
     "al-accordion-panel": {
       "figma": null,
@@ -670,7 +670,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "88350bc2d0cf904edc7dd21a1b2af9cf0e159be8",
+      "figmaCurrentDigest": "fb7d51491f26cd0a30f6906cdee71ff43e192742",
       "figmaContract": {
         "props": {
           "Text": {
@@ -683,11 +683,23 @@
               "Hidden",
               "Shown"
             ]
+          },
+          "State": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Error",
+              "Disabled"
+            ]
           }
         },
         "variants": [
-          "Label=Hidden",
-          "Label=Shown"
+          "Label=Hidden, State=Default",
+          "Label=Hidden, State=Disabled",
+          "Label=Hidden, State=Error",
+          "Label=Shown, State=Default",
+          "Label=Shown, State=Disabled",
+          "Label=Shown, State=Error"
         ]
       }
     },
@@ -953,7 +965,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "e473558c55e1cc2bc2fd8b428ad65f33327af57b",
+      "figmaCurrentDigest": "9a894a07552597490bb7ede71329e151ed7ade52",
       "figmaContract": {
         "props": {
           "Text": {
@@ -974,16 +986,23 @@
           "Weight": {
             "type": "VARIANT",
             "options": [
-              "Default"
+              "Default",
+              "Bold"
             ]
           }
         },
         "variants": [
+          "Variant=Display Lg, Weight=Bold",
           "Variant=Display Lg, Weight=Default",
+          "Variant=Display Md, Weight=Bold",
           "Variant=Display Md, Weight=Default",
+          "Variant=Display Sm, Weight=Bold",
           "Variant=Display Sm, Weight=Default",
+          "Variant=Lg, Weight=Bold",
           "Variant=Lg, Weight=Default",
+          "Variant=Md, Weight=Bold",
           "Variant=Md, Weight=Default",
+          "Variant=Sm, Weight=Bold",
           "Variant=Sm, Weight=Default"
         ]
       }
@@ -1865,9 +1884,13 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "5717db3388c0be68e3a3769af57ccc1a584b481b",
+      "figmaCurrentDigest": "e8276d95eaca380cd751040ac95867a0000e902d",
       "figmaContract": {
         "props": {
+          "Show Label": {
+            "type": "BOOLEAN",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -1875,7 +1898,8 @@
               "Hover",
               "Focus",
               "Active",
-              "Disabled"
+              "Disabled",
+              "Error"
             ]
           },
           "Behavior": {
@@ -1906,6 +1930,10 @@
           "State=Disabled, Behavior=Default, Output=Yes",
           "State=Disabled, Behavior=Range, Output=No",
           "State=Disabled, Behavior=Range, Output=Yes",
+          "State=Error, Behavior=Default, Output=No",
+          "State=Error, Behavior=Default, Output=Yes",
+          "State=Error, Behavior=Range, Output=No",
+          "State=Error, Behavior=Range, Output=Yes",
           "State=Focus, Behavior=Default, Output=No",
           "State=Focus, Behavior=Default, Output=Yes",
           "State=Focus, Behavior=Range, Output=No",
@@ -1928,7 +1956,7 @@
         "nodeId": "3704:13389"
       },
       "lastSync": null,
-      "figmaCurrentDigest": "3af5555dbf4b234c6b05e867a623fa5242b7c713",
+      "figmaCurrentDigest": "e075e57020b79eefa1512887683a762e0d86c029",
       "figmaContract": {
         "props": {
           "Text": {
@@ -1945,11 +1973,23 @@
               "Hidden",
               "Shown"
             ]
+          },
+          "State": {
+            "type": "VARIANT",
+            "options": [
+              "Default",
+              "Error",
+              "Disabled"
+            ]
           }
         },
         "variants": [
-          "Label=Hidden",
-          "Label=Shown"
+          "Label=Hidden, State=Default",
+          "Label=Hidden, State=Disabled",
+          "Label=Hidden, State=Error",
+          "Label=Shown, State=Default",
+          "Label=Shown, State=Disabled",
+          "Label=Shown, State=Error"
         ]
       }
     },
@@ -2018,7 +2058,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "59bf4427a3e84af410ce8cc717945d4ee3fac95c",
+      "figmaCurrentDigest": "eb2b98d412d23dbdbcf2f0ea195c115637583849",
       "figmaContract": {
         "props": {
           "State": {
@@ -2147,7 +2187,7 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "73e54bbbcdf6c5ad3635d61c271935aeca0274b9",
+      "figmaCurrentDigest": "af18880735d4ace268fea4428572aed817b1892e",
       "figmaContract": {
         "props": {
           "Text": {
@@ -2216,9 +2256,21 @@
         "contractVersion": "1.0.0",
         "figmaObserved": true
       },
-      "figmaCurrentDigest": "b72e9e67621ea91293b54d670dbf05ea95876075",
+      "figmaCurrentDigest": "be48f65a3fd251a611a7925dcfc9fc1160ed27bb",
       "figmaContract": {
         "props": {
+          "Text": {
+            "type": "TEXT",
+            "options": null
+          },
+          "Show Label": {
+            "type": "BOOLEAN",
+            "options": null
+          },
+          "Show Helper": {
+            "type": "BOOLEAN",
+            "options": null
+          },
           "State": {
             "type": "VARIANT",
             "options": [
@@ -2435,7 +2487,7 @@
     }
   },
   "figmaOnly": [],
-  "updated": "2026-09-08T20:41:38.857Z",
+  "updated": "2026-11-26T02:26:26.778Z",
   "project": "altitude",
   "figmaFileName": "Altitude Design System"
 }

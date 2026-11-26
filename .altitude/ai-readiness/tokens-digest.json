@@ -1,6 +1,6 @@
 {
   "source": "libs/al-web-components/styles/dist/tokens.json",
-  "total": 608,
+  "total": 609,
   "conventions": {
     "cssVariablePrefix": "--al-",
     "fontSizeNamingScheme": "numeric — --al-font-size-{10,12,14,16,20,24,28,32,36,48,56,64,72,112} (14 stops; NOT t-shirt sizes like -sm/-md/-lg/-2xl)",
@@ -183,6 +183,7 @@
         "default"
       ],
       "neutral": [
+        "bold",
         "default",
         "strong",
         "weak"
@@ -478,6 +479,7 @@
         "al-theme-color-border-neutral-weak": "#3c3c35",
         "al-theme-color-border-neutral-default": "#3c3c35",
         "al-theme-color-border-neutral-strong": "#7c7a70",
+        "al-theme-color-border-neutral-bold": "#a5a399",
         "al-theme-color-border-primary-faint": "#0e1834",
         "al-theme-color-border-primary-weak": "rgba(46, 92, 230, 0.3)",
         "al-theme-color-border-primary-default": "#8ea6ff",
@@ -768,7 +770,8 @@
         "al-theme-color-content-disabled-default": "#a5a399",
         "al-theme-color-border-neutral-weak": "#d5d3cc",
         "al-theme-color-border-neutral-default": "#d5d3cc",
-        "al-theme-color-border-neutral-strong": "#a5a399",
+        "al-theme-color-border-neutral-strong": "#7c7a70",
+        "al-theme-color-border-neutral-bold": "#6f6b61",
         "al-theme-color-border-primary-faint": "#e9eefc",
         "al-theme-color-border-primary-weak": "rgba(46, 92, 230, 0.3)",
         "al-theme-color-border-primary-default": "#2e5ce6",
@@ -1060,6 +1063,7 @@
         "al-theme-color-border-neutral-weak": "#4a453a",
         "al-theme-color-border-neutral-default": "#4a453a",
         "al-theme-color-border-neutral-strong": "#a49981",
+        "al-theme-color-border-neutral-bold": "#cfc9bc",
         "al-theme-color-border-primary-faint": "#1f0600",
         "al-theme-color-border-primary-weak": "rgba(240, 87, 53, 0.3)",
         "al-theme-color-border-primary-default": "#f05735",
@@ -1351,6 +1355,7 @@
         "al-theme-color-border-neutral-weak": "#cfc9bc",
         "al-theme-color-border-neutral-default": "#cfc9bc",
         "al-theme-color-border-neutral-strong": "#4a453a",
+        "al-theme-color-border-neutral-bold": "#322e26",
         "al-theme-color-border-primary-faint": "#ffded6",
         "al-theme-color-border-primary-weak": "rgba(240, 87, 53, 0.3)",
         "al-theme-color-border-primary-default": "#f05735",
@@ -1484,7 +1489,8 @@
           "present": [
             "weak",
             "default",
-            "strong"
+            "strong",
+            "bold"
           ],
           "collisions": [
             {
@@ -1495,8 +1501,8 @@
               "value": "#3c3c35"
             }
           ],
-          "rungs": 3,
-          "distinctValues": 2
+          "rungs": 4,
+          "distinctValues": 3
         },
         {
           "ladder": "al-theme-color-content-danger",
@@ -1788,7 +1794,8 @@
           "present": [
             "weak",
             "default",
-            "strong"
+            "strong",
+            "bold"
           ],
           "collisions": [
             {
@@ -1799,8 +1806,8 @@
               "value": "#d5d3cc"
             }
           ],
-          "rungs": 3,
-          "distinctValues": 2
+          "rungs": 4,
+          "distinctValues": 3
         },
         {
           "ladder": "al-theme-color-content-inverse",
@@ -1918,7 +1925,8 @@
           "present": [
             "weak",
             "default",
-            "strong"
+            "strong",
+            "bold"
           ],
           "collisions": [
             {
@@ -1929,8 +1937,8 @@
               "value": "#4a453a"
             }
           ],
-          "rungs": 3,
-          "distinctValues": 2
+          "rungs": 4,
+          "distinctValues": 3
         },
         {
           "ladder": "al-theme-color-content-danger",
@@ -2179,7 +2187,8 @@
           "present": [
             "weak",
             "default",
-            "strong"
+            "strong",
+            "bold"
           ],
           "collisions": [
             {
@@ -2190,8 +2199,8 @@
               "value": "#cfc9bc"
             }
           ],
-          "rungs": 3,
-          "distinctValues": 2
+          "rungs": 4,
+          "distinctValues": 3
         },
         {
           "ladder": "al-theme-color-content-inverse",
@@ -4416,19 +4425,24 @@
         "description": "Border/stroke colour for the inverse role at emphasis step 1 of 1 (default); resolves to #3c3c35 in light and dark alike."
       },
       {
+        "name": "--al-theme-color-border-neutral-bold",
+        "value": "var(--al-color-neutral-400)",
+        "description": "Border/stroke colour for the neutral role at emphasis step 4 of 4 (weak → default → strong → bold); resolves to #6f6b61 in light and #a5a399 in dark."
+      },
+      {
         "name": "--al-theme-color-border-neutral-default",
         "value": "var(--al-color-neutral-700)",
-        "description": "Border/stroke colour for the neutral role at emphasis step 2 of 3 (weak → default → strong); resolves to #d5d3cc in light and #3c3c35 in dark; in light and dark it is the SAME value as \"weak\", so stepping between them changes nothing."
+        "description": "Border/stroke colour for the neutral role at emphasis step 2 of 4 (weak → default → strong → bold); resolves to #d5d3cc in light and #3c3c35 in dark; in light and dark it is the SAME value as \"weak\", so stepping between them changes nothing."
       },
       {
         "name": "--al-theme-color-border-neutral-strong",
         "value": "var(--al-color-neutral-500)",
-        "description": "Border/stroke colour for the neutral role at emphasis step 3 of 3 (weak → default → strong); resolves to #a5a399 in light and #7c7a70 in dark."
+        "description": "Border/stroke colour for the neutral role at emphasis step 3 of 4 (weak → default → strong → bold); resolves to #7c7a70 in light and dark alike."
       },
       {
         "name": "--al-theme-color-border-neutral-weak",
         "value": "var(--al-color-neutral-700)",
-        "description": "Border/stroke colour for the neutral role at emphasis step 1 of 3 (weak → default → strong); resolves to #d5d3cc in light and #3c3c35 in dark; in light and dark it is the SAME value as \"default\", so stepping between them changes nothing."
+        "description": "Border/stroke colour for the neutral role at emphasis step 1 of 4 (weak → default → strong → bold); resolves to #d5d3cc in light and #3c3c35 in dark; in light and dark it is the SAME value as \"default\", so stepping between them changes nothing."
       },
       {
         "name": "--al-theme-color-border-primary-bold",

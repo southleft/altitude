@@ -140,7 +140,11 @@
         "code": {
           "attribute": "hideLabel"
         },
-        "figma": null
+        "figma": {
+          "kind": "BOOLEAN",
+          "property": "Show Label",
+          "pairWith": "Show Label"
+        }
       }
     },
     {
@@ -159,6 +163,7 @@
             "Active",
             "Default",
             "Disabled",
+            "Error",
             "Focus",
             "Hover"
           ],
@@ -175,7 +180,19 @@
         "code": {
           "attribute": "isError"
         },
-        "figma": null
+        "figma": {
+          "kind": "VARIANT",
+          "property": "State",
+          "options": [
+            "Active",
+            "Default",
+            "Disabled",
+            "Error",
+            "Focus",
+            "Hover"
+          ],
+          "pairWith": "State"
+        }
       }
     },
     {
