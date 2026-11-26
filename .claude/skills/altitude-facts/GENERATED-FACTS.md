@@ -568,7 +568,7 @@ record in the CEM digest, cited back to its source.
 
 ## Token conventions
 
-From .altitude/ai-readiness/tokens-digest.json: 608 tokens across 227 families.
+From .altitude/ai-readiness/tokens-digest.json: 609 tokens across 227 families.
 
 - CSS variable prefix: `--al-`
 - Semantic layer: --al-theme-* (single layer of indirection over the --al-color-* / --al-font-size-* primitives)
