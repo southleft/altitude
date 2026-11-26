@@ -6,10 +6,10 @@
  * Figma Code Connect — web component surface for the "Select"
  * component set (node 3704:13389).
  *
- * Mapped variant axes: Label.
+ * Mapped variant axes: Label, State, State.
  * Props the contract binds to an axis this generator could not map: label
  * (reasons in skipped.json — they are drift, not omissions).
- * Props the contract marks `omit` (no Figma axis): ariaDescribedBy, errorNote, fieldId, fieldNote, isActiveDropdown, isOptional, isReadonly, isRequired, name, placeholder, title, value.
+ * Props the contract marks `omit` (no Figma axis): align, ariaDescribedBy, errorNote, fieldId, fieldNote, hasSearch, isActiveDropdown, isOptional, isReadonly, isRequired, name, placeholder, title, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for before, error, field-note.
  */
@@ -20,10 +20,18 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3704
     hideLabel: figma.enum('Label', {
       Hidden: true,
     }),
+    isDisabled: figma.enum('State', {
+      Disabled: true,
+    }),
+    isError: figma.enum('State', {
+      Error: true,
+    }),
   },
   example: (props) => html`
     <al-select
       hideLabel="${props.hideLabel}"
+      isDisabled="${props.isDisabled}"
+      isError="${props.isError}"
     >
       <span slot="before">Before</span>
       Select

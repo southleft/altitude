@@ -7,6 +7,7 @@
  * component set (node 3702:12161).
  *
  * Mapped variant axes: Variant.
+ * Props the contract marks `omit` (no Figma axis): fill.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for action-right, actions-end, actions-start, footer, header, image.
  */

@@ -6,7 +6,7 @@
  * Figma Code Connect — web component surface for the "Combobox"
  * component set (node 3694:11119).
  *
- * Mapped variant axes: Label.
+ * Mapped variant axes: Label, State, State.
  * Props the contract marks `omit` (no Figma axis): align, ariaDescribedBy, errorNote, fieldId, fieldNote, filterMode, isActiveDropdown, isOptional, isRequired, label, noResultsText, placeholder, selectedValue, value.
  * Named slots below are PLACEHOLDERS: slot content is consumer-supplied, so
  * the contract records no default for error, field-note.
@@ -18,10 +18,18 @@ figma.connect('https://www.figma.com/design/y83n4o9LOGs74oAoguFcGS/?node-id=3694
     hideLabel: figma.enum('Label', {
       Hidden: true,
     }),
+    isDisabled: figma.enum('State', {
+      Disabled: true,
+    }),
+    isError: figma.enum('State', {
+      Error: true,
+    }),
   },
   example: (props) => html`
     <al-combobox
       hideLabel="${props.hideLabel}"
+      isDisabled="${props.isDisabled}"
+      isError="${props.isError}"
     >
       <span slot="error">Error</span>
       <span slot="field-note">Field note</span>
